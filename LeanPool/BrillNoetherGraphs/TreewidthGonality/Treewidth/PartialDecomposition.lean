@@ -353,7 +353,8 @@ def pairDecomp (H : SimpleGraph V) (X Y : Finset V)
     have hbridge : (joinTree (⊥ : SimpleGraph Unit) (⊥ : SimpleGraph Unit) () ()).Adj
         (Sum.inl ()) (Sum.inr ()) := by
       simp [joinTree, SimpleGraph.edge_adj]
-    have hsub : ∀ (P : Prop) (hP : P), ((⊥ : SimpleGraph Unit).induce {_t : Unit | P}).Connected := by
+    have hsub : ∀ (P : Prop) (hP : P), ((⊥ : SimpleGraph Unit).induce {_t : Unit | P}).Connected :=
+      by
       intro P hP
       have : Nonempty ↥{_t : Unit | P} := ⟨⟨(), hP⟩⟩
       exact SimpleGraph.Connected.of_subsingleton

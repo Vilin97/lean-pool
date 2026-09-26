@@ -6060,7 +6060,8 @@ theorem treePart75_check :
 /-- Leaf selecting row-03 cell 65, with 19 Farkas receipts deriving its cone inequalities from
 the active branch constraints. -/
 def treePart76 : CompactCellTree :=
-  .cell 65 [546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 595, 563, 596, 582, 564, 565]
+  .cell 65 [546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556, 557, 558, 595, 563, 596, 582,
+    564, 565]
 
 theorem treePart76_check :
     treePart76.check splitForms farkasReceipts cells

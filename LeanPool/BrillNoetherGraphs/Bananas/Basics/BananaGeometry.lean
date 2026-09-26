@@ -130,7 +130,8 @@ theorem core_twoEdgeConnected {g : ℕ} (hg : 1 ≤ g) (B : Banana g) :
 /-- Thus a nontrivial banana has no bridge in its subdivided graph. -/
 theorem graph_twoEdgeCutCondition {g : ℕ} (hg : 1 ≤ g) (B : Banana g) :
     TwoEdgeCutCondition B.graph :=
-  _root_.Utilities.Certificate.SubdivisionGraph.Spec.twoEdgeCutCondition_graph_of_coreTwoEdgeConnected B
+_root_.Utilities.Certificate.SubdivisionGraph.Spec.twoEdgeCutCondition_graph_of_coreTwoEdgeConnected
+    B
     (core_twoEdgeConnected hg B)
 
 /-- Distinct vertices of a nontrivial banana represent distinct degree-one

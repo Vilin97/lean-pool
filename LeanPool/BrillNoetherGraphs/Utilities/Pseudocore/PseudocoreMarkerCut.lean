@@ -217,13 +217,15 @@ theorem cut_leftTwoRegular (marker : Fin core.loopCount)
               split.splitCore.head edge = core.markerVertex marker ∨
             split.splitCore.tail edge = core.markerVertex marker ∧
               split.splitCore.head edge = core.baseVertex (split.markerBase marker) then
-          ((if split.splitCore.tail edge = core.baseVertex (split.markerBase marker) then 1 else 0) +
+          ((if split.splitCore.tail edge = core.baseVertex (split.markerBase marker) then 1 else 0)
+            +
             if split.splitCore.head edge = core.baseVertex (split.markerBase marker) then 1 else 0)
         else 0) =
         if split.splitCore.tail edge = core.baseVertex (split.markerBase marker) ∧
               split.splitCore.head edge = core.markerVertex marker ∨
             split.splitCore.tail edge = core.markerVertex marker ∧
-              split.splitCore.head edge = core.baseVertex (split.markerBase marker) then 1 else 0 := by
+              split.splitCore.head edge = core.baseVertex (split.markerBase marker) then 1 else 0 :=
+                by
       by_cases h : split.splitCore.tail edge = core.baseVertex (split.markerBase marker) ∧
             split.splitCore.head edge = core.markerVertex marker ∨
           split.splitCore.tail edge = core.markerVertex marker ∧
@@ -252,7 +254,8 @@ theorem cut_leftTwoRegular (marker : Fin core.loopCount)
         if split.splitCore.tail edge = core.baseVertex (split.markerBase marker) ∧
               split.splitCore.head edge = core.markerVertex marker ∨
             split.splitCore.tail edge = core.markerVertex marker ∧
-              split.splitCore.head edge = core.baseVertex (split.markerBase marker) then 1 else 0 := by
+              split.splitCore.head edge = core.baseVertex (split.markerBase marker) then 1 else 0 :=
+                by
       by_cases h : split.splitCore.tail edge = core.baseVertex (split.markerBase marker) ∧
             split.splitCore.head edge = core.markerVertex marker ∨
           split.splitCore.tail edge = core.markerVertex marker ∧

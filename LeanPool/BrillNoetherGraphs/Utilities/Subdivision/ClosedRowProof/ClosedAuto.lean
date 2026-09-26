@@ -441,7 +441,8 @@ theorem bnExists_iff (hn : 0 < n) (hForest : IsForest core (zeroSet length))
           change target.rep (symmetry.vertexPerm (core.head e)) =
             target.rep (core.head (symmetry.slotPerm e))
           rw [hh] }
-  exact Utilities.Certificate.DegenerateSpec.DegSpec.Relabeling.bnExists_iff source target rel rank degree
+  exact Utilities.Certificate.DegenerateSpec.DegSpec.Relabeling.bnExists_iff source target rel rank
+    degree
 
 end ClosedAuto
 

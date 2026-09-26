@@ -241,7 +241,8 @@ theorem dProfile_endpointDivisors (hNorm : length 0 ≤ length 5) (hBC : C lengt
 theorem efProfile_endpointDivisors (hBC : C length ≤ B length) :
     (efProfile length hLength hBC).endpointDivisors =
       - oneChip (p length hLength hBC) + oneChip ((Spec length hLength).coreVertex 3) +
-      oneChip ((Spec length hLength).coreVertex 2) - oneChip ((Spec length hLength).coreVertex 4) := by
+      oneChip ((Spec length hLength).coreVertex 2) - oneChip ((Spec length hLength).coreVertex 4) :=
+        by
   classical
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, efProfile_start_three, efProfile_stop_three,

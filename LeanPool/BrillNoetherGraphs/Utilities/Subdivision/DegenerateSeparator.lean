@@ -350,7 +350,8 @@ theorem bnExists_on_degenerate_subdivision_of_validClosed
   apply certificate.bnExists_of_validClosed_of_strongSeparator point
     core_nonempty rep rep_idem rep_zero rep_loopless forest degree hValid hCone
     hInv
-  · exact Utilities.Certificate.DegenerateSpec.DegSpec.graph_connected_of_coreConnected _ hCoreConnected
+  · exact Utilities.Certificate.DegenerateSpec.DegSpec.graph_connected_of_coreConnected _
+      hCoreConnected
   · exact Utilities.Certificate.DegenerateSpec.DegSpec.strongSeparatorCertificate _
 
 /-- The census-facing form: the `RepInvariant` obligation is replaced by the

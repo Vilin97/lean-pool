@@ -736,7 +736,8 @@ theorem blockRise_eq_zero_of_richBlockEnds_empty
           (w.pointValue x a.val e.val i).toNat := by
         rw [FiniteBlockEnds.startAt, ite_eq_right hZero] at hEmpty
         rw [w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e i (by simpa [k] using hi),
-          w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e (i - 1) (by simpa [k] using hPred)] at hEmpty
+          w.richBlockEnds_endAt d core Γ x hW1 hx hCoord a e (i - 1) (by
+            simpa [k] using hPred)] at hEmpty
         simpa [show i - 1 + 1 = i by omega] using hEmpty
       have hPointMono : w.pointValue x a.val e.val i ≤
           w.pointValue x a.val e.val (i + 1) :=
@@ -846,7 +847,8 @@ theorem richCensus_isStepSlope (w : RichWitness)
       (fun e k => Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope
         (w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn hForest hNotLoopy a).blockAt
         (w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn hForest hNotLoopy a).blockEnd
-        (w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn hForest hNotLoopy a).blockRise e k) := by
+        (w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn hForest hNotLoopy a).blockRise e
+          k) := by
   unfold richCensusPiecewiseScript
   exact (censusSpec core hn ℓ hForest hNotLoopy).isStepSlope_piecewiseScript
     (w.repInvariant_of_w1w2_census core Γ x hW1 hW2 hx a hn ℓ hCoord hForest hNotLoopy)

@@ -42,7 +42,9 @@ open GenusFiveRow06Symmetry (Chamber chamber_covers)
 /-- The 483 row-06 closed-cover cells in global index order, obtained by concatenating the five
 certificate blocks. -/
 def cells : List (CoordinateCell row06Core) :=
-  GenusFiveRow06CoverCells0.chunk ++ GenusFiveRow06CoverCells1.chunk ++ GenusFiveRow06CoverCells2.chunk ++ GenusFiveRow06CoverCells3.chunk ++ GenusFiveRow06CoverCells4.chunk
+  GenusFiveRow06CoverCells0.chunk ++ GenusFiveRow06CoverCells1.chunk ++
+    GenusFiveRow06CoverCells2.chunk ++ GenusFiveRow06CoverCells3.chunk ++
+    GenusFiveRow06CoverCells4.chunk
 
 theorem cells_check :
     cells.all (fun cell => cell.certificate.checkClosed 4) = true := by

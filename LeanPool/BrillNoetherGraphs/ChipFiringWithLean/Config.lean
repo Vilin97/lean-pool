@@ -75,7 +75,8 @@ lemma eq_config_iff_eq_chips {q : G.V} (c₁ c₂ : Config G q) :
   ⟨fun h => by rw [h], fun h => Config.ext (congrFun h)⟩
 
 /-- Two configurations are equal if and only if their images under `toDiv d` agree. -/
-lemma eq_config_iff_eq_div {q : G.V} (d : ℤ) (c₁ c₂ : Config G q) : c₁ = c₂ ↔ toDiv d c₁ = toDiv d c₂ := by
+lemma eq_config_iff_eq_div {q : G.V} (d : ℤ) (c₁ c₂ : Config G q) : c₁ = c₂ ↔ toDiv d c₁ = toDiv d
+    c₂ := by
   constructor
   -- Forward direction is clear
   intro h_eq
@@ -126,7 +127,8 @@ def toConfig {q : G.V} (D : qEffectiveDivisor G q) : Config G q := {
 }
 
 /-- The degree of a $q$-effective divisor equals its value at $q$ plus the configuration degree. -/
-lemma config_degree_div_degree {q : G.V} (D : qEffectiveDivisor G q) : deg D.D = D.D q + configDegree (toConfig D) := by
+lemma config_degree_div_degree {q : G.V} (D : qEffectiveDivisor G q) : deg D.D = D.D q +
+    configDegree (toConfig D) := by
   simp only [configDegree, toConfig, map_sub, map_zsmul, deg_one_chip, smul_eq_mul, mul_one]
   ring
 
@@ -236,7 +238,8 @@ lemma q_reduced_eq_chips_sub_one_chip (G : CFGraph) (q : G.V) (D : CFDiv G)
 
 /-- The divisor `toDiv d c` is effective if and only if $d \ge \deg(c)$, i.e. there are
 enough chips at $q$ to cover any debt. -/
-lemma config_eff {q : G.V} (d : ℤ) (c : Config G q) : effective (toDiv d c) ↔ d ≥ configDegree c := by
+lemma config_eff {q : G.V} (d : ℤ) (c : Config G q) : effective (toDiv d c) ↔ d ≥ configDegree c :=
+    by
   constructor
   -- Effective implies d ≥ configDegree
   intro h_eff
@@ -448,7 +451,8 @@ def isBurnList (G : CFGraph) {q : G.V} (c : Config G q) (L : List G.V) : Prop :=
       ∧ isBurnList G c (w :: rest)
 
 /-- Every burn list contains $q$, since the base case of a burn list is $[q]$. -/
-private lemma burn_list_contains_q (G : CFGraph) {q : G.V} (c : Config G q) (L : List G.V) (h_bl : isBurnList G c L) :
+private lemma burn_list_contains_q (G : CFGraph) {q : G.V} (c : Config G q) (L : List G.V) (h_bl :
+    isBurnList G c L) :
   L.contains q := by
   induction L with
   | nil =>
@@ -472,7 +476,9 @@ private lemma burn_list_contains_q (G : CFGraph) {q : G.V} (c : Config G q) (L :
 /-- If $c$ is superstable and a burn list $L$ does not yet contain all vertices, it can be
 extended by prepending a new vertex. This corresponds to the next edge burning in Dhar's
 burning algorithm; superstability implies that the entire graph will burn. -/
-private lemma extend_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : superstable G q c) (L : List G.V) : isBurnList G c L → (∃ v : G.V, ¬ L.contains v) → (∃ w : G.V, w ∉ L.toFinset ∧ isBurnList G c (w :: L)) := by
+private lemma extend_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : superstable G q c)
+    (L : List G.V) : isBurnList G c L → (∃ v : G.V, ¬ L.contains v) → (∃ w : G.V, w ∉ L.toFinset ∧
+    isBurnList G c (w :: L)) := by
   intro h_bl h_exists_v
   let S := univ \ L.toFinset
   have h_S_ne : S.Nonempty := by
@@ -534,7 +540,9 @@ structure burnList (G : CFGraph) {q : G.V} (c : Config G q) where
 
 /-- For each $n < |V(G)|$, there exists a burn list of size $n+1$. This is the inductive step for
 `superstable_burn_list`. -/
-private lemma burn_list_helper (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : superstable G q c) (n : ℕ) : (n < Finset.card (univ : Finset G.V))→ ∃ (L : List G.V), L.toFinset.card = n+1 ∧ isBurnList G c L := by
+private lemma burn_list_helper (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : superstable G q c)
+    (n : ℕ) : (n < Finset.card (univ : Finset G.V))→ ∃ (L : List G.V), L.toFinset.card = n+1 ∧
+    isBurnList G c L := by
   intro h_n_lt_card_V
   induction n with
   | zero =>
@@ -571,7 +579,8 @@ private lemma burn_list_helper (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : 
 /-- A superstable configuration admits a complete burn list containing every vertex of $G$.
 This is the key output of Dhar's burning algorithm: in a superstable configuration, the
 whole graph burns. -/
-lemma superstable_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : superstable G q c) : ∃ L : burnList G c, ∀ v : G.V, v ∈ L.list := by
+lemma superstable_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : superstable G q c) : ∃
+    L : burnList G c, ∀ v : G.V, v ∈ L.list := by
   have h_card_V : (univ : Finset G.V).card ≥ 1 := by
     have h_nonempty : Nonempty G.V := by infer_instance
     have h_card_pos : (univ : Finset G.V).card > 0 := Fintype.card_pos_iff.mpr h_nonempty
@@ -608,7 +617,9 @@ def burnFlow {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) : (G.V 
 /-- The `burnFlow` of a complete burn list is a valid orientation: for every edge
 $\{u,v\}$, exactly `numEdges G u v` units of flow are directed in one of the two
 directions. -/
-lemma burn_flow_reverse {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) (h_full : ∀ v : G.V, v ∈ L.list) : ∀ (u v : G.V), (burnFlow L ⟨u, v⟩) + (burnFlow L ⟨v, u⟩) = numEdges G u v := by
+lemma burn_flow_reverse {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) (h_full : ∀ v :
+    G.V, v ∈ L.list) : ∀ (u v : G.V), (burnFlow L ⟨u, v⟩) + (burnFlow L ⟨v, u⟩) = numEdges G u v :=
+    by
   intro u v
   dsimp only [burnFlow]
   by_cases h_uv : L.list.idxOf v < L.list.idxOf u
@@ -632,7 +643,8 @@ lemma burn_flow_reverse {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G
 
 /-- The `burnFlow` of a complete burn list is directed: for every pair $(u,v)$, flow goes
 in at most one direction. -/
-lemma burn_flow_directed {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) (h_full : ∀ v : G.V, v ∈ L.list) : ∀ (u v : G.V), burnFlow L ⟨u,v⟩ = 0 ∨ burnFlow L ⟨v,u⟩ = 0 := by
+lemma burn_flow_directed {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) (h_full : ∀ v :
+    G.V, v ∈ L.list) : ∀ (u v : G.V), burnFlow L ⟨u,v⟩ = 0 ∨ burnFlow L ⟨v,u⟩ = 0 := by
   intro u v
   dsimp only [burnFlow]
   by_cases h_uv : L.list.idxOf v < L.list.idxOf u
@@ -654,7 +666,8 @@ lemma burn_flow_directed {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList 
 /-- For any vertex $v \ne q$ in a burn list, the in-flow into $v$ exceeds the number of
 chips at $v$. This is the key inequality used to construct an acyclic orientation from a
 superstable configuration. -/
-lemma burnin_degree {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) (v : G.V) (h_pres : v ∈ L.list) (h_ne : v ≠ q): ∑ (w : G.V), burnFlow L ⟨w,v⟩ > c.chips v := by
+lemma burnin_degree {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) (v : G.V) (h_pres :
+    v ∈ L.list) (h_ne : v ≠ q): ∑ (w : G.V), burnFlow L ⟨w,v⟩ > c.chips v := by
   let h_bl := L.h_burn_list
   cases h: L.list with
   | nil =>

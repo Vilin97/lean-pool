@@ -858,7 +858,8 @@ private lemma chiMin_le_eulerChi_set_firing (h_conn : graphConnected G) (D : CFD
       simp only [hAdef, hBdef, Finset.mem_union, Finset.mem_inter, Finset.mem_sdiff]
       tauto
     have hABdisj : Disjoint A B :=
-      Finset.disjoint_left.mpr fun x hx hx' => (Finset.mem_sdiff.mp hx').2 (Finset.mem_inter.mp hx).2
+      Finset.disjoint_left.mpr fun x hx hx' =>
+        (Finset.mem_sdiff.mp hx').2 (Finset.mem_inter.mp hx).2
     have hAsub : A ⊆ S₀ := Finset.inter_subset_right
     have hBsub : B ⊆ S₀ᶜ := fun x hx => Finset.mem_compl.mpr (Finset.mem_sdiff.mp hx).2
     have hBS₀ : Disjoint B S₀ :=

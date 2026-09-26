@@ -265,7 +265,8 @@ theorem step_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀
 /-- With a common offset that absorbs the rounding costs, every coarse slope of
 the rounded script is bounded by the corresponding fine endpoint slopes and
 chip counts. -/
-theorem roundedSlope_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀ : CFDiv spec.graph)
+theorem roundedSlope_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀ : CFDiv
+    spec.graph)
     (σ : firingScript (spec.scale N hN).graph)
     (hσ : effective (spec.embed N hN D₀ + spec.fineChips N hN chips +
       prin (spec.scale N hN).graph σ))

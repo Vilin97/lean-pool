@@ -93,7 +93,8 @@ private lemma rank_geq_neg (G : CFGraph) (D : CFDiv G) (k : ℤ): (k < 0) → ra
 /-- A winnable divisor has nonnegative degree.
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Corollary 1.16. -/
-private lemma deg_winnable_nonneg (G : CFGraph) (D : CFDiv G) (h_winnable : winnable G D) : deg D ≥ 0 := by
+private lemma deg_winnable_nonneg (G : CFGraph) (D : CFDiv G) (h_winnable : winnable G D) : deg D ≥
+    0 := by
   rcases h_winnable with ⟨D', h_D'_eff, h_lequiv⟩
   have same_deg: deg D = deg D' := linear_equiv_preserves_deg G D D' h_lequiv
   rw [same_deg]
@@ -123,7 +124,8 @@ lemma winnable_add_winnable (G : CFGraph) (D1 D2 : CFDiv G)
 /-- If $r(D) \ge r$ for some $r \ge 0$, then $r \le \deg(D)$.
 
 In particular, `rank G D ≤ deg D` when `rank G D ≥ 0`. -/
-lemma rank_le_degree (G : CFGraph) (D : CFDiv G) : ∀ (r : ℤ), r ≥ 0 → rankGeq G D r → r ≤ deg D := by
+lemma rank_le_degree (G : CFGraph) (D : CFDiv G) : ∀ (r : ℤ), r ≥ 0 → rankGeq G D r → r ≤ deg D :=
+    by
   intro r r_nonneg h_rank
   contrapose! h_rank
   unfold rankGeq; push Not
@@ -212,7 +214,8 @@ lemma rank_nonneg_iff_winnable (G : CFGraph) (D : CFDiv G) :
 
 /-- If $r(D) \ge m$ fails for some natural number $m$, then there exists an exact rank
 $r < m$. -/
-private lemma rank_exists_helper (G : CFGraph) (D : CFDiv G) (m : ℕ):  ¬ (rankGeq G D m) → ∃ r < (m:ℤ), rankEq G D r := by
+private lemma rank_exists_helper (G : CFGraph) (D : CFDiv G) (m : ℕ):  ¬ (rankGeq G D m) → ∃ r <
+    (m:ℤ), rankEq G D r := by
   induction m with
   | zero =>
   · intro h_rank_geq

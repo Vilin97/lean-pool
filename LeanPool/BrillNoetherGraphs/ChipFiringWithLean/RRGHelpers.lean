@@ -134,7 +134,8 @@ private lemma maximal_unwinnable_q_reduced_chips_at_q (G : CFGraph) (q : G.V) (D
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Corollary 4.9(1),
 "only if" direction. -/
-private lemma degree_max_superstable {G : CFGraph} {q : G.V} (c : Config G q) (h_max : maximalSuperstable G c): configDegree c = genus G := by
+private lemma degree_max_superstable {G : CFGraph} {q : G.V} (c : Config G q) (h_max :
+    maximalSuperstable G c): configDegree c = genus G := by
   have := maximal_superstable_orientation G q c h_max
   rcases this with ⟨O, hO, h_orient_eq⟩
   rw [← h_orient_eq]
@@ -146,7 +147,8 @@ cited statement.
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Corollary 4.9(2),
 "only if" direction. -/
-private lemma maximal_unwinnable_q_reduced_form (G : CFGraph) (q : G.V) (D : CFDiv G) (c : Config G q) :
+private lemma maximal_unwinnable_q_reduced_form (G : CFGraph) (q : G.V) (D : CFDiv G) (c : Config G
+    q) :
   maximalUnwinnable G D → qReduced G q D → D = toDiv (deg D) c → D = c.chips - oneChip q := by
   intro h_max_unwinnable h_qred h_toDeg
   have h_c_eq : c = toConfig ⟨D, h_qred.1⟩ := by
@@ -216,7 +218,8 @@ private theorem maximal_superstable_config_prop (G : CFGraph) (q : G.V) (c : Con
 
 
 /-- A divisor of degree at least $g$ is winnable. -/
-lemma winnable_of_deg_ge_genus {G : CFGraph} (h_conn : graphConnected G) (D : CFDiv G) : deg D ≥ genus G → winnable G D := by
+lemma winnable_of_deg_ge_genus {G : CFGraph} (h_conn : graphConnected G) (D : CFDiv G) : deg D ≥
+    genus G → winnable G D := by
   intro h_deg_ge_g
   let q := Classical.arbitrary G.V
   rcases (exists_q_reduced_representative h_conn q D) with ⟨D_qred, h_equiv, h_qred⟩
@@ -230,7 +233,8 @@ lemma winnable_of_deg_ge_genus {G : CFGraph} (h_conn : graphConnected G) (D : CF
   exact (config_eff _ c).mpr (by linarith)
 
 /-- Adding a chip anywhere to $c'-q$ makes it winnable when $c'$ is maximal superstable. -/
-private lemma maximal_superstable_chip_winnable {G : CFGraph} (h_conn : graphConnected G) (q : G.V) (c' : Config G q) :
+private lemma maximal_superstable_chip_winnable {G : CFGraph} (h_conn : graphConnected G) (q : G.V)
+    (c' : Config G q) :
   maximalSuperstable G c' →
   ∀ (v : G.V), winnable G (c'.chips- (oneChip q) + (oneChip v)) := by
   intro h_max_superstable v
@@ -391,7 +395,8 @@ theorem acyclic_orientation_maximal_unwinnable_correspondence_and_degree
         rw [hv, h₁, h₂]
       · simp only [hv, ↓reduceIte, tsub_zero] at this
         exact this
-    exact Subtype.ext (orientation_determined_by_indegrees O₁.val O₂.val O₁.prop.1 O₂.prop.1 h_indeg)
+    exact Subtype.ext (orientation_determined_by_indegrees O₁.val O₂.val O₁.prop.1 O₂.prop.1
+      h_indeg)
   }
   { -- Part 2: Degree characterization
     -- This now correctly refers to the theorem defined above
@@ -437,7 +442,8 @@ lemma unwinnable_of_moderator {G : CFGraph} {D : CFDiv G} (h : isModerator D) : 
 
 /-- For every unwinnable divisor $D$, there exist a moderator $M$ and an effective divisor
 $H$ with $M \sim D + H$. -/
-lemma moderator_of_unwinnable {G : CFGraph} (h_conn: graphConnected G) (D : CFDiv G) (unwin : ¬ winnable G D) :
+lemma moderator_of_unwinnable {G : CFGraph} (h_conn: graphConnected G) (D : CFDiv G) (unwin : ¬
+    winnable G D) :
   ∃ (M H : CFDiv G), isModerator M ∧ effective H ∧ linearEquiv G M (D+H) := by
   let q := Classical.arbitrary G.V
   rcases superstable_of_divisor h_conn q D with ⟨c, k, h_equiv, h_super⟩

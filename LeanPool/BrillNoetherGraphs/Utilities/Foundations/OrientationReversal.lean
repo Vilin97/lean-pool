@@ -757,7 +757,8 @@ lemma indeg_reverseCycleOne (O : CFOrientation G) (C : DirectedCycle O) (v : G.V
       have hout : (∑ w : G.V, (if C.pred (C.vert j) w then (1 : ℤ) else 0)) = 1 :=
         (Finset.sum_eq_single (C.vert (j + 1))
           (fun b _ hb => ite_eq_right fun hc => hb ((C.pred_outOf b j).mp hc))
-          (fun hb => absurd (Finset.mem_univ _) hb)).trans (ite_eq_left ((C.pred_outOf _ j).mpr rfl))
+          (fun hb => absurd (Finset.mem_univ _) hb)).trans
+            (ite_eq_left ((C.pred_outOf _ j).mpr rfl))
       rw [hin, hout]
     · simp only [not_exists] at hv
       rw [Finset.sum_eq_zero fun w _ => ite_eq_right (C.not_pred_of_notMem hv w).1,

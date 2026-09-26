@@ -458,7 +458,8 @@ theorem prin_degenerateAnchorScript_coreVertex (anchor r : Fin n)
       certificate.classEndpointContribution rep anchor point r := by
   classical
   rw [degenerateAnchorScript,
-    Utilities.Certificate.DegenerateSpec.DegSpec.prin_interpolatedScript_coreVertex_eq_classSum _ hInv r]
+    Utilities.Certificate.DegenerateSpec.DegSpec.prin_interpolatedScript_coreVertex_eq_classSum _
+      hInv r]
   unfold classEndpointContribution endpointContribution
   refine Finset.sum_congr rfl fun v _ => Finset.sum_congr rfl fun e _ => ?_
   rw [certificate.coreRise_evaluatedPotential_degenerate point core_nonempty rep
@@ -522,7 +523,8 @@ theorem effective_degenerateAnchorResidual {degree : ℤ}
       simp
     rw [degenerateDivisor_interiorVertex, hChip]
     have hInterior :=
-      Utilities.Certificate.DegenerateSpec.DegSpec.prin_interpolatedScript_interiorVertex_nonneg d hInv e o
+      Utilities.Certificate.DegenerateSpec.DegSpec.prin_interpolatedScript_interiorVertex_nonneg d
+        hInv e o
     change (0 : ℤ) ≤ 0 - 0 + prin d.graph
       (Utilities.Certificate.DegenerateSpec.DegSpec.interpolatedScript d
         (certificate.evaluatedPotential anchor point)) (d.interiorVertex e o)
@@ -562,7 +564,8 @@ end Assembly
 
 /-- The embedded core classes of a contracted subdivision.  `coreVertex` is not
 injective, so this image can be strictly smaller than `n`. -/
-def degenerateCoreVertices (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) : Finset d.graph.V :=
+def degenerateCoreVertices (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) : Finset d.graph.V
+  :=
   Finset.univ.image d.coreVertex
 
 theorem degenerateCoreVertices_nonempty (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) :

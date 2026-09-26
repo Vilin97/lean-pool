@@ -59,25 +59,35 @@ noncomputable def bridgeWedgeAssocIso (M N K : MarkedGraph.{u}) :
         have hRightFirst := num_edges_bridgeGraph_inr M.graph N.graph M.right N.left
         have hCrossFirst := num_edges_bridgeGraph_inl_inr M.graph N.graph M.right N.left
         have hReverseFirst (a) (b) :=
-          (num_edges_symmetric (bridgeGraph M.graph N.graph M.right N.left) (Sum.inr a) (Sum.inl b)).trans
+          (num_edges_symmetric (bridgeGraph M.graph N.graph M.right N.left) (Sum.inr a) (Sum.inl
+            b)).trans
             (hCrossFirst b a)
-        have hLeftTarget := num_edges_bridgeGraph_inl M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)
-        have hRightTarget := num_edges_bridgeGraph_inr M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)
-        have hCrossTarget := num_edges_bridgeGraph_inl_inr M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)
+        have hLeftTarget := num_edges_bridgeGraph_inl M.graph (vertexWedge N.graph K.graph N.right
+          K.left) M.right (Sum.inl N.left)
+        have hRightTarget := num_edges_bridgeGraph_inr M.graph (vertexWedge N.graph K.graph N.right
+          K.left) M.right (Sum.inl N.left)
+        have hCrossTarget := num_edges_bridgeGraph_inl_inr M.graph (vertexWedge N.graph K.graph
+          N.right K.left) M.right (Sum.inl N.left)
         have hReverseTarget (a) (b) :=
-          (num_edges_symmetric (bridgeGraph M.graph (vertexWedge N.graph K.graph N.right K.left) M.right (Sum.inl N.left)) (Sum.inr a) (Sum.inl b)).trans
+          (num_edges_symmetric (bridgeGraph M.graph (vertexWedge N.graph K.graph N.right K.left)
+            M.right (Sum.inl N.left)) (Sum.inr a) (Sum.inl b)).trans
             (hCrossTarget b a)
         have hLeftSecond := num_edges_vertexWedge_left N.graph K.graph N.right K.left
         have hRightSecond := num_edges_vertexWedge_right N.graph K.graph N.right K.left
         have hCrossSecond := num_edges_vertexWedge_left_right N.graph K.graph N.right K.left
         have hReverseSecond (a) (b) :=
-          (num_edges_symmetric (vertexWedge N.graph K.graph N.right K.left) (Sum.inr a) (Sum.inl b)).trans
+          (num_edges_symmetric (vertexWedge N.graph K.graph N.right K.left) (Sum.inr a) (Sum.inl
+            b)).trans
             (hCrossSecond b a)
-        have hLeftSource := num_edges_vertexWedge_left (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left
-        have hRightSource := num_edges_vertexWedge_right (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left
-        have hCrossSource := num_edges_vertexWedge_left_right (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left
+        have hLeftSource := num_edges_vertexWedge_left (bridgeGraph M.graph N.graph M.right N.left)
+          K.graph (Sum.inr N.right) K.left
+        have hRightSource := num_edges_vertexWedge_right (bridgeGraph M.graph N.graph M.right
+          N.left) K.graph (Sum.inr N.right) K.left
+        have hCrossSource := num_edges_vertexWedge_left_right (bridgeGraph M.graph N.graph M.right
+          N.left) K.graph (Sum.inr N.right) K.left
         have hReverseSource (a) (b) :=
-          (num_edges_symmetric (vertexWedge (bridgeGraph M.graph N.graph M.right N.left) K.graph (Sum.inr N.right) K.left) (Sum.inr a) (Sum.inl b)).trans
+          (num_edges_symmetric (vertexWedge (bridgeGraph M.graph N.graph M.right N.left) K.graph
+            (Sum.inr N.right) K.left) (Sum.inr a) (Sum.inl b)).trans
             (hCrossSource b a)
         rintro ((a | a) | a) ((b | b) | b) <;>
           simp only [Equiv.coe_fn_mk,

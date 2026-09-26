@@ -262,7 +262,8 @@ theorem sum_range_eq_sum_blocks (f : ℕ → ℤ) :
     have hOffset' : x.2 < b.endAt x.1 - b.startAt x.1 := Finset.mem_range.1 hOffset
     have hEnd : b.startAt x.1 + x.2 < b.endAt x.1 := by
       omega
-    exact Finset.mem_range.2 (lt_of_lt_of_le hEnd (b.endAt_le_length x.1 (Finset.mem_range.1 hIndex)))
+    exact Finset.mem_range.2 (lt_of_lt_of_le hEnd (b.endAt_le_length x.1 (Finset.mem_range.1
+      hIndex)))
   · rintro ⟨xi, xj⟩ hx ⟨yi, yj⟩ hy hxy
     rcases Finset.mem_sigma.1 hx with ⟨hxIndex, hxOffset⟩
     rcases Finset.mem_sigma.1 hy with ⟨hyIndex, hyOffset⟩
@@ -394,7 +395,8 @@ def decodePiecewiseData (potential : Fin n → ℤ)
     simpa [blockStart, FiniteBlockEnds.startAt] using (blocks e).covers k hk
   ownsInterval := by
     intro e block k hStart hEnd
-    exact (blocks e).ownsInterval block k (by simpa [blockStart, FiniteBlockEnds.startAt] using hStart) hEnd
+    exact (blocks e).ownsInterval block k (by
+      simpa [blockStart, FiniteBlockEnds.startAt] using hStart) hEnd
   balance := balance
 
 end Utilities.Certificate.DegenerateSpec.DegSpec

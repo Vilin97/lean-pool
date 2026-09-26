@@ -264,7 +264,8 @@ private theorem ef_stop_three_eq_three :
       ((efProfile length hLength hBC hmy).stopPosition 3) =
       (Spec length hLength).coreVertex 3 := by
   calc
-    _ = (Spec length hLength).pathVertex 3 ⟨length 3, by change length 3 < length 3 + 1; omega⟩ := by
+    _ = (Spec length hLength).pathVertex 3 ⟨length 3, by
+      change length 3 < length 3 + 1; omega⟩ := by
       apply (Spec length hLength).pathVertex_eq_of_val_eq
       rfl
     _ = (Spec length hLength).coreVertex ((Spec length hLength).core.head 3) :=
@@ -292,7 +293,8 @@ private theorem ef_stop_four_eq_four :
       ((efProfile length hLength hBC hmy).stopPosition 4) =
       (Spec length hLength).coreVertex 4 := by
   calc
-    _ = (Spec length hLength).pathVertex 4 ⟨length 4, by change length 4 < length 4 + 1; omega⟩ := by
+    _ = (Spec length hLength).pathVertex 4 ⟨length 4, by
+      change length 4 < length 4 + 1; omega⟩ := by
       apply (Spec length hLength).pathVertex_eq_of_val_eq
       rfl
     _ = (Spec length hLength).coreVertex ((Spec length hLength).core.head 4) :=
@@ -329,9 +331,12 @@ private theorem ef_stop_eight_eq_r :
 
 theorem efProfile_endpointDivisors :
     (efProfile length hLength hBC hmy).endpointDivisors =
-      (- oneChip ((Spec length hLength).coreVertex 1) + oneChip ((Spec length hLength).coreVertex 3)) +
-      (oneChip ((Spec length hLength).pathVertex 4 ((dProfile length hLength hBC hmy).startPosition 4)) - oneChip ((Spec length hLength).coreVertex 4)) +
-      (oneChip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition 5)) - oneChip (q length hLength hNorm)) +
+      (- oneChip ((Spec length hLength).coreVertex 1) + oneChip ((Spec length hLength).coreVertex
+        3)) +
+      (oneChip ((Spec length hLength).pathVertex 4 ((dProfile length hLength hBC hmy).startPosition
+        4)) - oneChip ((Spec length hLength).coreVertex 4)) +
+      (oneChip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition
+        5)) - oneChip (q length hLength hNorm)) +
       (oneChip ((Spec length hLength).coreVertex 2) - oneChip (r length hLength hBC hmy)) := by
   rw [WindowProfile.Data.endpointDivisors]
   simp [Fin.sum_univ_succ, efProfile_slope, ef_start_three_eq_one, ef_stop_three_eq_three,
@@ -343,7 +348,8 @@ theorem efProfile_endpointDivisors :
 private theorem effective_dStarts_sub_one :
     effective (oneChip (G := (Spec length hLength).graph)
       ((Spec length hLength).pathVertex 4 ((dProfile length hLength hBC hmy).startPosition 4)) +
-      oneChip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition 5)) -
+      oneChip ((Spec length hLength).pathVertex 5 ((dProfile length hLength hBC hmy).startPosition
+        5)) -
       oneChip ((Spec length hLength).coreVertex 1)) := by
   by_cases hXD : X length ≤ Delta length
   · rw [dProfile_start_five_eq_one length hLength hBC hmy (min_eq_left hXD)]
@@ -353,7 +359,8 @@ private theorem effective_dStarts_sub_one :
     intro vertex; simp [oneChip]; split_ifs <;> omega
 
 theorem reaches_two : StrongSeparator.Reaches (Spec length hLength).graph
-    (threeChipDivisor ((Spec length hLength).coreVertex 4) (q length hLength hNorm) (r length hLength hBC hmy))
+    (threeChipDivisor ((Spec length hLength).coreVertex 4) (q length hLength hNorm) (r length
+      hLength hBC hmy))
     ((Spec length hLength).coreVertex 2) := by
   apply (efProfile length hLength hBC hmy).reaches_of_effective_endpointDivisors
   rw [efProfile_endpointDivisors length hLength hNorm hBC hmy]
@@ -363,7 +370,8 @@ theorem reaches_two : StrongSeparator.Reaches (Spec length hLength).graph
   all_goals abel_nf
 
 theorem reaches_three : StrongSeparator.Reaches (Spec length hLength).graph
-    (threeChipDivisor ((Spec length hLength).coreVertex 4) (q length hLength hNorm) (r length hLength hBC hmy))
+    (threeChipDivisor ((Spec length hLength).coreVertex 4) (q length hLength hNorm) (r length
+      hLength hBC hmy))
     ((Spec length hLength).coreVertex 3) := by
   apply (efProfile length hLength hBC hmy).reaches_of_effective_endpointDivisors
   rw [efProfile_endpointDivisors length hLength hNorm hBC hmy]

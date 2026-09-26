@@ -781,7 +781,8 @@ noncomputable def leftResidualFunction (s t : SlipFace) : ℤ → ℤ → ℤ :=
   fun a b => s a (leftResidualWitness s t a b) - t.dual b (leftResidualWitness s t a b)
 
 /-- Every value $s(a,\ell) - t^\vee(b,\ell)$ is at most $s \triangleleft t (a,b)$. -/
-lemma lres_val_ge (s t : SlipFace) (a b l : ℤ) : s a l - t.dual b l ≤ leftResidualFunction s t a b :=
+lemma lres_val_ge (s t : SlipFace) (a b l : ℤ) : s a l - t.dual b l ≤ leftResidualFunction s t a b
+    :=
   Classical.choose_spec (lres_wit_exists s t a b) l
 
 /-- The left residual is nonnegative, since for `l ≫ 0` both terms in the
@@ -988,7 +989,8 @@ noncomputable def rightResidualFunction (s t : SlipFace) : ℤ → ℤ → ℤ :
   fun a b => t (rightResidualWitness s t a b) b - s.dual (rightResidualWitness s t a b) a
 
 /-- Every value $t(\ell,b) - s^\vee(\ell,a)$ is at most $s \triangleright t (a,b)$. -/
-lemma rres_val_ge (s t : SlipFace) (a b l : ℤ) : t l b - s.dual l a ≤ rightResidualFunction s t a b :=
+lemma rres_val_ge (s t : SlipFace) (a b l : ℤ) : t l b - s.dual l a ≤ rightResidualFunction s t a b
+    :=
   Classical.choose_spec (rres_exists s t a b) l
 
 /-- The right residual is nonnegative, since for `l ≪ 0` both terms in the
@@ -1432,7 +1434,8 @@ lemma bend_set_witness_lres (s t : SlipFace) (a b : ℤ) :
   let l := leftResidualWitness s t a b
   have hmax : ∀ n, s a n - t.dual b n ≤ s a l - t.dual b l := by
     intro n
-    change s a n - t.dual b n ≤ s a (leftResidualWitness s t a b) - t.dual b (leftResidualWitness s t a b)
+    change s a n - t.dual b n ≤ s a (leftResidualWitness s t a b) - t.dual b (leftResidualWitness s
+      t a b)
     exact lres_val_ge s t a b n
   obtain ⟨r, hr_right, hlr⟩ := bend_set_witness_lres_right_helper s t a b l hmax
   obtain ⟨m, hm_left, hm_right, hrm⟩ := bend_set_witness_lres_helper s t a b r hr_right

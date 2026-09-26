@@ -247,6 +247,7 @@ theorem regularSubdivisionGonality_le_divisorialGonality (G : CFGraph) :
     regularSubdivisionGonality G ≤ divisorialGonality G := by
   rw [regularSubdivisionGonality,
     divisorialGonality_of_laplacianEquiv (UnitSubdivisionPresentation.laplacianEquiv G)]
-  exact Utilities.Certificate.SubdivisionGraph.Spec.regularSubdivisionGonality_le_divisorialGonality _
+  exact Utilities.Certificate.SubdivisionGraph.Spec.regularSubdivisionGonality_le_divisorialGonality
+    _
 
 end Utilities.Gonality

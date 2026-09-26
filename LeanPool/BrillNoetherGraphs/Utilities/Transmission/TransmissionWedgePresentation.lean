@@ -37,7 +37,8 @@ existence on its concrete vertex-wedge model. -/
     TransmissionExists K (P.leftMap u) (P.rightMap v) tau ↔
       TransmissionExists (vertexWedge G H x y) (Sum.inl u)
         (wedgeRightVertex G H x y v) tau := by
-  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using P.graphIso.transmissionExists_map_iff
+  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using
+    P.graphIso.transmissionExists_map_iff
     (Sum.inl u) (wedgeRightVertex G H x y v) tau
 
 /-- A pair of factor divisors satisfying the exact wedge rank profile gives
@@ -64,7 +65,8 @@ theorem satisfiesTransmission_map_wedgeAddDivisor_of_profile
       (P.graphIso.mapDiv (wedgeAddDivisor G H x y D E)) := by
   have hWedge := satisfiesTransmission_wedgeAddDivisor_of_profile
     G H x y D E u v tau hProfile
-  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using P.graphIso.satisfiesTransmission_mapDiv
+  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using
+    P.graphIso.satisfiesTransmission_mapDiv
     (Sum.inl u) (wedgeRightVertex G H x y v) tau
       (wedgeAddDivisor G H x y D E) hWedge
 

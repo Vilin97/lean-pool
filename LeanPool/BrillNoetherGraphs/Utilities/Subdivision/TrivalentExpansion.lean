@@ -503,9 +503,12 @@ theorem three_le_valence (v : Fin (2 * (p - n))) :
       (legEnd_ne C hDeg w h0 h1 (by omega))
       (legEnd_ne C hDeg w h0 h2 (by omega))
       (legEnd_ne C hDeg w h1 h2 (by omega))
-      (legEnd_mem C hDeg w i 0 h0 (by unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
-      (legEnd_mem C hDeg w i 1 h1 (by unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
-      (legEnd_mem C hDeg w i 2 h2 (by unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
+      (legEnd_mem C hDeg w i 0 h0 (by
+        unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
+      (legEnd_mem C hDeg w i 1 h1 (by
+        unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
+      (legEnd_mem C hDeg w i 2 h2 (by
+        unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
   · by_cases hi0 : i.val = 0
     · have h0 : (0 : ℕ) < slotValence C w := by omega
       have h1 : (1 : ℕ) < slotValence C w := by omega
@@ -514,8 +517,10 @@ theorem three_le_valence (v : Fin (2 * (p - n))) :
         (legEnd_ne C hDeg w h0 h1 (by omega))
         (legEnd_ne_contracted C hDeg w h0 ⟨w, ⟨0, hc⟩⟩ false)
         (legEnd_ne_contracted C hDeg w h1 ⟨w, ⟨0, hc⟩⟩ false)
-        (legEnd_mem C hDeg w i 0 h0 (by unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
-        (legEnd_mem C hDeg w i 1 h1 (by unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
+        (legEnd_mem C hDeg w i 0 h0 (by
+          unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
+        (legEnd_mem C hDeg w i 1 h1 (by
+          unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
         ?_
       refine mem_slotEnds_tail C hDeg (Sum.inl ⟨w, ⟨0, hc⟩⟩) ⟨w, i⟩ (bigV_eq C ?_)
       show (0 : ℕ) = i.val

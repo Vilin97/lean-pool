@@ -103,8 +103,10 @@ theorem rich_blockSlope_bounds (d : Utilities.Certificate.DegenerateSpec.DegSpec
     let data := w.richCensusPiecewiseData core Γ x hW1 hW2 hx ℓ hCoord hn
       hForest hNotLoopy a
     (w.block a.val e.val (data.blockAt e k)).lo ≤
-      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e k ∧
-    Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e k ≤
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+        data.blockRise e k ∧
+    Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+      data.blockRise e k ≤
       (w.block a.val e.val (data.blockAt e k)).hi := by
   subst d
   dsimp only
@@ -124,10 +126,13 @@ theorem rich_blockSlope_bounds (d : Utilities.Certificate.DegenerateSpec.DegSpec
   have hInterval := w.selectedBlock_intervalLength d core Γ x hW1 hx hCoord a e k hk
   have hIntervalData :
       ↑(data.blockEnd e (data.blockAt e k) -
-        Utilities.Certificate.DegenerateSpec.DegSpec.blockStart data.blockEnd e (data.blockAt e k)) =
+        Utilities.Certificate.DegenerateSpec.DegSpec.blockStart data.blockEnd e (data.blockAt e k))
+          =
         w.blockLengthValue x a.val e.val (data.blockAt e k) := by
-    simpa [data, richCensusPiecewiseData, Utilities.Certificate.DegenerateSpec.DegSpec.decodePiecewiseData,
-      Utilities.Certificate.DegenerateSpec.DegSpec.blockStart, FiniteBlockEnds.startAt, d] using hInterval
+    simpa [data, richCensusPiecewiseData,
+      Utilities.Certificate.DegenerateSpec.DegSpec.decodePiecewiseData,
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockStart, FiniteBlockEnds.startAt, d] using
+        hInterval
   constructor
   · apply Utilities.Certificate.DegenerateSpec.DegSpec.lower_le_blockSlope_of_mul_le e k _ hk
     rw [hIntervalData]
@@ -184,7 +189,8 @@ theorem rawChipMassAt_selectorChange (d : Utilities.Certificate.DegenerateSpec.D
     have hnat : (w.pointValue x a.val e.val t).toNat = o.val + 1 := by
       rw [← hp]
       exact hend
-    have hnn := hPointNonneg t (by have := b.blockAt_lt_length (o.val + 1) hLen; simp [j] at htj; omega)
+    have hnn := hPointNonneg t (by
+      have := b.blockAt_lt_length (o.val + 1) hLen; simp [j] at htj; omega)
     omega
   have hbelow : ∀ t, 1 ≤ t → t < i →
       w.pointValue x a.val e.val t ≠ (o.val + 1 : ℕ) := by
@@ -504,11 +510,13 @@ private theorem richCensusEndpoint_bounds
     let tail : Fin p → ℤ := fun e =>
       if d.length e = 0 then (w.block anchor.val e.val 0).lo
       else w.rawChipMassAt x e.val 0 +
-        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e 0
+        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+          data.blockRise e 0
     let head : Fin p → ℤ := fun e =>
       if d.length e = 0 then -(w.block anchor.val e.val 0).hi
       else w.rawChipMassAt x e.val (d.length e) -
-        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e
+        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+          data.blockRise e
           (d.length e - 1)
     (∀ e, w.tailContribution anchor.val e.val ≤ tail e) ∧
       (∀ e, w.headContribution anchor.val e.val ≤ head e) := by
@@ -519,11 +527,13 @@ private theorem richCensusEndpoint_bounds
   let tail : Fin p → ℤ := fun e =>
     if d.length e = 0 then (w.block anchor.val e.val 0).lo
     else w.rawChipMassAt x e.val 0 +
-      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e 0
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+        data.blockRise e 0
   let head : Fin p → ℤ := fun e =>
     if d.length e = 0 then -(w.block anchor.val e.val 0).hi
     else w.rawChipMassAt x e.val (d.length e) -
-      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+        data.blockRise e
         (d.length e - 1)
   change (∀ e, w.tailContribution anchor.val e.val ≤ tail e) ∧
       (∀ e, w.headContribution anchor.val e.val ≤ head e)
@@ -554,7 +564,8 @@ private theorem richCensusEndpoint_bounds
         exact hsel
       rw [hselData] at hslope
       change (w.block anchor.val e.val s).lo ≤
-        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e 0
+        Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+          data.blockRise e 0
         at hslope
       dsimp only [tail]
       rw [ite_eq_right hz]
@@ -634,11 +645,13 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
   let tail : Fin p → ℤ := fun e =>
     if d.length e = 0 then (w.block anchor.val e.val 0).lo
     else w.rawChipMassAt x e.val 0 +
-      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e 0
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+        data.blockRise e 0
   let head : Fin p → ℤ := fun e =>
     if d.length e = 0 then -(w.block anchor.val e.val 0).hi
     else w.rawChipMassAt x e.val (d.length e) -
-      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise e
+      Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+        data.blockRise e
         (d.length e - 1)
   have hEndpointBounds := richCensusEndpoint_bounds core w Γ hn x hx hW1 hW2 hW3
     ℓ hCoord hForest hNotLoopy anchor
@@ -769,9 +782,11 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
         w.rawChipDivisor_interiorVertex_eq_rawChipMassAt d core Γ x hW1 hW3 hx
           hCoord anchor fallback e o, hChip]
       have hPrin : prin d.graph script (d.interiorVertex e o) =
-          Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise
+          Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+            data.blockRise
               e (o.val + 1) -
-            Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise
+            Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+              data.blockRise
               e o.val := by
         simpa [script, data, richCensusPiecewiseScript] using
           (d.prin_piecewiseScript_interiorVertex hInv e o)
@@ -797,9 +812,11 @@ theorem richDivisor_winnable_sub_smul (core : ExplicitPotential.Core n p)
           hn hForest hNotLoopy anchor e (o.val + 1) (by omega) rfl).1
         have hW4actual := w.w4_actual_nonneg_of_rich_selector_change d core Γ x hW1
           hW4 hx hCoord anchor e o (by simpa [b] using hChange)
-          (Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise
+          (Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+            data.blockRise
             e o.val)
-          (Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd data.blockRise
+          (Utilities.Certificate.DegenerateSpec.DegSpec.blockSlope data.blockAt data.blockEnd
+            data.blockRise
             e (o.val + 1))
           (by simpa [data, richCensusPiecewiseData,
             Utilities.Certificate.DegenerateSpec.DegSpec.decodePiecewiseData, b] using hIncoming)

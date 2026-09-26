@@ -31,12 +31,17 @@ proof becomes: *exhibit a guarding set*.
 Thirteen of the sixteen genus-five rows close through `closedConstruction`
 below.  The other three cannot, and the reason splits in two:
 
-| rows | status |
-|---|---|
-| 01, 02, 03, 04, 06, 07, 09, 12, 14 | a `GuardingSet` is the row's proof |
-| 11, 13, 15, 16 | one configuration instance covers *every* chip-free vertex, so `ConfigTwo.closedConstruction` / `ConfigThree.closedConstruction` already close them in a line -- see the note below |
-| 05 | a core-supported uniform divisor exists (`1_{2,3,4,5}`), but no library picture recognises its chip-free set: two banana pairs with **unequal** arms.  A *library gap* |
-| 08, 10 | **no** core-supported degree-four divisor is uniformly rank one.  An interior chip is forced, and no unmarked guarding set can exist at this degree |
+Rows 01, 02, 03, 04, 06, 07, 09, 12, 14: a `GuardingSet` is the row's proof
+
+Rows 11, 13, 15, 16: one configuration instance covers *every* chip-free vertex, so
+`ConfigTwo.closedConstruction` / `ConfigThree.closedConstruction` already close them in a line --
+see the note below
+
+Rows 05: a core-supported uniform divisor exists (`1_{2,3,4,5}`), but no library picture recognises
+its chip-free set: two banana pairs with **unequal** arms.  A *library gap*
+
+Rows 08, 10: **no** core-supported degree-four divisor is uniformly rank one.  An interior chip is
+forced, and no unmarked guarding set can exist at this degree
 
 The two failure modes are the genus-five instances of
 auxiliary calculations §2a, and the classification there was reached

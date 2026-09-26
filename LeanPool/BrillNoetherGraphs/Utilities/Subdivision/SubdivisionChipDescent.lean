@@ -152,7 +152,8 @@ theorem fineOf_pathVertex (edge : Fin p) (position : spec.PathPosition edge) :
           (spec.scale N hN).length edge := by
         simp [hlen]
       unfold pathVertex
-      rw [dite_eq_right h0, dite_eq_left hlen, dite_eq_right (by rw [hNlen]; exact (Nat.mul_pos hN (spec.length_pos edge)).ne'),
+      rw [dite_eq_right h0, dite_eq_left hlen, dite_eq_right (by
+        rw [hNlen]; exact (Nat.mul_pos hN (spec.length_pos edge)).ne'),
         dite_eq_left hNlen]
       rfl
     · have hpos0 : 0 < position.val := Nat.pos_of_ne_zero h0

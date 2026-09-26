@@ -297,10 +297,12 @@ theorem marked_bridgelessGenusTwo_coreNormalForm
   | theta B equivalence =>
     let graphIso := equivalence.toGraphIso
     exact .theta B (graphIso.vertexEquiv u) (graphIso.vertexEquiv v) graphIso rfl rfl
-  | rigidWedge base factor attachment root hBaseConnected hBaseGenus hBaseCut hFactorCut hWedgeCut hBaseRigid hFactorRigid equivalence =>
+  | rigidWedge base factor attachment root hBaseConnected hBaseGenus hBaseCut hFactorCut
+      hWedgeCut hBaseRigid hFactorRigid equivalence =>
     let graphIso := equivalence.toGraphIso
     exact .rigidWedge base factor attachment root
       (graphIso.vertexEquiv u) (graphIso.vertexEquiv v)
-      hBaseConnected hBaseGenus hBaseCut hFactorCut hWedgeCut hBaseRigid hFactorRigid graphIso rfl rfl
+      hBaseConnected hBaseGenus hBaseCut hFactorCut hWedgeCut hBaseRigid hFactorRigid graphIso rfl
+        rfl
 
 end Bananas

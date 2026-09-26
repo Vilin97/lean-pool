@@ -673,7 +673,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_17
     ¬ KGeneralTransmission
       (mark B.graph (strandVertex B α i) (strandVertex B β j)) k := by
   intro hK
-  exact Bananas.corrected_highGenus_banana_not_kGeneral hg hk (toLibBanana B) α β i j ((kGeneralTransmission_toLib _ _).mp hK)
+  exact Bananas.corrected_highGenus_banana_not_kGeneral hg hk (toLibBanana B) α β i j
+    ((kGeneralTransmission_toLib _ _).mp hK)
 
 /-- **Remark 1.18** (unlabeled), claim 1 — the endpoint pencil. Section 1.
 
@@ -682,7 +683,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_17
 > consisting of the two non-bivalent vertices."
 
 Exact. Same underlying fact as Lemma 2.20 (`lem:g12`). -/
-theorem _root_.Bananas.TwiceMarkedBananas.s1_rem1_18a {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
+theorem _root_.Bananas.TwiceMarkedBananas.s1_rem1_18a {g : ℕ} (B : Banana g) : BNExists B.graph 1 2
+    := by
   exact (bnExists_toLib _ _ _).mpr (toLibBanana B).bnExists_one_two_of_two_core_vertices
 
 /-- **Remark 1.18** (unlabeled), claim 2 — hence not Brill–Noether general.
@@ -696,7 +698,8 @@ in the remark is not a graph-theoretic claim and is not formalized.) -/
 theorem _root_.Bananas.TwiceMarkedBananas.s1_rem1_18b {g : ℕ} (hg : 3 ≤ g) (B : Banana g) :
     ¬ BrillNoetherGeneral B.graph := by
   intro h
-  exact Bananas.banana_not_brillNoetherGeneral hg (toLibBanana B) ((brillNoetherGeneral_toLib _).mp h)
+  exact Bananas.banana_not_brillNoetherGeneral hg (toLibBanana B) ((brillNoetherGeneral_toLib _).mp
+    h)
 
 /-!
 ## Section 2 — Background
@@ -848,7 +851,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_12a
     ∃ τ : ℤ → ℤ, IsTransmissionPermutation (mark B.graph u v) D τ ∧
       IsKAffine k τ ∧ (kInversions k τ).Finite := by
   obtain ⟨τ, hτ, hAff, hFin⟩ := Bananas.exists_affine_transmission_of_allSubmodular
-    (M := toLibTM (mark B.graph u v)) (Bananas.banana_graph_connected (toLibBanana B)) hk ((allSubmodular_toLib _).mp hsub) D
+    (M := toLibTM (mark B.graph u v)) (Bananas.banana_graph_connected (toLibBanana B)) hk
+      ((allSubmodular_toLib _).mp hsub) D
   exact ⟨τ, (isTransmissionPermutation_toLib _ _ _).mpr hτ, hAff, hFin⟩
 
 /-- **Lemma 2.12** (`lem:tauChars`), southeast rank formula. Section 2.
@@ -863,7 +867,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_12b
       (southeastSet τ (a + 1) b).ncard := by
   rw [rank_toLib]
   exact Bananas.transmission_rank_eq_southeast_ncard (toLibTM (mark B.graph u v)) D
-    (Bananas.banana_graph_connected (toLibBanana B)) τ ((isTransmissionPermutation_toLib _ _ _).mp hτ) a b
+    (Bananas.banana_graph_connected (toLibBanana B)) τ ((isTransmissionPermutation_toLib _ _ _).mp
+      hτ) a b
 
 /-- **Lemma 2.12** (`lem:tauChars`), northwest rank formula. Section 2.
 
@@ -877,7 +882,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_12c
       (northwestSet τ (a + 1) b).ncard := by
   rw [rank_toLib]
   exact Bananas.transmission_complement_rank_eq_northwest_ncard (toLibTM (mark B.graph u v)) D
-    (Bananas.banana_graph_connected (toLibBanana B)) τ ((isTransmissionPermutation_toLib _ _ _).mp hτ) a b
+    (Bananas.banana_graph_connected (toLibBanana B)) τ ((isTransmissionPermutation_toLib _ _ _).mp
+      hτ) a b
 
 /- **Definition 2.13** (`def-inv`, cited to [Pfl22]) — inversions and
 k-inversions.
@@ -942,7 +948,8 @@ choice of integer rank. -/
 > has rank 1."
 
 Exact. Same underlying fact as Remark 1.18, claim 1. -/
-theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_20 {g : ℕ} (B : Banana g) : BNExists B.graph 1 2 := by
+theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_20 {g : ℕ} (B : Banana g) : BNExists B.graph 1 2
+    := by
   exact (bnExists_toLib _ _ _).mpr (toLibBanana B).bnExists_one_two_of_two_core_vertices
 
 /-- **Lemma 2.21** (`lem-BananaRDS`). Section 2.
@@ -975,7 +982,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_23b {g : ℕ} (B : Banana g)
     (a b : ℤ) (E : CFDiv B.graph) (hE : IsSemibreak B E)
     (hb : 0 ≤ b) (hdeg : b + deg E ≤ (g : ℤ)) :
     qReduced B.graph (leftEndpoint B) (bananaNormalForm B a b E) := by
-  exact Bananas.q_reduced_bananaNormalForm (toLibBanana B) a b E ((isSemibreak_toLib _ _).mp hE) hb hdeg
+  exact Bananas.q_reduced_bananaNormalForm (toLibBanana B) a b E ((isSemibreak_toLib _ _).mp hE) hb
+    hdeg
 
 /-- **Lemma 2.23** (unlabeled), final clause. Section 2.
 
@@ -989,7 +997,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_lem2_23c {g : ℕ} (B : Banana g)
     (hb : 0 ≤ b) (hdeg : b + deg E ≤ (g : ℤ)) :
     0 ≤ rank B.graph (bananaNormalForm B a b E) ↔ 0 ≤ a := by
   rw [rank_toLib]
-  exact Bananas.banana_normalForm_rank_nonneg_iff (toLibBanana B) a b E ((isSemibreak_toLib _ _).mp hE)
+  exact Bananas.banana_normalForm_rank_nonneg_iff (toLibBanana B) a b E ((isSemibreak_toLib _ _).mp
+    hE)
     hb hdeg
 
 /-- **Corollary 2.24** (`cor-BanaRankComp`). Section 2.
@@ -1005,7 +1014,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s2_cor2_24 {g : ℕ} (B : Banana g)
     rank B.graph (bananaNormalForm B a b E) =
       max (min a b) (a + b + deg E - (g : ℤ)) := by
   rw [rank_toLib]
-  exact Bananas.rank_bananaNormalForm (toLibBanana B) a b E ((isSemibreak_toLib _ _).mp hE) ha hb hdeg
+  exact Bananas.rank_bananaNormalForm (toLibBanana B) a b E ((isSemibreak_toLib _ _).mp hE) ha hb
+    hdeg
 
 /-- **Corollary 2.25** (`cor-BananaDeltaComps`), part 1). Section 2.
 
@@ -1277,7 +1287,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_rem4_1
     (hK : KGeneralTransmission (mark G u v) k) :
     KGeneralTransmission (mark G v u) k := by
   exact (kGeneralTransmission_toLib _ _).mpr
-    (Bananas.KGeneralTransmission.swap_marks (G := toLib G) u v ((kGeneralTransmission_toLib _ _).mp hK))
+    (Bananas.KGeneralTransmission.swap_marks (G := toLib G) u v ((kGeneralTransmission_toLib _ _).mp
+      hK))
 
 /-- **Lemma 4.2** (`lem:kgtImpliesTorsionOrder`). Section 4.
 
@@ -1293,7 +1304,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_2
     (hg : 0 < genus B.graph)
     (hK : KGeneralTransmission (mark B.graph u v) k) :
     IsTorsionOrder (mark B.graph u v) k := by
-  exact Bananas.banana_kGeneral_isTorsionOrder (toLibBanana B) u v huv hg ((kGeneralTransmission_toLib _ _).mp hK)
+  exact Bananas.banana_kGeneral_isTorsionOrder (toLibBanana B) u v huv hg
+    ((kGeneralTransmission_toLib _ _).mp hK)
 
 /-- **Lemma 4.3** (`lem-TO2GenTrans`). Section 4.
 
@@ -1353,7 +1365,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_5
         (D + t • (oneChip u - oneChip v)) →
       ¬ ThetaTransmissionAddTwoCase B u v
         (D + t • (oneChip u - oneChip v)) → tau t = t) := by
-  exact Bananas.theta_transmission_characteristic_rows (toLibBanana B) u v D tau t ((isTransmissionPermutation_toLib _ _ _).mp hTau)
+  exact Bananas.theta_transmission_characteristic_rows (toLibBanana B) u v D tau t
+    ((isTransmissionPermutation_toLib _ _ _).mp hTau)
     hDegree hRigid
 
 /- **Definition 4.6** (unlabeled) — non-recurrence.
@@ -1397,7 +1410,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_8
     KGeneralTransmission (mark B.graph u v) k ↔
       NonRecurrent (mark B.graph u v) k := by
   rw [kGeneralTransmission_toLib, nonRecurrent_toLib]
-  exact Bananas.thetaRigid_kGeneral_iff_nonRecurrent_class (toLibBanana B) u v ((allSubmodular_toLib _).mp hSub) hTO hRigid
+  exact Bananas.thetaRigid_kGeneral_iff_nonRecurrent_class (toLibBanana B) u v ((allSubmodular_toLib
+    _).mp hSub) hTO hRigid
 
 /- **Definition 4.9** (unlabeled) — degree-`d` twists T^d_D.
 
@@ -1431,7 +1445,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_10
       ((effectiveDegreeOneTwistResidues (mark B.graph u v) D k).ncard : ℤ) +
         invTauCorrection (mark B.graph u v) D := by
   rw [effectiveDegreeOneTwistResidues_toLib, invTauCorrection_toLib]
-  exact Bananas.intCast_kInversionCount_eq_effectiveResidues_add_correction (toLibBanana B) u v D k τ
+  exact Bananas.intCast_kInversionCount_eq_effectiveResidues_add_correction (toLibBanana B) u v D k
+    τ
     hTO ((isTransmissionPermutation_toLib _ _ _).mp hτ) hAffine
 
 /- **Definition 4.11** (unlabeled) — S^{d,e}_D(E). NOT FOUND, deliberately.
@@ -1634,7 +1649,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_endpoint
       (mark B.graph (leftEndpoint B) (rightEndpoint B)) k
       (Nat.choose (g + 1) 2) := by
   exact (hasInversionLowerBound_toLib _ _ _).mpr
-    (Bananas.endpoint_has_quadratic_inversion_lower_bound (toLibBanana B) ((allSubmodular_toLib _).mp hSub) hTO)
+    (Bananas.endpoint_has_quadratic_inversion_lower_bound (toLibBanana B) ((allSubmodular_toLib
+      _).mp hSub) hTO)
 
 /-- **Theorem 4.18**, same-strand one-off regime. Section 4. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_oneOff
@@ -1680,7 +1696,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_thm4_18_crossOneOff
       (strandVertex B beta ⟨B.length beta - 1, by omega⟩)) k
       (correctedCrossOneOffForcedCount g (B.length beta)) := by
   exact (hasInversionLowerBound_toLib _ _ _).mpr
-    (Bananas.crossOneOff_has_quadratic_inversion_lower_bound_of_not_both_two (toLibBanana B) alpha beta
+    (Bananas.crossOneOff_has_quadratic_inversion_lower_bound_of_not_both_two (toLibBanana B) alpha
+      beta
       hg hab hAlpha hBeta hLong ((allSubmodular_toLib _).mp hSub) hTO)
 
 /-- **Proposition 4.19** (`prop-bananTorsion`), full corrected dichotomy.
@@ -1703,7 +1720,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_19
     (hSub : AllSubmodular
       (mark B.graph (strandVertex B α i) (strandVertex B β j))) :
     (CorrectedMidpointException B α β i j ∧ k = 2) ∨ g ≤ k := by
-  exact Bananas.corrected_banana_torsion_dichotomy hg (toLibBanana B) α β i j hTO ((allSubmodular_toLib _).mp hSub)
+  exact Bananas.corrected_banana_torsion_dichotomy hg (toLibBanana B) α β i j hTO
+    ((allSubmodular_toLib _).mp hSub)
 
 /-- **Lemma 4.20** (`lem-TriangleInversionII`), period consequence. Section
 4.
@@ -1720,7 +1738,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_20
     (hk : IsTorsionOrder
       (mark B.graph (leftEndpoint B) (rightEndpoint B)) k) :
     g < k := by
-  exact Bananas.endpoint_marking_torsionOrder_gt_genus (toLibBanana B) ((allSubmodular_toLib _).mp hsub) hk
+  exact Bananas.endpoint_marking_torsionOrder_gt_genus (toLibBanana B) ((allSubmodular_toLib _).mp
+    hsub) hk
 
 /-- **Proposition 4.21** (`prop-TriangleInversionNumber`). Section 4.
 
@@ -1733,7 +1752,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_21
       (mark B.graph (leftEndpoint B) (rightEndpoint B)) D τ ∧
       IsKAffine k τ ∧ Nat.choose (g + 1) 2 ≤ kInversionCount k τ := by
   obtain ⟨D, τ, hτ, hAff, hCount⟩ :=
-    Bananas.endpoint_marked_inversion_lower_bound (toLibBanana B) ((allSubmodular_toLib _).mp hsub) hk
+    Bananas.endpoint_marked_inversion_lower_bound (toLibBanana B) ((allSubmodular_toLib _).mp hsub)
+      hk
   exact ⟨D, τ, (isTransmissionPermutation_toLib _ _ _).mpr hτ, hAff, hCount⟩
 
 /-- **Remark 4.22** (unlabeled) — completing the genus-2 picture. Section 4.
@@ -1750,7 +1770,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_rem4_22
     ¬ KGeneralTransmission
       (mark B.graph (leftEndpoint B) (rightEndpoint B)) k := by
   intro hK
-  exact Bananas.endpoint_marking_not_kGeneral hg (toLibBanana B) ((kGeneralTransmission_toLib _ _).mp hK)
+  exact Bananas.endpoint_marking_not_kGeneral hg (toLibBanana B) ((kGeneralTransmission_toLib _
+    _).mp hK)
 
 /-- **Lemma 4.23** (`lem-BananOneOff`), the uniform three-row block.
 Section 4.
@@ -2013,7 +2034,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s5_eqRRTauBounds_lower
     {M : TwiceMarked} {D : CFDiv M.graph} {τ : ℤ → ℤ}
     (hτ : IsTransmissionPermutation M D τ) (b : ℤ) :
     b - deg D ≤ τ b := by
-  exact Bananas.transmissionPermutation_ge (M := toLibTM M) ((isTransmissionPermutation_toLib _ _ _).mp hτ) b
+  exact Bananas.transmissionPermutation_ge (M := toLibTM M) ((isTransmissionPermutation_toLib _ _
+    _).mp hτ) b
 
 /-- Displayed equation `eq-RRTauBounds`, upper bound. Section 5 preamble.
 Needs connectivity (Riemann's inequality); the lower bound does not. -/
@@ -2022,7 +2044,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s5_eqRRTauBounds_upper
     (hconn : graphConnected M.graph)
     (hτ : IsTransmissionPermutation M D τ) (b : ℤ) :
     τ b ≤ 2 * genus M.graph + b - deg D := by
-  exact Bananas.transmissionPermutation_le (M := toLibTM M) hconn ((isTransmissionPermutation_toLib _ _ _).mp hτ) b
+  exact Bananas.transmissionPermutation_le (M := toLibTM M) hconn ((isTransmissionPermutation_toLib
+    _ _ _).mp hτ) b
 
 /- **Definition 5.1** (unlabeled) — marked point automorphism.
 
@@ -2052,7 +2075,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_2_2
     {M : TwiceMarked} {D : CFDiv M.graph} {tau : ℤ → ℤ}
     (hTau : IsTransmissionPermutation M D tau) (a b : ℤ) :
     tau b = a ↔ swapTransmissionPermutation tau (-a) = -b := by
-  exact Bananas.sectionFive_swap_value_iff (M := toLibTM M) ((isTransmissionPermutation_toLib _ _ _).mp hTau) a b
+  exact Bananas.sectionFive_swap_value_iff (M := toLibTM M) ((isTransmissionPermutation_toLib _ _
+    _).mp hTau) a b
 
 /-- **Lemma 5.2** (`lem:mpIds`), part 3). Section 5.
 
@@ -2067,7 +2091,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_2_3
     IsTransmissionPermutation (mark G v u)
       (transmissionDualDivisor u v D) (rawInverse tau) := by
   exact (isTransmissionPermutation_toLib _ _ _).mpr
-    (Bananas.sectionFive_dual_transmission (G := toLib G) hconn u v ((isTransmissionPermutation_toLib _ _ _).mp hTau))
+    (Bananas.sectionFive_dual_transmission (G := toLib G) hconn u v
+      ((isTransmissionPermutation_toLib _ _ _).mp hTau))
 
 /-- **Lemma 5.2** (`lem:mpIds`), part 4). Section 5.
 
@@ -2085,7 +2110,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s5_lem5_2_4
       (mark H (phi.vertexEquiv u) (phi.vertexEquiv v))
       (phi.mapDiv D) tau := by
   exact (isTransmissionPermutation_toLib _ _ _).mpr
-    (Bananas.sectionFive_map_transmission (toLibIso phi) u v ((isTransmissionPermutation_toLib _ _ _).mp hTau))
+    (Bananas.sectionFive_map_transmission (toLibIso phi) u v ((isTransmissionPermutation_toLib _ _
+      _).mp hTau))
 
 /-- **Lemma 5.3** (`lem-tauSyms`), part 1). Section 5.
 
@@ -2256,7 +2282,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s6_thm6_6
   exact (onceMarkedBrillNoetherGeneral_toLib _ _).mpr
     (Bananas.onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission (toLib G)
       (toLib H) u x y v hGconn hHconn ((allSubmodular_toLib _).mp hGsub)
-      ((onceMarkedBrillNoetherGeneral_toLib _ _).mp hGgeneral) ((kGeneralTransmission_toLib _ _).mp hK) hbudget)
+      ((onceMarkedBrillNoetherGeneral_toLib _ _).mp hGgeneral) ((kGeneralTransmission_toLib _ _).mp
+        hK) hbudget)
 
 /-- The one-vertex specialization following Theorem 6.6 (unlabeled in the
 source). Section 6.

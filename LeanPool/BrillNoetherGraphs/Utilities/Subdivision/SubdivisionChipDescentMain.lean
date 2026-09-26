@@ -294,7 +294,8 @@ private theorem interior_chip_count {ι : Type*} [Fintype ι] (chips : ι → sp
 
 /-- At every coarse vertex, the rounded script loses at most the number of
 chips rounded to that vertex relative to the fine script at its image. -/
-theorem prin_roundedScript_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀ : CFDiv spec.graph)
+theorem prin_roundedScript_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀ : CFDiv
+    spec.graph)
     (σ : firingScript (spec.scale N hN).graph)
     (hσ : effective (spec.embed N hN D₀ + spec.fineChips N hN chips +
       prin (spec.scale N hN).graph σ))

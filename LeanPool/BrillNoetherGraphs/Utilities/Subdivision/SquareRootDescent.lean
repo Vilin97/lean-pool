@@ -248,7 +248,8 @@ private theorem exists_coarse_double_of_split {n p : ℕ} (spec : Spec n p) (N :
   refine ⟨(∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv spec.graph))
       + spec.coarseChips N (fun q : {i : ι // P i} × Fin 2 => (chips0 q.1).double q.2),
     ?_, ?_, ?_⟩
-  · have h₁ := effective_sum_one_chip (G := spec.graph) (fun q : {i : ι // ¬ P i} × Fin 2 => lefts q.1)
+  · have h₁ := effective_sum_one_chip (G := spec.graph)
+      (fun q : {i : ι // ¬ P i} × Fin 2 => lefts q.1)
     have h₂ := effective_sum_one_chip (G := spec.graph)
       (fun q : {i : ι // P i} × Fin 2 => ((chips0 q.1).double q.2).coarseVertex)
     exact fun v => add_nonneg (h₁ v) (h₂ v)
@@ -291,7 +292,8 @@ private theorem exists_coarse_double_of_split {n p : ℕ} (spec : Spec n p) (N :
       refine lt_of_le_of_lt (le_of_eq ?_) hbudget
       exact Finset.sum_congr rfl fun i _ => by rw [hfilter i]
     -- The fine divisor is the embedding of the padding plus the chips.
-    have hE : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv spec.graph))
+    have hE : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv
+      spec.graph))
         = ∑ q : {i : ι // ¬ P i} × Fin 2, oneChip (ys q.1.1) := by
       rw [embed_sum]
       exact Finset.sum_congr rfl fun q _ => by
@@ -302,7 +304,8 @@ private theorem exists_coarse_double_of_split {n p : ℕ} (spec : Spec n p) (N :
       unfold fineChips
       exact Finset.sum_congr rfl fun q _ => by
         rw [Chip.double_fineVertex, ← hchips q.1]
-    have hfine : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv spec.graph))
+    have hfine : spec.embed N hN (∑ q : {i : ι // ¬ P i} × Fin 2, (oneChip (lefts q.1) : CFDiv
+      spec.graph))
           + spec.fineChips N hN
             (fun q : {i : ι // P i} × Fin 2 => (chips0 q.1).double q.2)
         = (∑ i, oneChip (ys i)) + ∑ i, oneChip (ys i) := by

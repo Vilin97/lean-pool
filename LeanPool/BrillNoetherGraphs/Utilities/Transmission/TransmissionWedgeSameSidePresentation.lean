@@ -38,7 +38,8 @@ existence on its concrete vertex-wedge model. -/
     (p q : G.V) (tau : AspPerm) :
     TransmissionExists K (P.leftMap p) (P.leftMap q) tau ↔
       TransmissionExists (vertexWedge G H x y) (Sum.inl p) (Sum.inl q) tau := by
-  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using P.graphIso.transmissionExists_map_iff
+  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using
+    P.graphIso.transmissionExists_map_iff
     (Sum.inl p) (Sum.inl q) tau
 
 /-- A same-left factor profile gives a transmission witness on any graph
@@ -64,7 +65,8 @@ theorem satisfiesTransmission_map_wedgeAddDivisor_sameLeft_of_profile
   have hWedge :=
     (satisfiesTransmission_wedgeAddDivisor_sameLeft_iff_profile
       G H x y D E p q tau).mpr hProfile
-  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using P.graphIso.satisfiesTransmission_mapDiv
+  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using
+    P.graphIso.satisfiesTransmission_mapDiv
     (Sum.inl p) (Sum.inl q) tau (wedgeAddDivisor G H x y D E) hWedge
 
 /-- Same-right transmission existence on a presented graph is exactly
@@ -75,7 +77,8 @@ existence on its concrete vertex-wedge model. -/
     TransmissionExists K (P.rightMap p) (P.rightMap q) tau ↔
       TransmissionExists (vertexWedge G H x y)
         (wedgeRightVertex G H x y p) (wedgeRightVertex G H x y q) tau := by
-  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using P.graphIso.transmissionExists_map_iff
+  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using
+    P.graphIso.transmissionExists_map_iff
     (wedgeRightVertex G H x y p) (wedgeRightVertex G H x y q) tau
 
 /-- A same-right factor profile gives a transmission witness on any graph
@@ -101,7 +104,8 @@ theorem satisfiesTransmission_map_wedgeAddDivisor_sameRight_of_profile
   have hWedge :=
     (satisfiesTransmission_wedgeAddDivisor_sameRight_iff_profile
       G H x y D E p q tau).mpr hProfile
-  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using P.graphIso.satisfiesTransmission_mapDiv
+  simpa only [P.graphIso_apply_left, P.graphIso_apply_wedgeRightVertex] using
+    P.graphIso.satisfiesTransmission_mapDiv
     (wedgeRightVertex G H x y p) (wedgeRightVertex G H x y q) tau
       (wedgeAddDivisor G H x y D E) hWedge
 
