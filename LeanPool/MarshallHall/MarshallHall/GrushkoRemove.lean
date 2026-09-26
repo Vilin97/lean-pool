@@ -125,9 +125,9 @@ theorem factorMul_assoc (x y z : Sum G H)
       binarySumIndex (G := G) (H := H) y)
     (hyz : binarySumIndex (G := G) (H := H) y =
       binarySumIndex (G := G) (H := H) z)
-    (hleft : binarySumIndex (G := G) (H := H) (factorMul x y) =
+    (_hleft : binarySumIndex (G := G) (H := H) (factorMul x y) =
       binarySumIndex (G := G) (H := H) z)
-    (hright : binarySumIndex (G := G) (H := H) x =
+    (_hright : binarySumIndex (G := G) (H := H) x =
       binarySumIndex (G := G) (H := H) (factorMul y z)) :
     factorMul (factorMul x y) z =
       factorMul x (factorMul y z) := by

@@ -359,7 +359,7 @@ noncomputable def foldQuotientCodeEquivGeneral (a b : V) :
         exact (foldCode_eq_some_iff (a := a) (b := b) (v := e.1) e).mpr rfl
 
 /-- Identifies the folded vertex set with the surviving vertices plus the identified vertex. -/
-noncomputable def foldQuotientCodeEquiv {a b : V} (hab : a ≠ b) :
+noncomputable def foldQuotientCodeEquiv {a b : V} (_hab : a ≠ b) :
     foldVertex a b ≃ Option (deletedEdge V a b) := by
   exact foldQuotientCodeEquivGeneral a b
 
@@ -1077,7 +1077,7 @@ theorem foldSymmPathAvoid_of_geometricallySimple_general
 
 omit [Fintype V] in
 omit [Fintype V] [(a b : V) → Fintype (a ⟶ b)] in
-theorem foldSymmPathAvoid_of_geometricallySimple [Finite V]
+theorem foldSymmPathAvoid_of_geometricallySimple
     {a c b : Symmetrify V}
     (e : @Quiver.Hom (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) a c)
     (q : @Quiver.Path (Symmetrify V) (@Quiver.symmetrifyQuiver V qV) c b)
