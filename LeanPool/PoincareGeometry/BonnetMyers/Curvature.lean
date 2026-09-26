@@ -43,7 +43,8 @@ variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 local notation "TM" => (TangentSpace I : M → Type _)
 
-private noncomputable def curvMiddle
+/-- Fixing the first curvature argument gives a continuous bilinear map on tangent vectors. -/
+noncomputable def curvMiddle
     (cov : CovariantDerivative I E TM) [cov.ContMDiffCovariantDerivative 1]
     (x : M) (u : TM x) :
     TM x →L[ℝ] TM x →L[ℝ] TM x :=
@@ -63,7 +64,8 @@ private noncomputable def curvMiddle
         exact congrArg (fun L : TM x →ₗ[ℝ] TM x => L z)
           ((CovariantDerivative.curvatureTensor (cov := cov) x u).map_smul c v) }
 
-private noncomputable def curvOuter
+/-- The curvature tensor as a continuous linear map into continuous bilinear tangent maps. -/
+noncomputable def curvOuter
     (cov : CovariantDerivative I E TM) [cov.ContMDiffCovariantDerivative 1]
     (x : M) :
     TM x →L[ℝ] TM x →L[ℝ] TM x →L[ℝ] TM x :=

@@ -138,7 +138,7 @@ theorem hasDerivAt_mlieBracket_left_of_joint_contMDiffAt
           VectorField.lieBracketWithin_univ]
     all_goals rfl
   convert htransport' using 1 <;>
-    simp only [VectorField.mlieBracket, VectorField.mlieBracketWithin_apply,
+    simp only [← VectorField.mlieBracketWithin_univ, VectorField.mlieBracketWithin_apply,
       Set.preimage_univ, Set.univ_inter, Function.comp_def, U, Udot, V, L] <;> rfl
 
 

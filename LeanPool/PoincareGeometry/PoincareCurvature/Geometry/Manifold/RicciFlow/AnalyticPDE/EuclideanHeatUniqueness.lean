@@ -44,7 +44,8 @@ namespace FiniteParabolicC2AlphaBanach
 
 variable {n : ℕ} {t₀ T α : ℝ}
 
-private def coordinateUpdateDerivative (k : Fin n) : Fin n → ℝ :=
+/-- The unit coordinate vector giving the derivative of an update in coordinate `k`. -/
+def coordinateUpdateDerivative (k : Fin n) : Fin n → ℝ :=
   Pi.single k 1
 
 private theorem hasDerivAt_coordinateUpdate

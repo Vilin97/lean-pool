@@ -67,6 +67,12 @@ local notation "W" => (ι × ι → ℝ)
 @[reducible] local instance cutoffCommutatorSecondNormedSpace :
     NormedSpace ℝ (E →L[ℝ] E →L[ℝ] W) :=
   ContinuousLinearMap.toNormedSpace
+@[reducible] local instance cutoffCommutatorTwoFiberNormedAddCommGroup (x : M) :
+    NormedAddCommGroup (T₂ x) :=
+  CovariantDerivative.coordinateTwoFiberNormedAddCommGroup x
+@[reducible] local instance cutoffCommutatorTwoFiberNormedSpace (x : M) :
+    NormedSpace ℝ (T₂ x) :=
+  CovariantDerivative.coordinateTwoFiberNormedSpace x
 @[reducible] local instance cutoffCommutatorThreeModelNormedAddCommGroup :
     NormedAddCommGroup (E →L[ℝ] E →L[ℝ] E →L[ℝ] ℝ) :=
   CovariantDerivative.coordinateThreeModelNormedAddCommGroup

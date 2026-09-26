@@ -222,7 +222,8 @@ theorem exists_localTensorHeatSolution_with_initialTrace
           (I := I) p e b hxFrame hxChart hT hα hα1 P hsmall‖ *
           ‖q - P h‖ := by
   exact LinearParabolicParametrix.exists_solution_with_trace_of_rightInverse_zeroTrace
-    (FiniteParabolicC2AlphaBanach.initialTraceL hT hα) P
+    (FiniteParabolicC2AlphaBanach.initialTraceL
+      (X := E) (E := Fin d × Fin d → ℝ) (t₀ := t₀) (T := T) (α := α) hT hα) P
     (localTensorHeatSolutionL
       (I := I) p e b hxFrame hxChart hT hα hα1 P hsmall)
     (comp_localTensorHeatSolutionL

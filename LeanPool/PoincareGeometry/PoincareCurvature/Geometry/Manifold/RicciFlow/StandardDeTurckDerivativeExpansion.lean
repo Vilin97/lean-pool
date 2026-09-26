@@ -124,6 +124,7 @@ theorem mvfderiv_standardDeTurckVectorField_localFrameCoeff_apply_eq_sum_torsion
     have hderiv : mvfderiv (I := I) (C i j) x = mvfderiv (I := I) (K i j) x := by
       unfold mvfderiv
       rw [(hCK i j).eq_of_nhds, (hCK i j).mfderiv_eq]
+      rfl
     exact congrArg (fun L : TM x →L[ℝ] ℝ => L X) hderiv
   have hbase :=
     mvfderiv_standardDeTurckVectorField_localFrameCoeff_apply
