@@ -82,8 +82,7 @@ theorem machineBoolMatrixEntryAtUnary_mem_FP :
         (pair (List.replicate i true)
           (pair (List.replicate j true) (boolMatrixCode M))) =
       [M[i][j]] := by
-  simpa only [machineBoolMatrixEntryAtUnary, boolMatrixCode, boolVectorCode, boolElementCode] using
-    machineNestedMatrixEntryAtUnary_encode boolElementCode M i j hi hj
+  exact machineNestedMatrixEntryAtUnary_encode boolElementCode M i j hi hj
 
 /-- Input:
 `pair rowUnary (pair columnUnary (pair replacementBit boolMatrixCode))`. -/
@@ -102,8 +101,7 @@ theorem machineBoolMatrixUpdateAtUnary_mem_FP :
           (pair (List.replicate j true)
             (pair [replacement] (boolMatrixCode M)))) =
       boolMatrixCode (M.set i (M[i].set j replacement)) := by
-  simpa only [machineBoolMatrixUpdateAtUnary, boolMatrixCode, boolVectorCode, boolElementCode] using
-    machineNestedMatrixUpdateAtUnary_encode boolElementCode M i j replacement hi hj
+  exact machineNestedMatrixUpdateAtUnary_encode boolElementCode M i j replacement hi hj
 
 /-! ## Rational support queries -/
 
