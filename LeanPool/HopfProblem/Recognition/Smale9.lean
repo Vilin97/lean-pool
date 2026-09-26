@@ -1403,6 +1403,9 @@ private theorem MorseCancel.nativeBeltLevelArc_transverse {E M : Type*} [NormedA
   have hnormalDerivative :
     mfderiv 𝓘(ℝ, ℝ) 𝓘(ℝ, d.chart.NegativeCoordinates) (d.beltNormal ∘ γ) 0 = L := by
     rw [hgerm.mfderiv_eq', mfderiv_eq_fderiv, L.fderiv]
+    apply ContinuousLinearMap.ext
+    intro s
+    rfl
   have hγ :=
     (nativeBeltLevelArc_contMDiffOn S hf q u v).contMDiffAt
       (Ioo_mem_nhds (show (-1 : ℝ) < 0 by norm_num) (show (0 : ℝ) < 1 by norm_num))
