@@ -189,8 +189,7 @@ private lemma pair_enorm_tsum_le_B_sq {k : ℕ} (hk : 2 ≤ k)
       simpa only [pow_two, hvolume] using
         mul_le_mul' (eLpNorm_coord_le_B hk a i) (eLpNorm_coord_le_B hk a i')
 
-private lemma diagonal_enorm_tsum_le_B_sq (a : Fin 2 → ι → ℂ)
-    (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
+private lemma diagonal_enorm_tsum_le_B_sq (a : Fin 2 → ι → ℂ) :
     ‖(∑' j, a 0 j * a 1 j)‖ₑ ≤
       (B (by norm_num : 2 ≤ (2 : ℕ)) a) ^ 2 := by
   exact pair_enorm_tsum_le_B_sq (by norm_num) a 0 1
@@ -212,7 +211,7 @@ private lemma pointwise_estimate_normalized_base (a : Fin 2 → ι → ℂ)
       rw [Q_two_sub_prod_eq_neg_diagonal a ha]
       simp
     _ ≤ (B (by norm_num : 2 ≤ (2 : ℕ)) a) ^ 2 :=
-      diagonal_enorm_tsum_le_B_sq a ha
+      diagonal_enorm_tsum_le_B_sq a
     _ ≤ 1 := by
       calc
         (B (by norm_num : 2 ≤ (2 : ℕ)) a) ^ 2 ≤ (1 : ENNReal) ^ 2 :=
@@ -557,7 +556,7 @@ private lemma sum_Q_collision_eq_tsum {k : ℕ}
         simp
 
 omit [Countable ι] in
-private lemma Q_succ_recursive {k : ℕ} (_hk : 1 ≤ k)
+private lemma Q_succ_recursive {k : ℕ}
     (a : Fin (k + 1) → ι → ℂ)
     (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
     Q a = Q (initFamily a) * s (a (Fin.last k)) -
@@ -628,7 +627,7 @@ private lemma Q_succ_recursive {k : ℕ} (_hk : 1 ≤ k)
     simp
 
 omit [Countable ι] in
-private lemma collisionFamily_summable {k : ℕ} (_hk : 1 ≤ k)
+private lemma collisionFamily_summable {k : ℕ}
     (a : Fin (k + 1) → ι → ℂ)
     (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) (i : Fin k) :
     ∀ t, Summable (fun j ↦ ‖collisionFamily a i t j‖) := by
@@ -647,7 +646,6 @@ most 1. This is the Cauchy-Schwarz line in the induction step.
 -/
 private lemma collision_sum_enorm_le_one {k : ℕ} (hk : 2 ≤ k)
     (a : Fin (k + 1) → ι → ℂ)
-    (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
     (hB : B (by omega : 2 ≤ k + 1) a ≤ 1) (i : Fin k) :
     ‖s (fun j ↦ a (Fin.castSucc i) j * a (Fin.last k) j)‖ₑ ≤ 1 := by
   calc
@@ -723,7 +721,6 @@ private lemma B_initFamily_le_one {k : ℕ} (hk : 2 ≤ k)
 omit [Countable ι] in
 private lemma B_collisionFamily_le_one {k : ℕ} (hk : 2 ≤ k)
     (a : Fin (k + 1) → ι → ℂ)
-    (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
     (hB : B (by omega : 2 ≤ k + 1) a ≤ 1) (i : Fin k) :
     B hk (collisionFamily a i) ≤ 1 := by
   let hk1 : 2 ≤ k + 1 := by omega
@@ -762,14 +759,13 @@ private lemma A_initFamily_le_step_max {k : ℕ} (hk : 2 ≤ k)
 
 private lemma A_collisionFamily_le_step_max {k : ℕ} (hk : 2 ≤ k)
     (a : Fin (k + 1) → ι → ℂ)
-    (ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
     (hB : B (by omega : 2 ≤ k + 1) a ≤ 1) (i : Fin k) :
     A hk (collisionFamily a i) ≤ max 1 (A (by omega : 2 ≤ k + 1) a) := by
   have hcollision_real :
       ‖s (fun j ↦ a (Fin.castSucc i) j * a (Fin.last k) j)‖ ≤ (1 : ℝ) := by
     rw [← show ‖(1 : ℂ)‖ = (1 : ℝ) by norm_num]
     rw [← enorm_le_iff_norm_le]
-    simpa using collision_sum_enorm_le_one hk a ha hB i
+    simpa using collision_sum_enorm_le_one hk a hB i
   unfold A
   rw [← ENNReal.ofReal_one, ← ENNReal.ofReal_max]
   apply ENNReal.ofReal_le_ofReal
@@ -791,7 +787,6 @@ private lemma A_collisionFamily_le_step_max {k : ℕ} (hk : 2 ≤ k)
 
 private lemma collision_product_sums_bound {k : ℕ} (hk : 2 ≤ k)
     (a : Fin (k + 1) → ι → ℂ)
-    (ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
     (hB : B (by omega : 2 ≤ k + 1) a ≤ 1) (i : Fin k) :
     ‖∏ t, s (collisionFamily a i t)‖ₑ ≤
       (max 1 (A (by omega : 2 ≤ k + 1) a)) ^ (k - 1) := by
@@ -807,7 +802,7 @@ private lemma collision_product_sums_bound {k : ℕ} (hk : 2 ≤ k)
       hraw.trans (le_max_right _ _)
   have hcollision :
       ‖s (collisionFamily a i i)‖ₑ ≤ 1 := by
-    simpa [collisionFamily] using collision_sum_enorm_le_one hk a ha hB i
+    simpa [collisionFamily] using collision_sum_enorm_le_one hk a hB i
   have hprod_erase :
       (∏ t ∈ Finset.univ.erase i, ‖s (collisionFamily a i t)‖ₑ) ≤
         M ^ (k - 1) := by
@@ -846,12 +841,12 @@ private lemma collision_error_bound_normalized {k : ℕ} (hk : 2 ≤ k)
       pointwiseConstant k *
         (max 1 (A (by omega : 2 ≤ k + 1) a)) ^ (k - 2) := by
   have hih := ih (collisionFamily a i)
-    (collisionFamily_summable (by omega : 1 ≤ k) a ha i)
-    (B_collisionFamily_le_one hk a ha hB i)
+    (collisionFamily_summable a ha i)
+    (B_collisionFamily_le_one hk a hB i)
   have hA :
       max 1 (A hk (collisionFamily a i)) ≤
         max 1 (A (by omega : 2 ≤ k + 1) a) := by
-    exact max_le (le_max_left _ _) (A_collisionFamily_le_step_max hk a ha hB i)
+    exact max_le (le_max_left _ _) (A_collisionFamily_le_step_max hk a hB i)
   calc
     ‖Q (collisionFamily a i) - ∏ t, s (collisionFamily a i t)‖ₑ
         ≤ pointwiseConstant k * (max 1 (A hk (collisionFamily a i))) ^ (k - 2) := by
@@ -877,7 +872,7 @@ private lemma collision_Q_bound_normalized {k : ℕ} (hk : 2 ≤ k)
       ‖Q (collisionFamily a i) - P‖ₑ ≤ pointwiseConstant k * M ^ (k - 2) := by
     simpa [M, P] using collision_error_bound_normalized hk ih a ha hB i
   have hprod : ‖P‖ₑ ≤ M ^ (k - 1) := by
-    simpa [M, P] using collision_product_sums_bound hk a ha hB i
+    simpa [M, P] using collision_product_sums_bound hk a hB i
   have hM : 1 ≤ M := le_max_left _ _
   have hpow : M ^ (k - 2) ≤ M ^ (k - 1) :=
     pow_le_pow_right₀ hM (by omega)
@@ -927,7 +922,7 @@ private lemma normalized_step_error_bound {k : ℕ} (hk : 2 ≤ k)
     rw [Fin.prod_univ_castSucc]
   have hmain : Q a - ∏ i, s (a i) = E * L - Csum := by
     dsimp [E, L, Csum]
-    rw [Q_succ_recursive (by omega : 1 ≤ k) a ha, hprod_split]
+    rw [Q_succ_recursive a ha, hprod_split]
     ring
   have hinit_error :
       ‖E‖ₑ ≤ pointwiseConstant k * M ^ (k - 2) := by
@@ -1056,7 +1051,7 @@ private lemma eLpNorm_rescaleFamily_le (hk : 2 ≤ k)
 
 omit [Countable ι] in
 private lemma B_rescaleFamily_le_one (hk : 2 ≤ k)
-    (a : Fin k → ι → ℂ) (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
+    (a : Fin k → ι → ℂ)
     (hB0 : B hk a ≠ 0) :
     B hk (rescaleFamily hk a) ≤ 1 := by
   by_cases htop : B hk a = ⊤
@@ -1101,19 +1096,19 @@ private lemma B_rescaleFamily_le_one (hk : 2 ≤ k)
 
 omit [Countable ι] in
 private lemma s_rescaleFamily (hk : 2 ≤ k)
-    (a : Fin k → ι → ℂ) (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) (i : Fin k) :
+    (a : Fin k → ι → ℂ) (i : Fin k) :
     s (rescaleFamily hk a i) = ((B hk a).toReal : ℂ)⁻¹ * s (a i) := by
   simp [s, rescaleFamily, smul_eq_mul, tsum_mul_left]
 
 omit [Countable ι] in
 private lemma prod_s_rescaleFamily (hk : 2 ≤ k)
-    (a : Fin k → ι → ℂ) (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
+    (a : Fin k → ι → ℂ) :
     (∏ i, s (rescaleFamily hk a i)) =
       ((B hk a).toReal : ℂ)⁻¹ ^ k * ∏ i, s (a i) := by
   calc
     (∏ i, s (rescaleFamily hk a i))
         = ∏ i : Fin k, ((B hk a).toReal : ℂ)⁻¹ * s (a i) := by
-      simp [s_rescaleFamily hk a ha]
+      simp [s_rescaleFamily hk a]
     _ = (∏ _i : Fin k, ((B hk a).toReal : ℂ)⁻¹) * ∏ i, s (a i) := by
       rw [Finset.prod_mul_distrib]
     _ = ((B hk a).toReal : ℂ)⁻¹ ^ k * ∏ i, s (a i) := by
@@ -1121,7 +1116,7 @@ private lemma prod_s_rescaleFamily (hk : 2 ≤ k)
 
 omit [Countable ι] in
 private lemma Q_rescaleFamily (hk : 2 ≤ k)
-    (a : Fin k → ι → ℂ) (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
+    (a : Fin k → ι → ℂ) :
     Q (rescaleFamily hk a) =
       ((B hk a).toReal : ℂ)⁻¹ ^ k * Q a := by
   let c : ℂ := ((B hk a).toReal : ℂ)⁻¹
@@ -1160,7 +1155,7 @@ private lemma B_mul_A_rescaleFamily_le_A (hk : 2 ≤ k)
     calc
       ‖s (rescaleFamily hk a i)‖ =
           ‖(((B hk a).toReal : ℂ)⁻¹ * s (a i))‖ := by
-        rw [s_rescaleFamily hk a ha i]
+        rw [s_rescaleFamily hk a i]
       _ = ‖(((B hk a).toReal : ℂ)⁻¹)‖ * ‖s (a i)‖ := by
         rw [norm_mul]
       _ = ((B hk a).toReal)⁻¹ * ‖s (a i)‖ := by
@@ -1208,7 +1203,7 @@ private lemma rescale_Q_sub_prod_enorm (hk : 2 ≤ k)
       Q (rescaleFamily hk a) - ∏ i, s (rescaleFamily hk a i) =
         c ^ k * (Q a - ∏ i, s (a i)) := by
     dsimp [c]
-    rw [Q_rescaleFamily hk a ha, prod_s_rescaleFamily hk a ha]
+    rw [Q_rescaleFamily hk a, prod_s_rescaleFamily hk a]
     ring
   rw [hscaled, enorm_mul, enorm_pow, hc_enorm]
   rw [← mul_assoc]
@@ -1261,7 +1256,7 @@ private lemma rescale_normalized_bound_le_original (hk : 2 ≤ k)
       ring_nf
 
 private lemma pointwise_estimate_of_B_eq_zero (hk : 2 ≤ k)
-    (a : Fin k → ι → ℂ) (_ha : ∀ i, Summable (fun j ↦ ‖a i j‖))
+    (a : Fin k → ι → ℂ)
     (hB0 : B hk a = 0) :
     ‖Q a - ∏ i, s (a i)‖ₑ ≤ pointwiseBound hk a := by
   have hk0 : k ≠ 0 := by omega
@@ -1303,10 +1298,10 @@ private lemma pointwise_estimate_of_normalized (hk : 2 ≤ k)
     (a : Fin k → ι → ℂ) (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) :
     ‖Q a - ∏ i, s (a i)‖ₑ ≤ pointwiseBound hk a := by
   by_cases hB0 : B hk a = 0
-  · exact pointwise_estimate_of_B_eq_zero hk a ha hB0
+  · exact pointwise_estimate_of_B_eq_zero hk a hB0
   · exact pointwise_estimate_scale_back hk a ha hB0 <|
       hNorm (rescaleFamily hk a) (rescaleFamily_summable hk a ha)
-        (B_rescaleFamily_le_one hk a ha hB0)
+        (B_rescaleFamily_le_one hk a hB0)
 
 theorem pointwise_estimate (hk : 2 ≤ k) (a : Fin k → ι → ℂ)
   (ha : ∀ i, Summable (fun j ↦ ‖a i j‖)) : ‖Q a - ∏ i, s (a i)‖ₑ ≤

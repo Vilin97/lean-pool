@@ -461,8 +461,7 @@ private lemma aemeasurable_sqfct_fintype {κ : Type*} [Finite κ] {g : κ → α
     rw [sqfct_fintype]
 
 private lemma eLpNorm_tsum_pow_eq_lintegral [Finite ι] {f : ι → α → ℂ}
-    (hr : 1 ≤ r) (_hf : TypeIVSuperorthogonal μ f r)
-    (_hsq : MemLp (sqfct f) (2 * r) μ) :
+    (hr : 1 ≤ r) (_hf : TypeIVSuperorthogonal μ f r) :
     eLpNorm (∑' j, f j) (2 * r) μ ^ ((2 * r : ℕ) : ℝ) =
       ∫⁻ x, ‖(∑' j, f j) x‖ₑ ^ ((2 * r : ℕ) : ℝ) ∂μ := by
   let := Fintype.ofFinite ι
@@ -504,10 +503,10 @@ private lemma eLpNorm_sqfct_pow_eq_lintegral [Finite ι] {f : ι → α → ℂ}
             rw [hbase]
 
 private lemma eLpNorm_tsum_pow_eq_lintegral_nat [Finite ι] {f : ι → α → ℂ}
-    (hr : 1 ≤ r) (hf : TypeIVSuperorthogonal μ f r) (hsq : MemLp (sqfct f) (2 * r) μ) :
+    (hr : 1 ≤ r) (hf : TypeIVSuperorthogonal μ f r) :
     eLpNorm (∑' j, f j) (2 * r) μ ^ ((2 * r : ℕ) : ℝ) =
       ∫⁻ x, ‖(∑' j, f j) x‖ₑ ^ (2 * r) ∂μ := by
-  rw [eLpNorm_tsum_pow_eq_lintegral (μ := μ) hr hf hsq]
+  rw [eLpNorm_tsum_pow_eq_lintegral (μ := μ) hr hf]
   apply lintegral_congr_ae
   exact Filter.Eventually.of_forall fun x ↦ by
     change ‖(∑' j, f j) x‖ₑ ^ ((2 * r : ℕ) : ℝ) =
@@ -676,13 +675,13 @@ private lemma eLpNorm_tsum_power_le [Finite ι] {f : ι → α → ℂ}
       _ = (M ^ ((2 * r : ℕ) : ℝ)) ^ (1 / (r : ℝ)) *
             (N ^ ((2 * r : ℕ) : ℝ)) ^ (1 - 1 / (r : ℝ)) := by
             rw [← eLpNorm_sqfct_pow_eq_lintegral_nat (μ := μ) (f := f) hf.measurable hr]
-            rw [← eLpNorm_tsum_pow_eq_lintegral_nat (μ := μ) hr hf hsq]
+            rw [← eLpNorm_tsum_pow_eq_lintegral_nat (μ := μ) hr hf]
       _ = M ^ 2 * N ^ (2 * r - 2) := by
             rw [ennreal_rpow_two_mul_inv hr M, ennreal_rpow_two_mul_one_sub_inv hr N]
   calc
     eLpNorm (∑' j, f j) (2 * r) μ ^ ((2 * r : ℕ) : ℝ)
         = ∫⁻ x, ‖(∑' j, f j) x‖ₑ ^ ((2 * r : ℕ) : ℝ) ∂μ := by
-          rw [eLpNorm_tsum_pow_eq_lintegral (μ := μ) hr hf hsq]
+          rw [eLpNorm_tsum_pow_eq_lintegral (μ := μ) hr hf]
     _ ≤ ∫⁻ x, (((2 * r)! - 1 : ENNReal) * (ENNReal.ofReal (sqfct f x)) ^ 2 *
         (max ‖(∑' j, f j) x‖ₑ (ENNReal.ofReal (sqfct f x))) ^ (2 * r - 2)) ∂μ :=
           lintegral_sum_norm_pow_le_pointwise_bound (μ := μ) hr hf hsq
@@ -827,7 +826,7 @@ private lemma eLpNorm_tsum_le_sqfct_of_one [Finite ι] {f : ι → α → ℂ}
     calc
       eLpNorm (∑' j, f j) (2 * ((1 : ℕ) : ENNReal)) μ ^ ((2 * 1 : ℕ) : ℝ)
           = ∫⁻ x, ‖(∑' j, f j) x‖ₑ ^ ((2 * 1 : ℕ) : ℝ) ∂μ := by
-            rw [eLpNorm_tsum_pow_eq_lintegral (μ := μ) (r := 1) (by norm_num) hf hsq']
+            rw [eLpNorm_tsum_pow_eq_lintegral (μ := μ) (r := 1) (by norm_num) hf]
       _ ≤ ∫⁻ x, (ENNReal.ofReal (sqfct f x)) ^ ((2 * 1 : ℕ) : ℝ) ∂μ := hpoint
       _ = eLpNorm (sqfct f) (2 * ((1 : ℕ) : ENNReal)) μ ^ ((2 * 1 : ℕ) : ℝ) := by
             rw [← eLpNorm_sqfct_pow_eq_lintegral (μ := μ) (f := f) (r := 1) hf.measurable (by
