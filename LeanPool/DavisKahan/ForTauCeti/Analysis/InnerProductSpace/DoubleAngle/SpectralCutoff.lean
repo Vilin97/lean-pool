@@ -121,8 +121,8 @@ noncomputable def spectralCutoff (hA : IsSelfAdjoint A) (c : ℝ) {T : ℝ}
     rw [LinearPMap.mem_specRange_iff]
     exact LinearPMap.specProjection_apply_specProjection_of_subset hA
       measurableSet_Iic measurableSet_Icc (Icc_neg_subset_Iic c T) v
-  mem_domain := fun v =>
-    LinearPMap.mem_domain_of_mem_specRange_of_bounded hA _ measurableSet_Icc
+  mem_domain := fun v => by
+    exact LinearPMap.mem_domain_of_mem_specRange_of_bounded hA _ measurableSet_Icc
       (fun _ hs => abs_le_of_mem_Icc_neg hcT hs)
       (LinearPMap.specProjection_mem_specRange hA _ measurableSet_Icc v)
   norm_apply_le := fun v => by

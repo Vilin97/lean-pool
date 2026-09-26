@@ -9,6 +9,7 @@ module
 public import LeanPool.DavisKahan.DavisKahan.SpectralTheory.FormMethod.ShiftedBeamRealization
 public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveCompact
 public import LeanPool.DavisKahan.ForTauCeti.MeasureTheory.IntervalSecondPrimitiveDeriv
+public import Mathlib.Analysis.Calculus.Deriv.Polynomial
 public import Mathlib.Analysis.InnerProductSpace.ProdL2
 public import Mathlib.Tactic
 

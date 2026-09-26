@@ -154,7 +154,7 @@ variable (U V : Submodule ℂ E)
 
 /-- Abbreviation for the two-projection operator `t = P_U P_V P_U`, whose
 spectrum carries the squared principal cosines. -/
-private noncomputable def crossT : E →L[ℂ] E :=
+noncomputable def crossT : E →L[ℂ] E :=
   U.starProjection * V.starProjection * U.starProjection
 
 omit [CompleteSpace E] in

@@ -61,7 +61,7 @@ noncomputable def spectraBoundedTruncation
     (A : H →ₗ.[ℂ] H)
     (hA : IsSelfAdjoint A) (τ : ℝ) : H →L[ℂ] H :=
   TauCeti.LinearPMap.truncation hA (Set.Icc (-τ) τ) measurableSet_Icc
-    (abs_le_max_zero_of_mem_Icc τ)
+    (M := max 0 τ) (by exact abs_le_max_zero_of_mem_Icc τ)
 
 /-- Bounded truncations are symmetric: the symbol is real. -/
 theorem spectraBoundedTruncation_isSymmetric

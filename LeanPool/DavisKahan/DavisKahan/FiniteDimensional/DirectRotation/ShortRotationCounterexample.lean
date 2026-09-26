@@ -372,7 +372,7 @@ private theorem orthonormal_mv : Orthonormal ℝ mv := by
 
 /-- The family as an orthonormal basis. -/
 noncomputable def mbasis : OrthonormalBasis (Fin 4) ℝ E4 :=
-  (basisOfLinearIndependentOfCardEqFinrank (by exact orthonormal_mv.linearIndependent)
+  (basisOfLinearIndependentOfCardEqFinrank (b := mv) (by exact orthonormal_mv.linearIndependent)
     (by simp [])).toOrthonormalBasis
     (by
       rw [coe_basisOfLinearIndependentOfCardEqFinrank]
