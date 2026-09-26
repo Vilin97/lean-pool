@@ -4089,13 +4089,13 @@ private theorem Smale.StripNormalData.normalDetector_eq_native {A B Z E M N : Ty
     Ψ (Ψ.symm (d.chart (Smale.StripCoordinates.center t))) =
       d.chart (Smale.StripCoordinates.center t) :=
     Ψ.right_inv' htarget
-  have hq' :
-    MDifferentiableAt 𝓘(ℝ, E) 𝓘(ℝ, N) q
-      (Ψ (Ψ.symm (d.chart (Smale.StripCoordinates.center t)))) :=
-    hinv.symm ▸ hq.mdifferentiableAt (by simp)
   unfold normalDetector
-  simpa only [mfderiv_eq_fderiv, hinv] using!
-    (mfderiv_comp _ hq' (Ψ.mdifferentiableAt (by simp) (Ψ.map_target' htarget)))
+  apply ContinuousLinearMap.ext
+  intro v
+  simpa only [mfderiv_eq_fderiv] using!
+    (mfderiv_comp_apply_of_eq (Ψ.symm (d.chart (Smale.StripCoordinates.center t)))
+      (hq.mdifferentiableAt (by simp))
+      (Ψ.mdifferentiableAt (by simp) (Ψ.map_target' htarget)) hinv v)
 
 private theorem Smale.StripNormalData.surjective_normalDetector {A B Z E M N : Type*}
     [NormedAddCommGroup A] [NormedSpace ℝ A] [NormedAddCommGroup B] [NormedSpace ℝ B]
