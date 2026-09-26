@@ -391,7 +391,8 @@ lemma relu_interval_ioo {U : Set NNReal} {a b : Real} (h : Ioo a b = relu ⁻¹'
   (relu '' (Set.Ioo a b) = U) := by
   apply subset_antisymm
   · rintro _ ⟨y, hy, rfl⟩
-    exact h ▸ hy
+    rw [h] at hy
+    exact hy
   · intro x hx
     refine ⟨(x : ℝ), ?_, relu_proj⟩
     rw [h]
