@@ -481,8 +481,8 @@ complex image is the minus family `Rm` — is a Salem number, provided
 `tau` avoids the two integer degeneracies `tau ∈ ℤ` and
 `tau + 1/tau ∈ ℤ`: it is an algebraic integer, its conjugates lie in
 the closed unit disk, at least one lies ON the circle, and `1/tau` is
-among them.  Verbatim port of `PdtSalemArith.salem_certificate`; all
-degenerate exclusions run through the same Gauss step. -/
+among them.  Specializes `SalemArith.salem_certificate_of_root_trichotomy`;
+the shared proof excludes the degeneracies through the Gauss step. -/
 theorem salem_certificate_minus
     (Pz : Polynomial ℤ) (hmonic : Pz.Monic)
     (alpha : ℝ) (halpha : 1 < alpha)
