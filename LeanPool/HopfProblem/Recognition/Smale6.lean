@@ -3909,8 +3909,11 @@ private theorem Smale.NativeEuclideanEmbedding.SmoothRetraction.mfderiv_sheetCoo
     fderiv ℝ (e.toFun ∘ g) 0 =
       (mfderiv 𝓘(ℝ, E) (𝓡 e.ambientDimension) e.toFun (f 0)).comp (mfderiv 𝓘(ℝ, Z) 𝓘(ℝ, E) g 0) :=
     by
-    simpa only [mvfderiv_eq_fderiv, hzero] using!
-      (mvfderiv_comp 0 (e.smooth.mdifferentiableAt (by simp)) (hg.mdifferentiableAt (by simp)))
+    apply ContinuousLinearMap.ext
+    intro v
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp_apply_of_eq 0 (e.smooth.mdifferentiableAt (by simp))
+        (hg.mdifferentiableAt (by simp)) hzero v)
   rw [sheetCoordinates, mfderiv_comp (0, 0) hr hsum.differentiableAt.mdifferentiableAt,
     mfderiv_eq_fderiv, hsum.fderiv, hbase, hdf, hdg]
   apply ContinuousLinearMap.ext
@@ -5238,18 +5241,16 @@ private theorem Smale.StripNormalData.injective_normalFrame_of_strip_germ {A B Z
   have hnormal :=
     (Smale.TransverseCoordinates.contMDiffOn_normalCoordinate Ψ).contMDiffAt
       (Ψ.open_target.mem_nhds htarget)
-  have hnormal' :
-    ContMDiffAt 𝓘(ℝ, E) 𝓘(ℝ, Z) ∞ (Smale.TransverseCoordinates.normalCoordinate Ψ)
-      (d.chart (Smale.StripCoordinates.center t)) := by
-    rw [← hfp]
-    exact hnormal
   have htransition :
     fderiv ℝ (Smale.TransverseCoordinates.normalCoordinate Ψ ∘ d.chart)
         (Smale.StripCoordinates.center t) =
       Q.comp T := by
-    simpa only [mvfderiv_eq_fderiv, ← hfp] using!
-      (mvfderiv_comp (Smale.StripCoordinates.center t) (hnormal'.mdifferentiableAt (by simp))
-        (d.chart.mdifferentiableAt (by simp) (d.line ht)))
+    apply ContinuousLinearMap.ext
+    intro v
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp_apply_of_eq (Smale.StripCoordinates.center t)
+        (hnormal.mdifferentiableAt (by simp))
+        (d.chart.mdifferentiableAt (by simp) (d.line ht)) hfp.symm v)
   change
     Function.Injective
       ((fderiv ℝ (Smale.TransverseCoordinates.normalCoordinate Ψ ∘ d.chart)
