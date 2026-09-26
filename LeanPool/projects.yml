@@ -10307,6 +10307,103 @@ projects:
     msc:
       - '12F05'
       - '13F25'
+  - slug: nemytskii-lebesgue
+    title: Nemytskii operators on Lebesgue spaces
+    summary: >-
+      Develops superposition operators induced by Caratheodory functions:
+      measurability, Lp-to-Lq growth bounds and sequential continuity,
+      Lipschitz estimates, monotonicity and coercivity, and Frechet remainder
+      estimates. For Lebesgue measure on the real line and finite-dimensional
+      real fibers, characterizes when every Lp input has an Lq output by the
+      standard integrable-envelope growth condition, for 1 <= p,q < infinity.
+      First-order remainder estimates on arbitrary measure spaces assume a
+      Caratheodory derivative with the stated Holder-compatible growth.
+      The integral-functional result bounds the integrated remainder and
+      proves integrability of the linearized integrand; it does not assert
+      integrability of the original integrand without its separate growth
+      hypotheses. Caratheodory here requires strongly measurable sections
+      and almost-everywhere continuity in the fiber variable.
+    branch: nonlinear functional analysis
+    entry_module: LeanPool.NemytskiiLebesgue
+    authors:
+      - Petr Girg
+      - Petr Nečesal
+      - Martin Dvořák
+      - Jakub Psutka
+    source:
+      title: Nemytskii operators on Lebesgue spaces
+      url: https://github.com/madvorak/nemytskii-lebesgue/tree/d276c27a1e3ebbd9eb09f25243b5e9808ca168d7
+      github_repo: madvorak/nemytskii-lebesgue
+      commit: d276c27a1e3ebbd9eb09f25243b5e9808ca168d7
+      completion_commit: 12e914c8b05694f2ea339a27c4af3d0bdf068922
+      release: https://github.com/madvorak/nemytskii-lebesgue/releases/tag/v4.33.1
+      completion_date: '2026-09-21T13:49:28Z'
+      dependencies:
+        - url: https://github.com/madvorak/utilities-zcu/tree/49f60eacb1401f82358b7d66ee447ea7f2fdebf1
+          license: Apache-2.0
+          scope: UtilitiesZCU/Basic.lean
+      provenance_note: >-
+        Upstream credits the four listed authors. Its README and available
+        commit history contain no AI disclosure; this is evidence under the
+        repository's human-provenance rubric, not proof of tool non-use.
+        The imported version includes substantial AI-assisted Mathlib porting
+        and proof refactoring by OpenAI Codex, so it is recorded as mixed.
+    license: Apache-2.0
+    status: verified
+    provenance: mix
+    main_declarations:
+      - NemytskiiLebesgue.IsCaratheodory.memLp_nemytskii_volume_iff_growth
+    main_results:
+      - declaration: NemytskiiLebesgue.IsCaratheodory.memLp_nemytskii_volume_iff_growth
+        informal: >-
+          For f from R times R^m to R^k with strongly measurable sections and
+          almost-everywhere continuous fibers, and 1 <= p,q < infinity,
+          every Lp input gives an Lq output if and only if there exist an Lq
+          real envelope a and a nonnegative constant C such that almost
+          everywhere, simultaneously for every fiber vector xi,
+          norm(f(x,xi)) <= abs(a(x)) + C * norm(xi)^(p/q).
+        source_ref: Upstream NemytskiiLebesgue/ConverseImplication.lean.
+      - declaration: NemytskiiLebesgue.IsCaratheodory.nemytskii_seqContinuous_of_memLp_of_growth_real
+        informal: >-
+          On any measure space, the same Caratheodory and growth assumptions
+          imply that a sequence of Lp functions converging in Lp to an Lp
+          function has superposition images converging in Lq, for finite
+          exponents p,q at least one and finite-dimensional real fibers.
+        source_ref: Upstream NemytskiiLebesgue/Continuity.lean.
+      - declaration: NemytskiiLebesgue.IsCaratheodory.eLpNorm_frechet_remainder_le_ofReal_mul_eLpNorm
+        informal: >-
+          On a measure space, suppose f and its fiber derivative f'
+          are Caratheodory, f' is the Frechet derivative at every fiber point
+          almost everywhere, p,r >= 1 satisfy 1/q = 1/r + 1/p, and f' is
+          bounded by b + C * norm(xi)^(p/r) with nonnegative b in Lr and C > 0.
+          At each Lp function u, the Lq integral quantity (a quasi-norm when
+          q < 1) of the first-order remainder is at most epsilon times the
+          Lp norm of l whenever l is in Lp and
+          its Lp norm is sufficiently small.
+        source_ref: >-
+          Upstream NemytskiiLebesgue/Frechet.lean; generalized in this port
+          by removing an unused finite-measure assumption.
+      - declaration: NemytskiiLebesgue.IsCaratheodory.integralFunctional_frechet_deriv
+        informal: >-
+          On a measure space with finite-dimensional real inputs,
+          under Caratheodory assumptions on f and its fiber derivative f',
+          conjugate exponents p,q, and derivative growth b + C*norm(xi)^(p-1)
+          with nonnegative b in Lq and C > 0, the linearized integrand is
+          integrable for every Lp perturbation. The norm of the integral of
+          the first-order remainder is at most epsilon times the Lp norm of
+          the perturbation when that norm is sufficiently small.
+        source_ref: >-
+          Upstream NemytskiiLebesgue/IntegralFunctional.lean; generalized in
+          this port by removing an unused finite-measure assumption.
+    tags:
+      - nonlinear-analysis
+      - nemytskii-operators
+      - lebesgue-spaces
+      - differentiation
+    msc:
+      - 47H30
+      - 46E30
+      - 47J05
   - slug: uniform-sheafy-tate-domains-lean
     title: Uniform sheafy Tate rings that are not stably uniform
     summary: 'A Lean 4 formalisation of *Uniform sheafy Tate rings that are not stably
