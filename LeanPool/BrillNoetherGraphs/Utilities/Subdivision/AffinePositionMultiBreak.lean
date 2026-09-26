@@ -108,7 +108,7 @@ variable {m n p : ℕ}
 /-- An affine position code whose normalized coordinate is strictly interior
 decodes to the interior vertex one step below that coordinate. -/
 theorem decodeVertex_eq_interiorVertex
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -132,7 +132,7 @@ end Code
 
 /-! ## Geometry-only certificate carriers
 
-`ExplicitPotential.Certificate.Valid` bundles two unrelated things: the
+`ExplicitPotential.CertificateData.Valid` bundles two unrelated things: the
 *geometry* of the length cone (a loopless core and a cone which forces every
 segment to be positive) and the *interpolated-script* rank-one data
 (`alpha`, `beta`, `potential`, and the endpoint inequalities).  Only the
@@ -154,7 +154,7 @@ scripts are multi-break scripts. -/
 def certificate (core : ExplicitPotential.Core n p)
     (segment : Fin p → ExplicitPotential.AffineForm m)
     (cone : List (ExplicitPotential.AffineForm m)) :
-    ExplicitPotential.Certificate m n p where
+    ExplicitPotential.CertificateData m n p where
   core := core
   segment := segment
   divisor := fun _ => 1
@@ -212,7 +212,7 @@ theorem certificate_valid (core : ExplicitPotential.Core n p)
           if core.head edge = vertex then (0 : ℤ) else 0)) = 0
       simp
     rw [hContribution, add_zero]
-    unfold ExplicitPotential.Certificate.targetCoefficient
+    unfold ExplicitPotential.CertificateData.targetCoefficient
     by_cases hAnchor : vertex = anchor <;> simp [certificate, hAnchor]
   · intro edge
     exact Or.inr (hPositive edge)
@@ -220,14 +220,14 @@ theorem certificate_valid (core : ExplicitPotential.Core n p)
     constructor
     · left
       apply affineForm_eq_zero <;>
-        simp [ExplicitPotential.Certificate.lowerForm,
-          ExplicitPotential.Certificate.rise,
+        simp [ExplicitPotential.CertificateData.lowerForm,
+          ExplicitPotential.CertificateData.rise,
           ExplicitPotential.AffineForm.sub, ExplicitPotential.AffineForm.scale,
           certificate]
     · left
       apply affineForm_eq_zero <;>
-        simp [ExplicitPotential.Certificate.upperForm,
-          ExplicitPotential.Certificate.rise,
+        simp [ExplicitPotential.CertificateData.upperForm,
+          ExplicitPotential.CertificateData.rise,
           ExplicitPotential.AffineForm.sub, ExplicitPotential.AffineForm.scale,
           certificate]
 
@@ -247,23 +247,23 @@ namespace MultiCode
 variable {m n p d : ℕ}
 
 /-- Every code of the family has its two bound rows in the local cone. -/
-def BoundsCertified (certificate : ExplicitPotential.Certificate m n p)
+def BoundsCertified (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) : Prop :=
   ∀ index : Fin d, (family.code index).BoundsCertified certificate
 
 /-- Fail-closed executable bounds check for a whole family. -/
-def checkBounds (certificate : ExplicitPotential.Certificate m n p)
+def checkBounds (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) : Bool :=
   ExplicitPotential.allFin fun index => (family.code index).checkBounds certificate
 
 @[simp] theorem checkBounds_eq_true_iff
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) :
     family.checkBounds certificate = true ↔ family.BoundsCertified certificate := by
   simp [checkBounds, BoundsCertified]
 
 /-- The decoded subdivision vertex of one member of the family. -/
-def vertex (certificate : ExplicitPotential.Certificate m n p)
+def vertex (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -273,7 +273,7 @@ def vertex (certificate : ExplicitPotential.Certificate m n p)
     (hBounds index) hCone
 
 /-- The divisor named by a family of affine position codes. -/
-def divisorOf (certificate : ExplicitPotential.Certificate m n p)
+def divisorOf (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -283,7 +283,7 @@ def divisorOf (certificate : ExplicitPotential.Certificate m n p)
     oneChip (family.vertex certificate point core_nonempty hValid hBounds hCone index)
 
 theorem divisorOf_apply
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -322,7 +322,7 @@ theorem divisorOf_apply
 
 /-- The degree of a multi-code divisor is the number of codes. -/
 @[simp] theorem deg_divisorOf
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -335,7 +335,7 @@ theorem divisorOf_apply
 
 /-- A multi-code divisor is effective. -/
 theorem effective_divisorOf
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -348,7 +348,7 @@ theorem effective_divisorOf
 
 /-- A multi-code divisor vanishes at every vertex named by no code. -/
 theorem divisorOf_apply_eq_zero
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -372,7 +372,7 @@ theorem divisorOf_apply_eq_zero
 /-- A multi-code divisor carries exactly one chip at a vertex named by a
 single code. -/
 theorem divisorOf_apply_eq_one
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -404,7 +404,7 @@ pencils: `MultiBreakScript` supplies the individual `Reaches` witnesses, and
 the public core-vertex strong-separator theorem supplies all remaining
 subdivision vertices.  No stability hypothesis on the core is needed. -/
 theorem bnExists_of_reaches_coreVertices
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (family : MultiCode m p d) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : family.BoundsCertified certificate)
@@ -614,25 +614,25 @@ namespace SlopeScript
 variable {m n p b : ℕ}
 
 /-- Every break position of the script has its bound rows in the local cone. -/
-def BoundsCertified (certificate : ExplicitPotential.Certificate m n p)
+def BoundsCertified (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) : Prop :=
   ∀ index : Fin b, (script.entry index).position.BoundsCertified certificate
 
 /-- Fail-closed executable bounds check for a multi-break script. -/
-def checkBounds (certificate : ExplicitPotential.Certificate m n p)
+def checkBounds (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) : Bool :=
   ExplicitPotential.allFin fun index =>
     (script.entry index).position.checkBounds certificate
 
 @[simp] theorem checkBounds_eq_true_iff
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) :
     script.checkBounds certificate = true ↔ script.BoundsCertified certificate := by
   simp [checkBounds, BoundsCertified]
 
 /-- The concrete per-slot break list obtained by evaluating every affine
 break position at a length point. -/
-def breaks (certificate : ExplicitPotential.Certificate m n p)
+def breaks (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (point : Fin m → ℤ) (edge : Fin p) :
     List (ℕ × ℤ) :=
   (List.ofFn script.entry).filterMap fun item =>
@@ -643,7 +643,7 @@ def breaks (certificate : ExplicitPotential.Certificate m n p)
 /-- Every entry of a decoded break list comes from a named break of the
 script, on the named slot and at its decoded coordinate. -/
 theorem exists_of_mem_breaks
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (point : Fin m → ℤ) (edge : Fin p)
     {pair : ℕ × ℤ} (hMem : pair ∈ script.breaks certificate point edge) :
     ∃ index : Fin b,
@@ -664,7 +664,7 @@ theorem exists_of_mem_breaks
 /-- If no break of the script sits on `edge` at coordinate `coordinate`, then
 the decoded break list has no entry starting there. -/
 theorem notMem_start_of_no_break
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (point : Fin m → ℤ) (edge : Fin p)
     (coordinate : ℕ)
     (hAvoid : ∀ index : Fin b,
@@ -679,7 +679,7 @@ theorem notMem_start_of_no_break
 
 /-- The multi-break firing script on the concrete subdivision named by a
 length point. -/
-def firingScript (certificate : ExplicitPotential.Certificate m n p)
+def firingScript (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
@@ -689,7 +689,7 @@ def firingScript (certificate : ExplicitPotential.Certificate m n p)
     potential (script.breaks certificate point)
 
 /-- The closing condition for a multi-break script at one length point. -/
-def Balanced (certificate : ExplicitPotential.Certificate m n p)
+def Balanced (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) : Prop :=
@@ -699,7 +699,7 @@ def Balanced (certificate : ExplicitPotential.Certificate m n p)
 /-- The Laplacian of an affine-positioned multi-break script at an interior
 vertex is the jump of the decoded break list there. -/
 theorem prin_firingScript_interiorVertex
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -722,7 +722,7 @@ at every interior vertex which no break of the script names.  Together with
 `MultiCode.divisorOf_apply_eq_zero` this is the row-independent statement that
 lets a residual be checked at the finitely many named positions only. -/
 theorem prin_firingScript_interiorVertex_eq_zero
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -743,7 +743,7 @@ theorem prin_firingScript_interiorVertex_eq_zero
 /-- The Laplacian of an affine-positioned multi-break script at a core vertex
 is the usual endpoint-slope sum. -/
 theorem prin_firingScript_coreVertex
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)

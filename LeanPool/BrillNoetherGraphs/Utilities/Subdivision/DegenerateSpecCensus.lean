@@ -50,15 +50,12 @@ the concrete Finset `zeroSlots certificate point` — both decidable, both
 already what a census enumerates.
 `bnExists_on_degenerate_subdivision_of_validClosed_of_forestCensus`
 below is the resulting one-call wrapper, shaped to exactly match
-`ExplicitPotential.Certificate.bnExists_on_degenerate_subdivision_of_validClosed_of_zeroReach`'s
+`ExplicitPotential.CertificateData.bnExists_on_degenerate_subdivision_of_validClosed_of_zeroReach`'s
 conclusion.
 -/
 
 @[expose] public section
 
--- The `Certificate` structure deliberately lives inside a namespace that already
--- ends in `Certificate`; renaming either would ripple through every consumer.
--- Lean v4.33 added `linter.dupNamespace`, which flags exactly this shape.
 namespace Utilities.Certificate
 open Utilities.Certificate
 
@@ -68,7 +65,7 @@ open Finset ExplicitPotential ContractionForestCensusGeneral
 
 end Utilities.Certificate
 
-namespace Utilities.Certificate.ExplicitPotential.Certificate
+namespace Utilities.Certificate.ExplicitPotential.CertificateData
 open Utilities
 open Utilities.Certificate
 
@@ -76,7 +73,7 @@ open Utilities.Certificate
 open Utilities
 open Finset ExplicitPotential ContractionForestCensusGeneral
 open Utilities.Certificate.ExplicitPotential
-open Utilities.Certificate.ExplicitPotential.Certificate
+open Utilities.Certificate.ExplicitPotential.CertificateData
 
 variable {m n p : ℕ}
 
@@ -84,15 +81,15 @@ variable {m n p : ℕ}
 
 /-- The slots that vanish at `point`: exactly the `Finset` a contraction
 census classifies. -/
-def zeroSlots (certificate : Certificate m n p) (point : Fin m → ℤ) : Finset (Fin p) :=
+def zeroSlots (certificate : CertificateData m n p) (point : Fin m → ℤ) : Finset (Fin p) :=
   Finset.univ.filter (fun edge => certificate.segmentNat point edge = 0)
 
-@[simp] theorem mem_zeroSlots (certificate : Certificate m n p) (point : Fin m → ℤ)
+@[simp] theorem mem_zeroSlots (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (edge : Fin p) :
     edge ∈ certificate.zeroSlots point ↔ certificate.segmentNat point edge = 0 := by
   simp [zeroSlots]
 
-theorem not_mem_zeroSlots_of_pos (certificate : Certificate m n p) (point : Fin m → ℤ)
+theorem not_mem_zeroSlots_of_pos (certificate : CertificateData m n p) (point : Fin m → ℤ)
     {edge : Fin p} (hpos : 0 < certificate.segmentNat point edge) :
     edge ∉ certificate.zeroSlots point := by
   simp only [mem_zeroSlots]; omega
@@ -101,15 +98,15 @@ theorem not_mem_zeroSlots_of_pos (certificate : Certificate m n p) (point : Fin 
 
 /-- **The census-produced `rep`.** No row ever writes this by hand: it is the
 union-find component map of the vanishing-slot set. -/
-def censusRep (certificate : Certificate m n p) (point : Fin m → ℤ) : Fin n → Fin n :=
+def censusRep (certificate : CertificateData m n p) (point : Fin m → ℤ) : Fin n → Fin n :=
   compFold certificate.core (certificate.zeroSlots point)
 
-theorem censusRep_idem (certificate : Certificate m n p) (point : Fin m → ℤ) :
+theorem censusRep_idem (certificate : CertificateData m n p) (point : Fin m → ℤ) :
     ∀ v : Fin n, certificate.censusRep point (certificate.censusRep point v)
       = certificate.censusRep point v :=
   compFold_idem certificate.core (certificate.zeroSlots point)
 
-theorem censusRep_zero (certificate : Certificate m n p) (point : Fin m → ℤ) :
+theorem censusRep_zero (certificate : CertificateData m n p) (point : Fin m → ℤ) :
     ∀ edge : Fin p, certificate.segmentNat point edge = 0 →
       certificate.censusRep point (certificate.core.tail edge) =
         certificate.censusRep point (certificate.core.head edge) :=
@@ -117,7 +114,7 @@ theorem censusRep_zero (certificate : Certificate m n p) (point : Fin m → ℤ)
     compFold_tail_eq_head_of_mem certificate.core
       ((certificate.mem_zeroSlots point edge).mpr hzero)
 
-theorem censusRep_loopless (certificate : Certificate m n p) (point : Fin m → ℤ)
+theorem censusRep_loopless (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (hNotLoopy : ¬ IsLoopy certificate.core (certificate.zeroSlots point)) :
     ∀ edge : Fin p, 0 < certificate.segmentNat point edge →
       certificate.censusRep point (certificate.core.tail edge) ≠
@@ -126,7 +123,7 @@ theorem censusRep_loopless (certificate : Certificate m n p) (point : Fin m → 
     rep_loopless_of_not_isLoopy certificate.core hNotLoopy edge
       (certificate.not_mem_zeroSlots_of_pos point hpos)
 
-theorem censusRep_forest (certificate : Certificate m n p) (point : Fin m → ℤ)
+theorem censusRep_forest (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (hForest : IsForest certificate.core (certificate.zeroSlots point)) :
     (Finset.univ.image (certificate.censusRep point)).card
       + (Finset.univ.filter
@@ -137,7 +134,7 @@ theorem censusRep_forest (certificate : Certificate m n p) (point : Fin m → �
 
 /-- Direct adjacency along `zeroSlots` is exactly `ZeroLink`, pointwise: both
 say "some vanishing slot joins `u` and `v`, in either reading direction". -/
-theorem adjInList_edgeList_zeroSlots_iff_zeroLink (certificate : Certificate m n p)
+theorem adjInList_edgeList_zeroSlots_iff_zeroLink (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (u v : Fin n) :
     AdjInList certificate.core (edgeList (certificate.zeroSlots point)) u v ↔
       certificate.ZeroLink point u v := by
@@ -153,7 +150,7 @@ theorem adjInList_edgeList_zeroSlots_iff_zeroLink (certificate : Certificate m n
 /-- Reachability along `zeroSlots` is exactly `ZeroReach`: the
 reflexive-transitive closures of the two pointwise-equal relations above
 agree, by `Relation.ReflTransGen.mono` in both directions. -/
-theorem reachIn_zeroSlots_iff_zeroReach (certificate : Certificate m n p)
+theorem reachIn_zeroSlots_iff_zeroReach (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (u v : Fin n) :
     ReachIn certificate.core (certificate.zeroSlots point) u v ↔
       certificate.ZeroReach point u v := by
@@ -173,7 +170,7 @@ vanishing slots — the same spanning-forest fact `censusRep` is defined from,
 via `reachIn_self_compFold`, read through
 `reachIn_zeroSlots_iff_zeroReach`. No separate search: it falls out of
 `rep`'s own construction. -/
-theorem censusRep_zeroReach (certificate : Certificate m n p) (point : Fin m → ℤ) :
+theorem censusRep_zeroReach (certificate : CertificateData m n p) (point : Fin m → ℤ) :
     ∀ v : Fin n, certificate.ZeroReach point v (certificate.censusRep point v) :=
   fun v =>
     (certificate.reachIn_zeroSlots_iff_zeroReach point v (certificate.censusRep point v)).mp
@@ -189,7 +186,7 @@ that it is a forest (`IsForest`) and carries no semantic loop (`¬ IsLoopy`).
 No `rep`, no `ZeroReach` witness, and no `forest` cardinality proof is ever
 written by a row again. -/
 theorem bnExists_on_degenerate_subdivision_of_validClosed_of_forestCensus
-    (certificate : Certificate m n p) (point : Fin m → ℤ) (core_nonempty : 0 < n)
+    (certificate : CertificateData m n p) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     (degree : ℤ) (hValid : certificate.ValidClosed degree)
     (hCone : FormsHold certificate.cone point)
     (hForest : IsForest certificate.core (certificate.zeroSlots point))
@@ -206,7 +203,7 @@ theorem bnExists_on_degenerate_subdivision_of_validClosed_of_forestCensus
     (certificate.censusRep_forest point hForest) degree hValid hCone
     (certificate.censusRep_zeroReach point) hCoreConnected
 
-end Utilities.Certificate.ExplicitPotential.Certificate
+end Utilities.Certificate.ExplicitPotential.CertificateData
 
 namespace Utilities.Certificate
 open Utilities.Certificate

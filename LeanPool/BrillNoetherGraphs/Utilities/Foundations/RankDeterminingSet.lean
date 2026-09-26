@@ -484,12 +484,12 @@ def Spec.coreVertices (spec : Spec n p) : Finset spec.graph.V :=
     x ∈ spec.coreVertices ↔ ∃ v : Fin n, spec.coreVertex v = x := by
   simp [Spec.coreVertices]
 
-/-- `Spec.coreVertices` and the `ExplicitPotential.Certificate` spelling of the
+/-- `Spec.coreVertices` and the `ExplicitPotential.CertificateData` spelling of the
 same set agree on the nose.  Both are `Finset.univ.image spec.coreVertex`; the
 duplicate exists only because the two namespaces grew independently, and this
 `rfl` lets the separator machinery be quoted verbatim. -/
 theorem Spec.coreVertices_eq (spec : Spec n p) :
-    spec.coreVertices = ExplicitPotential.Certificate.coreVertices spec := rfl
+    spec.coreVertices = ExplicitPotential.CertificateData.coreVertices spec := rfl
 
 /-- **The geometric input, at `r = 1`: a divisor reaching every core vertex of
 a subdivided loopless core has rank at least one.**
@@ -528,7 +528,7 @@ theorem Spec.rank_ge_one_of_forall_mem_coreVertices (spec : Spec n p)
       winnable spec.graph (D - oneChip x)) :
     rank spec.graph D ≥ 1 := by
   refine StrongSeparator.rank_ge_one_of_strongSeparatorCertificate hConnected
-    (ExplicitPotential.Certificate.coreVertices_nonempty spec)
+    (ExplicitPotential.CertificateData.coreVertices_nonempty spec)
     spec.coreVertices_strongSeparatorCertificate ?_
   intro s hs
   exact hReaches s (by rwa [spec.coreVertices_eq])

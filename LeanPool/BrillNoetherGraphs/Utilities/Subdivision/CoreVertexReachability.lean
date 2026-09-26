@@ -37,7 +37,7 @@ theorem bnExists_of_reaches_coreVertices
   refine ⟨D, hDegree, ?_⟩
   apply StrongSeparator.rank_ge_one_of_strongSeparatorCertificate
     hConnected
-    (ExplicitPotential.Certificate.coreVertices_nonempty spec)
+    (ExplicitPotential.CertificateData.coreVertices_nonempty spec)
     spec.coreVertices_strongSeparatorCertificate
   intro vertex hVertex
   obtain ⟨anchor, _hAnchor, rfl⟩ := Finset.mem_image.mp hVertex

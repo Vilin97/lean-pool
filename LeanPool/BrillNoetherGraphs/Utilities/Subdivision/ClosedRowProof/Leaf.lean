@@ -336,7 +336,7 @@ end Witness
 
 /-! ## §3  The certificate a witness denotes
 
-`ExplicitPotential.Certificate` is the existing arithmetic record; a
+`ExplicitPotential.CertificateData` is the existing arithmetic record; a
 single-block leaf is exactly one, with `α_e = lo_e` and `β_e = −hi_e`.  The
 cone is *synthesised* here rather than transcribed: it holds precisely the
 rows the semantics needs, and `FormsHold` for them is discharged by the
@@ -377,7 +377,7 @@ def leafCone (m : ℕ) (core : ExplicitPotential.Core n p) (w : Witness) :
 
 /-- The explicit-potential certificate a single-block leaf denotes. -/
 def leafCertificate (m : ℕ) (core : ExplicitPotential.Core n p) (w : Witness) :
-    ExplicitPotential.Certificate m n p where
+    ExplicitPotential.CertificateData m n p where
   core := core
   segment := fun e => toAffineForm m (coordForm e.val)
   divisor := fun v => w.divisorCore.getD v.val 0
@@ -597,7 +597,7 @@ theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
         exact List.mem_flatMap.mpr ⟨e, List.mem_finRange e, by simp⟩
   -- The census facts transport along `hseg`.
   have hzs : (leafCertificate m core w).zeroSlots point = zeroSet ℓ := by
-    unfold ExplicitPotential.Certificate.zeroSlots zeroSet
+    unfold ExplicitPotential.CertificateData.zeroSlots zeroSet
     exact Finset.filter_congr fun e _ => by rw [hseg e]
   have hForest' : IsForest (leafCertificate m core w).core
       ((leafCertificate m core w).zeroSlots point) := by rw [hzs]; exact hForest
@@ -606,8 +606,8 @@ theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
   have hCoreConn : (leafCertificate m core w).core.Connected :=
     (ExplicitPotential.Core.connectedCheck_eq_true_iff core).mp hConn
   have hMain :=
-    ExplicitPotential.Certificate.bnExists_on_degenerate_subdivision_of_validClosed_of_forestCensus
-      (leafCertificate m core w) point hn degree hValid hCone hForest' hNotLoopy' hCoreConn
+    (leafCertificate m core w).bnExists_on_degenerate_subdivision_of_validClosed_of_forestCensus
+      point hn degree hValid hCone hForest' hNotLoopy' hCoreConn
   -- Finally the two degenerate specs are the same object.
   have hEq : (leafCertificate m core w).degenerateSpec point hn
       ((leafCertificate m core w).censusRep point)
@@ -617,8 +617,8 @@ theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
       ((leafCertificate m core w).censusRep_forest point hForest')
       = censusSpec core hn ℓ hForest hNotLoopy := by
     refine DegSpec.ext' rfl (funext hseg) ?_
-    change ExplicitPotential.Certificate.censusRep _ point = compFold core (zeroSet ℓ)
-    unfold ExplicitPotential.Certificate.censusRep
+    change ExplicitPotential.CertificateData.censusRep _ point = compFold core (zeroSet ℓ)
+    unfold ExplicitPotential.CertificateData.censusRep
     rw [hzs]
     rfl
   rwa [hEq] at hMain

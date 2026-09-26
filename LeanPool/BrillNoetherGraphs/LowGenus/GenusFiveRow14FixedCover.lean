@@ -6054,7 +6054,7 @@ theorem cells_check :
 theorem cells_valid : ∀ cell ∈ cells, cell.certificate.ValidClosed 4 := by
   intro cell hCell
   have hChecks := (List.all_eq_true.mp cells_check) cell hCell
-  exact (ExplicitPotential.Certificate.checkClosed_eq_true_iff _ _).mp hChecks
+  exact (ExplicitPotential.CertificateData.checkClosed_eq_true_iff _ _).mp hChecks
 
 theorem tree_check :
     tree.check splitForms farkasReceipts cells base = true := by

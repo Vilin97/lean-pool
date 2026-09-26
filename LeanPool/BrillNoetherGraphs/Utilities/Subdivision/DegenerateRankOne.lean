@@ -53,9 +53,6 @@ chain; that is the exact join with the contraction census.
 
 @[expose] public section
 
--- `Certificate` is a structure inside a namespace already ending in `Certificate`;
--- renaming either would ripple through every consumer.  Lean v4.33 added
--- `linter.dupNamespace`, which flags exactly this shape.
 namespace Utilities.Certificate
 open Utilities.Certificate
 
@@ -91,7 +88,7 @@ theorem sum_endpointIndicator_class {n p : ℕ} (rep : Fin n → Fin n)
 
 end Utilities.Certificate
 
-namespace Utilities.Certificate.ExplicitPotential.Certificate
+namespace Utilities.Certificate.ExplicitPotential.CertificateData
 open Utilities
 open Utilities.Certificate
 
@@ -99,32 +96,32 @@ open Utilities.Certificate
 open Utilities
 open Finset ExplicitPotential
 open Utilities.Certificate.ExplicitPotential
-open Utilities.Certificate.ExplicitPotential.Certificate
+open Utilities.Certificate.ExplicitPotential.CertificateData
 
 variable {m n p : ℕ}
 
 /-! ## Endpoint bookkeeping at a contracted class -/
 
 /-- Conservative endpoint bookkeeping, summed over a contracted class. -/
-def classLowerEndpointContribution (certificate : Certificate m n p)
+def classLowerEndpointContribution (certificate : CertificateData m n p)
     (rep : Fin n → Fin n) (anchor r : Fin n) : ℤ :=
   ∑ vertex ∈ Finset.univ.filter (fun v : Fin n => rep v = rep r),
     certificate.lowerEndpointContribution anchor vertex
 
 /-- Actual interpolated endpoint contribution, summed over a contracted class. -/
-def classEndpointContribution (certificate : Certificate m n p)
+def classEndpointContribution (certificate : CertificateData m n p)
     (rep : Fin n → Fin n) (anchor : Fin n) (point : Fin m → ℤ) (r : Fin n) : ℤ :=
   ∑ vertex ∈ Finset.univ.filter (fun v : Fin n => rep v = rep r),
     certificate.endpointContribution anchor point vertex
 
 /-- Target coefficient after removing the anchor chip, summed over a contracted
 class. -/
-def classTargetCoefficient (certificate : Certificate m n p)
+def classTargetCoefficient (certificate : CertificateData m n p)
     (rep : Fin n → Fin n) (anchor r : Fin n) : ℤ :=
   ∑ vertex ∈ Finset.univ.filter (fun v : Fin n => rep v = rep r),
     certificate.targetCoefficient anchor vertex
 
-theorem classLowerEndpointContribution_eq (certificate : Certificate m n p)
+theorem classLowerEndpointContribution_eq (certificate : CertificateData m n p)
     (rep : Fin n → Fin n) (anchor r : Fin n) :
     certificate.classLowerEndpointContribution rep anchor r =
       ∑ e : Fin p,
@@ -143,7 +140,7 @@ theorem classLowerEndpointContribution_eq (certificate : Certificate m n p)
   unfold classLowerEndpointContribution lowerEndpointContribution
   exact Finset.sum_congr rfl fun v _ => (Finset.sum_add_distrib).symm
 
-theorem classEndpointContribution_eq (certificate : Certificate m n p)
+theorem classEndpointContribution_eq (certificate : CertificateData m n p)
     (rep : Fin n → Fin n) (anchor : Fin n) (point : Fin m → ℤ) (r : Fin n) :
     certificate.classEndpointContribution rep anchor point r =
       ∑ e : Fin p,
@@ -168,7 +165,7 @@ theorem classEndpointContribution_eq (certificate : Certificate m n p)
   unfold classEndpointContribution endpointContribution
   exact Finset.sum_congr rfl fun v _ => (Finset.sum_add_distrib).symm
 
-theorem classTargetCoefficient_eq (certificate : Certificate m n p)
+theorem classTargetCoefficient_eq (certificate : CertificateData m n p)
     (rep : Fin n → Fin n) (anchor r : Fin n) :
     certificate.classTargetCoefficient rep anchor r =
       (∑ v ∈ Finset.univ.filter (fun v : Fin n => rep v = rep r),
@@ -190,7 +187,7 @@ contribution is exactly `0`, because the two endpoint terms lie in the same
 class and are equal and opposite, while the bound contributes
 `α_e + β_e ≤ 0` — `Valid`'s third conjunct, unchanged. -/
 theorem classLowerEndpointContribution_le_classEndpointContribution
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (rep : Fin n → Fin n)
@@ -221,7 +218,7 @@ theorem classLowerEndpointContribution_le_classEndpointContribution
 /-- **Gap 2, the balance.**  At every contracted class the target plus the
 actual interpolated contributions is non-negative. -/
 theorem class_core_balance_nonnegative
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (rep : Fin n → Fin n)
@@ -242,7 +239,7 @@ theorem class_core_balance_nonnegative
 
 /-- On the interior the class is a singleton, so the class-level statements are
 literally the existing per-vertex ones. -/
-theorem classEndpointContribution_eq_of_rep_id (certificate : Certificate m n p)
+theorem classEndpointContribution_eq_of_rep_id (certificate : CertificateData m n p)
     (rep : Fin n → Fin n) (hId : ∀ v : Fin n, rep v = v)
     (anchor : Fin n) (point : Fin m → ℤ) (r : Fin n) :
     certificate.classEndpointContribution rep anchor point r =
@@ -258,7 +255,7 @@ theorem classEndpointContribution_eq_of_rep_id (certificate : Certificate m n p)
 /-! ## Rep-invariance of the anchor potential -/
 
 /-- Two core vertices joined by one collapsed slot. -/
-def ZeroLink (certificate : Certificate m n p) (point : Fin m → ℤ)
+def ZeroLink (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (u v : Fin n) : Prop :=
   ∃ e : Fin p, certificate.segmentNat point e = 0 ∧
     ((certificate.core.tail e = u ∧ certificate.core.head e = v) ∨
@@ -266,12 +263,12 @@ def ZeroLink (certificate : Certificate m n p) (point : Fin m → ℤ)
 
 /-- Joined by a chain of collapsed slots.  This is the relation a contraction
 census decides; `rep` is meant to be its component map. -/
-def ZeroReach (certificate : Certificate m n p) (point : Fin m → ℤ) :
+def ZeroReach (certificate : CertificateData m n p) (point : Fin m → ℤ) :
     Fin n → Fin n → Prop :=
   Relation.ReflTransGen (certificate.ZeroLink point)
 
 theorem segment_eval_eq_zero_of_segmentNat_eq_zero
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) {e : Fin p}
     (hzero : certificate.segmentNat point e = 0) :
@@ -281,7 +278,7 @@ theorem segment_eval_eq_zero_of_segmentNat_eq_zero
   simpa using hCast.symm
 
 theorem evaluatedPotential_eq_of_zeroLink
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (anchor : Fin n)
     {u v : Fin n} (hLink : certificate.ZeroLink point u v) :
@@ -301,7 +298,7 @@ theorem evaluatedPotential_eq_of_zeroLink
     exact hPot
 
 theorem evaluatedPotential_eq_of_zeroReach
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (anchor : Fin n)
     {u v : Fin n} (hReach : certificate.ZeroReach point u v) :
@@ -317,7 +314,7 @@ theorem evaluatedPotential_eq_of_zeroReach
 
 section Face
 
-variable (certificate : Certificate m n p) (point : Fin m → ℤ)
+variable (certificate : CertificateData m n p) (point : Fin m → ℤ)
   (core_nonempty : 0 < n) (rep : Fin n → Fin n)
   (rep_idem : ∀ v : Fin n, rep (rep v) = rep v)
   (rep_zero : ∀ edge : Fin p, certificate.segmentNat point edge = 0 →
@@ -368,23 +365,23 @@ end Face
 of its members' chips, and every interior vertex carries none.
 
 This is the shape change forced by non-injectivity of `coreVertex`. -/
-def degenerateDivisor (certificate : Certificate m n p)
+def degenerateDivisor (certificate : CertificateData m n p)
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) : CFDiv d.graph :=
   d.coreClassDivisor certificate.divisor
 
-@[simp] theorem degenerateDivisor_coreVertex (certificate : Certificate m n p)
+@[simp] theorem degenerateDivisor_coreVertex (certificate : CertificateData m n p)
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) (r : Fin n) :
     certificate.degenerateDivisor d (d.coreVertex r) =
       ∑ v ∈ Finset.univ.filter (fun v : Fin n => d.rep v = d.rep r),
         certificate.divisor v := rfl
 
-@[simp] theorem degenerateDivisor_interiorVertex (certificate : Certificate m n p)
+@[simp] theorem degenerateDivisor_interiorVertex (certificate : CertificateData m n p)
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) (e : Fin p) (o : Fin (d.length e - 1)) :
     certificate.degenerateDivisor d (d.interiorVertex e o) = 0 := rfl
 
 /-- Agreement with the strictly positive layer: on the interior each class is a
 singleton, so the extended divisor is literally `subdivisionDivisor`'s value. -/
-theorem degenerateDivisor_coreVertex_of_pos (certificate : Certificate m n p)
+theorem degenerateDivisor_coreVertex_of_pos (certificate : CertificateData m n p)
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) (hpos : ∀ e : Fin p, 0 < d.length e)
     (r : Fin n) :
     certificate.degenerateDivisor d (d.coreVertex r) = certificate.divisor r := by
@@ -394,7 +391,7 @@ theorem degenerateDivisor_coreVertex_of_pos (certificate : Certificate m n p)
 
 /-- The extended divisor has exactly the degree checked on the core: no chip is
 lost when two named core vertices are merged. -/
-theorem deg_degenerateDivisor (certificate : Certificate m n p)
+theorem deg_degenerateDivisor (certificate : CertificateData m n p)
     (d : Utilities.Certificate.DegenerateSpec.DegSpec n p) :
     deg (certificate.degenerateDivisor d) =
       ∑ v : Fin n, certificate.divisor v := by
@@ -421,7 +418,7 @@ theorem deg_degenerateDivisor (certificate : Certificate m n p)
 
 section Assembly
 
-variable (certificate : Certificate m n p) (point : Fin m → ℤ)
+variable (certificate : CertificateData m n p) (point : Fin m → ℤ)
   (core_nonempty : 0 < n) (rep : Fin n → Fin n)
   (rep_idem : ∀ v : Fin n, rep (rep v) = rep v)
   (rep_zero : ∀ edge : Fin p, certificate.segmentNat point edge = 0 →
@@ -595,7 +592,7 @@ positive subdivision of the contracted core.  On the interior (`rep = id`,
 `hInv` free by `repInvariant_evaluatedPotential_of_pos`) this is the existing
 statement. -/
 theorem bnExists_of_validClosed_of_strongSeparator
-    (certificate : Certificate m n p) (point : Fin m → ℤ)
+    (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) (rep : Fin n → Fin n)
     (rep_idem rep_zero rep_loopless forest)
     (degree : ℤ) (hValid : certificate.ValidClosed degree)
@@ -629,7 +626,7 @@ theorem bnExists_of_validClosed_of_strongSeparator
     exact certificate.reaches_degenerateCoreVertex point core_nonempty rep rep_idem
       rep_zero rep_loopless forest hValid hCone anchor (hInv anchor)
 
-end Utilities.Certificate.ExplicitPotential.Certificate
+end Utilities.Certificate.ExplicitPotential.CertificateData
 
 namespace Utilities.Certificate
 open Utilities.Certificate

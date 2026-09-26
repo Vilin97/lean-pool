@@ -61,9 +61,6 @@ is the image `Finset` `degenerateCoreVertices d`, which is exactly the set of
 
 @[expose] public section
 
--- `Certificate` is a structure inside a namespace already ending in `Certificate`;
--- renaming either would ripple through every consumer.  Lean v4.33 added
--- `linter.dupNamespace`, which flags exactly this shape.
 namespace Utilities.Certificate.DegenerateSpec.DegSpec
 open Utilities.Certificate
 
@@ -161,12 +158,12 @@ variable {n' p' : ℕ} {d : DegSpec n p} {target : SubdivisionGraph.Spec n' p'}
 contracted core classes.  Injectivity of `coreVertex` is never used: the
 statement is an equality of images. -/
 theorem degenerateCoreVertices_eq_image (c : Contraction d target) :
-    (ExplicitPotential.Certificate.coreVertices target).image c.vertexEquiv
-      = ExplicitPotential.Certificate.degenerateCoreVertices d := by
+    (ExplicitPotential.CertificateData.coreVertices target).image c.vertexEquiv
+      = ExplicitPotential.CertificateData.degenerateCoreVertices d := by
   classical
   ext y
-  simp only [ExplicitPotential.Certificate.coreVertices,
-    ExplicitPotential.Certificate.degenerateCoreVertices]
+  simp only [ExplicitPotential.CertificateData.coreVertices,
+    ExplicitPotential.CertificateData.degenerateCoreVertices]
   constructor
   · intro hy
     obtain ⟨x, hx, hxy⟩ := Finset.mem_image.mp hy
@@ -185,7 +182,7 @@ theorem degenerateCoreVertices_eq_image (c : Contraction d target) :
 positive target, where `SubdivisionSeparator` applies unchanged. -/
 theorem strongSeparatorCertificate (c : Contraction d target) :
     StrongSeparator.StrongSeparatorCertificate d.graph
-      (ExplicitPotential.Certificate.degenerateCoreVertices d) :=
+      (ExplicitPotential.CertificateData.degenerateCoreVertices d) :=
   StrongSeparator.strongSeparatorCertificate_of_image c.laplacianEquiv
     c.degenerateCoreVertices_eq_image
     (SubdivisionGraph.Spec.coreVertices_strongSeparatorCertificate target)
@@ -259,7 +256,7 @@ exactly as on the open orthant, where
 `coreVertices_strongSeparatorCertificate` is also hypothesis-free. -/
 theorem strongSeparatorCertificate :
     StrongSeparator.StrongSeparatorCertificate d.graph
-      (ExplicitPotential.Certificate.degenerateCoreVertices d) :=
+      (ExplicitPotential.CertificateData.degenerateCoreVertices d) :=
   d.canonicalContraction.strongSeparatorCertificate
 
 /-- **Connectivity for any degenerate spec** from the finite core cut
@@ -282,7 +279,7 @@ theorem rank_ge_one_of_reaches_coreVertices
     rank d.graph D ≥ 1 := by
   apply StrongSeparator.rank_ge_one_of_strongSeparatorCertificate
     (d.graph_connected_of_coreConnected hCore)
-    (ExplicitPotential.Certificate.degenerateCoreVertices_nonempty d)
+    (ExplicitPotential.CertificateData.degenerateCoreVertices_nonempty d)
     d.strongSeparatorCertificate
   intro vertex hVertex
   obtain ⟨v, _hv, rfl⟩ := Finset.mem_image.mp hVertex
@@ -292,7 +289,7 @@ end Utilities.Certificate.DegenerateSpec.DegSpec
 
 /-! ## The convenience wrapper a row calls -/
 
-namespace Utilities.Certificate.ExplicitPotential.Certificate
+namespace Utilities.Certificate.ExplicitPotential.CertificateData
 open Utilities
 open Utilities.Certificate
 open Utilities.Certificate.DegenerateSpec
@@ -303,13 +300,13 @@ open Finset ExplicitPotential
 variable {n p : ℕ} (d : DegSpec n p)
 variable {n' p' : ℕ} {d : DegSpec n p} {target : SubdivisionGraph.Spec n' p'}
 open Utilities.Certificate.ExplicitPotential
-open Utilities.Certificate.ExplicitPotential.Certificate
+open Utilities.Certificate.ExplicitPotential.CertificateData
 
 variable {m n p : ℕ}
 
 section Face
 
-variable (certificate : Certificate m n p) (point : Fin m → ℤ)
+variable (certificate : CertificateData m n p) (point : Fin m → ℤ)
   (core_nonempty : 0 < n) (rep : Fin n → Fin n)
   (rep_idem : ∀ v : Fin n, rep (rep v) = rep v)
   (rep_zero : ∀ edge : Fin p, certificate.segmentNat point edge = 0 →
@@ -407,7 +404,7 @@ it anyway, through `graph_connected_of_coreConnected`. -/
 `subdivisionSpec`: the two structures have the same core and the same lengths,
 and their remaining fields are proofs. -/
 theorem toSpec_degenerateSpec_eq_subdivisionSpec
-    (certificate : Certificate m n p) (point : Fin m → ℤ)
+    (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) (rep : Fin n → Fin n)
     (rep_idem rep_zero rep_loopless forest)
     {degree : ℤ} (hValid : certificate.Valid degree)
@@ -427,7 +424,7 @@ and `DegSpec.bnExists_toSpec_iff` carries the conclusion back to the ordinary
 `subdivisionSpec`.  So the closed-orthant route is a strict extension of the
 open one, not an alternative to it. -/
 theorem bnExists_on_subdivision_of_valid_via_closed
-    (certificate : Certificate m n p) (point : Fin m → ℤ)
+    (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) (degree : ℤ)
     (hValid : certificate.Valid degree)
     (hCone : FormsHold certificate.cone point)
@@ -469,7 +466,7 @@ theorem bnExists_on_subdivision_of_valid_via_closed
     id (fun _ => rfl) hrepZero hrepLoopless hforest hValid hCone hpos]
     at hTransported
 
-end Utilities.Certificate.ExplicitPotential.Certificate
+end Utilities.Certificate.ExplicitPotential.CertificateData
 
 namespace Utilities.Certificate
 open Utilities.Certificate

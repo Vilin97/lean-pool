@@ -93,7 +93,7 @@ theorem rank_ge_one_coreDivisor (spec : SubdivisionGraph.Spec n p)
     (hPositive : ∀ vertex, 1 ≤ weight vertex) :
     rank spec.graph (coreDivisor spec weight) ≥ 1 := by
   apply rank_ge_one_of_effective_positive_on_strongSeparator hConnected
-    (ExplicitPotential.Certificate.coreVertices_nonempty spec)
+    (ExplicitPotential.CertificateData.coreVertices_nonempty spec)
     spec.coreVertices_strongSeparatorCertificate
     (coreDivisor_effective spec weight (fun vertex => by
       have := hPositive vertex

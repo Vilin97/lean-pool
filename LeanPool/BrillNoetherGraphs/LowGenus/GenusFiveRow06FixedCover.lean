@@ -55,7 +55,7 @@ theorem cells_check :
 theorem cells_valid : ∀ cell ∈ cells, cell.certificate.ValidClosed 4 := by
   intro cell hCell
   have hChecks := (List.all_eq_true.mp cells_check) cell hCell
-  exact (ExplicitPotential.Certificate.checkClosed_eq_true_iff _ _).mp hChecks
+  exact (ExplicitPotential.CertificateData.checkClosed_eq_true_iff _ _).mp hChecks
 
 /-- The twelve root rows of the closed orthant followed by the six
 chamber inequalities cutting the fundamental domain. -/

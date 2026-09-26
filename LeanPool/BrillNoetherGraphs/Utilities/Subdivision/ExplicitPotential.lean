@@ -36,9 +36,6 @@ kept separate so that this file remains a small arithmetic trust boundary.
 
 @[expose] public section
 
--- The `Certificate` structure deliberately lives inside a namespace that already
--- ends in `Certificate`; renaming either would ripple through every consumer.
--- Lean v4.33 added `linter.dupNamespace`, which flags exactly this shape.
 namespace Utilities.Certificate
 
 open Finset
@@ -78,7 +75,7 @@ structure AnchorWitness (m n p : ℕ) where
   potential : Fin n → AffineForm m
 
 /-- Passive local data for a rank-one divisor over one length cone. -/
-structure Certificate (m n p : ℕ) where
+structure CertificateData (m n p : ℕ) where
   /-- The ordered core incidence data underlying the local certificate. -/
   core : Core n p
   /-- The affine length expression assigned to each core slot. -/
@@ -147,17 +144,17 @@ def positive (form : AffineForm m) : AffineForm m where
 
 end AffineForm
 
-namespace Certificate
+namespace CertificateData
 
 /-- The potential rise from the tail to the head of one expanded edge. -/
-def rise (certificate : Certificate m n p) (anchor : Fin n)
+def rise (certificate : CertificateData m n p) (anchor : Fin n)
     (edge : Fin p) : AffineForm m :=
   AffineForm.sub
     ((certificate.witness anchor).potential (certificate.core.head edge))
     ((certificate.witness anchor).potential (certificate.core.tail edge))
 
 /-- The displayed lower endpoint inequality `rise - alpha * length >= 0`. -/
-def lowerForm (certificate : Certificate m n p) (anchor : Fin n)
+def lowerForm (certificate : CertificateData m n p) (anchor : Fin n)
     (edge : Fin p) : AffineForm m :=
   AffineForm.sub (certificate.rise anchor edge)
     (AffineForm.scale ((certificate.witness anchor).alpha edge)
@@ -165,7 +162,7 @@ def lowerForm (certificate : Certificate m n p) (anchor : Fin n)
 
 /-- The displayed upper endpoint inequality
 `-beta * length - rise >= 0`. -/
-def upperForm (certificate : Certificate m n p) (anchor : Fin n)
+def upperForm (certificate : CertificateData m n p) (anchor : Fin n)
     (edge : Fin p) : AffineForm m :=
   AffineForm.sub
     (AffineForm.scale (-((certificate.witness anchor).beta edge))
@@ -173,12 +170,12 @@ def upperForm (certificate : Certificate m n p) (anchor : Fin n)
     (certificate.rise anchor edge)
 
 /-- The target coefficient at a core vertex after removing the anchor chip. -/
-def targetCoefficient (certificate : Certificate m n p)
+def targetCoefficient (certificate : CertificateData m n p)
     (anchor vertex : Fin n) : ℤ :=
   certificate.divisor vertex - if vertex = anchor then 1 else 0
 
 /-- The conservative endpoint contribution checked before seeing any lengths. -/
-def lowerEndpointContribution (certificate : Certificate m n p)
+def lowerEndpointContribution (certificate : CertificateData m n p)
     (anchor vertex : Fin n) : ℤ :=
   ∑ edge : Fin p,
     ((if certificate.core.tail edge = vertex then
@@ -187,7 +184,7 @@ def lowerEndpointContribution (certificate : Certificate m n p)
         (certificate.witness anchor).beta edge else 0))
 
 /-- Point-independent exact validity of a passive local record. -/
-def Valid (certificate : Certificate m n p) (degree : ℤ) : Prop :=
+def Valid (certificate : CertificateData m n p) (degree : ℤ) : Prop :=
   (∀ edge : Fin p, certificate.core.tail edge ≠ certificate.core.head edge) ∧
   (∑ vertex : Fin n, certificate.divisor vertex) = degree ∧
   (∀ anchor : Fin n, ∀ edge : Fin p,
@@ -206,7 +203,7 @@ def Valid (certificate : Certificate m n p) (degree : ℤ) : Prop :=
       certificate.upperForm anchor edge ∈ certificate.cone))
 
 /-- Executable exact validity checker. -/
-def check (certificate : Certificate m n p) (degree : ℤ) : Bool :=
+def check (certificate : CertificateData m n p) (degree : ℤ) : Bool :=
   (allFin fun edge : Fin p =>
     decide (certificate.core.tail edge ≠ certificate.core.head edge)) &&
   decide ((∑ vertex : Fin n, certificate.divisor vertex) = degree) &&
@@ -233,14 +230,14 @@ def check (certificate : Certificate m n p) (degree : ℤ) : Bool :=
           certificate.cone))
 
 @[simp] theorem check_eq_true_iff
-    (certificate : Certificate m n p) (degree : ℤ) :
+    (certificate : CertificateData m n p) (degree : ℤ) :
     certificate.check degree = true ↔ certificate.Valid degree := by
   simp [check, Valid, and_assoc]
 
 /-- A cone holds any required form which is either literally zero or a member
 of that cone. -/
 private theorem form_holds_of_zero_or_mem
-    (certificate : Certificate m n p) (point : Fin m → ℤ)
+    (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (form : AffineForm m)
     (hForm : form = 0 ∨ form ∈ certificate.cone)
     (hCone : FormsHold certificate.cone point) :
@@ -252,7 +249,7 @@ private theorem form_holds_of_zero_or_mem
 /-- Every expanded segment has positive integral length at a point in an
 accepted local cone. -/
 theorem segment_positive_of_valid
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.Valid degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (edge : Fin p) :
     0 < (certificate.segment edge).eval point := by
@@ -263,12 +260,12 @@ theorem segment_positive_of_valid
   omega
 
 /-- The natural-number segment length decoded from an integral point. -/
-def segmentNat (certificate : Certificate m n p)
+def segmentNat (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (edge : Fin p) : ℕ :=
   ((certificate.segment edge).eval point).toNat
 
 theorem segmentNat_cast_eq
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.Valid degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (edge : Fin p) :
     (certificate.segmentNat point edge : ℤ) =
@@ -277,7 +274,7 @@ theorem segmentNat_cast_eq
     (le_of_lt (certificate.segment_positive_of_valid hValid point hCone edge))
 
 theorem segmentNat_positive
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.Valid degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (edge : Fin p) :
     0 < certificate.segmentNat point edge := by
@@ -286,14 +283,14 @@ theorem segmentNat_positive
   exact_mod_cast hPositive
 
 /-- Numerical core-potential rise at one integral length point. -/
-def riseValue (certificate : Certificate m n p) (anchor : Fin n)
+def riseValue (certificate : CertificateData m n p) (anchor : Fin n)
     (point : Fin m → ℤ) (edge : Fin p) : ℤ :=
   (certificate.rise anchor edge).eval point
 
 /-- Membership of the explicit lower/upper forms yields their endpoint rise
 bounds with no shortest-path theorem. -/
 theorem rise_bounds_of_valid
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.Valid degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor : Fin n) (edge : Fin p) :
@@ -316,7 +313,7 @@ theorem rise_bounds_of_valid
 /-- The two endpoint slopes supplied by integer interpolation dominate the
 advertised `alpha`/`beta` bounds. -/
 theorem interpolated_endpoint_bounds
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.Valid degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor : Fin n) (edge : Fin p) :
@@ -337,7 +334,7 @@ theorem interpolated_endpoint_bounds
   · simpa only [hCast] using hBounds.2
 
 /-- Actual interpolated endpoint contribution at a core vertex. -/
-def endpointContribution (certificate : Certificate m n p)
+def endpointContribution (certificate : CertificateData m n p)
     (anchor : Fin n) (point : Fin m → ℤ) (vertex : Fin n) : ℤ :=
   ∑ edge : Fin p,
     ((if certificate.core.tail edge = vertex then
@@ -351,7 +348,7 @@ def endpointContribution (certificate : Certificate m n p)
         (certificate.segmentNat point edge - 1) else 0))
 
 theorem lowerEndpointContribution_le_endpointContribution
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.Valid degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor vertex : Fin n) :
@@ -370,7 +367,7 @@ theorem lowerEndpointContribution_le_endpointContribution
 /-- At every expanded core vertex, the target plus actual interpolated edge
 contributions is nonnegative. -/
 theorem core_balance_nonnegative
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.Valid degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor vertex : Fin n) :
@@ -385,7 +382,7 @@ theorem core_balance_nonnegative
 second difference (the path-interior principal-divisor coefficient) is
 nonnegative. -/
 theorem interior_balance_nonnegative
-    (certificate : Certificate m n p) (anchor : Fin n)
+    (certificate : CertificateData m n p) (anchor : Fin n)
     (point : Fin m → ℤ) (edge : Fin p) (offset : ℕ)
     (hOffset : 0 < offset) :
     0 ≤ SubdivisionArithmetic.potential
@@ -399,7 +396,7 @@ theorem interior_balance_nonnegative
           (certificate.riseValue anchor point edge) (offset + 1) :=
   SubdivisionArithmetic.interiorSecondDifference_nonneg _ hOffset
 
-end Certificate
+end CertificateData
 
 end ExplicitPotential
 

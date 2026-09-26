@@ -12,7 +12,7 @@ public import LeanPool.BrillNoetherGraphs.Utilities.Subdivision.DegenerateSpec
 /-!
 # `ValidClosed`: the affine certificate grammar on the CLOSED length orthant
 
-`ExplicitPotential.Certificate.Valid` has six conjuncts.  Five of them are
+`ExplicitPotential.CertificateData.Valid` has six conjuncts.  Five of them are
 already boundary-compatible; exactly one is not:
 
 ```
@@ -63,9 +63,6 @@ is `Valid`'s third conjunct, unchanged.
 
 @[expose] public section
 
--- `Certificate` is a structure inside a namespace already ending in `Certificate`;
--- renaming either would ripple through every consumer.  Lean v4.33 added
--- `linter.dupNamespace`, which flags exactly this shape.
 namespace Utilities.Certificate
 open Utilities.Certificate
 
@@ -75,7 +72,7 @@ open ExplicitPotential
 
 end Utilities.Certificate
 
-namespace Utilities.Certificate.ExplicitPotential.Certificate
+namespace Utilities.Certificate.ExplicitPotential.CertificateData
 open Utilities
 open Utilities.Certificate
 
@@ -83,7 +80,7 @@ open Utilities.Certificate
 open Utilities
 open ExplicitPotential
 open Utilities.Certificate.ExplicitPotential
-open Utilities.Certificate.ExplicitPotential.Certificate
+open Utilities.Certificate.ExplicitPotential.CertificateData
 
 variable {m n p : ℕ}
 
@@ -92,7 +89,7 @@ variable {m n p : ℕ}
 /-- The closed-orthant segment row.  The first two disjuncts are exactly
 `Valid`'s row (`ℓ_e ≥ 1`); the last two are the relaxation (`ℓ_e ≥ 0`).
 Any one of the four delivers `0 ≤ (segment e).eval point` at a cone point. -/
-def SegmentRowClosed (certificate : Certificate m n p) (edge : Fin p) : Prop :=
+def SegmentRowClosed (certificate : CertificateData m n p) (edge : Fin p) : Prop :=
   AffineForm.positive (certificate.segment edge) = 0 ∨
     AffineForm.positive (certificate.segment edge) ∈ certificate.cone ∨
     certificate.segment edge = 0 ∨
@@ -100,7 +97,7 @@ def SegmentRowClosed (certificate : Certificate m n p) (edge : Fin p) : Prop :=
 
 /-- Point-independent validity on the **closed** length orthant.  Identical to
 `Valid` except that the segment row is `SegmentRowClosed`. -/
-def ValidClosed (certificate : Certificate m n p) (degree : ℤ) : Prop :=
+def ValidClosed (certificate : CertificateData m n p) (degree : ℤ) : Prop :=
   (∀ edge : Fin p, certificate.core.tail edge ≠ certificate.core.head edge) ∧
   (∑ vertex : Fin n, certificate.divisor vertex) = degree ∧
   (∀ anchor : Fin n, ∀ edge : Fin p,
@@ -120,7 +117,7 @@ def ValidClosed (certificate : Certificate m n p) (degree : ℤ) : Prop :=
 
 /-- Every certificate that is `Valid` is `ValidClosed`.  Nothing already proved
 is weakened by moving a consumer to the closed grammar. -/
-theorem valid_toValidClosed {certificate : Certificate m n p} {degree : ℤ}
+theorem valid_toValidClosed {certificate : CertificateData m n p} {degree : ℤ}
     (hValid : certificate.Valid degree) : certificate.ValidClosed degree :=
   ⟨hValid.1, hValid.2.1, hValid.2.2.1, hValid.2.2.2.1,
     fun edge => (hValid.2.2.2.2.1 edge).imp id Or.inl,
@@ -128,7 +125,7 @@ theorem valid_toValidClosed {certificate : Certificate m n p} {degree : ℤ}
 
 /-- **On the interior, `ValidClosed` is `Valid`.**  The two differ only in the
 segment row, so supplying the strict rows recovers `Valid` outright. -/
-theorem valid_of_validClosed {certificate : Certificate m n p} {degree : ℤ}
+theorem valid_of_validClosed {certificate : CertificateData m n p} {degree : ℤ}
     (hClosed : certificate.ValidClosed degree)
     (hStrict : ∀ edge : Fin p,
       AffineForm.positive (certificate.segment edge) = 0 ∨
@@ -138,7 +135,7 @@ theorem valid_of_validClosed {certificate : Certificate m n p} {degree : ℤ}
     hClosed.2.2.2.2.2⟩
 
 /-- The two grammars agree exactly on the interior chamber. -/
-theorem validClosed_iff_valid_of_strict {certificate : Certificate m n p}
+theorem validClosed_iff_valid_of_strict {certificate : CertificateData m n p}
     {degree : ℤ}
     (hStrict : ∀ edge : Fin p,
       AffineForm.positive (certificate.segment edge) = 0 ∨
@@ -149,7 +146,7 @@ theorem validClosed_iff_valid_of_strict {certificate : Certificate m n p}
 /-! ## Executable checker -/
 
 /-- Proof-free check of the relaxed segment row. -/
-def checkSegmentRowClosed (certificate : Certificate m n p) (edge : Fin p) :
+def checkSegmentRowClosed (certificate : CertificateData m n p) (edge : Fin p) :
     Bool :=
   AffineCover.AffineForm.equal
       (AffineForm.positive (certificate.segment edge)) 0 ||
@@ -159,13 +156,13 @@ def checkSegmentRowClosed (certificate : Certificate m n p) (edge : Fin p) :
     AffineCover.AffineForm.mem (certificate.segment edge) certificate.cone
 
 @[simp] theorem checkSegmentRowClosed_eq_true_iff
-    (certificate : Certificate m n p) (edge : Fin p) :
+    (certificate : CertificateData m n p) (edge : Fin p) :
     certificate.checkSegmentRowClosed edge = true ↔
       certificate.SegmentRowClosed edge := by
   simp [checkSegmentRowClosed, SegmentRowClosed, or_assoc]
 
 /-- Executable closed-orthant validity checker. -/
-def checkClosed (certificate : Certificate m n p) (degree : ℤ) : Bool :=
+def checkClosed (certificate : CertificateData m n p) (degree : ℤ) : Bool :=
   (allFin fun edge : Fin p =>
     decide (certificate.core.tail edge ≠ certificate.core.head edge)) &&
   decide ((∑ vertex : Fin n, certificate.divisor vertex) = degree) &&
@@ -187,7 +184,7 @@ def checkClosed (certificate : Certificate m n p) (degree : ℤ) : Bool :=
         AffineCover.AffineForm.mem (certificate.upperForm anchor edge)
           certificate.cone))
 
-@[simp] theorem checkClosed_eq_true_iff (certificate : Certificate m n p)
+@[simp] theorem checkClosed_eq_true_iff (certificate : CertificateData m n p)
     (degree : ℤ) :
     certificate.checkClosed degree = true ↔ certificate.ValidClosed degree := by
   simp [checkClosed, ValidClosed, and_assoc]
@@ -195,7 +192,7 @@ def checkClosed (certificate : Certificate m n p) (degree : ℤ) : Bool :=
 /-! ## Point-level consequences -/
 
 private theorem holds_of_zero_or_mem_closed
-    (certificate : Certificate m n p) (point : Fin m → ℤ)
+    (certificate : CertificateData m n p) (point : Fin m → ℤ)
     (form : AffineForm m)
     (hForm : form = 0 ∨ form ∈ certificate.cone)
     (hCone : FormsHold certificate.cone point) :
@@ -208,7 +205,7 @@ private theorem holds_of_zero_or_mem_closed
 a cone point.  This is the exact replacement for
 `segment_positive_of_valid`. -/
 theorem segment_nonneg_of_validClosed
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (edge : Fin p) :
     0 ≤ (certificate.segment edge).eval point := by
@@ -229,7 +226,7 @@ theorem segment_nonneg_of_validClosed
     simpa [AffineCover.AffineForm.Holds] using this
 
 theorem segmentNat_cast_eq_of_validClosed
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (edge : Fin p) :
     (certificate.segmentNat point edge : ℤ) =
@@ -240,7 +237,7 @@ theorem segmentNat_cast_eq_of_validClosed
 /-- The endpoint-rise bounds need no positivity at all: the `lowerForm` and
 `upperForm` rows are shared verbatim with `Valid`. -/
 theorem rise_bounds_of_validClosed
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor : Fin n) (edge : Fin p) :
@@ -266,7 +263,7 @@ theorem rise_bounds_of_validClosed
 the rise to zero: they read `α_e·ℓ_e ≤ rise ≤ −β_e·ℓ_e`, and both bounds
 collapse when `ℓ_e = 0`. -/
 theorem rise_eq_zero_of_segment_eval_zero
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor : Fin n) (edge : Fin p)
@@ -281,7 +278,7 @@ theorem rise_eq_zero_of_segment_eval_zero
 potential takes the same value at the two ends of a collapsed slot.  No extra
 certificate field is required for this — it is already implied. -/
 theorem potential_eq_of_segment_eval_zero
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor : Fin n) (edge : Fin p)
@@ -300,7 +297,7 @@ theorem potential_eq_of_segment_eval_zero
 bookkeeping at the merged class, while contributing exactly zero to the
 Laplacian.  The inequality is `Valid`'s third conjunct, unchanged. -/
 theorem zeroSlotContribution_nonpos
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (anchor : Fin n) (edge : Fin p) :
     (certificate.witness anchor).alpha edge +
       (certificate.witness anchor).beta edge ≤ 0 :=
@@ -309,7 +306,7 @@ theorem zeroSlotContribution_nonpos
 /-! ## Recovering the strictly positive conclusions slot by slot -/
 
 theorem segmentNat_positive_of_eval_pos
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point) (edge : Fin p)
     (hPos : 0 < (certificate.segment edge).eval point) :
@@ -321,7 +318,7 @@ theorem segmentNat_positive_of_eval_pos
 /-- `interpolated_endpoint_bounds` needs a unit step, and on the closed orthant
 that is precisely `0 < segmentNat`.  Otherwise the statement is unchanged. -/
 theorem interpolated_endpoint_bounds_of_validClosed
-    (certificate : Certificate m n p) {degree : ℤ}
+    (certificate : CertificateData m n p) {degree : ℤ}
     (hValid : certificate.ValidClosed degree) (point : Fin m → ℤ)
     (hCone : FormsHold certificate.cone point)
     (anchor : Fin n) (edge : Fin p)
@@ -353,7 +350,7 @@ obligation beyond the census data. -/
 /-- Turn evaluated affine segment lengths and a checked idempotent contraction representative
 into a degenerate subdivision specification, retaining the supplied looplessness and
 forest-count guarantees. -/
-def degenerateSpec (certificate : Certificate m n p)
+def degenerateSpec (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n)
     (rep : Fin n → Fin n)
     (rep_idem : ∀ v : Fin n, rep (rep v) = rep v)
@@ -374,7 +371,7 @@ def degenerateSpec (certificate : Certificate m n p)
   rep_loopless := rep_loopless
   forest := forest
 
-@[simp] theorem degenerateSpec_length (certificate : Certificate m n p)
+@[simp] theorem degenerateSpec_length (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) (rep : Fin n → Fin n)
     (rep_idem rep_zero rep_loopless forest) :
     (certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
@@ -382,7 +379,7 @@ def degenerateSpec (certificate : Certificate m n p)
 
 /-- Genus of the face cut out by a closed certificate: unchanged from the
 core's `p − n + 1`, by `DegSpec.genus_graph`. -/
-theorem genus_degenerateSpec (certificate : Certificate m n p)
+theorem genus_degenerateSpec (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) (rep : Fin n → Fin n)
     (rep_idem rep_zero rep_loopless forest) :
     genus (certificate.degenerateSpec point core_nonempty rep rep_idem rep_zero
@@ -391,7 +388,7 @@ theorem genus_degenerateSpec (certificate : Certificate m n p)
 
 /-- At a strictly positive point the degenerate spec is the ordinary
 `subdivisionSpec`: same core, same lengths, and `rep = id`. -/
-theorem degenerateSpec_toSpec_length (certificate : Certificate m n p)
+theorem degenerateSpec_toSpec_length (certificate : CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) (rep : Fin n → Fin n)
     (rep_idem rep_zero rep_loopless forest)
     (hpos : ∀ edge : Fin p, 0 < certificate.segmentNat point edge) :
@@ -399,7 +396,7 @@ theorem degenerateSpec_toSpec_length (certificate : Certificate m n p)
         rep_loopless forest).toSpec hpos).length =
       certificate.segmentNat point := rfl
 
-end Utilities.Certificate.ExplicitPotential.Certificate
+end Utilities.Certificate.ExplicitPotential.CertificateData
 
 namespace Utilities.Certificate
 open Utilities.Certificate

@@ -25,9 +25,6 @@ which chooses this data is not trusted.
 
 @[expose] public section
 
--- The `Certificate` structure deliberately lives inside a namespace that already
--- ends in `Certificate`; renaming either would ripple through every consumer.
--- Lean v4.33 added `linter.dupNamespace`, which flags exactly this shape.
 namespace MarkedGraphs.Certificate.SpanningTreeConnectivity
 open Utilities.Certificate
 
@@ -44,7 +41,7 @@ def EdgeJoins (core : ExplicitPotential.Core n p) (edge : Fin p)
   (core.tail edge = second ∧ core.head edge = first)
 
 /-- Proof-free rooted parent data for an ordered finite multigraph core. -/
-structure Certificate (core : ExplicitPotential.Core n p) where
+structure CertificateData (core : ExplicitPotential.Core n p) where
   /-- The proposed root of the spanning-tree parent certificate. -/
   root : Fin n
   /-- The proposed parent of each vertex; validity requires every non-root parent link to be an
@@ -56,12 +53,12 @@ structure Certificate (core : ExplicitPotential.Core n p) where
   out cycles. -/
   rank : Fin n → Nat
 
-namespace Certificate
+namespace CertificateData
 
 variable {core : ExplicitPotential.Core n p}
 
 /-- Mathematical validity of every non-root parent link. -/
-def Valid (data : Certificate core) : Prop :=
+def Valid (data : CertificateData core) : Prop :=
   ∀ vertex : Fin n,
     vertex = data.root ∨
       (data.rank (data.parent vertex) < data.rank vertex ∧
@@ -69,7 +66,7 @@ def Valid (data : Certificate core) : Prop :=
           vertex (data.parent vertex))
 
 /-- Linear-time exact checker for rooted parent data. -/
-def check (data : Certificate core) : Bool :=
+def check (data : CertificateData core) : Bool :=
   AffineCover.allFin fun vertex : Fin n =>
     decide (vertex = data.root) ||
       (decide (data.rank (data.parent vertex) < data.rank vertex) &&
@@ -78,7 +75,7 @@ def check (data : Certificate core) : Bool :=
           (decide (core.tail (data.parentEdge vertex) = data.parent vertex) &&
             decide (core.head (data.parentEdge vertex) = vertex))))
 
-@[simp] theorem check_eq_true_iff (data : Certificate core) :
+@[simp] theorem check_eq_true_iff (data : CertificateData core) :
     data.check = true ↔ data.Valid := by
   simp [check, Valid, EdgeJoins]
 
@@ -102,7 +99,7 @@ private theorem edgeJoins_comm
 
 /-- Valid rooted parent data imply the exact cut-connectedness predicate used
 by explicit-potential cores. -/
-theorem coreConnected_of_valid (data : Certificate core)
+theorem coreConnected_of_valid (data : CertificateData core)
     (hValid : data.Valid) :
     core.Connected := by
   intro S hSplit
@@ -148,12 +145,12 @@ theorem coreConnected_of_valid (data : Certificate core)
       exact edge_crosses_of_joins hJoin hVertexInside hParentOutside
 
 /-- Checker acceptance implies exact ordered-core connectedness. -/
-theorem coreConnected_of_check_eq_true (data : Certificate core)
+theorem coreConnected_of_check_eq_true (data : CertificateData core)
     (hCheck : data.check = true) :
     core.Connected :=
   data.coreConnected_of_valid ((data.check_eq_true_iff).mp hCheck)
 
-end Certificate
+end CertificateData
 
 namespace SubdivisionGraph.Spec
 
@@ -161,7 +158,7 @@ namespace SubdivisionGraph.Spec
 every positive subdivision as a chip-firing graph. -/
 theorem graph_connected_of_spanningCheck
     (spec : SubdivisionGraph.Spec n p)
-    (data : Certificate spec.core)
+    (data : CertificateData spec.core)
     (hCheck : data.check = true) :
     graphConnected spec.graph :=
   spec.graph_connected_of_coreConnected
@@ -179,7 +176,7 @@ def pathCore : ExplicitPotential.Core 3 2 where
   head := ![1, 2]
 
 /-- The valid parent certificate for the three-vertex path, rooted at 0 with ranks 0, 1, and 2. -/
-def pathCertificate : Certificate pathCore where
+def pathCertificate : CertificateData pathCore where
   root := 0
   parent := ![0, 0, 1]
   parentEdge := ![0, 0, 1]
@@ -193,7 +190,7 @@ theorem pathCore_connected : pathCore.Connected :=
 
 /-- An intentionally invalid path certificate with constant zero rank, rejected because non-root
 links do not decrease rank. -/
-def badRankCertificate : Certificate pathCore where
+def badRankCertificate : CertificateData pathCore where
   root := 0
   parent := ![0, 0, 1]
   parentEdge := ![0, 0, 1]

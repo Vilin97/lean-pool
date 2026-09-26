@@ -46,7 +46,7 @@ genus-preserving canonical closed face. -/
 theorem bnExists_censusSpec_of_genusFourRankOneCheck
     (core : ExplicitPotential.Core n p) (hn : 0 < n)
     (cut : CoreVertexCut.Data core)
-    (tree : MarkedGraphs.Certificate.SpanningTreeConnectivity.Certificate core)
+    (tree : MarkedGraphs.Certificate.SpanningTreeConnectivity.CertificateData core)
     (hLoopless : ∀ e : Fin p, core.tail e ≠ core.head e)
     (hCheck : cut.genusFourRankOneCheck tree = true)
     (length : Fin p → ℕ) (hForest : IsForest core (zeroSet length))

@@ -13,7 +13,7 @@ public import Mathlib.Tactic
 /-!
 # From explicit subdivision potentials to rank one
 
-`ExplicitPotential.Certificate` checks the arithmetic data attached to one
+`ExplicitPotential.CertificateData` checks the arithmetic data attached to one
 affine length cone.  This file assembles those data on the concrete
 subdivision graph from `SubdivisionGraph`.
 
@@ -27,9 +27,6 @@ vertices form a strong separator in a subdivision.
 
 @[expose] public section
 
--- `Certificate` is a structure inside a namespace already ending in `Certificate`;
--- renaming either would ripple through every consumer.  Lean v4.33 added
--- `linter.dupNamespace`, which flags exactly this shape.
 namespace Utilities.Certificate
 
 open Finset
@@ -289,11 +286,11 @@ end SubdivisionGraph.Spec
 
 /-! ## Assembly of one checked explicit-potential cone -/
 
-namespace ExplicitPotential.Certificate
+namespace ExplicitPotential.CertificateData
 
 /-- The concrete subdivision specified by an integral point of a checked
 local cone. -/
-def subdivisionSpec (certificate : ExplicitPotential.Certificate m n p)
+def subdivisionSpec (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
@@ -306,18 +303,18 @@ def subdivisionSpec (certificate : ExplicitPotential.Certificate m n p)
 
 /-- The core divisor, extended by zero over all subdivision-interior
 vertices. -/
-def subdivisionDivisor (certificate : ExplicitPotential.Certificate m n p)
+def subdivisionDivisor (certificate : ExplicitPotential.CertificateData m n p)
     (spec : SubdivisionGraph.Spec n p) : CFDiv spec.graph
   | Sum.inl vertex => certificate.divisor vertex
   | Sum.inr _interior => 0
 
 /-- Evaluate one affine core potential at the chosen integral length point. -/
-def evaluatedPotential (certificate : ExplicitPotential.Certificate m n p)
+def evaluatedPotential (certificate : ExplicitPotential.CertificateData m n p)
     (anchor : Fin n) (point : Fin m → ℤ) (vertex : Fin n) : ℤ :=
   ((certificate.witness anchor).potential vertex).eval point
 
 theorem coreRise_evaluatedPotential
-    (certificate : ExplicitPotential.Certificate m n p) (anchor : Fin n)
+    (certificate : ExplicitPotential.CertificateData m n p) (anchor : Fin n)
     (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -326,12 +323,12 @@ theorem coreRise_evaluatedPotential
         (certificate.evaluatedPotential anchor point) edge =
       certificate.riseValue anchor point edge := by
   simp [evaluatedPotential, subdivisionSpec, SubdivisionGraph.Spec.coreRise,
-    ExplicitPotential.Certificate.riseValue,
-    ExplicitPotential.Certificate.rise]
+    ExplicitPotential.CertificateData.riseValue,
+    ExplicitPotential.CertificateData.rise]
 
 /-- The extended divisor has exactly the degree checked on the core. -/
 theorem deg_subdivisionDivisor
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (spec : SubdivisionGraph.Spec n p) :
     deg (certificate.subdivisionDivisor spec) =
       ∑ vertex : Fin n, certificate.divisor vertex := by
@@ -339,7 +336,7 @@ theorem deg_subdivisionDivisor
 
 /-- The firing script attached to a core anchor, assembled on the concrete
 subdivision by canonical integral interpolation. -/
-def coreAnchorScript (certificate : ExplicitPotential.Certificate m n p)
+def coreAnchorScript (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -353,7 +350,7 @@ def coreAnchorScript (certificate : ExplicitPotential.Certificate m n p)
 /-- The checked explicit potential for a core anchor makes the corresponding
 removed-chip residual effective at every core and interior vertex. -/
 theorem effective_coreAnchorResidual
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree)
@@ -416,7 +413,7 @@ theorem effective_coreAnchorResidual
 /-- Every core vertex is reached by the divisor assembled from a checked
 explicit-potential record. -/
 theorem reaches_coreVertex
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree)
@@ -471,7 +468,7 @@ search result occurs among the hypotheses: `Valid`, `FormsHold`, and the
 separator certificate are ordinary Lean propositions, and generated data can
 discharge the first two through their Boolean checkers. -/
 theorem bnExists_of_valid_of_strongSeparator
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ)
     (core_nonempty : 0 < n) (degree : ℤ)
     (hValid : certificate.Valid degree)
@@ -496,6 +493,6 @@ theorem bnExists_of_valid_of_strongSeparator
     obtain ⟨anchor, _hAnchor, rfl⟩ := Finset.mem_image.mp hCoreVertex
     exact certificate.reaches_coreVertex point core_nonempty hValid hCone anchor
 
-end ExplicitPotential.Certificate
+end ExplicitPotential.CertificateData
 
 end Utilities.Certificate

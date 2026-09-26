@@ -57,7 +57,7 @@ variable {m n p : ℕ}
 decoding changes: `segmentNat_cast_eq_of_validClosed` needs non-negativity, not
 positivity. -/
 theorem rawOffset_le_segmentNat_of_validClosed
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) {degree : ℤ}
     (hValid : certificate.ValidClosed degree)
     (hBounds : code.BoundsCertified certificate)
@@ -75,7 +75,7 @@ theorem rawOffset_le_segmentNat_of_validClosed
 
 /-- Closed-orthant replacement for `coordinate_le_segmentNat`. -/
 theorem coordinate_le_segmentNat_of_validClosed
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) {degree : ℤ}
     (hValid : certificate.ValidClosed degree)
     (hBounds : code.BoundsCertified certificate)
@@ -92,7 +92,7 @@ theorem coordinate_le_segmentNat_of_validClosed
 
 section Decode
 
-variable (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+variable (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
   (point : Fin m → ℤ) (core_nonempty : 0 < n) (rep : Fin n → Fin n)
   (rep_idem : ∀ v : Fin n, rep (rep v) = rep v)
   (rep_zero : ∀ edge : Fin p, certificate.segmentNat point edge = 0 →

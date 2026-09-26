@@ -251,7 +251,7 @@ variable {m n p b : ℕ}
 a member of the decoded break list for `edge`. Converse of
 `exists_of_mem_breaks`. -/
 theorem mem_breaks_of_edge_eq
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (point : Fin m → ℤ) (edge : Fin p)
     (index : Fin b) (hEdge : (script.entry index).position.edge = edge) :
     ((script.entry index).position.coordinate certificate point,
@@ -260,7 +260,7 @@ theorem mem_breaks_of_edge_eq
   exact ⟨script.entry index, List.mem_ofFn.mpr ⟨index, rfl⟩, by rw [ite_eq_left hEdge]⟩
 
 /-- Every slot's decoded break list is sorted. -/
-def SortedBreaks (certificate : ExplicitPotential.Certificate m n p)
+def SortedBreaks (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (point : Fin m → ℤ) : Prop :=
   ∀ edge : Fin p,
     SubdivisionGraph.Spec.BreakSorted (script.breaks certificate point edge)
@@ -272,7 +272,7 @@ establishes (breaks are written down in the order the chip should pass
 through them), and it is enough to make every slot's decoded break list
 sorted, without ever materializing that list. -/
 theorem sortedBreaks_of_coordinate_lt
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (point : Fin m → ℤ)
     (hOrder : ∀ edge : Fin p, ∀ i j : Fin b, i < j →
       (script.entry i).position.edge = edge →
@@ -301,7 +301,7 @@ breaks in coordinate order on every slot: the closing balance condition of
 `Balanced`, together with sortedness of every slot's decoded break list.
 The affine-positioned analogue of `GenusFourCore100.RampData`, generalized
 from one window per slot to an arbitrary sorted sequence of them. -/
-structure MarchData (certificate : ExplicitPotential.Certificate m n p)
+structure MarchData (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) : Prop where
@@ -314,7 +314,7 @@ slope minus the running value just before it. Generalizes
 `GenusFourCore100.rampSlope_diff`/`capSlope_diff` to an arbitrary sorted
 sequence of affine-positioned breaks. -/
 theorem prin_firingScript_atBreak
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (script : SlopeScript m p b) (potential : Fin n → ℤ) (point : Fin m → ℤ)
     (core_nonempty : 0 < n) {degree : ℤ} (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)

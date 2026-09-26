@@ -22,9 +22,6 @@ vertex, and the elementary path-cut property required by
 
 @[expose] public section
 
--- `Certificate` is a structure inside a namespace already ending in `Certificate`;
--- renaming either would ripple through every consumer.  Lean v4.33 added
--- `linter.dupNamespace`, which flags exactly this shape.
 namespace Utilities.Certificate
 
 open Finset
@@ -822,7 +819,7 @@ interval on some edge slot.  The endpoints are chosen by finite max/min, so
 the construction is valid for arbitrary (not necessarily connected) `R`. -/
 theorem exists_complementInterval
     (R : Finset spec.Vertex)
-    (hCore : ExplicitPotential.Certificate.coreVertices spec ⊆ R)
+    (hCore : ExplicitPotential.CertificateData.coreVertices spec ⊆ R)
     (hProper : R ≠ Finset.univ) :
     Nonempty (spec.ComplementInterval R) := by
   classical
@@ -835,7 +832,7 @@ theorem exists_complementInterval
   rcases vertex with core | interior
   · exfalso
     exact hVertexOutside
-      (hCore (ExplicitPotential.Certificate.coreVertex_mem_coreVertices
+      (hCore (ExplicitPotential.CertificateData.coreVertex_mem_coreVertices
         spec core))
   · rcases interior with ⟨edge, offset⟩
     let center : spec.PathPosition edge :=
@@ -864,7 +861,7 @@ theorem exists_complementInterval
       rw [show zero = ⟨0, by omega⟩ by apply Fin.ext; rfl,
         spec.pathVertex_zero]
       exact hCore
-        (ExplicitPotential.Certificate.coreVertex_mem_coreVertices spec
+        (ExplicitPotential.CertificateData.coreVertex_mem_coreVertices spec
           (spec.core.tail edge))
     have hLeftCandidates : leftCandidates.Nonempty := by
       refine ⟨zero, ?_⟩
@@ -887,7 +884,7 @@ theorem exists_complementInterval
         apply Fin.ext
         rfl, spec.pathVertex_length]
       exact hCore
-        (ExplicitPotential.Certificate.coreVertex_mem_coreVertices spec
+        (ExplicitPotential.CertificateData.coreVertex_mem_coreVertices spec
           (spec.core.head edge))
     have hRightCandidates : rightCandidates.Nonempty := by
       refine ⟨endpoint, ?_⟩
@@ -940,21 +937,21 @@ graph.  No connectedness hypothesis is needed for this local statement; graph
 connectedness enters only when the strong-separator rank theorem is applied. -/
 theorem coreVertices_strongSeparatorCertificate :
     StrongSeparator.StrongSeparatorCertificate spec.graph
-      (ExplicitPotential.Certificate.coreVertices spec) := by
+      (ExplicitPotential.CertificateData.coreVertices spec) := by
   intro R hCore _hRNonempty hProper
   obtain ⟨interval⟩ := spec.exists_complementInterval R hCore hProper
   exact ⟨interval.expansionCell⟩
 
 end SubdivisionGraph.Spec
 
-namespace ExplicitPotential.Certificate
+namespace ExplicitPotential.CertificateData
 
 variable {m n p : ℕ}
 
 /-- A checked explicit-potential record now proves rank-one existence on its
 connected subdivision with no separately supplied separator hypothesis. -/
 theorem bnExists_on_subdivision_of_valid
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) (degree : ℤ)
     (hValid : certificate.Valid degree)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -968,6 +965,6 @@ theorem bnExists_on_subdivision_of_valid
   exact SubdivisionGraph.Spec.coreVertices_strongSeparatorCertificate
     (certificate.subdivisionSpec point core_nonempty hValid hCone)
 
-end ExplicitPotential.Certificate
+end ExplicitPotential.CertificateData
 
 end Utilities.Certificate

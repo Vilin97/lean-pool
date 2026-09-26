@@ -1423,7 +1423,7 @@ theorem bnExists_one_three_of_two_two
 /-- Checker-facing form: the same finite `genusFourRankOneCheck` that the
 open-orthant corpus already runs, now concluding on the closed orthant. -/
 theorem bnExists_one_three_of_genusFourRankOneCheck
-    (tree : SpanningTreeConnectivity.Certificate d.core)
+    (tree : SpanningTreeConnectivity.CertificateData d.core)
     (hRep : d.RepIsContraction)
     (hLoopless : ∀ e : Fin p, d.core.tail e ≠ d.core.head e)
     (hCheck : cut.genusFourRankOneCheck tree = true) :

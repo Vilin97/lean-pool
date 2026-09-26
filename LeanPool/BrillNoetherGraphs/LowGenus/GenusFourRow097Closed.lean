@@ -130,7 +130,7 @@ theorem bnExists_of_reaches_coreVertices (d : DegSpec n p)
   refine ⟨D, hDegree, ?_⟩
   apply StrongSeparator.rank_ge_one_of_strongSeparatorCertificate
     (d.graph_connected_of_coreConnected hCore)
-    (ExplicitPotential.Certificate.degenerateCoreVertices_nonempty d)
+    (ExplicitPotential.CertificateData.degenerateCoreVertices_nonempty d)
     d.strongSeparatorCertificate
   intro vertex hVertex
   obtain ⟨anchor, -, rfl⟩ := Finset.mem_image.mp hVertex

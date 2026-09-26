@@ -47,7 +47,7 @@ def GenusFourRankOneConditions (c : CoreVertexCut.Data core) : Prop :=
 Connectivity is supplied by local rooted spanning-tree data rather than the
 exponential all-cuts checker. -/
 def genusFourRankOneCheck (c : CoreVertexCut.Data core)
-    (tree : SpanningTreeConnectivity.Certificate core) : Bool :=
+    (tree : SpanningTreeConnectivity.CertificateData core) : Bool :=
   c.check && tree.check &&
     ((decide (c.leftGenus = 2) && decide (c.rightGenus = 2)) ||
       (decide (c.leftGenus = 3) && c.rightTwoRegularCheck &&
@@ -59,12 +59,12 @@ def genusFourRankOneCheck (c : CoreVertexCut.Data core)
 conditions exactly. -/
 @[simp] theorem genusFourRankOneCheck_eq_true_iff
     (c : CoreVertexCut.Data core)
-    (tree : SpanningTreeConnectivity.Certificate core) :
+    (tree : SpanningTreeConnectivity.CertificateData core) :
     c.genusFourRankOneCheck tree = true ↔
       c.Valid ∧ tree.Valid ∧ c.GenusFourRankOneAlternatives := by
   simp only [genusFourRankOneCheck, GenusFourRankOneAlternatives,
     Bool.and_eq_true, Bool.or_eq_true, check_eq_true_iff,
-    SpanningTreeConnectivity.Certificate.check_eq_true_iff,
+    SpanningTreeConnectivity.CertificateData.check_eq_true_iff,
     leftTwoRegularCheck_eq_true_iff, rightTwoRegularCheck_eq_true_iff,
     decide_eq_true_eq]
   tauto
@@ -73,7 +73,7 @@ conditions exactly. -/
 the subdivision theorem. -/
 theorem genusFourRankOneConditions_of_check
     (c : CoreVertexCut.Data core)
-    (tree : SpanningTreeConnectivity.Certificate core)
+    (tree : SpanningTreeConnectivity.CertificateData core)
     (hCheck : c.genusFourRankOneCheck tree = true) :
     c.GenusFourRankOneConditions := by
   obtain ⟨hCut, hTree, hAlternatives⟩ :=
@@ -138,7 +138,7 @@ theorem bnExists_one_three_of_genusFourRankOneConditions
 
 /-- Checker-facing form of the critical genus-four conclusion. -/
 theorem bnExists_one_three_of_genusFourRankOneCheck
-    (tree : SpanningTreeConnectivity.Certificate spec.core)
+    (tree : SpanningTreeConnectivity.CertificateData spec.core)
     (hCheck : c.genusFourRankOneCheck tree = true) :
     BNExists spec.graph 1 3 :=
   c.bnExists_one_three_of_genusFourRankOneConditions spec

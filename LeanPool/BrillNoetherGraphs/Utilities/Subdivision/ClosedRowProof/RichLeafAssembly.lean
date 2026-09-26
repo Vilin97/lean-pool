@@ -865,7 +865,7 @@ theorem richLeaf_sound (core : ExplicitPotential.Core n p) (w : RichWitness)
   · apply StrongSeparator.rank_ge_one_of_strongSeparatorCertificate
       (Utilities.Certificate.DegenerateSpec.DegSpec.graph_connected_of_coreConnected d
         ((ExplicitPotential.Core.connectedCheck_eq_true_iff core).mp hConnected))
-      (ExplicitPotential.Certificate.degenerateCoreVertices_nonempty d)
+      (ExplicitPotential.CertificateData.degenerateCoreVertices_nonempty d)
       (Utilities.Certificate.DegenerateSpec.DegSpec.strongSeparatorCertificate d)
     intro coreVertex hCoreVertex
     obtain ⟨anchor, -, rfl⟩ := Finset.mem_image.mp hCoreVertex

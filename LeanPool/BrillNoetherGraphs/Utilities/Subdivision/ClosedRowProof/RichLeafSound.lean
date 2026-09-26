@@ -1071,7 +1071,7 @@ The following are the exact nontrivial obligations left before a theorem
   **Current formal interface obstruction.**  `RichWitness.chips` is still a
   raw `List (Nat × Form × Int)`, whereas the closed-face library's only
   chipwise divisor API is `Closed.WeightedChip.divisorOf`, which accepts
-  bounded `Code`s from an `ExplicitPotential.Certificate`.  A rich leaf has
+  bounded `Code`s from an `ExplicitPotential.CertificateData`.  A rich leaf has
   neither of those objects.  Consequently the library has no definition for
   the rich chip divisor on `d.graph`, nor a coefficient theorem saying that
   chips which decode to the tail/head are exactly the C-faithful

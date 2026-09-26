@@ -103,7 +103,7 @@ theorem rank_ge_one_of_twoPoleData {n p : ℕ}
         exact J.winnable_sub_right_first D CA CB hDA hDB
           (fun z _ _ => hDEffective z) hCA hCB hWinA hWinB
   apply StrongSeparator.rank_ge_one_of_strongSeparatorCertificate hConnected
-    (ExplicitPotential.Certificate.coreVertices_nonempty s)
+    (ExplicitPotential.CertificateData.coreVertices_nonempty s)
     s.coreVertices_strongSeparatorCertificate
   intro vertex hVertex
   obtain ⟨anchor, _hAnchor, rfl⟩ := Finset.mem_image.mp hVertex

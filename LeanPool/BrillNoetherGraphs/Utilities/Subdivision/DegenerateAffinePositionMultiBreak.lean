@@ -52,14 +52,14 @@ variable {m n p : ℕ}
 /-- The affine certificate and a closed-face `DegSpec` read the same concrete
 slot lengths at this point. -/
 def LengthCompatible (d : DegSpec n p)
-    (certificate : ExplicitPotential.Certificate m n p) (point : Fin m → ℤ) : Prop :=
+    (certificate : ExplicitPotential.CertificateData m n p) (point : Fin m → ℤ) : Prop :=
   ∀ edge : Fin p, d.length edge = certificate.segmentNat point edge
 
 /-- Decode a cone-certified affine code into an arbitrary compatible closed
 face.  Unlike `Code.decodeDegenerateVertex`, this does not require the face's
 representative map to have been constructed by the certificate census. -/
 def Code.decodeClosedVertex (d : DegSpec n p)
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) {degree : ℤ}
     (hValid : certificate.ValidClosed degree)
     (hLength : LengthCompatible d certificate point)
@@ -80,13 +80,13 @@ structure WeightedChip (m p : ℕ) where
 namespace WeightedChip
 
 /-- Every named chip position has its two bounds certified by the local cone. -/
-def BoundsCertified (certificate : ExplicitPotential.Certificate m n p)
+def BoundsCertified (certificate : ExplicitPotential.CertificateData m n p)
     (chips : List (WeightedChip m p)) : Prop :=
   ∀ chip ∈ chips, chip.position.BoundsCertified certificate
 
 /-- The divisor denoted by a list of weighted affine chips on a compatible
 closed face. -/
-def divisorOf (d : DegSpec n p) (certificate : ExplicitPotential.Certificate m n p)
+def divisorOf (d : DegSpec n p) (certificate : ExplicitPotential.CertificateData m n p)
     (chips : List (WeightedChip m p)) (point : Fin m → ℤ) {degree : ℤ}
     (hValid : certificate.ValidClosed degree)
     (hLength : LengthCompatible d certificate point)
@@ -99,7 +99,7 @@ def divisorOf (d : DegSpec n p) (certificate : ExplicitPotential.Certificate m n
 
 /-- The degree of a weighted affine-chip divisor is the sum of its declared
 coefficients, including negative coefficients. -/
-theorem deg_divisorOf (d : DegSpec n p) (certificate : ExplicitPotential.Certificate m n p)
+theorem deg_divisorOf (d : DegSpec n p) (certificate : ExplicitPotential.CertificateData m n p)
     (chips : List (WeightedChip m p)) (point : Fin m → ℤ) {degree : ℤ}
     (hValid : certificate.ValidClosed degree)
     (hLength : LengthCompatible d certificate point)
@@ -147,17 +147,17 @@ def WellFormed (script : BreakList m p) : Prop :=
   ∀ edge entry, entry ∈ script edge → entry.position.edge = edge
 
 /-- All affine positions in the break lists have certified bounds. -/
-def BoundsCertified (certificate : ExplicitPotential.Certificate m n p)
+def BoundsCertified (certificate : ExplicitPotential.CertificateData m n p)
     (script : BreakList m p) : Prop :=
   ∀ edge entry, entry ∈ script edge → entry.position.BoundsCertified certificate
 
 /-- Evaluate the ordered affine break list for one slot. -/
-def breaks (certificate : ExplicitPotential.Certificate m n p)
+def breaks (certificate : ExplicitPotential.CertificateData m n p)
     (script : BreakList m p) (point : Fin m → ℤ) (edge : Fin p) : List (ℕ × ℤ) :=
   (script edge).map fun entry => (entry.position.coordinate certificate point, entry.slope)
 
 /-- A concrete closed-face firing script from affine break lists. -/
-def firingScript (d : DegSpec n p) (certificate : ExplicitPotential.Certificate m n p)
+def firingScript (d : DegSpec n p) (certificate : ExplicitPotential.CertificateData m n p)
     (script : BreakList m p) (potential : Fin n → ℤ) (point : Fin m → ℤ) :
     firingScript d.graph :=
   d.breakScript potential (script.breaks certificate point)
@@ -165,13 +165,13 @@ def firingScript (d : DegSpec n p) (certificate : ExplicitPotential.Certificate 
 /-- The sole closing condition for an affine break-list script on a closed
 face.  In particular it forces equality of endpoint potentials on a collapsed
 slot. -/
-def Balanced (d : DegSpec n p) (certificate : ExplicitPotential.Certificate m n p)
+def Balanced (d : DegSpec n p) (certificate : ExplicitPotential.CertificateData m n p)
     (script : BreakList m p) (potential : Fin n → ℤ) (point : Fin m → ℤ) : Prop :=
   d.BreakData potential (script.breaks certificate point)
 
 /-- The interior Laplacian is the jump of the evaluated ordered break list. -/
 theorem prin_firingScript_interiorVertex (d : DegSpec n p)
-    (certificate : ExplicitPotential.Certificate m n p) (script : BreakList m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (script : BreakList m p)
     (potential : Fin n → ℤ) (point : Fin m → ℤ) (hInv : d.RepInvariant potential)
     (hBalanced : script.Balanced d certificate potential point)
     (edge : Fin p) (offset : Fin (d.length edge - 1)) :
@@ -184,7 +184,7 @@ theorem prin_firingScript_interiorVertex (d : DegSpec n p)
 
 /-- Away from every named affine break, the interior Laplacian vanishes. -/
 theorem prin_firingScript_interiorVertex_eq_zero (d : DegSpec n p)
-    (certificate : ExplicitPotential.Certificate m n p) (script : BreakList m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (script : BreakList m p)
     (potential : Fin n → ℤ) (point : Fin m → ℤ) (hInv : d.RepInvariant potential)
     (hBalanced : script.Balanced d certificate potential point)
     (edge : Fin p) (offset : Fin (d.length edge - 1))
@@ -201,7 +201,7 @@ theorem prin_firingScript_interiorVertex_eq_zero (d : DegSpec n p)
 /-- The core Laplacian is the usual endpoint-slope sum over the contracted
 classes, including zero slots. -/
 theorem prin_firingScript_coreVertex (d : DegSpec n p)
-    (certificate : ExplicitPotential.Certificate m n p) (script : BreakList m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (script : BreakList m p)
     (potential : Fin n → ℤ) (point : Fin m → ℤ) (hInv : d.RepInvariant potential)
     (hBalanced : script.Balanced d certificate potential point) (vertex : Fin n) :
     prin d.graph (script.firingScript d certificate potential point) (d.coreVertex vertex) =

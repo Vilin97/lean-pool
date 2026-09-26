@@ -193,7 +193,7 @@ def toCut (d : CutData) (core : ExplicitPotential.Core n p) (hn : 0 < n) :
 
 /-- Decode the spanning-tree certificate. -/
 def toTree (d : CutData) (core : ExplicitPotential.Core n p) (hn : 0 < n)
-    (hp : 0 < p) : SpanningTreeConnectivity.Certificate core where
+    (hp : 0 < p) : SpanningTreeConnectivity.CertificateData core where
   root := ⟨d.root % n, Nat.mod_lt _ hn⟩
   parent := fun v => ⟨d.parent.getD v.val 0 % n, Nat.mod_lt _ hn⟩
   parentEdge := fun v => ⟨d.parentEdge.getD v.val 0 % p, Nat.mod_lt _ hp⟩

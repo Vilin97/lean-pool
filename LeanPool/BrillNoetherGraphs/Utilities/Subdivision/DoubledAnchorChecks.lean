@@ -39,9 +39,9 @@ only consumers are.
 @[expose] public section
 
 -- The established name of the certificate namespace repeats `Certificate`,
--- which is what `ExplicitPotential.Certificate` means.  Lean v4.33 added
+-- which is what `ExplicitPotential.CertificateData` means.  Lean v4.33 added
 -- `linter.dupNamespace`, which flags exactly this shape.
-namespace Utilities.Certificate.ExplicitPotential.Certificate
+namespace Utilities.Certificate.ExplicitPotential.CertificateData
 
 open Utilities
 open Utilities.Certificate
@@ -54,19 +54,19 @@ variable {m n p : ℕ}
 /-- **The checker's W7 domination row.**  The core divisor carries at least
 `chips` chips at `mark` and nothing negative anywhere else.  Written as a
 single uniform inequality so that the Boolean form below is one `allFin`. -/
-def DominatesMark (certificate : Certificate m n p) (mark : Fin n)
+def DominatesMark (certificate : CertificateData m n p) (mark : Fin n)
     (chips : ℤ) : Prop :=
   ∀ vertex : Fin n,
     0 ≤ certificate.divisor vertex - if vertex = mark then chips else 0
 
 /-- Executable form of `DominatesMark`, for an emitter to discharge by
 `decide` on concrete data. -/
-def dominatesMarkCheck (certificate : Certificate m n p) (mark : Fin n)
+def dominatesMarkCheck (certificate : CertificateData m n p) (mark : Fin n)
     (chips : ℤ) : Bool :=
   allFin fun vertex : Fin n =>
     decide (0 ≤ certificate.divisor vertex - if vertex = mark then chips else 0)
 
-@[simp] theorem dominatesMarkCheck_eq_true_iff (certificate : Certificate m n p)
+@[simp] theorem dominatesMarkCheck_eq_true_iff (certificate : CertificateData m n p)
     (mark : Fin n) (chips : ℤ) :
     certificate.dominatesMarkCheck mark chips = true ↔
       certificate.DominatesMark mark chips := by
@@ -76,11 +76,11 @@ def dominatesMarkCheck (certificate : Certificate m n p) (mark : Fin n)
 
 /-- The target coefficient at a core vertex after removing `mult` chips at the
 anchor.  At `mult = 1` this is `targetCoefficient`, syntactically. -/
-def multTargetCoefficient (certificate : Certificate m n p) (mult : ℤ)
+def multTargetCoefficient (certificate : CertificateData m n p) (mult : ℤ)
     (anchor vertex : Fin n) : ℤ :=
   certificate.divisor vertex - if vertex = anchor then mult else 0
 
-theorem multTargetCoefficient_one (certificate : Certificate m n p)
+theorem multTargetCoefficient_one (certificate : CertificateData m n p)
     (anchor vertex : Fin n) :
     certificate.multTargetCoefficient 1 anchor vertex =
       certificate.targetCoefficient anchor vertex := rfl
@@ -89,23 +89,23 @@ theorem multTargetCoefficient_one (certificate : Certificate m n p)
 semantic content of the `(comp x …)` plan: everything else — the slack
 discipline, the potential, the endpoint bookkeeping — is shared verbatim with
 the `n` rank anchors. -/
-def MultResidual (certificate : Certificate m n p) (mult : ℤ)
+def MultResidual (certificate : CertificateData m n p) (mult : ℤ)
     (anchor : Fin n) : Prop :=
   ∀ vertex : Fin n,
     0 ≤ certificate.multTargetCoefficient mult anchor vertex +
       certificate.lowerEndpointContribution anchor vertex
 
 /-- Executable form of `MultResidual`. -/
-def multResidualCheck (certificate : Certificate m n p) (mult : ℤ)
+def multResidualCheck (certificate : CertificateData m n p) (mult : ℤ)
     (anchor : Fin n) : Bool :=
   allFin fun vertex : Fin n =>
     decide (0 ≤ certificate.multTargetCoefficient mult anchor vertex +
       certificate.lowerEndpointContribution anchor vertex)
 
-@[simp] theorem multResidualCheck_eq_true_iff (certificate : Certificate m n p)
+@[simp] theorem multResidualCheck_eq_true_iff (certificate : CertificateData m n p)
     (mult : ℤ) (anchor : Fin n) :
     certificate.multResidualCheck mult anchor = true ↔
       certificate.MultResidual mult anchor := by
   simp [multResidualCheck, MultResidual]
 
-end Utilities.Certificate.ExplicitPotential.Certificate
+end Utilities.Certificate.ExplicitPotential.CertificateData

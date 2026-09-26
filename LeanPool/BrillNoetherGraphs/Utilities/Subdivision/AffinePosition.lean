@@ -51,13 +51,13 @@ def lowerRow (code : Code m p) : ExplicitPotential.AffineForm m :=
   code.offset
 
 /-- The upper-bound row for a position code on a particular certificate. -/
-def upperRow (certificate : ExplicitPotential.Certificate m n p)
+def upperRow (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) : ExplicitPotential.AffineForm m :=
   ExplicitPotential.AffineForm.sub (certificate.segment code.edge) code.offset
 
 /-- The local cone explicitly contains the two rows which say that the
 offset is between zero and the length of its named slot. -/
-def BoundsCertified (certificate : ExplicitPotential.Certificate m n p)
+def BoundsCertified (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) : Prop :=
   (code.lowerRow = 0 ∨ code.lowerRow ∈ certificate.cone) ∧
   (code.upperRow certificate = 0 ∨ code.upperRow certificate ∈ certificate.cone)
@@ -76,13 +76,13 @@ def checkRow (form : ExplicitPotential.AffineForm m)
   simp [checkRow]
 
 /-- Executable fail-closed bounds check for an affine position code. -/
-def checkBounds (certificate : ExplicitPotential.Certificate m n p)
+def checkBounds (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) : Bool :=
   checkRow code.lowerRow certificate.cone &&
     checkRow (code.upperRow certificate) certificate.cone
 
 @[simp] theorem checkBounds_eq_true_iff
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) :
     code.checkBounds certificate = true ↔ code.BoundsCertified certificate := by
   simp [checkBounds, BoundsCertified]
@@ -92,7 +92,7 @@ def rawOffset (code : Code m p) (point : Fin m → ℤ) : ℕ :=
   (code.offset.eval point).toNat
 
 private theorem holds_of_zero_or_mem
-    (certificate : ExplicitPotential.Certificate m n p)
+    (certificate : ExplicitPotential.CertificateData m n p)
     (point : Fin m → ℤ) (form : ExplicitPotential.AffineForm m)
     (hRow : form = 0 ∨ form ∈ certificate.cone)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
@@ -103,7 +103,7 @@ private theorem holds_of_zero_or_mem
 
 /-- Cone-certified offsets evaluate nonnegatively. -/
 theorem offset_nonneg
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
     0 ≤ code.offset.eval point := by
@@ -112,7 +112,7 @@ theorem offset_nonneg
 
 /-- Cone-certified offsets do not exceed their named segment length. -/
 theorem offset_le_segment_eval
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
     code.offset.eval point ≤ (certificate.segment code.edge).eval point := by
@@ -125,7 +125,7 @@ theorem offset_le_segment_eval
 /-- At a certified point, coercing the raw offset back to `ℤ` recovers its
 affine value exactly. -/
 theorem rawOffset_cast
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
     (code.rawOffset point : ℤ) = code.offset.eval point := by
@@ -133,7 +133,7 @@ theorem rawOffset_cast
 
 /-- The raw natural offset is bounded by the concrete subdivision length. -/
 theorem rawOffset_le_segmentNat
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
@@ -149,7 +149,7 @@ theorem rawOffset_le_segmentNat
 
 /-- Tail-oriented numerical coordinate of a code in the concrete
 subdivision. -/
-def coordinate (certificate : ExplicitPotential.Certificate m n p)
+def coordinate (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) (point : Fin m → ℤ) : ℕ :=
   if code.fromHead then
     certificate.segmentNat point code.edge - code.rawOffset point
@@ -157,7 +157,7 @@ def coordinate (certificate : ExplicitPotential.Certificate m n p)
 
 /-- The orientation-normalized coordinate lies on its named slot. -/
 theorem coordinate_le_segmentNat
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
@@ -169,7 +169,7 @@ theorem coordinate_le_segmentNat
   · exact code.rawOffset_le_segmentNat certificate point hValid hBounds hCone
 
 /-- Typed path position decoded from a cone-certified affine position. -/
-def decodePosition (certificate : ExplicitPotential.Certificate m n p)
+def decodePosition (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : code.BoundsCertified certificate)
@@ -180,7 +180,7 @@ def decodePosition (certificate : ExplicitPotential.Certificate m n p)
     (code.coordinate_le_segmentNat certificate point hValid hBounds hCone)
 
 /-- The actual subdivision vertex named by an affine position code. -/
-def decodeVertex (certificate : ExplicitPotential.Certificate m n p)
+def decodeVertex (certificate : ExplicitPotential.CertificateData m n p)
     (code : Code m p) (point : Fin m → ℤ) (core_nonempty : 0 < n)
     {degree : ℤ} (hValid : certificate.Valid degree)
     (hBounds : code.BoundsCertified certificate)
@@ -190,7 +190,7 @@ def decodeVertex (certificate : ExplicitPotential.Certificate m n p)
     code.edge (code.decodePosition certificate point core_nonempty hValid hBounds hCone)
 
 @[simp] theorem decodePosition_val
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point) :
@@ -199,7 +199,7 @@ def decodeVertex (certificate : ExplicitPotential.Certificate m n p)
 
 /-- Tail-oriented codes retain their raw coordinate. -/
 theorem decodePosition_val_of_fromHead_false
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -210,7 +210,7 @@ theorem decodePosition_val_of_fromHead_false
 
 /-- Head-oriented codes use the complementary tail coordinate. -/
 theorem decodePosition_val_of_fromHead_true
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -222,7 +222,7 @@ theorem decodePosition_val_of_fromHead_true
 /-- Tail-oriented decoding is definitionally the ordinary bounded path
 position constructor. -/
 theorem decodePosition_eq_pathPosition_of_fromHead_false
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -238,7 +238,7 @@ theorem decodePosition_eq_pathPosition_of_fromHead_false
 /-- A decoded position is interior whenever its normalized coordinate is
 strictly between the two endpoints. -/
 theorem decodePosition_isInterior
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -254,7 +254,7 @@ theorem decodePosition_isInterior
 
 /-- Coordinate zero decodes to the tail core vertex. -/
 theorem decodeVertex_eq_tail_of_coordinate_eq_zero
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)
@@ -276,7 +276,7 @@ theorem decodeVertex_eq_tail_of_coordinate_eq_zero
 
 /-- Coordinate equal to the slot length decodes to the head core vertex. -/
 theorem decodeVertex_eq_head_of_coordinate_eq_length
-    (certificate : ExplicitPotential.Certificate m n p) (code : Code m p)
+    (certificate : ExplicitPotential.CertificateData m n p) (code : Code m p)
     (point : Fin m → ℤ) (core_nonempty : 0 < n) {degree : ℤ}
     (hValid : certificate.Valid degree) (hBounds : code.BoundsCertified certificate)
     (hCone : ExplicitPotential.FormsHold certificate.cone point)

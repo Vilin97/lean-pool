@@ -31,7 +31,7 @@ open Utilities
 
 open Certificate
 open Certificate.ExplicitPotential
-open Certificate.ExplicitPotential.Certificate
+open Certificate.ExplicitPotential.CertificateData
 open Utilities.Certificate.ContractionForestCensusGeneral
 open Configurations
 
@@ -72,7 +72,7 @@ structure CoordinateCell (core : ExplicitPotential.Core n p) where
 
 /-- Interpret a cell as the standard explicit-potential certificate. -/
 def CoordinateCell.certificate {core : ExplicitPotential.Core n p}
-    (cell : CoordinateCell core) : Certificate p n p where
+    (cell : CoordinateCell core) : CertificateData p n p where
   core := core
   segment := coordinateForm
   divisor := cell.divisor
@@ -92,14 +92,14 @@ def lengthPoint (length : Fin p → ℕ) : Fin p → ℤ :=
     (length : Fin p → ℕ) (edge : Fin p) :
     cell.certificate.segmentNat (lengthPoint length) edge = length edge := by
   simp [CoordinateCell.certificate, lengthPoint,
-    ExplicitPotential.Certificate.segmentNat]
+    ExplicitPotential.CertificateData.segmentNat]
 
 @[simp] theorem coordinateCell_zeroSlots
     {core : ExplicitPotential.Core n p} (cell : CoordinateCell core)
     (length : Fin p → ℕ) :
     cell.certificate.zeroSlots (lengthPoint length) = zeroSlots length := by
   ext edge
-  simp [ExplicitPotential.Certificate.mem_zeroSlots,
+  simp [ExplicitPotential.CertificateData.mem_zeroSlots,
     Configurations.mem_zeroSlots]
 
 /-- One accepted coordinate cell proves the semantic row statement on the

@@ -32,7 +32,7 @@ That is `RepInvariant`, and it is genuinely an extra input:
 * on the interior it is free (`repInvariant_of_pos`, since `rep = id` there);
 * along a *single* collapsed slot it is free for a certificate potential, by
   `ValidClosed`'s shared `lowerForm`/`upperForm` rows
-  (`ExplicitPotential.Certificate.potential_eq_of_segment_eval_zero`);
+  (`ExplicitPotential.CertificateData.potential_eq_of_segment_eval_zero`);
 * on a whole class it is exactly the statement that `rep` merges only vertices
   joined by chains of collapsed slots.  The `forest` field does not imply this
   (see the caveat in the design note), so it is supplied, and
