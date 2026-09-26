@@ -10563,3 +10563,45 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: li-criterion-rh-equivalence-lean
+    title: Li's criterion for the Riemann Hypothesis
+    summary: 'Li''s criterion for the Riemann zeta function, formalized in Lean 4 over
+      Mathlib: Mathlib''s `RiemannHypothesis` holds if and only if every Li-Keiper coefficient
+      of the completed xi function has nonnegative real part. The zero-indexed analytic
+      coefficient at n is Li''s classical lambda_(n+1), the n-th Taylor coefficient
+      at 0 of the logarithmic derivative of s |-> xi(1/(1-s)). A second compared theorem
+      identifies this analytic coefficient with Li''s arithmetic coefficient, the symmetrized
+      sum over the nontrivial zeros counted with multiplicity, and proves that symmetrized
+      family summable so the sum is the genuine one. Both results are unconditional:
+      the biconditional, the coefficient identification, the genus-1 Hadamard factorization
+      of xi (with multiplicity), genus-1 summability of 1/|rho|^2, and the growth bound
+      order(xi) <= 1 are all proved. This is a formalization of a classically known
+      equivalence (X.-J. Li, 1997); it is not a proof of the Riemann Hypothesis, nor
+      of the positivity of the coefficients.'
+    branch: analytic number theory
+    entry_module: LeanPool.LiCriterion
+    authors:
+    - Nicholas Bulka
+    source:
+      url: https://github.com/nicholasbulka/li-criterion-rh-equivalence-lean
+      github_repo: nicholasbulka/li-criterion-rh-equivalence-lean
+      commit: 35df682f3b709ffe5fbcfdd452dfa964bd622b87
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - li_criterion
+    - li_coefficients_eq_zero_sum
+    main_results:
+    - declaration: li_criterion
+      informal: The Riemann hypothesis is equivalent to nonnegativity of every Li–Keiper
+        coefficient.
+    - declaration: li_coefficients_eq_zero_sum
+      informal: The analytic Li–Keiper coefficients equal the symmetrically summed arithmetic
+        coefficients over the nontrivial zeros.
+    tags:
+    - number-theory
+    - riemann-hypothesis
+    - complex-analysis
+    msc:
+    - 11M26
