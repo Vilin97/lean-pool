@@ -134,7 +134,7 @@ omit [MeasurableSpace (DiscreteCharacterSpace A)]
 @[simp] theorem spectralEnergyTest_apply
     (a : A) (χ : DiscreteCharacterSpace A) :
     spectralEnergyTest a χ =
-      ‖((χ (Multiplicative.ofAdd a) : Circle) : ℂ) - 1‖ ^ 2 := rfl
+      ‖((χ (Multiplicative.ofAdd a) : Circle) : ℂ) - 1‖ ^ 2 := by rfl
 
 omit [DiscreteTopology A] in
 /-- The spectral displacement integrand is integrable against every probability measure. -/

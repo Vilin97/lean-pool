@@ -301,7 +301,7 @@ theorem hadamardLayerOp_mem_unitaryGroup (n : ℕ) :
           · rw [ite_eq_right hys, Matrix.one_apply_ne hys, mul_zero]
 
 /-- The `n`-qubit Hadamard layer as a unitary gate. -/
-def hadamardLayer (n : ℕ) : Gate n :=
+@[expose] def hadamardLayer (n : ℕ) : Gate n :=
   Gate.ofUnitary (hadamardLayerOp n) (hadamardLayerOp_mem_unitaryGroup n)
 
 /-- Raw uniform input-register vector produced by the first Hadamard layer. -/
@@ -359,7 +359,7 @@ theorem norm_afterPhaseQueryVec (f : Oracle n) : ‖afterPhaseQueryVec f‖ = 1 
   simp_all
 
 /-- The input register after the XOR oracle has been converted into a phase query. -/
-def afterPhaseQuery (f : Oracle n) : PureState n :=
+@[expose] def afterPhaseQuery (f : Oracle n) : PureState n :=
   PureState.ofVec (afterPhaseQueryVec f) (norm_afterPhaseQueryVec f)
 
 /-- The actual XOR-oracle query on the uniform input register and `|−⟩`

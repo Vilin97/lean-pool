@@ -68,7 +68,8 @@ theorem timeMultiplier_norm (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
   timeMultiplier_norm_le T hT A
 
 /-- The actual bounded linear coefficient-to-Bochner-multiplier map. -/
-def coefficientLinear : C(Icc (0 : ℝ) T, E →L[ℝ] F) →ₗ[ℝ] (TimeLp T E →L[ℝ] TimeLp T F) where
+@[expose] def coefficientLinear :
+    C(Icc (0 : ℝ) T, E →L[ℝ] F) →ₗ[ℝ] (TimeLp T E →L[ℝ] TimeLp T F) where
   toFun := timeMultiplier T hT
   map_add' := timeMultiplier_add T hT
   map_smul' := timeMultiplier_smul T hT

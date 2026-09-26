@@ -59,6 +59,7 @@ namespace WithRPowDist
 variable {X : Type*} {α : ℝ} {hα₀ : 0 < α} {hα₁ : α ≤ 1}
 
 /-- The natural equivalence between `WithRPowDist X α hr₀ hr₁` and `X`. -/
+@[expose]
 def equiv (X : Type*) (α : ℝ) (hr₀ : 0 < α) (hr₁ : α ≤ 1) : WithRPowDist X α hr₀ hr₁ ≃ X where
   toFun := val
   invFun := mk
@@ -124,7 +125,7 @@ theorem continuous_mk : Continuous (mk : X → WithRPowDist X α hα₀ hα₁) 
   continuous_induced_rng.2 continuous_id
 
 /-- The natural homeomorphism between `WithRPowDist X α hα₀ hα₁` and `X`. -/
-def homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X where
+@[expose] def homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X where
   toEquiv := WithRPowDist.equiv X α hα₀ hα₁
 
 theorem toEquiv_homeomorph : homeomorph.toEquiv = equiv X α hα₀ hα₁ := by rfl

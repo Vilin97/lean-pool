@@ -428,7 +428,7 @@ lemma computeRulesRec_derives [DecidableEq T] [DecidableEq g.NT] {r : ContextFre
   | succ n ih =>
     unfold computeRulesRec at hrix
     split at hrix
-    · rename_i _ hrn
+    · rename_i n₁ hrn
       simp only [List.cons_subset, List.get_eq_getElem] at hrix hrn
       obtain ⟨hx₁, hx₂⟩ := hrix
       rw [← List.getElem_cons_drop, hrn]
@@ -441,7 +441,10 @@ lemma computeRulesRec_derives [DecidableEq T] [DecidableEq g.NT] {r : ContextFre
         · simp only [List.map_cons, List.map_drop]
           rw [← List.singleton_append, ← List.singleton_append, embedSymbol_nonterminal,
             ← List.map_drop]
-          apply ChomskyNormalFormGrammar.Derives.append_left
+          simp only [ChomskyNormalFormRule.output]
+          refine ChomskyNormalFormGrammar.Derives.append_left
+            (g := ChomskyNormalFormGrammar.mk g.NT' _ x.toFinset)
+            (p := ([Symbol.nonterminal (Sum.inl n₁)] : List (Symbol T g.NT'))) ?_
           have hrₒ : r.output.length - 2 - (n + 1) + 1 = r.output.length - 2 - n := by omega
           simp_all
       · omega

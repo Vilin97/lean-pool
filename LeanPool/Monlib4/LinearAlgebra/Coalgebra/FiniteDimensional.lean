@@ -188,7 +188,7 @@ Coalgebra.lTensor_mul_comp_rTensor_comul_of h
 
 /-- Construct the Frobenius algebra structure from finite-dimensional Hilbert-algebra data. -/
 @[reducible]
-noncomputable def FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
+@[expose] noncomputable def FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
   [RCLike R] [NormedAddCommGroupOfRing A] [InnerProductSpace R A]
   [SMulCommClass R A A] [IsScalarTower R A A] [FiniteDimensional R A]
   (h : ∃ σ : A → A, ∀ x y z : A, ⟪x * y, z⟫_R = ⟪y, σ x * z⟫_R) :

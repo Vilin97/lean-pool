@@ -14,7 +14,7 @@ public section
 namespace Erdos97Octagon.RawIncidence
 
 /-- Generated monotone-obstruction entries for this hash-bucket group. -/
-def patternBuckets21 : Array (List PatternEntry) := #[
+@[expose] def patternBuckets21 : Array (List PatternEntry) := #[
   [
     ⟨424, 145138297339904, .k4 2 [2, 3, 5] 2 3 5 7⟩,
     ⟨2216, 3474747736396398592, .k4 4 [4, 7, 5, 6] 3 4 5 6⟩,
@@ -75,7 +75,7 @@ def patternBuckets21 : Array (List PatternEntry) := #[
 ]
 
 /-- Generated exact-table entries for this hash-bucket group. -/
-def hardBuckets21 : Array (List HardEntry) := #[
+@[expose] def hardBuckets21 : Array (List HardEntry) := #[
   [
     ⟨680, 8694995735922566430, .hubPentagon 0 [0, 1, 2, 3, 4, 6, 5, 7] 1 0 2 5 6 3⟩,
     ⟨1192, 7148788942262922270, .residual 1557451065360065⟩,

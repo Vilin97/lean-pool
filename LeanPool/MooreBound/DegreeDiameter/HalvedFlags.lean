@@ -79,7 +79,7 @@ end PartialFlag
 
 /-- An even and an odd partial flag are compatible when they are the two
 parts of one complete flag. -/
-def Compatible (P : EvenPartialFlag (K := K) (V := V) (n := n))
+@[expose] def Compatible (P : EvenPartialFlag (K := K) (V := V) (n := n))
     (Q : OddPartialFlag (K := K) (V := V) (n := n)) : Prop :=
   ∃ F : CompleteFlag K V n,
     PartialFlag.ofComplete 0 F = P ∧ PartialFlag.ofComplete 1 F = Q

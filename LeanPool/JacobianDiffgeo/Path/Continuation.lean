@@ -345,7 +345,7 @@ theorem pathIntegral_zero_form (γ : Path x y) : pathIntegral γ (0 : Form1 X) =
   ring
 
 /-- The integral of a fixed path, as a ℂ-linear map on 1-forms. -/
-noncomputable def pathIntegralₗ (γ : Path x y) : Form1 X →ₗ[ℂ] ℂ where
+@[expose] noncomputable def pathIntegralₗ (γ : Path x y) : Form1 X →ₗ[ℂ] ℂ where
   toFun η := pathIntegral γ η
   map_add' := pathIntegral_add γ
   map_smul' c η := by simpa using pathIntegral_smul γ c η

@@ -119,6 +119,7 @@ theorem N_bot_mem {X : Set ℕ} : N.bot.mem X ↔ X = Set.univ := NeighborhoodSy
 
 /-- Scott's total element `n̂ = ↑{n} = {{n}, ℕ}`, the principal filter of the
 singleton `{n}`. -/
+@[expose]
 def natElem (n : ℕ) : N.Element := N.principal (N_mem.mpr (memN_singleton n))
 
 /-- A neighbourhood belongs to `n̂` iff it is `ℕ` (the master) or the singleton
@@ -137,6 +138,7 @@ theorem mem_natElem_iff {n : ℕ} {Y : Set ℕ} :
     · exact ⟨memN_singleton n, subset_rfl⟩
 
 /-- Scott's `0 ∈ |N|`, the distinguished zero of the structured domain. -/
+@[expose]
 def zeroElt : N.Element := natElem 0
 
 /-! ### The strict lifting combinator `n̂ ↦ val n`, `⊥ ↦ ⊥`. -/

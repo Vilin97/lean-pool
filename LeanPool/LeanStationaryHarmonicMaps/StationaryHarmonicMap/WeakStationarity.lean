@@ -63,7 +63,7 @@ theorem weakStationarityIntegrand_eq_zero_of_notMem_tsupport {n m : ℕ}
 
 /-- Weak stationarity in the domain-variation sense, stated in terms of the
 weak gradient field `Du`. -/
-def WeakStationaryIn {n m : ℕ}
+@[expose] def WeakStationaryIn {n m : ℕ}
     (Du : Domain n → Gradient n m) (Ω : Set (Domain n)) : Prop :=
   ∀ X : Domain n → Domain n,
     ContDiff ℝ 1 X →
@@ -99,7 +99,7 @@ theorem weakStationaryIn_of_subset {n m : ℕ}
   rwa [heq] at hzero_Ω
 
 /-- Local integrability of a scalar function on compact subsets of `Ω`. -/
-def LocallyIntegrableScalarIn {n : ℕ}
+@[expose] def LocallyIntegrableScalarIn {n : ℕ}
     (f : Domain n → ℝ) (Ω : Set (Domain n)) : Prop :=
   ∀ K : Set (Domain n), IsCompact K → K ⊆ Ω → IntegrableOn f K volume
 
@@ -111,7 +111,7 @@ of `|u|²`. -/
 
 /-- The `L²_loc` requirement for a gradient field, stated as local integrability
 of its Hilbert-Schmidt energy. -/
-def GradientLocallyL2In {n m : ℕ}
+@[expose] def GradientLocallyL2In {n m : ℕ}
     (Du : Domain n → Gradient n m) (Ω : Set (Domain n)) : Prop :=
   LocallyIntegrableScalarIn (fun x => weakEnergyDensity Du x) Ω
 
@@ -159,7 +159,7 @@ theorem gradientLocallyL2In_integrableOn_ball {n m : ℕ}
 For each coordinate direction `i`, the `i`-th component of `Du` is the weak
 derivative of `u` if integration by parts holds against every compactly
 supported target-valued test map. -/
-def HasWeakGradientIn {n m : ℕ}
+@[expose] def HasWeakGradientIn {n m : ℕ}
     (u : Domain n → Target m) (Du : Domain n → Gradient n m)
     (Ω : Set (Domain n)) : Prop :=
   ∀ i : Fin n, ∀ ψ : Domain n → Target m,

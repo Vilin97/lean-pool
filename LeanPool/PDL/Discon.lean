@@ -22,8 +22,7 @@ namespace PDL
 /-! ## Conjunction -/
 
 /-- Conjunction of a list of formulas, with the empty conjunction equal to truth. -/
-@[simp]
-def con : List Formula → Formula
+@[expose, simp] def con : List Formula → Formula
   | [] => ⊤
   | [f] => f
   | f :: rest => f⋀con rest

@@ -102,7 +102,7 @@ def swap : Player → Player
 @[simp, simp_isPosition] lemma swap_one : one.swap = zero := by rfl
 
 /-- if `p` moves in position `[]`, then `p.residual x` moves in position `x` -/
-@[simp_isPosition] def residual := if x.length % 2 = 0 then p else p.swap
+@[expose, simp_isPosition] def residual := if x.length % 2 = 0 then p else p.swap
 end Player
 
 /-- is player `p` to move in position `x`? -/

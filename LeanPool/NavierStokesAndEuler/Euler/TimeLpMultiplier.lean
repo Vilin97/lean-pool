@@ -45,7 +45,7 @@ theorem timeApply_ae (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ
   (timeApply_memLp T hT A u).coeFn_toLp
 
 /-- Actual time-dependent bounded operator application is linear in the time field. -/
-def timeApplyLinear (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
+@[expose] def timeApplyLinear (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
     TimeLp T E →ₗ[ℝ] TimeLp T F where
   toFun := timeApply T hT A
   map_add' u v := by

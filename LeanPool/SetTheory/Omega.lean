@@ -70,7 +70,7 @@ namespace SetTheory
   aesop
 
 /-- The `ωₛ` declaration. -/
-def ωₛ := Ordinal.toZFSet ω
+@[expose] def ωₛ := Ordinal.toZFSet ω
 
 instance instNatCastM : NatCast M where
   natCast (n : ℕ) := by

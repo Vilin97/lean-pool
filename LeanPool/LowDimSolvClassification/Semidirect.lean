@@ -169,22 +169,22 @@ def fst : L ⋉[φ] J →ₗ⁅K⁆ L := {
 }
 
 @[simp]
-theorem fst_inl (x : L) : fst (inl x : L ⋉[φ] J) = x := rfl
+theorem fst_inl (x : L) : fst (inl x : L ⋉[φ] J) = x := by rfl
 
 @[simp]
-theorem fst_inr (x : J) : fst (inr x : L ⋉[φ] J) = 0 := rfl
+theorem fst_inr (x : J) : fst (inr x : L ⋉[φ] J) = 0 := by rfl
 
 @[simp]
-theorem fst_inl' (x : L) : (inl x : L ⋉[φ] J).1 = x := rfl
+theorem fst_inl' (x : L) : (inl x : L ⋉[φ] J).1 = x := by rfl
 
 @[simp]
-theorem fst_inr' (x : J) : (inr x : L ⋉[φ] J).1 = 0 := rfl
+theorem fst_inr' (x : J) : (inr x : L ⋉[φ] J).1 = 0 := by rfl
 
 @[simp]
-theorem snd_inl' (x : L) : (inl x : L ⋉[φ] J).2 = 0 := rfl
+theorem snd_inl' (x : L) : (inl x : L ⋉[φ] J).2 = 0 := by rfl
 
 @[simp]
-theorem snd_inr' (x : J) : (inr x : L ⋉[φ] J).2 = x := rfl
+theorem snd_inr' (x : J) : (inr x : L ⋉[φ] J).2 = x := by rfl
 
 @[simp]
 theorem inl_left_add_inr_right (x : L ⋉[φ] J) : inl x.1 + inr x.2 = x := by

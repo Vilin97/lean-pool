@@ -55,7 +55,7 @@ public section
 namespace Nivat
 
 /-- The window `Rₘ,ₙ = {0, …, m-1} × {0, …, n-1}` from Section 1. -/
-def rectangle (m n : ℕ) : Finset Lattice :=
+@[expose] def rectangle (m n : ℕ) : Finset Lattice :=
   (Finset.Ico (0 : ℤ) (m : ℤ)).product (Finset.Ico (0 : ℤ) (n : ℤ))
 
 /-- Coordinate inequalities describing the rectangle of Section 1. -/

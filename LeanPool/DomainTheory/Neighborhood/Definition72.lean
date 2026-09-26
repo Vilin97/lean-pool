@@ -94,7 +94,7 @@ def IsComputableMap {V : NeighborhoodSystem α} {W : NeighborhoodSystem β}
 condition becomes: the index set `{m ∣ Yₘ ∈ y}` of the element `y ∈ |W|` is
 recursively enumerable.
 We take this as the definition of a *computable element*. -/
-def IsComputableElement {W : NeighborhoodSystem β} (Q : ComputablePresentation W)
+@[expose] def IsComputableElement {W : NeighborhoodSystem β} (Q : ComputablePresentation W)
     (y : W.Element) : Prop :=
   REPred (fun m => y.mem (Q.X m))
 

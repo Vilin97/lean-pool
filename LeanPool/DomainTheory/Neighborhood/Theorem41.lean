@@ -75,7 +75,7 @@ namespace ApproximableMap
 /-- **Theorem 4.1 (Scott 1981, PRG-19).** The `n`-fold composition `fⁿ` of an
 endomap with itself:
 `f⁰ = I_𝒟` and `f^{n+1} = f ∘ fⁿ`. -/
-def iterMap (f : ApproximableMap V V) : ℕ → ApproximableMap V V
+@[expose] def iterMap (f : ApproximableMap V V) : ℕ → ApproximableMap V V
   | 0 => idMap V
   | (n + 1) => f.comp (f.iterMap n)
 
@@ -136,7 +136,7 @@ Scott's: `Δ ∈ x` (the
 (`inter_right`) of
 the single iterate `f^{max n m}` reached by extending the shorter chain; upward
 closure is `mono`. -/
-def fixElement (f : ApproximableMap V V) : V.Element where
+@[expose] def fixElement (f : ApproximableMap V V) : V.Element where
   mem X := ∃ n, (f.iterMap n).rel V.master X
   sub := fun ⟨n, h⟩ => (f.iterMap n).rel_cod h
   master_mem := ⟨0, show (idMap V).rel V.master V.master from (idMap V).master_rel⟩
@@ -212,7 +212,8 @@ theorem fixElement_mono {f g : ApproximableMap V V} (hfg : f ≤ g) :
 /-! ### Theorem 4.2(iii) — the iterates `fⁿ(⊥)`. -/
 
 /-- The `n`-th approximant `fⁿ(⊥)` of the least fixed point. -/
-def iterElem (f : ApproximableMap V V) (n : ℕ) : V.Element := (f.iterMap n).toElementMap V.bot
+@[expose] def iterElem (f : ApproximableMap V V) (n : ℕ) : V.Element :=
+  (f.iterMap n).toElementMap V.bot
 
 /-- `Y ∈ fⁿ(⊥) ↔ Δ fⁿ Y`: the `n`-th approximant is the family of neighbourhoods
 reachable from

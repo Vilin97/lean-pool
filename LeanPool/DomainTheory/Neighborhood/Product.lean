@@ -285,7 +285,7 @@ theorem pair_fst_snd (z : (prod V₀ V₁).Element) : pair z.fst z.snd = z := by
 
 /-- **Proposition 3.2 (Scott 1981, PRG-19).** The order-isomorphism `|𝒟₀ × 𝒟₁| ≃o
 |𝒟₀| × |𝒟₁|`. -/
-def prodEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
+@[expose] def prodEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     (prod V₀ V₁).Element ≃o V₀.Element × V₁.Element where
   toFun z := (z.fst, z.snd)
   invFun p := pair p.1 p.2

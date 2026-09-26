@@ -312,7 +312,7 @@ instance : CoeFun (Var A) (fun _ ↦ ℝ → PreProbabilityMeasure A) where
   base _ := μ.base
 
 @[simp]
-lemma apply_const (μ : PreProbabilityMeasure A) (r : ℝ) : apply (const μ) r = μ := rfl
+lemma apply_const (μ : PreProbabilityMeasure A) (r : ℝ) : apply (const μ) r = μ := by rfl
 
 /-- Precomposition of variables by measurable functions. -/
 @[expose] def comp {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) : Var A where
@@ -323,7 +323,7 @@ lemma apply_const (μ : PreProbabilityMeasure A) (r : ℝ) : apply (const μ) r 
 lemma apply_comp
     {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) (r : ℝ)
     : apply (comp hf φ) r = apply φ (f r) :=
-  rfl
+  by rfl
 
 /-- Gluing of a countable number of variables. -/
 noncomputable def cases

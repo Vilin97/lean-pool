@@ -142,11 +142,11 @@ def timedIterate (M : GroverModel) (k : ℕ) : Timed (PureState 1) :=
 theorem timedIterate_ret (M : GroverModel) (k : ℕ) :
     (timedIterate M k).ret =
       Gate.apply ((M.diffusion * M.phaseOracle) ^ k)
-        (amplitudeAmplificationState M.θ 0) := rfl
+        (amplitudeAmplificationState M.θ 0) := by rfl
 
 @[simp]
 theorem timedIterate_time (M : GroverModel) (k : ℕ) :
-    (timedIterate M k).time = k := rfl
+    (timedIterate M k).time = k := by rfl
 
 /-- Grover correctness, phrased through the TimeM return value. -/
 theorem timedIterate_correct (M : GroverModel) (k : ℕ) :
@@ -164,7 +164,9 @@ theorem timedIterate_ret_eq_amplitudeAmplification
     (M : GroverModel) (k : ℕ) :
     (timedIterate M k).ret =
       (AmplitudeAmplification.timedIterate
-        M.toAmplitudeAmplificationModel k).ret := rfl
+        M.toAmplitudeAmplificationModel k).ret := by
+  rw [AmplitudeAmplification.timedIterate_ret]
+  rfl
 
 /-- Trusted public resource profile for `k` Grover iterations on `n` index
 qubits: `k` oracle queries and a linear-in-`n` elementary-gate representative

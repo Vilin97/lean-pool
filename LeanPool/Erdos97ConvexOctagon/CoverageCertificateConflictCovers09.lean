@@ -18,7 +18,7 @@ public section
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Conflict-cover data group 36. -/
-def conflictCovers36 : Array ConflictCover :=
+@[expose] def conflictCovers36 : Array ConflictCover :=
   #[⟨7, 272630816, 33554431679, [5, 10, 22, 28]⟩,
   ⟨6, 140737756791842, 34359717887, [1, 5, 10, 28, 47]⟩,
   ⟨7, 70369012623392, 34342940405, [5, 11, 13, 28, 46]⟩, ⟨7, 268437536, 20879224565, [5, 11, 28]⟩,
@@ -85,7 +85,7 @@ theorem conflictCovers36_valid :
   decide
 
 /-- Conflict-cover data group 37. -/
-def conflictCovers37 : Array ConflictCover :=
+@[expose] def conflictCovers37 : Array ConflictCover :=
   #[⟨7, 270537728, 34090495391, [10, 12, 21, 28]⟩,
   ⟨6, 141287514708992, 34359734271, [10, 11, 12, 21, 28, 39, 47]⟩,
   ⟨6, 550026380320, 34359734271, [5, 10, 15, 21, 28, 39]⟩,
@@ -155,7 +155,7 @@ theorem conflictCovers37_valid :
   decide
 
 /-- Conflict-cover data group 38. -/
-def conflictCovers38 : Array ConflictCover :=
+@[expose] def conflictCovers38 : Array ConflictCover :=
   #[⟨6, 2418049058, 34359721983, [1, 5, 15, 21, 28, 31]⟩,
   ⟨6, 2418029568, 34359197695, [10, 12, 13, 21, 28, 31]⟩,
   ⟨6, 2418021408, 34359721983, [5, 10, 12, 21, 28, 31]⟩,
@@ -226,7 +226,7 @@ theorem conflictCovers38_valid :
   decide
 
 /-- Conflict-cover data group 39. -/
-def conflictCovers39 : Array ConflictCover :=
+@[expose] def conflictCovers39 : Array ConflictCover :=
   #[⟨6, 140737499894784, 34359541663, [10, 12, 20, 21, 23, 47]⟩,
   ⟨6, 140737767277568, 34359737887, [10, 21, 23, 28, 47]⟩,
   ⟨5, 549760014408, 34359738359, [3, 6, 11, 12, 22, 39]⟩,

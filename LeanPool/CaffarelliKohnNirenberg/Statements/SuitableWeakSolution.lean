@@ -45,7 +45,7 @@ integrand it tests. The a.e. uniqueness of the weak gradient is
 four integrability conjuncts to the identity clauses. Those follow from the
 regularity clauses above, so the two classes have the same inhabitants; the
 proof is `CKN.isSuitableWeakSolution_iff_integrable`. -/
-def IsSuitableWeakSolution (Ω : Set Vec3) (I : Set ℝ) (q : ℝ)
+@[expose] def IsSuitableWeakSolution (Ω : Set Vec3) (I : Set ℝ) (q : ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (p : ParabolicPoint → ℝ) (f : ParabolicPoint → Vec3) : Prop :=
   IsOpen Ω ∧ IsOpen I ∧ OrdConnected I ∧ 5 / 2 < q ∧

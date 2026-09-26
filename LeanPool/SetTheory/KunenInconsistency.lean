@@ -28,7 +28,8 @@ private lemma mk_Iio_ToType_lt {c : Cardinal} (i : c.ord.ToType) : #(Set.Iio i) 
   simpa using mk_Iio_lt i
 
 /-- The `IsOmegaJonssonFunc` declaration. -/
-@[realize] def IsOmegaJonssonFunc {M₀} [ZFStructure M₀] [IsVonNeumannWithOmega M₀] (f κ : M₀) :=
+@[expose, realize] def IsOmegaJonssonFunc {M₀} [ZFStructure M₀] [IsVonNeumannWithOmega M₀]
+    (f κ : M₀) :=
   f ∈ Func (Func ωₘ κ) κ ∧ ∀ X ⊆ κ, cardEq X κ → ∀ α ∈ κ, ∃ s ∈ Func ωₘ X, apply f s = α
 
 /-- The `KunenBoundParams` type. -/
@@ -53,9 +54,9 @@ instance : ZFStructure M := structureM
 instance : IsVonNeumannWithOmega M := hasOmegaOfNontrivialSelfEmbedding (hM := isVonNeumann) j
 
 /-- The `κ` declaration. -/
-def κ n := j^[n] (crit j)
+@[expose] def κ n := j^[n] (crit j)
 /-- The `κω` declaration. -/
-def κω : M := ⨆ n : ℕ, κ n
+@[expose] def κω : M := ⨆ n : ℕ, κ n
 /-- The `κωEquinumerousSubsets` declaration. -/
 def κωEquinumerousSubsets := {x : M // x ⊆ κω ∧ #x = #κω}
 /-- The `ν` declaration. -/
@@ -89,7 +90,7 @@ lemma bddAbove_ordinal_κ :
   convert bddAbove_crit_iter using 1
   ext x
   simp only [Set.mem_image, Set.mem_range, exists_exists_eq_and]
-  rfl
+  simp only [κ]
 
 lemma κω_eq_ordinal_sSup : κω = (⨆ n : ℕ, (⟨κ n, isOrdinal_crit_iter _⟩ : Ordinals M)).1 := by
   rw [κω, comOrdinals.map_iSup Subtype.val]
@@ -103,7 +104,8 @@ lemma κ_mem_κω (n : ℕ) : κ n ∈ κω := by
   erw [Subtype.mk_lt_mk, ← IsOrdinal.mem_iff_lt (isOrdinal_crit_iter _) (isOrdinal_crit_iter _)]
   exact crit_iter_mem_succ n
 
-lemma κ_le_κω (n : ℕ) : κ n ≤ κω := le_csSup bddAbove_crit_iter ⟨n, rfl⟩
+lemma κ_le_κω (n : ℕ) : κ n ≤ κω := by
+  simpa only [κ] using (le_csSup bddAbove_crit_iter ⟨n, rfl⟩)
 
 lemma aleph0_le_κω : ℵ₀ ≤ #κω := by
   simpa only [← card_ωₘ, κω] using card_le_of_sub (le_trans ωₘ_le_crit (κ_le_κω 0))
@@ -198,7 +200,7 @@ lemma s_mem_X : ∀ α n, (s α n).1 ∈ X α := by
 /-- The `f` declaration. -/
 def f (x : ℕ → κω) : κω := ⟨γ (s.invFun x), γ_mem_κω _⟩
 /-- The `fSet` declaration. -/
-def fSet : M := funcToSet fun x => f (setToFunc x ∘ omegaEquiv.symm)
+@[expose] def fSet : M := funcToSet fun x => f (setToFunc x ∘ omegaEquiv.symm)
 
 lemma fSet_mem : fSet ∈ Func (Func ωₘ κω) κω :=
   (funcEquiv.symm fun x => f (funcEquiv x ∘ omegaEquiv.symm)).2
@@ -271,7 +273,8 @@ lemma j_κFuncSet : j κFuncSet = funcToSet (κFunc ∘ Nat.succ ∘ omegaEquiv)
   rw [← j_natCast (j := j), apply.elementarity, κFuncSet, apply_funcToSet _ (by simp),
     apply_funcToSet _ (by simp [j_natCast])]
   simp only [comp_apply, κFunc, Nat.succ_eq_add_one, j_natCast]
-  erw [omegaEquiv.apply_symm_apply, κ, κ, iterate_succ_apply']
+  simp only [κ]
+  rw [iterate_succ_apply']
 
 lemma j_κω : j κω = κω := by
   simp only [← iUnion_κ_funcSet_eq, elementary_simps_rev, j_κFuncSet]
@@ -286,7 +289,7 @@ lemma j_κω : j κω = κω := by
       simpa [eq_comm] using (Nat.or_exists_add_one (p := fun n => κ n = x)).symm
     have bdd_κ_comp_succ : BddAbove (Set.range (κ ∘ Nat.succ)) := by
       refine bddAbove_crit_iter.mono fun | x, ⟨n, hn⟩ => ?_
-      simpa using ⟨n + 1, hn⟩
+      simpa only [κ, comp_apply] using ⟨n + 1, hn⟩
     rw [eq_insert, csSup_insert bdd_κ_comp_succ, right_eq_sup]
     · exact le_trans (le_of_lt (crit_iter_lt_succ 0)) (le_csSup bdd_κ_comp_succ ⟨0, rfl⟩)
     · simp [Set.range_nonempty]

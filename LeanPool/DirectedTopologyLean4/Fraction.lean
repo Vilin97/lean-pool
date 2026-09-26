@@ -20,8 +20,7 @@ noncomputable section
 fraction
 `i/n : ℝ` lives in the unit interval
 -/
-@[reducible]
-def Fraction {i n : ℕ} (hn : 0 < n) (hi : i ≤ n) : I :=
+@[reducible, expose] def Fraction {i n : ℕ} (hn : 0 < n) (hi : i ≤ n) : I :=
   ⟨(i : ℝ)/(n : ℝ),
     ⟨div_nonneg (Nat.cast_nonneg i) (Nat.cast_nonneg n),
       (div_le_one ((Nat.cast_pos (α := ℝ)).mpr hn)).mpr (Nat.cast_le.mpr hi)⟩⟩

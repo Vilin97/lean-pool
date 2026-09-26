@@ -40,15 +40,15 @@ structure FrameSpec where
     ∀ s ∈ rawSupports, s.Nodup ∧ (∀ i ∈ s, i < parts.length) ∧ 2 ≤ s.length
 
 /-- The arity of a frame specification. -/
-def FrameSpec.t (spec : FrameSpec) : ℕ :=
+@[expose] def FrameSpec.t (spec : FrameSpec) : ℕ :=
   spec.parts.length
 
 /-- The capacity vector of a frame specification. -/
-def FrameSpec.cap (spec : FrameSpec) : Fin spec.t → ℕ :=
+@[expose] def FrameSpec.cap (spec : FrameSpec) : Fin spec.t → ℕ :=
   fun i => spec.parts.get i
 
 /-- Encode a list of support indices as a support pattern. -/
-def supportPatternOfList {t : ℕ} (s : List ℕ)
+@[expose] def supportPatternOfList {t : ℕ} (s : List ℕ)
     (hIn : ∀ i ∈ s, i < t) (hNodup : s.Nodup) (hCard : 2 ≤ s.length) :
     SupportPattern t := by
   let finList : List (Fin t) := s.pmap (fun i hi => (⟨i, hi⟩ : Fin t)) hIn
@@ -60,7 +60,7 @@ def supportPatternOfList {t : ℕ} (s : List ℕ)
   simpa [finList] using hCard
 
 /-- The support list of a frame specification, interpreted on `Fin spec.t`. -/
-def FrameSpec.supportList (spec : FrameSpec) : List (SupportPattern spec.t) :=
+@[expose] def FrameSpec.supportList (spec : FrameSpec) : List (SupportPattern spec.t) :=
   (spec.rawSupports.pmap (fun s hs =>
       supportPatternOfList s
         (fun i hi => (spec.rawSupports_ok s hs).2.1 i hi)
@@ -78,7 +78,7 @@ def FrameSpec.bonus (spec : FrameSpec) : ℕ :=
   spec.rawSupports.length
 
 /-- Decide whether a support pattern contributes to the frame inequality for `T` and `I`. -/
-def frameWitnesses {t : ℕ} (T I : Finset (Fin t)) (S : SupportPattern t) : Bool :=
+@[expose] def frameWitnesses {t : ℕ} (T I : Finset (Fin t)) (S : SupportPattern t) : Bool :=
   decide (S.1 ⊆ T ∧ ((S.1 ∩ I).card = 1))
 
 /-- The computable count of support occurrences contributing to the frame inequality. -/
@@ -181,7 +181,7 @@ def core4Spec : FrameSpec :=
   frame [3, 3, 3, 3] core4Supports (by decide)
 
 /-- The exact small frames listed in Appendix A. -/
-def exactSmallFrames : List FrameSpec :=
+@[expose] def exactSmallFrames : List FrameSpec :=
 [
   frame! [2, 2, 2] [
     s2 0 1,
@@ -773,7 +773,7 @@ def exactSmallFrames : List FrameSpec :=
 ]
 
 /-- The explicit boosters listed in Appendix B. -/
-def boosters : List FrameSpec :=
+@[expose] def boosters : List FrameSpec :=
 [
   frame! [2, 2, 2, 2, 2, 2, 3] [
     s2 0 2,
@@ -1044,7 +1044,7 @@ def boosters : List FrameSpec :=
 ]
 
 /-- The residue gadgets `R_r` used by the balanced four-way construction. -/
-def residueGadgets : List FrameSpec :=
+@[expose] def residueGadgets : List FrameSpec :=
 [
   frame! [0, 0, 0, 0] [
   ],
@@ -1466,11 +1466,11 @@ private theorem bit_testBit_gt {n i : Nat} (hi : n < i) :
   simp_all
 
 /-- The frame coordinates selected by a natural-number bit mask. -/
-def maskFinset (spec : FrameSpec) (mask : Nat) : Finset (Fin spec.t) :=
+@[expose] def maskFinset (spec : FrameSpec) (mask : Nat) : Finset (Fin spec.t) :=
   Finset.univ.filter fun i => mask.testBit i.1
 
 /-- Recursively check the maximal witness set for each right-hand side support mask. -/
-def checkComplementMasksDown (spec : FrameSpec) : Nat → Nat → Bool
+@[expose] def checkComplementMasksDown (spec : FrameSpec) : Nat → Nat → Bool
   | 0, mask =>
       let U := maskFinset spec mask
       decide (spec.countWitnesses Finset.univ Uᶜ ≤ U.sum spec.cap)
@@ -1534,7 +1534,7 @@ private theorem checkComplementMasksDown_sound (spec : FrameSpec) :
           · exact hrep j (by omega)
 
 /-- A Boolean validator using only maximal witness sets for each capacity support. -/
-def FrameSpec.checkComplementValid (spec : FrameSpec) : Bool :=
+@[expose] def FrameSpec.checkComplementValid (spec : FrameSpec) : Bool :=
   checkComplementMasksDown spec spec.t 0
 
 /-- The complement-based checker implies all frame inequalities. -/

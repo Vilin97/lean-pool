@@ -92,7 +92,7 @@ theorem idealPrimeFactors_idealOfPrimeFactors
   simp_all
 
 /-- A nonzero ideal equiv prime factors used in the Odlyzko-bound argument. -/
-noncomputable def nonzeroIdealEquivPrimeFactors :
+@[expose] noncomputable def nonzeroIdealEquivPrimeFactors :
     NonzeroIdeal K ≃ Multiset (HeightOneSpectrum (𝓞 K)) where
   toFun := idealPrimeFactors K
   invFun := idealOfPrimeFactors K

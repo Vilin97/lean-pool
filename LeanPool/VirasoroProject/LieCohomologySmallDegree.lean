@@ -324,7 +324,7 @@ def _root_.VirasoroProject.LieOneCochainBdryHom
   simp
 
 lemma _root_.VirasoroProject.LieOneCochain.bdry_apply (β : LieOneCochain 𝕜 𝓰 𝓪) (X Y : 𝓰) :
-    β.bdry X Y = β (⁅X, Y⁆) := rfl
+    β.bdry X Y = β (⁅X, Y⁆) := by rfl
 
 /-- Lie algebra 2-coboundaries as a vector space. -/
 abbrev _root_.VirasoroProject.LieTwoCoboundary := LinearMap.range (LieOneCochainBdryHom 𝕜 𝓰 𝓪)

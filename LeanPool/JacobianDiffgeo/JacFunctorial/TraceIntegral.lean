@@ -129,7 +129,7 @@ def liftSeg (hm : multiplicity f (S.pt i) = 1) {a b : Y} (p : Path a b)
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ, ℂ) ω X] [T2Space Y]
     [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 @[simp] theorem liftSeg_coe (hm : multiplicity f (S.pt i) = 1) {a b : Y} (p : Path a b)
-    (hV : ∀ s : I, p s ∈ S.V) : ⇑(liftSeg hm p hV) = fun s => sectionAt S i (p s) := rfl
+    (hV : ∀ s : I, p s ∈ S.V) : ⇑(liftSeg hm p hV) = fun s => sectionAt S i (p s) := by rfl
 
 /-! ### The segment lemma -/
 
@@ -263,7 +263,7 @@ def Path.segMap {a b : Y} (δ : Path a b) (t₀ t₁ : ℝ) : Path (δ.extend t�
 
 omit [T2Space Y] [ChartedSpace ℂ Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 @[simp] theorem Path.segMap_coe {a b : Y} (δ : Path a b) (t₀ t₁ : ℝ) :
-    ⇑(Path.segMap δ t₀ t₁) = fun s : I => δ.extend ((1 - (s : ℝ)) * t₀ + (s : ℝ) * t₁) := rfl
+    ⇑(Path.segMap δ t₀ t₁) = fun s : I => δ.extend ((1 - (s : ℝ)) * t₀ + (s : ℝ) * t₁) := by rfl
 
 omit [T2Space Y] [ChartedSpace ℂ Y] [IsManifold 𝓘(ℂ, ℂ) ω Y] in
 theorem Path.segMap_mem_Icc {a b : Y} (_δ : Path a b) {t₀ t₁ : ℝ} (h : t₀ ≤ t₁) (s : I) :

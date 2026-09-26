@@ -103,7 +103,8 @@ lemma ωScottContinuous_lintegral
         exact le_iSup_of_le n le_rfl
       · refine iSup_le fun n ↦ ?_
         apply le_ωSup_of_le n
-        rfl
+        simp only [Chain.coe_map, OrderHom.coe_mk, Function.comp_apply,
+          Chain.zip_apply, Chain.const_apply, le_refl]
     · fun_prop
     · intro i j h a
       apply hf₁.monotone

@@ -430,7 +430,6 @@ theorem Psi_right_inv [hA : QuantumSet A] [hB : QuantumSet B]
   simp_all
 
 /-- The linear equivalence between maps and tensors used in the quantum-set formalism. -/
-@[simps]
 noncomputable def Psi [hA : QuantumSet A] [hB : QuantumSet B]
     (t r : ℝ) : (A →ₗ[ℂ] B) ≃ₗ[ℂ] (B ⊗[ℂ] Aᵐᵒᵖ) where
   toFun x := PsiToFun t r x
@@ -444,6 +443,16 @@ noncomputable def Psi [hA : QuantumSet A] [hB : QuantumSet B]
   map_add' x y := by simp_rw [map_add]
   map_smul' r x := by
     simp_all
+
+@[simp]
+theorem Psi_apply [QuantumSet A] [QuantumSet B] (t r : ℝ) (x : A →ₗ[ℂ] B) :
+    Psi t r x = PsiToFun t r x := by
+  rfl
+
+@[simp]
+theorem Psi_symm_apply [QuantumSet A] [QuantumSet B] (t r : ℝ) (x : B ⊗[ℂ] Aᵐᵒᵖ) :
+    (Psi t r).symm x = PsiInvFun (A := B) (B := A) t r x := by
+  rfl
 
 end QuantumSet
 
@@ -793,10 +802,24 @@ theorem QuantumSet.Psi_symm_apply_one [QuantumSet A] [QuantumSet B] (t r : ℝ) 
   rw [← QuantumSet.Psi_apply_one_one t r, LinearEquiv.symm_apply_apply]
 
 /-- The `Psi` equivalence with tensor factors swapped back from the opposite space. -/
-@[simps! -isSimp]
 noncomputable abbrev Upsilon [QuantumSet A] [QuantumSet B] :
     (A →ₗ[ℂ] B) ≃ₗ[ℂ] (A ⊗[ℂ] B) :=
   (Psi 0 (k A + 1)).trans ((tenSwap ℂ).trans (LinearEquiv.lTensor _ (unop ℂ)))
+
+theorem Upsilon_apply [QuantumSet A] [QuantumSet B] (x : A →ₗ[ℂ] B) :
+    Upsilon x =
+      (LinearEquiv.lTensor A (unop ℂ))
+        ((TensorProduct.map (unop ℂ) (op ℂ))
+          ((TensorProduct.comm ℂ B Aᵐᵒᵖ) (PsiToFun 0 (k A + 1) x))) := by
+  rfl
+
+theorem Upsilon_symm_apply [QuantumSet A] [QuantumSet B] (x : A ⊗[ℂ] B) :
+    Upsilon.symm x =
+      PsiInvFun (A := B) (B := A) 0 (k A + 1)
+        ((TensorProduct.comm ℂ Aᵐᵒᵖ B)
+          ((TensorProduct.map (op ℂ) (unop ℂ))
+            ((LinearEquiv.lTensor A (op ℂ)) x))) := by
+  rfl
 
 theorem Upsilon_apply_one_one [QuantumSet A] [QuantumSet B] :
     Upsilon (rankOne ℂ (1 : B) (1 : A)) = (1 : A ⊗[ℂ] B) := by

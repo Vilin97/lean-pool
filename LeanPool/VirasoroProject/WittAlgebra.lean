@@ -62,7 +62,7 @@ open Module
 variable (𝕜 : Type*) [CommRing 𝕜]
 
 /-- The Witt algebra: an ∞-dimensional Lie algebra (polynomial vector fields on a circle). -/
-def WittAlgebra := ℤ →₀ 𝕜
+@[expose] def WittAlgebra := ℤ →₀ 𝕜
 
 noncomputable instance : AddCommGroup (WittAlgebra 𝕜) := Finsupp.instAddCommGroup
 

@@ -66,6 +66,7 @@ theorem target_row_mem_rowOptions (Q : OctagonIncidence) (v : Vertex) :
   ((code >>> UInt64.ofNat index) &&& 1) != 0
 
 /-- Decode one three-bit entry of a packed permutation. -/
+@[expose]
 def decodeMap (code : UInt64) (vertex : Vertex) : Vertex :=
   Fin.ofNat 8 (((code >>> UInt64.ofNat (3 * vertex.val)) &&& 7).toNat)
 

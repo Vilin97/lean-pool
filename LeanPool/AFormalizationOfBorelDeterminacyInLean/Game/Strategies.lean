@@ -151,7 +151,7 @@ variable (T p) in
   rfl
 variable (T p) in
 /-- A quasistrategy is a `PreStrategy` that allows exactly one move in every position -/
-def Strategy := ∀ x : T, IsPosition x.val p → ExtensionsAt x
+@[expose] def Strategy := ∀ x : T, IsPosition x.val p → ExtensionsAt x
 @[ext] lemma Strategy.ext {f g : Strategy T p} (h : ∀ x hp, f x hp = g x hp) : f = g :=
   funext fun x ↦ funext (h x)
 

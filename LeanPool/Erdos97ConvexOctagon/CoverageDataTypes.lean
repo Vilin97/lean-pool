@@ -32,11 +32,11 @@ structure HardEntry where
   certificate : Certificate
 
 /-- Validate a pattern witness against precisely its required incidences. -/
-def PatternEntry.validB (entry : PatternEntry) : Bool :=
+@[expose] def PatternEntry.validB (entry : PatternEntry) : Bool :=
   entry.certificate.toCertificate.validPackedB entry.mask
 
 /-- Validate an exact-table witness against its decoded incidence table. -/
-def HardEntry.validB (entry : HardEntry) : Bool :=
+@[expose] def HardEntry.validB (entry : HardEntry) : Bool :=
   entry.certificate.validPackedB entry.code
 
 /-- A successful pattern audit supplies its mathematical witness. -/

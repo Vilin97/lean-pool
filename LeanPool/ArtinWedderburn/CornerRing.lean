@@ -72,7 +72,7 @@ def CornerSubringNonUnital (e : R) : NonUnitalSubring R where
     noncomm_ring
 
 -- definition unfolding theorems
-theorem corner_ring_carrier : (CornerSubringNonUnital e).carrier = bothMul e e := rfl
+theorem corner_ring_carrier : (CornerSubringNonUnital e).carrier = bothMul e e := by rfl
 
 theorem el_in_corner_ring (x : R) : x ∈ bothMul e e ↔ x ∈ CornerSubringNonUnital e := Iff.rfl
 

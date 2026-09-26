@@ -152,7 +152,7 @@ def os3ReflectionPositivityReal (dμ_config : ProbabilityMeasure FieldConfigurat
     polynomial decay rate. For the GFF in 4D spacetime (d=3 spatial dimensions),
     the natural rate is α = 2d = 6 from the mass gap.
 -/
-def os4PolynomialClustering (dμ_config : ProbabilityMeasure FieldConfiguration)
+@[expose] def os4PolynomialClustering (dμ_config : ProbabilityMeasure FieldConfiguration)
     (α : ℝ) (_hα : α > 0) : Prop :=
   let _ := _hα
   ∀ (f g : TestFunctionℂ), ∃ (c : ℝ), c ≥ 0 ∧

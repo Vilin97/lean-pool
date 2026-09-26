@@ -74,14 +74,17 @@ inductive BranchClaim where
   | search (claims : BranchClaims)
 
 /-- The empty node claim used when a lookup has no matching entry. -/
+@[expose]
 def defaultNodeClaim : NodeClaim :=
   ⟨0, 0, 0, 0, 0, 0, 0, 0, #[]⟩
 
 /-- An empty word claim retaining the requested word index. -/
+@[expose]
 def emptyNodeWordClaim (wordIndex : Nat) : NodeWordClaim :=
   ⟨wordIndex, [], [], [], []⟩
 
 /-- Search a bounded suffix of the word-claim array for the requested index. -/
+@[expose]
 def nodeWordClaimAtAux
   (wordClaims : Array NodeWordClaim) (wordIndex position : Nat) :
     Nat → NodeWordClaim
@@ -94,10 +97,12 @@ def nodeWordClaimAtAux
           else nodeWordClaimAtAux wordClaims wordIndex (position + 1) fuel
 
 /-- Retrieve one of at most seven sparse word claims, defaulting to empty streams. -/
+@[expose]
 def NodeClaim.wordAt (claim : NodeClaim) (wordIndex : Nat) : NodeWordClaim :=
   nodeWordClaimAtAux claim.wordClaims wordIndex 0 7
 
 /-- Retrieve one node without unfolding an entire large flat array literal. -/
+@[expose]
 def BranchClaims.nodeAt (claims : BranchClaims) (identifier : Nat) : NodeClaim :=
   (claims.nodeGroups.getD (identifier / 64) #[]).getD (identifier % 64)
     defaultNodeClaim
@@ -213,6 +218,7 @@ private theorem foldl_good_of_final
   | some group => group[identifier % 64]?
 
 /-- Check one certificate row and update its accumulated references. -/
+@[expose]
 def processRow
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
@@ -247,6 +253,7 @@ def processRow
           ⟨childValid, cursor.patternOrigins, childIds, cursor.hardOrigins⟩
 
 /-- Process at most five compatible rows while threading the local witness streams. -/
+@[expose]
 def processFiveRows
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
@@ -315,6 +322,7 @@ private theorem nodeRowValid_of_processRow_ok
     simp [processRow, hcursorFalse] at hok
 
 /-- Validate one of the seven disjoint five-row words of a node claim. -/
+@[expose]
 def nodeWordValidB
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
@@ -364,6 +372,7 @@ theorem nodeRowValid_of_word
   else false
 
 /-- Check one rejected row and record its target. -/
+@[expose]
 def processRejectedRow
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (cursor : RejectionCursor) (index : Nat) : RejectionCursor :=
@@ -376,6 +385,7 @@ def processRejectedRow
           remainingTargets⟩
 
 /-- Validate at most five rejected rows using one semantic conflict each. -/
+@[expose]
 def rejectedWordValidB
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (indices targets : List Nat) : Bool :=

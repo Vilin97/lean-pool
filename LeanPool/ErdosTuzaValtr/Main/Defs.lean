@@ -28,7 +28,7 @@ variable {α : Type _} [LinearOrder α] (C : Config α)
 
 /-- The configuration-relative main goal at level `n`: any large cap-free, cup-free finset
 contains an interweaved laced configuration. -/
-def Config.MainGoal (n : ℕ) : Prop :=
+@[expose] def Config.MainGoal (n : ℕ) : Prop :=
   ∀ S : Finset α,
     Nat.choose (n + 2) 2 + 2 ≤ S.card →
       ¬C.HasNCap 4 S → ¬C.HasNCup (n + 3) S → ∃ p q r s, C.HasInterweavedLaced (n + 2) S p q r s

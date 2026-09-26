@@ -100,6 +100,7 @@ theorem not_inj₁_subset_inj₀ {X : Set α} {Y : Set β} (hY : Y.Nonempty)
 relation between sum-neighbourhoods, `W (f+g) W'` holds iff `W'` is the codomain
 master, or `W = 0X`
 with `W' = 0Y'` and `X f Y'`, or `W = 1Y` with `W' = 1Y'` and `Y g Y'`. -/
+@[expose]
 def sumMap (f : ApproximableMap V₀ V₀') (g : ApproximableMap V₁ V₁') :
     ApproximableMap (sum V₀ V₁ h₀ h₁) (sum V₀' V₁' h₀' h₁') where
   rel W W' := (sum V₀ V₁ h₀ h₁).mem W ∧ (sum V₀' V₁' h₀' h₁').mem W' ∧

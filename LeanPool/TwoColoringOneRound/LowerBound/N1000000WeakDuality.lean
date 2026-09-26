@@ -112,7 +112,7 @@ def zCoeff (i : Var) : Q :=
   (dualObjectiveComputedD2 : Q) / ((D : Q) * (D : Q))
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
-def PrimalFeasibleForCertificate (x : Var → Q) : Prop :=
+@[expose] def PrimalFeasibleForCertificate (x : Var → Q) : Prop :=
   (∀ k : Mu, aDot k x ≤ (1 : Q)) ∧ ∀ r : Block, (S x r).PosSemidef
 
 theorem muVal_nonneg (k : Mu) : 0 ≤ muVal k := by

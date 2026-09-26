@@ -96,7 +96,7 @@ instance : Module K (AdeleSpace k K) :=
     (fun _ => Subtype.ext <| funext fun _ => one_mul _)
 
 /-- Multiplication by `x ∈ K` as a `k`-linear endomorphism of the adele space. -/
-def mulAdeleLinear (x : K) : AdeleSpace k K →ₗ[k] AdeleSpace k K where
+@[expose] def mulAdeleLinear (x : K) : AdeleSpace k K →ₗ[k] AdeleSpace k K where
   toFun a := x • a
   map_add' _ _ := smul_add x _ _
   map_smul' c a := by

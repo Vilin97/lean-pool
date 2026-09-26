@@ -62,7 +62,7 @@ theorem coordSum_smul (g : H) (f : PermMod Ω) :
   exact (MulAction.toPerm g).symm.sum_comp f
 
 /-- The deleted binary permutation module, i.e. the coordinate-sum kernel. -/
-def DeletedModule (Ω : Type*) [Fintype Ω] :=
+@[expose] def DeletedModule (Ω : Type*) [Fintype Ω] :=
   LinearMap.ker (coordSum (Ω := Ω))
 
 instance deletedModuleDistribMulAction :
@@ -87,7 +87,7 @@ instance deletedModuleSMulCommClass :
   smul_comm _ _ _ := by apply Subtype.ext; rfl
 
 /-- The inclusion of the deleted module into the full permutation module. -/
-def deletedIncl : DeletedModule Ω →ₗ[F2] PermMod Ω :=
+@[expose] def deletedIncl : DeletedModule Ω →ₗ[F2] PermMod Ω :=
   (DeletedModule Ω).subtype
 
 theorem coordSum_one (hΩodd : Odd (Fintype.card Ω)) :
@@ -202,7 +202,7 @@ theorem vq_card (d : Nat) (hd : Odd d) :
   norm_num
 
 /-- The natural representation of `Hq d` on its deleted module. -/
-def hqRepresentation (d : Nat) : Representation F2 (Hq d) (Vq d) :=
+@[expose] def hqRepresentation (d : Nat) : Representation F2 (Hq d) (Vq d) :=
   Representation.ofDistribMulAction F2 (Hq d) (Vq d)
 
 /-- The characteristic vector of `{0,1}`, written as a deleted vector. -/

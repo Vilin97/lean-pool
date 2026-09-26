@@ -41,7 +41,7 @@ variable {V : Type*} [DecidableEq V]
 
 /-- Run `k` nibble rounds from `H` under retention strategy `R`, returning
 `(accumulated matching, current residual)`. -/
-def nibbleIter (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
+@[expose] def nibbleIter (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) :
     ℕ → Finset (Finset V) × Finset (Finset V) :=
   nibbleIterSeq (fun _ => R) H
 

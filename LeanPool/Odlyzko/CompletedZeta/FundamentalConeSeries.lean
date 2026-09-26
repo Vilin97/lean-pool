@@ -26,7 +26,7 @@ variable (K : Type*) [Field K] [NumberField K]
 open mixedEmbedding fundamentalCone
 
 /-- A principal ideal norm count used in the Odlyzko-bound argument. -/
-noncomputable def principalIdealNormCount (J : (Ideal (𝓞 K))⁰) (n : ℕ) : ℕ :=
+@[expose] noncomputable def principalIdealNormCount (J : (Ideal (𝓞 K))⁰) (n : ℕ) : ℕ :=
   Nat.card {I : (Ideal (𝓞 K))⁰ //
     (J : Ideal (𝓞 K)) ∣ I ∧ IsPrincipal (I : Ideal (𝓞 K)) ∧
       absNorm (I : Ideal (𝓞 K)) = n}
@@ -112,7 +112,7 @@ theorem principalIdealNormCount_le_idealNormCount
     grind
 
 /-- A principal ideal zeta used in the Odlyzko-bound argument. -/
-noncomputable def principalIdealZeta (J : (Ideal (𝓞 K))⁰) (s : ℂ) : ℂ :=
+@[expose] noncomputable def principalIdealZeta (J : (Ideal (𝓞 K))⁰) (s : ℂ) : ℂ :=
   LSeries (fun n ↦ (principalIdealNormCount K J n : ℂ)) s
 
 /-- A fundamental cone zeta used in the Odlyzko-bound argument. -/

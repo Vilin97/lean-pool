@@ -128,7 +128,7 @@ is *monotone on
 domains* iff every subdomain relation `D ◁ E` is carried to a subdomain relation
 `T(D) ◁ T(E)` whose
 projection pair is `(T(i), T(j))` — see `MonotoneAt`. -/
-def MonotoneOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
+@[expose] def MonotoneOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
   ∀ {α : Type w} {D E : NeighborhoodSystem α} (h : D ◁ E), MonotoneAt T h
 
 /-- The **identity functor is monotone on domains**: it fixes objects and maps, so

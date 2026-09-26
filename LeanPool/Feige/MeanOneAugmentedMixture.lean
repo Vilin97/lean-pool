@@ -26,7 +26,7 @@ namespace Feige
 noncomputable section
 
 /-- The augmented latent law, including the degenerate zero-below-moment case. -/
-def meanOneAugmentedLatent (μ : Measure ℝ) :
+@[expose] def meanOneAugmentedLatent (μ : Measure ℝ) :
     Measure AugmentedTwoPointParams :=
   if belowMoment μ = 0 then
     Measure.dirac (Sum.inl ())

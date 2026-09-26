@@ -48,7 +48,7 @@ namespace CyclotomicIntegers
 
 /-- The canonical equivalence between `CyclotomicIntegers p` and the ring of integers of the
 `p`-th cyclotomic field. -/
-def equiv :
+@[expose] def equiv :
     CyclotomicIntegers p ≃+* 𝓞 (CyclotomicField p ℚ) := by
   have H := IsCyclotomicExtension.zeta_spec p ℚ (CyclotomicField p ℚ)
   have hH : minpoly ℤ H.integralPowerBasis.gen = cyclotomic p ℤ :=
@@ -62,7 +62,7 @@ instance : IsDomain (CyclotomicIntegers p) :=
     (cyclotomic.irreducible hpri.out.pos))
 
 /-- The tautological primitive root of unity in `CyclotomicIntegers p`. -/
-def zeta : CyclotomicIntegers p := AdjoinRoot.root _
+@[expose] def zeta : CyclotomicIntegers p := AdjoinRoot.root _
 
 lemma equiv_zeta : equiv p (zeta p) = (IsCyclotomicExtension.zeta_spec
     p ℚ (CyclotomicField p ℚ)).toInteger := by

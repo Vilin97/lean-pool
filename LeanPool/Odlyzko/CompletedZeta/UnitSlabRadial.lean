@@ -36,7 +36,7 @@ def negativeRadialHalfSpace :
 
 open Classical in
 /-- A positive radial half space used in the Odlyzko-bound argument. -/
-def positiveRadialHalfSpace :
+@[expose] def positiveRadialHalfSpace :
     Set (mixedEmbedding.realSpace K) :=
   {y | 0 < y w₀}
 

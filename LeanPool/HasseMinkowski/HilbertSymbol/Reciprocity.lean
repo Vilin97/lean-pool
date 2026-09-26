@@ -193,7 +193,7 @@ formalises.  We record the statement as a `Prop` for downstream reference. -/
 /-- Hilbert reciprocity for `ℚ`: for nonzero rationals `a, b`, the product of the local
 Hilbert symbols over all places (the finite places `ℚ_[p]` and the archimedean place `ℝ`)
 is `1`.  Stated for reference; not proved in this file. -/
-def HilbertReciprocity : Prop :=
+@[expose] def HilbertReciprocity : Prop :=
   ∀ a b : ℚ, a ≠ 0 → b ≠ 0 →
     (∏ᶠ p : Nat.Primes, hilbertSym (a : ℚ_[p]) (b : ℚ_[p]))
       * hilbertSym (a : ℝ) (b : ℝ) = 1

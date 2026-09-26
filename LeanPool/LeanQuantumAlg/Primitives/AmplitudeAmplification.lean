@@ -258,11 +258,11 @@ def timedIterate (M : AmplitudeAmplificationModel) (k : ℕ) : Timed (PureState 
 theorem timedIterate_ret (M : AmplitudeAmplificationModel) (k : ℕ) :
     (timedIterate M k).ret =
       Gate.apply ((M.startReflection * M.goodReflection) ^ k)
-        (amplitudeAmplificationState M.θ 0) := rfl
+        (amplitudeAmplificationState M.θ 0) := by rfl
 
 @[simp]
 theorem timedIterate_time (M : AmplitudeAmplificationModel) (k : ℕ) :
-    (timedIterate M k).time = k := rfl
+    (timedIterate M k).time = k := by rfl
 
 /-- Amplitude-amplification correctness, phrased through the TimeM return value. -/
 theorem timedIterate_correct (M : AmplitudeAmplificationModel) (k : ℕ) :

@@ -30,7 +30,7 @@ open LikelihoodRatio
 
 /-- The complete four-part local-transfer conclusion for the two exponential
 shifts of a base density. -/
-def CompleteConclusion
+@[expose] def CompleteConclusion
     (f : ℝ → ENNReal) (a b c d : ℝ) : Prop :=
   let νP := zPlusLaw (volume.withDensity f) a
   let νM := zMinusLaw (volume.withDensity f) b

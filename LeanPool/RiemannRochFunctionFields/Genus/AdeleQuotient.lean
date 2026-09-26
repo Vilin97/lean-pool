@@ -36,7 +36,7 @@ variable [IsFullConstantField k K]
 local instance instDecidableEqPlaceAAdeleQuotient : DecidableEq (PlaceA k K) := Classical.decEq _
 
 /-- The top submodule of the adele space (avoids `↥⊤` notation pitfalls). -/
-def topAdeleSubmodule : Submodule k (AdeleSpace k K) := ⊤
+@[expose] def topAdeleSubmodule : Submodule k (AdeleSpace k K) := ⊤
 
 omit [IsFullConstantField k K] in
 /-- Finite set of finite places where an adele component is not integral. -/

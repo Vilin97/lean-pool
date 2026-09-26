@@ -47,7 +47,7 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 variable {V : Type*} [DecidableEq V]
 
 /-- The loss weight of `v` against a covered set `C`: `∑_{u ∈ C, u ≠ v} codeg(v,u)`. -/
-def coverWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
+@[expose] def coverWeight (H : Finset (Finset V)) (v : V) (C : Finset V) : ℕ :=
   ∑ u ∈ C.erase v, codegree H v u
 
 /-- The Bonferroni correction: `∑_{e ∋ v} C(|(e∖v) ∩ C|, 2)`. -/

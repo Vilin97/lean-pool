@@ -78,7 +78,7 @@ noncomputable def ramIdxInfty (P : Ideal (infiniteIntegers k K)) : ℕ :=
   (IsLocalRing.maximalIdeal (inftyValuationSubring k)).ramificationIdx' P
 
 /-- Its image `t_K` in the function field. -/
-noncomputable def tK : K := algebraMap k⟮X⟯ K (tRatFunc k)
+@[expose] noncomputable def tK : K := algebraMap k⟮X⟯ K (tRatFunc k)
 
 omit [Algebra k K] [Algebra k[X] K] [IsScalarTower k k[X] K] [IsScalarTower k[X] k⟮X⟯ K]
   [_root_.FunctionField k K] [Algebra.IsSeparable k⟮X⟯ K] [IsFullConstantField k K] in

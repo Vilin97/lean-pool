@@ -48,10 +48,10 @@ def uliftDownHom : ULift.{u} G →ₜ+ G :=
     continuous_toFun := (Homeomorph.ulift (X := G)).continuous }
 
 omit [IsTopologicalAddGroup G] in
-@[simp] theorem uliftUpHom_apply (x : G) : uliftUpHom.{u} x = ULift.up x := rfl
+@[simp] theorem uliftUpHom_apply (x : G) : uliftUpHom.{u} x = ULift.up x := by rfl
 
 omit [IsTopologicalAddGroup G] in
-@[simp] theorem uliftDownHom_apply (x : ULift.{u} G) : uliftDownHom x = x.down := rfl
+@[simp] theorem uliftDownHom_apply (x : ULift.{u} G) : uliftDownHom x = x.down := by rfl
 
 end RS
 

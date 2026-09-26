@@ -63,7 +63,7 @@ open scoped Real ComplexOrder Manifold MatrixGroups
 /-- The modular `j`-invariant in this project's normalization, `j = 1728·J = E₄³/Δ`.
 Kept definitionally equal to the `1728 * J τ` appearing in `SingularModuli.lean`'s pinned
 statements. -/
-def j (τ : ℍ) : ℂ := 1728 * J τ
+@[expose] def j (τ : ℍ) : ℂ := 1728 * J τ
 
 @[simp] lemma j_def (τ : ℍ) : j τ = 1728 * J τ := by rfl
 

@@ -213,6 +213,7 @@ def component (z : (iterSys V).Element) (n : ℕ) : V.Element where
 /-- The `𝒟^∞`-element determined by an infinite sequence `⟨xₙ⟩` of `𝒟`-elements:
 the neighbourhoods
 `W` whose every fiber lies in the corresponding `xᵢ`. -/
+@[expose]
 def ofSeq (seq : ℕ → V.Element) : (iterSys V).Element where
   mem W := (iterSys V).mem W ∧ ∀ i, (seq i).mem (fiber W i)
   sub h := h.1
@@ -314,6 +315,7 @@ def natShiftEquiv (E : Type*) [Preorder E] : (ℕ → E) ≃o E × (ℕ → E) w
 /-- **Exercise 3.16 (Scott 1981, PRG-19).** The isomorphism `|𝒟^∞| ≃o |𝒟 × 𝒟^∞|`,
 obtained from the
 sequence correspondence and the shift. -/
+@[expose]
 def iterProdIso (V : NeighborhoodSystem α) :
     (iterSys V).Element ≃o (prod V (iterSys V)).Element :=
   (iterSeqEquiv V).trans <|

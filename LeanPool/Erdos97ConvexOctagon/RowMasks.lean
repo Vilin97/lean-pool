@@ -40,6 +40,6 @@ def rowTwoMask : Fin 35 → UInt64 := ![
 ]
 
 /-- Order in which the direct audit assigns the five noncanonical rows. -/
-def searchCentres : List Vertex := [3, 4, 7, 6, 5]
+@[expose] def searchCentres : List Vertex := [3, 4, 7, 6, 5]
 
 end Erdos97Octagon.RawIncidence

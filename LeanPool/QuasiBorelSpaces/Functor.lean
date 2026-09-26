@@ -313,12 +313,12 @@ variable [Continuous F] {S} [Sequence S]
 @[simp]
 lemma seq_unseq_coe (x : Limit (Comp F S)) : seq (unseq x) = x := by
   have := congr_arg (DFunLike.coe · x) seq_unseq
-  simpa only [QuasiBorelHom.comp_coe, QuasiBorelHom.id_coe] using this
+  simpa only [QuasiBorelHom.comp_coe, QuasiBorelHom.id_coe, id_eq] using this
 
 @[simp]
 lemma unseq_seq_coe (x : F (Limit S)) : unseq (seq x) = x := by
   have := congr_arg (DFunLike.coe · x) unseq_seq
-  simpa only [QuasiBorelHom.comp_coe, QuasiBorelHom.id_coe] using this
+  simpa only [QuasiBorelHom.comp_coe, QuasiBorelHom.id_coe, id_eq] using this
 
 end Continuous
 
@@ -342,7 +342,6 @@ lemma isHom_mk : IsHom (mk (F := F)) := by
   simp only [isHom_to_lift (A := Nu F), isHom_id']
 
 /-- Shift a compatible family to a family in the functor-composed sequence. -/
-@[simps]
 def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
   toFun x := {
     toFun n := .mk (Iter.unsucc (x (n + 1)))
@@ -355,8 +354,12 @@ def shift : Limit (Iter F) →𝒒 Limit (Comp F (Iter F)) where
       rw [this]
   }
 
+@[simp]
+lemma shift_coe_coe_get (x : Limit (Iter F)) (n : ℕ) :
+    ((shift x) n).get = Iter.unsucc (x (n + 1)) := by
+  rfl
+
 /-- Recover a compatible family from the functor-composed sequence. -/
-@[simps -fullyApplied]
 def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
   toFun x := {
     toFun
@@ -375,6 +378,12 @@ def unshift : Limit (Comp F (Iter F)) →𝒒 Limit (Iter F) where
     simp only [Pi.isHom_iff]
     intro n
     cases n <;> fun_prop
+
+@[simp]
+lemma unshift_coe_coe (x : Limit (Comp F (Iter F))) :
+    ⇑(unshift x) = (fun | 0 => Iter.zero | n + 1 => Iter.succ ((x n).get)) := by
+  funext n
+  cases n <;> rfl
 
 @[simp]
 private lemma shift_unshift_coe (x : Limit (Comp F (Iter F))) : shift (unshift x) = x := by

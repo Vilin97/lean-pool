@@ -123,7 +123,7 @@ instance : Min (L.BoundedFormulaω α n) := ⟨BoundedFormulaω.and⟩
 instance : Max (L.BoundedFormulaω α n) := ⟨BoundedFormulaω.or⟩
 
 /-- Biconditional between formulas. -/
-protected def iff (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
+@[expose] protected def iff (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
   (φ.imp ψ) ⊓ (ψ.imp φ)
 
 /-- Indexed conjunction over any `Encodable` type. This extends `iInf` from ℕ-indexed

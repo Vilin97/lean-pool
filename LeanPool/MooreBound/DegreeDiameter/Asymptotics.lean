@@ -43,7 +43,7 @@ noncomputable def AsymptoticHalvedWitness (k p : ℕ) : Prop :=
       G.ediam ≤ (k : ℕ∞)
 
 /-- A construction theorem in precisely the form consumed below. -/
-def AsymptoticHalvedWitnessHypothesis : Prop :=
+@[expose] def AsymptoticHalvedWitnessHypothesis : Prop :=
   ∀ k p : ℕ, 0 < k → Nat.Prime p → AsymptoticHalvedWitness k p
 
 lemma maxDegreeLE_of_regular {V : Type*} {G : SimpleGraph V} {Δ : ℕ}

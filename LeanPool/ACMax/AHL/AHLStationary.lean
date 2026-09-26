@@ -216,7 +216,7 @@ theorem nbWeight_concat {x v t : V} (p : G.Walk x v) (hp : ¬ p.Nil) (h : G.Adj 
 
 /-- The global sigma finset of all length-`k` non-backtracking walks, tagged by their start: an
 element `⟨x, ⟨v, p⟩⟩` is a length-`k` non-backtracking walk `p : G.Walk x v`. -/
-def nbAll (k : ℕ) : Finset (Σ x : V, Σ v : V, G.Walk x v) :=
+@[expose] def nbAll (k : ℕ) : Finset (Σ x : V, Σ v : V, G.Walk x v) :=
   Finset.univ.sigma fun x => nbWalksFrom G x k
 
 /-- Membership in `nbAll`: `⟨x, ⟨v, p⟩⟩` lies in `nbAll k` iff `p` has length `k` and is
@@ -230,18 +230,18 @@ theorem mem_nbAll {k : ℕ} {t : Σ x : V, Σ v : V, G.Walk x v} :
 /-- **The last-edge marginal** (AHL's `xP = x`, def only).  The total weight of the length-`k`
 non-backtracking walks whose last directed edge is `(u, v)` — i.e. ending at `v` with penultimate
 `u`.  Its value `1` (for `k ≥ 1`, `G.Adj u v`) is the stationarity identity proved in node W3. -/
-noncomputable def nbLastWeight (k : ℕ) (u v : V) : ℝ :=
+@[expose] noncomputable def nbLastWeight (k : ℕ) (u v : V) : ℝ :=
   ∑ t ∈ (nbAll (G := G) k).filter (fun t => t.2.1 = v ∧ t.2.2.penultimate = u), nbWeight t.2
 
 /-- **The end marginal** (def only).  The total weight of the length-`k` non-backtracking walks
 ending at `v`; its value `deg v` (node W4) is the marginal of `nbLastWeight` over the neighbours of
 `v`. -/
-noncomputable def nbEndWeight (k : ℕ) (v : V) : ℝ :=
+@[expose] noncomputable def nbEndWeight (k : ℕ) (v : V) : ℝ :=
   ∑ t ∈ (nbAll (G := G) k).filter (fun t => t.2.1 = v), nbWeight t.2
 
 /-- **The total weight** (def only).  The total weight of all length-`k` non-backtracking walks;
 its value `D = ∑ v, deg v` (node W5) is the normalization `∑_v nbEndWeight k v`. -/
-noncomputable def nbWeightTotal (k : ℕ) : ℝ :=
+@[expose] noncomputable def nbWeightTotal (k : ℕ) : ℝ :=
   ∑ t ∈ nbAll (G := G) k, nbWeight t.2
 
 end ACMax

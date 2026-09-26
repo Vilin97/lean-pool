@@ -151,6 +151,7 @@ theorem `sub_one_le_d`. -/
 representatives of the isomorphism classes of the elements of* `sigma K n`—it consists of elements
 of `sigma K n`, and every element of `sigma K n` is `K`-isomorphic to exactly one member of `R`
 ([Serre 1978, Remark 3°, p.1031][Serre1978]). -/
+@[expose]
 def IsRepresentativeSet (n : ℕ) (R : Set (IntermediateField K (SeparableClosure K))) : Prop :=
   R ⊆ sigma K n ∧ ∀ L ∈ sigma K n, ∃! M, M ∈ R ∧ Nonempty (↥L ≃ₐ[K] ↥M)
 

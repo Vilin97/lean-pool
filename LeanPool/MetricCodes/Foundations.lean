@@ -550,13 +550,13 @@ theorem lower_smul (c : ℝ) (f : Function n) :
   by_cases ha : a ∈ S <;> simp [ha]
 
 /-- The raise linear used in the binary-code argument. -/
-def raiseLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
+@[expose] def raiseLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
   toFun := raise
   map_add' := raise_add
   map_smul' := raise_smul
 
 /-- The lower linear used in the binary-code argument. -/
-def lowerLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
+@[expose] def lowerLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
   toFun := lower
   map_add' := lower_add
   map_smul' := lower_smul
@@ -7142,7 +7142,7 @@ theorem centered_coordinate_inner_sum {n w : ℕ}
       field_simp [hn']; ring
 
 /-- The geometric axis used in the Johnson-code argument. -/
-def geometricAxis {n w : ℕ} (x : JohnsonSphere n w) : MetricCodes.Ambient n :=
+@[expose] def geometricAxis {n w : ℕ} (x : JohnsonSphere n w) : MetricCodes.Ambient n :=
   WithLp.toLp 2 (fun i : Fin n =>
     Real.sqrt ((n : ℝ) /
       ((w : ℝ) * ((n - w : ℕ) : ℝ))) *

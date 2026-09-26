@@ -642,7 +642,7 @@ theorem toElementMap₂_eval (φ : (funSpace V₁ V₂).Element) (x : V₁.Eleme
 /-- **Theorem 3.11 (Scott 1981, PRG-19).** Evaluation as a single approximable map
 out of the
 product `(𝒟₁ → 𝒟₂) × 𝒟₁ → 𝒟₂`. -/
-def evalMap (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
+@[expose] def evalMap (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
     ApproximableMap (prod (funSpace V₁ V₂) V₁) V₂ := ofMap₂ (eval V₁ V₂)
 
 /-- **Theorem 3.11(i) (Scott 1981, PRG-19).** `eval(⟨f, x⟩) = f(x)`. -/
@@ -846,7 +846,7 @@ theorem curry_eval_comp (h : ApproximableMap V₀ (funSpace V₁ V₂)) :
 
 /-- **Theorem 3.12 (Scott 1981, PRG-19).** `curry` is an order-isomorphism between
 `|𝒟₀ × 𝒟₁ → 𝒟₂|` and `|𝒟₀ → (𝒟₁ → 𝒟₂)|`. -/
-def curryEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
+@[expose] def curryEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
     (V₂ : NeighborhoodSystem γ) :
     ApproximableMap (prod V₀ V₁) V₂ ≃o ApproximableMap V₀ (funSpace V₁ V₂) where
   toFun := curry

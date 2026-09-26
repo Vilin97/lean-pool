@@ -37,7 +37,7 @@ noncomputable section «Section1»
 variable {S T : PointedTrees} {n : ℕ}
 namespace PointedLenHom
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def toHom (f : PointedLenHom S T) : S.1 ⟶ T.1 := f.toLenHom
+@[expose] def toHom (f : PointedLenHom S T) : S.1 ⟶ T.1 := f.toLenHom
 instance : FunLike (PointedLenHom S T) S.1 T.1 where
   coe f := f.toHom
   coe_injective _ _ h := PointedLenHom.ext <| LenHom.ext h
@@ -47,7 +47,7 @@ instance : OrderHomClass (PointedLenHom S T) S.1 T.1 where
   f x = f.toHom x := rfl
 
 /-- The category of trees with a chosen base node -/
-instance : Category PointedTrees where
+@[expose] instance : Category PointedTrees where
   Hom S T := PointedLenHom S T
   id S := ⟨𝟙 S.1, rfl⟩
   comp f g := ⟨f.toHom ≫ g.toHom, by change g.toFun (f.toFun _) = _; rw [f.hp, g.hp]⟩

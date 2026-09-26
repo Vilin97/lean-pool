@@ -2094,7 +2094,7 @@ private theorem dSVDensityRationalPhysicalAcceptedProjector_eq_spectralMask
     dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  simp only [spectralConjugationCLM_apply]
+  simp only [spectralConjugationCLM_apply, Matrix.UnitaryGroup.inv_val]
 
 /-- The finite outcome encoding for DSV density rational canonical prefix spectral. -/
 @[expose] def dSVDensityRationalCanonicalPrefixSpectralOutcome
@@ -2257,7 +2257,7 @@ theorem dSVDensityRationalFirstAcceptPhysicalEffect_eq_spectralMask
   unfold dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  simp only [spectralConjugationCLM_apply]
+  simp only [spectralConjugationCLM_apply, Matrix.UnitaryGroup.inv_val]
 
 theorem dSVDensityRationalFirstAcceptLocalSpectralMask_transpose
     {d : ℕ} (w : ℝ) (N : ℕ)

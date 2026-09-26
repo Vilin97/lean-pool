@@ -635,7 +635,7 @@ namespace K3MajorantWitness
 
 /-- Convert the first source majorant `z ⟶ x` to the draft convention:
 `a` counts moves at `x`, while `b` counts moves at `z`. -/
-def toFirstK3Majorant
+@[expose] def toFirstK3Majorant
     {n : ℕ} [NeZero n] {P : Fin n → Point ℝ} {d₁ d₂ d₃ : ℝ} {i j : Fin n}
     (W : K3MajorantWitness P d₁ d₂ d₃ i j) : K3Majorant where
   leftMoves := W.rightMoves

@@ -271,8 +271,7 @@ def qppYZZYZ (U : Gate n) (φ θ₀ φ₀ : ℝ) (ps : List (ℝ × ℝ)) : Gate
 @[simp]
 theorem qppYZZYZ_nil (U : Gate n) (φ θ₀ φ₀ : ℝ) :
     qppYZZYZ U φ θ₀ φ₀ []
-      = Gate.tensor (rotZStd φ * (rotY θ₀ * rotZStd φ₀)) (1 : Gate n) :=
-  rfl
+      = Gate.tensor (rotZStd φ * (rotY θ₀ * rotZStd φ₀)) (1 : Gate n) := by rfl
 
 theorem qppYZZYZ_concat (U : Gate n) (φ θ₀ φ₀ : ℝ) (ps : List (ℝ × ℝ))
     (p : ℝ × ℝ) :

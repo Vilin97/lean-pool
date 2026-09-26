@@ -56,7 +56,7 @@ variable {Var : Type}
 /-- Replace the internal variables in a Q-formula according to `σ`, yielding a `Formula`.
 For `σ x = ·(n x)` with `n` injective into unused proposition letters this is the formula
 that the paper denotes by `ι` itself. -/
-def subst (σ : Var → Formula) : QFormula Var → Formula
+@[expose] def subst (σ : Var → Formula) : QFormula Var → Formula
   | .fma ψ => ψ
   | .var q => σ q
   | .and ι1 ι2 => ι1.subst σ ⋀ ι2.subst σ

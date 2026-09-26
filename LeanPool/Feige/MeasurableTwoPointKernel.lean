@@ -104,7 +104,7 @@ theorem kernelTwoPointMixture_apply_le
     _ = c := by simp
 
 /-- The strict below-above region used for the nondegenerate latent pair. -/
-def strictPairSet : Set (ℝ × ℝ) :=
+@[expose] def strictPairSet : Set (ℝ × ℝ) :=
   {p | p.1 < 1 ∧ 1 < p.2}
 
 theorem measurableSet_strictPairSet : MeasurableSet strictPairSet := by
@@ -162,7 +162,7 @@ theorem measurable_latentPairDensity (M : ℝ) :
   fun_prop
 
 /-- The concrete weighted below×above latent measure. -/
-noncomputable def latentPairMeasure (μ : Measure ℝ) (M : ℝ) :
+@[expose] noncomputable def latentPairMeasure (μ : Measure ℝ) (M : ℝ) :
     Measure (ℝ × ℝ) :=
   (belowAboveProduct μ).withDensity (latentPairDensity M)
 

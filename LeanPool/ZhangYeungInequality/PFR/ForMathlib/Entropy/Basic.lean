@@ -66,7 +66,7 @@ def entropy (X : Ω → S) (μ : Measure Ω := by volume_tac) := Hm[μ.map X]
 @[inherit_doc entropy] notation3:max "H[" X " | " Y " ← " y "]" => entropy X (ℙ[|Y ← y])
 
 /-- Entropy of a random variable agrees with entropy of its distribution. -/
-lemma entropy_def (X : Ω → S) (μ : Measure Ω) : entropy X μ = Hm[μ.map X] := rfl
+lemma entropy_def (X : Ω → S) (μ : Measure Ω) : entropy X μ = Hm[μ.map X] := by rfl
 
 /-- Entropy of a random variable is also the kernel entropy of the distribution over a
 Dirac mass.
@@ -390,7 +390,7 @@ def _root_.ProbabilityTheory.condEntropy
   (μ.map Y)[fun y ↦ H[X | Y ← y; μ]]
 
 lemma _root_.ProbabilityTheory.condEntropy_def (X : Ω → S) (Y : Ω → T) (μ : Measure Ω) :
-    condEntropy X Y μ = (μ.map Y)[fun y ↦ H[X | Y ← y; μ]] := rfl
+    condEntropy X Y μ = (μ.map Y)[fun y ↦ H[X | Y ← y; μ]] := by rfl
 
 @[inherit_doc condEntropy] notation3:max "H[" X " | " Y "; " μ "]" => condEntropy X Y μ
 @[inherit_doc condEntropy] notation3:max "H[" X " | " Y "]" => condEntropy X Y volume
@@ -733,7 +733,7 @@ def _root_.ProbabilityTheory.mutualInfo
 @[inherit_doc mutualInfo] notation3:max "I[" X " : " Y "]" => mutualInfo X Y volume
 
 lemma _root_.ProbabilityTheory.mutualInfo_def (X : Ω → S) (Y : Ω → T) (μ : Measure Ω) :
-  I[X : Y; μ] = H[X; μ] + H[Y; μ] - H[⟨X, Y⟩; μ] := rfl
+  I[X : Y; μ] = H[X; μ] + H[Y; μ] - H[⟨X, Y⟩; μ] := by rfl
 
 lemma _root_.ProbabilityTheory.entropy_add_entropy_sub_mutualInfo
     (X : Ω → S) (Y : Ω → T) (μ : Measure Ω) :
@@ -762,7 +762,7 @@ def _root_.ProbabilityTheory.condMutualInfo
 lemma _root_.ProbabilityTheory.condMutualInfo_def
     (X : Ω → S) (Y : Ω → T) (Z : Ω → U) (μ : Measure Ω) :
     condMutualInfo X Y Z μ = (μ.map Z)[fun z ↦
-      H[X | Z ← z; μ] + H[Y | Z ← z; μ] - H[⟨X, Y⟩ | Z ← z; μ]] := rfl
+      H[X | Z ← z; μ] + H[Y | Z ← z; μ] - H[⟨X, Y⟩ | Z ← z; μ]] := by rfl
 
 @[inherit_doc condMutualInfo]
 notation3:max "I[" X " : " Y "|" Z ";" μ "]" => condMutualInfo X Y Z μ
@@ -770,7 +770,7 @@ notation3:max "I[" X " : " Y "|" Z ";" μ "]" => condMutualInfo X Y Z μ
 notation3:max "I[" X " : " Y "|" Z "]" => condMutualInfo X Y Z volume
 
 lemma _root_.ProbabilityTheory.condMutualInfo_eq_integral_mutualInfo :
-    I[X : Y | Z; μ] = (μ.map Z)[fun z ↦ I[X : Y; μ[| Z ⁻¹' {z}]]] := rfl
+    I[X : Y | Z; μ] = (μ.map Z)[fun z ↦ I[X : Y; μ[| Z ⁻¹' {z}]]] := by rfl
 
 @[simp] lemma _root_.ProbabilityTheory.condMutualInfo_zero_measure : I[X : Y | Z; 0] = 0 := by
   simp [condMutualInfo]
@@ -792,7 +792,7 @@ lemma _root_.ProbabilityTheory.mutualInfo_nonneg
     rw [Measure.map_map measurable_snd (hX.prodMk hY)]
     congr
   rw [h_fst, h_snd]
-  exact measureMutualInfo_nonneg
+  simpa only [measureMutualInfo_def] using measureMutualInfo_nonneg
 
 /-- Subadditivity of entropy. -/
 lemma _root_.ProbabilityTheory.entropy_pair_le_add
@@ -814,7 +814,7 @@ lemma _root_.ProbabilityTheory.mutualInfo_eq_zero
     congr
   rw [h_fst, h_snd]
   convert measureMutualInfo_eq_zero_iff (μ := μ.map (⟨X, Y⟩)) using 2
-  · exact measureMutualInfo_def _
+  · exact measureMutualInfo_def (μ.map (⟨X, Y⟩))
   rw [indepFun_iff_map_prod_eq_prod_map_map hX.aemeasurable hY.aemeasurable,
     Measure.ext_iff_measureReal_singleton_finiteSupport]
   congr! with p

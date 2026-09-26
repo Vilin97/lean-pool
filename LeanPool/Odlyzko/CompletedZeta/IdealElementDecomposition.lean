@@ -265,7 +265,7 @@ theorem surjective_idealElementDecompositionMap
 
 open Classical in
 /-- An ideal element decomposition equiv used in the Odlyzko-bound argument. -/
-noncomputable def idealElementDecompositionEquiv
+@[expose] noncomputable def idealElementDecompositionEquiv
     (J : (Ideal (𝓞 K))⁰) :
     idealSet K J × unitShiftIndex K ≃ nonzeroIdealElement K J :=
   Equiv.ofBijective (idealElementDecompositionMap K J)

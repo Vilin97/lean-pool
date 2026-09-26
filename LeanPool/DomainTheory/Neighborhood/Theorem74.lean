@@ -85,7 +85,7 @@ presentation
 `prodNbhd_subset_iff`, into the *conjunction* of the two factors' relations on the
 projected
 indices — recursively decidable by `RecDecidable.and`/`.comp`/`.of_iff`. -/
-def prodPresentation (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁) :
+@[expose] def prodPresentation (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁) :
     ComputablePresentation (prod V₀ V₁) where
   X := prodEnum P₀ P₁
   mem_X t := prod_mem_prodNbhd (P₀.mem_X _) (P₁.mem_X _)

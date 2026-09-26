@@ -405,7 +405,7 @@ theorem sum3_mem_nonempty {W : Set (Option (Unit ⊕ Str ⊕ Str))} (h : CC.mem 
 /-! ### The forward half `toCC : |C| → |𝟙 + C + C|`. -/
 
 /-- **Example 6.2 — forward half of `C ≅ 𝟙 + C + C`.** -/
-def toCC (x : C.Element) : CC.Element where
+@[expose] def toCC (x : C.Element) : CC.Element where
   mem W := W = master3 unitSys C C
     ∨ (W = j0 (Set.univ : Set Unit) ∧ x.mem ({[]} : Set Str))
     ∨ (∃ X, C.mem X ∧ W = j1 X ∧ x.mem (embBit false X))
@@ -520,7 +520,7 @@ theorem toCC_mem_j2 {x : C.Element} {Y : Set Str} (hY : C.mem Y) :
 /-! ### The inverse half `fromCC : |𝟙 + C + C| → |C|`. -/
 
 /-- **Example 6.2 — inverse half of `C ≅ 𝟙 + C + C`.** -/
-def fromCC (s : CC.Element) : C.Element where
+@[expose] def fromCC (s : CC.Element) : C.Element where
   mem W := W = Set.univ
     ∨ (W = ({[]} : Set Str) ∧ s.mem (j0 (Set.univ : Set Unit)))
     ∨ (∃ X, C.mem X ∧ W = embBit false X ∧ s.mem (j1 X))

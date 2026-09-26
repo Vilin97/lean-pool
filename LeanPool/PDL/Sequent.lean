@@ -163,7 +163,7 @@ theorem Olf.change_some_some_eq {Onew nχ} : Olf.change (some nχ) (some nχ) On
   cases Onew <;> simp [Olf.change, Option.pdlOverwrite]
 
 /-- Whether the optional loading is absent. -/
-@[simp]
+@[expose, simp]
 def Olf.isNone : Olf → Prop
  | .none => True
  | .some (Sum.inl _) => False
@@ -203,7 +203,7 @@ instance instDecidableOlfisRight (o : Olf) : Decidable o.isRight := by
 
 /-- A tableau node is labelled with two finite sets of formulas and an `Olf`.
 Each formula is placed on the left or right and up to one formula may be loaded. -/
-@[implicit_reducible]
+@[expose, implicit_reducible]
 def Sequent := Finset Formula × Finset Formula × Olf -- ⟨L, R, o⟩
   deriving DecidableEq, Repr
 
@@ -214,14 +214,11 @@ def Sequent := Finset Formula × Finset Formula × Olf -- ⟨L, R, o⟩
 /-! ## Components and sides of sequents -/
 
 /-- The ordinary formulas in the left component. -/
-@[grind .]
-@[expose] def Sequent.L : Sequent → Finset Formula | ⟨L,_,_⟩ => L
+@[expose, grind .] def Sequent.L : Sequent → Finset Formula | ⟨L,_,_⟩ => L
 /-- The ordinary formulas in the right component. -/
-@[grind .]
-@[expose] def Sequent.R : Sequent → Finset Formula | ⟨_,R,_⟩ => R
+@[expose, grind .] def Sequent.R : Sequent → Finset Formula | ⟨_,R,_⟩ => R
 /-- The optional loaded formula and its side. -/
-@[grind .]
-@[expose] def Sequent.O : Sequent → Olf | ⟨_,_,O⟩ => O
+@[expose, grind .] def Sequent.O : Sequent → Olf | ⟨_,_,O⟩ => O
 
 @[simp]
 lemma Sequent.L_eq {L R O} : Sequent.L ⟨L,R,O⟩ = L := by simp [Sequent.L]

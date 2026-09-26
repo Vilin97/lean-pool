@@ -903,7 +903,6 @@ def sampleTargetFails {n N : ℕ} (rIn rOut T : ℕ)
 instance instDecidableSampleTargetFails {n N rIn rOut T : ℕ}
     (target : HypercubeVertex n) (sample : CenterSample n N) :
     Decidable (sampleTargetFails rIn rOut T target sample) := by
-  unfold sampleTargetFails
   infer_instance
 
 instance instDecidablePredSampleTargetFails {n N rIn rOut T : ℕ}
@@ -920,7 +919,6 @@ instance instDecidableSampleFailsSomeTarget {n N rIn rOut T : ℕ}
     (sample : CenterSample n N) :
     Decidable (sampleFailsSomeTarget rIn rOut T sample) := by
   classical
-  unfold sampleFailsSomeTarget
   infer_instance
 
 instance instDecidablePredSampleFailsSomeTarget {n N rIn rOut T : ℕ} :

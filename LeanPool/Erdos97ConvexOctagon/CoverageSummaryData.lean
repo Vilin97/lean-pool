@@ -45,7 +45,7 @@ public section
 namespace Erdos97Octagon.RawIncidence
 
 /-- The 32 groups containing all lightweight pattern summaries. -/
-def patternSummaryBucketGroups : Array (Array (List PatternSummary)) := #[
+@[expose] def patternSummaryBucketGroups : Array (Array (List PatternSummary)) := #[
   patternSummaryBuckets00,
   patternSummaryBuckets01,
   patternSummaryBuckets02,
@@ -81,7 +81,7 @@ def patternSummaryBucketGroups : Array (Array (List PatternSummary)) := #[
 ]
 
 /-- The 32 groups containing all lightweight exact-table summaries. -/
-def hardSummaryBucketGroups : Array (Array (List HardSummary)) := #[
+@[expose] def hardSummaryBucketGroups : Array (Array (List HardSummary)) := #[
   hardSummaryBuckets00,
   hardSummaryBuckets01,
   hardSummaryBuckets02,

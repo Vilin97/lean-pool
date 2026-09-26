@@ -66,7 +66,7 @@ topological space
   isDipath_reparam := fun {x y : α} γ t₀ t₁ φ hφ_mono hγ => by
     exact isDipath_reparam hφ_mono hγ
 
-instance DirectedSubspace {α : Type u} {p : α → Prop} [DirectedSpace α] :
+@[expose] instance DirectedSubspace {α : Type u} {p : α → Prop} [DirectedSpace α] :
   DirectedSpace (Subtype p) :=
   DirectedSpace.Induced continuous_induced_dom
 
@@ -102,6 +102,7 @@ def DirectedSubsetInclusion {α : Type u} [t : DirectedSpace α] {X Y : Set α} 
 
 end subtype
 
+@[expose]
 instance DirectedProduct {α : Type u} {β : Type v} [t₁ : DirectedSpace α] [t₂ : DirectedSpace β] :
   DirectedSpace (α × β) where
   IsDipath := fun {x y : α × β}

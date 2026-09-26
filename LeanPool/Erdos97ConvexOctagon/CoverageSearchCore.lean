@@ -45,21 +45,21 @@ structure ColumnState where
   counts : UInt64
 
 /-- The empty column-count state. -/
-def ColumnState.empty : ColumnState := ⟨0⟩
+@[expose] def ColumnState.empty : ColumnState := ⟨0⟩
 
 /-- Packed increments contributed by one target-row mask. -/
-def columnIncrements (row : UInt64) : UInt64 :=
+@[expose] def columnIncrements (row : UInt64) : UInt64 :=
   (List.finRange 8).foldl (fun result target =>
     if bitSetB row target.val then
       result + (1 <<< UInt64.ofNat (8 * target.val))
     else result) 0
 
 /-- Update packed column counts after accepting one row. -/
-def ColumnState.add (state : ColumnState) (row : UInt64) : ColumnState :=
+@[expose] def ColumnState.add (state : ColumnState) (row : UInt64) : ColumnState :=
   ⟨state.counts + columnIncrements row⟩
 
 /-- Read one packed column counter. -/
-def ColumnState.count (state : ColumnState) (target : Vertex) : Nat :=
+@[expose] def ColumnState.count (state : ColumnState) (target : Vertex) : Nat :=
   ((state.counts >>> UInt64.ofNat (8 * target.val)) &&& 255).toNat
 
 /-- Number of remaining rows that can still select a target. -/
@@ -67,7 +67,7 @@ def ColumnState.count (state : ColumnState) (target : Vertex) : Nat :=
   (remaining.filter (· ≠ target)).length
 
 /-- Fast packed check that every column can still finish with exactly four entries. -/
-def ColumnState.feasible (state : ColumnState) (remaining : List Vertex) : Bool :=
+@[expose] def ColumnState.feasible (state : ColumnState) (remaining : List Vertex) : Bool :=
   (List.finRange 8).all fun target =>
     decide (state.count target ≤ 4) &&
       decide (4 ≤ state.count target + remainingColumnCapacity remaining target)
@@ -92,7 +92,7 @@ def columnFeasibleB
         remainingColumnCapacity remaining target)
 
 /-- Full semantic check that a packed pattern extends the assigned partial table. -/
-def patternExtendsAssignmentsB
+@[expose] def patternExtendsAssignmentsB
     (assignments : List RowAssignment) (summary : PatternSummary) : Bool :=
   (List.finRange 8).all fun centre =>
     (List.finRange 8).all fun target =>
@@ -100,7 +100,7 @@ def patternExtendsAssignmentsB
         selectedByAssignmentsB assignments centre target
 
 /-- Full semantic check that an exact-table code equals all assigned rows. -/
-def hardEqualsAssignmentsB
+@[expose] def hardEqualsAssignmentsB
     (assignments : List RowAssignment) (summary : HardSummary) : Bool :=
   (List.finRange 8).all fun centre =>
     (List.finRange 8).all fun target =>

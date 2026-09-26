@@ -32,7 +32,7 @@ noncomputable section
   ![1, -Real.sqrt 2 * t, t ^ 2]
 
 /-- Feature vector `b(x) = (x², √2 x, 1)ᵀ`. -/
-def b (x : ℝ) : Fin 3 → ℝ :=
+@[expose] def b (x : ℝ) : Fin 3 → ℝ :=
   ![x ^ 2, Real.sqrt 2 * x, 1]
 
 /-- Truncated square `aᵢ(x) = (x - tᵢ)₊²`. -/
@@ -69,7 +69,7 @@ lemma posSemidef_vecMulVec_self_fin3 (w : Fin 3 → ℝ) :
 variable {k : ℕ} (t : Fin k → ℝ) (q : Fin k → ℝ)
 
 /-- Gram matrix `𝒜 = I₃ + ∑ᵢ qᵢ v(tᵢ) v(tᵢ)ᵀ`. -/
-def 𝒜 : Matrix (Fin 3) (Fin 3) ℝ :=
+@[expose] def 𝒜 : Matrix (Fin 3) (Fin 3) ℝ :=
   1 + ∑ i, q i • vecMulVec (v (t i)) (v (t i))
 
 /-- `𝒜` is positive definite: the identity is PD and each summand is PSD. -/
@@ -99,7 +99,7 @@ lemma m_zero : m t q 0 = ∑ i, q i := by
   a0 t q * (1 + 2 * m t q 2) - 2 * m t q 1 ^ 2
 
 /-- Scalar `Δ = det 𝒜`. -/
-def Δ : ℝ :=
+@[expose] def Δ : ℝ :=
   (𝒜 t q).det
 
 /-- Vector `V = 𝒜 e₀`. -/
@@ -182,7 +182,7 @@ lemma D2_pos (hq : ∀ i, 0 < q i) : 0 < D2 t q := by
 /-! ### KR05: auxiliary functions -/
 
 /-- `h(x) = ∑ᵢ qᵢ aᵢ(x)`. -/
-def h (x : ℝ) : ℝ :=
+@[expose] def h (x : ℝ) : ℝ :=
   ∑ i, q i * truncSq (t i) x
 
 /-- `h₁(x) = ∑ᵢ qᵢ tᵢ aᵢ(x)`. -/
@@ -194,7 +194,7 @@ def h (x : ℝ) : ℝ :=
   b x + ∑ i, (q i * truncSq (t i) x) • v (t i)
 
 /-- `U(x) = b̂(x) + (h(x)/γ) V`. -/
-def U (γ x : ℝ) : Fin 3 → ℝ :=
+@[expose] def U (γ x : ℝ) : Fin 3 → ℝ :=
   bhat t q x + (h t q x / γ) • Vvec t q
 
 /-- The Gram update `𝒜 + VVᵀ/γ` before inversion. -/
@@ -224,7 +224,7 @@ lemma 𝒦Mat_isUnit (γ : ℝ) (hq : ∀ i, 0 < q i) (hγ : 0 < γ) :
   a0 t q * x + m t q 1 * x ^ 2 + m t q 1 * h t q x - a0 t q * h1 t q x
 
 /-- `Z(x) = γ x² + (γ + a₀) h(x)`. -/
-def Z (γ x : ℝ) : ℝ :=
+@[expose] def Z (γ x : ℝ) : ℝ :=
   γ * x ^ 2 + (γ + a0 t q) * h t q x
 
 /-! ### KR06: `𝒜⁻¹ V = e₀` -/

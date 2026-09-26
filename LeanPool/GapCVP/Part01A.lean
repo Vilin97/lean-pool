@@ -2794,7 +2794,7 @@ private theorem encodeFormulaFrom_allDistinct {T S : ℕ}
       ih (clauseIndex + 1)⟩
 
 /-- Encode a finite formula as clauses for the reduction. -/
-def encodeFormula {T S : ℕ} (formula : Formula T S) : ThreeCNF :=
+@[expose] def encodeFormula {T S : ℕ} (formula : Formula T S) : ThreeCNF :=
   encodeFormulaFrom 0 (sortedElements formula)
 
 theorem encodeFormula_allDistinct {T S : ℕ} (formula : Formula T S) :
@@ -3098,7 +3098,7 @@ private theorem encodeFormula_satisfiable_iff {T S : ℕ}
       encodeFormula_complete formula assignment hsatisfied⟩
 
 /-- GapCVP reduction support. -/
-def encodeTableau {T S : ℕ} (spec : Specification T S) : ThreeCNF :=
+@[expose] def encodeTableau {T S : ℕ} (spec : Specification T S) : ThreeCNF :=
   encodeFormula (tableauFormula spec)
 
 private theorem encodeTableau_satisfiable_iff_validTrace {T S : ℕ}
@@ -3549,7 +3549,7 @@ structure TableauSimulation
       Nonempty (AcceptedExecution bound machine x)
 
 /-- GapCVP reduction support. -/
-noncomputable def encodedTableau
+@[expose] noncomputable def encodedTableau
     {bound : Polynomial ℕ}
     {verifier : List Bool × List Bool → Bool}
     {machine : VerifierTM verifier}
@@ -4079,7 +4079,7 @@ structure LocalTableauCompiler
       GuessingExecution bound machine x
 
 /-- GapCVP reduction support. -/
-noncomputable def tableauSimulationOfLocalCompiler
+@[expose] noncomputable def tableauSimulationOfLocalCompiler
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)

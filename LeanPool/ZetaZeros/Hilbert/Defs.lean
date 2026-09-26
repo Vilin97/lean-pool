@@ -48,11 +48,13 @@ def IsSymmetric (Φ : ℝ → ℂ) : Prop :=
 
 /-- The two-variable kernel `F (u, v) = ∑ z, m z * fz z u * fz z v`, the multiset sum written with
 explicit multiplicities. -/
-@[expose, zz_tag "def_F"] noncomputable def bigF (eta : ℝ → ℝ) (Z : Finset ℂ) (m : ℂ → ℕ) (u v : ℝ) : ℂ :=
+@[expose, zz_tag "def_F"]
+noncomputable def bigF (eta : ℝ → ℝ) (Z : Finset ℂ) (m : ℂ → ℕ) (u v : ℝ) : ℂ :=
   ∑ z ∈ Z, (m z : ℂ) * fz eta z u * fz eta z v
 
 /-- The simple real part of the support: real points of multiplicity one. -/
-@[expose, zz_tag "def_R2"] noncomputable def multipleRealPart (Z : Finset ℂ) (m : ℂ → ℕ) : Finset ℂ :=
+@[expose, zz_tag "def_R2"]
+noncomputable def multipleRealPart (Z : Finset ℂ) (m : ℂ → ℕ) : Finset ℂ :=
   Z.filter fun x => x.im = 0 ∧ 2 ≤ m x
 
 /-- The non-real part of the support. -/

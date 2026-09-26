@@ -36,7 +36,7 @@ inductive PrefixCertificate where
   deriving DecidableEq
 
 /-- Regard a monotone prefix witness as a general obstruction certificate. -/
-def PrefixCertificate.toCertificate : PrefixCertificate → Certificate
+@[expose] def PrefixCertificate.toCertificate : PrefixCertificate → Certificate
   | .k4 root component a b c d => .k4 root component a b c d
   | .sharedThree a b q1 q2 q3 => .sharedThree a b q1 q2 q3
 
@@ -65,15 +65,15 @@ def treeLabelledEdgeB
     (decide (b ∈ component) && decide (a ∈ R b))
 
 /-- The class number stored in a residual-isomorphism payload. -/
-def payloadClass (payload : UInt64) : ℕ :=
+@[expose] def payloadClass (payload : UInt64) : ℕ :=
   (payload &&& 15).toNat
 
 /-- The forward permutation stored in a residual-isomorphism payload. -/
-def payloadForwardCode (payload : UInt64) : UInt64 :=
+@[expose] def payloadForwardCode (payload : UInt64) : UInt64 :=
   (payload >>> 4) &&& 0xffffff
 
 /-- The inverse permutation stored in a residual-isomorphism payload. -/
-def payloadInverseCode (payload : UInt64) : UInt64 :=
+@[expose] def payloadInverseCode (payload : UInt64) : UInt64 :=
   (payload >>> 28) &&& 0xffffff
 
 /-- The mathematical proposition checked for each emitted finite witness. -/
@@ -186,7 +186,7 @@ theorem Certificate.valid_of_validB
         and_assoc] using hvalid
 
 /-- One incidence table extends another when it contains every selected edge. -/
-def Extends (R S : RawIncidence) : Prop :=
+@[expose] def Extends (R S : RawIncidence) : Prop :=
   ∀ centre target, target ∈ R centre → target ∈ S centre
 
 private theorem extendsTreeB_mono {R S : RawIncidence} (hRS : Extends R S) :

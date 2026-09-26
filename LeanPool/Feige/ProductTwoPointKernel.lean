@@ -80,7 +80,7 @@ theorem parallelComp_comp_prod_measure
 section RecursiveFiniteKernel
 
 /-- Measurable head/tail splitting of a homogeneous `Fin (n+1)` vector. -/
-noncomputable def finHeadTailEquiv (α : Type*) [MeasurableSpace α] (n : ℕ) :
+@[expose] noncomputable def finHeadTailEquiv (α : Type*) [MeasurableSpace α] (n : ℕ) :
     (Fin (n + 1) → α) ≃ᵐ α × (Fin n → α) :=
   MeasurableEquiv.piFinSuccAbove (fun _ : Fin (n + 1) => α) 0
 

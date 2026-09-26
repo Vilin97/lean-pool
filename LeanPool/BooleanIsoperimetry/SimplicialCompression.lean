@@ -29,13 +29,13 @@ namespace BooleanIsoperimetry
 
 /-- A faithful relation for the Up compression of a family along a coordinate `i`.
 It pushes elements missing `i` to have `i`, provided the target is not already present. -/
-def IsCoordinateUp {N : ℕ} (i : Fin N) (A A' : Finset (Cube N)) : Prop :=
+@[expose] def IsCoordinateUp {N : ℕ} (i : Fin N) (A A' : Finset (Cube N)) : Prop :=
   A'.card = A.card ∧
   ∀ x, x ∈ A' ↔ (x ∈ A ∧ (i ∈ x ∨ insert i x ∈ A)) ∨ (i ∈ x ∧ x ∉ A ∧ x.erase i ∈ A)
 
 /-- A faithful relation for the Down compression of a family along a coordinate `i`.
 It pushes elements containing `i` to miss `i`, provided the target is not already present. -/
-def IsCoordinateDown {N : ℕ} (i : Fin N) (B B' : Finset (Cube N)) : Prop :=
+@[expose] def IsCoordinateDown {N : ℕ} (i : Fin N) (B B' : Finset (Cube N)) : Prop :=
   B'.card = B.card ∧
   ∀ x, x ∈ B' ↔ (x ∈ B ∧ (i ∉ x ∨ x.erase i ∈ B)) ∨ (i ∉ x ∧ x ∉ B ∧ insert i x ∈ B)
 
@@ -566,13 +566,13 @@ lemma coordinateDown_potential_lt_of_ne {N : ℕ} (i : Fin N) (A : Finset (Cube 
 
 /-- Within-layer colexicographic shift. It moves an element to a strictly earlier
 element in the same layer (same cardinality), provided the target is not already in the family. -/
-def IsColexShift {N : ℕ} (A A' : Finset (Cube N)) : Prop :=
+@[expose] def IsColexShift {N : ℕ} (A A' : Finset (Cube N)) : Prop :=
   A'.card = A.card ∧
   ∃ (x y : Cube N), x ∈ A ∧ y ∉ A ∧ x.card = y.card ∧ simplicialLt y x ∧
     A' = insert y (A.erase x)
 
 /-- A family is stable under all within-layer colex shifts. -/
-def IsColexShiftFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
+@[expose] def IsColexShiftFixed {N : ℕ} (A : Finset (Cube N)) : Prop :=
   ∀ A', ¬IsColexShift A A'
 
 /-- The missing level-saturation condition in the PDF compression route: once

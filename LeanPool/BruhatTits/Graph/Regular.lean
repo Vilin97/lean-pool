@@ -70,8 +70,7 @@ def standardNeighbour {L : Lattice R} {y : Vertices R} (h : IsNeighbour y ⟦L�
 @[simp]
 lemma standardNeighbourBasis_ntwist_eq {L : Lattice R} {y : Vertices R} (h : IsNeighbour y ⟦L⟧) :
     ((standardNeighbourBasis h).ntwist₂ (standardNeighbourϖ_irreducible h) 1 0).toLattice =
-      standardNeighbour h :=
-  rfl
+      standardNeighbour h := by rfl
 
 lemma standardNeighbour_isStandardNeighbour {L : Lattice R} {y : Vertices R}
     (h : IsNeighbour y ⟦L⟧) :
@@ -287,7 +286,6 @@ variable [Finite (ResidueField R)]
 /-- If the residue field of `R` is finite, every vertex has finitely many neighbors. -/
 instance (x : Vertices R) : Finite ((BTgraph (R := R)).neighborSet x) := by
   refine Quotient.inductionOn x (fun L ↦ ?_)
-  change Finite {y : Vertices R // IsNeighbour ⟦L⟧ y}
   have : Finite L.quotient := Module.finite_of_finite (ResidueField R)
   apply Finite.of_equiv _ (neighborSetEquivProjectivization L).symm
 

@@ -36,7 +36,7 @@ variable {lam : ℝ} {eta : ℝ → ℝ}
 noncomputable abbrev L2Interval (lam : ℝ) := Lp ℂ 2 (volume.restrict (Set.Ioo (-lam) lam))
 
 /-- The twisted function as an element of `L²`. -/
-noncomputable def fzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
+@[expose] noncomputable def fzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
   MemLp.toLp _ (memLp_fz h z)
 
 /-- The even part as an element of `L²`. -/
@@ -44,7 +44,7 @@ noncomputable def fzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
   MemLp.toLp _ (memLp_gz h z)
 
 /-- The odd part as an element of `L²`. -/
-noncomputable def hzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
+@[expose] noncomputable def hzL2 (h : IsAdmissible lam eta) (z : ℂ) : L2Interval lam :=
   MemLp.toLp _ (memLp_hz h z)
 
 /-- The first subspace, spanned by the twisted functions at the multiple real points together with

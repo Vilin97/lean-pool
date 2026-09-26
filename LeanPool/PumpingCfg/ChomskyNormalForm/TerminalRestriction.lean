@@ -246,7 +246,8 @@ lemma restrictTerminals_derives_rightEmbedString_embedString {u : List (Symbol T
   induction u with
   | nil => rfl
   | cons a _ ih =>
-    simp only [List.mem_cons] at hu ⊢
+    simp only [List.mem_cons] at hu
+    simp only [rightEmbedString, embedString, List.map_cons]
     rw [← List.singleton_append, ← @List.singleton_append _ (embedSymbol a)]
     apply Derives.append_left_trans
     · simp_all

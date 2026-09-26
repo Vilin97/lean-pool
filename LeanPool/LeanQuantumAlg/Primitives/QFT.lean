@@ -66,7 +66,7 @@ noncomputable section
 /-- Primitive `2^n`-th root of unity: `ω_n = e^{2πi/2^n}`
 [dW19, qcnotes.tex:1690].
 Forward-transform sign convention (`+2πi`, not `−2πi`). -/
-def omega (n : ℕ) : ℂ :=
+@[expose] def omega (n : ℕ) : ℂ :=
   Complex.exp (↑(2 * Real.pi / (2 : ℝ) ^ n) * Complex.I)
 -- [dW19, qcnotes.tex:1690]: ω_N = e^{2πi/N}
 
@@ -204,7 +204,7 @@ theorem QFT_mem_unitaryGroup (n : ℕ) :
     rw [sum_omega_zpow_eq_zero n hd, mul_zero]
 
 /-- The quantum Fourier transform on `n` qubits as a unitary gate. -/
-def QFT (n : ℕ) : Gate n := Gate.ofUnitary (QFTMatrix n) (QFT_mem_unitaryGroup n)
+@[expose] def QFT (n : ℕ) : Gate n := Gate.ofUnitary (QFTMatrix n) (QFT_mem_unitaryGroup n)
 
 @[simp]
 theorem QFT_coe (n : ℕ) : ((QFT n : Gate n) : HilbertOperator n) = QFTMatrix n := by rfl

@@ -684,7 +684,7 @@ theorem isTwoStepNilpotent_iff_lowerCentral' :
 --here L is necesarily finite dimensional (if K is a field). Could generalize this to
 --infinite dimensions.
 /-- A Lie algebra is almost abelian if it has a codimension one abelian ideal. -/
-def IsAlmostAbelian : Prop :=
+@[expose] def IsAlmostAbelian : Prop :=
     ∃ I : LieIdeal K L, IsLieAbelian I ∧ Module.finrank K L = Module.finrank K I + 1
 
 theorem isAlmostAbelian_iff :

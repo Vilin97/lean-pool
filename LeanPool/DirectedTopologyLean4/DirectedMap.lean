@@ -94,14 +94,14 @@ instance : Coe D(α,β) C(α, β) := ⟨fun f => f.toContinuousMap⟩
 variable (α)
 
 /-- The identity map is directed -/
-protected def id : D(α,α) where
+@[expose] protected def id : D(α,α) where
   toFun := id
   directed_toFun := fun x y γ γ_path => γ_path
 
 @[simp] lemma coe_id : ⇑(DirectedMap.id α) = id := by rfl
 
 /-- Constant maps are directed -/
-def const (b : β) : D(α,β) where
+@[expose] def const (b : β) : D(α,β) where
   toFun := fun _ : α => b
   directed_toFun := fun x y γ _ => isDipath_constant b
 

@@ -436,8 +436,7 @@ omit [IsFullConstantField k K] in
 @[simp]
 theorem smulIntoOmega_coe (ω : WeilDifferential k K) {D₀ : DivisorA k K}
     (h : D₀ ∈ vanishingDivisors ω) (E : DivisorA k K) (f : RRspace k K E) :
-    (smulIntoOmega ω h E f : AdeleSpace k K →ₗ[k] k) = (smulWeil (f : K) ω).toFun :=
-  rfl
+    (smulIntoOmega ω h E f : AdeleSpace k K →ₗ[k] k) = (smulWeil (f : K) ω).toFun := by rfl
 
 omit [IsFullConstantField k K] in
 theorem smulIntoOmega_injective (ω : WeilDifferential k K) {D₀ : DivisorA k K}

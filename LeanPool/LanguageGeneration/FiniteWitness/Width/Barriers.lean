@@ -52,7 +52,7 @@ def finiteTraces (H : Set (Set α)) (F : Finset α) : Set (Set α) :=
   {E | ∃ L ∈ H, L ∩ (↑F : Set α) = E}
 
 /-- The intersection of all target languages consistent with a finite positive sample. -/
-def positiveClosure (H : Set (Set α)) (S : Finset α) : Set α :=
+@[expose] def positiveClosure (H : Set (Set α)) (S : Finset α) : Set α :=
   {x | ∀ L ∈ H, (↑S : Set α) ⊆ L → x ∈ L}
 
 theorem full_finiteTraces_of_cofinite_subset {H : Set (Set α)} (hH : cofinite α ⊆ H)

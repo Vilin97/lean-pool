@@ -70,7 +70,7 @@ base). -/
 /-- The intersection of the sets in `M`, taken inside the base set `base` (so the
 empty list gives
 `base`, matching the convention 1.1a where the empty intersection is `Δ`). -/
-def interList (base : Set β) : List (Set β) → Set β
+@[expose] def interList (base : Set β) : List (Set β) → Set β
   | [] => base
   | Y :: M => Y ∩ interList base M
 
@@ -156,13 +156,13 @@ by the presentation
 variable (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁)
 
 /-- The step pair coded by an entry `e`: `(X_{e.unpair.1}, Y_{e.unpair.2})`. -/
-def funPair (e : ℕ) : Set α × Set β := (P₀.X e.unpair.1, P₁.X e.unpair.2)
+@[expose] def funPair (e : ℕ) : Set α × Set β := (P₀.X e.unpair.1, P₁.X e.unpair.2)
 
 @[simp] theorem funPair_fst (e : ℕ) : (funPair P₀ P₁ e).1 = P₀.X e.unpair.1 := rfl
 @[simp] theorem funPair_snd (e : ℕ) : (funPair P₀ P₁ e).2 = P₁.X e.unpair.2 := rfl
 
 /-- The list of step pairs coded by an entry-list `el`. -/
-def funListOf (el : List ℕ) : List (Set α × Set β) := el.map (funPair P₀ P₁)
+@[expose] def funListOf (el : List ℕ) : List (Set α × Set β) := el.map (funPair P₀ P₁)
 
 theorem funListOf_valid (el : List ℕ) :
     ∀ p ∈ funListOf P₀ P₁ el, V₀.mem p.1 ∧ V₁.mem p.2 := by
@@ -369,7 +369,7 @@ predicate is
 recursively decidable (`RecDecidable.bForall`). All choice-free. -/
 
 /-- The sublist of `L` selected by the bitmask `b` (low bit = head). -/
-def bitSelect : List ℕ → ℕ → List ℕ
+@[expose] def bitSelect : List ℕ → ℕ → List ℕ
   | [], _ => []
   | e :: L, b => if b % 2 = 1 then e :: bitSelect L (b / 2) else bitSelect L (b / 2)
 

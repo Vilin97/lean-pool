@@ -125,7 +125,7 @@ lemma evenPoly_C_mul_X_sq_add_C {R : Type*} [CommSemiring R] (b c : R) :
 
 /-- The integer sequence `c_n` (indexed from 1): `c_1 = -a`, `c_{n+1} = c_n² + a`; the value at
 index `0` is `0`. It is the `γ`-sequence of `X² + a` with `ε = -1`. -/
-noncomputable def cSeq (a : ℤ) : ℕ → ℤ := gammaSeq (X ^ 2 + C a) (-1)
+@[expose] noncomputable def cSeq (a : ℤ) : ℕ → ℤ := gammaSeq (X ^ 2 + C a) (-1)
 
 /-- `c_n = γ_n(X² + a, ε = -1)` (definitional). -/
 lemma cSeq_eq_gammaSeq (a : ℤ) (n : ℕ) : cSeq a n = gammaSeq (X ^ 2 + C a) (-1) n := by rfl

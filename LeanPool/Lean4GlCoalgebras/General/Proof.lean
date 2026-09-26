@@ -198,7 +198,7 @@ lemma path_in_FL {𝕏 : Proof} {x y : 𝕏.X}
     List.pmap (fun x y ↦ ⟨x, y⟩) (𝕐.α y.1).2 (fun _ z_in ↦ Relation.ReflTransGen.tail y.2 z_in)⟩
 
 /-- Point Generated Proof. -/
-def pointGeneratedProof (𝕐 : Proof) (x : 𝕐.X) : Proof where
+@[expose] def pointGeneratedProof (𝕐 : Proof) (x : 𝕐.X) : Proof where
   X := {y : 𝕐.X // Relation.ReflTransGen (edge 𝕐.α) x y }
   α := αPoint 𝕐 x
   step := by

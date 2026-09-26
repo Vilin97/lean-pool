@@ -1274,7 +1274,7 @@ def elimTT (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
   (M (Xconfig s t ρ x)).submatrix elimT elimT
 
 lemma elimEE_none_none (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
-    elimEE s t ρ x none none = M (Xconfig s t ρ x) idxZ0 idxZ0 := rfl
+    elimEE s t ρ x none none = M (Xconfig s t ρ x) idxZ0 idxZ0 := by rfl
 
 lemma elimEE_none_some (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) :
     elimEE s t ρ x none (some i) = 0 :=
@@ -1286,7 +1286,7 @@ lemma elimEE_some_none (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) 
 
 lemma elimEE_some_some (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i h : Fin k) :
     elimEE s t ρ x (some i) (some h) =
-      M (Xconfig s t ρ x) (idxZ i) (idxZ h) := rfl
+      M (Xconfig s t ρ x) (idxZ i) (idxZ h) := by rfl
 
 lemma elimEE_isHermitian (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     (elimEE s t ρ x).IsHermitian :=

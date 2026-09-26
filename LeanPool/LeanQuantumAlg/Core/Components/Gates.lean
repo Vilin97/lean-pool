@@ -54,6 +54,7 @@ theorem HOp_mem_unitaryGroup :
 def H : Gate 1 := ofUnitary HOp HOp_mem_unitaryGroup
 
 /-- The Pauli-X (NOT) gate, as the basis permutation `|0> ↔ |1>`. -/
+@[expose]
 def X : Gate 1 := ofPerm (Equiv.swap 0 1)
 
 /-- Raw Pauli-Y operator `[[0, -i], [i, 0]]`. -/
@@ -80,7 +81,7 @@ theorem ZOp_mem_unitaryGroup :
     simp [ZOp, Matrix.mul_apply, Matrix.star_apply]
 
 /-- The Pauli-Z gate. -/
-def Z : Gate 1 := ofUnitary ZOp ZOp_mem_unitaryGroup
+@[expose] def Z : Gate 1 := ofUnitary ZOp ZOp_mem_unitaryGroup
 
 /-- The controlled-NOT gate on two qubits, control = qubit 0. -/
 @[expose]

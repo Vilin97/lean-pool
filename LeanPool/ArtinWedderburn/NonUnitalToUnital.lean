@@ -37,7 +37,7 @@ The additive structure is inherited verbatim from the `NonUnitalRing R` instance
 `Ring.ofMinimalAxioms` would) yields `nsmulRec`/`zsmulRec` instead and makes the two
 incomparable during instance synthesis. -/
 @[reducible]
-def nonUnitalWEIsRing : Ring R where
+@[expose] def nonUnitalWEIsRing : Ring R where
   __ := (inferInstance : NonUnitalRing R)
   __ := eOne e
   one_mul := is_left_unit

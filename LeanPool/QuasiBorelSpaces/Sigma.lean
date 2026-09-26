@@ -57,16 +57,23 @@ attribute [fun_prop] measurable_index
 Since every `Var` represents a variable, each `Var` induces a function
 `ℝ → Σi, P i`.
 -/
-@[simps]
 def apply (x : Var I P) (r : ℝ) : Sigma P where
   fst := x.embed (x.index r)
   snd := x.var (x.index r) r
 
 @[simp]
+lemma apply_fst (x : Var I P) (r : ℝ) : (apply x r).fst = x.embed (x.index r) := by
+  rfl
+
+@[simp]
+lemma apply_snd (x : Var I P) (r : ℝ) : (apply x r).snd = x.var (x.index r) r := by
+  rfl
+
+@[simp]
 lemma apply_mk
     {f : ℕ → I} {i : ℝ → ℕ} {φ : (i : ℕ) → ℝ → P (f i)} {r : ℝ}
     (hφ : ∀ i, IsHom (φ i)) (hi : Measurable[_, ⊤] i)
-    : apply ⟨f, i, φ, hφ, hi⟩ r = ⟨f (i r), φ (i r) r⟩ :=
+    : apply ⟨f, i, φ, hφ, hi⟩ r = ⟨f (i r), φ (i r) r⟩ := by
   rfl
 
 /-- A `Var` can be constructed from any `Encodable` index type. -/

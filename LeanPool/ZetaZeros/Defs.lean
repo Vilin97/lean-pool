@@ -38,18 +38,18 @@ noncomputable def zeroMultiplicity (ρ : ℂ) : ℕ := analyticOrderNatAt rieman
 
 /-- The number of non-trivial zeros with imaginary part in `(0, T]`, counted with multiplicity.
 This is `N T` in the source. -/
-@[zz_tag "def_N"]
+@[expose, zz_tag "def_N"]
 noncomputable def zeroCount (T : ℝ) : ℕ := ∑ᶠ ρ ∈ nontrivialZeros T, zeroMultiplicity ρ
 
 /-- The number of non-trivial zeros with imaginary part in `(0, T]` that are simple and lie on
 the critical line `re s = 1/2`. This is `N₀ˢ T` in the source. -/
-@[zz_tag "def_N_simple"]
+@[expose, zz_tag "def_N_simple"]
 noncomputable def simpleOnLineCount (T : ℝ) : ℕ :=
   {ρ ∈ nontrivialZeros T | ρ.re = 1 / 2 ∧ zeroMultiplicity ρ = 1}.ncard
 
 /-- The number of distinct non-trivial zeros with imaginary part in `(0, T]`. This is `N_d T`
 in the source. -/
-@[zz_tag "def_N_distinct"]
+@[expose, zz_tag "def_N_distinct"]
 noncomputable def distinctZeroCount (T : ℝ) : ℕ := (nontrivialZeros T).ncard
 
 /-- The Fourier transform of a compactly supported real function, at a complex argument. -/

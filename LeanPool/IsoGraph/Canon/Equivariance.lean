@@ -2573,11 +2573,11 @@ kernel should never be asked to do. -/
 
 theorem part_mk (lab pos cst cen : Array Nat) (inW : Array Bool) (tr : UInt64) (bc : Array Nat) :
     (SplitState.mk lab pos cst cen inW tr bc).part
-      = { lab := lab, pos := pos, cst := cst, cen := cen } := rfl
+      = { lab := lab, pos := pos, cst := cst, cen := cen } := by rfl
 
 theorem part_update (st : SplitState) (inW : Array Bool) (tr : UInt64) (bc : Array Nat) :
     ({ lab := st.lab, pos := st.pos, cst := st.cst, cen := st.cen, inW, tr, bc } :
-      SplitState).part = st.part := rfl
+      SplitState).part = st.part := by rfl
 
 /-- A singleton cell: only the trace hash moves. -/
 theorem splitCell_eq_singleton {cnt : Array Nat} {c : Nat} {st : SplitState}
@@ -4778,7 +4778,8 @@ theorem canonical_ok (n : Nat) (f : Nat → Nat → Bool) :
     | some b =>
       have hbo := hst.1 b hb
       exact ⟨hbo.size, hbo.lt, hbo.inj, hbo.cert⟩
-  exact key _ (dfsNode_ok n f _ _ _ _ _ (initialRefine_wf f) ⟨by simp, by simp⟩)
+  exact key _ (dfsNode_ok n f _ _ _ _ _ (initialRefine_wf f)
+    ⟨by intro l h; cases h, by intro l h; cases h⟩)
 
 theorem canonical_cert (n : Nat) (f : Nat → Nat → Bool) :
     (canonical (Graph.ofOracle n f)).cert

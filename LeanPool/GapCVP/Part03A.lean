@@ -1106,7 +1106,7 @@ private theorem acceptedExecution_paddedAcceptance_validTrace
       bound machine execution supported hint hwindows⟩
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def paddedAcceptanceLocalTableauCompiler
+@[expose] def paddedAcceptanceLocalTableauCompiler
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :

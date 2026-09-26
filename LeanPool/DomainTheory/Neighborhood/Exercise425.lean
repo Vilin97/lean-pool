@@ -148,7 +148,7 @@ def C1 : NeighborhoodSystem ℕ :=
 
 @[simp] theorem C1_mem {X : Set ℕ} : C1.mem X ↔ memC1 X := Iff.rfl
 
-@[simp] theorem C1_master : C1.master = (Set.univ : Set ℕ) := rfl
+@[simp] theorem C1_master : C1.master = (Set.univ : Set ℕ) := by rfl
 
 /-! ### Elements: `1ⁿ` (total) and `1ⁿ⊥` (partial). -/
 

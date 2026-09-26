@@ -14,7 +14,7 @@ public section
 namespace Erdos97Octagon
 
 /-- The canonical first witness row used by the finite classification. -/
-def standardTargets : Finset Vertex := {1, 2, 3, 4}
+@[expose] def standardTargets : Finset Vertex := {1, 2, 3, 4}
 
 /-- The canonical witness row has four vertices. -/
 @[simp] theorem card_standardTargets : standardTargets.card = 4 := by

@@ -43,7 +43,7 @@ def evalAtₗ (x : X) : Form1 X →ₗ[ℂ] ℂ where
   map_smul' := coeffAt_smul x
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
-@[simp] theorem evalAtₗ_apply (x : X) (η : Form1 X) : evalAtₗ x η = coeffAt x η := rfl
+@[simp] theorem evalAtₗ_apply (x : X) (η : Form1 X) : evalAtₗ x η = coeffAt x η := by rfl
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] in
 /-- The nonvanishing locus of a form's coefficient is open. -/

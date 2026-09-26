@@ -325,7 +325,7 @@ lemma edgeAdmissible_set_bddAbove (ell d : ℕ) :
 
 /-- The paper defines `h_ell(d) - 1` as the maximum admissible edge count, so we define `h` to be
 one plus that maximum. -/
-noncomputable def h (ell d : ℕ) : ℕ :=
+@[expose] noncomputable def h (ell d : ℕ) : ℕ :=
   1 + sSup {m : ℕ | EdgeAdmissible ell d m}
 
 /-- The exact Moore expression. -/

@@ -68,14 +68,14 @@ theorem OrthonormalBasis.toMatrix_apply {n E : Type _} [Fintype n] [DecidableEq 
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E]
     (b : OrthonormalBasis n 𝕜 E) (x : E →ₗ[𝕜] E) (i j : n) :
     b.toMatrix x i j = inner 𝕜 (b i) (x (b j)) :=
-  rfl
+  by rfl
 
 theorem OrthonormalBasis.toMatrix_symm_apply {n E : Type _} [Fintype n] [DecidableEq n]
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E]
     (b : OrthonormalBasis n 𝕜 E) (x : Matrix n n 𝕜) :
     b.toMatrix.symm x =
       ∑ i, ∑ j, x i j • (InnerProductSpace.rankOne 𝕜 (b i) (b j)).toLinearMap :=
-  rfl
+  by rfl
 
 theorem OrthonormalBasis.toMatrix_symm_apply' {n E : Type _} [Fintype n] [DecidableEq n]
     [NormedAddCommGroup E] [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E]
@@ -164,7 +164,7 @@ theorem innerConj_apply {R E F : Type*} [CommSemiring R] [AddCommMonoid E]
     [AddCommMonoid F] [Module R E] [Module R F] (e : E ≃ₗ[R] F)
     (f : Module.End R E) :
     e.innerConj f = e.toLinearMap ∘ₗ f ∘ₗ e.symm.toLinearMap :=
-  rfl
+  by rfl
 
 end LinearEquiv
 
@@ -190,7 +190,7 @@ theorem Matrix.stdBasis_repr_eq_reshape {R I J : Type _} [Fintype I] [Finite J]
       calc Matrix.reshape (Matrix.stdBasis R I J i) j =
           Matrix.reshape (Matrix.single i.1 i.2 (1 : R)) j := by
             rw [Matrix.stdBasis_eq_single]
-        _ = Matrix.single i.1 i.2 (1 : R) j.1 j.2 := rfl
+        _ = Matrix.single i.1 i.2 (1 : R) j.1 j.2 := by rfl
         _ = if i = j then 1 else 0 := by
           simp_rw [Matrix.single, Matrix.of_apply, ← Prod.eq_iff_fst_eq_snd_eq])
     x ij
@@ -204,14 +204,14 @@ theorem toMatrix_stdBasis_stdBasis {K L : Type _} [Fintype K] [Finite L]
     toMatrix (Matrix.stdBasis R I J) (Matrix.stdBasis R K L) x =
       LinearMap.toMatrix' (Matrix.reshape.toLinearMap ∘ₗ
         x ∘ₗ Matrix.reshape.symm.toLinearMap) :=
-  rfl
+  by rfl
 
 theorem toLin_stdBasis_stdBasis {K L : Type _} [Fintype K] [Finite L]
     (x : Matrix (K × L) (I × J) R) :
     (toLin (Matrix.stdBasis R I J) (Matrix.stdBasis R K L)) x =
       (Matrix.reshape : Matrix K L R ≃ₗ[R] _).symm.toLinearMap ∘ₗ
         toLin' x ∘ₗ (Matrix.reshape : Matrix I J R ≃ₗ[R] _).toLinearMap :=
-  rfl
+  by rfl
 
 /-- Identify endomorphisms of a matrix space with matrices on the reshaped index type. -/
 def toMatrixOfAlgEquiv : (Matrix I J R →ₗ[R] Matrix I J R) ≃ₐ[R]
@@ -222,13 +222,13 @@ theorem toMatrixOfAlgEquiv_apply (x : Matrix I J R →ₗ[R] Matrix I J R) :
     toMatrixOfAlgEquiv x =
       toMatrixAlgEquiv' ((Matrix.reshape : Matrix I J R ≃ₗ[R] _).toLinearMap ∘ₗ
         x ∘ₗ (Matrix.reshape : Matrix I J R ≃ₗ[R] _).symm.toLinearMap) :=
-  rfl
+  by rfl
 
 theorem toMatrixOfAlgEquiv_symm_apply (x : Matrix (I × J) (I × J) R) :
     toMatrixOfAlgEquiv.symm x =
       (Matrix.reshape : Matrix I J R ≃ₗ[R] _).symm.toLinearMap ∘ₗ
         toMatrixAlgEquiv'.symm x ∘ₗ (Matrix.reshape : Matrix I J R ≃ₗ[R] _).toLinearMap :=
-  rfl
+  by rfl
 
 theorem toMatrixOfAlgEquiv_apply' (x : Matrix I J R →ₗ[R] Matrix I J R)
     (ij kl : I × J) :
@@ -257,7 +257,7 @@ theorem toLinOfAlgEquiv_apply (x : Matrix (I × J) (I × J) R)
     (y : Matrix I J R) :
     toLinOfAlgEquiv x y =
       (reshape : Matrix I J R ≃ₗ[R] I × J → R).symm (toLinAlgEquiv' x (reshape y)) :=
-  rfl
+  by rfl
 
 /-- Rank-one endomorphism on the standard basis of a matrix space. -/
 def rankOneStdBasis {I J : Type _} [DecidableEq I] [DecidableEq J]
@@ -271,7 +271,7 @@ def rankOneStdBasis {I J : Type _} [DecidableEq I] [DecidableEq J]
 theorem rankOneStdBasis_apply {I J : Type _} [DecidableEq I] [DecidableEq J]
     (ij kl : I × J) (r : R) (x : Matrix I J R) :
     rankOneStdBasis ij kl r x = single ij.1 ij.2 (r • r • x kl.1 kl.2) :=
-  rfl
+  by rfl
 
 open scoped BigOperators
 

@@ -138,7 +138,7 @@ variable (hf : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω f) (hne : ¬ ∃ c, ∀ x, f x =
 
 /-- The chart of the trace's coefficient data at index `y`: the preferred chart at `y`,
 restricted to the stack neighborhood `(stackAt hf hne y).V`. -/
-def traceChart (y : Y) : OpenPartialHomeomorph Y ℂ :=
+@[expose] def traceChart (y : Y) : OpenPartialHomeomorph Y ℂ :=
   (chartAt ℂ y).restr (stackAt hf hne y).V
 
 @[simp] theorem traceChart_coe (y : Y) : ⇑(traceChart hf hne y) = ⇑(chartAt ℂ y) := by rfl
@@ -168,7 +168,7 @@ theorem traceChart_mem_maximalAtlas (y : Y) :
 
 /-- The transition from the preferred chart's coordinate at `y` to the `i`-th branch's target
 chart coordinate. -/
-def branchTrans (y : Y) (i : Fin (stackAt hf hne y).n) : ℂ → ℂ :=
+@[expose] def branchTrans (y : Y) (i : Fin (stackAt hf hne y).n) : ℂ → ℂ :=
   ⇑((stackAt hf hne y).A i).e' ∘ ⇑(chartAt ℂ y).symm
 
 theorem analyticAt_branchTrans (y : Y) {w : ℂ} (hw : w ∈ (traceChart hf hne y).target)

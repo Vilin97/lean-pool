@@ -281,7 +281,7 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · exact h_pc
     · repeat (constructor <;> try assumption)
       · simp at *
-        grind <;> omega
+        bv_decide
       · simp_all
 
 

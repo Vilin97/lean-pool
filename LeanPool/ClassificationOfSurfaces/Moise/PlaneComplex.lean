@@ -404,7 +404,7 @@ noncomputable abbrev mapAffineEquiv (e : Plane ≃ᵃ[ℝ] Plane) : TriangleMesh
 
 /-- Reposition the vertices of a triangle mesh while retaining its abstract triangles.  The
 caller supplies the geometric nondegeneracy and face-to-face proofs for the new positions. -/
-noncomputable def reposition (position' : M.Vertex → Plane)
+@[expose] noncomputable def reposition (position' : M.Vertex → Plane)
     (hposition_injective : Function.Injective position')
     (haffineIndependent : ∀ t ∈ M.triangles,
       AffineIndependent ℝ fun v : t => position' v)
@@ -432,7 +432,7 @@ noncomputable def reposition (position' : M.Vertex → Plane)
 
 /-- Delete one maximal triangle from a mesh.  Vertices no longer used by any triangle are retained;
 this keeps the vertex type and geometric positions definitionally unchanged. -/
-noncomputable def eraseTriangle (t : Finset M.Vertex) : TriangleMesh where
+@[expose] noncomputable def eraseTriangle (t : Finset M.Vertex) : TriangleMesh where
   Vertex := M.Vertex
   position := M.position
   position_injective := M.position_injective
@@ -642,7 +642,7 @@ theorem isCompact_support : IsCompact K.support :=
   K.simplexes.finite_toSet.isCompact_biUnion fun s _ => K.isCompact_cellCarrier s
 
 /-- Transport a finite plane complex through an affine equivalence. -/
-noncomputable def mapAffineEquiv (e : Plane ≃ᵃ[ℝ] Plane) : PlaneComplex where
+@[expose] noncomputable def mapAffineEquiv (e : Plane ≃ᵃ[ℝ] Plane) : PlaneComplex where
   Vertex := K.Vertex
   position := e ∘ K.position
   position_injective := e.injective.comp K.position_injective
@@ -770,7 +770,7 @@ theorem oneSkeleton_isGraph :
 
 /-- Keep the faces of `L` which lie in a face of `K`.  This is the standard way to turn an
 ambient line arrangement into a subdivision subordinate to a pre-existing complex. -/
-noncomputable def subordinateTo (L K : PlaneComplex) : PlaneComplex := by
+@[expose] noncomputable def subordinateTo (L K : PlaneComplex) : PlaneComplex := by
   classical
   exact {
     Vertex := L.Vertex
@@ -819,7 +819,7 @@ theorem subordinateTo_support_subset (L K : PlaneComplex) :
   exact ⟨t, ht, hst hxs⟩
 
 /-- Keep precisely the faces whose carriers lie in a prescribed geometric set. -/
-noncomputable def restrictToSet (K : PlaneComplex) (A : Set Plane) : PlaneComplex := by
+@[expose] noncomputable def restrictToSet (K : PlaneComplex) (A : Set Plane) : PlaneComplex := by
   classical
   exact {
     Vertex := K.Vertex
@@ -1346,7 +1346,7 @@ noncomputable def PlaneComplex.realizationHomeomorph (K : PlaneComplex) (hpure :
 
 @[simp] theorem PlaneComplex.realizationHomeomorph_apply (K : PlaneComplex)
     (hpure : K.IsPure2) (x : GeometricRealization K.Vertex K.cells) :
-    ((K.realizationHomeomorph hpure) x).1 = K.baryEval x.1 := rfl
+    ((K.realizationHomeomorph hpure) x).1 = K.baryEval x.1 := by rfl
 
 /-- **Realization bridge** (elementary): a purely two-dimensional plane complex induces a
 geometric triangulation of its support, by barycentric coordinates in the face containing each

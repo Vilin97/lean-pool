@@ -107,6 +107,7 @@ master `{Λ} ∪ 0Δ₀ ∪ 1Δ₁`, a left copy `0X` (`X ∈ 𝒟₀`), or a ri
 assumption `∅ ∉ 𝒟ᵢ` (`h₀`, `h₁`) makes the two tagged copies disjoint, so the
 system is closed under
 consistent intersection. -/
+@[expose]
 def sumTok (D₀ D₁ : NeighborhoodSystem Str)
     (h₀ : ∀ X, D₀.mem X → X.Nonempty) (h₁ : ∀ Y, D₁.mem Y → Y.Nonempty) :
     NeighborhoodSystem Str where
@@ -434,6 +435,7 @@ the basepoint, in contrast to the sum (where a proper neighbourhood refines
 exactly one summand). -/
 
 /-- A product neighbourhood `{Λ} ∪ 0X ∪ 1Y` over `{0,1}*`. -/
+@[expose]
 def prodTokNbhd (X Y : Set Str) : Set Str := insert [] (embBit false X ∪ embBit true Y)
 
 @[simp] theorem mem_prodTokNbhd_nil {X Y : Set Str} : ([] : Str) ∈ prodTokNbhd X Y :=
@@ -489,6 +491,7 @@ Neighbourhoods are
 `{Λ} ∪ 0X ∪ 1Y` with `X ∈ 𝒟₀`, `Y ∈ 𝒟₁`. Closed under consistent intersection by
 Scott's (1)/(2)
 together with the factors' closure. -/
+@[expose]
 def prodTok (D₀ D₁ : NeighborhoodSystem Str) : NeighborhoodSystem Str where
   mem W := ∃ X Y, D₀.mem X ∧ D₁.mem Y ∧ W = prodTokNbhd X Y
   master := prodTokNbhd D₀.master D₁.master

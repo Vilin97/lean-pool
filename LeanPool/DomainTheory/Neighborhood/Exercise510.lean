@@ -323,7 +323,7 @@ Theorem 3.10. -/
 input only to the
 master
 output. -/
-def IsStrict (f : ApproximableMap V₀ V₁) : Prop :=
+@[expose] def IsStrict (f : ApproximableMap V₀ V₁) : Prop :=
   ∀ ⦃Y⦄, f.rel V₀.master Y → Y = V₁.master
 
 /-- Strictness is exactly `f(⊥) = ⊥`. -/
@@ -364,7 +364,7 @@ abbrev StrictMap (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
   {f : ApproximableMap V₀ V₁ // IsStrict f}
 
 /-- A step set among strict maps: `[X, Y] = {f strict ∣ X f Y}`. -/
-def sstep (X : Set α) (Y : Set β) : Set (StrictMap V₀ V₁) := {f | f.1.rel X Y}
+@[expose] def sstep (X : Set α) (Y : Set β) : Set (StrictMap V₀ V₁) := {f | f.1.rel X Y}
 
 @[simp] theorem mem_sstep {X : Set α} {Y : Set β} {f : StrictMap V₀ V₁} :
     f ∈ sstep X Y ↔ f.1.rel X Y := Iff.rfl
@@ -505,6 +505,7 @@ theorem mem_sstepFun_iff (φ : (strictFun V₀ V₁).Element) {L : List (Set α 
 because the step `[Δ₀, Y]` with `Y ≠ Δ₁` is empty (no strict map relates `Δ₀` to a
 proper output),
 hence not a neighbourhood, so it cannot belong to `φ`. -/
+@[expose]
 def toStrictMap (φ : (strictFun V₀ V₁).Element) : StrictMap V₀ V₁ :=
   ⟨{ rel := fun X Y => φ.mem (sstep X Y)
      rel_dom := by intro X Y h; obtain ⟨f, hf⟩ := (φ.sub h).2; exact f.1.rel_dom hf
@@ -535,7 +536,7 @@ def toStrictMap (φ : (strictFun V₀ V₁).Element) : StrictMap V₀ V₁ :=
     (toStrictMap φ).1.rel X Y ↔ φ.mem (sstep X Y) := Iff.rfl
 
 /-- **The filter `f̂ = {F ∣ f ∈ F}` of a strict map.** -/
-def toStrictFilter (f : StrictMap V₀ V₁) : (strictFun V₀ V₁).Element where
+@[expose] def toStrictFilter (f : StrictMap V₀ V₁) : (strictFun V₀ V₁).Element where
   mem W := (strictFun V₀ V₁).mem W ∧ f ∈ W
   sub h := h.1
   master_mem := ⟨(strictFun V₀ V₁).master_mem, Set.mem_univ f⟩
@@ -550,6 +551,7 @@ def toStrictFilter (f : StrictMap V₀ V₁) : (strictFun V₀ V₁).Element whe
 /-- **Exercise 5.10 — the strict function space is complete.** `|𝒟₀ →⊥ 𝒟₁|` is
 order-isomorphic to
 the strict approximable maps `𝒟₀ → 𝒟₁`. -/
+@[expose]
 def strictFunEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     (strictFun V₀ V₁).Element ≃o StrictMap V₀ V₁ where
   toFun := toStrictMap

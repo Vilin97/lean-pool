@@ -66,7 +66,7 @@ def reducedSymplecticHom :
 /-- Evaluation of matrix reduction. Paper: §2. -/
 @[simp] theorem reducedSymplecticHom_coe (g : IntegralSymplecticGroup) :
     (reducedSymplecticHom g : Matrix SymplecticIndex SymplecticIndex (ZMod 2)) =
-      reducedMatrixHom g := rfl
+      reducedMatrixHom g := by rfl
 
 instance : DistribMulAction ModTwoSymplecticGroup ModTwoSpace :=
   DistribMulAction.compHom ModTwoSpace
@@ -254,7 +254,7 @@ def integralQuadraticCocycle (g : IntegralSymplecticGroup) : ModTwoSpace :=
 /- Reduction and integral actions agree on the finite carrier. Paper: §2. -/
 theorem reducedSymplecticHom_smul
     (g : IntegralSymplecticGroup) (w : ModTwoSpace) :
-    reducedSymplecticHom g • w = g • w := rfl
+    reducedSymplecticHom g • w = g • w := by rfl
 
 /- The integral cocycle has the quadratic defining identity. Paper: §2. -/
 theorem integralQuadraticCocycle_defining_identity
