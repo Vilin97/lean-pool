@@ -11,14 +11,15 @@ public import LeanPool.InflationTermination.TriangleInflation.Exponent
 /-!
 # The distance rate of the Navascués–Wolfe hierarchy
 
-Paper Corollary 6.1 (`prop:promised`), specialized to the binary triangle, where the
-number of independent source types is `L = 3`.
+The theorem `rate_triangle` proves the binary-triangle bound with coefficient
+`1 - (1 - 1/n)³` by separating copied-triangle pairs according to shared source indices.
+This is weaker than the coefficient `1/n` in manuscript Corollary 6.1 (`prop:promised`,
+`eq:nw-rate`) at revision `2aa1f05ce932fdeef3896c83d287abd77cd8befb`.
+`ConvexOrder.rate_triangle_sharp` proves the latter estimate for the binary triangle.
 
-Scope: the general correlation-scenario version of Corollary 6.1, and the rejecting-order
-corollaries `t_min ≤ ⌊L(1-‖P‖₂²)/δ₂²⌋+1 ≤ ⌊LK/(4δ²)⌋+1` that use the infimum distance to
-the compatible set, are out of scope here; only the order-`n` Euclidean estimate (eq:nw-rate)
-is stated, in the form "some compatible law is that close", which is what the paper's proof
-produces and what the corollaries are derived from.
+Both statements produce a compatible law at the asserted squared Euclidean distance.
+The general correlation-scenario result and the rejecting-order bounds expressed using
+the infimum distance to the compatible set are beyond the scope of this module.
 -/
 
 @[expose] public section
@@ -35,7 +36,7 @@ def sqNorm (w : ThreeBit → ℝ) : ℝ := ∑ x : ThreeBit, w x ^ 2
 
 /-! ## Auxiliary facts
 
-The proof of `rate_triangle` below is the argument of paper Corollary 6.1 with `L = 3`.
+The proof of `rate_triangle` uses a collision-counting estimate with three source types.
 The facts it needs about product laws, about the symmetry group of the inflation, and about
 the empirical law of a random copied triangle are not stated in the imported files, so they
 are proved here privately. -/
@@ -470,8 +471,7 @@ private theorem sum_pairs_const (n : ℕ) :
 
 /-! ### The two expectation identities -/
 
-/-- Fact (1) of the proof of paper Corollary 6.1: the empirical law of a random copied
-triangle has mean `P`. -/
+/-- The empirical law of a random copied triangle has mean `P`. -/
 theorem expect_qLaw {n : ℕ} (hn : 1 ≤ n) {P : ThreeBit → ℝ} (hP : IsLaw P)
     {Γ : Assign n → ℝ} (hsym : SymmetricLaw n Γ)
     (hdiag : pushforward Γ readDiagonal = tensorPow n P) (w : ThreeBit) :
@@ -498,7 +498,7 @@ theorem expect_qLaw {n : ℕ} (hn : 1 ≤ n) {P : ThreeBit → ℝ} (hP : IsLaw 
   rw [h1, h2]
   field_simp
 
-/-- Fact (2) of the proof of paper Corollary 6.1: with `α = (1-1/n)³` the mean squared
+/-- The collision-counting estimate: with `α = (1-1/n)³` the mean squared
 norm of the empirical law is at most `α‖P‖₂² + (1-α)`. The `n³(n-1)³` ordered pairs of
 copied triangles sharing no copy index contribute `‖P‖₂²` each; the remaining pairs
 contribute at most `1` each. -/
@@ -591,10 +591,11 @@ theorem exists_le_of_weighted {α : Type*} [Fintype α] {Γ : α → ℝ}
 
 /-! ## The distance rate -/
 
-/-- Paper Corollary 6.1 (`prop:promised`), equation (eq:nw-rate), specialized to the
-binary triangle (`L = 3` independent source types): if `P` is feasible at order `n` then
-some triangle-compatible law `Qc` satisfies
-`‖P - Qc‖₂² ≤ [1 - (1 - 1/n)³] (1 - ‖P‖₂²)`. -/
+/-- A collision-counting distance bound for the binary triangle: if `P` is feasible at
+order `n`, some triangle-compatible law `Qc` satisfies
+`‖P - Qc‖₂² ≤ [1 - (1 - 1/n)³] (1 - ‖P‖₂²)`.
+The sharper coefficient `1/n` of manuscript Corollary 6.1 is proved in
+`rate_triangle_sharp` in `ConvexOrder.lean`. -/
 theorem rate_triangle (n : ℕ) (hn : 1 ≤ n) {P : ThreeBit → ℝ} (hP : IsLaw P)
     (h : NWFeasible n P) :
     ∃ Qc : ThreeBit → ℝ, IsLaw Qc ∧ TriangleCompatible Qc ∧

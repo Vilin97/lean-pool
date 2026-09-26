@@ -13,10 +13,10 @@ public import LeanPool.InflationTermination.TriangleInflation.Rate
 /-!
 # The convex-order distance rate for the triangle
 
-The sharpening of `rate_triangle` (paper Corollary 6.1) recorded as item B3 of the
-`2026-09-13` audit notes: for a law feasible at order `n` the Euclidean distance to the
-triangle-compatible set is at most `(1 - ‖P‖₂²)/n`, with no factor counting the three
-independent source types.
+The binary-triangle instance of manuscript Corollary 6.1 (`prop:promised`, `eq:nw-rate`)
+at revision `2aa1f05ce932fdeef3896c83d287abd77cd8befb`: feasibility at order `n` gives a
+compatible law at squared Euclidean distance at most `(1 - ‖P‖₂²)/n`.
+This improves the weaker collision-counting coefficient proved by `rate_triangle`.
 
 The argument is the convex-order one. Let `Γ` be a Navascués–Wolfe witness at order `n` and
 let `ω` be a deterministic assignment. Shifting the three families of copy indices by a
@@ -34,8 +34,8 @@ The total-variation corollaries convert with Cauchy–Schwarz on the eight atoms
 `d_TV(P, q_ω) ≤ (√8/2)‖P - q_ω‖₂ ≤ (√8/2)√((1-‖P‖₂²)/n) ≤ √7/(2√n)`, the last step by
 `‖P‖₂² ≥ 1/8` for a law on eight atoms.
 
-Nothing here restates or weakens `Rate.lean`; `rate_triangle` is kept as the formalization
-of the manuscript's Corollary 6.1 as written, and the theorems below are the improvement.
+The theorem `rate_triangle` retains its separate collision-counting proof. The sharp
+estimate below matches the current manuscript corollary, including its coefficient `1/n`.
 -/
 
 @[expose] public section
@@ -264,8 +264,8 @@ private theorem expect_sq_le_sharp {n : ℕ} (hn : 1 ≤ n) {P : ThreeBit → �
 
 /-! ## The sharp distance rate -/
 
-/-- Audit item B3: the convex-order sharpening of paper Corollary 6.1 for the binary
-triangle. If `P` is feasible at order `n` then some triangle-compatible law `Qc` satisfies
+/-- Manuscript Corollary 6.1 (`prop:promised`, `eq:nw-rate`) for the binary triangle.
+If `P` is feasible at order `n`, some triangle-compatible law `Qc` satisfies
 `‖P - Qc‖₂² ≤ (1 - ‖P‖₂²)/n`. The constant carries no factor counting the three
 independent source types, so it improves `rate_triangle`, whose constant
 `1 - (1 - 1/n)³` is asymptotically `3/n`. -/
