@@ -296,7 +296,7 @@ private theorem marshalLoop_encodedState (n : ℕ) (store : Structured.Store) (c
     simp only [sourceCleared, Structured.Basic.exec]
     rw [Function.update_of_ne]
     · exact hsourceLoadedState
-    · rw [hloadedAddress]
+    · rw [show sourceLoaded (addressReg n) = cursor from hloadedAddress]
       simp [stateReg]
       omega
   have hbasedState : based stateReg = cursor := by

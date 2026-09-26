@@ -195,7 +195,6 @@ private theorem binaryRippleAddScanTM_step_terminal {n : ℕ}
       · intro i _ _ hires
         simp [finalWork, hires]
 
-/-- With the left input exhausted, ripple addition consumes the right suffix and carry. -/
 /-- Writing one ripple-add output bit extends its prefix without changing the start marker. -/
 private theorem binaryRippleAddScanAdvanceWork_result {n : ℕ}
     (lhsIdx rhsIdx resultIdx : Fin n) (sum : Bool) (emitted : List Bool)
@@ -224,6 +223,7 @@ private theorem binaryRippleAddScanAdvanceWork_result {n : ℕ}
     exact Tape.hasBinaryPrefix_write_bit_cell0 sum hresult hresultStart
   exact ⟨hresult₁, hresultStart₁⟩
 
+/-- With the left input exhausted, ripple addition consumes the right suffix and carry. -/
 private theorem binaryRippleAddScanTM_suffix_empty_left {n : ℕ}
     (lhsIdx rhsIdx resultIdx : Fin n)
     (hdistinct : BinaryRippleAddDistinct lhsIdx rhsIdx resultIdx)

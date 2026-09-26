@@ -871,9 +871,7 @@ private theorem unionReject_rewindInput_head_bound
   have hstep_eq := step_inl_qhalt_cfg tm₁ tm₂ hstateq
   -- c_rw.input = c₁.input.move (idleDir c₁.input.read) since unionPhase1Cfg.input = c₁.input
   have hcrw_input_eq : c_rw.input = c₁.input.move (idleDir c₁.input.read) := by
-    have heq : some c_rw = some _ := hstep1.symm.trans hstep_eq
-    simp only [Option.some.injEq] at heq
-    rw [heq]; rfl
+    exact congrArg (fun c => c.input) (Option.some.inj (hstep1.symm.trans hstep_eq))
   -- c_rw.input.head ≤ c₁.input.head + 1
   have hcrw_head : c_rw.input.head ≤ c₁.input.head + 1 := by
     rw [hcrw_input_eq]; cases (idleDir c₁.input.read) <;> simp [Tape.move]; omega
@@ -904,8 +902,7 @@ private theorem unionReject_rewindInput_head_bound
   have hri_head : rewindInput.head = checkInput.head := by
     show (checkInput.move (idleDir checkInput.read)).head = _
     exact idle_move_preserves_head _ (by omega) hcr_ino
-  -- Chain: rewindInput.head = rewindInput.head = c_rw.input.head ≤ c₁.input.head + 1
-  omega
+  exact (hri_head.trans (hcr_head.trans hat0_head)).trans_le hcrw_head
 
 /-- After Phase 1, if tm₁ rejected, the union machine transitions to a
     config ready for Phase 2: state is `Sum.inr (Sum.inr tm₂.qstart)`,

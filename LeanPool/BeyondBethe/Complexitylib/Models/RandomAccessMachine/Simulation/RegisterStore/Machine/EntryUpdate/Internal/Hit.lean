@@ -356,7 +356,7 @@ theorem entryUpdateDeleteIteration_internal
       TM.binaryPredTime (resultCount - 1) + 1 +
       TM.binaryPredTime rest.length + 1,
     ?_, ?_, hinvFinal, ?_⟩
-  · unfold entryUpdateIterationTime entryUpdateBranchTime
+  · unfold entryUpdateIterationTime
     omega
   · simpa [hinputEq, Nat.add_assoc] using htotalReach
   · rw [houtputEq]

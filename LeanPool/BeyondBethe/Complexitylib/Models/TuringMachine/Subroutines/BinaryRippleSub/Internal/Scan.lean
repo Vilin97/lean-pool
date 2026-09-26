@@ -170,7 +170,6 @@ private theorem binaryRippleSubCoreTM_step_terminal {n : ℕ}
   · intro i _ _ hires
     simp [binaryRippleSubScanTurnWork, hires]
 
-/-- With the left input exhausted, ripple subtraction condiffes the right suffix and borrow. -/
 /-- Writing one ripple-sub output bit extends its prefix without changing the start marker. -/
 private theorem binaryRippleSubScanAdvanceWork_result {n : ℕ}
     (lhsIdx rhsIdx resultIdx : Fin n) (diff : Bool) (emitted : List Bool)
@@ -199,6 +198,7 @@ private theorem binaryRippleSubScanAdvanceWork_result {n : ℕ}
     exact Tape.hasBinaryPrefix_write_bit_cell0 diff hresult hresultStart
   exact ⟨hresult₁, hresultStart₁⟩
 
+/-- With the left input exhausted, ripple subtraction consumes the right suffix and borrow. -/
 private theorem binaryRippleSubCoreTM_suffix_empty_left {n : ℕ}
     (lhsIdx rhsIdx resultIdx : Fin n)
     (hdistinct : BinaryRippleSubDistinct lhsIdx rhsIdx resultIdx)

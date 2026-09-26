@@ -860,7 +860,6 @@ private theorem marshal_ready_of_decoded
       simp [memoBase, CircuitCode.RawGate.length_encode,
         UnaryDecode.inputBase]
       omega)]
-    change saveRestartStore first (memoBase gate + index) = _
     rw [saveRestart_high first _ (by
       simp [memoBase, CircuitCode.RawGate.length_encode,
         UnaryDecode.inputBase]
@@ -916,7 +915,7 @@ theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Boo
     hsecondResult.2.2.2
   have hsecondOp : second headerOpReg = Input.bitValue gate.opBit := by
     rw [hsecondFrame _ (by simp [headerOpReg, UnaryDecode.inputBase])]
-    rw [show saved headerOpReg = first headerOpReg by
+    rw [show saveRestartStore first headerOpReg = first headerOpReg by
       apply saveRestart_apply_of_ne <;>
         simp [headerOpReg, savedInput0Reg, UnaryDecode.verdictReg,
           UnaryDecode.valueReg, UnaryDecode.activeReg, UnaryDecode.inputBase]]
@@ -925,7 +924,7 @@ theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Boo
   have hsecondNegated0 : second headerNegated0Reg =
       Input.bitValue gate.negated₀ := by
     rw [hsecondFrame _ (by simp [headerNegated0Reg, UnaryDecode.inputBase])]
-    rw [show saved headerNegated0Reg = first headerNegated0Reg by
+    rw [show saveRestartStore first headerNegated0Reg = first headerNegated0Reg by
       apply saveRestart_apply_of_ne <;>
         simp [headerNegated0Reg, savedInput0Reg, UnaryDecode.verdictReg,
           UnaryDecode.valueReg, UnaryDecode.activeReg, UnaryDecode.inputBase]]
@@ -934,7 +933,7 @@ theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Boo
   have hsecondNegated1 : second headerNegated1Reg =
       Input.bitValue gate.negated₁ := by
     rw [hsecondFrame _ (by simp [headerNegated1Reg, UnaryDecode.inputBase])]
-    rw [show saved headerNegated1Reg = first headerNegated1Reg by
+    rw [show saveRestartStore first headerNegated1Reg = first headerNegated1Reg by
       apply saveRestart_apply_of_ne <;>
         simp [headerNegated1Reg, savedInput0Reg, UnaryDecode.verdictReg,
           UnaryDecode.valueReg, UnaryDecode.activeReg, UnaryDecode.inputBase]]
@@ -942,7 +941,7 @@ theorem program_measured_internal (gate : CircuitCode.RawGate) (wires : List Boo
     exact header_negated1 gate wires
   have hsecondInput0 : second savedInput0Reg = gate.input₀ := by
     rw [hsecondFrame _ (by simp [savedInput0Reg, UnaryDecode.inputBase])]
-    rw [show saved savedInput0Reg =
+    rw [show saveRestartStore first savedInput0Reg =
         first UnaryDecode.valueReg + first UnaryDecode.activeReg by
       exact saveRestart_saved first]
     rw [hfirstValue, hfirstActive]
