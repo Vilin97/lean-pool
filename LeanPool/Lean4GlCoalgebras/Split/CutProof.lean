@@ -58,7 +58,7 @@ inductive RuleApp
   map_comp := by aesop_cat
 
 /-- Given a RuleApp, obtain the principal formulas. -/
-def fₚ : RuleApp → SplitSequent
+@[expose] def fₚ : RuleApp → SplitSequent
   | RuleApp.skp _ => ∅
   | RuleApp.cutₗ _ _ => ∅
   | RuleApp.cutᵣ _ _ => ∅
@@ -121,7 +121,7 @@ lemma fₙ_alternate (r : RuleApp) : fₙ r = match r with
   | RuleApp.boxᵣ Δ A _ => Δ \ {Sum.inr (□ A)} := by cases r <;> simp [fₙ, f, fₚ]
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def RuleApp.isBox : RuleApp → Prop
+@[expose] def RuleApp.isBox : RuleApp → Prop
   | RuleApp.boxₗ _ _ _ => true
   | RuleApp.boxᵣ _ _ _ => true
   | _ => false
@@ -179,9 +179,9 @@ structure Proof where
     ∀ n, ∃ m, (r α (f.1 (n + m))).isBox
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def proves (𝕏 : Proof) (Δ : SplitSequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
+@[expose] def proves (𝕏 : Proof) (Δ : SplitSequent) : Prop := ∃ x : 𝕏.X, f (r 𝕏.α x) = Δ
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-def SplitSequent.isTrue (Δ : SplitSequent) : Prop := ∃ (𝕏 : Proof), proves 𝕏 Δ
+@[expose] def SplitSequent.isTrue (Δ : SplitSequent) : Prop := ∃ (𝕏 : Proof), proves 𝕏 Δ
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
 infixr:6 "⊢" => proves

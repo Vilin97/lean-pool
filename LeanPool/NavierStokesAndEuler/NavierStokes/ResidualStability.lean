@@ -211,7 +211,7 @@ variable {D E F G : Type*}
   [NormedAddCommGroup G] [NormedSpace ℝ G]
 
 /-- Every actual derivative decays faster than each fixed natural power. -/
-def AllJetsFlat (l : Filter D) (q : D → ℝ) (f : D → E) : Prop :=
+@[expose] def AllJetsFlat (l : Filter D) (q : D → ℝ) (f : D → E) : Prop :=
   ∀ m : ℕ, Flatness.PowerFlat l q (fun x => ‖iteratedFDeriv ℝ m f x‖)
 
 /-- Each actual derivative has a fixed inverse-power bound. The power and

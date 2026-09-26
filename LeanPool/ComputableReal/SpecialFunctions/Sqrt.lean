@@ -133,7 +133,7 @@ def boundedSqrt (x : ℚInterval) (n : ℕ) (b : ℕ) (hb : 0 < b) : ℚInterval
     ⟩
 
 /-- Definition of `sqrtq`. -/
-def sqrtq (x : ℚInterval) (n : ℕ) : ℚInterval :=
+@[expose] def sqrtq (x : ℚInterval) (n : ℕ) : ℚInterval :=
   --shortcut with an if to slightly speed things up
   if x.snd ≤ 0 then 0 else boundedSqrt x n 4 (by norm_num)
 
@@ -638,7 +638,7 @@ theorem TLUW_upper : TendstoLocallyUniformlyWithout
     linarith
 
 /-- Definition of `sqrt`. -/
-noncomputable def sqrt : ComputableℝSeq → ComputableℝSeq :=
+@[expose] noncomputable def sqrt : ComputableℝSeq → ComputableℝSeq :=
   ofTendstoLocallyUniformlyContinuous
   (f := Real.sqrt)
   (hf := Real.continuous_sqrt)
@@ -686,6 +686,7 @@ end ComputableℝSeq
 
 namespace IsComputable
 
+@[expose]
 noncomputable instance instComputableSqrt (x : ℝ) [hx : IsComputable x] : IsComputable (x.sqrt) :=
   .lift (Real.sqrt) ComputableℝSeq.Sqrt.sqrt
     (by apply ComputableℝSeq.val_ofTendstoLocallyUniformlyContinuous) hx

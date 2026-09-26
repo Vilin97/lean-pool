@@ -262,7 +262,7 @@ def processFiveRows
     (processRow claims identifier claim centre remaining pairState) initial
 
 /-- Semantic consequence recorded for one active legal-row index. -/
-def NodeRowValid
+@[expose] def NodeRowValid
     (claims : BranchClaims) (identifier : Nat) (claim : NodeClaim)
     (centre : Vertex) (remaining : List Vertex) (pairState : PairState)
     (index : Nat) : Prop :=
@@ -394,7 +394,7 @@ def rejectedWordValidB
   result.ok && result.targets.isEmpty
 
 /-- Semantic column-conflict consequence recorded for one rejected row. -/
-def RejectedRowValid
+@[expose] def RejectedRowValid
     (claim : NodeClaim) (centre : Vertex) (remaining : List Vertex)
     (index : Nat) : Prop :=
   ∃ target, rejectedRowValidB claim centre remaining index target = true

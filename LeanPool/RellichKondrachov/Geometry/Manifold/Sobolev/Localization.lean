@@ -70,7 +70,7 @@ abbrev chart (i : d.ι) : PartialEquiv M E :=
     d.ρ i ((chart (d := d) i).symm y) * f ((chart (d := d) i).symm y)
 
 /-- The closed set `closure (support (ρ i))` used to control the support of localizations. -/
-def rhoSupportClosure (i : d.ι) : Set M :=
+@[expose] def rhoSupportClosure (i : d.ι) : Set M :=
   closure (Function.support (d.ρ i : M → ℝ))
 
 omit [CompleteSpace E] [FiniteDimensional ℝ E] [IsManifold I (1 : WithTop ℕ∞) M]

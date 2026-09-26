@@ -32,12 +32,12 @@ variable {V W : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
   [NormedAddCommGroup W] [NormedSpace ℝ W]
 
 /-- Jet postcompose, given by `compContinuousMultilinearMapL ℝ (fun _ : Fin n => Space) V W L`. -/
-def jetPostcompose (L : V →L[ℝ] W) (n : ℕ) :
+@[expose] def jetPostcompose (L : V →L[ℝ] W) (n : ℕ) :
     (Space [×n]→L[ℝ] V) →L[ℝ] (Space [×n]→L[ℝ] W) :=
   compContinuousMultilinearMapL ℝ (fun _ : Fin n => Space) V W L
 
 /-- Map field, bundling `field`, `smooth`, `integrable`. -/
-def mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) : SmoothL2Field W where
+@[expose] def mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) : SmoothL2Field W where
   field := L ∘ A.field
   smooth := L.contDiff.comp A.smooth
   integrable n := (jetPostcompose L n).comp_memLp' (A.integrable n) |>.ae_eq

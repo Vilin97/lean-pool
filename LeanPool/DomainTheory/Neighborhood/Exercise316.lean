@@ -282,6 +282,7 @@ theorem le_of_component_le {z z' : (iterSys V).Element}
 one-one,
 order-preserving correspondence with infinite sequences `⟨xₙ⟩` of elements of
 `|𝒟|`. -/
+@[expose]
 def iterSeqEquiv (V : NeighborhoodSystem α) : (iterSys V).Element ≃o (∀ _ : ℕ, V.Element) where
   toFun z := fun n => component z n
   invFun seq := ofSeq seq

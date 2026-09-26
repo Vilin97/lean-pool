@@ -41,7 +41,7 @@ def CenterSample.toList {n N : ℕ} (sample : CenterSample n N) :
   List.ofFn sample
 
 /-- Total annulus contribution of a sampled `N`-tuple to a fixed target. -/
-def sampleTotalContribution {n N : ℕ} (rIn rOut : ℕ)
+@[expose] def sampleTotalContribution {n N : ℕ} (rIn rOut : ℕ)
     (target : HypercubeVertex n) (sample : CenterSample n N) : ℕ :=
   ∑ j : Fin N, annulusContribution rIn rOut target (sample j)
 
@@ -929,7 +929,7 @@ instance instDecidablePredSampleFailsSomeTarget {n N rIn rOut T : ℕ} :
 
 /-- Failure probability for one fixed target.  This is the quantity controlled
 by Bernstein in the proof. -/
-noncomputable def targetFailureProbability {n N : ℕ} (rIn rOut T : ℕ)
+@[expose] noncomputable def targetFailureProbability {n N : ℕ} (rIn rOut T : ℕ)
     (target : HypercubeVertex n) : ℚ :=
   uniformProbability fun sample : CenterSample n N =>
     sampleTargetFails rIn rOut T target sample
@@ -1571,7 +1571,7 @@ theorem globalFailureProbability_le_sum_targetFailureProbability {n N rIn rOut T
         targetFailureProbability (N := N) rIn rOut T target := by
   classical
   simpa only [globalFailureProbability, targetFailureProbability,
-    sampleFailsSomeTarget, sampleTargetFails] using
+    sampleFailsSomeTarget, sampleTargetFails, uniformProbability] using
     (uniformProbability_exists_le_sum
       (Ω := CenterSample n N) (ι := HypercubeVertex n)
       (fun target sample => sampleTotalContribution rIn rOut target sample < T))

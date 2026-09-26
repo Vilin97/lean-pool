@@ -57,7 +57,7 @@ theorem pi_restrict_Ioi_eq_volume_restrict_positiveOrthant :
 
 open Classical in
 /-- A complex place radial jacobian used in the Odlyzko-bound argument. -/
-noncomputable def complexPlaceRadialJacobian
+@[expose] noncomputable def complexPlaceRadialJacobian
     (q : InfinitePlace K → ℝ) : ℝ :=
   mixedEmbedding.norm (mixedSpaceOfRealSpace q) *
     (∏ w : {w : InfinitePlace K // IsComplex w}, q w.1)⁻¹ *

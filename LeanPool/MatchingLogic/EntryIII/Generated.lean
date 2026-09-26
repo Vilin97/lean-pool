@@ -152,7 +152,7 @@ inductive GeneratingPath (root : CanonicalCarrier S) :
 
 /-- The one-step context for a generating coordinate, with `top` in all
 sibling positions as required by source Definition 76. -/
-def generatingStepContext (e : Coord S) : AppCtx S Nat :=
+@[expose] def generatingStepContext (e : Coord S) : AppCtx S Nat :=
   .node e.1 e.2 (fun _ => Pattern.tp) .hole
 
 @[simp] theorem generatingStepContext_plug (e : Coord S) (p : Pattern S Nat) :
@@ -162,7 +162,7 @@ def generatingStepContext (e : Coord S) : AppCtx S Nat :=
 
 /-- The symbol context `C_path`, obtained by nesting one-step contexts in path
 order. -/
-def generatingContext (path : List (Coord S)) : AppCtx S Nat :=
+@[expose] def generatingContext (path : List (Coord S)) : AppCtx S Nat :=
   path.foldl (fun C e => C.comp (generatingStepContext e)) .hole
 
 @[simp] theorem generatingContext_nil :

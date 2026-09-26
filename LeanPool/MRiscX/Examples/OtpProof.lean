@@ -28,7 +28,7 @@ public section
 
 /-- The precondition of the One-Time-Pad correctness proof, constraining the
 plaintext `p`, key `k`, ciphertext `c`, and length `l` addresses. -/
-def iPre (p k c l : UInt64) :=
+@[expose] def iPre (p k c l : UInt64) :=
   p < k ∧ k < c ∧
   c.toNat + l.toNat < UInt64.size ∧
   (p + l - 1 < k ∧ k + l - 1 < c)
@@ -242,11 +242,14 @@ theorem proof_otp_loopBody : ∀ (p k c l : UInt64) (s : MState),
                     ({n:UInt64 | n ≠ 6})
                   · apply beqz_otp
                   · applySpec specification_LoadWordReg (pc := 5) (dst := 5) (regWithAddr := 0)
+                    simp_all
                   · simpSetEq
                 · applySpec specification_LoadWordReg (pc := 6) (dst := 6) (regWithAddr := 1)
+                  simp_all
                 · simpSetEq
               · rw [show ({8} : Set UInt64) = {7 + 1} by simp]
                 applySpec specification_XOR (dst := 7) (reg1 := 5) (reg2 := 6)
+                simp_all
               · simpSetEq
             · intros l' h_l'
               rw [h_l']
@@ -454,11 +457,15 @@ theorem proof_otp : ∀ (p k c l: UInt64),
         {n:UInt64 | n ≠ 1},
         {n:UInt64 | n ≠ 2}
         · applySpec specification_LoadAddress (s := s) (pc := 0) (dst := 0) (addr := p)
+          simp_all
         · applySpec specification_LoadAddress (s := s) (pc := 1) (dst := 1) (addr := k)
+          simp_all
         · simpSetEq
       · applySpec specification_LoadAddress (s := s) (pc := 2) (dst := 2) (addr := c)
+        simp_all
       · simpSetEq
     · applySpec specification_LoadImmediate (s := s) (pc := 3) (dst := 3) (val := l)
+      simp_all
     · simpSetEq
     -- end 0 → 4 proof
     -- start 4 → 14 proof

@@ -73,7 +73,7 @@ theorem preparedDifference_injective (a : ContinuumIndex) :
   exact sub_left_injective hmn
 
 /-- Concrete input for the rational transfinite recursion. -/
-def transfiniteData : RationalTransfiniteExtension.ContinuumData where
+@[expose] def transfiniteData : RationalTransfiniteExtension.ContinuumData where
   Code := ContinuumIndex
   codeIndex := codeIndex
   prepared := prepared N hN M

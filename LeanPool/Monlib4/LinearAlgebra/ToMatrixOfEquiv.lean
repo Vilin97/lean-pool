@@ -155,7 +155,7 @@ theorem OrthonormalBasis.std_toMatrix {n : Type _} [Fintype n] [DecidableEq n] :
 namespace LinearEquiv
 
 /-- Conjugate endomorphism algebras along a linear equivalence. -/
-def innerConj {R E F : Type*} [CommSemiring R] [AddCommMonoid E] [AddCommMonoid F]
+@[expose] def innerConj {R E F : Type*} [CommSemiring R] [AddCommMonoid E] [AddCommMonoid F]
     [Module R E] [Module R F] (e : E ≃ₗ[R] F) :
     Module.End R E ≃ₐ[R] Module.End R F :=
   e.conjAlgEquiv R

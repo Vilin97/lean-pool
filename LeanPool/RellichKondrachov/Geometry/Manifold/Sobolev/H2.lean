@@ -247,7 +247,7 @@ noncomputable def h2GraphChart (i : d.ι) :
     (localizeToC2c (d := d) (I := I) i)
 
 /-- The product-of-charts graph map `C²(M) →ₗ ∀ i, h2TargetE i` used to define manifold `H²`. -/
-noncomputable def h2Graph :
+@[expose] noncomputable def h2Graph :
     ↥(C2 (E := E) (H := H) (M := M) (I := I)) →ₗ[ℝ] h2Target (d := d) (I := I) μ := by
   classical
   refine LinearMap.pi fun i => h2GraphChart (d := d) (I := I) (μ := μ) i
@@ -266,7 +266,7 @@ private instance instContinuousConstSMulH2Target :
     (ContinuousConstSMul ℝ (∀ i : d.ι, h2TargetE (d := d) (I := I) μ i))
 
 /-- The `H²` submodule defined by chart localizations and the Euclidean `H²` graph construction. -/
-noncomputable def h2 : Submodule ℝ (h2Target (d := d) (I := I) μ) :=
+@[expose] noncomputable def h2 : Submodule ℝ (h2Target (d := d) (I := I) μ) :=
   (LinearMap.range (h2Graph (d := d) (I := I) (μ := μ))).topologicalClosure
 
 omit [IsManifold I (1 : WithTop ℕ∞) M] [T2Space M] in

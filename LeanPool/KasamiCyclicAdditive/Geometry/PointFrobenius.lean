@@ -164,7 +164,7 @@ theorem frobPt_frobPt (P : (fer K).toAffine.Point) :
 /-! ## Iterated Frobenius -/
 
 /-- `π` as an element of the endomorphism monoid, so that `π ^ k` is available. -/
-noncomputable def frobEnd (K : Type*) [Field K] [DecidableEq K] [CharP K 2] :
+@[expose] noncomputable def frobEnd (K : Type*) [Field K] [DecidableEq K] [CharP K 2] :
     AddMonoid.End ((fer K).toAffine.Point) := frobPt K
 
 /-- One step of the recursion for `π ^ k`. -/

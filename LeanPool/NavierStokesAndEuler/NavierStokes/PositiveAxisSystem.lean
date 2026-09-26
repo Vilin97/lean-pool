@@ -74,9 +74,9 @@ noncomputable def a (h : K) : K := 1 / 2 + h
 /-- D scale, given by `1 / 2 - h`. -/
 noncomputable def dScale (h : K) : K := 1 / 2 - h
 /-- Edge, given by `1 - eta ^ 2`. -/
-noncomputable def edge (eta : K) : K := 1 - eta ^ 2
+@[expose] noncomputable def edge (eta : K) : K := 1 - eta ^ 2
 /-- Ell, given by `1 - 2 * h * eta ^ 2`. -/
-noncomputable def ell (h eta : K) : K := 1 - 2 * h * eta ^ 2
+@[expose] noncomputable def ell (h eta : K) : K := 1 - 2 * h * eta ^ 2
 /-- Angular power, given by `-a h - 1 / 2`. -/
 noncomputable def angularPower (h : K) : K := -a h - 1 / 2
 /-- Axial power, given by `-a h`. -/
@@ -540,7 +540,7 @@ theorem hasDerivAt_squareProfile_radial {f : InnerProfile} {r eta : ℝ}
 
 /-- Profile vector, given by `jetVector r (actualJet phi (r ^ 2, eta)) (actualJet u (r ^ 2,
 eta)) (actualJet k (r ^ 2, eta)) (actualJet p (r ^ 2, eta))`. -/
-noncomputable def profileVector (phi u k p : InnerProfile) (r eta : ℝ) : Fin 6 → ℝ :=
+@[expose] noncomputable def profileVector (phi u k p : InnerProfile) (r eta : ℝ) : Fin 6 → ℝ :=
   jetVector r (actualJet phi (r ^ 2, eta)) (actualJet u (r ^ 2, eta))
     (actualJet k (r ^ 2, eta)) (actualJet p (r ^ 2, eta))
 
@@ -1121,7 +1121,7 @@ section RealOutput
 open VolterraAnalyticBounds
 
 /-- Complex jet, given by `⟨j.value, j.radial, j.radial2, j.parameter⟩`. -/
-noncomputable def complexJet (j : Jet ℝ) : Jet ℂ :=
+@[expose] noncomputable def complexJet (j : Jet ℝ) : Jet ℂ :=
   ⟨j.value, j.radial, j.radial2, j.parameter⟩
 
 /-- Complex base, given by `⟨complexJet b.phi, complexJet b.axial, b.beta⟩`. -/

@@ -50,13 +50,14 @@ analogous to `decidable_of_iff`, as a way to avoid `Eq.rec` on data-carrying ins
   fun ⟨sx, hsx⟩ ↦ ⟨sx, h ▸ hsx⟩
 
 /-- Definition of `lift`. -/
-@[reducible] def lift (fr : ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq)
+@[expose, reducible] def lift (fr : ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq)
     (h : ∀ a, (fs a).val = fr a.val) :
     IsComputable x → IsComputable (fr x) :=
   fun ⟨sx, hsx⟩ ↦ ⟨fs sx, hsx ▸ h sx⟩
 
 /-- Definition of `lift₂`. -/
-@[reducible] def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
+@[expose, reducible]
+def lift₂ (fr : ℝ → ℝ → ℝ) (fs : ComputableℝSeq → ComputableℝSeq → ComputableℝSeq)
     (h : ∀ a b, (fs a b).val = fr a.val b.val) :
     IsComputable x → IsComputable y → IsComputable (fr x y) :=
   fun ⟨sx, hsx⟩ ⟨sy, hsy⟩ ↦ ⟨fs sx sy, hsx ▸ hsy ▸ h sx sy⟩

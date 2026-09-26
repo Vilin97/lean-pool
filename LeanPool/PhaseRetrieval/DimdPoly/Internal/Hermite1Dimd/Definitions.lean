@@ -169,7 +169,7 @@ def defectNorm {d : ℕ} (κ : MultiIndex d) (G : FiniteHermiteSum d) : ℝ :=
     exact ∫ z, if z ∈ productAnnulus j then ‖F z‖ ^ 2 else 0 ∂ gaussianMeasure d
 
 /-- `defectAnnulusMass`: defect Annulus Mass. -/
-def defectAnnulusMass {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d)
+@[expose] def defectAnnulusMass {d : ℕ} (κ : MultiIndex d) (j : MultiIndex d)
     (F : CSpace d → ℂ) : ℝ :=
   by
     classical

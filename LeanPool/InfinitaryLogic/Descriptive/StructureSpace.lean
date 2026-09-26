@@ -90,7 +90,7 @@ theorem relMap_toStructure [L.IsRelational] (c : StructureSpaceOn L α)
 
 /-- Encode an L-structure on carrier α into a code.
 Takes an explicit structure instance rather than using the typeclass. -/
-noncomputable def ofStructure [_isRelational : L.IsRelational]
+@[expose] noncomputable def ofStructure [_isRelational : L.IsRelational]
     (inst : L.Structure α) : StructureSpaceOn L α :=
   fun ⟨⟨_, R⟩, v⟩ => @decide _ (Classical.dec (@Structure.RelMap _ _ inst _ R v))
 
@@ -119,7 +119,7 @@ theorem relMap_toStructure [L.IsRelational] (c : StructureSpace L)
   Iff.rfl
 
 /-- Encode an L-structure on ℕ into a code. -/
-noncomputable def ofStructure [L.IsRelational]
+@[expose] noncomputable def ofStructure [L.IsRelational]
     (inst : L.Structure ℕ) : StructureSpace L :=
   StructureSpaceOn.ofStructure inst
 

@@ -46,7 +46,7 @@ theorem iteratedFieldDerivative_postcomp {n : ℕ} (L : F →L[ℝ] G) (w : Fin 
 end LinearMaps
 
 /-- Isometric complexification of a real scalar cylinder field. -/
-noncomputable def complexField (f : LiftDomain period → ℝ) : LiftDomain period → ℂ :=
+@[expose] noncomputable def complexField (f : LiftDomain period → ℝ) : LiftDomain period → ℂ :=
   Complex.ofRealCLM ∘ f
 
 theorem complexField_smooth (f : LiftDomain period → ℝ)

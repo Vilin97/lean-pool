@@ -200,7 +200,7 @@ instance : Semantics F (Set M) := ⟨fun s f ↦ ∀ ⦃𝓜⦄, 𝓜 ∈ s → 
 @[simp] lemma empty_models (f : F) : (∅ : Set M) ⊧ f := by rintro h; simp
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Consequence (T : Set F) (f : F) : Prop := models M T ⊧ f
+@[expose] def Consequence (T : Set F) (f : F) : Prop := models M T ⊧ f
 
 -- note that ⊨ (\vDash) is *NOT* ⊧ (\models)
 /-- Imported declaration from the Incompleteness formalization. -/

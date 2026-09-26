@@ -157,7 +157,7 @@ uses
 *monotone on domains* (`MonotoneAt`) to obtain the next carrier identification and
 subdomain
 relation. Choice-free. -/
-def iter (s : Setup.{w}) : (n : ℕ) →
+@[expose] def iter (s : Setup.{w}) : (n : ℕ) →
     Σ' (S : NeighborhoodSystem s.Tok), Σ' (ceq : (s.T.obj ⟨s.Tok, S⟩).carrier = s.Tok),
       S ◁ (ceq ▸ (s.T.obj ⟨s.Tok, S⟩).sys : NeighborhoodSystem s.Tok)
   | 0 => ⟨s.Γ, s.ceq, s.hsub⟩
@@ -170,7 +170,7 @@ def iter (s : Setup.{w}) : (n : ℕ) →
           rwa [rec_trans] at hsub⟩
 
 /-- `Tⁿ({Γ})`, the `n`-th system in the tower (over `Tok`). -/
-def Dsys (s : Setup.{w}) (n : ℕ) : NeighborhoodSystem s.Tok := (iter s n).1
+@[expose] def Dsys (s : Setup.{w}) (n : ℕ) : NeighborhoodSystem s.Tok := (iter s n).1
 
 /-- The carrier identification `(T.obj Tⁿ({Γ})).carrier = Tok`. -/
 theorem Dceq (s : Setup.{w}) (n : ℕ) : (s.T.obj ⟨s.Tok, Dsys s n⟩).carrier = s.Tok :=
@@ -205,7 +205,7 @@ consistent intersection
 uses that the tower is a chain (`chain_le`): any finite collection of
 neighbourhoods sits inside one
 level `Tᴺ({Γ})`, whose own `inter_mem` finishes the job. -/
-def colim (s : Setup.{w}) : NeighborhoodSystem s.Tok where
+@[expose] def colim (s : Setup.{w}) : NeighborhoodSystem s.Tok where
   mem X := ∃ n, (Dsys s n).mem X
   master := s.Γ.master
   master_mem := ⟨0, s.Γ.master_mem⟩
@@ -340,7 +340,7 @@ def colimIso (s : Setup.{w}) : Iso (s.T.obj ⟨s.Tok, colim s⟩) (⟨s.Tok, col
   isoOfEq (colimObj_eq s)
 
 /-- The colimit `𝒟` as a `T`-algebra, with structure map the iso `T(𝒟) → 𝒟`. -/
-def colimAlg (s : Setup.{w}) : TAlgebra s.T :=
+@[expose] def colimAlg (s : Setup.{w}) : TAlgebra s.T :=
   ⟨⟨s.Tok, colim s⟩, (colimIso s).hom⟩
 attribute [local implicit_reducible] colimAlg
 
@@ -388,7 +388,7 @@ theorem rho_mono (s : Setup.{w}) {n m : ℕ} (h : n ≤ m) {X Y : Set s.Tok}
   exact ⟨hcX, hcY, z, (chain_le s h).sub hDz, hXz, hzY⟩
 
 /-- The pointwise union `⋃ₙ ρₙ` (directed, since the chain is increasing). -/
-def iSupRho (s : Setup.{w}) : ApproximableMap (colim s) (colim s) :=
+@[expose] def iSupRho (s : Setup.{w}) : ApproximableMap (colim s) (colim s) :=
   iSupMap (rho s) (fun i j => ⟨max i j,
     fun _ _ h => rho_mono s (le_max_left i j) h,
     fun _ _ h => rho_mono s (le_max_right i j) h⟩)

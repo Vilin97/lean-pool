@@ -14,12 +14,12 @@ public section
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Retrieve the generated pattern summary having one source origin. -/
-def patternSummaryForOriginLookup (origin : Nat) : Option PatternSummary :=
+@[expose] def patternSummaryForOriginLookup (origin : Nat) : Option PatternSummary :=
   let group := patternSummaryBucketGroups.getD (origin % 256 / 8) #[]
   (group.getD (origin % 8) []).find? fun summary => summary.origin == origin
 
 /-- Retrieve the generated hard summary having one source origin. -/
-def hardSummaryForOriginLookup (origin : Nat) : Option HardSummary :=
+@[expose] def hardSummaryForOriginLookup (origin : Nat) : Option HardSummary :=
   let group := hardSummaryBucketGroups.getD (origin % 256 / 8) #[]
   (group.getD (origin % 8) []).find? fun summary => summary.origin == origin
 

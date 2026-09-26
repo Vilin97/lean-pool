@@ -103,7 +103,7 @@ point, which is the second disjunct of `cover_segsOf`. -/
 open scoped Classical in
 /-- The nondegenerate segments of a polygonal chain, in order. A repeated vertex contributes
 nothing. -/
-noncomputable def segsOf : List Plane → List Piece
+@[expose] noncomputable def segsOf : List Plane → List Piece
   | [] => []
   | [_] => []
   | u :: v :: rest => if u = v then segsOf (v :: rest) else (u, v) :: segsOf (v :: rest)

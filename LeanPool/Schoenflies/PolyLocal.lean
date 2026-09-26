@@ -332,7 +332,7 @@ theorem IsLocallyPolyConn'.inter_isOpen (h : IsLocallyPolyConn' S) (hW : IsOpen 
 /-! ### Relatively open subsets and their components -/
 
 /-- `A` is relatively open in `S`: cut out of `S` by an ambient open set. -/
-def IsRelOpenIn (S A : Set Plane) : Prop := ∃ W : Set Plane, IsOpen W ∧ A = S ∩ W
+@[expose] def IsRelOpenIn (S A : Set Plane) : Prop := ∃ W : Set Plane, IsOpen W ∧ A = S ∩ W
 
 theorem IsRelOpenIn.subset (h : IsRelOpenIn S A) : A ⊆ S := by
   obtain ⟨W, -, rfl⟩ := h

@@ -70,7 +70,7 @@ namespace SeparationPackage
 variable {I : Type u}
 
 /-- Simultaneous evaluation by all compatible separating characters. -/
-def evaluation (C : SeparationPackage I) :
+@[expose] def evaluation (C : SeparationPackage I) :
     (I →₀ ℤ) →+ ({x : I →₀ ℤ // x ≠ 0} → UnitAddCircle) where
   toFun y x := C.character x y
   map_zero' := by

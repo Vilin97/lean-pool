@@ -95,7 +95,7 @@ namespace FullCharacterPackage
 variable {G : Type u} [AddCommGroup G]
 
 /-- Simultaneous evaluation by all characters in the package. -/
-def evaluation (C : FullCharacterPackage G) :
+@[expose] def evaluation (C : FullCharacterPackage G) :
     G →+ (C.CharacterIndex → UnitAddCircle) where
   toFun x j := C.character j x
   map_zero' := by ext j; simp

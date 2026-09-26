@@ -73,7 +73,7 @@ omit [IsScalarTower k[X] k⟮X⟯ K] [_root_.FunctionField k K] [Algebra.IsSepar
 @[simp]
 lemma finitePart_apply (D : DivisorA k K)
     (v : IsDedekindDomain.HeightOneSpectrum (ringOfIntegers k K)) :
-    finitePart (k := k) K D v = D (Sum.inl v) := rfl
+    finitePart (k := k) K D v = D (Sum.inl v) := by rfl
 
 /-- The ideal class represented by the finite part of an adelic divisor. -/
 noncomputable def finiteDivisorClass : DivisorA k K →+
@@ -132,7 +132,9 @@ lemma finiteDivisorClass_principal (u : Kˣ) :
     Submodule.span (ringOfIntegers k K) {(u : K)}
   rw [← FractionalIdeal.coe_spanSingleton
     (R := ringOfIntegers k K) (S := (ringOfIntegers k K)⁰)]
-  rfl
+  exact congrArg (fun J : FractionalIdeal (ringOfIntegers k K)⁰ K =>
+    (J : Submodule (ringOfIntegers k K) K))
+    (FractionalIdeal.principalFractionalIdeal_apply_coe u)
 
 omit [Algebra k K] [IsScalarTower k k[X] K] [IsFullConstantField k K] in
 lemma eq_single_of_effective_deg_one {D : DivisorA k K}

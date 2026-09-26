@@ -76,7 +76,7 @@ private theorem eq_of_count_eq {I J : FractionalIdeal R⁰ K} (hI : I ≠ 0) (hJ
 
 Multiplication of fractional ideals corresponds to addition of divisors.
 -/
-noncomputable def divisorEquiv : Additive (FractionalIdeal R⁰ K)ˣ ≃+ Divisor R where
+@[expose] noncomputable def divisorEquiv : Additive (FractionalIdeal R⁰ K)ˣ ≃+ Divisor R where
   toFun I := divisor I.toMul
   invFun D := Additive.ofMul (ofDivisor K D)
   left_inv I := by
@@ -108,7 +108,7 @@ theorem principalFractionalIdeal_apply_coe (x : Kˣ) :
       spanSingleton R⁰ (x : K) := by rfl
 
 /-- The principal divisor of a nonzero element of the fraction field. -/
-noncomputable def principalDivisor : Additive Kˣ →+ Divisor R :=
+@[expose] noncomputable def principalDivisor : Additive Kˣ →+ Divisor R :=
   divisorEquiv.toAddMonoidHom.comp principalFractionalIdeal.toAdditive
 
 @[simp]

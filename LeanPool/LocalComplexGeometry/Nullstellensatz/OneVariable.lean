@@ -33,7 +33,7 @@ noncomputable section
 /-! ## The standard coordinate on `ComplexEuclidean 1` -/
 
 /-- Evaluation at the unique coordinate, as a complex-linear equivalence. -/
-def oneCoordinateLinearEquiv : ComplexEuclidean 1 ≃ₗ[ℂ] ℂ where
+@[expose] def oneCoordinateLinearEquiv : ComplexEuclidean 1 ≃ₗ[ℂ] ℂ where
   toFun x := x 0
   invFun z := fun _ ↦ z
   left_inv x := by

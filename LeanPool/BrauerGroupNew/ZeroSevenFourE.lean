@@ -559,8 +559,7 @@ lemma gen_spec (M : Type v) [AddCommGroup M]
     ∃ a : A, m' = a • gen A M := (exists_gen A M).choose_spec.2 m'
 
 /-- The left action map into the double centralizer endomorphism algebra. -/
-@[simps]
-@[expose]
+@[simps, expose]
 def toEndEnd (M : Type v) [AddCommGroup M] [Module A M] :
     A →ₗ[A] Module.End (Module.End A M) M where
   toFun a :=

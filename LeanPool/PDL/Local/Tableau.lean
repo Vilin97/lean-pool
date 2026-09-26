@@ -427,7 +427,7 @@ lemma measureProp {α : Program} {φ φ₁ φ₂ : Formula} :
 --   apply localRuleApp.decreases_DM lra Y h
 
 /-- An open local tableau has at least one end node. -/
-def OpenLocalTableau (X : Sequent) : Type := {lt : LocalTableau X // endNodesOf lt ≠ {}}
+@[expose] def OpenLocalTableau (X : Sequent) : Type := {lt : LocalTableau X // endNodesOf lt ≠ {}}
 deriving DecidableEq
 
 /-! ## The Dershowitz-Manna ordering on sequents -/

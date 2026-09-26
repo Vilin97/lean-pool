@@ -49,7 +49,7 @@ def blockDiagonal'AlgHom {o : Type _} {m' : o → Type _} {α : Type _} [Fintype
 theorem blockDiagonal'AlgHom_apply {o : Type _} {m' : o → Type _} {α : Type _} [Fintype o]
     [DecidableEq o] [∀ i, Fintype (m' i)] [∀ i, DecidableEq (m' i)] [CommSemiring α]
     (x : PiMat α o m') : Matrix.blockDiagonal'AlgHom x = blockDiagonal' x :=
-  rfl
+  by rfl
 
 /-- The linear map sending a matrix to the family of its diagonal blocks. -/
 def blockDiag'LinearMap {o : Type _} {m' n' : o → Type _} {α : Type _} [Semiring α] :
@@ -62,7 +62,7 @@ def blockDiag'LinearMap {o : Type _} {m' n' : o → Type _} {α : Type _} [Semir
 theorem blockDiag'LinearMap_apply {o : Type _} {m' : o → Type _} {n' : o → Type _} {α : Type _}
     [Semiring α] (x : Matrix (Σ i : o, m' i) (Σ i : o, n' i) α) :
     Matrix.blockDiag'LinearMap x = blockDiag' x :=
-  rfl
+  by rfl
 
 theorem blockDiag'LinearMap_blockDiagonal'AlgHom {o : Type _} {m' : o → Type _} {α : Type _}
     [Fintype o] [DecidableEq o] [∀ i, Fintype (m' i)] [∀ i, DecidableEq (m' i)] [CommSemiring α]
@@ -433,7 +433,7 @@ theorem coe_mul {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     ((x * y : (BlockDiagonals R k s)) :
         Matrix (Σ i, s i) (Σ i, s i) R) =
       x * y :=
-  rfl
+  by rfl
 
 theorem one {k : Type _} [DecidableEq k] {s : k → Type _} [∀ i, DecidableEq (s i)] :
     (1 : Matrix (Σ i, s i) (Σ i, s i) R).IsBlockDiagonal := by
@@ -448,7 +448,7 @@ theorem coe_one {k : Type _} [DecidableEq k] {s : k → Type _} [∀ i, Decidabl
     ((1 : (BlockDiagonals R k s)) :
         Matrix (Σ i, s i) (Σ i, s i) R) =
       1 :=
-  rfl
+  by rfl
 
 theorem coe_nsmul {k : Type _} [DecidableEq k] {s : k → Type _} (n : ℕ)
     (x : (BlockDiagonals R k s)) :
@@ -478,9 +478,9 @@ theorem coe_npow {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     ((x ^ n : (BlockDiagonals R k s)) :
         Matrix (Σ i, s i) (Σ i, s i) R) =
       x ^ n :=
-  rfl
+  by rfl
 
-@[reducible, instance]
+@[reducible, instance, expose]
 def semiring {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     [∀ i, Fintype (s i)] [∀ i, DecidableEq (s i)] :
     Semiring (BlockDiagonals R k s)
@@ -555,7 +555,7 @@ theorem coe_blockDiagonal'_blockDiag' {k : Type _} [DecidableEq k] {s : k → Ty
 end IsBlockDiagonal
 
 /-- Block-diagonal matrices are algebra-equivalent to block-indexed matrix families. -/
-@[simps]
+@[expose, simps]
 def isBlockDiagonalPiAlgEquiv {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     [∀ i, Fintype (s i)] [∀ i, DecidableEq (s i)] :
     (BlockDiagonals R k s) ≃ₐ[R] PiMat R k s
@@ -617,7 +617,7 @@ theorem coe_star {R : Type _} [CommSemiring R] [StarAddMonoid R] {k : Type _}
     [DecidableEq k] {s : k → Type _}
     (y : (BlockDiagonals R k s)) :
     ((Star.star y : BlockDiagonals R k s) : Matrix (Σ i, s i) (Σ i, s i) R) = yᴴ :=
-  rfl
+  by rfl
 
 end IsBlockDiagonal
 
@@ -647,8 +647,7 @@ end isBlockDiagonalPiAlgEquiv
 namespace Equiv
 
 /-- A variant of `Equiv.sigmaProdDistrib` with the product coordinate first. -/
-@[simps!]
-def sigmaProdDistrib' {ι : Type _} (β : Type _) (α : ι → Type _) :
+@[expose] def sigmaProdDistrib' {ι : Type _} (β : Type _) (α : ι → Type _) :
     (β × Σ i : ι, α i) ≃ Σ i : ι, β × α i := by
   let this : (Σ i : ι, β × α i) ≃ Σ i : ι, α i × β := by
     apply Equiv.sigmaCongrRight
@@ -656,11 +655,24 @@ def sigmaProdDistrib' {ι : Type _} (β : Type _) (α : ι → Type _) :
     exact Equiv.prodComm _ _
   exact ((Equiv.prodComm _ _).trans (Equiv.sigmaProdDistrib _ _)).trans this.symm
 
+@[simp] theorem sigmaProdDistrib'_apply_fst {ι : Type _} (β : Type _) (α : ι → Type _)
+    (x : β × Σ i, α i) : ((sigmaProdDistrib' β α) x).1 = x.2.1 := by
+  rfl
+
+@[simp] theorem sigmaProdDistrib'_apply_snd {ι : Type _} (β : Type _) (α : ι → Type _)
+    (x : β × Σ i, α i) :
+    ((sigmaProdDistrib' β α) x).2 = (Equiv.prodComm (α x.2.1) β) (x.2.2, x.1) := by
+  rfl
+
+@[simp] theorem sigmaProdDistrib'_symm_apply {ι : Type _} (β : Type _) (α : ι → Type _)
+    (x : Σ i, β × α i) :
+    (sigmaProdDistrib' β α).symm x = (x.2.1, ⟨x.1, x.2.2⟩) := by
+  rfl
+
 end Equiv
 
 /-- Distribute a product of sigma types into a nested sigma type. -/
-@[simps]
-def sigmaProdSigma {α β : Type _} {ζ : α → Type _} {℘ : β → Type _} :
+@[expose] def sigmaProdSigma {α β : Type _} {ζ : α → Type _} {℘ : β → Type _} :
     ((Σ i, ζ i) × Σ i, ℘ i) ≃ Σ i j, ζ i × ℘ j
     where
   toFun x := by
@@ -673,6 +685,27 @@ def sigmaProdSigma {α β : Type _} {ζ : α → Type _} {℘ : β → Type _} :
   right_inv x := by
     rcases x with ⟨i, j, z, p⟩
     rfl
+
+@[simp] theorem sigmaProdSigma_apply_fst {α β : Type _} {ζ : α → Type _}
+    {℘ : β → Type _} (x : (Σ i, ζ i) × Σ i, ℘ i) :
+    (sigmaProdSigma x).1 = ((Equiv.sigmaProdDistrib ζ ((i : β) × ℘ i)) x).1 := by
+  rfl
+
+@[simp] theorem sigmaProdSigma_apply_snd_fst {α β : Type _} {ζ : α → Type _}
+    {℘ : β → Type _} (x : (Σ i, ζ i) × Σ i, ℘ i) :
+    (sigmaProdSigma x).2.1 =
+      ((Equiv.sigmaProdDistrib' ((i : α) × ζ i) ℘) x).1 := by
+  rfl
+
+@[simp] theorem sigmaProdSigma_apply_snd_snd {α β : Type _} {ζ : α → Type _}
+    {℘ : β → Type _} (x : (Σ i, ζ i) × Σ i, ℘ i) :
+    (sigmaProdSigma x).2.2 = (x.1.2, x.2.2) := by
+  rfl
+
+@[simp] theorem sigmaProdSigma_symm_apply {α β : Type _} {ζ : α → Type _}
+    {℘ : β → Type _} (x : Σ i j, ζ i × ℘ j) :
+    sigmaProdSigma.symm x = (⟨x.1, x.2.2.1⟩, ⟨x.2.1, x.2.2.2⟩) := by
+  rfl
 
 namespace IsBlockDiagonal
 
@@ -705,7 +738,7 @@ theorem kronecker_hMul {R : Type _} [CommSemiring R] {k : Type _} [DecidableEq k
 end IsBlockDiagonal
 
 /-- Conjugation by the block-diagonal/pi-matrix algebra equivalence on endomorphisms. -/
-@[simps!]
+@[expose, simps!]
 def directSumLinearMapAlgEquivIsBlockDiagonalLinearMap {R : Type _} [CommSemiring R] {k : Type _}
     [Fintype k] [DecidableEq k] {s : k → Type _} [∀ i, Fintype (s i)] [∀ i, DecidableEq (s i)] :
     ((PiMat R k s) →ₗ[R] PiMat R k s) ≃ₐ[R]

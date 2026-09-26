@@ -59,7 +59,7 @@ def PairSparse (Q : OctagonIncidence) : Prop :=
   ∀ ⦃a b⦄, a ≠ b → Q.pairMultiplicity a b ≤ 2
 
 /-- Every vertex occurs in exactly four witness rows. -/
-def Balanced (Q : OctagonIncidence) : Prop :=
+@[expose] def Balanced (Q : OctagonIncidence) : Prop :=
   ∀ a, Q.indegree a = 4
 
 private lemma row_pair_sum (Q : OctagonIncidence) (a v : Vertex) :

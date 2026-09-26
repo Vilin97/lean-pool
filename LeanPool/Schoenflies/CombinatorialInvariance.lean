@@ -291,7 +291,7 @@ variable {S}
 variable (R : S.Realization)
 
 /-- The drawn skeleton: the pushforward of the abstract skeleton along the positions. -/
-def graph : Graph Plane γ := S.skel.map R.pos
+@[expose] def graph : Graph Plane γ := S.skel.map R.pos
 
 @[simp] theorem vertexSet_graph : V(R.graph) = R.pos '' V(S.skel) := vertexSet_map _ _
 
@@ -399,7 +399,7 @@ theorem image_outerSet : g.toFun '' R₁.outerSet = R₂.outerSet :=
 theorem injOn : InjOn g.toFun R₁.skeletonSet := g.leftInvOn.injOn
 
 /-- The homeomorphism run backwards. -/
-def symm : SkeletonHomeo R₂ R₁ where
+@[expose] def symm : SkeletonHomeo R₂ R₁ where
   toFun := g.invFun
   invFun := g.toFun
   continuousOn_toFun := g.continuousOn_invFun

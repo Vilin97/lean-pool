@@ -43,7 +43,7 @@ noncomputable def resC0 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 �
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem resC0_apply (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) (f : C0 D 𝒰) (k : Fin 𝒱.n) :
-    resC0 D τ hτ f k = LinSysOn.restrictL D (hτ k) (f (τ k)) := rfl
+    resC0 D τ hτ f k = LinSysOn.restrictL D (hτ k) (f (τ k)) := by rfl
 
 /-- Restriction of `1`-cochains along a refinement index `τ`. -/
 noncomputable def resC1 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) : C1 D 𝒰 →ₗ[ℂ] C1 D 𝒱 :=
@@ -53,7 +53,7 @@ noncomputable def resC1 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 �
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem resC1_apply (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) (f : C1 D 𝒰)
     (p : Fin 𝒱.n × Fin 𝒱.n) :
-    resC1 D τ hτ f p = LinSysOn.restrictL D (inf_le_inf (hτ p.1) (hτ p.2)) (f (τ p.1, τ p.2)) :=
+    resC1 D τ hτ f p = LinSysOn.restrictL D (inf_le_inf (hτ p.1) (hτ p.2)) (f (τ p.1, τ p.2)) := by
   rfl
 
 variable (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ)
@@ -116,7 +116,7 @@ noncomputable def resZ1 : Z1 D 𝒰 →ₗ[ℂ] Z1 D 𝒱 :=
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem resZ1_apply_coe (f : Z1 D 𝒰) :
-    (resZ1 D τ hτ f : C1 D 𝒱) = resC1 D τ hτ (f : C1 D 𝒰) := rfl
+    (resZ1 D τ hτ f : C1 D 𝒱) = resC1 D τ hτ (f : C1 D 𝒰) := by rfl
 
 /-- The induced map on cover-level `H¹`. -/
 noncomputable def resH1 : H1Cover D 𝒰 →ₗ[ℂ] H1Cover D 𝒱 :=

@@ -27,7 +27,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]
 
 /-- The complex unit phase at time `t` and spectral coordinate `r`. -/
-noncomputable def stonePhase (t r : ℝ) : ℂ :=
+@[expose] noncomputable def stonePhase (t r : ℝ) : ℂ :=
   Complex.exp (Complex.I * (t : ℂ) * (r : ℂ))
 
 theorem stonePhase_measurable (t : ℝ) : Measurable (stonePhase t) := by
@@ -74,7 +74,7 @@ private theorem PVM.integral_const_mul_local (E_pvm : PVM E)
         exact E_pvm.integral_const c, smul_mul_assoc, one_mul]
 
 /-- The bounded evolution operator obtained by integrating the unit phase against a PVM. -/
-noncomputable def spectralEvolution (E_pvm : PVM E) (t : ℝ) : E →L[ℂ] E :=
+@[expose] noncomputable def spectralEvolution (E_pvm : PVM E) (t : ℝ) : E →L[ℂ] E :=
   E_pvm.integral (stonePhase t) (by exact stonePhase_measurable t)
     (by exact ⟨1, stonePhase_bounded t⟩)
 
@@ -278,7 +278,7 @@ private theorem spectralEvolution_stronglyContinuous (E_pvm : PVM E) (x : E) :
   exact (sq_lt_sq₀ (norm_nonneg _) hε.le).1 hsquare
 
 /-- The strongly continuous unitary group assembled from spectral evolution operators. -/
-noncomputable def spectralUnitaryGroup (E_pvm : PVM E) :
+@[expose] noncomputable def spectralUnitaryGroup (E_pvm : PVM E) :
     StrongContUnitary E where
   toFun := spectralEvolution E_pvm
   isUnitary := by exact spectralEvolution_unitary E_pvm
@@ -598,7 +598,7 @@ private theorem spectralUnitaryGroup_generator (E_pvm : PVM E) :
   exact (LinearPMap.eq_of_le_of_domain_eq hle hdomain).symm
 
 /-- The unitary group obtained by integrating the phases `exp (i t r)` against a PVM. -/
-noncomputable def PVM.phaseUnitaryGroup (E_pvm : PVM E) : StrongContUnitary E :=
+@[expose] noncomputable def PVM.phaseUnitaryGroup (E_pvm : PVM E) : StrongContUnitary E :=
   spectralUnitaryGroup E_pvm
 
 /-- The generator of the phase unitary group is integration against the real coordinate. -/

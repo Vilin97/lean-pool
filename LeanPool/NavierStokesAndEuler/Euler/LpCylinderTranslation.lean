@@ -97,7 +97,7 @@ theorem operator_intertwines (a : Space) (S Ω : Set Space) (hS : MeasurableSet 
   change (full volume (translatedField A a) (translation a (u : L2Space V))) x =
     (translation a (full volume A (u : L2Space V))) x
   rw [hl, hu, hr, ha]
-  simpa only [translatedField, EulerMeanCoefficients.translated_apply]
+  simp only [translatedField, EulerMeanCoefficients.translated_apply]
 
 /-- Compactly supported data have a qualitative translation neighborhood
 inside any prescribed larger open support region. -/
@@ -287,6 +287,14 @@ def intoLarger (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ 
           hΩ))
       (translate_mem period a S Ω hS hΩ hsub)
   norm_map' := fun u => (translate period a).norm_map (u : CylinderL2 period V)
+
+@[simp] theorem intoLarger_coe (a : LiftTangent) (S Ω : Set Space)
+    (hS : MeasurableSet S) (hΩ : MeasurableSet Ω)
+    (hsub : EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω)
+    (u : supportedSpace (V := V) (liftMeasure period) (spatialSet period S)
+      (spatialSet_measurable period S hS)) :
+    (intoLarger period a S Ω hS hΩ hsub u : CylinderL2 period V) =
+      translate period a (u : CylinderL2 period V) := by rfl
 
 end Supported
 

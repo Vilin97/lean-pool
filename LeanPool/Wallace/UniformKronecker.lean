@@ -30,7 +30,7 @@ namespace Wallace
 open Filter Set TopologicalSpace Topology
 
 /-- The homomorphism which evaluates an integer relation on a finite tuple. -/
-def relationMap {G : Type u} [AddCommGroup G] {m : ℕ} (z : Fin m → G) :
+@[expose] def relationMap {G : Type u} [AddCommGroup G] {m : ℕ} (z : Fin m → G) :
     (Fin m → ℤ) →+ G where
   toFun a := ∑ i, a i • z i
   map_zero' := by simp
@@ -46,7 +46,7 @@ theorem relationMap_single {G : Type u} [AddCommGroup G] {m : ℕ}
   simp [relationMap]
 
 /-- Evaluation of an integer vector on a tuple in the unit additive torus. -/
-def torusRelationMap {m : ℕ} (t : Fin m → UnitAddCircle) :
+@[expose] def torusRelationMap {m : ℕ} (t : Fin m → UnitAddCircle) :
     (Fin m → ℤ) →+ UnitAddCircle :=
   relationMap t
 

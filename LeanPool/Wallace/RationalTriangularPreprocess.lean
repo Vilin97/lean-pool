@@ -54,7 +54,7 @@ abbrev RationalInjectiveSequences :=
   {s : ℕ → ContinuumRationalGroup // Function.Injective s}
 
 /-- The triangular support condition for rational-valued finitely supported sequences. -/
-def RationalSupportedBelow (s : ℕ → ContinuumRationalGroup) (i : ContinuumIndex) : Prop :=
+@[expose] def RationalSupportedBelow (s : ℕ → ContinuumRationalGroup) (i : ContinuumIndex) : Prop :=
   ∀ n j, j ∈ (s n).support → j < i
 
 theorem mk_continuumIndex : #ContinuumIndex = 𝔠 :=

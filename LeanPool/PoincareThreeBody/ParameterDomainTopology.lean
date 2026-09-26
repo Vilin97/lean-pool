@@ -163,7 +163,7 @@ noncomputable def phaseCoordinateHomeomorph : PhaseSpace ≃ₜ (Plane × Plane)
   Homeomorph.mk phaseCoordinateEquiv (by fun_prop) (by fun_prop)
 
 /-- The mass-zero phase domain, excluding both fixed primary positions. -/
-def massZeroCollisionFree : Set PhaseSpace :=
+@[expose] def massZeroCollisionFree : Set PhaseSpace :=
   {state | (0, state) ∈ collisionFree}
 
 /-- The mass-zero collision-free phase domain is a twice-punctured position plane times the

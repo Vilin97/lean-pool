@@ -59,6 +59,7 @@ def implicitFunctionDataOfComplementedKerRange (f : E → F) (f' : E →L[𝕜] 
 @[simp] theorem implicitFunctionDataOfComplementedKerRange_pt (f : E → F)
     (f' : E →L[𝕜] F) {a : E} (hf : HasStrictFDerivAt f f' a)
     (hker : f'.ker.ClosedComplemented) (hrange : f'.range.ClosedComplemented) :
+    have := hrange.isClosed.completeSpace_coe
     (hf.implicitFunctionDataOfComplementedKerRange f f' hker hrange).pt = a := by
   classical
   unfold implicitFunctionDataOfComplementedKerRange

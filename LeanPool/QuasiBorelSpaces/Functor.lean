@@ -416,7 +416,7 @@ lemma unroll_roll [Continuous F] (x : F (Nu F)) : unroll (roll x) = x := by
   simp only [
     unroll, roll, QuasiBorelHom.coe_mk, shift_unshift_coe,
     Continuous.unseq_seq_coe, Functor.map_comp_coe, QuasiBorelHom.eq_comp,
-    QuasiBorelHom.eq_id, Functor.map_id, QuasiBorelHom.id_coe]
+    QuasiBorelHom.eq_id, Functor.map_id, QuasiBorelHom.id_coe, id_eq]
 
 /-- Constructs a `Nu` from an unfolding. -/
 def unfold (f : A →𝒒 F A) : A →𝒒 Nu F where

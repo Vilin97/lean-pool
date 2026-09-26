@@ -43,7 +43,7 @@ inductive WitnessRel : ℕ → Type
   | tree (n : ℕ) : WitnessRel (2 * n)
 
 /-- **The functional witness language** (Marker's `τ*`, audit v2 D4). -/
-def WitnessLang : Language.{0, 0} where
+@[expose] def WitnessLang : Language.{0, 0} where
   Functions := WitnessFun
   Relations := WitnessRel
 

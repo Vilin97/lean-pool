@@ -80,7 +80,7 @@ theorem choose_two_le_sum_pair_ind (D C : Finset V) :
 /-! ## The pair count as a random variable -/
 
 /-- The ordered-pair count of covering indicators at `v`. -/
-noncomputable def pairCount {H : Finset (Finset V)} {p : ℝ}
+@[expose] noncomputable def pairCount {H : Finset (Finset V)} {p : ℝ}
     (ρ : BernoulliRetention (Ω := Ω) H p) (v : V) (ω : Ω) : ℝ :=
   ∑ e ∈ H.filter (fun e => v ∈ e), ∑ u ∈ e.erase v, ∑ u' ∈ (e.erase v).erase u,
     coverInd ρ u ω * coverInd ρ u' ω

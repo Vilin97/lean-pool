@@ -227,7 +227,7 @@ variable {α : Type*}
   scaledRay D.m D.v (D.r ξ) D.s₀ D.t₀ D.a D.ε τ
 
 /-- Velocity, given by `scaledVelocity D.m D.v (D.w ξ) D.t₀ D.a D.ε τ`. -/
-def velocity (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
+@[expose] def velocity (D : PhysicalGeometryData α) (ξ : α) (τ : ℝ) : Fin 3 → ℝ :=
   scaledVelocity D.m D.v (D.w ξ) D.t₀ D.a D.ε τ
 
 /-- Size, given by `‖D.r ξ (D.time τ)‖*‖D.w ξ (D.time τ)‖`. -/
@@ -256,7 +256,7 @@ D.targetTime) (D.w D.center D.targetTime)`. -/
 
 /-- Next compression, given by `normalizedCoupling (D.M D.center D.targetTime) (D.r D.center
 D.targetTime) (D.r D.center D.targetTime)`. -/
-def nextCompression (D : PhysicalGeometryData α) : ℝ :=
+@[expose] def nextCompression (D : PhysicalGeometryData α) : ℝ :=
   normalizedCoupling (D.M D.center D.targetTime)
     (D.r D.center D.targetTime) (D.r D.center D.targetTime)
 

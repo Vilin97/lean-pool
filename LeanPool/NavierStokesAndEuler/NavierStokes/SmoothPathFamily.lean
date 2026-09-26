@@ -249,7 +249,7 @@ variable [CompleteSpace E] (hab : a ≤ b)
 
 /-- The actual finite-interval ODE solution for the supplied joint coefficient
 and forcing families. -/
-noncomputable def odeFamily (A : P × ℝ → E →L[ℝ] E) (x₀ : P → E)
+@[expose] noncomputable def odeFamily (A : P × ℝ → E →L[ℝ] E) (x₀ : P → E)
     (f : P × ℝ → E) (p : P) : C(Icc a b, E) :=
   ParametricODE.solution hab (pathFamily A p) (x₀ p) (pathFamily f p)
 

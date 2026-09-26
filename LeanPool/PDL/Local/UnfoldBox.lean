@@ -52,7 +52,7 @@ instance : CoeOut (TP (∗α)) (TP α) :=
 /-- List of all test profiles for a given program.
 Note that in contrast to `Fintype.elems : Finset (TP α)`
 here we get a computable List (TP α). -/
-def allTP α : List (TP α) := (testsOfProgram α).sublists.map (fun l ⟨τ, _⟩ => τ ∈ l)
+@[expose] def allTP α : List (TP α) := (testsOfProgram α).sublists.map (fun l ⟨τ, _⟩ => τ ∈ l)
 
 /-- All test profiles are in the list of all test profiles.
 Thanks to Floris van Doorn

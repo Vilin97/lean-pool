@@ -86,7 +86,7 @@ We model “supported in `K`” as belonging to the closed range of the extensio
           (μ := (volume : Measure E)) (E := ℝ) (p := (2 : ℝ≥0∞)) (s := K) hKm).toLinearMap))
 
 /-- The inclusion `h1On K → L²(volume)` as a continuous linear map. -/
-noncomputable def h1OnToL2 (K : Set E) (hKm : MeasurableSet K) :
+@[expose] noncomputable def h1OnToL2 (K : Set E) (hKm : MeasurableSet K) :
     ↥(h1On K hKm) →L[ℝ] (E →₂[(volume : Measure E)] ℝ) :=
   (h1ToL2 (μ := (volume : Measure E)) (E := E)).comp (h1On K hKm).subtypeL
 

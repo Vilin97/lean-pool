@@ -71,7 +71,7 @@ abbrev History : Type := List Sequent
 
 /-- We have a repeat iff the history contains a node that is `setEqTo` the current node.
 Note that this is a `Prop`, it does not carry a specific number of steps to go back. -/
-def rep (Hist : History) (X : Sequent) : Prop := ∃ Y ∈ Hist, Y = X
+@[expose] def rep (Hist : History) (X : Sequent) : Prop := ∃ Y ∈ Hist, Y = X
 
 instance {H X} : Decidable (rep H X) := by
   unfold rep
@@ -124,7 +124,7 @@ lemma rep.toFin_agrees (rp : rep H X) :
 /-- A lpr means we can go `k` steps back in the history to
 reach an equal node, and all nodes on the way are loaded.
 Note: `k=0` means the first element of `Hist` is the companion. -/
-def LoadedPathRepeat (Hist : History) (X : Sequent) : Type :=
+@[expose] def LoadedPathRepeat (Hist : History) (X : Sequent) : Type :=
   Subtype (fun k => (Hist.get k) = X ∧ ∀ m ≤ k, (Hist.get m).isLoaded)
 
 lemma LoadedPathRepeat.to_rep {H X} (lpr : LoadedPathRepeat H X) : rep H X := by

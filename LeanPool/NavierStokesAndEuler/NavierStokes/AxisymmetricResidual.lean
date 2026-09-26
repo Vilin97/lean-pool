@@ -312,7 +312,7 @@ theorem scalarLaplacian_weighted_one {G : Profile} {t : ℝ} (hG : SliceC2 G t) 
 @[expose] def velocity (B F U : Profile) : VelocityField :=
   fun w => pack (componentX B F w.1 w.2) (componentY B F w.1 w.2) (lift U w.1 w.2)
 /-- Pressure, defined pointwise by `lift P w.1 w.2`. -/
-def pressure (P : Profile) : PressureField := fun w => lift P w.1 w.2
+@[expose] def pressure (P : Profile) : PressureField := fun w => lift P w.1 w.2
 
 /-- Velocity jacobian, constructed using `packDerivative`. -/
 @[expose] def velocityJacobian (B F U : Profile) (t : ℝ) (x : Space) : Space →L[ℝ] Space :=
@@ -432,10 +432,10 @@ theorem pressureGradient_pressure {P : Profile} {t : ℝ}
         one_mul, pack]
 
 /-- Time profile jacobian, given by `(ContinuousLinearMap.id ℝ ℝ).prod (0 : ℝ →L[ℝ] ℝ × ℝ)`. -/
-def timeProfileJacobian : ℝ →L[ℝ] ProfilePoint :=
+@[expose] def timeProfileJacobian : ℝ →L[ℝ] ProfilePoint :=
   (ContinuousLinearMap.id ℝ ℝ).prod (0 : ℝ →L[ℝ] ℝ × ℝ)
 /-- Time profile derivative, given by `(fderiv ℝ G p).comp timeProfileJacobian`. -/
-def timeProfileDerivative (G : Profile) (p : ProfilePoint) : ℝ →L[ℝ] ℝ :=
+@[expose] def timeProfileDerivative (G : Profile) (p : ProfilePoint) : ℝ →L[ℝ] ℝ :=
   (fderiv ℝ G p).comp timeProfileJacobian
 
 @[simp] theorem timeProfileDerivative_one (G : Profile) (p : ProfilePoint) :

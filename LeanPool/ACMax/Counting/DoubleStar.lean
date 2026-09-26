@@ -422,7 +422,7 @@ cherry constructions (SingleVertex / TwoTwin / HubTriangle). -/
 open Classical in
 /-- **C5 — the `e(M) = 0` world.**  Closing counting: NEEDS-NEW-COUNTING (L5.7; the
 MaxHub-style extremal counting survives only `n ≤ 20`). -/
-def CaseMZero (G : SimpleGraph V) : Prop := mIncidence G = 0
+@[expose] def CaseMZero (G : SimpleGraph V) : Prop := mIncidence G = 0
 
 open Classical in
 /-- The `e(M)` **dispatch gate**: the `D`–`D` incidence sum is even (each `M`-edge is

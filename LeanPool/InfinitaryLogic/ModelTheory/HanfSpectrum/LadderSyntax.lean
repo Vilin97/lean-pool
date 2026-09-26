@@ -77,7 +77,7 @@ noncomputable instance (α : Ordinal.{0}) : OrderTop (Index α) where
 
 /-- The ladder language: `ℕ` constants, `Index α`-indexed unary level predicates, one binary
 relation. `Language.{0,0}` for every `α`. -/
-def ladderLang (α : Ordinal.{0}) : Language.{0, 0} :=
+@[expose] def ladderLang (α : Ordinal.{0}) : Language.{0, 0} :=
   ⟨fun n => match n with
     | 0 => ℕ
     | _ => Empty,

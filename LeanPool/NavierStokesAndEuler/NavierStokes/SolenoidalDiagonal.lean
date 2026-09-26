@@ -195,7 +195,7 @@ open ProblemStatement
 
 /-- The constructed velocity is the actual spatial curl of the summed
 potential, with time held fixed by `SpatialCurl.spatialCurl`. -/
-def velocitySum (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A : ℕ → VelocityField) :
+@[expose] def velocitySum (a : ℕ → ℝ) (q : SpaceTime → ℝ) (A : ℕ → VelocityField) :
     VelocityField :=
   SpatialCurl.spatialCurl (potentialSum a q A)
 

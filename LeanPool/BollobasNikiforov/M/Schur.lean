@@ -1708,7 +1708,7 @@ lemma configLred_eq_weightedLaplacian (hs : ∀ i, 0 < s i) (hρ : ∀ j, 0 < ρ
 
 lemma configEEmbed_eq_elimEEmbed :
     (configEEmbed : Option (Fin k) → ConfigIdx k p) = elimEEmbed :=
-  rfl
+  by rfl
 
 lemma configLEE_isSymm : (configLEE s t ρ x).IsSymm := by
   ext a b

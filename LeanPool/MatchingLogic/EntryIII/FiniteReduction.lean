@@ -21,7 +21,7 @@ namespace MatchingLogic
 variable {S : Signature} {Var : Type} [DecidableEq Var]
 
 /-- Strong local completeness restricted to theories presented by finite lists. -/
-def FiniteLocalCompleteness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
+@[expose] def FiniteLocalCompleteness (S : Signature) (Var : Type) [DecidableEq Var] : Prop :=
   ∀ (l : List (Pattern S Var)) (phi : Pattern S Var),
     LocalCons {delta | delta ∈ l} phi →
       Provable (∅ : Set (Pattern S Var)) (.imp (conj l) phi)

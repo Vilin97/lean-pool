@@ -301,13 +301,13 @@ instance : OmegaQuasiBorelSpace (X →ω𝒒 Y) where
 /-! ### Operations -/
 
 /-- Identity `OmegaQuasiBorelHom`s. -/
-def id : X →ω𝒒 X where
+@[expose] def id : X →ω𝒒 X where
   toFun x := x
 
 @[simp] theorem id_coe (x : X) : (id : X →ω𝒒 X) x = x := by rfl
 
 /-- Function composition for `OmegaQuasiBorelHom`s. -/
-def comp (f : Y →ω𝒒 Z) (g : X →ω𝒒 Y) : X →ω𝒒 Z where
+@[expose] def comp (f : Y →ω𝒒 Z) (g : X →ω𝒒 Y) : X →ω𝒒 Z where
   toFun x := f (g x)
 
 @[simp] theorem comp_coe (f : Y →ω𝒒 Z) (g : X →ω𝒒 Y) (x : X) :

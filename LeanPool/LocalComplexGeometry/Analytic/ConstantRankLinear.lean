@@ -32,7 +32,7 @@ noncomputable section
 
 /-- Range dimension for a continuous complex-linear map between arbitrary
 complex normed spaces. -/
-def complexLinearRank
+@[expose] def complexLinearRank
     {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E]
     [NormedAddCommGroup F] [NormedSpace ℂ F]

@@ -56,7 +56,7 @@ noncomputable def radialReduce (F : Plane → E) (q : Plane) : E :=
   EvenSmoothDescent.radialDerivative (fun r => F (q.1, r)) q.2
 
 /-- Descend, given by `F (q.1, Real.sqrt q.2)`. -/
-noncomputable def descend (F : Plane → E) (q : Plane) : E :=
+@[expose] noncomputable def descend (F : Plane → E) (q : Plane) : E :=
   F (q.1, Real.sqrt q.2)
 
 /-- Plane derivative, given by `(ContinuousLinearMap.fst ℝ ℝ ℝ).smulRight (parameterPartial F q)

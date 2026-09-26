@@ -803,7 +803,7 @@ noncomputable abbrev Upsilon [QuantumSet A] [QuantumSet B] :
 theorem Upsilon_apply [QuantumSet A] [QuantumSet B] (x : A →ₗ[ℂ] B) :
     Upsilon x =
       (LinearEquiv.lTensor A (unop ℂ))
-        ((TensorProduct.map (unop ℂ) (op ℂ))
+        ((LinearEquiv.TensorProduct.map (unop ℂ) (op ℂ))
           ((TensorProduct.comm ℂ B Aᵐᵒᵖ) (PsiToFun 0 (k A + 1) x))) := by
   rfl
 
@@ -811,7 +811,7 @@ theorem Upsilon_symm_apply [QuantumSet A] [QuantumSet B] (x : A ⊗[ℂ] B) :
     Upsilon.symm x =
       PsiInvFun (A := B) (B := A) 0 (k A + 1)
         ((TensorProduct.comm ℂ Aᵐᵒᵖ B)
-          ((TensorProduct.map (op ℂ) (unop ℂ))
+          ((LinearEquiv.TensorProduct.map (op ℂ) (unop ℂ))
             ((LinearEquiv.lTensor A (op ℂ)) x))) := by
   rfl
 
@@ -959,7 +959,7 @@ private lemma rmulMapLmul_apply_Upsilon_aux_apply [QuantumSet A] [QuantumSet B]
 lemma Upsilon_rankOne [QuantumSet A] [QuantumSet B] (a : A) (b : B) :
     Upsilon (rankOne ℂ a b).toLinearMap = (modAut (-k B - 1) (star b)) ⊗ₜ[ℂ] a := by
   rw [Upsilon_apply, QuantumSet.PsiToFun_apply, TensorProduct.comm_tmul,
-    TensorProduct.map_tmul, LinearEquiv.lTensor_tmul, starAlgebra.modAut_star,
+    LinearEquiv.TensorProduct.map_tmul, LinearEquiv.lTensor_tmul, starAlgebra.modAut_star,
     starAlgebra.modAut_zero]
   ring_nf
   rfl
@@ -969,7 +969,7 @@ lemma Upsilon_symm_tmul [QuantumSet A] [QuantumSet B] (a : A) (b : B) :
       (rankOne ℂ b (modAut (-k A - 1) (star a))).toLinearMap := by
   rw [Upsilon_symm_apply]
   simp only [LinearEquiv.lTensor_tmul, op_apply,
-    TensorProduct.map_tmul, LinearEquiv.coe_coe, unop_apply, MulOpposite.unop_op,
+    LinearEquiv.TensorProduct.map_tmul, LinearEquiv.coe_coe, unop_apply, MulOpposite.unop_op,
     TensorProduct.comm_tmul, QuantumSet.PsiInvFun_apply, starAlgebra.modAut_zero, neg_zero]
   ring_nf
   rfl
@@ -1010,4 +1010,4 @@ lemma rmulMapLmul_apply_Upsilon_eq [QuantumSet A] [QuantumSet B] (x : A →ₗ[�
   nth_rw 2 [QuantumSet.inner_conj_left]
   simp_rw [starAlgebra.modAut_star, modAut_apply_modAut, star_star,
     add_neg_cancel, starAlgebra.modAut_zero]
-  simp only [lmul_apply, one_mul]
+  simp only [lmul_apply]

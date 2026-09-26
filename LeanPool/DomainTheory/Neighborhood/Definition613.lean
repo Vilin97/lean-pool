@@ -159,7 +159,7 @@ for any non-empty
 directed family `ℱ` of subsystems of `E` whose union is the subsystem `U` (`hU`),
 the target-side
 neighbourhood family of `T(U)` is the union of those of the `T(D)` for `D ∈ ℱ`. -/
-def ContinuousOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
+@[expose] def ContinuousOnDomains (T : Endofunctor DomainObj.{w}) : Prop :=
   ∃ hmono : MonotoneOnDomains T,
     ∀ {α : Type w} {E : NeighborhoodSystem α}
       (ℱ : Set (NeighborhoodSystem α)) (hℱ : ∀ ⦃D⦄, D ∈ ℱ → D ◁ E)

@@ -1753,12 +1753,12 @@ noncomputable def parityVec : Vec →L[ℂ] Vec :=
 
 /-- Coefficient parity on, given by `∀ r ∈ S, ∀ z ∈ U, ∀ i j, A (-r) z i j = -(paritySign i *
 paritySign j) * A r z i j`. -/
-def CoefficientParityOn (S : Set ℝ) (U : Set ℂ) (A : Coeff) : Prop :=
+@[expose] def CoefficientParityOn (S : Set ℝ) (U : Set ℂ) (A : Coeff) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, ∀ i j,
     A (-r) z i j = -(paritySign i * paritySign j) * A r z i j
 
 /-- Forcing parity on, given by `∀ r ∈ S, ∀ z ∈ U, ∀ i, f (-r) z i = -(paritySign i) * f r z i`. -/
-def ForcingParityOn (S : Set ℝ) (U : Set ℂ) (f : Field) : Prop :=
+@[expose] def ForcingParityOn (S : Set ℝ) (U : Set ℂ) (f : Field) : Prop :=
   ∀ r ∈ S, ∀ z ∈ U, ∀ i, f (-r) z i = -(paritySign i) * f r z i
 
 /-- Coefficient parity, given by `∀ r z i j, A (-r) z i j = -(paritySign i * paritySign j) * A r

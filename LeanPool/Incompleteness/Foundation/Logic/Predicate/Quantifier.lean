@@ -82,7 +82,7 @@ instance : PiSymbol SigmaPiDelta := ⟨pi⟩
 instance : DeltaSymbol SigmaPiDelta := ⟨delta⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def alt : SigmaPiDelta → SigmaPiDelta
+@[expose] def alt : SigmaPiDelta → SigmaPiDelta
   | Sg => Pg
   | Pg => Sg
   | Dlt => Dlt
@@ -141,7 +141,7 @@ section «lp_section_1»
 variable {α : ℕ → Type*} [UnivQuantifier α] [ExQuantifier α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def quant : Polarity → α (n + 1) → α n
+@[expose] def quant : Polarity → α (n + 1) → α n
   | Sg, φ => ∃' φ
   | Pg, φ => ∀' φ
 
@@ -168,7 +168,7 @@ prefix:64 "∀* " => univClosure
 lemma univClosure_succ {n} (a : α (n + 1)) : ∀* a = ∀* ∀' a := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def univItr : (k : ℕ) → α (n + k) → α n
+@[expose] def univItr : (k : ℕ) → α (n + k) → α n
   | 0,     a => a
   | k + 1, a => univItr k (∀' a)
 
@@ -200,7 +200,7 @@ prefix:64 "∃* " => exClosure
 lemma exClosure_succ {n} (a : α (n + 1)) : ∃* a = ∃* ∃' a := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def exItr : (k : ℕ) → α (n + k) → α n
+@[expose] def exItr : (k : ℕ) → α (n + k) → α n
   | 0,     a => a
   | k + 1, a => exItr k (∃' a)
 

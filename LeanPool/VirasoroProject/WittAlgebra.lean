@@ -71,7 +71,7 @@ noncomputable instance : Module 𝕜 (WittAlgebra 𝕜) := Finsupp.module ..
 namespace WittAlgebra
 
 /-- The basis of `ℓₙ` generators of the Witt algebra (indices `n : ℤ`). -/
-noncomputable def lgen : Basis ℤ 𝕜 (WittAlgebra 𝕜) := Finsupp.basisFun _ _
+@[expose] noncomputable def lgen : Basis ℤ 𝕜 (WittAlgebra 𝕜) := Finsupp.basisFun _ _
 
 lemma lgen_eq_single (n : ℤ) : lgen 𝕜 n = Finsupp.single n 1 := rfl
 

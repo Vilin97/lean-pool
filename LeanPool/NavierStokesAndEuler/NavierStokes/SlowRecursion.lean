@@ -128,7 +128,7 @@ noncomputable def matrixOperator : Matrix (Fin 6) (Fin 6) ℂ →L[ℂ] (Vec →
     LinearMap.toContinuousLinearMap).toContinuousLinearEquiv.toContinuousLinearMap
 
 @[simp] theorem matrixOperator_apply (A : Matrix (Fin 6) (Fin 6) ℂ) (v : Vec) :
-    matrixOperator A v = A.mulVec v := rfl
+    matrixOperator A v = A.mulVec v := by rfl
 
 @[simp] theorem matrixOperator_toMatrix (A : Matrix (Fin 6) (Fin 6) ℂ) :
     LinearMap.toMatrix' (matrixOperator A).toLinearMap = A :=
@@ -470,7 +470,7 @@ noncomputable def xProfile (W : Field) (i : Fin 6) (p : ℝ × ℝ) : ℝ :=
   ParametricEvenDescent.descend (realRadialComponent W i) (p.2, p.1)
 
 @[simp] theorem xProfile_apply (W : Field) (i : Fin 6) (X eta : ℝ) :
-    xProfile W i (X, eta) = (W (Real.sqrt X) (eta : ℂ) i).re := rfl
+    xProfile W i (X, eta) = (W (Real.sqrt X) (eta : ℂ) i).re := by rfl
 
 theorem realRadialComponent_smooth {R : ℝ} {U : Set ℂ} {W : Field}
     (hW : ContDiffOn ℝ ∞ (fun p : ℝ × ℂ => W p.1 p.2) (radialDomain R ×ˢ U))
@@ -1318,10 +1318,10 @@ noncomputable def jetZ2 {K : Type*} [Field K] (h b X e : K) (j : Jet2 K) : K :=
     (1 - e ^ 2) * jetZE h b X e j - 2 * e * X * jetZX h b X e j) / jetL h e
 
 theorem T_eq_jet (h b : ℝ) (v : InnerProfile) (w : InnerPoint) :
-    T h b v w = jetT h b w.1 w.2 (profileJet v w) := rfl
+    T h b v w = jetT h b w.1 w.2 (profileJet v w) := by rfl
 
 theorem Z_eq_jet (h b : ℝ) (v : InnerProfile) (w : InnerPoint) :
-    Z h b v w = jetZ h b w.1 w.2 (profileJet v w) := rfl
+    Z h b v w = jetZ h b w.1 w.2 (profileJet v w) := by rfl
 
 theorem Z_partials_eq_jet (h b : ℝ) {v : InnerProfile} {w : InnerPoint}
     (hv : ContDiffAt ℝ 2 v w) (hL : L h w.2 ≠ 0) :
@@ -1914,7 +1914,7 @@ noncomputable def realConstant (R : ℝ) (U : Set ℂ) (c : ℝ) : AxisFunction 
   algebraMap ℝ (AxisFunction R U) c
 
 @[simp] theorem realConstant_apply (R : ℝ) (U : Set ℂ) (c : ℝ) (p : ℝ × ℂ) :
-    realConstant R U c p = (c : ℂ) := rfl
+    realConstant R U c p = (c : ℂ) := by rfl
 
 @[simp] theorem add_apply {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
     (F + G) p = F p + G p := rfl
@@ -1959,7 +1959,7 @@ noncomputable def restrict {R S : ℝ} {U : Set ℂ} (hSR : S ≤ R)
     real := fun r hr eta heta => F.2.real r (interval_mono hSR hr) eta heta }⟩
 
 @[simp] theorem restrict_apply {R S : ℝ} {U : Set ℂ} (hSR : S ≤ R)
-    (F : AxisFunction R U) (p : ℝ × ℂ) : restrict hSR F p = F p := rfl
+    (F : AxisFunction R U) (p : ℝ × ℂ) : restrict hSR F p = F p := by rfl
 
 /-- Inverse as an element of `AxisFunction R U`. -/
 noncomputable def inverse {R : ℝ} {U : Set ℂ} (F : AxisFunction R U)
@@ -2285,23 +2285,23 @@ noncomputable def axialOperator {R : ℝ} {U : Set ℂ} {h : ℝ} (c : Domain R 
       radialDerivative c.positive c.open_set F) * inverseDenominator c
 
 @[simp] theorem complexProfile_add {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (F + G) p = complexProfile F p + complexProfile G p := rfl
+    complexProfile (F + G) p = complexProfile F p + complexProfile G p := by rfl
 @[simp] theorem complexProfile_sub {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (F - G) p = complexProfile F p - complexProfile G p := rfl
+    complexProfile (F - G) p = complexProfile F p - complexProfile G p := by rfl
 @[simp] theorem complexProfile_mul {R : ℝ} {U : Set ℂ} (F G : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (F * G) p = complexProfile F p * complexProfile G p := rfl
+    complexProfile (F * G) p = complexProfile F p * complexProfile G p := by rfl
 @[simp] theorem complexProfile_neg {R : ℝ} {U : Set ℂ} (F : AxisFunction R U) (p : ℝ × ℂ) :
-    complexProfile (-F) p = -complexProfile F p := rfl
+    complexProfile (-F) p = -complexProfile F p := by rfl
 @[simp] theorem complexProfile_pow {R : ℝ} {U : Set ℂ} (F : AxisFunction R U) (k : ℕ) (p : ℝ × ℂ) :
-    complexProfile (F ^ k) p = complexProfile F p ^ k := rfl
+    complexProfile (F ^ k) p = complexProfile F p ^ k := by rfl
 @[simp] theorem complexProfile_zero {R : ℝ} {U : Set ℂ} (p : ℝ × ℂ) :
-    complexProfile (0 : AxisFunction R U) p = 0 := rfl
+    complexProfile (0 : AxisFunction R U) p = 0 := by rfl
 @[simp] theorem complexProfile_one {R : ℝ} {U : Set ℂ} (p : ℝ × ℂ) :
-    complexProfile (1 : AxisFunction R U) p = 1 := rfl
+    complexProfile (1 : AxisFunction R U) p = 1 := by rfl
 @[simp] theorem complexProfile_realConstant (R : ℝ) (U : Set ℂ) (b : ℝ) (p : ℝ × ℂ) :
-    complexProfile (realConstant R U b) p = (b : ℂ) := rfl
+    complexProfile (realConstant R U b) p = (b : ℂ) := by rfl
 @[simp] theorem complexProfile_parameter (R : ℝ) (U : Set ℂ) (p : ℝ × ℂ) :
-    complexProfile (parameter R U) p = p.2 := rfl
+    complexProfile (parameter R U) p = p.2 := by rfl
 @[simp] theorem complexProfile_squaredRadius (R : ℝ) (U : Set ℂ) {X : ℝ} (hX : 0 ≤ X) (z : ℂ) :
     complexProfile (squaredRadius R U) (X, z) = (X : ℂ) := by
   change ((Real.sqrt X ^ 2 : ℝ) : ℂ) = _

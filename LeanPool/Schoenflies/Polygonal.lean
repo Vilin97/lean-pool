@@ -33,7 +33,7 @@ namespace Schoenflies
 
 /-- A set is polygonal when it is the carrier of a finite vertex list, that is, a finite union
 of line segments. -/
-def IsPolygonal (A : Set Plane) : Prop := ∃ vs : List Plane, A = poly vs
+@[expose] def IsPolygonal (A : Set Plane) : Prop := ∃ vs : List Plane, A = poly vs
 
 theorem IsPolygonal.isCompact {A : Set Plane} (h : IsPolygonal A) : IsCompact A := by
   obtain ⟨vs, rfl⟩ := h

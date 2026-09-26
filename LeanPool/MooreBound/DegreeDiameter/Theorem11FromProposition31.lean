@@ -38,7 +38,7 @@ noncomputable section
 
 /-- A prime, viewed as one of the prime-power field orders used in
 Proposition 3.1. -/
-def proposition31PrimePowerIndexOfPrime (p : ℕ) (hp : p.Prime) :
+@[expose] def proposition31PrimePowerIndexOfPrime (p : ℕ) (hp : p.Prime) :
     PrimePowerIndex :=
   ⟨p, hp.isPrimePow⟩
 

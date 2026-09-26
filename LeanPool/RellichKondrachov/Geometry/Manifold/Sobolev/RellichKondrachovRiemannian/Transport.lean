@@ -592,7 +592,7 @@ restricted `L²` spaces.
 
 /-- The `L²`-level equivalence between the chart pushforward measure and Lebesgue `volume`,
 localized to the fixed compact support, for a general value type `F`. -/
-noncomputable def l2EquivVolumeOnRhoSupportImage' (i : dR.d.ι) (F : Type*)
+@[expose] noncomputable def l2EquivVolumeOnRhoSupportImage' (i : dR.d.ι) (F : Type*)
     [NormedAddCommGroup F] [NormedSpace ℝ F] :
     (E →₂[
         (FiniteChartData.chartMeasure (d := dR.d) (I := I)

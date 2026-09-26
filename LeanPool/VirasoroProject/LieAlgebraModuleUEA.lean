@@ -388,7 +388,7 @@ structure on `V`. -/
     (a : 𝓤 𝕜 𝓰) (v : V) :
     (LieAlgebra.Representation.moduleUniversalEnvelopingAlgebra ρ).smul a v
       = UniversalEnvelopingAlgebra.lift 𝕜 ρ a v :=
-  rfl
+  by rfl
 
 /-- The defining property of the `𝓤 𝕜 𝓰`-module structure on a representation `V` of a
 `𝕜`-Lie algebra `𝓰`. -/

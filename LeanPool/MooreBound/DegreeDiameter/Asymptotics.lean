@@ -34,7 +34,7 @@ open SimpleGraph
 /-- The exact interface required from the halved flag-graph construction.  The intentionally
 slightly weaker degree estimate `(p+1)^(2*k)` is the estimate proved directly by the construction
 and is all that the limiting arguments need. -/
-noncomputable def AsymptoticHalvedWitness (k p : ℕ) : Prop :=
+@[expose] noncomputable def AsymptoticHalvedWitness (k p : ℕ) : Prop :=
   ∃ (V : Type) (G : SimpleGraph V) (Δ : ℕ),
     Finite V ∧
       p ^ (2 * k * k) ≤ Nat.card V ∧

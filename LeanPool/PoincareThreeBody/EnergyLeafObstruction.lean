@@ -28,7 +28,7 @@ namespace LeanPool.PoincareThreeBody
 
 
 /-- The Delaunay action on the Kepler energy leaf `E` with first action `L`. -/
-noncomputable def energyLeafAction (energy firstAction : ℝ) : ActionSpace :=
+@[expose] noncomputable def energyLeafAction (energy firstAction : ℝ) : ActionSpace :=
   ![firstAction, -1 / (2 * firstAction ^ 2) - energy]
 
 @[simp] theorem energyLeafAction_zero (energy firstAction : ℝ) :

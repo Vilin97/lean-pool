@@ -37,7 +37,7 @@ variable {P Z E : Type u} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 /-- The actual slice when continuous, with a zero fallback outside the domain
 where the hypotheses guarantee continuity. -/
-noncomputable def family (K : Set Z) (F : P × Z → E) (p : P) : C(K, E) := by
+@[expose] noncomputable def family (K : Set Z) (F : P × Z → E) (p : P) : C(K, E) := by
   classical
   exact if h : Continuous (fun z : K => F (p, z)) then ⟨_, h⟩ else 0
 

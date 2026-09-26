@@ -46,7 +46,7 @@ structure Data (R : Type w) (I : Type u) [Zero R] [LT I] where
   p : Code → Ultrafilter ℕ
 
 /-- Closure under the prepared supports attached to code coordinates in `D`. -/
-def ClosedUnderPreparedSupports {R : Type w} {I : Type u} [Zero R] [LT I]
+@[expose] def ClosedUnderPreparedSupports {R : Type w} {I : Type u} [Zero R] [LT I]
     (E : Data R I) (D : Set I) : Prop :=
   ∀ c, E.codeIndex c ∈ D → ∀ n i, i ∈ (E.prepared c n).support → i ∈ D
 

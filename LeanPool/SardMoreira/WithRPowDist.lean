@@ -38,7 +38,7 @@ theorem measurable_mk : Measurable (mk : X → WithRPowDist X α hα₀ hα₁) 
     rw [instMeasurableSpace, MeasurableSpace.comap_comp, val_comp_mk, MeasurableSpace.comap_id]
 
 /-- The natural measurable equivalence between `WithRPowDist X α hα₀ hα₁` and `X`. -/
-@[simps! -fullyApplied toEquiv apply symm_apply]
+@[expose, simps! -fullyApplied toEquiv apply symm_apply]
 def measurableEquiv : WithRPowDist X α hα₀ hα₁ ≃ᵐ X where
   toEquiv := WithRPowDist.equiv X α hα₀ hα₁
   measurable_toFun := measurable_val
@@ -116,7 +116,8 @@ instance [TopologicalSpace X] [μ.WeaklyRegular] :
     apply WeaklyRegular.innerRegular.map'
     · exact fun U hU ↦ hU.preimage continuous_mk
     · intro K hK
-      rwa [measurableEquiv_symm_apply, ← homeomorph_symm_apply, Homeomorph.isClosed_image]
+      simpa only [homeomorph_symm_apply] using
+        (homeomorph.symm.isClosed_image.mpr hK)
 
 instance [TopologicalSpace X] [μ.InnerRegularCompactLTTop] :
     (μ.withRPowDist α hα₀ hα₁).InnerRegularCompactLTTop where

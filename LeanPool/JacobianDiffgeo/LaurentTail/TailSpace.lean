@@ -81,7 +81,7 @@ noncomputable def windowAtToTailAt (p : X) (D : RS.Divisor X) (d' : ℤ) :
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem windowAtToTailAt_mk (p : X) (D : RS.Divisor X) (d' : ℤ) (ψ : RS.Cech.ordGe p (-d')) :
-    windowAtToTailAt p D d' (RS.Cech.WindowAt.mk p (D p) d' ψ) = TailAt.mk p D ψ := rfl
+    windowAtToTailAt p D d' (RS.Cech.WindowAt.mk p (D p) d' ψ) = TailAt.mk p D ψ := by rfl
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in
 /-- Every tail class is *represented* by some finite window (the union-of-`ordGe` fact): every

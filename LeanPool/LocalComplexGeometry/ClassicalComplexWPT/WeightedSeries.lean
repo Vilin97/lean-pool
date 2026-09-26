@@ -191,7 +191,7 @@ def highShiftLinear (d : ℕ) : L1Coeff (A × ℕ) →ₗ[ℂ] L1Coeff (A × ℕ
   map_smul' := highShift_smul d
 
 /-- High shift as a contraction. -/
-def highShiftCLM (d : ℕ) : L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ) :=
+@[expose] def highShiftCLM (d : ℕ) : L1Coeff (A × ℕ) →L[ℂ] L1Coeff (A × ℕ) :=
   (highShiftLinear d).mkContinuous 1 (by
     intro f
     change ‖highShift d f‖ ≤ 1 * ‖f‖

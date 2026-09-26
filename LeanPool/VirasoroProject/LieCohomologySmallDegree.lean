@@ -312,7 +312,7 @@ variable {𝕜 𝓰 𝓪}
 variable (𝕜 𝓰 𝓪)
 
 /-- The `∂` as a linear map from Lie algebra 1-cochains to Lie algebra 2-cocycles. -/
-def _root_.VirasoroProject.LieOneCochainBdryHom
+@[expose] def _root_.VirasoroProject.LieOneCochainBdryHom
     : LieOneCochain 𝕜 𝓰 𝓪 →ₗ[𝕜] LieTwoCocycle 𝕜 𝓰 𝓪 where
   toFun β := β.bdry
   map_add' _ _ := rfl
@@ -367,7 +367,7 @@ variable {𝕜 𝓰 𝓪}
 
 /-- The projection to 2-cohomologies from 2-cocycles of a Lie algebra `𝓰` with coefficients
 in `𝓪`. (This definition is to enable dot notation, while the linear map version doesn't.) -/
-def _root_.VirasoroProject.LieTwoCocycle.cohomologyClass
+@[expose] def _root_.VirasoroProject.LieTwoCocycle.cohomologyClass
     (γ : LieTwoCocycle 𝕜 𝓰 𝓪) : LieTwoCohomology 𝕜 𝓰 𝓪 :=
   LieTwoCocycle.toLieTwoCohomology _ _ _ γ
 

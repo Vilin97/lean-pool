@@ -344,7 +344,7 @@ monotone one):
       (a :: b :: (mergeVal σ b₀ τ b₁).1, (mergeVal σ b₀ τ b₁).2) := rfl
 
 /-- The element produced by interleaving `(b₀, σ)` and `(b₁, τ)`. -/
-def mergeElem (σ : Str) (b₀ : Bool) (τ : Str) (b₁ : Bool) : C.Element :=
+@[expose] def mergeElem (σ : Str) (b₀ : Bool) (τ : Str) (b₁ : Bool) : C.Element :=
   shapeElem (mergeVal σ b₀ τ b₁).2 (mergeVal σ b₀ τ b₁).1
 
 /-! #### The monotonicity of `mergeVal` (the crux of approximability). -/

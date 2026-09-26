@@ -180,6 +180,7 @@ theorem restrictFun_smul {S' S : Opens X} (h : S' ≤ S) (c : ℂ) (f : BddHoloO
   rfl
 
 /-- Restriction, norm `≤ 1`. -/
+@[expose]
 noncomputable def restrictCLM {S' S : Opens X} (h : S' ≤ S) : BddHoloOn S →L[ℂ] BddHoloOn S' :=
   LinearMap.mkContinuous
     { toFun := fun f => ⟨restrictFun h f, restrictFun_mem h f⟩
@@ -255,8 +256,7 @@ named `toGerm` application on their own). -/
 theorem toGerm_eq_mk {S : Opens X} (f : BddHoloOn S) :
     toGerm S f = MeroGermOn.mk f.2.choose
       (fun _x hx => RS.ContMDiffAt.meromorphicAtX (f.2.choose_spec.1.contMDiffAt (S.2.mem_nhds
-          hx))) :=
-  rfl
+          hx))) := by rfl
 
 omit [T1Space X] in
 theorem toGerm_mem_linSysOn {S : Opens X} (f : BddHoloOn S) :

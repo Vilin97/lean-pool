@@ -136,7 +136,7 @@ noncomputable def toL2 {d : Nat} (kappa : MultiIndex d) (F : Skappa d kappa) : L
   exact if h : MeasureTheory.MemLp (toFun kappa F) 2 (gammaD d) then h.toLp (toFun kappa F) else 0
 
 /-- `ofPkappa`: of Pkappa. -/
-def ofPkappa {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) : Skappa d kappa :=
+@[expose] def ofPkappa {d : Nat} (kappa : MultiIndex d) (F : Pkappa d kappa) : Skappa d kappa :=
   { coeff := fun alpha => F alpha
     summable_norm_sq := by
       classical
@@ -188,11 +188,11 @@ def positivePhaseGauge {d : Nat} {kappa : MultiIndex d}
   Real.sqrt <| ∫ z, (‖evalPkappa kappa (F + G) z‖ - ‖evalPkappa kappa F z‖) ^ 2 ∂ gammaD d
 
 /-- `productAnnulus`: product Annulus. -/
-def productAnnulus {d : Nat} (j : Idx d) : Set (Cd d) :=
+@[expose] def productAnnulus {d : Nat} (j : Idx d) : Set (Cd d) :=
   { z | ∀ q : Fin d, (j q : ℝ) ≤ ‖z q‖ ∧ ‖z q‖ < (j q : ℝ) + 1 }
 
 /-- `annulusMass`: annulus Mass. -/
-def annulusMass {d : Nat} {kappa : MultiIndex d} (j : Idx d) (F : Skappa d kappa) : ℝ :=
+@[expose] def annulusMass {d : Nat} {kappa : MultiIndex d} (j : Idx d) (F : Skappa d kappa) : ℝ :=
   ∫ z, Set.indicator (productAnnulus j) (fun w => ‖toFun kappa F w‖ ^ 2) z ∂ gammaD d
 
 /-- `lowAnnuli`: low Annuli. -/

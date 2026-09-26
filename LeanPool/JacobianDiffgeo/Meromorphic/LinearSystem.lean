@@ -237,6 +237,7 @@ theorem linSys_eq_bot_of_degree_neg [T2Space X] [CompactSpace X] [ConnectedSpace
 /-- Relative `L(D)` (CC8 Čech cochain spaces). Junk-gated on `IsOpen U` (D3): when `U` is not
 open, the condition is vacuous (every class qualifies), matching `ord`'s own junk convention so
 that `zero_mem'` holds unconditionally. -/
+@[expose]
 noncomputable def LinSysOn (D : Divisor X) (U : Set X) : Submodule ℂ (MeroGermOn X U) where
   carrier := {φ | IsOpen U → ∀ x ∈ U, ((-(D x) : ℤ) : WithTop ℤ) ≤ φ.ord x}
   zero_mem' := by

@@ -50,7 +50,7 @@ namespace MFormData
 /-- Codiscrete/germ agreement of raw chart-coefficient families: the preferred-chart coefficients
 agree on a punctured neighborhood of every chart center (CC3 pattern; see the module docstring
 for why this is the right granularity). -/
-def Eqv (θ η : MFormData X) : Prop :=
+@[expose] def Eqv (θ η : MFormData X) : Prop :=
   ∀ x : X, θ.coeffAt x =ᶠ[𝓝[≠] (chartAt ℂ x x)] η.coeffAt x
 
 theorem eqv_refl (θ : MFormData X) : Eqv θ θ := fun _ => Filter.EventuallyEq.rfl
@@ -73,7 +73,7 @@ variable (X) in
 namespace MForm
 
 /-- The class of a raw chart-coefficient family. -/
-def mk (θ : MFormData X) : MForm X := Quotient.mk MFormData.instSetoid θ
+@[expose] def mk (θ : MFormData X) : MForm X := Quotient.mk MFormData.instSetoid θ
 
 theorem exists_rep (Θ : MForm X) : ∃ θ : MFormData X, mk θ = Θ := Quotient.exists_rep Θ
 
@@ -197,7 +197,7 @@ theorem eventually_ord_eq_zero {Θ : MForm X} {x : X} (h : Θ.ord x ≠ ⊤) :
 noncomputable def divisor [T1Space X] (Θ : MForm X) : Divisor X :=
   Quotient.liftOn Θ MFormData.divisor fun θ η h =>
     Function.locallyFinsuppWithin.ext fun y => by
-      change (θ.ord y).untop₀ = (η.ord y).untop₀
+      rw [MFormData.divisor_apply, MFormData.divisor_apply]
       have hord : θ.ord y = η.ord y := meromorphicOrderAt_congr (h y)
       rw [hord]
 
@@ -207,7 +207,7 @@ noncomputable def divisor [T1Space X] (Θ : MForm X) : Divisor X :=
 @[simp] theorem divisor_apply [T1Space X] (Θ : MForm X) (x : X) :
     Θ.divisor x = (Θ.ord x).untop₀ := by
   obtain ⟨θ, rfl⟩ := exists_rep Θ
-  rfl
+  rw [divisor_mk, ord_mk, MFormData.divisor_apply]
 
 /-- D6: the degree of the divisor. -/
 noncomputable def degree [T1Space X] [T2Space X] [CompactSpace X] (Θ : MForm X) : ℤ :=

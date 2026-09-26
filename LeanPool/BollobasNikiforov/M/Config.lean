@@ -237,7 +237,7 @@ lemma Xconfig_z_y (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) (i : Fin k) (j : 
   1 + configH t ρ x i
 
 /-- `σ = ∑ᵢ sᵢ`. -/
-def configσ (s : Fin k → ℝ) : ℝ :=
+@[expose] def configσ (s : Fin k → ℝ) : ℝ :=
   ∑ i, s i
 
 lemma configH_nonneg (t : Fin k → ℝ) {ρ : Fin p → ℝ} (hρ : ∀ j, 0 < ρ j)

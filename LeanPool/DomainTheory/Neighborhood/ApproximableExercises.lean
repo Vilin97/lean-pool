@@ -233,7 +233,7 @@ approximable
 maps is approximable. Directedness is stated on the relations: any two `f i, f j`
 are dominated by
 some `f k`. The union relation is `X g Z ↔ ∃ i, X (f i) Z`. -/
-def iSupMap {I : Type*} [Nonempty I] (f : I → ApproximableMap V₀ V₁)
+@[expose] def iSupMap {I : Type*} [Nonempty I] (f : I → ApproximableMap V₀ V₁)
     (hdir : ∀ i j, ∃ k, (∀ X Y, (f i).rel X Y → (f k).rel X Y) ∧
       (∀ X Y, (f j).rel X Y → (f k).rel X Y)) : ApproximableMap V₀ V₁ where
   rel X Z := ∃ i, (f i).rel X Z

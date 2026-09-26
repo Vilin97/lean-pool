@@ -203,6 +203,7 @@ theories, whereas the paper's many-sorted theories may mix sorts. That is
 exactly sufficient for Proposition 30, whose `Γ` is a singleton at sort `a`, and
 it keeps the induction below stated in terms of a single `sΓ`. An audit flagged
 the narrowing, so it is recorded here rather than silent. -/
+@[expose]
 def MSoundness (S : MSignature) (Var : Type) [DecidableEq S.Srt] [DecidableEq Var] : Prop :=
   ∀ {sΓ sφ : S.Srt} (Γ : Set (MPattern S Var sΓ)) (φ : MPattern S Var sφ),
     MProvable Γ φ → MGlobalCons Γ φ

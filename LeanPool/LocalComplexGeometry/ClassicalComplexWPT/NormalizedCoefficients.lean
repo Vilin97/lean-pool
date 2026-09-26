@@ -42,7 +42,7 @@ noncomputable def monomialSeq (d : ℕ) : OriginSeq := lp.single 1 d 1
   simp [monomialSeq, lp.single_apply, h]
 
 /-- Diagonal rescaling of an `ℓ¹` sequence by powers of `t ≤ 1`. -/
-noncomputable def scaleSeq (t : ℝ≥0) (ht : t ≤ 1) (f : OriginSeq) : OriginSeq :=
+@[expose] noncomputable def scaleSeq (t : ℝ≥0) (ht : t ≤ 1) (f : OriginSeq) : OriginSeq :=
   ⟨fun k ↦ (t : ℂ) ^ k * f k, by
     apply memℓp_gen
     have hs : Summable (fun k ↦ ‖(t : ℂ) ^ k * f k‖) :=
@@ -57,7 +57,7 @@ noncomputable def scaleSeq (t : ℝ≥0) (ht : t ≤ 1) (f : OriginSeq) : Origin
     scaleSeq t ht f k = (t : ℂ) ^ k * f k := rfl
 
 /-- Rescale a sequence and normalize its coefficient in degree `d` to one. -/
-noncomputable def normalizedScale (t : ℝ≥0) (ht : t ≤ 1)
+@[expose] noncomputable def normalizedScale (t : ℝ≥0) (ht : t ≤ 1)
     (f : OriginSeq) (d : ℕ) : OriginSeq :=
   ((scaleSeq t ht f d)⁻¹) • scaleSeq t ht f
 

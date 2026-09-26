@@ -35,7 +35,7 @@ abbrev Point := ℝ × Plane
 abbrev Source := Point → ℂ
 
 /-- Slice, defined pointwise by `f (p, Y)`. -/
-noncomputable def slice (f : Source) (p : ℝ) : Plane → ℂ := fun Y => f (p, Y)
+@[expose] noncomputable def slice (f : Source) (p : ℝ) : Plane → ℂ := fun Y => f (p, Y)
 
 /-- Periodic, given by `∀ p, SmoothFourierData.UnitPeriodic (slice f p)`. -/
 @[expose] def Periodic (f : Source) : Prop := ∀ p, SmoothFourierData.UnitPeriodic (slice f p)

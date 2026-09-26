@@ -31,7 +31,7 @@ variable {L : Language.{u, v}} {M N P : Type w}
 
 /-- **A-elementarity**: truth agreement on every fragment member, at every tuple, along an
 embedding. -/
-def AElementary (A : Fragment L) (f : N ↪[L] M) : Prop :=
+@[expose] def AElementary (A : Fragment L) (f : N ↪[L] M) : Prop :=
   ∀ {n : ℕ} (φ : L.BoundedFormulaω Empty n),
     (⟨n, φ⟩ : Σ n, L.BoundedFormulaω Empty n) ∈ A.toSet →
     ∀ a : Fin n → N, (φ.Realize Empty.elim (⇑f ∘ a) ↔ φ.Realize Empty.elim a)

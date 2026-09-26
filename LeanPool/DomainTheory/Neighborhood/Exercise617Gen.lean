@@ -939,7 +939,7 @@ theorem sumSig_mem_jc_inv {a : A} {X : Set (Strn A)} (h : (CCn A).mem (jc a X)) 
 /-- **Forward half of `Cₐ ≅ 𝟙 + Σ_a Cₐ`.** Records, for each branch, whether `x`
 finishes at `Λ`
 (the `𝟙`-summand) or reaches the `a`-copy `aX` (the `a`-th summand). -/
-def toCC (x : (Cn A).Element) : (CCn A).Element where
+@[expose] def toCC (x : (Cn A).Element) : (CCn A).Element where
   mem W := W = masterSig (Cn A)
     ∨ (W = jU ∧ x.mem ({[]} : Set (Strn A)))
     ∨ (∃ a X, (Cn A).mem X ∧ W = jc a X ∧ x.mem (embA a X))
@@ -1130,7 +1130,7 @@ theorem toCC_fromCC (s : (CCn A).Element) : toCC (fromCC s) = s := by
     · exact Or.inr (Or.inr ⟨a, X, hX, rfl, (fromCC_mem_embA hX).mpr hW⟩)
 
 /-- **The isomorphism `|Cₐ| ≃o |𝟙 + Σ_a Cₐ|`.** -/
-def ccEquiv : (Cn A).Element ≃o (CCn A).Element where
+@[expose] def ccEquiv : (Cn A).Element ≃o (CCn A).Element where
   toFun := toCC
   invFun := fromCC
   left_inv := fromCC_toCC

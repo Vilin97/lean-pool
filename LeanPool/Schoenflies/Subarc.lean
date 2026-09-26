@@ -161,7 +161,7 @@ Taken on the parameter side, as the image of the open unit interval, because tha
 the subarc basis argument needs: an open subarc is the image of an open subinterval.
 Injectivity then says it is also the arc minus the two endpoint *values*, which is how the
 blueprint reads it (`openArc_eq_diff`). -/
-def openArc (f : ℝ → Plane) : Set Plane := f '' Ioo 0 1
+@[expose] def openArc (f : ℝ → Plane) : Set Plane := f '' Ioo 0 1
 
 theorem Ioo_subset_I : Ioo (0 : ℝ) 1 ⊆ I := Ioo_subset_Icc_self
 

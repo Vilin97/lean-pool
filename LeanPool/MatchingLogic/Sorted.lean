@@ -152,7 +152,7 @@ theorem MModel.app_eq_empty (M : MModel S) (σ : S.Sym)
   exact hi
 
 /-- `M ⊨ φ`: `φ` is total at its own sort under every valuation. -/
-def MModel.Sat (M : MModel S) {s : S.Srt} (φ : MPattern S Var s) : Prop :=
+@[expose] def MModel.Sat (M : MModel S) {s : S.Srt} (φ : MPattern S Var s) : Prop :=
   ∀ ρ : MVal M Var, mdenote M ρ φ = Set.univ
 
 /-- `M ⊨ Γ` for a HETEROGENEOUS theory: a set of sorted patterns, each total at
@@ -166,7 +166,7 @@ def MModel.SatSetHet (M : MModel S)
 what Proposition 30 needs, since its `Γ` is a singleton of sort `a`.  It is a
 special case of `SatSetHet`, not a different notion — `satSetHet_homogeneous`
 below records that. -/
-def MModel.SatSet (M : MModel S) {s : S.Srt} (Γ : Set (MPattern S Var s)) : Prop :=
+@[expose] def MModel.SatSet (M : MModel S) {s : S.Srt} (Γ : Set (MPattern S Var s)) : Prop :=
   ∀ γ ∈ Γ, M.Sat γ
 
 /-- The homogeneous notion is the heterogeneous one restricted to a single
@@ -184,7 +184,7 @@ theorem satSetHet_homogeneous (M : MModel S) {s : S.Srt}
 
 /-- `Γ ⊨ φ`, where `Γ` and `φ` may live at DIFFERENT sorts -- which is exactly
 the situation Proposition 30 exploits. -/
-def MGlobalCons {sΓ sφ : S.Srt} (Γ : Set (MPattern S Var sΓ))
+@[expose] def MGlobalCons {sΓ sφ : S.Srt} (Γ : Set (MPattern S Var sΓ))
     (φ : MPattern S Var sφ) : Prop :=
   ∀ M : MModel S, M.SatSet Γ → M.Sat φ
 

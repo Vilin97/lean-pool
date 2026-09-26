@@ -83,7 +83,7 @@ lemma projr_coe [Inhabited B] (c : Chain (A ⊕ B)) (n : ℕ) :
       Sum.swap_inr, Sum.elim_inl, id_eq, Sum.elim_inr]
 
 /-- Splits a chain of sums into a sum of chains. -/
-def distrib (c : Chain (A ⊕ B)) : Chain A ⊕ Chain B :=
+@[expose] def distrib (c : Chain (A ⊕ B)) : Chain A ⊕ Chain B :=
   Sum.elim
     (fun d ↦
       let : Inhabited A := ⟨d⟩

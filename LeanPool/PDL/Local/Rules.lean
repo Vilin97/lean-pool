@@ -100,7 +100,7 @@ lemma OneSidedLocalRule.precond_ne_nil {precond ress} (orule : OneSidedLocalRule
 /-! ## Loaded Rules -/
 
 /-- Convert list-valued formula components to finsets while preserving optional loadings. -/
-@[simp]
+@[expose, simp]
 def _root_.List.pdlToFinFinOpt [DecidableEq α] [DecidableEq β] :
     List (List α × Option β) → Finset (Finset α × Option β)
   | LS => (LS.map (fun ⟨L,O⟩ => ⟨L.toFinset, O⟩)).toFinset

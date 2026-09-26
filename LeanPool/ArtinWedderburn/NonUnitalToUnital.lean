@@ -22,8 +22,7 @@ variable {R : Type*} [NonUnitalRing R]
 variable (e : R)
 
 /-- Designate `e` as the `1` element when building a unital `Ring` structure on `R`. -/
-@[reducible]
-@[expose] def eOne : One R := ⟨e⟩
+@[reducible, expose] def eOne : One R := ⟨e⟩
 
 variable (is_left_unit : ∀ x : R, e * x = x)
 variable (is_right_unit : ∀ x : R, x * e = x)

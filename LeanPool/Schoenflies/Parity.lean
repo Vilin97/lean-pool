@@ -80,7 +80,7 @@ variable {u a b c p q z w : Plane} {s t : ℝ} {L : List Piece}
 
 /-- How far across the direction `u` the point `z` lies. Edges on which this is constant are
 the blueprint's horizontal edges. -/
-def hgt (u z : Plane) : ℝ := Plane.det u z
+@[expose] def hgt (u z : Plane) : ℝ := Plane.det u z
 
 /-- How far along the direction `u` the point `z` lies. The ray from `q` is the set of points
 of the same `hgt` and larger `fwd`. -/
@@ -240,7 +240,7 @@ theorem crosses_swap (h : hgt u a ≠ hgt u b) (q : Plane) :
   simp only [Crosses, meet_swap h, min_comm (hgt u b) (hgt u a), max_comm (hgt u b) (hgt u a)]
 
 /-- How many edges of `L` the ray from `q` crosses. -/
-noncomputable def crossings (u : Plane) (L : List Piece) (q : Plane) : ℕ :=
+@[expose] noncomputable def crossings (u : Plane) (L : List Piece) (q : Plane) : ℕ :=
   (L.map (fun P => if Crosses u P q then 1 else 0)).sum
 
 /-- The contribution of one edge to the parity. -/

@@ -62,13 +62,13 @@ def StabilizesAt (M : Type w) [L.Structure M] (α : Ordinal) : Prop :=
 
 /-- BFEquiv α on n-tuples from M equals BFEquiv (succ α) for all countable N.
 This captures when the BFEquiv relation has stopped distinguishing tuples at level α. -/
-def StabilizesForTuples (M : Type w) [L.Structure M] (α : Ordinal) (n : ℕ) : Prop :=
+@[expose] def StabilizesForTuples (M : Type w) [L.Structure M] (α : Ordinal) (n : ℕ) : Prop :=
   ∀ (N : Type w) [L.Structure N] [Countable N] (a : Fin n → M) (b : Fin n → N),
     BFEquiv (L := L) α n a b ↔ BFEquiv (L := L) (Order.succ α) n a b
 
 /-- All tuple sizes stabilize at α. This is the key condition for the back-and-forth
 argument to yield an isomorphism. -/
-def StabilizesCompletely (M : Type w) [L.Structure M] (α : Ordinal) : Prop :=
+@[expose] def StabilizesCompletely (M : Type w) [L.Structure M] (α : Ordinal) : Prop :=
   ∀ n : ℕ, StabilizesForTuples (L := L) M α n
 
 omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
@@ -131,7 +131,7 @@ omit [L.IsRelational] [Countable (Σ l, L.Relations l)] in
 /-- Self-stabilization: BFEquiv α on n-tuples from M vs M equals BFEquiv (succ α)
 for all n. This is weaker than `StabilizesCompletely` which requires the iff
 to hold for all countable N, not just M itself. -/
-def SelfStabilizesCompletely (M : Type w) [L.Structure M] (α : Ordinal) : Prop :=
+@[expose] def SelfStabilizesCompletely (M : Type w) [L.Structure M] (α : Ordinal) : Prop :=
   ∀ (n : ℕ) (a a' : Fin n → M),
     BFEquiv (L := L) α n a a' ↔ BFEquiv (L := L) (Order.succ α) n a a'
 
@@ -466,7 +466,7 @@ such splits.
 **Boundary**: This is the sole non-trivial hypothesis in the Scott analysis pipeline.
 All other reasoning (descent lemmas, stabilization from countability, Scott rank bounds)
 is fully formalized. -/
-def CountableRefinementHypothesis (L : Language.{u, v})
+@[expose] def CountableRefinementHypothesis (L : Language.{u, v})
     [_isRelational : L.IsRelational]
     [_countableRelations : Countable (Σ l, L.Relations l)] : Prop :=
   ∀ (M : Type w) [L.Structure M] [Countable M] (n : ℕ) (a : Fin n → M),

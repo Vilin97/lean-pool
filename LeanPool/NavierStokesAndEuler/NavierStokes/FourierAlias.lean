@@ -512,7 +512,8 @@ theorem fourierSourceJet_eq_parameterJet (d : Direction) {f : State → ℂ}
     (hf : ContDiff ℝ ∞ f) (hp : ParametricTorusInverse.Periodic f) (p : ℕ) :
     fourierSourceJet d f p = parameterJet p (iterateInverse d p f) := by
   induction p with
-  | zero => rfl
+  | zero => simp only [fourierSourceJet, RadialAlias.sourceJet_zero, parameterJet_zero,
+      iterateInverse_zero]
   | succ p ih =>
     have heq : fourierSourceJet d f (p + 1) = parameterPartial (inverse d (fourierSourceJet d f p))
         :=
@@ -616,7 +617,8 @@ theorem cutoffAlias_arbitrary_order_of_integratedMean_zero (d : Direction)
 /-- The square average is the normalized Haar average of the actual descent. -/
 theorem torusMean_eq_haar {f : Plane → ℂ} (hf : Continuous f) (hp : TorusPeriodic f) :
     torusMean f = ∫ z, SmoothFourierData.descendContinuous f hf hp z ∂torusMeasure := by
-  rw [← SmoothFourierData.coefficient_zero_eq_mean]
+  rw [← SmoothFourierData.coefficient_zero_eq_mean,
+    SmoothFourierData.torusLift_descendContinuous]
   exact (SmoothFourierData.coefficient_zero_eq_integral f).symm
 
 theorem cutoffAlias_haar_zero (d : Direction) {a b M : ℝ} {f : State → ℂ}

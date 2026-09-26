@@ -41,7 +41,7 @@ theorem HasFDerivWithinAt.of_local_leftInverse {𝕜 E F : Type*}
   HasFDerivWithinAt.of_local_left_inverse hg hf ha hfg
 
 /-- Continuous linear equivalence between a submodule of a submodule and its mapped subtype. -/
-@[simps! -fullyApplied apply_coe symm_apply_coe_coe]
+@[expose, simps! -fullyApplied apply_coe symm_apply_coe_coe]
 def Submodule.continuousEquivSubtypeMap {R M : Type*} [Semiring R] [AddCommMonoid M]
     [Module R M] [TopologicalSpace M] (p : Submodule R M) (q : Submodule R p) :
     q ≃L[R] q.map p.subtype where
@@ -50,7 +50,7 @@ def Submodule.continuousEquivSubtypeMap {R M : Type*} [Semiring R] [AddCommMonoi
   continuous_invFun := .codRestrict (.codRestrict continuous_subtype_val _) _
 
 /-- Continuous linear equivalence from the top submodule to the ambient module. -/
-@[simps!]
+@[expose, simps!]
 def Submodule.topContinuousEquiv {R M : Type*} [Semiring R] [AddCommMonoid M]
     [Module R M] [TopologicalSpace M] :
     (⊤ : Submodule R M) ≃L[R] M where

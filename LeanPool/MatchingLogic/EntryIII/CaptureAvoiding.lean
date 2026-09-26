@@ -239,7 +239,7 @@ theorem denote_eq {p q : Pattern S Nat} (h : AlphaEq p q)
 end AlphaEq
 
 /-- No existential binder in a pattern uses `y` as its raw name. -/
-def AvoidsBinder (y : Nat) : Pattern S Nat → Prop
+@[expose] def AvoidsBinder (y : Nat) : Pattern S Nat → Prop
   | .var _ => True
   | .bot => True
   | .app _ args => ∀ i, AvoidsBinder y (args i)

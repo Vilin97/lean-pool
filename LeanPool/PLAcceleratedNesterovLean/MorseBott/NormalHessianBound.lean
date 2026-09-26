@@ -58,7 +58,7 @@ variable {E : Type*}
 -- ════════════════════════════════════════════════════════════════════════════
 
 /-- The set of global minimizers of `f`. (PLAcceleratedNesterovLean: `argminSet`) -/
-def ExternalThm3.argminSet (f : E → ℝ) : Set E := {x | ∀ y, f x ≤ f y}
+@[expose] def ExternalThm3.argminSet (f : E → ℝ) : Set E := {x | ∀ y, f x ≤ f y}
 
 /-- The global infimum of `f`. (PLAcceleratedNesterovLean: `fStar`) -/
 def ExternalThm3.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
@@ -66,7 +66,7 @@ def ExternalThm3.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
 /-- The Polyak–Łojasiewicz condition on a set `U`.
     Uses `‖fderiv ℝ f x‖` which equals `‖gradient f x‖` by Riesz representation.
     (PLAcceleratedNesterovLean: `PolyakLojasiewicz`) -/
-def ExternalThm3.PolyakLojasiewicz (f : E → ℝ) (μ : ℝ) (U : Set E) : Prop :=
+@[expose] def ExternalThm3.PolyakLojasiewicz (f : E → ℝ) (μ : ℝ) (U : Set E) : Prop :=
   0 < μ ∧ ∀ x ∈ U, ‖fderiv ℝ f x‖ ^ 2 ≥ 2 * μ * (f x - ExternalThm3.fStar f)
 
 /-- The gradient of `f` at `x`, as the Riesz representative of `fderiv ℝ f x`.

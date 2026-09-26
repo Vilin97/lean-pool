@@ -2454,7 +2454,7 @@ namespace ThreeCNFReduction
 open GapCVP.CL
 
 /-- GapCVP reduction support. -/
-def sortedElements {α : Type} [Encodable α] (s : Finset α) : List α := by
+@[expose] def sortedElements {α : Type} [Encodable α] (s : Finset α) : List α := by
   letI : IsTrans α
     (fun a b : α => Encodable.encode a ≤ Encodable.encode b) :=
     ⟨fun _ _ _ hab hbc => Nat.le_trans hab hbc⟩

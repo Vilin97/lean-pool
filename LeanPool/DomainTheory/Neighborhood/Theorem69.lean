@@ -159,7 +159,7 @@ variable (T : Endofunctor DomainObj) (D E : DomainObj)
   (hj : IsStrict j) (hk : IsStrict k)
 
 /-- The strict composite `g ↦ k ∘ g ∘ j : (T(D) →⊥ T(E)) → (D →⊥ E)`. -/
-def homOpComp (g : StrictMap (T.obj D).sys (T.obj E).sys) : StrictMap D.sys E.sys :=
+@[expose] def homOpComp (g : StrictMap (T.obj D).sys (T.obj E).sys) : StrictMap D.sys E.sys :=
   ⟨k.comp (g.1.comp j), isStrict_comp hk (isStrict_comp g.2 hj)⟩
 
 theorem homOpComp_mono {g g' : StrictMap (T.obj D).sys (T.obj E).sys} (hgg : g ≤ g') :

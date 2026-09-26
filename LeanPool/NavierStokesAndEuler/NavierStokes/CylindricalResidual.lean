@@ -109,7 +109,7 @@ theorem contDiff_chart {n : WithTop ℕ∞} : ContDiff ℝ n chart := by
   fderiv ℝ f q (coordinateVector i)
 
 /-- Euclidean laplacian, given by `∑ i : Fin 3, dCoord i (dCoord i f) x`. -/
-noncomputable def euclideanLaplacian (f : Space → E) (x : Space) : E :=
+@[expose] noncomputable def euclideanLaplacian (f : Space → E) (x : Space) : E :=
   ∑ i : Fin 3, dCoord i (dCoord i f) x
 
 /-- Scalar laplacian, given by `dCoord 0 (dCoord 0 f) q + (q 0)⁻¹ • dCoord 0 f q + ((q 0) ^ 2)⁻¹
@@ -447,7 +447,7 @@ theorem cartesianDivergence_components {f : Space → Space} {q : Space}
   ring
 
 /-- Euclidean gradient, given by `∑ i : Fin 3, dCoord i f x • coordinateVector i`. -/
-noncomputable def euclideanGradient (f : Space → ℝ) (x : Space) : Space :=
+@[expose] noncomputable def euclideanGradient (f : Space → ℝ) (x : Space) : Space :=
   ∑ i : Fin 3, dCoord i f x • coordinateVector i
 
 /-- Scalar gradient, given by `pack (dCoord 0 f q) (dCoord 1 f q / q 0) (dCoord 2 f q)`. -/

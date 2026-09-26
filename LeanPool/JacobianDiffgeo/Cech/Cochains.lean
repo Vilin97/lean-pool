@@ -35,7 +35,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 /-! ### `LinSysOn.restrictL` -/
 
 /-- Restriction as a `ℂ`-linear map of relative linear systems (wrapper on mero's `restrict`). -/
-noncomputable def LinSysOn.restrictL {V U : Opens X} (D : RS.Divisor X) (h : V ≤ U) :
+@[expose] noncomputable def LinSysOn.restrictL {V U : Opens X} (D : RS.Divisor X) (h : V ≤ U) :
     RS.LinSysOn D (U : Set X) →ₗ[ℂ] RS.LinSysOn D (V : Set X) :=
   LinearMap.restrict (RS.MeroGermOn.restrict h).toLinearMap
     (fun _φ hφ => RS.restrict_mem_linSysOn h V.2 U.2 hφ)
@@ -74,7 +74,7 @@ namespace MeroGermOn
 
 /-- Transport along a propositional set equality (D6): built from `restrict` both ways using the
 presheaf laws. Used to move gluing targets `⋃ i, ↑(U i)` against `↑Ω`. -/
-noncomputable def congrSet {U V : Set X} (h : U = V) :
+@[expose] noncomputable def congrSet {U V : Set X} (h : U = V) :
     RS.MeroGermOn X U ≃ₗ[ℂ] RS.MeroGermOn X V :=
   LinearEquiv.ofLinearMap (RS.MeroGermOn.restrict h.ge).toLinearMap
     (RS.MeroGermOn.restrict h.le).toLinearMap
@@ -106,7 +106,7 @@ abbrev C2 : Type _ := ∀ t : Fin 𝒰.n × Fin 𝒰.n × Fin 𝒰.n,
 /-! ### The coboundary maps -/
 
 /-- `(δ⁰f)_{ij} = f_j − f_i` (after restriction to `U i ⊓ U j`). -/
-noncomputable def d0 : C0 D 𝒰 →ₗ[ℂ] C1 D 𝒰 :=
+@[expose] noncomputable def d0 : C0 D 𝒰 →ₗ[ℂ] C1 D 𝒰 :=
   LinearMap.pi fun p : Fin 𝒰.n × Fin 𝒰.n =>
     (LinSysOn.restrictL D (inf_le_right : 𝒰.U p.1 ⊓ 𝒰.U p.2 ≤ 𝒰.U p.2)).comp
         (LinearMap.proj p.2)
@@ -119,7 +119,7 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
       LinSysOn.restrictL D inf_le_left (f p.1) := by rfl
 
 /-- `(δ¹f)_{ijk} = f_{jk} − f_{ik} + f_{ij}` (after restriction to `U i ⊓ U j ⊓ U k`). -/
-noncomputable def d1 : C1 D 𝒰 →ₗ[ℂ] C2 D 𝒰 :=
+@[expose] noncomputable def d1 : C1 D 𝒰 →ₗ[ℂ] C2 D 𝒰 :=
   LinearMap.pi fun t : Fin 𝒰.n × Fin 𝒰.n × Fin 𝒰.n =>
     (LinSysOn.restrictL D
         (le_inf (inf_le_left.trans inf_le_right) inf_le_right :
@@ -168,7 +168,7 @@ theorem d1_comp_d0 : (d1 D 𝒰) ∘ₗ (d0 D 𝒰) = 0 := by
 noncomputable def Z1 : Submodule ℂ (C1 D 𝒰) := LinearMap.ker (d1 D 𝒰)
 
 /-- `1`-coboundaries. -/
-noncomputable def B1 : Submodule ℂ (C1 D 𝒰) := LinearMap.range (d0 D 𝒰)
+@[expose] noncomputable def B1 : Submodule ℂ (C1 D 𝒰) := LinearMap.range (d0 D 𝒰)
 
 /-- Registered explicitly (rather than left to ad-hoc re-derivation at `H1Cover`'s `⧸`): the
 newer toolchain's `synthInstance` no longer reliably re-discharges the *dependent* Pi-instance
@@ -193,7 +193,7 @@ theorem mem_Z1_iff (f : C1 D 𝒰) : f ∈ Z1 D 𝒰 ↔ ∀ t, d1 D 𝒰 f t = 
 noncomputable abbrev H1Cover : Type _ := Z1 D 𝒰 ⧸ (B1 D 𝒰).comap (Z1 D 𝒰).subtype
 
 /-- The quotient map onto `H¹(𝒰,D)`. -/
-noncomputable def H1Cover.mk : Z1 D 𝒰 →ₗ[ℂ] H1Cover D 𝒰 := Submodule.mkQ _
+@[expose] noncomputable def H1Cover.mk : Z1 D 𝒰 →ₗ[ℂ] H1Cover D 𝒰 := Submodule.mkQ _
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem H1Cover.mk_surjective : Function.Surjective (H1Cover.mk D 𝒰) := Submodule.mkQ_surjective _

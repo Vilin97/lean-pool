@@ -83,7 +83,7 @@ theorem preparedDifference_injective (a : ContinuumIndex) :
 /-! ## Packaging for the transfinite extension -/
 
 /-- The concrete triangular data used by the transfinite recursion. -/
-def transfiniteData : TransfiniteExtension.ContinuumData where
+@[expose] def transfiniteData : TransfiniteExtension.ContinuumData where
   Code := ContinuumIndex
   codeIndex := codeIndex
   prepared := prepared N hN M

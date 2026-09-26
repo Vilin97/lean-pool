@@ -83,12 +83,12 @@ def projectPath : C(K,CylinderL2 period V) →L[ℝ] C(K,Supported period V S hS
 
 omit [CompactSpace K] in
 @[simp] theorem includePath_apply (f : C(K, Supported period V S hS)) (t : K) :
-    includePath period S hS f t = (f t : CylinderL2 period V) := rfl
+    includePath period S hS f t = (f t : CylinderL2 period V) := by rfl
 
 omit [CompactSpace K] in
 @[simp] theorem projectPath_apply (f : C(K, CylinderL2 period V)) (t : K) :
     projectPath period S hS f t = projection (liftMeasure period) (spatialSet period S)
-        (spatialSet_measurable period S hS) (f t) := rfl
+        (spatialSet_measurable period S hS) (f t) := by rfl
 
 /-- Time-path inclusion is a contraction (indeed an isometry). -/
 theorem includePath_norm : ‖includePath (K := K) (V := V) period S hS‖ ≤ 1 := by
@@ -106,7 +106,8 @@ theorem projectPath_norm : ‖projectPath (K := K) (V := V) period S hS‖ ≤ 1
   rw [one_mul]
   apply (ContinuousMap.norm_le _ (norm_nonneg f)).2
   intro t
-  exact (cutoff_norm (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
+  simpa only [projectPath_apply] using
+    (cutoff_norm (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
       (f t)).trans (f.norm_coe_le_norm t)
 
 omit [CompactSpace K] in
@@ -134,7 +135,8 @@ theorem translatedData_eq_intoLarger (S₀ : Set Space) (hS₀ : MeasurableSet S
     (ha : shiftedSet a.1 S₀ ⊆ S) :
     translatedData period S hS (u : CylinderL2 period V) a = EulerLpCylinderTranslation.intoLarger
         period a S₀ S hS₀ hS ha u := by
-  exact projection_supported (liftMeasure period) (spatialSet period S) (spatialSet_measurable
+  simpa only [translatedData, EulerLpCylinderTranslation.intoLarger_coe] using
+    projection_supported (liftMeasure period) (spatialSet period S) (spatialSet_measurable
       period S hS) (EulerLpCylinderTranslation.intoLarger period a S₀ S hS₀ hS ha u)
 
 omit [CompactSpace K] in
@@ -147,7 +149,9 @@ theorem translatedForcing_eq_intoLarger (S₀ : Set Space) (hS₀ : MeasurableSe
           ha).toContinuousLinearMap.compLeftContinuous ℝ K f := by
   apply ContinuousMap.ext
   intro t
-  exact translatedData_eq_intoLarger period S hS S₀ hS₀ (f t) a ha
+  simpa only [translatedForcing, projectPath_apply, includePath_apply, pathTranslate_apply,
+    translatedData, compLeftContinuous_apply] using
+    translatedData_eq_intoLarger period S hS S₀ hS₀ (f t) a ha
 
 /-- Smoothness is inherited from the true ordinary L² translation orbit. -/
 theorem translatedData_contDiff (u : CylinderL2 period V)

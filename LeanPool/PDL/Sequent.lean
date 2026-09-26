@@ -431,7 +431,7 @@ lemma Sequent.satisfiable_top_cons_right {X : Sequent} (h_left_nil : X.left = {}
 /-! ## Removing loaded formulas from sequents -/
 
 /-- Remove a negated formula from the ordinary components or from the optional loading. -/
-def Sequent.without : (LRO : Sequent) → (naf : AnyNegFormula) → Sequent
+@[expose] def Sequent.without : (LRO : Sequent) → (naf : AnyNegFormula) → Sequent
 | ⟨L,R,O⟩, ⟨.normal f⟩  => ⟨L \ {~f}, R \ {~f}, O⟩
 | ⟨L,R,O⟩, ⟨.loaded lf⟩ => if ((~'lf).memSequent ⟨L,R,O⟩) then ⟨L, R, none⟩ else ⟨L,R,O⟩
 

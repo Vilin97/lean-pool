@@ -52,7 +52,7 @@ inductive RuleApp {𝕏 : Split.Proof} (x : 𝕏.X) (τ : 𝕏.X → SplitSequen
   | boxᵣ : (Δ : SplitSequent) → (A : Formula) → Sum.inr (□ A) ∈ Δ → RuleApp x τ
 
 /-- Given a RuleApp, obtain the principal formulas. -/
-def fₚ {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : RuleApp x τ → SplitSequent
+@[expose] def fₚ {𝕏 : Split.Proof} {x : 𝕏.X} {τ : 𝕏.X → SplitSequent} : RuleApp x τ → SplitSequent
   | RuleApp.pre _ _ => ∅
   | RuleApp.cutₗ _ _ => ∅
   | RuleApp.cutᵣ _ _ => ∅

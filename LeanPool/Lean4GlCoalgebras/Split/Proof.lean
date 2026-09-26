@@ -72,7 +72,7 @@ def fₚ : RuleApp → SplitSequent
   | RuleApp.boxᵣ _ A _ => {Sum.inr (□ A)}
 
 /-- Given a RuleApp, obtain the split sequent. -/
-def f : RuleApp → SplitSequent
+@[expose] def f : RuleApp → SplitSequent
   | RuleApp.topₗ Δ _ => Δ
   | RuleApp.topᵣ Δ _ => Δ
   | RuleApp.axₗₗ Δ _ _ => Δ

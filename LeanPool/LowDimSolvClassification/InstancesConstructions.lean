@@ -124,7 +124,8 @@ variable (K : Type*) [CommRing K] (V : Type*) [AddCommGroup V] [Module K V]
 example : LieAlgebra K (Module.End K V) := inferInstance
 
 /-- TODO. -/
-def _root_.LieAlgebra.ofAffineEquivAux := (Abelian.DerivationOfLinearMap K (mkAbelian K V)).toLieHom
+@[expose] def _root_.LieAlgebra.ofAffineEquivAux :=
+  (Abelian.DerivationOfLinearMap K (mkAbelian K V)).toLieHom
 
 /-- The Lie algebra of the general affine group on a vector space `V`,
     constructed as semidirect product of `V →ₗ[K] V` with the abelian Lie algebra `V`. -/
@@ -144,11 +145,12 @@ variable (K : Type*) [CommRing K] (V : Type*) [AddCommGroup V] [Module K V] (L :
     [LieRing L] [LieAlgebra K L] [IsLieAbelian L]
 
 /-- TODO. -/
-def _root_.LieAlgebra.RealHyperbolicAux' : K →ₗ⁅K⁆ LieDerivation K L L :=
+@[expose] def _root_.LieAlgebra.RealHyperbolicAux' : K →ₗ⁅K⁆ LieDerivation K L L :=
   LieHom.comp (Abelian.DerivationOfLinearMap K L) (LieHom.smulRight (LinearMap.id : End K L))
 
 /-- TODO. -/
-def _root_.LieAlgebra.RealHyperbolicAux : K →ₗ⁅K⁆ LieDerivation K (mkAbelian K V) (mkAbelian K V)
+@[expose] def _root_.LieAlgebra.RealHyperbolicAux :
+    K →ₗ⁅K⁆ LieDerivation K (mkAbelian K V) (mkAbelian K V)
     := RealHyperbolicAux' K (mkAbelian K V)
 
 /-- The almost abelian Lie algebra associated to real hyperbolic space,

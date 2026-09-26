@@ -109,7 +109,7 @@ instance uniqueBoundaryJarOne : Unique (⊔I^1) where
     · exfalso; obtain ⟨k, hk⟩ := hy2 h1; exact Nat.not_succ_le_zero k hk.left
 
 /-- `homeoNeqLast` -/
-def homeoNeqLast {n : ℕ} : (I^ Fin n) ≃ₜ I^{ j : Fin (n + 1) // j ≠ Fin.last _ } :=
+@[expose] def homeoNeqLast {n : ℕ} : (I^ Fin n) ≃ₜ I^{ j : Fin (n + 1) // j ≠ Fin.last _ } :=
   Homeomorph.piCongr
     { toFun i := ⟨i.castSucc, by
         simp_all ⟩

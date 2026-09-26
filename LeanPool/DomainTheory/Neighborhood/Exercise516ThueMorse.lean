@@ -74,7 +74,7 @@ open Domain.Neighborhood NeighborhoodSystem ApproximableMap ExampleB Example44 E
 
 /-- The Thue–Morse substitution applied letterwise: each bit `b` is replaced by `b
 (¬b)`. -/
-def expand : Str → Str
+@[expose] def expand : Str → Str
   | [] => []
   | b :: σ => b :: (!b) :: expand σ
 
@@ -204,7 +204,7 @@ theorem tm_two_mul_add_one (n : ℕ) : tm (2 * n + 1) = !tm n := by
   simp only [tm, Nat.bit1_bits n, List.foldr_cons, Bool.true_xor]
 
 /-- The length-`n` Thue–Morse prefix `[tm 0, tm 1, …, tm (n-1)]`. -/
-def tmList (n : ℕ) : Str := (List.range n).map tm
+@[expose] def tmList (n : ℕ) : Str := (List.range n).map tm
 
 @[simp] theorem tmList_zero : tmList 0 = [] := rfl
 

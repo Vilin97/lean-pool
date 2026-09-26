@@ -40,6 +40,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 /-! ### `ordGe` -/
 
 /-- Germs at the chart source of `p` with order `≥ m` at `p`. -/
+@[expose]
 noncomputable def ordGe (p : X) (m : ℤ) : Submodule ℂ (RS.MeroGermOn X ((chartAt ℂ p).source)) where
   carrier := {ψ | (m : WithTop ℤ) ≤ ψ.ord p}
   zero_mem' := by
@@ -101,7 +102,7 @@ theorem ord_tailGerm_self (p : X) (m : ℤ) : (tailGerm p m).ord p = (m : WithTo
 
 /-- The one-step leading-coefficient functional (D7): `ψ ↦ (θ_{p,−m}·ψ).evalAt p` on
 `ordGe p m`. -/
-noncomputable def leadCoeff (p : X) (m : ℤ) : ordGe p m →ₗ[ℂ] ℂ where
+@[expose] noncomputable def leadCoeff (p : X) (m : ℤ) : ordGe p m →ₗ[ℂ] ℂ where
   toFun ψ := ((tailGerm p (-m)) * (ψ : RS.MeroGermOn X ((chartAt ℂ p).source))).evalAt p
   map_add' ψ ψ' := by
     have h1 : (0 : WithTop ℤ) ≤ (tailGerm p (-m) * (ψ : RS.MeroGermOn X _)).ord p := by
@@ -143,7 +144,7 @@ noncomputable abbrev WindowAt (p : X) (d d' : ℤ) : Type _ :=
 
 /-- The quotient map onto the window at `p`: a germ of order at least `-d'`, taken modulo those of
 order at least `-d`. -/
-noncomputable def WindowAt.mk (p : X) (d d' : ℤ) : ordGe p (-d') →ₗ[ℂ] WindowAt p d d' :=
+@[expose] noncomputable def WindowAt.mk (p : X) (d d' : ℤ) : ordGe p (-d') →ₗ[ℂ] WindowAt p d d' :=
   Submodule.mkQ _
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in

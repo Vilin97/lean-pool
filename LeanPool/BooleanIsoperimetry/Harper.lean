@@ -2161,6 +2161,10 @@ lemma harper_base (A : Finset (Cube 0)) (k : ℕ) (hk : A.card = k) :
   subst hk
   fin_cases A <;>
     simp +decide [simplicialInitSeg, Finset.filter_singleton, rank, simplicialLt, simplicialLe]
+  have hdefault : (default : Cube 0) = ∅ := by
+    ext i
+    exact i.elim0
+  simpa [hdefault]
 
 theorem harper_theorem (n : ℕ) (A : Finset (Cube n)) (k : ℕ) (hk : A.card = k) :
     (neighborhood 1 (simplicialInitSeg n k)).card ≤ (neighborhood 1 A).card := by

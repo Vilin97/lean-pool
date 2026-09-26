@@ -37,7 +37,7 @@ namespace Encoding
     | i :: is => (xs[i]?.map fun k ↦ k.2 is).getD x
 
 /-- The encoded version of `Rose.foldr`. -/
-def fold (mk : A → List B → B) : Encoding A → B
+@[expose] def fold (mk : A → List B → B) : Encoding A → B
   | ⟨⟨(), xs⟩, k⟩ => mk
     (k [])
     (List.ofFn fun i : Fin xs.length ↦ fold mk ⟨xs[i], fun is ↦ k (i :: is)⟩)

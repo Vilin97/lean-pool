@@ -37,7 +37,7 @@ def ballRadialEnergy {n m : ℕ} (u : Domain n → Target m) (a : Domain n) (r :
   ∫ x in Metric.ball a r, weakEnergyDensity Du x
 
 /-- Weak radial energy on a ball, written in terms of the chosen weak gradient. -/
-def weakBallRadialEnergy {n m : ℕ}
+@[expose] def weakBallRadialEnergy {n m : ℕ}
     (Du : Domain n → Gradient n m) (a : Domain n) (r : ℝ) : ℝ :=
   ∫ x in Metric.ball a r, weakRadialEnergyDensity Du a x
 

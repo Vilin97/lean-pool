@@ -213,7 +213,7 @@ theorem restrictGerm_mem (h : V ⊆ U) {γ : Filter.Germ (codiscreteWithin U) �
 namespace MeroGermOn
 
 /-- Restriction to a smaller open set (Čech's structure maps). -/
-noncomputable def restrict (h : V ⊆ U) : MeroGermOn X U →ₐ[ℂ] MeroGermOn X V where
+@[expose] noncomputable def restrict (h : V ⊆ U) : MeroGermOn X U →ₐ[ℂ] MeroGermOn X V where
   toFun φ := ⟨restrictGerm h φ.1, restrictGerm_mem h φ.2⟩
   map_one' := Subtype.ext (restrictGerm_one h)
   map_mul' φ ψ := Subtype.ext (restrictGerm_mul h φ.1 ψ.1)

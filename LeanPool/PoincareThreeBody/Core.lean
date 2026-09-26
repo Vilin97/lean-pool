@@ -75,7 +75,7 @@ abbrev PhaseSpace := Fin 4 → ℝ
   ∀ z ∈ parameterDomain δ, poissonBracket (F z.1) (hamiltonian z.1) z.2 = 0
 
 /-- Functional independence of the phase differentials at some point. -/
-noncomputable def IsIndependentSomewhere (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
+@[expose] noncomputable def IsIndependentSomewhere (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
   ∃ z ∈ parameterDomain δ,
     LinearIndependent ℝ
       ![fderiv ℝ (hamiltonian z.1) z.2, fderiv ℝ (F z.1) z.2]

@@ -283,8 +283,7 @@ lemma matches_finite : WellFounded (Function.swap Move) := by
       cases this
 
 /-- Auxiliary declaration used in the GL coalgebra development. -/
-@[reducible]
-def coalgebraGame : Game where
+@[expose, reducible] def coalgebraGame : Game where
   Pos := GamePos -- = (Sequent ⊕ RuleApp) × List Sequent × List RuleApp
   turn
     | ⟨Sum.inl _, _, _⟩ => Prover -- Prover gets a sequent and picks a rule application

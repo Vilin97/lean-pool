@@ -172,7 +172,7 @@ polygon already built, truncates there and appends. -/
 /-- The last vertex of a nonempty vertex list, with the nonemptiness discharged by the
 `cons`. Carrying the list in the form `u :: t` removes every dependent proof argument from
 the statements below. -/
-def lastP (u : Plane) (t : List Plane) : Plane := (u :: t).getLast (List.cons_ne_nil u t)
+@[expose] def lastP (u : Plane) (t : List Plane) : Plane := (u :: t).getLast (List.cons_ne_nil u t)
 
 @[simp] theorem lastP_nil (u : Plane) : lastP u [] = u := rfl
 

@@ -47,11 +47,11 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 namespace MFormData
 
 /-- D4: the order of `θ` at `x`, read via the (fixed) preferred chart at `x`. -/
-noncomputable def ord (θ : MFormData X) (x : X) : WithTop ℤ :=
+@[expose] noncomputable def ord (θ : MFormData X) (x : X) : WithTop ℤ :=
   meromorphicOrderAt (θ.coeffAt x) (chartAt ℂ x x)
 
 /-- D4: the residue of `θ` at `x`, read via the (fixed) preferred chart at `x`. -/
-noncomputable def resAt (θ : MFormData X) (x : X) : ℂ :=
+@[expose] noncomputable def resAt (θ : MFormData X) (x : X) : ℂ :=
   RS.resAt (θ.coeffAt x) (chartAt ℂ x x)
 
 theorem meromorphicAt_coeffAt (θ : MFormData X) (x : X) :

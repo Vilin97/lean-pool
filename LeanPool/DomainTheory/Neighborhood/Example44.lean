@@ -152,7 +152,7 @@ bit `b`:
 `X (bx) Y ↔ bX ⊆ Y`. Approximable because `bX` is again a neighbourhood
 (`memC_prepend`) and
 prepending is monotone. -/
-def consMap (b : Bool) : ApproximableMap C C where
+@[expose] def consMap (b : Bool) : ApproximableMap C C where
   rel X Y := memC X ∧ memC Y ∧ prepend [b] X ⊆ Y
   rel_dom h := h.1
   rel_cod h := h.2.1

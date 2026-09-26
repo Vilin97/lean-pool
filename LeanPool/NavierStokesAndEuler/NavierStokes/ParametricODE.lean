@@ -132,6 +132,11 @@ omit [CompleteSpace E] in
 theorem coefficientAction_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
     coefficientAction (E := E) A u t = A t (u t) := by rfl
 
+theorem coefficientAction_apply_curve (A : Coefficient a b E) (u : Curve a b E) :
+    coefficientAction (E := E) A u = applyCoefficient A u := by
+  ext t
+  exact coefficientAction_apply A u t
+
 /-- Volterra, given by `((ContinuousLinearMap.compL ℝ (Curve a b E) (Curve a b E) (Curve a b E))
 (integrator hab)).comp (coefficientAction (E := E))`. -/
 def volterra : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve a b E :=

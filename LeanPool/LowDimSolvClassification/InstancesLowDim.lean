@@ -186,7 +186,7 @@ variable (K : Type*) [CommRing K]
 abbrev _root_.LieAlgebra.Dim3.Abelian := mkAbelian K (Fin 3 → K)
 
 /-- The three-dimensional Heisenberg Lie algebra. -/
-def _root_.LieAlgebra.Dim3.Heisenberg := Fin 3 → K
+@[expose] def _root_.LieAlgebra.Dim3.Heisenberg := Fin 3 → K
 attribute [local implicit_reducible] LieAlgebra.Dim3.Heisenberg
 
 instance : LieRing (Heisenberg K) := {
@@ -223,7 +223,7 @@ instance : LieAlgebra K (Heisenberg K) := {
 }
 
 /-- The three-dimensional Lie algebra which has one-dimensional commutator and is not nilpotent. -/
-def _root_.LieAlgebra.Dim3.AffinePlusAbelian := Fin 3 → K
+@[expose] def _root_.LieAlgebra.Dim3.AffinePlusAbelian := Fin 3 → K
 attribute [local implicit_reducible] LieAlgebra.Dim3.AffinePlusAbelian
 
 instance : LieRing (AffinePlusAbelian K) := {
@@ -260,7 +260,7 @@ instance : LieAlgebra K (AffinePlusAbelian K):= {
 }
 
 /-- The three-dimensional solvable Lie algebra associated to real hyperbolic space. -/
-def _root_.LieAlgebra.Dim3.Hyperbolic := Fin 3 → K
+@[expose] def _root_.LieAlgebra.Dim3.Hyperbolic := Fin 3 → K
 attribute [local implicit_reducible] LieAlgebra.Dim3.Hyperbolic
 
 instance : LieRing (Hyperbolic K) := {
@@ -299,7 +299,7 @@ theorem _root_.LieAlgebra.Dim3.Hyperbolic.bracket (l r : Hyperbolic K) :
 /-- The two-parameter family of solvable Lie algebras appearing in the classification of
 3-dimensional Lie algebras. The two `K` parameters are phantom: they index the bracket structure
 but do not appear in the underlying type; consuming them via `id` keeps the linter happy. -/
-def _root_.LieAlgebra.Dim3.Family (α β : K) : Type _ :=
+@[expose] def _root_.LieAlgebra.Dim3.Family (α β : K) : Type _ :=
   (id (α, β) : K × K) |> fun _ ↦ Fin 3 → K
 attribute [local implicit_reducible] LieAlgebra.Dim3.Family
 

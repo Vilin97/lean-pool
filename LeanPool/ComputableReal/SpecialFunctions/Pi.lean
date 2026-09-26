@@ -33,12 +33,13 @@ private theorem mul_le_of_le_of_le_one_of_nonneg {a b c : ℝ} (hac : a ≤ c) (
     (ha : 0 ≤ a) : a * b ≤ c :=
   (mul_le_of_le_one_right ha hb).trans hac
 
+@[expose]
 noncomputable instance instComputableSqrtTwoAddSeries (x : ℝ) [hx : IsComputable x] (n : ℕ) :
     IsComputable (Real.sqrtTwoAddSeries x n) :=
   n.rec hx (fun _ _ ↦ IsComputable.instComputableSqrt _)
 
 /-- Definition of `sqrtTwoAddSeriesN`. -/
-noncomputable def sqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
+@[expose] noncomputable def sqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
   fun n ↦ (instComputableSqrtTwoAddSeries 0 n).seq
 
 theorem sqrtTwoAddSeriesN_lb_le (n k : ℕ) : (sqrtTwoAddSeriesN n).lb k ≤ Real.sqrtTwoAddSeries 0
@@ -163,7 +164,7 @@ theorem sqrtTwoAddSeriesN_bounds (n k : ℕ) (hk : 3 ≤ k) :
   linarith
 
 /-- Definition of `sqrtTwoSubSqrtTwoAddSeriesN`. -/
-noncomputable def sqrtTwoSubSqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
+@[expose] noncomputable def sqrtTwoSubSqrtTwoAddSeriesN : ℕ → ComputableℝSeq :=
   fun n ↦ (inferInstance : IsComputable (Real.sqrt (2 - Real.sqrtTwoAddSeries 0 n))).seq
 
 theorem sqrtTwoSubSqrtTwoAddSeries_eq (n k : ℕ) :

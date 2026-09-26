@@ -36,7 +36,7 @@ noncomputable def toC0 : RS.LinSysOn D (Ω : Set X) →ₗ[ℂ] C0 D 𝒰 :=
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem toC0_apply (φ : RS.LinSysOn D (Ω : Set X)) (i : Fin 𝒰.n) :
-    toC0 D 𝒰 φ i = LinSysOn.restrictL D (𝒰.le_base i) φ := rfl
+    toC0 D 𝒰 φ i = LinSysOn.restrictL D (𝒰.le_base i) φ := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem toC0_mem_ker (φ : RS.LinSysOn D (Ω : Set X)) :

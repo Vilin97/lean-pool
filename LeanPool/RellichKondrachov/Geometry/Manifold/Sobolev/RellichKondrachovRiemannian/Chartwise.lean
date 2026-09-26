@@ -88,7 +88,7 @@ open RellichKondrachov.Analysis.FunctionalSpaces.Sobolev.Euclidean
 variable (i : dR.d.ι)
 
 /-- Embed the local square-integrable range using the chart volume measure. -/
-noncomputable def eL2RangeChartVol (i : dR.d.ι)
+@[expose] noncomputable def eL2RangeChartVol (i : dR.d.ι)
     (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F] :
     let μM :=
       RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure (I := I) (M := M)
@@ -114,7 +114,7 @@ between `μchart` and `volume` explicit and purely `L²`-level.
 omit [T2Space M] in
 /-- The chartwise `H¹ → L²` projection with codomain restricted to the Euclidean `H¹` range,
 for the chart pushforward of the Riemannian volume measure. -/
-noncomputable def h1ToChartL2Range :
+@[expose] noncomputable def h1ToChartL2Range :
     let μM :=
       RellichKondrachov.Geometry.Manifold.Riemannian.riemannianVolumeMeasure (I := I) (M := M)
     let μchart := FiniteChartData.chartMeasure (d := dR.d) (I := I) μM i

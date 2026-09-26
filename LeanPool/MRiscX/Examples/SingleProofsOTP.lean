@@ -37,7 +37,7 @@ in the very long proof took quite a while on every change.
 
 /-- The precondition shared by the per-instruction One-Time-Pad proofs,
 constraining the plaintext `p`, key `k`, ciphertext `c`, and length `l` addresses. -/
-def iPre' (p k c l : UInt64) :=
+@[expose] def iPre' (p k c l : UInt64) :=
   p < k ∧ k < c ∧
   c.toNat + l.toNat < UInt64.size ∧
   (p + l - 1 < k ∧ k + l - 1 < c)
@@ -284,11 +284,10 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · simpCurrInstr
     · exact h_pc
     · repeat (constructor <;> try assumption)
-      · simp at *
-        bv_decide
+      · simp_all
       · have h_index : p + (l - x) = p + (l - (x - 1)) - 1 := by
           bv_decide
-        rw [h_index]
+        simp_all
 
 
 

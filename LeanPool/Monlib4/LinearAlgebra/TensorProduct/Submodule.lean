@@ -242,8 +242,11 @@ def piProdUnitEquivPi {R n : Type*} [Semiring R] : (n × Unit → R) ≃ₗ[R] n
   map_smul' r x := by simp only [RingHom.id_apply]; rfl
 
 /-- `matrix.replicateCol` written as a linear equivalence -/
-def Matrix.ofReplicateCol {R n : Type*} [Semiring R] : Matrix n Unit R ≃ₗ[R] n → R :=
+@[expose] def Matrix.ofReplicateCol {R n : Type*} [Semiring R] : Matrix n Unit R ≃ₗ[R] n → R :=
   (reshape : Matrix n Unit R ≃ₗ[R] n × Unit → R).trans piProdUnitEquivPi
+
+@[simp] theorem Matrix.ofReplicateCol_apply {R n : Type*} [Semiring R]
+    (x : Matrix n Unit R) (i : n) : Matrix.ofReplicateCol x i = x i () := by rfl
 
 /-- Remove a trailing `Unit` factor from the column index of a matrix. -/
 def matrixProdUnitRight {R n m : Type*} [Semiring R] : Matrix n (m × Unit) R ≃ₗ[R] Matrix n m R
@@ -256,6 +259,10 @@ def matrixProdUnitRight {R n m : Type*} [Semiring R] : Matrix n (m × Unit) R �
   map_add' x y := by rfl
   map_smul' r x := by simp only [RingHom.id_apply]; rfl
 
+@[simp] theorem matrixProdUnitRight_apply {R n m : Type*} [Semiring R]
+    (x : Matrix n (m × Unit) R) (i : n) (j : m) :
+    matrixProdUnitRight x i j = x i (j, ()) := by rfl
+
 open Kronecker
 /-- `vec_mulVec x y` written as a kronecker product -/
 theorem replicateCol_hMul_replicateCol_conjTranspose_is_kronecker_of_vectors
@@ -267,9 +274,9 @@ theorem replicateCol_hMul_replicateCol_conjTranspose_is_kronecker_of_vectors
           (matrixProdUnitRight (replicateCol Unit x ⊗ₖ replicateCol Unit y))) := by
   ext i j
   rw [reshape_symm_apply]
-  change x i * y j = reshape _ ((i, j), PUnit.unit)
-  rw [reshape_apply]
-  rfl
+  rw [vecMulVec_apply]
+  simp only [Matrix.ofReplicateCol_apply, matrixProdUnitRight_apply,
+    kroneckerMap_apply, replicateCol_apply]
 
 section
 

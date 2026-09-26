@@ -27,8 +27,8 @@ namespace QuasiBorelSpace.Sum
 universe u v
 
 variable
-  {A : Type*} [QuasiBorelSpace A]
-  {B : Type*} [QuasiBorelSpace B]
+  {A : Type*} [instA : QuasiBorelSpace A]
+  {B : Type*} [instB : QuasiBorelSpace B]
   {C : Type*} [QuasiBorelSpace C]
   {D : Type*} [QuasiBorelSpace D]
   {E : Type*} [QuasiBorelSpace E]
@@ -36,7 +36,7 @@ variable
 /--
 We derive the `QuasiBorelSpace` instance for `A ⊕ B` via `Sigma (Encoding A B)`.
 -/
-def Encoding (A : Type u) (B : Type v) : Bool → Type (max u v)
+@[expose] def Encoding (A : Type u) (B : Type v) : Bool → Type (max u v)
   | true => ULift A
   | false => ULift B
 
@@ -83,6 +83,7 @@ def encode : A ⊕ B → Sigma (Encoding A B) :=
 
 instance : QuasiBorelSpace (A ⊕ B) := lift encode
 
+include instA instB in
 @[fun_prop]
 lemma isHom_encode : IsHom (encode (A := A) (B := B)) := by
   apply isHom_of_lift
@@ -114,7 +115,7 @@ lemma isHom_elim
     ext x
     cases x <;> rfl
   rw [this]
-  fun_prop
+  exact isHom_comp (Encoding.isHom_elim hf hg) isHom_encode
 
 @[fun_prop]
 lemma isHom_elim'

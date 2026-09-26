@@ -15,14 +15,14 @@ public section
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Check that a dense pattern summary agrees with its canonical source lookup. -/
-def patternSummaryCanonicalB (summary : PatternSummary) : Bool :=
+@[expose] def patternSummaryCanonicalB (summary : PatternSummary) : Bool :=
   match patternSummaryForOriginLookup summary.origin with
   | none => false
   | some canonical =>
       (canonical.origin == summary.origin) && (canonical.mask == summary.mask)
 
 /-- Check that a dense exact summary agrees with its canonical source lookup. -/
-def hardSummaryCanonicalB (summary : HardSummary) : Bool :=
+@[expose] def hardSummaryCanonicalB (summary : HardSummary) : Bool :=
   match hardSummaryForOriginLookup summary.origin with
   | none => false
   | some canonical =>

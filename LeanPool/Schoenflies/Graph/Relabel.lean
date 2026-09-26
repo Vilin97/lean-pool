@@ -32,7 +32,7 @@ namespace Graph
 variable {α β δ : Type*} {G : Graph α β} {f : β → δ}
 
 /-- Relabel every edge of `G` by a map injective on `E(G)`, without changing its vertices. -/
-def relabelEdges (G : Graph α β) (f : β → δ) (hf : InjOn f E(G)) : Graph α δ where
+@[expose] def relabelEdges (G : Graph α β) (f : β → δ) (hf : InjOn f E(G)) : Graph α δ where
   vertexSet := V(G)
   edgeSet := f '' E(G)
   IsLink d x y := ∃ e ∈ E(G), f e = d ∧ G.IsLink e x y

@@ -395,7 +395,7 @@ Paper: §3.
 /-- The crossed-product group unitary implements the action on the base.
 Paper: §3.
 -/
-def crossedActionL2Equiv
+@[expose] def crossedActionL2Equiv
     {K : Type u} {Ω : Type v} [Group K]
     [AddCommGroup Ω] [TopologicalSpace Ω] [MeasurableSpace Ω]
     (X : HaarProbabilityAction K Ω) (k : K) :

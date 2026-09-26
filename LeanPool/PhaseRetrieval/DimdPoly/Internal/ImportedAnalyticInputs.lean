@@ -1222,7 +1222,7 @@ private theorem schwartzApproxRealVec_toLp_tendsto {d : Nat} (f : L2Real d) :
   simpa [hdist, hf, μ] using hraw
 
 /-- `IsL2Rep`: Is L2 Rep. -/
-def IsL2Rep {d : Nat} (f : L2Real d) (fRep : RealVec d -> ℂ) : Prop :=
+@[expose] def IsL2Rep {d : Nat} (f : L2Real d) (fRep : RealVec d -> ℂ) : Prop :=
   ∃ hf_mem : MeasureTheory.MemLp fRep 2
       (MeasureTheory.volume : MeasureTheory.Measure (RealVec d)),
     hf_mem.toLp fRep = f

@@ -408,7 +408,7 @@ theorem active_position_image (s : Finset K.ActiveVertex) :
   simp [activeEmbedding]
 
 /-- Delete all unused vertices without changing the support or any face geometry. -/
-noncomputable def active : PlaneComplex where
+@[expose] noncomputable def active : PlaneComplex where
   Vertex := K.ActiveVertex
   position := fun v => K.position v.1
   position_injective := fun v w h => Subtype.ext (K.position_injective h)

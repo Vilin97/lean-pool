@@ -293,7 +293,7 @@ abbrev delimitedNaturalComparisonMachine : Turing.FinTM2 where
       delimitedComparePrefixStatement
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def naturalCompareConfiguration (phase : Fin 12)
+@[expose] def naturalCompareConfiguration (phase : Fin 12)
     (outcome : EncodedWordOrdering)
     (input firstCounter firstReversed secondCounter secondReversed
       firstForward secondForward source sourcePrefix output : List Bool) :

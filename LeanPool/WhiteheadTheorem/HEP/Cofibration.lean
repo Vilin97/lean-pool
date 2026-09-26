@@ -25,7 +25,7 @@ open scoped Topology unitInterval
 
 
 /-- `HasHomotopyExtensionProperty` -/
-def HasHomotopyExtensionProperty {A X : Type u} [TopologicalSpace A] [TopologicalSpace X]
+@[expose] def HasHomotopyExtensionProperty {A X : Type u} [TopologicalSpace A] [TopologicalSpace X]
     (i : C(A, X)) (Y : Type u) [TopologicalSpace Y] : Prop :=
   ∀ (f : C(X, Y)) (h : C(A × I, Y)), f ∘ i = h ∘ (·, 0) →
   ∃ H : C(X × I, Y), f = H ∘ (·, 0) ∧ h = H ∘ Prod.map i id

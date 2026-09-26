@@ -40,14 +40,14 @@ local instance instDecidableEqPatternNatWitnessed : DecidableEq (Pattern S Nat) 
 
 /-- A theory is witnessed when every existential it contains has a Henkin
 implication to one of its capture-avoiding variable instances. -/
-def Witnessed (Gamma : Set (Pattern S Nat)) : Prop :=
+@[expose] def Witnessed (Gamma : Set (Pattern S Nat)) : Prop :=
   ∀ {x : Nat} {p : Pattern S Nat}, .ex x p ∈ Gamma →
     ∃ y : Nat, .imp (.ex x p) (Pattern.captureAvoidingSubst x y p) ∈ Gamma
 
 /-- A witnessed theory whose Henkin name is fresh for every raw occurrence in
 the existential body.  This is the source construction's actual stronger
 invariant; `Witnessed` is its interface needed by the basic Truth Lemma. -/
-def FreshWitnessed (Gamma : Set (Pattern S Nat)) : Prop :=
+@[expose] def FreshWitnessed (Gamma : Set (Pattern S Nat)) : Prop :=
   ∀ {x : Nat} {p : Pattern S Nat}, .ex x p ∈ Gamma →
     ∃ y : Nat, y ∉ p.allVars ∧
       .imp (.ex x p) (Pattern.captureAvoidingSubst x y p) ∈ Gamma
@@ -169,7 +169,7 @@ theorem locConsistent_insert_captureAvoidingWitness
   | n + 1 => step (henkinStages step enum base n) (enum n)
 
 /-- The union of the theories represented by all finite Henkin stages. -/
-def henkinLimit {α : Type} (stageTheory : List α → Set α)
+@[expose] def henkinLimit {α : Type} (stageTheory : List α → Set α)
     (step : List α → α → List α) (enum : Nat → α) (base : List α) : Set α :=
   {q | ∃ n, q ∈ stageTheory (henkinStages step enum base n)}
 

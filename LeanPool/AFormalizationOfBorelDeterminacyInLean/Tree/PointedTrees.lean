@@ -126,7 +126,7 @@ end «Section2»
     simp_all
 
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=
+@[expose] def extensions.val' {T : PointedTrees} (a : extensions.obj T) : List T.1.1 :=
   T.2.val ++ [a.val]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 @[expose] def extensions.valT' {T : PointedTrees} (a : extensions.obj T) : T.1 :=

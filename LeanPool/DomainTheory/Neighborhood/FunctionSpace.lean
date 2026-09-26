@@ -605,7 +605,7 @@ variable {V₂ : NeighborhoodSystem γ}
 
 /-- **Theorem 3.11 (Scott 1981, PRG-19).** The two-variable evaluation map
 `eval : (𝒟₁ → 𝒟₂) × 𝒟₁ → 𝒟₂`, `F, X eval Y ↔ X f Y for all f ∈ F`. -/
-def eval (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
+@[expose] def eval (V₁ : NeighborhoodSystem β) (V₂ : NeighborhoodSystem γ) :
     ApproximableMap₂ (funSpace V₁ V₂) V₁ V₂ where
   rel F X Y := (funSpace V₁ V₂).mem F ∧ V₁.mem X ∧ V₂.mem Y ∧ ∀ f ∈ F, f.rel X Y
   rel_dom₀ h := h.1

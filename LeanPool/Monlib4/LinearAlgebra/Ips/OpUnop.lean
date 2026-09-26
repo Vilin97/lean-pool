@@ -25,7 +25,7 @@ public section
 variable {R A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A]
 
 /-- The linear equivalence sending a vector to its multiplicative opposite. -/
-@[expose] abbrev op (R : Type*) {A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A] :=
+abbrev op (R : Type*) {A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A] :=
 (MulOpposite.opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ)
 
 @[simp]
@@ -33,7 +33,7 @@ theorem op_apply (x : A) : op R x = MulOpposite.op x :=
   rfl
 
 /-- The inverse linear equivalence from the multiplicative opposite. -/
-@[expose] abbrev unop (R : Type*) {A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A] :
+abbrev unop (R : Type*) {A : Type _} [CommSemiring R] [AddCommMonoid A] [Module R A] :
   Aᵐᵒᵖ ≃ₗ[R] A :=
 (op R).symm
 
@@ -67,7 +67,7 @@ open scoped TensorProduct
 
 variable {B : Type*} [AddCommMonoid B] [Module R B]
 /-- Swap tensor factors while moving the multiplicative-opposite marker to the other factor. -/
-@[expose] noncomputable abbrev tenSwap (R : Type*)
+noncomputable abbrev tenSwap (R : Type*)
   {A B : Type*} [AddCommMonoid A] [AddCommMonoid B]
   [CommSemiring R] [Module R A] [Module R B] :
     A ⊗[R] Bᵐᵒᵖ ≃ₗ[R] B ⊗[R] Aᵐᵒᵖ :=

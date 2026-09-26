@@ -630,7 +630,7 @@ theorem finalAngular_before (d : TailData) (eta : ℝ) {y : ℝ}
 
 /-- Carrier, given by `(radialAmplitude d.core.P d.core.dropLength d.core.lam y / 2) * Real.exp
 (releaseAdjustment d (y - d.releaseStart))`. -/
-def carrier (d : TailData) (y : ℝ) : ℝ :=
+@[expose] def carrier (d : TailData) (y : ℝ) : ℝ :=
   (radialAmplitude d.core.P d.core.dropLength d.core.lam y / 2) *
     Real.exp (releaseAdjustment d (y - d.releaseStart))
 

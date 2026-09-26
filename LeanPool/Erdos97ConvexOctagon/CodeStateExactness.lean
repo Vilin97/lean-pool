@@ -143,7 +143,7 @@ private theorem shiftedRow_bit
       simp [hequal, hbefore]
 
 /-- A packed table code exactly records all selected bits in its assignment list. -/
-def CodeMatches (code : UInt64) (assignments : List RowAssignment) : Prop :=
+@[expose] def CodeMatches (code : UInt64) (assignments : List RowAssignment) : Prop :=
   ∀ centre target,
     bitSetB code (varIndex centre target) =
       selectedByAssignmentsB assignments centre target

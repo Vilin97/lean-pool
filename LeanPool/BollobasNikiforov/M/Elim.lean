@@ -1252,24 +1252,24 @@ lemma elimEEmbed_ne_elimT (a : Option (Fin k)) (j : Fin p) :
 
 /-- The `E`-block of `M (Xconfig s t ρ x)`: rows and columns indexed by the axis vector and the left
 vectors through `elimEEmbed`. -/
-def elimEE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimEE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Option (Fin k)) (Option (Fin k)) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimEEmbed elimEEmbed
 
 /-- The block of `M (Xconfig s t ρ x)` with `E`-rows (via `elimEEmbed`) and right-vector columns
 (via `elimT`). -/
-def elimET (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimET (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Option (Fin k)) (Fin p) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimEEmbed elimT
 
 /-- The block of `M (Xconfig s t ρ x)` with right-vector rows (via `elimT`) and `E`-columns (via
 `elimEEmbed`). -/
-def elimTE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimTE (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Fin p) (Option (Fin k)) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimT elimEEmbed
 
 /-- The right-vector block of `M (Xconfig s t ρ x)`: rows and columns indexed through `elimT`. -/
-def elimTT (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
+@[expose] def elimTT (s t : Fin k → ℝ) (ρ x : Fin p → ℝ) :
     Matrix (Fin p) (Fin p) ℝ :=
   (M (Xconfig s t ρ x)).submatrix elimT elimT
 

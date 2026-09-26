@@ -371,8 +371,8 @@ noncomputable def cartesianY : Plane →ᵃ[ℝ] ℝ :=
   ((LinearMap.proj (R := ℝ) (φ := fun _ : Fin 2 => ℝ) 1).comp
     (WithLp.linearEquiv 2 ℝ (Fin 2 → ℝ)).toLinearMap).toAffineMap
 
-@[simp] theorem cartesianX_apply (p : Plane) : cartesianX p = p 0 := rfl
-@[simp] theorem cartesianY_apply (p : Plane) : cartesianY p = p 1 := rfl
+@[simp] theorem cartesianX_apply (p : Plane) : cartesianX p = p 0 := by rfl
+@[simp] theorem cartesianY_apply (p : Plane) : cartesianY p = p 1 := by rfl
 
 /-- The affine line through the two new edge points in the reference split. -/
 noncomputable def referenceOuterAffine (a b : ℝ) : Plane →ᵃ[ℝ] ℝ :=
@@ -388,14 +388,14 @@ noncomputable def referenceVertexAffine (a b : ℝ) : Plane →ᵃ[ℝ] ℝ :=
   cartesianX + (a * (1 + b) / (2 * b)) • cartesianY - AffineMap.const ℝ Plane a
 
 @[simp] theorem referenceOuterAffine_planePoint (a b x y : ℝ) :
-    referenceOuterAffine a b (planePoint x y) = a⁻¹ * x + b⁻¹ * y - 1 := rfl
+    referenceOuterAffine a b (planePoint x y) = a⁻¹ * x + b⁻¹ * y - 1 := by rfl
 
 @[simp] theorem referenceDiagonalAffine_planePoint (a x y : ℝ) :
-    referenceDiagonalAffine a (planePoint x y) = x + a * y - a := rfl
+    referenceDiagonalAffine a (planePoint x y) = x + a * y - a := by rfl
 
 @[simp] theorem referenceVertexAffine_planePoint (a b x y : ℝ) :
     referenceVertexAffine a b (planePoint x y) =
-      x + (a * (1 + b) / (2 * b)) * y - a := rfl
+      x + (a * (1 + b) / (2 * b)) * y - a := by rfl
 
 private theorem affineIndependent_referenceTriangle0 {a b : ℝ} (ha0 : 0 < a)
     (hb0 : 0 < b) :
@@ -1219,11 +1219,11 @@ noncomputable def cutRefinedVertex (u v : M.Vertex)
       ⟨Finset.mem_product.mpr ⟨Finset.mem_univ _, Finset.mem_univ _⟩, huv⟩, rfl⟩⟩
 
 @[simp] theorem oldRefinedVertex_val (v : M.Vertex) :
-    (M.oldRefinedVertex f v : Plane) = M.position v := rfl
+    (M.oldRefinedVertex f v : Plane) = M.position v := by rfl
 
 @[simp] theorem cutRefinedVertex_val (u v : M.Vertex)
     (huv : f (M.position u) * f (M.position v) < 0) :
-    (M.cutRefinedVertex f u v huv : Plane) = M.pairCutPosition f u v := rfl
+    (M.cutRefinedVertex f u v huv : Plane) = M.pairCutPosition f u v := by rfl
 
 theorem pairCutPosition_eq_reverse (u v : M.Vertex)
     (huv : f (M.position u) * f (M.position v) < 0) :
@@ -1265,7 +1265,7 @@ noncomputable def refinedVertexNegEquiv : M.RefinedVertex (-f) ≃ M.RefinedVert
   right_inv v := Subtype.ext rfl
 
 @[simp] theorem refinedVertexNegEquiv_val (v : M.RefinedVertex (-f)) :
-    (M.refinedVertexNegEquiv f v : Plane) = v := rfl
+    (M.refinedVertexNegEquiv f v : Plane) = v := by rfl
 
 /-- The five vertices of the strict `+--` model in the coherent global vertex pool. -/
 noncomputable def strictModelVertex (t : M.Triangle)
@@ -2266,7 +2266,7 @@ noncomputable def localCutVertex (t : M.Triangle) (i j : Fin 3)
   M.cutRefinedVertex f (M.orderedVertex t i) (M.orderedVertex t j) hij
 
 @[simp] theorem localOldVertex_val (t : M.Triangle) (i : Fin 3) :
-    (M.localOldVertex f t i : Plane) = M.position (M.orderedVertex t i) := rfl
+    (M.localOldVertex f t i : Plane) = M.position (M.orderedVertex t i) := by rfl
 
 theorem localCutVertex_apply_eq_zero (t : M.Triangle) (i j : Fin 3)
     (hij : f (M.position (M.orderedVertex t i)) *

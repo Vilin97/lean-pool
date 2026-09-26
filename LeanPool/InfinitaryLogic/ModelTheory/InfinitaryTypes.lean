@@ -32,12 +32,12 @@ variable {L : Language.{u, v}}
 
 /-- The complete infinitary type of a tuple over the empty set: all `L_{ω₁ω}`-formulas (in `n`
 free variables) it realizes. -/
-def infinitaryType (M : Type w) [L.Structure M] {n : ℕ} (a : Fin n → M) :
+@[expose] def infinitaryType (M : Type w) [L.Structure M] {n : ℕ} (a : Fin n → M) :
     Set (L.BoundedFormulaω Empty n) :=
   { ψ | ψ.Realize Empty.elim a }
 
 /-- The realized complete types of `M` at arity `n`. -/
-def RealizedInfinitaryTypes (M : Type w) [L.Structure M] (n : ℕ) :
+@[expose] def RealizedInfinitaryTypes (M : Type w) [L.Structure M] (n : ℕ) :
     Set (Set (L.BoundedFormulaω Empty n)) :=
   Set.range fun a : Fin n → M => infinitaryType M a
 

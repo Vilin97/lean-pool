@@ -51,7 +51,7 @@ open Classical in
 /-- The **slot value function** `σ(d) = (d−3)/(d−2)`: the per-slot worst-case
 surplus of a degree-`d` neighbour used as a leak carrier.  `σ(3) = 0`,
 `σ(4) = 1/2`, `σ(5) = 2/3`, `σ(6) = 3/4`, `σ → 1`. -/
-noncomputable def sigma (d : ℕ) : ℝ := ((d : ℝ) - 3) / ((d : ℝ) - 2)
+@[expose] noncomputable def sigma (d : ℕ) : ℝ := ((d : ℝ) - 3) / ((d : ℝ) - 2)
 
 open Classical in
 /-- The **mass factor** `c_u = 1 + Σ_{w∈N(u)} 1/(deg w − 2)`. -/
@@ -398,7 +398,7 @@ open Classical in
 each of which is `σ`-usable.  This is the exact *spread* witness: present on every
 diameter-`≥ 4` "buried" world and absent on every diameter-`3` compact cell
 inhabitant. -/
-def HasUsableFarPair (G : SimpleGraph V) : Prop :=
+@[expose] def HasUsableFarPair (G : SimpleGraph V) : Prop :=
   ∃ u v : V, u ≠ v ∧ ¬G.Adj u v ∧ (∀ w : V, ¬(G.Adj u w ∧ G.Adj v w)) ∧
     (∀ w w' : V, G.Adj u w → G.Adj v w' → ¬G.Adj w w') ∧
     sigS G u ≤ 2 ∧ sigS G v ≤ 2

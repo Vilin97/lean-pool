@@ -140,7 +140,7 @@ abbrev hessian (f : E → ℝ) (x : E) : E →L[ℝ] (E →L[ℝ] ℝ) :=
          space T = ker(Hess f(x₀)),
       2. The Hessian is μ-coercive on the normal space T⊥:
          D²f(x₀)(v,v) ≥ μ ‖v‖² for all v ∈ T⊥. -/
-def IsMuMB (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
+@[expose] def IsMuMB (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
   let H := hessian f x₀
   let T := hessianKer f x₀
   0 < μ ∧

@@ -187,7 +187,7 @@ lemma TensorModule.hom_ext {M N : TensorModule R A C} (f g : M ⟶ N) (h : f.hom
   simp_all
 
 /-- Build an isomorphism of tensor modules from an isomorphism of the underlying modules. -/
-@[simps]
+@[simps, expose]
 def TensorModule.IsoMk {M N : TensorModule R A C} (f : M.carrier ≅ N.carrier)
     (h : ∀ c, f.hom ≫ ModuleCat.ofHom (N.morphism c) =
     ModuleCat.ofHom (M.morphism c) ≫ f.hom) :

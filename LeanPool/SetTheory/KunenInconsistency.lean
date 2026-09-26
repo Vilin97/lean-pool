@@ -91,6 +91,7 @@ lemma bddAbove_ordinal_κ :
   ext x
   simp only [Set.mem_image, Set.mem_range, exists_exists_eq_and]
   simp only [κ]
+  rfl
 
 lemma κω_eq_ordinal_sSup : κω = (⨆ n : ℕ, (⟨κ n, isOrdinal_crit_iter _⟩ : Ordinals M)).1 := by
   rw [κω, comOrdinals.map_iSup Subtype.val]

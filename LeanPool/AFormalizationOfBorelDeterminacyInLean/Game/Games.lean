@@ -111,7 +111,6 @@ namespace Player
   by_cases h : x.length % 2 = 0
   · cases p
     · simp_all
-      rfl
     · unfold Player.payoff Player.residual
       rw [ite_eq_left h, Game.residual_payoff_even G x h]
       ext y
@@ -119,10 +118,10 @@ namespace Player
   · have hodd : x.length % 2 = 1 := Nat.mod_two_ne_zero.mp h
     cases p
     · simp_all
-      rfl
     · unfold Player.payoff Player.residual
       rw [ite_eq_right h, Game.residual_payoff_odd G x hodd]
-      exact compl_compl (body.append x ⁻¹' G.payoff)
+      simpa only [Game.residual_tree, Player.swap_one] using
+        compl_compl (body.append x ⁻¹' G.payoff)
 end Player
 @[congr] lemma subtype_val_player_payoff {G' p'} (h : G = G') (hp : p = p') :
   Subtype.val '' (p.payoff G) = Subtype.val '' (p'.payoff G') := by congr!
@@ -136,7 +135,6 @@ lemma PreStrategy.IsWinning.residual {s : PreStrategy G.tree p} (h : s.IsWinning
   (x : s.subtree) : (s.residual x).IsWinning (G := G.residual x) := by
   have hpay : (p.residual x.val).payoff (G.residual x.val) = (body.append x.val)⁻¹' p.payoff G := by
     simp_all
-    rfl
   change body _ ⊆ _
   rw [hpay]
   simpa [PreStrategy.residual, Game.residual, subAt_body, subAt_body_image] using
@@ -189,7 +187,8 @@ lemma AllWinning.residual (hW : G.AllWinning p) x :
         Game.residual_payoff_even G x hx]
       ext a
       constructor
-      · simp_all
+      · intro _
+        trivial
       · intro _ hmem
         have hcompl : body.append x a ∈ G.payoffᶜ := by
           simp_all

@@ -72,7 +72,7 @@ theorem str_comp_desc (A : TAlgebra T) (hA : IsInitial A) :
 : T(D) → D` of an
 initial `T`-algebra is an isomorphism `T(D) ≅ D`, with inverse the descent
 homomorphism `j`. -/
-def lambek (A : TAlgebra T) (hA : IsInitial A) : Iso (T.obj A.carrier) A.carrier where
+@[expose] def lambek (A : TAlgebra T) (hA : IsInitial A) : Iso (T.obj A.carrier) A.carrier where
   hom := A.str
   inv := (hA.desc (tStr A)).hom
   inv_hom_id := str_comp_desc A hA

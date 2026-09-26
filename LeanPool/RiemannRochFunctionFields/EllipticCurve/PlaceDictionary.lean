@@ -71,7 +71,7 @@ lemma XYIdeal_ne_bot {x y : k} (_h : W.Nonsingular x y) :
     (XYIdeal_isMaximal W h).isPrime, XYIdeal_ne_bot W h⟩
 
 /-- The finite place corresponding to a nonsingular affine pair. -/
-noncomputable def finitePlaceOfAffine {x y : k} (h : W.Nonsingular x y) : PlaceA k K :=
+@[expose] noncomputable def finitePlaceOfAffine {x y : k} (h : W.Nonsingular x y) : PlaceA k K :=
   Sum.inl (IsDedekindDomain.HeightOneSpectrum.equivOfRingEquiv
     (coordinateRingEquivIntegers W K).toRingEquiv (affineHeightOne W h))
 

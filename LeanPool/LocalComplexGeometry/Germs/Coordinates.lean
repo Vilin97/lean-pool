@@ -31,7 +31,7 @@ noncomputable section
 /-! ## The standard successor-coordinate splitting -/
 
 /-- Split the last coordinate of `ℂⁿ⁺¹`, as a complex-linear equivalence. -/
-def wptAmbientLinearEquiv (n : ℕ) :
+@[expose] def wptAmbientLinearEquiv (n : ℕ) :
     ComplexEuclidean (n + 1) ≃ₗ[ℂ] ClassicalComplexWPT.Ambient n where
   toFun x := (fun i ↦ x i.castSucc, x (Fin.last n))
   invFun x := Fin.lastCases x.2 x.1

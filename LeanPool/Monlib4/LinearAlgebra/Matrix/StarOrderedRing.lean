@@ -57,12 +57,12 @@ protected def _root_.Matrix.LE {n : Type _} :
   ⟨fun x y => (y - x).PosSemidef⟩
 
 /-- A matrix is negative semidefinite when its Hermitian quadratic form is nonpositive. -/
-def _root_.Matrix.NegSemidef {𝕜 n : Type _} [RCLike 𝕜] [Fintype n]
+@[expose] def _root_.Matrix.NegSemidef {𝕜 n : Type _} [RCLike 𝕜] [Fintype n]
     (x : Matrix n n 𝕜) : Prop :=
   x.IsHermitian ∧ ∀ a : n → 𝕜, dotProduct (Star.star a) (x *ᵥ a) ≤ 0
 
 /-- A matrix is negative definite when its quadratic form is negative on nonzero inputs. -/
-def _root_.Matrix.NegDef {𝕜 n : Type _} [RCLike 𝕜] [Fintype n]
+@[expose] def _root_.Matrix.NegDef {𝕜 n : Type _} [RCLike 𝕜] [Fintype n]
     (x : Matrix n n 𝕜) : Prop :=
   x.IsHermitian ∧ ∀ a : n → 𝕜, a ≠ 0 → (star a) ⬝ᵥ (x *ᵥ a) < 0
 

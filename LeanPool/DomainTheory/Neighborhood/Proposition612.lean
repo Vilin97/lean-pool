@@ -77,7 +77,7 @@ relation,
 `X i Y ↔ X ∈ D ∧ Y ∈ E ∧ X ⊆ Y`. Element-wise (see `toElementMap_inj`) it is
 Scott's
 `i(x) = {Y ∈ E ∣ ∃ X ∈ x, X ⊆ Y}`. -/
-def inj (h : D ◁ E) : ApproximableMap D E where
+@[expose] def inj (h : D ◁ E) : ApproximableMap D E where
   rel X Y := D.mem X ∧ E.mem Y ∧ X ⊆ Y
   rel_dom hr := hr.1
   rel_cod hr := hr.2.1
@@ -100,7 +100,7 @@ Scott's
 `j(y) = y ∩ D`. The `inter_right` law is exactly where Definition 6.10's
 consistency clause
 (`inter_closed`) is used. -/
-def proj (h : D ◁ E) : ApproximableMap E D where
+@[expose] def proj (h : D ◁ E) : ApproximableMap E D where
   rel Y X := E.mem Y ∧ D.mem X ∧ Y ⊆ X
   rel_dom hr := hr.1
   rel_cod hr := hr.2.1

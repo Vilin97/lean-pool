@@ -231,7 +231,7 @@ lemma isStrongLimit_crit_iter (n : ℕ) : IsStrongLimit (j^[n] (crit j)) := by
 
 variable (j) in
 /-- The `hasOmegaOfNontrivialSelfEmbedding` declaration. -/
-@[reducible] def hasOmegaOfNontrivialSelfEmbedding : IsVonNeumannWithOmega M := by
+@[expose, reducible] def hasOmegaOfNontrivialSelfEmbedding : IsVonNeumannWithOmega M := by
   split_vonNeumann hM
   · suffices ω < μ from .vonNeumann μ hμ this rfl
     by_contra! μ_le_omega

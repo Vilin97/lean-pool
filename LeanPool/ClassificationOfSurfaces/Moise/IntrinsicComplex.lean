@@ -97,6 +97,7 @@ theorem realization_eq_iUnion_faceCarrier :
   · exact Set.subset_univ _
 
 /-- The intrinsic subcomplex obtained by retaining a selected family of maximal faces. -/
+@[expose]
 def restrictFaces (p : Finset K.Vertex → Prop) [DecidablePred p] : IntrinsicTwoComplex where
   Vertex := K.Vertex
   faces := K.faces.filter p
@@ -255,7 +256,7 @@ noncomputable def faceEdge (t : K.Face) (i : ZMod 3) : K.Edge := by
   · simp [K.faceVertex_ne_next t i]
 
 @[simp] theorem faceEdge_val (t : K.Face) (i : ZMod 3) :
-    (K.faceEdge t i).1 = {K.faceVertex t i, K.faceVertex t (i + 1)} := rfl
+    (K.faceEdge t i).1 = {K.faceVertex t i, K.faceVertex t (i + 1)} := by rfl
 
 /-- The consecutive face edges share exactly their common cyclic vertex. -/
 theorem faceEdge_inter_next (t : K.Face) (i : ZMod 3) :
@@ -774,11 +775,11 @@ noncomputable def refl : K.Subdivision where
     intro t ht
     exact ⟨t, ht, fun x hx => hx⟩
 
-@[simp] theorem refl_refined : (refl K).refined = K := rfl
+@[simp] theorem refl_refined : (refl K).refined = K := by rfl
 
 
 /-- Faithful intrinsic subdivisions compose. -/
-noncomputable def trans {K : IntrinsicTwoComplex}
+@[expose] noncomputable def trans {K : IntrinsicTwoComplex}
     (R : K.Subdivision) (Q : R.refined.Subdivision) : K.Subdivision where
   refined := Q.refined
   homeo := Q.homeo.trans R.homeo
@@ -799,11 +800,11 @@ noncomputable def trans {K : IntrinsicTwoComplex}
     exact ⟨s, hs, fun x hx => hus (Q.homeo x) (htu x hx)⟩
 
 @[simp] theorem trans_refined (R : K.Subdivision) (Q : R.refined.Subdivision) :
-    (R.trans Q).refined = Q.refined := rfl
+    (R.trans Q).refined = Q.refined := by rfl
 
 theorem trans_homeo_apply (R : K.Subdivision) (Q : R.refined.Subdivision)
     (x : Q.refined.realization) :
-    (R.trans Q).homeo x = R.homeo (Q.homeo x) := rfl
+    (R.trans Q).homeo x = R.homeo (Q.homeo x) := by rfl
 
 end Subdivision
 
@@ -890,7 +891,7 @@ noncomputable def refl : K.PLHomeomorph K where
     intro x hx
     rfl
 
-@[simp] theorem refl_apply (x : K.realization) : (refl K).toHomeomorph x = x := rfl
+@[simp] theorem refl_apply (x : K.realization) : (refl K).toHomeomorph x = x := by rfl
 
 end PLHomeomorph
 

@@ -538,7 +538,7 @@ def toMap₂ (f : ApproximableMap (prod V₀ V₁) V₂) : ApproximableMap₂ V�
 
 /-- **Theorem 3.5 (←) (Scott 1981, PRG-19).** A two-variable mapping induces a
 joint mapping. -/
-def ofMap₂ (f : ApproximableMap₂ V₀ V₁ V₂) : ApproximableMap (prod V₀ V₁) V₂ where
+@[expose] def ofMap₂ (f : ApproximableMap₂ V₀ V₁ V₂) : ApproximableMap (prod V₀ V₁) V₂ where
   rel W Z := (prod V₀ V₁).mem W ∧ f.rel (Sum.inl ⁻¹' W) (Sum.inr ⁻¹' W) Z
   rel_dom h := h.1
   rel_cod h := f.rel_cod h.2

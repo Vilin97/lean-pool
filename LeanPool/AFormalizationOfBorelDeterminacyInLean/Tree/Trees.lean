@@ -37,7 +37,7 @@ variable {n : ℕ} {x : T} (a : ExtensionsAt x)
 /-- The underlying list of a child -/
 @[expose] def val' := x.val ++ [a.val]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def valT' : T := ⟨a.val', a.prop⟩
+@[expose] def valT' : T := ⟨a.val', a.prop⟩
 @[simp] lemma valT'_coe : (a.valT' : List A) = a.val' := by rfl
 @[ext] lemma ext {a b : ExtensionsAt x} (h : a.val = b.val) : a = b := Subtype.ext h
 lemma ext_val' {a b : ExtensionsAt x} (h : a.val' = b.val') : a = b := by

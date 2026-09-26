@@ -115,14 +115,14 @@ lemma ContinuousLinearMap.toLinearMapAlgEquiv_apply
   [InnerProductSpace 𝕜 B] [FiniteDimensional 𝕜 B]
   (f : B →L[𝕜] B) :
   ContinuousLinearMap.toLinearMapAlgEquiv f = f.toLinearMap :=
-rfl
+by rfl
 
 lemma ContinuousLinearMap.toLinearMapAlgEquiv_symm_apply
   {𝕜 B : Type*} [RCLike 𝕜] [NormedAddCommGroup B]
   [InnerProductSpace 𝕜 B] [FiniteDimensional 𝕜 B]
   (f : B →ₗ[𝕜] B) :
   ContinuousLinearMap.toLinearMapAlgEquiv.symm f = LinearMap.toContinuousLinearMap f :=
-rfl
+by rfl
 
 theorem ContinuousLinearMap.spectrum_coe {𝕜 B : Type*} [RCLike 𝕜] [NormedAddCommGroup B]
   [InnerProductSpace 𝕜 B] [FiniteDimensional 𝕜 B] (T : B →L[𝕜] B) :

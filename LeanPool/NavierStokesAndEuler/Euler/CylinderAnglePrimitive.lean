@@ -89,7 +89,7 @@ def primitiveLinear : LiftL2 P →ₗ[ℝ] LiftL2 P where
 def primitive : LiftL2 P →L[ℝ] LiftL2 P :=
   (primitiveLinear P).mkContinuous P (kernelIntegral_norm P)
 
-@[simp] theorem primitive_apply (u : LiftL2 P) : primitive P u = kernelIntegral P u := rfl
+@[simp] theorem primitive_apply (u : LiftL2 P) : primitive P u = kernelIntegral P u := by rfl
 
 theorem primitive_norm : ‖primitive P‖ ≤ P :=
   ContinuousLinearMap.opNorm_le_bound _ (le_of_lt (Fact.out : 0 < P)) (kernelIntegral_norm P)

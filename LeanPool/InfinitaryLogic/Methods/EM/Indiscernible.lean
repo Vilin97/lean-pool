@@ -48,7 +48,7 @@ Motivation: the EM pipeline only uses indiscernibility on the countable
 family `Set.range s` for a chosen formula enumeration `s`, not on all
 Lω₁ω formulas. Weakening to the restricted form lets callers supply the
 genuinely-needed hypothesis rather than the stronger full indiscernibility. -/
-def IsLomega1omegaIndiscernibleOn (a : I → M)
+@[expose] def IsLomega1omegaIndiscernibleOn (a : I → M)
     (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) : Prop :=
   ∀ {n : ℕ} {φ : L.BoundedFormulaω Empty n}, ⟨n, φ⟩ ∈ Γ →
     ∀ (s t : Fin n → I), StrictMono s → StrictMono t →

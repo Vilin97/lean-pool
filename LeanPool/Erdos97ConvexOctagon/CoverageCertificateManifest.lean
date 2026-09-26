@@ -33,7 +33,7 @@ public section
 namespace Erdos97Octagon.RawIncidence.StaticDirectCoverage
 
 /-- Certificate claim for each of the 245 canonical fixed-row branches. -/
-def coverageBranchClaim (orbit : Fin 7) (rowTwo : Fin 35) : BranchClaim :=
+@[expose] def coverageBranchClaim (orbit : Fin 7) (rowTwo : Fin 35) : BranchClaim :=
   match orbit.val, rowTwo.val with
   | 0, 0 => .patternTwo 0
   | 0, 1 => .patternTwo 0

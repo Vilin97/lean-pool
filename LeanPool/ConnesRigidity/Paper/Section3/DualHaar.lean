@@ -85,7 +85,7 @@ def linearCharacter (ℓ : PaperKernel.D →ₗ[ZMod 2] ZMod 2) :
 
 @[simp] theorem linearCharacter_apply
     (ℓ : PaperKernel.D →ₗ[ZMod 2] ZMod 2) (x : PaperKernel.D) :
-    linearCharacter ℓ (Multiplicative.ofAdd x) = ZMod.toCircle (ℓ x) := rfl
+    linearCharacter ℓ (Multiplicative.ofAdd x) = ZMod.toCircle (ℓ x) := by rfl
 
 /-- Character extraction recovers every binary linear form. Paper: §3. -/
 theorem characterLinear_linearCharacter

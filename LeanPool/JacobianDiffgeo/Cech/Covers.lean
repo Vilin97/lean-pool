@@ -99,12 +99,12 @@ noncomputable instance : DecidableEq (FinCover Ω) := Classical.decEq _
 variable [ChartedSpace ℂ X]
 
 /-- `V` is a chart disk: some chart maps it bijectively onto a round ball (D4). -/
-def IsChartDisk (V : Opens X) : Prop :=
+@[expose] def IsChartDisk (V : Opens X) : Prop :=
   ∃ (x : X) (r : ℝ), 0 < r ∧ x ∈ V ∧ (V : Set X) ⊆ (chartAt ℂ x).source ∧
     chartAt ℂ x '' V = Metric.ball (chartAt ℂ x x) r
 
 /-- A cover all of whose members are chart disks. -/
-def FinCover.IsGood (𝒰 : FinCover Ω) : Prop := ∀ i, IsChartDisk (𝒰.U i)
+@[expose] def FinCover.IsGood (𝒰 : FinCover Ω) : Prop := ∀ i, IsChartDisk (𝒰.U i)
 
 /-- Every neighbourhood of a point contains a chart-disk neighbourhood of it (§6.3). -/
 theorem exists_chartDisk_basis {x : X} {W : Set X} (hW : W ∈ 𝓝 x) :
