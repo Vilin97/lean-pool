@@ -237,7 +237,8 @@ theorem fderivL2Norm_le_gradientCoordL2NormSum_ofContDiffOnIsOpenBoundedConvexDo
     _ ≤ ‖dCoordLp‖ := hderiv_le_sum
     _ ≤ u.gradientCoordL2NormSum := hsum_le
 
-private noncomputable def smoothPoincareSqConst
+/-- The squared smooth Poincare constant from the convex-domain estimate. -/
+noncomputable def smoothPoincareSqConst
     (hU : IsOpenBoundedConvexDomain U) : ℝ :=
   (((MeasureTheory.volume U).toReal⁻¹ *
       (((2 * Classical.choose hU.isBoundedDomain) ^ d) / (d : ℝ))) ^ (2 : ℝ)) *
@@ -265,7 +266,8 @@ private theorem smoothPoincareSqConst_nonneg
     (Real.rpow_nonneg hbase₁ _)
     (Real.rpow_nonneg hbase₂ _)
 
-private noncomputable def smoothPoincareConst
+/-- The smooth Poincare constant used in the bundled mean-zero estimate. -/
+noncomputable def smoothPoincareConst
     (hU : IsOpenBoundedConvexDomain U) : ℝ :=
   Real.sqrt (smoothPoincareSqConst (d := d) (U := U) hU)
 
@@ -428,7 +430,7 @@ noncomputable def convexApproxSmoothH1
       (U := U) (ρ := unitConvexApproxKernel (d := d)) (u := u.toFun)
       (p := (2 : ENNReal)) (x0 := x0) (r := r) (ε := unitConvexApproxScale n)
       hU.isOpen.measurableSet (isConvexApproxKernel_unitConvexApproxKernel (d := d))
-      (by norm_num : (1 : ENNReal) ≤ 2) u.memL2 hr (unitConvexApproxScale_pos n)).of_le
+      (by norm_num : (1 : ENNReal) ≤ 2) u.memL2 hr (by exact unitConvexApproxScale_pos n)).of_le
       (by simp))
 
 theorem convexApproxSmoothH1_toFun

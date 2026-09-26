@@ -6,7 +6,7 @@ Authors: Scott Armstrong, Tuomo Kuusi
 module
 
 
-public import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
+public import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
 
 /-! # Integral seminorms without measurability assumptions -/
 
@@ -40,6 +40,22 @@ theorem integralLpSeminorm_neg {E : Type*} [NormedAddCommGroup E] {α : Type*} [
     integralLpSeminorm (-f) p μ = integralLpSeminorm f p μ := by
   simp only [integralLpSeminorm, eLpNormEssSup_eq_essSup_enorm,
     Pi.neg_apply, enorm_neg, eLpNorm'_neg]
+
+/-- Scalar multiplication scales the raw integral seminorm at every exponent, including zero
+and infinity, without requiring the function to be measurable. -/
+theorem integralLpSeminorm_const_smul
+    {𝕜 : Type*} {F : Type*} {α : Type*}
+    [NormedDivisionRing 𝕜] [NormedAddCommGroup F]
+    [Module 𝕜 F] [NormSMulClass 𝕜 F] [MeasurableSpace α]
+    (c : 𝕜) (f : α → F) (p : ℝ≥0∞) (μ : Measure α) :
+    integralLpSeminorm (c • f) p μ = ‖c‖ₑ * integralLpSeminorm f p μ := by
+  by_cases hp0 : p = 0
+  · simp [integralLpSeminorm, hp0]
+  by_cases hpt : p = ∞
+  · simp only [integralLpSeminorm, if_neg hp0, if_pos hpt,
+      eLpNormEssSup_const_smul]
+  · simp only [integralLpSeminorm, if_neg hp0, if_neg hpt]
+    exact eLpNorm'_const_smul c (ENNReal.toReal_pos hp0 hpt)
 
 /-- Almost everywhere equal functions have equal integral seminorms. -/
 theorem integralLpSeminorm_congr_ae {α : Type*} [MeasurableSpace α]

@@ -264,40 +264,13 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_soft_max
       (d := d) (σ := σ) hσ_pos params
   refine ⟨Cfluct, Ccrude, Centry, a,
     hCfluct, hCcrude, hCentry, ha, ?_⟩
-  intro t αbad P hP hStruct hΓ hσ_eq hparams q m n
-  dsimp only
-  intro hnm hqm ht hαt
+  intro t αbad P hP hStruct hΓ hσ_eq hparams q m n K N0 Hshift D S b L tau pref highA
+    crudeA hnm hqm ht hαt
   classical
   let : IsProbabilityMeasure P := hP.isProbability
-  let K : ℝ := quenchedProbeEnvelopeConst d
   let x : ℝ :=
     αbad * ((m - q : ℕ) : ℝ) - t * ((m - n : ℕ) : ℝ)
   let ell : ℕ := selectedBadPairScale K a t αbad q m n
-  let N0 : ℕ :=
-    annealedAlgebraicEntryScale P
-      hΓ.toQuantitativeCoarseGrainedEllipticity Centry
-  let Hshift : ℕ → ℕ → RegCoeffField d → ℝ :=
-    fun M N aω =>
-      quenchedProbeEnvelope hP hStruct (N0 + M) (N0 + N) aω
-  let D : Finset (TriadicCube d) :=
-    descendantsAtScale
-      (originCube d (((N0 + m : ℕ) : ℤ)))
-      (((N0 + n : ℕ) : ℤ))
-  let S : Finset (NormalizedProbeIndex d) := Finset.univ
-  let b : ℝ := (d : ℝ) / 2
-  let L : ℝ := (a * Real.log 3)⁻¹ * Real.log (max (2 * K) 1)
-  let tau : ℝ := min σ 2
-  let pref : ℝ := (S.card : ℝ) * (D.card : ℝ)
-  let highA : ℝ :=
-    (3 : ℝ) ^
-        (b * (q : ℝ) - (b - t) * ((q - n : ℕ) : ℝ) +
-          (t - αbad) * ((m - q : ℕ) : ℝ) - b * (L + 1)) /
-      (2 * K * Cfluct * hΓ.thetaHat ^ (2 : ℕ))
-  let crudeA : ℝ :=
-    (3 : ℝ) ^
-        (t * ((q - n : ℕ) : ℝ) +
-          (t - αbad) * ((m - q : ℕ) : ℝ)) /
-      (K * Ccrude * hΓ.thetaHat ^ (2 : ℕ))
   by_cases hnq : n ≤ q
   · by_cases hell : selectedBadPairScale K a t αbad q m n < n
     · let highScale : ℝ :=
@@ -444,6 +417,17 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_soft_max
       ((by norm_num : (0 : ℝ) ≤ 1).trans (le_max_left 1 pref))
       (Real.exp_pos _).le
 
+/-- A nonnegative counting factor bounded by two weights stays bounded after adjoining one. -/
+private theorem max_one_mul_le_weighted_product {a x u v : ℝ}
+    (hx0 : 0 ≤ x) (hx : x ≤ u * v) (hu : 1 ≤ u) (hv : 1 ≤ v) :
+    max 1 (a * x) ≤ max 1 a * u * v := by
+  apply max_le
+  · exact one_le_mul₀ (one_le_mul₀ (le_max_left 1 a) hu) hv
+  · calc
+      a * x ≤ max 1 a * (u * v) :=
+        mul_le_mul (le_max_right 1 a) hx hx0 (zero_le_one.trans (le_max_left 1 a))
+      _ = max 1 a * u * v := (mul_assoc _ _ _).symm
+
 /-- Concrete mixed-bottom fixed-pair estimate in the weighted row shape, with
 the corrected finite bad-scale exponent.  The only remaining denominator
 conditions are explicit algebraic domination conditions for the chosen
@@ -497,32 +481,10 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_interpol
       (d := d) (σ := σ) hσ_pos params
   refine ⟨Cfluct, Ccrude, Centry, a,
     hCfluct, hCcrude, hCentry, ha, ?_⟩
-  intro t αbad Den P hP hStruct hΓ hσ_eq hparams q r j
-  dsimp only
-  intro ht htb hαt hDen hDen_high hDen_crude
+  intro t αbad Den P hP hStruct hΓ hσ_eq hparams q r j K N0 Hshift S b L τ η w Dhigh
+    Dcrude A ρ Cpref m n ht htb hαt hDen hDen_high hDen_crude
   classical
   let : IsProbabilityMeasure P := hP.isProbability
-  let K : ℝ := quenchedProbeEnvelopeConst d
-  let N0 : ℕ :=
-    annealedAlgebraicEntryScale P
-      hΓ.toQuantitativeCoarseGrainedEllipticity Centry
-  let Hshift : ℕ → ℕ → RegCoeffField d → ℝ :=
-    fun M N aω =>
-      quenchedProbeEnvelope hP hStruct (N0 + M) (N0 + N) aω
-  let S : Finset (NormalizedProbeIndex d) := Finset.univ
-  let b : ℝ := (d : ℝ) / 2
-  let L : ℝ := (a * Real.log 3)⁻¹ * Real.log (max (2 * K) 1)
-  let τ : ℝ := finiteQuenchedTailTau σ
-  let η : ℝ := finiteQuenchedTailExponent d σ t
-  let w : ℝ := ((3 ^ d : ℕ) : ℝ)
-  let Dhigh : ℝ := 2 * K * Cfluct * hΓ.thetaHat ^ (2 : ℕ)
-  let Dcrude : ℝ := K * Ccrude * hΓ.thetaHat ^ (2 : ℕ)
-  let A : ℝ :=
-    (3 : ℝ) ^ ((q : ℝ) - (τ * b * (L + 1)) / η) / Den
-  let ρ : ℝ := (3 : ℝ) ^ (τ * (t - αbad) / η)
-  let Cpref : ℝ := Real.exp 1 * max 1 (S.card : ℝ)
-  let m : ℕ := q + r
-  let n : ℕ := q - j.val
   by_cases hnm : n < m
   · let D : Finset (TriadicCube d) :=
       descendantsAtScale
@@ -601,24 +563,8 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_interpol
       simpa [D, w, m, n] using
         descendantsAtScale_bottom_row_card_le_weight
           (d := d) (N := N0) (q := q) (r := r) (j := j) hnm_le
-    have hpref_bound : max 1 pref ≤ max 1 (S.card : ℝ) * w ^ q * w ^ r := by
-      have hD_nonneg : 0 ≤ (D.card : ℝ) := by positivity
-      have hpref_le :
-          pref ≤ max 1 (S.card : ℝ) * w ^ q * w ^ r := by
-        calc
-          pref = (S.card : ℝ) * (D.card : ℝ) := rfl
-          _ ≤ max 1 (S.card : ℝ) * (w ^ q * w ^ r) :=
-            mul_le_mul
-              (le_max_right 1 (S.card : ℝ)) hDcard
-              hD_nonneg
-              ((by norm_num : (0 : ℝ) ≤ 1).trans
-                (le_max_left 1 (S.card : ℝ)))
-          _ = max 1 (S.card : ℝ) * w ^ q * w ^ r := by ring
-      have hone :
-          1 ≤ max 1 (S.card : ℝ) * w ^ q * w ^ r := by
-        have hmaxS : 1 ≤ max 1 (S.card : ℝ) := le_max_left 1 (S.card : ℝ)
-        nlinarith [hmaxS, hwq_one, hwr_one]
-      exact max_le hone hpref_le
+    have hpref_bound : max 1 pref ≤ max 1 (S.card : ℝ) * w ^ q * w ^ r :=
+      max_one_mul_le_weighted_product (by positivity) hDcard hwq_one hwr_one
     let row : ℝ := τ * (t - αbad)
     let offset : ℝ := τ * b * (L + 1)
     let X : ℝ := η * (q : ℝ) - offset + row * (r : ℝ)
@@ -633,44 +579,24 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_interpol
     have hm_sub_q : m - q = r := by
       dsimp [m]
       exact Nat.add_sub_cancel_left q r
-    have hcollapse_raw :
-        η * (q : ℝ) + τ * (t - αbad) * (r : ℝ) ≤
-          max
-            (τ *
-              (b * (q : ℝ) - (b - t) * ((q - n : ℕ) : ℝ) +
-                (t - αbad) * (r : ℝ)))
-            (σ * (t * ((q - n : ℕ) : ℝ) + (t - αbad) * (r : ℝ))) := by
-      have hmain :=
-        finiteQuenchedTailExponent_mul_nat_add_row_le_max_bottom
-          (d := d) (q := q) (n := n) (r := r)
-          (σ := σ) (t := t) (α := αbad) hσ_pos ht hαt
-          (by simpa [b] using htb)
-      simpa [b, τ, η] using hmain
-    have hcollapse :
-        X ≤ max Xhigh Xcrude := by
+    have hcollapse_raw :=
+      finiteQuenchedTailExponent_mul_nat_add_row_le_max_bottom
+        (d := d) (q := q) (n := n) (r := r)
+        (σ := σ) (t := t) (α := αbad) hσ_pos ht hαt
+        (by simpa [b] using htb)
+    have hcollapse : X ≤ max Xhigh Xcrude := by
       have hsub :=
         sub_nonneg_le_max_sub_left_of_le_max
-          (c := offset) (by simpa [offset] using hoff_nonneg)
-          hcollapse_raw
-      have hX_eq :
-          X = η * (q : ℝ) + τ * (t - αbad) * (r : ℝ) - offset := by
-        dsimp [X, row]
+          (c := offset) (by simpa [offset] using hoff_nonneg) hcollapse_raw
+      convert hsub using 1
+      · dsimp [X, row]
         ring
-      have hXhigh_eq :
-          Xhigh =
-            τ *
-              (b * (q : ℝ) - (b - t) * ((q - n : ℕ) : ℝ) +
-                (t - αbad) * (r : ℝ)) - offset := by
-        dsimp [Xhigh, offset]
-        rw [hm_sub_q]
-        ring
-      have hXcrude_eq :
-          Xcrude =
-            σ * (t * ((q - n : ℕ) : ℝ) + (t - αbad) * (r : ℝ)) := by
-        dsimp [Xcrude]
-        rw [hm_sub_q]
-      rw [hX_eq, hXhigh_eq, hXcrude_eq]
-      exact hsub
+      · congr 1
+        · dsimp [Xhigh, offset]
+          rw [hm_sub_q]
+          ring
+        · dsimp [Xcrude]
+          rw [hm_sub_q]
     have hAρ :
         A * ρ ^ r = (3 : ℝ) ^ (X / η) / Den := by
       simpa [A, ρ, X, row, offset] using
@@ -714,17 +640,7 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_interpol
         (C := max 1 (S.card : ℝ)) (w := w)
         (q := q) (r := r)
         hfixed hpref_bound hCpref_nonneg hw_pos.le hpow
-    change
-      P.real (highBottomPairEvent Hshift K a t αbad q m n) ≤
-        (Cpref * w ^ q) *
-          (w ^ r * Real.exp (-((A * ρ ^ r) ^ η)))
-    calc
-      P.real (highBottomPairEvent Hshift K a t αbad q m n)
-          ≤ (Real.exp 1 * max 1 (S.card : ℝ) * w ^ q) *
-              (w ^ r * Real.exp (-((A * ρ ^ r) ^ η))) := hrow
-      _ = (Cpref * w ^ q) *
-              (w ^ r * Real.exp (-((A * ρ ^ r) ^ η))) := by
-            dsimp [Cpref]
+    exact hrow
   · have hempty :
         highBottomPairEvent Hshift K a t αbad q m n = ∅ := by
       ext ω

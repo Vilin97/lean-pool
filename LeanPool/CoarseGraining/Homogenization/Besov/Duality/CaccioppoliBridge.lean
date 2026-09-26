@@ -34,7 +34,7 @@ theorem cubeLpNorm_const_mul {d : ℕ} (Q : TriadicCube d) (p : ℝ≥0∞) (c :
   have hfun : (fun x => c * f x) = c • f := by
     funext x
     simp [Pi.smul_apply, smul_eq_mul]
-  rw [hfun, MeasureTheory.eLpNorm_const_smul]
+  rw [hfun, Gagliardo.integralLpSeminorm_const_smul]
   simp [ENNReal.toReal_mul]
 
 theorem descendantsAverage_mul_left_local {d : ℕ} (Q : TriadicCube d) (j : ℕ)
