@@ -5047,10 +5047,11 @@ private theorem Smale.exists_partialDiffeomorph_into_manifold {D E M : Type*} [N
   have hcinv : (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) c (f x)).IsInvertible :=
     isInvertible_mfderiv_extChartAt (mem_extChartAt_source (f x))
   have hderiv : (fderiv ℝ (c ∘ f) x).IsInvertible := by
-    rw [← mfderiv_eq_fderiv,
-      mfderiv_comp x (c.mdifferentiableAt (by simp) hc)
+    have hmanifold : (mfderiv 𝓘(ℝ, D) 𝓘(ℝ, E) (c ∘ f) x).IsInvertible := by
+      rw [mfderiv_comp x (c.mdifferentiableAt (by simp) hc)
         ((hf.contMDiffAt (hU.mem_nhds hx)).mdifferentiableAt (by simp))]
-    exact hcinv.comp hinv
+      exact hcinv.comp hinv
+    simpa only [mfderiv_eq_fderiv] using! hmanifold
   obtain ⟨d, hd, hdV, hdf⟩ := NoExotic.exists_partialDiffeomorph_of_contDiffOn hV hxV hcf hderiv
   have hdx : d x ∈ c.target := by
     rw [hdf]
@@ -5260,8 +5261,8 @@ private theorem Smale.CollarHeight.mfderiv_height_zero {D H X : Type*} [NormedAd
     rw [mfderiv_eq_fderiv, htime.hasFDerivAt.fderiv]
     apply ContinuousLinearMap.ext
     intro t
-    simp only [ContinuousLinearMap.toSpanSingleton_apply, ContinuousLinearMap.id_apply,
-      smul_eq_mul, mul_one]
+    change t * (1 : ℝ) = t
+    exact mul_one t
   apply ContinuousLinearMap.ext
   intro v
   rw [mfderiv_prod_eq_add_apply ((hh.contMDiffAt (hU.mem_nhds hx)).mdifferentiableAt (by simp)),

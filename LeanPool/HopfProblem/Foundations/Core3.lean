@@ -83,7 +83,7 @@ private theorem
     (hgf : ContMDiff I L ω (g ∘ f)) : ContMDiff J L ω g := by
   intro y
   obtain ⟨x, rfl⟩ := hsurj y
-  have h := hgf.contMDiffAt.comp (f x) (hf x).localInverse_contMDiffAt
+  have h := hgf.contMDiffAt.comp (f x) (hf x).contMDiffAt_localInverse
   apply h.congr_of_eventuallyEq
   filter_upwards [(hf x).localInverse_eventuallyEq_right] with z hz
   change g z = g (f ((hf x).localInverse z))
