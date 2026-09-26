@@ -10109,6 +10109,39 @@ projects:
     msc:
       - '90C35'
       - '05C21'
+  - slug: 1mfld
+    title: The classification of compact 1-manifolds
+    summary: 'A Lean 4 (mathlib) proof of the classification of 1-manifolds, specifically that
+      every compact, connected, Hausdorff topological space charted on the half-line [0,∞) is
+      homeomorphic to the circle S¹ or to the closed unit interval [0,1]. The proof follows
+      David Gale''s outline: shrink to a finite atlas of interval charts, then induct on the
+      atlas size, merging two overlapping charts at each step; a connected overlap glues two
+      charts into one (two boundary charts glue onto [0, 1]), while a disconnected overlap has
+      exactly two components and yields the circle.'
+    branch: topology
+    entry_module: LeanPool.OneManifold
+    authors:
+    - Jim Fowler
+    - Dennis Sweeney
+    source:
+      url: https://github.com/sweeneyde/1mfld
+      github_repo: sweeneyde/1mfld
+      commit: 83e961ba28dd8182e7bae844756aba614eb1512e
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - OneMfld.homeomorph_circle_or_unitInterval
+    main_results:
+    - declaration: OneMfld.homeomorph_circle_or_unitInterval
+      informal: Every compact connected Hausdorff space charted on the nonnegative real half-line
+        is homeomorphic to the circle or the closed unit interval.
+    tags:
+    - topology
+    msc:
+    - 57N99
+    - 54F65
+    - 68V20
+    provenance: mix
   - slug: asymptotic-triangle-packing
     title: Finite near-regular hypergraph rounding
     summary: >-
