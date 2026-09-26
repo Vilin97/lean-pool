@@ -79,7 +79,7 @@ private lemma not_mem_of_ge (asps : AspSet) {m n : ℤ} (n_le_m : n ≤ m) : ⟨
 @[simp] private lemma not_mem_self (asps : AspSet) (n : ℤ) : ⟨n, n⟩ ∉ asps :=
   asps.not_mem_of_ge (le_refl n)
 
-/-- The order on indices after the inversions in `asps` are applied. 
+/-- The order on indices after the inversions in `asps` are applied.
 
  The integer order obtained by reversing precisely the inversions in the ASP set. -/
 def postLt (asps : AspSet) (m n : ℤ) : Prop :=

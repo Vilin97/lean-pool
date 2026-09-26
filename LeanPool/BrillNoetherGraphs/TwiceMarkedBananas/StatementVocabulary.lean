@@ -596,4 +596,3 @@ def correctedCrossOneOffForcedCount (g n : ℕ) : ℕ :=
   else Nat.choose (g - 1) 2 + g / (n - 1)
 
 end TMB
-
