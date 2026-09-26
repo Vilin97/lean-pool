@@ -74,8 +74,6 @@ theorem inr_mem_boundary
 
 /-! ### The path match of the product system is componentwise -/
 
--- The proof introduces the lexicographic order on the sum, which
--- needs both component orders even though the statement does not.
 open scoped Classical in
 /-- A left boundary flag's chain stays left, so the product
 system's path matching is the left component's. -/
@@ -89,7 +87,6 @@ theorem pathMatch_prodRel_inl
     (hb' : g ∈ (leftSub F).boundaryFlags) :
     (prodRel (F := F) κ₁ κ₂).pathMatch (Sum.inl g) hb =
       Sum.inl (κ₁.pathMatch g hb') := by
-  let := sumLexLinearOrder α β
   obtain ⟨k, -, hcont, hpm⟩ := pathMatch_chain_length κ₁ hb'
   have hterm : W₁.pairing (iterWalk κ₁ g k) ∈
       (leftSub F).boundaryFlags := by
@@ -111,8 +108,6 @@ theorem pathMatch_prodRel_inl
     hcontU htermU).trans ?_
   rw [iterWalk_prodRel_inl κ₁ κ₂ g k, pairing_inl, hpm]
 
--- The proof introduces the lexicographic order on the sum, which
--- needs both component orders even though the statement does not.
 open scoped Classical in
 /-- And likewise on the right. -/
 theorem pathMatch_prodRel_inr
@@ -125,7 +120,6 @@ theorem pathMatch_prodRel_inr
     (hb' : g ∈ (rightSub F).boundaryFlags) :
     (prodRel (F := F) κ₁ κ₂).pathMatch (Sum.inr g) hb =
       Sum.inr (κ₂.pathMatch g hb') := by
-  let := sumLexLinearOrder α β
   obtain ⟨k, -, hcont, hpm⟩ := pathMatch_chain_length κ₂ hb'
   have hterm : W₂.pairing (iterWalk κ₂ g k) ∈
       (rightSub F).boundaryFlags := by

@@ -44,6 +44,7 @@ namespace EdgeSubset
 
 variable {α : Type}
 
+open scoped Classical in
 /-- **RS21's tensor `t′_h`, in coordinates.** -/
 noncomputable def tPrime [LinearOrder α] [Fintype α] {W : Fragment α}
     (F : EdgeSubset W) {k ℓ : ℕ}
@@ -63,6 +64,7 @@ noncomputable def tPrime [LinearOrder α] [Fintype α] {W : Fragment α}
         else 0
   else 0
 
+open scoped Classical in
 /-- **RS21's tensor at given arc directions.**  The chain
 orientation fixes the vertex signs; the arc directions fix which
 legs carry `f` and which carry `g`. -/

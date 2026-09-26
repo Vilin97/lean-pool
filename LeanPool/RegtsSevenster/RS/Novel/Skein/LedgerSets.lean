@@ -48,6 +48,7 @@ two sets. -/
 theorem mem_symmU {E₁ E₂ : Finset α} {i : α} :
     i ∈ symmU E₁ E₂ ↔
       (i ∈ E₁ ∧ i ∉ E₂) ∨ (i ∈ E₂ ∧ i ∉ E₁) := by
+  classical
   unfold symmU
   rw [Finset.mem_union, Finset.mem_sdiff, Finset.mem_sdiff]
 
@@ -99,6 +100,7 @@ noncomputable def pairSet (p : α × α) : Finset α := {p.1, p.2}
 /-- Membership in a pair's label set. -/
 theorem mem_pairSet {p : α × α} {i : α} :
     i ∈ pairSet p ↔ i = p.1 ∨ i = p.2 := by
+  classical
   unfold pairSet
   rw [Finset.mem_insert, Finset.mem_singleton]
 

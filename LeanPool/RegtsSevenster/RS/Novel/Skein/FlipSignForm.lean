@@ -100,6 +100,7 @@ private theorem step_algebra (x : ℤ) (n : ℕ) :
   rw [tri_succ, neg_pow, pow_add, pow_succ]
   ring
 
+open scoped Classical in
 /-- **The closed form of the flip-sign product**: each label `a`
 with `n` instances in `flipLabels L` contributes the initial sign
 to the `n`-th power times the triangular-number sign. -/
@@ -174,6 +175,7 @@ theorem flipSignProd_formula (f : α → Fin (2 * ℓ))
       ite_eq_left (Finset.mem_insert_of_mem (Finset.mem_insert_self p.2 _))]
     ring
 
+open scoped Classical in
 /-- **The even corollary**: a flip sequence in which every label
 occurs an even number of times has sign product `(−1)^length`. -/
 theorem flipSignProd_of_even (f : α → Fin (2 * ℓ))

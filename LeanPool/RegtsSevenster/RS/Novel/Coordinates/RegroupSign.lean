@@ -694,7 +694,7 @@ theorem sign_listIndexPerm_oriented_matched (W : ClosedFragment) (F : EdgeSubset
       (orientedPairList_nodup W F o) (matchedPairList_nodup' W F o)
       (fun x => ⟨fun _ => mem_matchedPairList' W F o x,
                   fun _ => mem_orientedPairList W F o x⟩)
-      (len_oriented_eq_matched W F o)) =
+      (by exact len_oriented_eq_matched W F o)) =
     Perm.sign (κ.outPerm o) := by
   -- ═══════ SETUP: BOTH LISTS AS FLAT-MAPPED PAIR BLOCKS ═══════
   -- Oriented and matched lists share the base `mB`, each pairing it
@@ -935,10 +935,12 @@ theorem sign_listIndexPerm_matched_global (W : ClosedFragment) (F : EdgeSubset
   W)
     {κ : F.TransitionSystem} (o : κ.Orientation) :
     Perm.sign (listIndexPerm (matchedPairList W F o) (globalPairList W F o)
-      (matchedPairList_nodup' W F o) (globalPairList_nodup' W F o)
-      (fun x => ⟨fun _ => mem_globalPairList' W F o x,
-                  fun _ => mem_matchedPairList' W F o x⟩)
-      (len_matched_eq_global W F o)) =
+      (matchedPairList_nodup' W F o) (by exact globalPairList_nodup' W F o)
+      (by
+        intro x
+        exact ⟨fun _ => mem_globalPairList' W F o x,
+          fun _ => mem_matchedPairList' W F o x⟩)
+      (by exact len_matched_eq_global W F o)) =
     1 := by
   -- ═══════ SETUP: BOTH LISTS AS FLAT-MAPPED PAIR BLOCKS ═══════
   -- Matched and global lists pair their own bases with the same

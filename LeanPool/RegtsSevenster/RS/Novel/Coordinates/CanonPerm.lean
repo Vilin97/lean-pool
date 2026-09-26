@@ -186,7 +186,7 @@ private theorem vr_comp_canon_mono (μm : Multiset (Fin k)) (F : Finset (Fin (2 
     simp only [colourValueRank]
     have hpw := Multiset.pairwise_sort μm (· ≤ ·)
     have hlen := show (μm.sort (· ≤ ·)).length = μm.card from by simp
-    exact hpw.sortedLE (Fin.mk_le_mk.mpr (by omega) :
+    exact hpw.sortedLE.monotone_get (Fin.mk_le_mk.mpr (by omega) :
       (⟨i, hlen ▸ h1⟩ : Fin _) ≤ ⟨j, hlen ▸ h2⟩)
   · -- left ≤ right
     change colourValueRank k (Sum.inl _) ≤ colourValueRank k (Sum.inr _)
@@ -202,7 +202,7 @@ private theorem vr_comp_canon_mono (μm : Multiset (Fin k)) (F : Finset (Fin (2 
     show k + _ ≤ k + _
     have hpw := Finset.pairwise_sort F (· ≤ ·)
     have hlen := show (F.sort (· ≤ ·)).length = F.card from by simp
-    have hle := hpw.sortedLE (Fin.mk_le_mk.mpr (by omega) :
+    have hle := hpw.sortedLE.monotone_get (Fin.mk_le_mk.mpr (by omega) :
       (⟨i - μm.card, hlen ▸ (by omega)⟩ : Fin _) ≤
         ⟨j - μm.card, hlen ▸ (by omega)⟩)
     omega
@@ -654,7 +654,7 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
     have hnd : (F.sort (· ≤ ·)).Nodup := F.sort_nodup (· ≤ ·)
     have hslt : (F.sort (· ≤ ·)).SortedLT := hpw.sortedLE.sortedLT_of_nodup hnd
     -- SortedLT = StrictMono l.get
-    exact hslt (show (⟨a.val, _⟩ : Fin (F.sort (· ≤ ·)).length) < ⟨b.val, _⟩
+    exact hslt.strictMono_get (show (⟨a.val, _⟩ : Fin (F.sort (· ≤ ·)).length) < ⟨b.val, _⟩
       from hab)
   -- ═══════ STAGE 5: THE ODD LIST'S INVERSIONS ARE π'S ═══════
   have step5 : inversions (oddListOf c) = pairInv (⇑π) := by
