@@ -10307,43 +10307,42 @@ projects:
     msc:
       - '12F05'
       - '13F25'
-  - slug: lean-malliavin
-    title: Malliavin calculus and the Clark–Ocone representation
-    summary: Constructs the Malliavin derivative, Gaussian integration by parts, closability,
-      Wiener chaos, Brownian Itô integration and martingale representation. The Clark–Ocone
-      endpoint uses a generating pre-Brownian process with continuous linear coordinates
-      on a separable real Gaussian Banach space, its natural filtration, and pairs in the
-      closed Malliavin graph; the conditional-expectation sections agree almost everywhere
-      at positive times.
-    branch: stochastic analysis
-    entry_module: LeanPool.Malliavin
+
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
     - Ezzeri Esa
     source:
-      url: https://github.com/savarin/lean-malliavin
-      github_repo: savarin/lean-malliavin
-      commit: a1a6ccc6eedbdf15fc3aebf9146d1fddfa0c8272
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - PalomarClarkOcone.generated_clark_ocone
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: PalomarClarkOcone.generated_clark_ocone
-      informal: For a generating pre-Brownian process on a separable real Gaussian Banach
-        space whose coordinates are pointwise represented by continuous linear functionals,
-        constructs a time realization of the Malliavin derivative and an Itô isometry for
-        the natural filtration, with martingale representation for every terminal L² variable.
-        For pairs in the closed Malliavin graph, the Clark–Ocone formula identifies the
-        derivative's predictable projection with its conditional-expectation sections for
-        almost every positive time.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - probability
-    - malliavin-calculus
-    - stochastic-analysis
+    - functional-analysis
     msc:
-    - 60H07
-    - 60H05
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10441,3 +10440,41 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: lean-malliavin
+    title: Malliavin calculus and the Clark–Ocone representation
+    summary: Constructs the Malliavin derivative, Gaussian integration by parts, closability,
+      Wiener chaos, Brownian Itô integration and martingale representation. The Clark–Ocone
+      endpoint uses a generating pre-Brownian process with continuous linear coordinates
+      on a separable real Gaussian Banach space, its natural filtration, and pairs in the
+      closed Malliavin graph; the conditional-expectation sections agree almost everywhere
+      at positive times.
+    branch: stochastic analysis
+    entry_module: LeanPool.Malliavin
+    authors:
+    - Ezzeri Esa
+    source:
+      url: https://github.com/savarin/lean-malliavin
+      github_repo: savarin/lean-malliavin
+      commit: a1a6ccc6eedbdf15fc3aebf9146d1fddfa0c8272
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - PalomarClarkOcone.generated_clark_ocone
+    main_results:
+    - declaration: PalomarClarkOcone.generated_clark_ocone
+      informal: For a generating pre-Brownian process on a separable real Gaussian Banach
+        space whose coordinates are pointwise represented by continuous linear functionals,
+        constructs a time realization of the Malliavin derivative and an Itô isometry for
+        the natural filtration, with martingale representation for every terminal L² variable.
+        For pairs in the closed Malliavin graph, the Clark–Ocone formula identifies the
+        derivative's predictable projection with its conditional-expectation sections for
+        almost every positive time.
+    tags:
+    - probability
+    - malliavin-calculus
+    - stochastic-analysis
+    msc:
+    - 60H07
+    - 60H05
