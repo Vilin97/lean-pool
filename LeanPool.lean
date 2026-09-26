@@ -292,6 +292,7 @@ public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.AnalyticSigmaA
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Capacitability
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsCompact
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.CouplingsUHC
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ENNRealTruncation
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.EpsOptimalSelection
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.JankovVonNeumann
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.KernelIntegral

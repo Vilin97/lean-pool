@@ -39,6 +39,7 @@ We upgrade it to lower semicontinuous `ℝ≥0∞`-valued integrands in three st
 -/
 module
 
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ENNRealTruncation
 public import Mathlib.Algebra.Order.Ring.Star
 public import Mathlib.MeasureTheory.Measure.LevyProkhorovMetric
 public import Mathlib.Order.CompletePartialOrder
@@ -55,20 +56,6 @@ Supporting results for BicausalOT.
 
 open MeasureTheory Filter Set Topology
 open scoped ENNReal
-
-/-- Every `a : ℝ≥0∞` is the supremum of its truncations `min a n`.
-(A copy of `ennreal_iSup_min_natCast` from `BicausalOT.DescriptiveSetTheory.KernelIntegral`;
-kept `private` so that this draft stays self-contained over Mathlib and can be
-deduplicated on integration.) -/
-private lemma ennreal_iSup_min_natCast' (a : ℝ≥0∞) : ⨆ n : ℕ, min a (n : ℝ≥0∞) = a := by
-  refine le_antisymm (iSup_le fun n => min_le_left _ _) ?_
-  rcases eq_or_ne a ∞ with rfl | ha
-  · have hmin : ∀ n : ℕ, min (∞ : ℝ≥0∞) (n : ℝ≥0∞) = (n : ℝ≥0∞) := fun n =>
-      min_eq_right le_top
-    simp only [hmin]
-    exact ENNReal.iSup_natCast.ge
-  · obtain ⟨n, hn⟩ := ENNReal.exists_nat_gt ha
-    exact le_iSup_of_le n (min_eq_left hn.le).ge
 
 section SequentialBound
 
@@ -146,7 +133,7 @@ theorem LowerSemicontinuous.lintegral_le_liminf
       = ⨆ n : ℕ, ∫⁻ x, min (f x) (n : ℝ≥0∞) ∂μ := by
         rw [← lintegral_iSup (fun n => hf.measurable.min measurable_const)
             (fun n m hnm x => min_le_min le_rfl (by exact_mod_cast hnm))]
-        exact lintegral_congr fun x => (ennreal_iSup_min_natCast' (f x)).symm
+        exact lintegral_congr fun x => (ennreal_iSup_min_natCast (f x)).symm
     _ ≤ atTop.liminf fun i => ∫⁻ x, f x ∂(μs i) := iSup_le h_bound
 
 end SequentialBound

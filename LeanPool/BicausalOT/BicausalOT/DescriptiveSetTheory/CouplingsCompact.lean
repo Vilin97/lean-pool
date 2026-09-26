@@ -18,25 +18,18 @@ Authors: KT. Wu
   via the marginal equations (`Set.compl_prod_eq_union`,
   `Measure.map_apply measurable_fst`); (ii) Prokhorov
   (`isCompact_closure_of_isTightMeasureSet`) gives compactness of the
-  closure; (iii) the set is CLOSED (front F2's
-  `isClosed_probabilityMeasure_couplings`, reproduced below), so it equals
+  closure; (iii) the set is CLOSED
+  (`isClosed_probabilityMeasure_couplings` below), so it equals
   its closure.
 
-  As in F2, the `Measure.map`-level reformulations matching the shape of
+  The `Measure.map`-level reformulations matching the shape of
   the repository's marginal constraints (`CouplingSet₀` in Defs.lean,
   `MultiPeriod.Feas`) are provided, including the unconditional plain-
   `Measure`-target version (empty when a target is not a probability
   measure — and the empty set is compact).
 
-  Bonus: nonemptiness via the product coupling
-  (`ProbabilityMeasure.prod`, `ProbabilityMeasure.map_fst_prod`) — NOTE
-  this may duplicate front F1's deliverable; dedupe at integration.
-
-  DEDUPE NOTE FOR THE INTEGRATOR: the section "Translation" and the
-  theorems `isClosed_probabilityMeasure_couplings`,
-  `probabilityMeasure_couplings_toMeasure_eq` are copied VERBATIM from
-  front F2's draft_FeasClosed.lean (scratch files cannot import each
-  other); keep a single copy when integrating both fronts.
+  Nonemptiness follows from the product coupling
+  (`ProbabilityMeasure.prod`, `ProbabilityMeasure.map_fst_prod`).
 -/
 module
 
@@ -45,8 +38,7 @@ public import Mathlib.MeasureTheory.Measure.Prokhorov
 public import Mathlib.Tactic
 
 
-/-! ## Translation between `ProbabilityMeasure.map` and `Measure.map` constraints
-(verbatim copy of front F2's lemma — dedupe at integration) -/
+/-! ## Translation between `ProbabilityMeasure.map` and `Measure.map` constraints -/
 
 @[expose] public section
 
@@ -75,7 +67,7 @@ theorem probabilityMeasure_map_eq_iff (γ : ProbabilityMeasure Ω) (μ : Probabi
 
 end Translation
 
-/-! ## Closedness of coupling sets (front F2, reproduced) -/
+/-! ## Closedness of coupling sets -/
 
 section Couplings
 
@@ -83,8 +75,7 @@ variable {A B : Type*}
   [TopologicalSpace A] [PolishSpace A] [MeasurableSpace A] [BorelSpace A]
   [TopologicalSpace B] [PolishSpace B] [MeasurableSpace B] [BorelSpace B]
 
-/-- **F2, `ProbabilityMeasure` level** (verbatim copy — dedupe at integration). On Borel
-Polish spaces, the set of couplings of `mu` and `nu` is closed in the topology of weak
+/-- On Borel Polish spaces, the set of couplings of `mu` and `nu` is closed in the topology of weak
 convergence. -/
 theorem isClosed_probabilityMeasure_couplings
     (mu : ProbabilityMeasure A) (nu : ProbabilityMeasure B) :
@@ -102,7 +93,7 @@ omit [TopologicalSpace A] [PolishSpace A] [BorelSpace A]
   [TopologicalSpace B] [PolishSpace B] [BorelSpace B] in
 /-- The coupling set stated with `Measure.map` constraints on the underlying measures
 (the shape used by `CouplingSet₀` and `MultiPeriod.Feas`) coincides with the coupling
-set stated via `ProbabilityMeasure.map` (verbatim copy of F2 — dedupe at integration). -/
+set stated via `ProbabilityMeasure.map`. -/
 theorem probabilityMeasure_couplings_toMeasure_eq
     (mu : ProbabilityMeasure A) (nu : ProbabilityMeasure B) :
     {γ : ProbabilityMeasure (A × B) |
@@ -219,8 +210,7 @@ theorem isCompact_probabilityMeasure_marginals (m : Measure A) (n : Measure B) :
     rw [hempty]
     exact isCompact_empty
 
-/-! ## Bonus: nonemptiness via the product coupling
-(NOTE: front F1 owns nonemptiness — dedupe at integration if F1 delivers) -/
+/-! ## Nonemptiness via the product coupling -/
 
 omit [TopologicalSpace A] [PolishSpace A] [BorelSpace A]
   [TopologicalSpace B] [PolishSpace B] [BorelSpace B] in

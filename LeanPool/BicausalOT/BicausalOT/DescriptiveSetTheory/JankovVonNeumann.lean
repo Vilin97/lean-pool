@@ -37,7 +37,7 @@ open MeasureTheory Set ENNReal
 noncomputable section
 
 /-- Pointwise ε-optimal element in a nonempty set. -/
-private theorem eps_optimal_element'
+theorem eps_optimal_element
     {α : Type*} (S : Set α) (h_ne : S.Nonempty)
     (f : α → ENNReal) (ε : ENNReal) (hε : 0 < ε) :
     ∃ a ∈ S, f a ≤ (⨅ (x : α) (_ : x ∈ S), f x) + ε := by
@@ -62,7 +62,7 @@ theorem eps_optimal_selection
       (∀ a, sel a ∈ S a) ∧
       (∀ a, f a (sel a) ≤ (⨅ (m : Measure β) (_ : m ∈ S a), f a m) + ε) := by
   have key : ∀ a, ∃ m ∈ S a, f a m ≤ (⨅ (m : Measure β) (_ : m ∈ S a), f a m) + ε :=
-    fun a => eps_optimal_element' (S a) (h_ne a) (f a) ε hε
+    fun a => eps_optimal_element (S a) (h_ne a) (f a) ε hε
   choose sel hsel_mem hsel_opt using key
   exact ⟨sel, hsel_mem, hsel_opt⟩
 

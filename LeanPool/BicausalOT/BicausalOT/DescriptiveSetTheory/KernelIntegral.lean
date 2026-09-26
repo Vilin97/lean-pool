@@ -23,6 +23,7 @@ Authors: KT. Wu
 module
 
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.Capacitability
+public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.ENNRealTruncation
 public import LeanPool.BicausalOT.BicausalOT.DescriptiveSetTheory.LowerSemianalytic
 public import Mathlib.MeasureTheory.Measure.Prod
 public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
@@ -98,17 +99,6 @@ theorem ennreal_le_iff_forall_lt_add_inv {a q : ℝ≥0∞} (hq : q ≠ ∞) :
     have h1 : ((k : ℝ≥0∞) + 1)⁻¹ ≤ (ε : ℝ≥0∞) :=
       le_of_lt (lt_of_le_of_lt (ENNReal.inv_le_inv.mpr le_self_add) hk)
     exact absurd (h k) (not_lt.mpr (le_trans (by gcongr) hεa.le))
-
-theorem ennreal_iSup_min_natCast (a : ℝ≥0∞) : ⨆ n : ℕ, min a (n : ℝ≥0∞) = a := by
-  refine le_antisymm (iSup_le fun n => min_le_left _ _) ?_
-  rcases eq_or_ne a ∞ with rfl | ha
-  · have hmin : ∀ n : ℕ, min (∞ : ℝ≥0∞) (n : ℝ≥0∞) = (n : ℝ≥0∞) :=
-      fun n => min_eq_right le_top
-    calc (∞ : ℝ≥0∞) = ⨆ n : ℕ, (n : ℝ≥0∞) := ENNReal.iSup_natCast.symm
-      _ ≤ ⨆ n : ℕ, min (∞ : ℝ≥0∞) (n : ℝ≥0∞) :=
-          iSup_mono fun n => (hmin n).symm.le
-  · obtain ⟨n, hn⟩ := ENNReal.exists_nat_gt ha
-    exact le_iSup_of_le n (by simp [min_eq_left hn.le])
 
 /-! ## AEMeasurability from analytic sublevel sets
 
