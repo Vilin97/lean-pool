@@ -6783,6 +6783,7 @@ public import LeanPool.ParameterFreeGradient.V7.PositiveModel
 public import LeanPool.ParameterFreeGradient.V7.Proofs.Anchor
 public import LeanPool.ParameterFreeGradient.V7.Proofs.Euclidean
 public import LeanPool.ParameterFreeGradient.V7.Proofs.GuardAdapters
+public import LeanPool.ParameterFreeGradient.V7.Proofs.ResidualAlgebra
 public import LeanPool.ParameterFreeGradient.V7.Proofs.Shared
 public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1AxiomAudit
 public import LeanPool.ParameterFreeGradient.V7.Proofs.Stage1E03

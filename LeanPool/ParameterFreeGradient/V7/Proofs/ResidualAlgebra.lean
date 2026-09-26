@@ -1,0 +1,381 @@
+/-
+Copyright (c) 2026 Yuning Yang. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Yuning Yang
+-/
+module
+
+public import LeanPool.ParameterFreeGradient.V7.BelowTwoStatements
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteC
+public import LeanPool.ParameterFreeGradient.O3.Stage2RouteD
+
+/-!
+# Algebra shared by the below-two and above-two residual identities
+
+The weighted reversal, pairing and triangular-sum identities depend on the residual
+map and recurrence, independently of the coefficient regime.
+-/
+
+@[expose] public section
+
+open scoped BigOperators
+
+namespace V7.ResidualAlgebra
+
+/-- Weighted reversal obtained by accumulating the residual increments. -/
+noncomputable def forwardC (n : ℕ) (u : ScalarSeq)
+    (A : VectorSeq d) : VectorSeq d :=
+  fun k => Nat.rec (u n • A n)
+    (fun j previous =>
+      if j < n then
+        previous + u (n - j - 1) • (A (n - j - 1) - A (n - j))
+      else previous) k
+
+lemma forwardC_zero (n : ℕ) (u : ScalarSeq) (A : VectorSeq d) :
+    forwardC n u A 0 = u n • A n := by
+  rfl
+
+lemma forwardC_succ (n : ℕ) (u : ScalarSeq) (A : VectorSeq d)
+    (k : ℕ) (hk : k < n) :
+    forwardC n u A (k + 1) = forwardC n u A k +
+      u (n - k - 1) • (A (n - k - 1) - A (n - k)) := by
+  simp [forwardC, hk]
+
+lemma forward_map (n : ℕ) (u : ScalarSeq) (A B : VectorSeq d) :
+    BelowResidualMap n u A B (forwardC n u A) (fun i => B (n - i)) := by
+  refine ⟨forwardC_zero n u A, ?_, ?_⟩
+  · intro i hi
+    have hpos : 0 < n - i := by omega
+    have hk : n - i - 1 < n := by omega
+    rw [show n - i = (n - i - 1) + 1 by omega]
+    rw [forwardC_succ n u A (n - i - 1) hk]
+    have hindex₁ : n - (n - i - 1) - 1 = i := by omega
+    have hindex₂ : n - (n - i - 1) = i + 1 := by omega
+    rw [hindex₁, hindex₂]
+    simp only [Nat.succ_sub_one]
+    exact add_sub_cancel_left
+      (forwardC n u A (n - i - 1))
+      (u i • (A i - A (i + 1)))
+  · intro i hi
+    rfl
+
+/-- Reconstruct the reversed primal sequence from weighted residual increments. -/
+noncomputable def inverseRev (n : ℕ) (u : ScalarSeq)
+    (C : VectorSeq d) : VectorSeq d :=
+  fun k => Nat.rec ((1 / u n) • C 0)
+    (fun j previous =>
+      if j < n then
+        previous + (1 / u (n - j - 1)) • (C (j + 1) - C j)
+      else previous) k
+
+lemma inverseRev_zero (n : ℕ) (u : ScalarSeq) (C : VectorSeq d) :
+    inverseRev n u C 0 = (1 / u n) • C 0 := by
+  rfl
+
+lemma inverseRev_succ (n : ℕ) (u : ScalarSeq) (C : VectorSeq d)
+    (k : ℕ) (hk : k < n) :
+    inverseRev n u C (k + 1) = inverseRev n u C k +
+      (1 / u (n - k - 1)) • (C (k + 1) - C k) := by
+  simp [inverseRev, hk]
+
+/-- Return the reconstructed primal sequence in its original index order. -/
+noncomputable def inverseA (n : ℕ) (u : ScalarSeq)
+    (C : VectorSeq d) : VectorSeq d :=
+  fun i => inverseRev n u C (n - i)
+
+lemma map_determined_forward (n : ℕ) (u : ScalarSeq)
+    (A B C D : VectorSeq d) (hmap : BelowResidualMap n u A B C D) :
+    SameOnHorizon n C (forwardC n u A) ∧
+      SameOnHorizon n D (fun i => B (n - i)) := by
+  constructor
+  · intro k hk
+    induction k with
+    | zero => exact hmap.1.trans (forwardC_zero n u A).symm
+    | succ k ih =>
+      have hkn : k < n := by omega
+      have hi : n - k - 1 < n := by omega
+      have hnk : n - (n - k - 1) = k + 1 := by omega
+      have hpred : n - (n - k - 1) - 1 = k := by omega
+      have hm := hmap.2.1 (n - k - 1) hi
+      simp only [hnk, Nat.succ_sub_one,
+        show n - k - 1 + 1 = n - k by omega] at hm
+      rw [forwardC_succ n u A k hkn, ← ih (by omega)]
+      exact eq_add_of_sub_eq' hm
+  · intro k hk
+    exact hmap.2.2 k hk
+
+lemma pairing_smul_left (r : ℝ) (x y : Point d) :
+    O3.pairing (r • x) y = r * O3.pairing x y :=
+  O3.Stage2RouteD.pairing_smul_left r x y
+
+lemma pairing_smul_right (r : ℝ) (x y : Point d) :
+    O3.pairing x (r • y) = r * O3.pairing x y :=
+  O3.Stage2RouteD.pairing_smul_right r x y
+
+lemma pairing_add_left (x y z : Point d) :
+    O3.pairing (x + y) z = O3.pairing x z + O3.pairing y z := by
+  simp [O3.pairing, Finset.sum_add_distrib, add_mul]
+
+lemma pairing_sub_left (x y z : Point d) :
+    O3.pairing (x - y) z = O3.pairing x z - O3.pairing y z := by
+  simp [O3.pairing, Finset.sum_sub_distrib, sub_mul]
+
+lemma pairing_sub_right (x y z : Point d) :
+    O3.pairing x (y - z) = O3.pairing x y - O3.pairing x z := by
+  simp [O3.pairing, Finset.sum_sub_distrib, mul_sub]
+
+lemma pairing_weightedSum_left (m : ℕ) (a : ScalarSeq)
+    (X : VectorSeq d) (y : Point d) :
+    O3.pairing (weightedSum m a X) y =
+      ∑ i ∈ Finset.range m, a i * O3.pairing (X i) y := by
+  induction m with
+  | zero => simp [weightedSum, O3.pairing]
+  | succ m ih =>
+    have hsum : weightedSum (m + 1) a X =
+        weightedSum m a X + a m • X m := by
+      ext j
+      simp [weightedSum, Finset.sum_range_succ]
+    rw [hsum, pairing_add_left, ih, pairing_smul_left,
+      Finset.sum_range_succ]
+
+lemma pairing_weightedSum_right (m : ℕ) (a : ScalarSeq)
+    (X : VectorSeq d) (y : Point d) :
+    O3.pairing y (weightedSum m a X) =
+      ∑ i ∈ Finset.range m, a i * O3.pairing y (X i) := by
+  rw [O3.pairing_comm, pairing_weightedSum_left]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [O3.pairing_comm]
+
+lemma pairing_abel (n : ℕ) (Y X : VectorSeq d) :
+    (∑ k ∈ Finset.range (n + 1), O3.pairing (Y k - Y (k + 1)) (X k)) =
+      O3.pairing (Y 0) (X 0) +
+        (∑ k ∈ Finset.range n,
+          O3.pairing (Y (k + 1)) (X (k + 1) - X k)) -
+        O3.pairing (Y (n + 1)) (X n) := by
+  induction n with
+  | zero =>
+    simp [pairing_sub_left]
+  | succ n ih =>
+    rw [Finset.sum_range_succ, ih, Finset.sum_range_succ]
+    simp only [pairing_sub_left, pairing_sub_right]
+    ring
+
+lemma triangle_sum {E : Type*} [AddCommMonoid E]
+    (f : ℕ → ℕ → E) (n : ℕ) :
+    (∑ j ∈ Finset.range (n + 1),
+      ∑ l ∈ Finset.range (n - j + 1), f (j + l) j) =
+    ∑ r ∈ Finset.range (n + 1),
+      ∑ j ∈ Finset.range (r + 1), f r j := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    change
+      (∑ j ∈ Finset.range (n + 2),
+        ∑ l ∈ Finset.range (n + 1 - j + 1), f (j + l) j) =
+      ∑ r ∈ Finset.range (n + 2),
+        ∑ j ∈ Finset.range (r + 1), f r j
+    rw [Finset.sum_range_succ _ (n + 1),
+      Finset.sum_range_succ _ (n + 1)]
+    have hlast :
+        (∑ l ∈ Finset.range (n + 1 - (n + 1) + 1), f (n + 1 + l) (n + 1)) =
+          f (n + 1) (n + 1) := by simp
+    rw [hlast]
+    have hsplit :
+        (∑ j ∈ Finset.range (n + 1),
+          ∑ l ∈ Finset.range (n + 1 - j + 1), f (j + l) j) =
+        (∑ j ∈ Finset.range (n + 1),
+          ∑ l ∈ Finset.range (n - j + 1), f (j + l) j) +
+        ∑ j ∈ Finset.range (n + 1), f (n + 1) j := by
+      rw [← Finset.sum_add_distrib]
+      apply Finset.sum_congr rfl
+      intro j hj
+      have hjlt : j < n + 1 := Finset.mem_range.mp hj
+      have hjn : j ≤ n := by omega
+      have hsize : n + 1 - j + 1 = (n - j + 1) + 1 := by omega
+      rw [hsize, Finset.sum_range_succ]
+      rw [show j + (n - j + 1) = n + 1 by omega]
+    rw [hsplit, ih]
+    rw [Finset.sum_range_succ (fun j => f (n + 1) j) (n + 1)]
+    ac_rfl
+
+/-- Dual sequence expressed by the weighted summation-by-parts formula. -/
+noncomputable def dualP (n : ℕ) (u : ScalarSeq)
+    (C : VectorSeq d) (k : ℕ) : Point d :=
+  (1 / u (n - (k + 1))) • C (k + 1) -
+    weightedSum (k + 1)
+      (fun j => 1 / u (n - (j + 1)) - 1 / u (n - j)) C
+
+lemma dualP_succ (n : ℕ) (u : ScalarSeq) (C : VectorSeq d)
+    (k : ℕ) :
+    dualP n u C (k + 1) = dualP n u C k +
+      (1 / u (n - (k + 2))) • (C (k + 2) - C (k + 1)) := by
+  ext j
+  simp [dualP, weightedSum, Finset.sum_range_succ]
+  ring
+
+lemma omega_block (n : ℕ) (Omega : Point d → ℝ)
+    (heven : EvenIncrement Omega) (B D : VectorSeq d)
+    (hD : ∀ i ≤ n, D i = B (n - i)) :
+    (∑ k ∈ Finset.range n, Omega (B k - B (k + 1))) =
+      ∑ k ∈ Finset.range n, Omega (D k - D (k + 1)) := by
+  rw [← Finset.sum_range_reflect
+    (fun k => Omega (B k - B (k + 1))) n]
+  apply Finset.sum_congr rfl
+  intro k hk
+  have hkn : k < n := Finset.mem_range.mp hk
+  rw [hD k (by omega), hD (k + 1) (by omega)]
+  have h₁ : n - k = n - 1 - k + 1 := by omega
+  have h₂ : n - (k + 1) = n - 1 - k := by omega
+  rw [h₁, h₂]
+  rw [show B (n - 1 - k + 1) - B (n - 1 - k) =
+      -(B (n - 1 - k) - B (n - 1 - k + 1)) by abel]
+  exact (heven _).symm
+
+lemma b_block (n : ℕ) (u : ScalarSeq)
+    (b : ScalarMatrix) (A B C D X : VectorSeq d)
+    (hb00 : b 0 0 = -1) (hAn : A (n + 1) = 0)
+    (hX : BelowXRecurrence n b B X)
+    (hmap : BelowResidualMap n u A B C D) :
+    -(∑ k ∈ Finset.range (n + 1),
+        u k * O3.pairing (A k - A (k + 1)) (X k)) =
+      ∑ k ∈ Finset.range (n + 1),
+        O3.pairing
+          (weightedSum (k + 1) (fun i => b (n - i) (n - k)) C)
+          (D k) := by
+  let Y : VectorSeq d := fun k => if k ≤ n then C (n - k) else 0
+  have hY : ∀ k ≤ n,
+      u k • (A k - A (k + 1)) = Y k - Y (k + 1) := by
+    intro k hk
+    by_cases hkn : k < n
+    · have hm := hmap.2.1 k hkn
+      have hsub : n - (k + 1) = n - k - 1 := by omega
+      dsimp [Y]
+      rw [ite_eq_left hk, ite_eq_left (by omega), hsub]
+      exact hm.symm
+    · have hkeq : k = n := by omega
+      subst k
+      dsimp [Y]
+      simp only [le_refl, ↓reduceIte, Nat.sub_self,
+        sub_zero, hAn]
+      simpa using hmap.1.symm
+  have hYlast : Y (n + 1) = 0 := by simp [Y]
+  have hYzero : Y 0 = C n := by simp [Y]
+  have hprimal :
+      -(∑ k ∈ Finset.range (n + 1),
+          u k * O3.pairing (A k - A (k + 1)) (X k)) =
+        -O3.pairing (Y 0) (X 0) +
+          ∑ k ∈ Finset.range n,
+            O3.pairing (Y (k + 1)) (X k - X (k + 1)) := by
+    have hab := pairing_abel n Y X
+    rw [hYlast] at hab
+    have hzero : O3.pairing (0 : Point d) (X n) = 0 := by
+      simp [O3.pairing]
+    rw [hzero, sub_zero] at hab
+    have hsum :
+        (∑ k ∈ Finset.range (n + 1),
+          u k * O3.pairing (A k - A (k + 1)) (X k)) =
+        ∑ k ∈ Finset.range (n + 1),
+          O3.pairing (Y k - Y (k + 1)) (X k) := by
+      apply Finset.sum_congr rfl
+      intro k hk
+      have hklt : k < n + 1 := Finset.mem_range.mp hk
+      have hkle : k ≤ n := by omega
+      rw [← pairing_smul_left, hY k hkle]
+    have hneg :
+        (∑ k ∈ Finset.range n,
+          O3.pairing (Y (k + 1)) (X (k + 1) - X k)) =
+        -(∑ k ∈ Finset.range n,
+          O3.pairing (Y (k + 1)) (X k - X (k + 1))) := by
+      rw [← Finset.sum_neg_distrib]
+      apply Finset.sum_congr rfl
+      intro k hk
+      simp only [pairing_sub_right]
+      ring
+    rw [hsum, hab, hneg]
+    ring
+  have hrow :
+      -O3.pairing (Y 0) (X 0) +
+          (∑ k ∈ Finset.range n,
+            O3.pairing (Y (k + 1)) (X k - X (k + 1))) =
+        ∑ r ∈ Finset.range (n + 1),
+          O3.pairing (Y r) (weightedSum (r + 1) (b r) B) := by
+    rw [Finset.sum_range_succ']
+    have hbase : weightedSum 1 (b 0) B = -(B 0) := by
+      ext j
+      simp [weightedSum, hb00]
+    rw [hbase, hX.1]
+    have hpairneg : O3.pairing (Y 0) (-(B 0)) =
+        -O3.pairing (Y 0) (B 0) := by
+      simp [O3.pairing, Finset.sum_neg_distrib]
+    rw [hpairneg]
+    have hsums :
+        (∑ k ∈ Finset.range n,
+          O3.pairing (Y (k + 1)) (X k - X (k + 1))) =
+        ∑ k ∈ Finset.range n,
+          O3.pairing (Y (k + 1))
+            (weightedSum (k + 2) (b (k + 1)) B) := by
+      apply Finset.sum_congr rfl
+      intro k hk
+      have hkn := Finset.mem_range.mp hk
+      have hxk := hX.2 k hkn
+      rw [hxk]
+      congr 1
+      abel
+    rw [hsums]
+    abel
+  have hrow_triangle :
+      (∑ r ∈ Finset.range (n + 1),
+          O3.pairing (Y r) (weightedSum (r + 1) (b r) B)) =
+        ∑ j ∈ Finset.range (n + 1),
+          ∑ l ∈ Finset.range (n - j + 1),
+            b (j + l) j * O3.pairing (C (n - (j + l))) (B j) := by
+    calc
+      (∑ r ∈ Finset.range (n + 1),
+          O3.pairing (Y r) (weightedSum (r + 1) (b r) B)) =
+        ∑ r ∈ Finset.range (n + 1),
+          ∑ j ∈ Finset.range (r + 1),
+            b r j * O3.pairing (C (n - r)) (B j) := by
+          apply Finset.sum_congr rfl
+          intro r hr
+          have hrlt : r < n + 1 := Finset.mem_range.mp hr
+          have hrn : r ≤ n := by omega
+          rw [pairing_weightedSum_right]
+          dsimp [Y]
+          rw [ite_eq_left hrn]
+      _ = ∑ j ∈ Finset.range (n + 1),
+          ∑ l ∈ Finset.range (n - j + 1),
+            b (j + l) j * O3.pairing (C (n - (j + l))) (B j) := by
+          exact (triangle_sum
+            (fun r j => b r j * O3.pairing (C (n - r)) (B j)) n).symm
+  have hdual_triangle :
+      (∑ k ∈ Finset.range (n + 1),
+        O3.pairing
+          (weightedSum (k + 1) (fun i => b (n - i) (n - k)) C)
+          (D k)) =
+        ∑ j ∈ Finset.range (n + 1),
+          ∑ l ∈ Finset.range (n - j + 1),
+            b (j + l) j * O3.pairing (C (n - (j + l))) (B j) := by
+    rw [← Finset.sum_range_reflect
+      (fun k => O3.pairing
+        (weightedSum (k + 1) (fun i => b (n - i) (n - k)) C) (D k))
+      (n + 1)]
+    apply Finset.sum_congr rfl
+    intro j hj
+    have hjlt : j < n + 1 := Finset.mem_range.mp hj
+    have hjn : j ≤ n := by omega
+    have hout : n + 1 - 1 - j = n - j := by omega
+    rw [hout, hmap.2.2 (n - j) (by omega), show n - (n - j) = j by omega]
+    rw [pairing_weightedSum_left]
+    have href := Finset.sum_range_reflect
+      (fun i => b (n - i) j * O3.pairing (C i) (B j)) (n - j + 1)
+    rw [← href]
+    apply Finset.sum_congr rfl
+    intro l hl
+    have hln : l < n - j + 1 := Finset.mem_range.mp hl
+    have hidx : n - (n - j + 1 - 1 - l) = j + l := by omega
+    have hcidx : n - j + 1 - 1 - l = n - (j + l) := by omega
+    rw [hidx, hcidx]
+  rw [hprimal, hrow, hrow_triangle, hdual_triangle]
+
+end V7.ResidualAlgebra
