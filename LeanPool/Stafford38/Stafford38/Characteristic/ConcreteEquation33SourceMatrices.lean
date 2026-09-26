@@ -548,9 +548,8 @@ variable [OreLocalization.OreSet
   (OppositeDenominators (filteredQuotientTwoJetTraceData k I) S)]
 variable [IsLocalRing (Localization S)]
 
-private abbrev concreteData := filteredQuotientTwoJetTraceData k I
-
-local notation "D" => concreteData k I
+local notation "D" =>
+  Stafford38.Characteristic.ConcreteLocalizedTwoBlockSpecialFibre.concreteData k I
 
 /-- The concrete localized two-block quotient has exactly the principal
 parameter reduction required by the source matrix construction. -/

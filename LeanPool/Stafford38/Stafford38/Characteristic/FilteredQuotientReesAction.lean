@@ -526,8 +526,8 @@ theorem orderReesParameter_op_smul_eq_shift
       ext L
       by_cases hL : N + 1 = L
       · subst L
-        simp only [DirectSum.of_apply, Nat.one_add, Nat.succ_eq_add_one, Nat.add_left_cancel_iff,
-          ↓reduceDIte, DirectSum.of_eq_same, SetLike.coe_eq_coe]
+        simp only [DirectSum.of_apply, Nat.one_add, Nat.succ_eq_add_one, ↓reduceDIte,
+          SetLike.coe_eq_coe]
         apply Subtype.ext
         simp only [quotientOrderPieceSucc, Submodule.coe_inclusion]
         exact (cast_quotientOrderPiece_coe k I (Nat.one_add N) q').trans rfl

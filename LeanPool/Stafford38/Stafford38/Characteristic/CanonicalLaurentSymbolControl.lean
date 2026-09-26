@@ -88,7 +88,7 @@ private abbrev orderDecompositionGroundExtension :=
     (@Stafford38.WeylFiltration.orderWeight n)
 
 /-- The weighted grading of the order-symbol algebra used for extension of the ground field. -/
-local instance orderGradedAlgebraGroundExtensionInstance :
+private local instance orderGradedAlgebraGroundExtensionInstance :
     GradedAlgebra (orderDecompositionGroundExtension (k := k) (n := n)) :=
   MvPolynomial.weightedGradedAlgebra k
     (@Stafford38.WeylFiltration.orderWeight n)
