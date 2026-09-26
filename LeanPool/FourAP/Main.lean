@@ -17,7 +17,7 @@ integers”. For the closest match to the displayed theorem in the paper, see
 as positions and as values, and an arbitrary nonzero integer difference.
 Each existential statement below uses the explicit, verified construction.
 -/
-@[expose] public section
+public section
 
 namespace FourAP
 

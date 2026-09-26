@@ -15,7 +15,7 @@ These elementary bookkeeping facts make precise the paper's statements that
 prefix does not move any of its old entries. They are independent of the special
 binary order.
 -/
-@[expose] public section
+public section
 
 namespace FourAP
 

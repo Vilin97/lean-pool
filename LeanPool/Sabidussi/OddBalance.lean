@@ -24,7 +24,7 @@ modulo two, expands the count over choices of partner vertices, and cancels the 
 derangement contributions in pairs.
 -/
 
-@[expose] public section
+public section
 
 open scoped BigOperators
 open Finset
@@ -51,6 +51,7 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 
 /-- The interaction obstruction at a vertex `v`: the sum over all other vertices `u` of the
 pairwise interaction of the chosen frames at `v` and `u`. -/
+@[expose]
 def obstruction (b : V → V → Fin 3 → Fin 3 → F2) (x : V → Fin 3) (v : V) : F2 :=
   ∑ u ∈ Finset.univ.erase v, b v u (x v) (x u)
 
@@ -290,7 +291,7 @@ lemma totalChoiceTerm_eq_zero_of_twoCycle
   rw [hrow, zero_mul]
 
 /-- A derangement of the vertices of `S`: a fixed-point-free permutation. -/
-def Derangement (S : Finset V) :=
+@[expose] def Derangement (S : Finset V) :=
   {σ : Equiv.Perm {v // v ∈ S} // ∀ v, σ v ≠ v}
 
 noncomputable instance Derangement.instFintype (S : Finset V) : Fintype (Derangement S) :=
@@ -377,7 +378,7 @@ lemma totalChoiceTerm_eq_zero_of_derangement_inv_eq_self
       _ = d.1 v₀ := rfl
 
 /-- A choice of partners whose image covers every vertex of `S`. -/
-def CoveredChoice (S : Finset V) :=
+@[expose] def CoveredChoice (S : Finset V) :=
   {f : Choice S // ∀ w : {w // w ∈ S}, ∃ v, (f v : V) = w}
 
 noncomputable instance CoveredChoice.instFintype (S : Finset V) :

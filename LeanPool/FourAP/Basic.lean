@@ -21,13 +21,13 @@ together with `a ≠ b`, are equivalent to having a nonzero **integer** common
 difference.  Thus decreasing progressions are included throughout.
 -/
 
-@[expose] public section
+public section
 
 namespace FourAP
 
 /-- Four consecutive terms of a nonconstant arithmetic progression, as in the
 paper's main theorem. The equations avoid truncated subtraction in `ℕ`. -/
-def IsAP4 (a b c d : ℕ) : Prop :=
+@[expose] def IsAP4 (a b c d : ℕ) : Prop :=
   a ≠ b ∧ a + c = 2 * b ∧ b + d = 2 * c
 
 /-- The equation-based representation used in this formalization is equivalent
@@ -46,18 +46,18 @@ theorem isAP4_iff_integer_progression {a b c d : ℕ} :
 
 /-- The paper's definition of a 4AP-free order, applied to a strict relation.
 The relation need not be bundled as a linear order for this predicate. -/
-def APFree (R : ℕ → ℕ → Prop) : Prop :=
+@[expose] def APFree (R : ℕ → ℕ → Prop) : Prop :=
   ∀ ⦃a b c d : ℕ⦄, IsAP4 a b c d → R a b → R b c → R c d → False
 
 /-- The completion `𝒞(P)` from the paragraph preceding Lemma 1, with an arbitrary
 background relation `R`.  `List.idxOf` is the length of the list for a missing
 entry, so the first disjunct orders the prefix and puts it before the tail. -/
-def Completion (R : ℕ → ℕ → Prop) (P : List ℕ) (a b : ℕ) : Prop :=
+@[expose] def Completion (R : ℕ → ℕ → Prop) (P : List ℕ) (a b : ℕ) : Prop :=
   P.idxOf a < P.idxOf b ∨ (a ∉ P ∧ b ∉ P ∧ R a b)
 
 /-- A safe word in the sense of the paper: a word without repetitions whose
 completion is 4AP-free. The background order is made explicit here. -/
-def Safe (R : ℕ → ℕ → Prop) (P : List ℕ) : Prop :=
+@[expose] def Safe (R : ℕ → ℕ → Prop) (P : List ℕ) : Prop :=
   P.Nodup ∧ APFree (Completion R P)
 
 end FourAP

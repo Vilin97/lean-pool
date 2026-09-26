@@ -22,7 +22,7 @@ The construction is the degree-splitting step of the manuscript written without 
 graph: remove pairs of occurrences recursively, ending with a pair or a triple.
 -/
 
-@[expose] public section
+public section
 
 namespace Sabidussi
 
@@ -46,6 +46,7 @@ theorem sum_tripleDifference_choice (i : Fin 3) :
 /-- Three local patterns on `n + 2` occurrences.  For `2` occurrences the difference is constant;
 for `3` it is the anisotropic triple; every additional pair receives the same nonzero colour and
 is then removed recursively. -/
+@[expose]
 def localDifference : (n : ℕ) → Fin 3 → Fin (n + 2) → Color
   | 0, c => doubleDifference (choiceColor c)
   | 1, c => tripleDifference (choiceColor c)
