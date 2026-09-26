@@ -5,7 +5,7 @@ Authors: Scott Armstrong
 -/
 module
 
-public import LeanPool.BKARForestFormula.BKAR.CubePartition.SimplexSector
+public import LeanPool.BKARForestFormula.BKAR.CubePartition.SimplexSector.Equiv
 
 /-! # Simplex-sector conversion: arbitrary order
 

@@ -31,19 +31,11 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 The ordinary cube contribution attached to an abstract forest index.
 
 The value is independent of the active-extension choice system used to realize
-the support as a `Forest` representative; if no such system is available, this definition
-uses `0` as a harmless fallback. The public BKAR theorem will remove that
-fallback by constructing a global choice system.
+the support as a `Forest` representative. Such a system exists for every finite vertex type.
 -/
 def cubeContribution (I : ForestIndex V) (ρ : (Edge V → ℝ) → ℝ) : ℝ :=
-  by
-    classical
-    exact
-      if hchoices : Nonempty (Forest.ActiveExtensionChoice V) then
-        (Forest.canonicalGrownForestForSupport (Classical.choice hchoices) I)
-          |>.cubeContribution ρ
-      else
-        0
+  (Forest.canonicalGrownForestForSupport
+    (Classical.choice (Forest.nonempty_activeExtensionChoice V)) I).cubeContribution ρ
 
 /--
 Any concrete active-extension choice system realizes the same abstract
@@ -56,10 +48,9 @@ theorem cubeContribution_eq_canonicalGrownForestForSupport
       (Forest.canonicalGrownForestForSupport choices I).cubeContribution ρ := by
   classical
   unfold cubeContribution
-  rw [dite_eq_left ⟨choices⟩]
   exact
     Forest.canonicalGrownForestForSupport_cubeContribution_eq_of_choices
-      (Classical.choice ⟨choices⟩) choices I ρ hρ
+      (Classical.choice (Forest.nonempty_activeExtensionChoice V)) choices I ρ hρ
 
 end ForestIndex
 
