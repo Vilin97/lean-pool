@@ -10307,44 +10307,42 @@ projects:
     msc:
       - '12F05'
       - '13F25'
-  - slug: lean-scv
-    title: Classical several complex variables
-    summary: Formalizes Cauchy and Taylor theory, Hartogs phenomena, removable singularities, analytic
-      sets and germs, Weierstrass theory, holomorphic convexity, Cartan–Thullen and Bochner tube theorems,
-      plurisubharmonic functions, Levi convexity, and elementary Runge-domain theory. Weierstrass preparation
-      and coordinate-origin germ Noetherianity overlap LocalComplexGeometry; this development also supplies
-      germ unique factorization and global extension and convexity results.
-    branch: complex analysis
-    entry_module: LeanPool.SeveralComplexVariables
+
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Bastiaan J Braams
+    - Ezzeri Esa
     source:
-      url: https://github.com/bjbraams/lean-scv
-      github_repo: bjbraams/lean-scv
-      commit: caef1ae776ff79933718312357980d46628d3702
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: SCV.cauchy_formula_polydisc
-      informal: Holomorphic functions on a polydisc satisfy the iterated Cauchy integral formula.
-    - declaration: SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
-      informal: On an open subset of a finite complex coordinate space, a Banach-valued separately analytic
-        map that is locally bounded is jointly analytic.
-      source_ref: Boas (2013), Section 2.7, Theorem 7 (the classical two-variable scalar case).
-    - declaration: SCV.identity_theorem
-      informal: Holomorphic functions on a connected domain that agree on a nonempty open subset agree
-        throughout the domain.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - complex-analysis
-    - several-complex-variables
-    - holomorphic-functions
+    - functional-analysis
     msc:
-    - 32A10
-    - 32D05
-    - 32E10
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10442,3 +10440,42 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: lean-scv
+    title: Classical several complex variables
+    summary: Formalizes Cauchy and Taylor theory, Hartogs phenomena, removable singularities, analytic
+      sets and germs, Weierstrass theory, holomorphic convexity, Cartan–Thullen and Bochner tube theorems,
+      plurisubharmonic functions, Levi convexity, and elementary Runge-domain theory. Weierstrass preparation
+      and coordinate-origin germ Noetherianity overlap LocalComplexGeometry; this development also supplies
+      germ unique factorization and global extension and convexity results.
+    branch: complex analysis
+    entry_module: LeanPool.SeveralComplexVariables
+    authors:
+    - Bastiaan J Braams
+    source:
+      url: https://github.com/bjbraams/lean-scv
+      github_repo: bjbraams/lean-scv
+      commit: caef1ae776ff79933718312357980d46628d3702
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
+    main_results:
+    - declaration: SCV.cauchy_formula_polydisc
+      informal: Holomorphic functions on a polydisc satisfy the iterated Cauchy integral formula.
+    - declaration: SeveralComplexVariables.analyticOnNhd_of_separately_analytic_locally_bounded
+      informal: On an open subset of a finite complex coordinate space, a Banach-valued separately analytic
+        map that is locally bounded is jointly analytic.
+      source_ref: Boas (2013), Section 2.7, Theorem 7 (the classical two-variable scalar case).
+    - declaration: SCV.identity_theorem
+      informal: Holomorphic functions on a connected domain that agree on a nonempty open subset agree
+        throughout the domain.
+    tags:
+    - complex-analysis
+    - several-complex-variables
+    - holomorphic-functions
+    msc:
+    - 32A10
+    - 32D05
+    - 32E10
