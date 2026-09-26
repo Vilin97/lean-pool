@@ -200,22 +200,6 @@ def IsAffineCylinderSimplex
         (singularSimplexAsContinuousMap (RelativeCylinder p) n σ
           (SphereOddDegree.FiniteSimplex.vertex i)).2.1
 
-/-- The geometric realization condition for a relative subdivision boundary.
-Unlike a generic finite support, every represented collar simplex is required to be affine in the
-realization-cylinder barycentric coordinates. -/
-structure AffineCollarRealization
-    {n : Nat}
-    (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n) where
-  /-- A finite singular-generator representation of the collar chain. -/
-  support : FiniteChainRealization B.collarChain
-  affine : ∀ i : support.Occurrence, IsAffineCylinderSimplex (support.simplex i)
-
-/-- Existence of an explicit affine finite-cell realization of the relative collar chain. -/
-def AffineCollarRealizationExists
-    {n : Nat}
-    (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n) : Prop :=
-  Nonempty (AffineCollarRealization B)
-
 variable (p : Nat) {n : Nat}
 variable (B : RelativeSubdivisionBoundary (ZMod p) (RelativeCylinder p) n)
 

@@ -18,7 +18,7 @@ vertex are pairwise distinct movable quotient-orbit parameters.  This file
 uses their range as a canonical selected index subtype and splits the complete
 movable product into selected and complementary coordinates.
 
-Unlike the earlier abstract `SelectedVectorCoordinateSplit`, this construction
+This construction
 requires no additional coordinate-equivalence hypothesis.
 -/
 

@@ -6,7 +6,7 @@ Authors: Arseniy Akopyan
 module
 
 
-public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBCoordinateSplit
+public import LeanPool.NandakumarRamanaRao.NRR.PrimePolyhedron.FoxNeuwirth.RouteBVectorFiberElimination
 
 /-!
 # Route B: the actual selected local vector block

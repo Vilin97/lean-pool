@@ -970,69 +970,7 @@ theorem eval_restrictedGenericityPolynomial
   | inr qf =>
       exact eval_restrictedCodimTwoMinorPolynomial hp C base move qf.1.1 qf.1.2
 
-/-- Proof-carrying attachment of the complete restricted polynomial family to explicit affine
-relative cells. -/
-structure RelativePolynomialAttachment
-    (base : Assignment hp C) where
-  /-- The polynomial family together with its identification with the restricted determinants. -/
-  polynomialData : {f : RelativeGenericityIndex hp C → MovablePolynomialRing hp C //
-    f = restrictedGenericityPolynomial hp C base}
-  evaluation : ∀ move i,
-    MvPolynomial.eval move (polynomialData.1 i) =
-      genericityValue hp C (replaceMovable hp C base move) i
-
-namespace RelativePolynomialAttachment
-
-variable {hp C} {base : Assignment hp C}
-
-/-- The determinant and minor polynomials carried by the attachment. -/
-def polynomial (A : RelativePolynomialAttachment hp C base) :
-    RelativeGenericityIndex hp C → MovablePolynomialRing hp C :=
-  A.polynomialData.1
-
-theorem polynomial_eq (A : RelativePolynomialAttachment hp C base) :
-    A.polynomial = restrictedGenericityPolynomial hp C base :=
-  A.polynomialData.2
-
-end RelativePolynomialAttachment
-
-/-- Every explicit affine relative cell system carries the audited boundary-restricted determinant
-and minor polynomial attachment. -/
-noncomputable def relativePolynomialAttachment
-    (base : Assignment hp C) : RelativePolynomialAttachment hp C base where
-  polynomialData := ⟨restrictedGenericityPolynomial hp C base, rfl⟩
-  evaluation := eval_restrictedGenericityPolynomial hp C base
-
-/-- The polynomial attachment exists without any genericity or nontriviality assumption. -/
-theorem relativePolynomialAttachment_nonempty
-    (base : Assignment hp C) :
-    Nonempty (RelativePolynomialAttachment hp C base) :=
-  ⟨relativePolynomialAttachment hp C base⟩
-
 end Polynomials
-
-variable (hp : Nat.Prime p)
-
-/-- Combined proof-carrying package produced once a genuine relative affine collar and a base
-boundary assignment are available. -/
-structure AffineRelativeCellAndPolynomialAttachment
-    (hp : Nat.Prime p) (N₀ N₁ M L : Nat) where
-  /-- The relative affine collar carrying the polynomial attachment. -/
-  collar : FoxNeuwirthRelativeAffineCollar hp N₀ N₁ M L
-  /-- The base vertex assignment from which movable coordinates are perturbed. -/
-  base : Parameters.Assignment hp collar.cells
-  /-- The polynomial identities attached to the collar and its base assignment. -/
-  attachment : Polynomials.RelativePolynomialAttachment hp collar.cells base
-
-/-- Polynomial attachment to any already-constructed genuine relative affine collar. -/
-noncomputable def attachPolynomialsToCollar
-    {N₀ N₁ M L : Nat}
-    (C : FoxNeuwirthRelativeAffineCollar hp N₀ N₁ M L)
-    (base : Parameters.Assignment hp C.cells) :
-    AffineRelativeCellAndPolynomialAttachment hp N₀ N₁ M L where
-  collar := C
-  base := base
-  attachment := Polynomials.relativePolynomialAttachment hp C.cells base
 
 end ExplicitAffineRelativeCollar
 end EquivariantPrismStableRelativeBoundary
