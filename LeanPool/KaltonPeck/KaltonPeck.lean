@@ -37,88 +37,126 @@ noncomputable
 section
 
 /-- A strong continuous alternating form on a real normed space. -/
-structure StrongSymplecticForm (X : Type*) [NormedAddCommGroup X] [NormedSpace ℝ X] where
-  /-- The continuous linear equivalence induced by the strong symplectic form. -/
-  toDual : X ≃L[ℝ] StrongDual ℝ X
-  alternating : ∀ x, toDual x x = 0
+abbrev StrongSymplecticForm (X : Type*) [NormedAddCommGroup X] [NormedSpace ℝ X] :=
+  Support.StrongSymplecticForm X
+
+namespace StrongSymplecticForm
+
+export Support.StrongSymplecticForm (mk)
+
+variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+
+/-- The continuous linear equivalence induced by the strong symplectic form. -/
+abbrev toDual (ω : StrongSymplecticForm X) : X ≃L[ℝ] StrongDual ℝ X :=
+  Support.StrongSymplecticForm.toDual ω
+
+/-- The form vanishes on the diagonal. -/
+abbrev alternating (ω : StrongSymplecticForm X) : ∀ x, ω.toDual x x = 0 :=
+  Support.StrongSymplecticForm.alternating ω
+
+end StrongSymplecticForm
 
 /-- The transpose of a bounded linear map between real normed spaces. -/
-def transpose {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev transpose {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) :
     StrongDual ℝ Y →L[ℝ] StrongDual ℝ X :=
-  (ContinuousLinearMap.flip (ContinuousLinearMap.compL ℝ X Y ℝ)) T
+  Support.transpose T
 
 /-- The adjoint of a bounded operator with respect to a strong symplectic form. -/
-def StrongSymplecticForm.adjoint {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev StrongSymplecticForm.adjoint {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (ω : StrongSymplecticForm X) (T : X →L[ℝ] X) : X →L[ℝ] X :=
-  ω.toDual.symm.toContinuousLinearMap.comp
-    ((transpose T).comp ω.toDual.toContinuousLinearMap)
+  Support.StrongSymplecticForm.adjoint ω T
 
 /-- A bounded linear map is Fredholm when it has finite-dimensional kernel, closed range,
 and finite-dimensional cokernel. -/
-def IsFredholm {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev IsFredholm {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : Prop :=
-  FiniteDimensional ℝ T.toLinearMap.ker ∧
-    IsClosed (T.toLinearMap.range : Set Y) ∧
-      FiniteDimensional ℝ (Y ⧸ T.toLinearMap.range)
+  Support.IsFredholm T
 
 /-- A bounded linear map has finite rank when its algebraic range is finite-dimensional. -/
-def HasFiniteRank {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev HasFiniteRank {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : Prop :=
-  FiniteDimensional ℝ T.toLinearMap.range
+  Support.HasFiniteRank T
 
 /-- The rank of a bounded linear map, used when its range is finite-dimensional. -/
-def operatorRank {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev operatorRank {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : ℕ :=
-  Module.finrank ℝ T.toLinearMap.range
+  Support.operatorRank T
 
 /-- The dimension of the kernel of a bounded linear map, used when the kernel is
 finite-dimensional. -/
-def nullity {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev nullity {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     [NormedAddCommGroup Y] [NormedSpace ℝ Y] (T : X →L[ℝ] Y) : ℕ :=
-  Module.finrank ℝ T.toLinearMap.ker
+  Support.nullity T
 
 /-- A complex structure on a real normed space is a bounded operator squaring to `-I`. -/
-def IsComplexStructure {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev IsComplexStructure {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (J : X →L[ℝ] X) : Prop :=
-  J ^ 2 = -1
+  Support.IsComplexStructure J
 
 /-- A closed codimension-one linear subspace. -/
-def IsHyperplane {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+abbrev IsHyperplane {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (H : Submodule ℝ X) : Prop :=
-  IsClosed (H : Set X) ∧ Module.finrank ℝ (X ⧸ H) = 1
+  Support.IsHyperplane H
 
 /-- A real sequence is square-summable. -/
-def IsSquareSummable (x : ℕ → ℝ) : Prop :=
-  Summable fun n ↦ x n ^ 2
+abbrev IsSquareSummable (x : ℕ → ℝ) : Prop :=
+  Support.IsSquareSummable x
 
 /-- The usual `ℓ₂` norm, defined on all real sequences and used on square-summable ones. -/
-def l2Norm (x : ℕ → ℝ) : ℝ :=
-  Real.sqrt (∑' n, x n ^ 2)
+abbrev l2Norm (x : ℕ → ℝ) : ℝ :=
+  Support.l2Norm x
 
 /-- The Kalton--Peck centralizer, with Lean's `Real.log 0 = 0` supplying the zero convention. -/
-def centralizer (x : ℕ → ℝ) (n : ℕ) : ℝ :=
-  2 * x n * Real.log (|x n| / l2Norm x)
+abbrev centralizer (x : ℕ → ℝ) (n : ℕ) : ℝ :=
+  Support.centralizer x n
 
 /-- The admissible coordinate pairs in the usual real Kalton--Peck presentation. -/
-def IsAdmissiblePair (p : (ℕ → ℝ) × (ℕ → ℝ)) : Prop :=
-  IsSquareSummable p.2 ∧ IsSquareSummable (p.1 - centralizer p.2)
+abbrev IsAdmissiblePair (p : (ℕ → ℝ) × (ℕ → ℝ)) : Prop :=
+  Support.IsAdmissiblePair p
 
 /-- The standard quasi-norm used to present the real Kalton--Peck space. -/
-def kaltonPeckQuasiNorm (p : (ℕ → ℝ) × (ℕ → ℝ)) : ℝ :=
-  l2Norm (p.1 - centralizer p.2) + l2Norm p.2
+abbrev kaltonPeckQuasiNorm (p : (ℕ → ℝ) × (ℕ → ℝ)) : ℝ :=
+  Support.kaltonPeckQuasiNorm p
 
 /-- A real Banach space carrying the standard Kalton--Peck coordinate presentation. -/
-structure RealKaltonPeckPresentation (X : Type*) [NormedAddCommGroup X]
-    [NormedSpace ℝ X] where
-  /-- Linear coordinates identifying the space with the admissible Kalton--Peck pairs. -/
-  coordinates : X →ₗ[ℝ] (ℕ → ℝ) × (ℕ → ℝ)
-  coordinates_injective : Function.Injective coordinates
-  coordinates_mem : ∀ z, IsAdmissiblePair (coordinates z)
-  coordinates_surjective : ∀ p, IsAdmissiblePair p → ∃ z, coordinates z = p
-  norm_equivalent : ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ z,
-    c * kaltonPeckQuasiNorm (coordinates z) ≤ ‖z‖ ∧
-      ‖z‖ ≤ C * kaltonPeckQuasiNorm (coordinates z)
+abbrev RealKaltonPeckPresentation (X : Type*) [NormedAddCommGroup X]
+    [NormedSpace ℝ X] :=
+  Support.RealKaltonPeckPresentation X
+
+namespace RealKaltonPeckPresentation
+
+export Support.RealKaltonPeckPresentation (mk)
+
+variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+
+/-- Linear coordinates identifying the space with the admissible Kalton--Peck pairs. -/
+abbrev coordinates (p : RealKaltonPeckPresentation X) : X →ₗ[ℝ] (ℕ → ℝ) × (ℕ → ℝ) :=
+  Support.RealKaltonPeckPresentation.coordinates p
+
+/-- The coordinate map is injective. -/
+abbrev coordinates_injective (p : RealKaltonPeckPresentation X) :
+    Function.Injective p.coordinates :=
+  Support.RealKaltonPeckPresentation.coordinates_injective p
+
+/-- Every coordinate pair is admissible. -/
+abbrev coordinates_mem (p : RealKaltonPeckPresentation X) :
+    ∀ z, IsAdmissiblePair (p.coordinates z) :=
+  Support.RealKaltonPeckPresentation.coordinates_mem p
+
+/-- Every admissible coordinate pair is represented by a vector. -/
+abbrev coordinates_surjective (p : RealKaltonPeckPresentation X) :
+    ∀ q, IsAdmissiblePair q → ∃ z, p.coordinates z = q :=
+  Support.RealKaltonPeckPresentation.coordinates_surjective p
+
+/-- The coordinate quasi-norm and the norm of the space are equivalent. -/
+abbrev norm_equivalent (p : RealKaltonPeckPresentation X) :
+    ∃ c C : ℝ, 0 < c ∧ 0 < C ∧ ∀ z,
+      c * kaltonPeckQuasiNorm (p.coordinates z) ≤ ‖z‖ ∧
+        ‖z‖ ≤ C * kaltonPeckQuasiNorm (p.coordinates z) :=
+  Support.RealKaltonPeckPresentation.norm_equivalent p
+
+end RealKaltonPeckPresentation
 
 /- Source: paper.tex, label `thm:rank_parity_general`, lines 131--138, repeated as
 `thm:rank-parity` at lines 504--509. Approved representation: a real symplectic Banach space is
@@ -130,29 +168,22 @@ theorem rankParityGeneral {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (hFredholm : IsFredholm (1 + ω.adjoint T * T))
     (hFiniteRank : HasFiniteRank (T ^ 2 + 1)) :
     Nat.ModEq 2 (operatorRank (T ^ 2 + 1)) (nullity (1 + ω.adjoint T * T)) := by
-  let omega : Support.StrongSymplecticForm X :=
-    { toDual := ω.toDual
-      alternating := ω.alternating }
-  have hadj : omega.adjoint T = ω.adjoint T := by rfl
-  have hFred : Support.IsFredholm (1 + omega.adjoint T * T) := by
-    rw [hadj]
-    exact hFredholm
-  have hFinite : Support.HasFiniteRank (T ^ 2 + 1) := hFiniteRank
+  let omega : Support.StrongSymplecticForm X := ω
   let E := (T ^ 2 + 1).toLinearMap.ker
   obtain ⟨hEclosed, hEfinite, hEdim, _, _⟩ :=
-    Support.GeneralRank.finiteRankPolynomialKernel T hFinite
+    Support.GeneralRank.finiteRankPolynomialKernel T hFiniteRank
   let : IsClosed (E : Set X) := hEclosed
   let : FiniteDimensional ℝ (X ⧸ E) := hEfinite
   let eta := (Support.GeneralRank.rankParityForm omega T).form
   have hEtaFred : Support.IsFredholm eta.toDual :=
-    (Support.GeneralRank.rankParityForm omega T).isFredholm hFred
+    (Support.GeneralRank.rankParityForm omega T).isFredholm hFredholm
   obtain ⟨hRfinite, hParity⟩ :=
     Support.FiniteCodim.finiteCodimParity eta
       (Support.Forms.strongSymplecticReflexive omega) hEtaFred E
   let : FiniteDimensional ℝ (eta.restrictedRadical E) := hRfinite
   have hREven : Even (Module.finrank ℝ (eta.restrictedRadical E)) := by
     simpa [eta, E] using
-      (Support.GeneralRank.restrictedRadicalEven omega T hFinite).2
+      (Support.GeneralRank.restrictedRadicalEven omega T hFiniteRank).2
   rw [hEdim, (Support.GeneralRank.rankParityForm omega T).radical_eq_kernel] at hParity
   rcases hREven with ⟨k, hk⟩
   unfold Nat.ModEq at hParity ⊢
@@ -170,23 +201,10 @@ Approval record: `agent_outputs/AUDIT.md`, decision `DEC-USER-STATEMENT-CONFIRM`
 theorem rankParityZ2 {Z₂ : Type*} [NormedAddCommGroup Z₂] [NormedSpace ℝ Z₂]
     [CompleteSpace Z₂] (_hZ₂ : RealKaltonPeckPresentation Z₂) (T : Z₂ →L[ℝ] Z₂)
     (hFiniteRank : HasFiniteRank (T ^ 2 + 1)) : Even (operatorRank (T ^ 2 + 1)) := by
-  let hZ : Support.RealKaltonPeckPresentation Z₂ :=
-    { coordinates := _hZ₂.coordinates
-      coordinates_injective := _hZ₂.coordinates_injective
-      coordinates_mem := _hZ₂.coordinates_mem
-      coordinates_surjective := _hZ₂.coordinates_surjective
-      norm_equivalent := _hZ₂.norm_equivalent }
-  let omegaS := Support.Symplectic.transportedKaltonSwansonForm hZ
-  let omega : StrongSymplecticForm Z₂ :=
-    { toDual := omegaS.toDual
-      alternating := omegaS.alternating }
-  have hadj : omega.adjoint T = omegaS.adjoint T := by rfl
-  obtain ⟨hFredS, hEvenKernel⟩ :=
-    Support.GraphFredholm.evenGraphKernel hZ T
-  have hFred : IsFredholm (1 + omega.adjoint T * T) := by
-    rw [hadj]
-    exact hFredS
-  have hParity := rankParityGeneral omega T hFred hFiniteRank
+  let omega := Support.Symplectic.transportedKaltonSwansonForm _hZ₂
+  obtain ⟨hFredholm, hEvenKernel⟩ :=
+    Support.GraphFredholm.evenGraphKernel _hZ₂ T
+  have hParity := rankParityGeneral omega T hFredholm hFiniteRank
   apply even_iff_two_dvd.mpr
   apply Nat.modEq_zero_iff_dvd.mp
   exact hParity.trans
