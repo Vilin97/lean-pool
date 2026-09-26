@@ -5,8 +5,7 @@ Authors: Arthur F. Ramos, Ruy J. G. B. de Queiroz, Anjolina G. de Oliveira
 -/
 module
 
-public import Mathlib.RingTheory.Localization.Basic
-public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.MultSet
+public import LeanPool.NagataFactoriality.NagataFactoriality.Localization.IsLocalization
 
 
 /-!
@@ -80,31 +79,15 @@ theorem algebraMap_injective : Function.Injective (algebraMap α (Localization S
 
 theorem mk_eq_iff {a b s t : α} (hs : s ∈ S) (ht : t ∈ S) :
     mk (S := S) a s hs = mk (S := S) b t ht ↔ a * t = b * s := by
-  constructor
-  · intro h
-    have h' :
-        algebraMap α (Localization S) (a * t) = algebraMap α (Localization S) (b * s) := by
-      have h'' :
-          IsLocalization.mk' (Localization S) a ⟨s, hs⟩ =
-            IsLocalization.mk' (Localization S) b ⟨t, ht⟩ := by
-        simpa [mk, _root_.Localization.mk_eq_mk'_apply] using h
-      exact (IsLocalization.mk'_eq_iff_eq' (M := S) (S := Localization S)).1 h''
-    exact algebraMap_injective (S := S) <|
-      by simpa [map_mul, mul_assoc, mul_left_comm, mul_comm] using h'
-  · intro h
-    have h' :
-        IsLocalization.mk' (Localization S) a ⟨s, hs⟩ =
-          IsLocalization.mk' (Localization S) b ⟨t, ht⟩ := by
-      exact IsLocalization.mk'_eq_of_eq' (M := S) (S := Localization S) <|
-        by simpa [mul_assoc, mul_left_comm, mul_comm] using h.symm
-    simpa [mk, _root_.Localization.mk_eq_mk'_apply] using h'
+  simpa only [mk, _root_.Localization.mk_eq_mk'_apply] using
+    (NagataFactoriality.IsLocalization.mk'_eq_iff (S := S) (β := Localization S) hs ht)
 
 theorem of_eq_iff (a b : α) : of (S := S) a = of (S := S) b ↔ a = b :=
   (algebraMap_injective (S := S)).eq_iff
 
 theorem mk_eq_zero_iff {a s : α} (hs : s ∈ S) : mk (S := S) a s hs = 0 ↔ a = 0 := by
-  have h := mk_eq_iff (S := S) (a := a) (b := 0) (s := s) (t := 1) hs S.one_mem
-  simpa [of] using h
+  simp only [mk, _root_.Localization.mk_eq_mk'_apply,
+    NagataFactoriality.IsLocalization.mk'_eq_zero_iff (S := S) (β := Localization S) hs]
 
 @[simp] theorem of_eq_zero_iff (a : α) : of (S := S) a = 0 ↔ a = 0 := by
   change algebraMap α (Localization S) a = 0 ↔ a = 0
@@ -121,8 +104,7 @@ end Nonzero
 
 @[simp] theorem of_mul_mk (a b s : α) (hs : s ∈ S) :
     of (S := S) a * mk (S := S) b s hs = mk (S := S) (a * b) s hs := by
-  simpa [mk, of, _root_.Localization.mk_eq_mk'_apply] using
-    (IsLocalization.mul_mk'_eq_mk'_of_mul (M := S) (S := Localization S) a b ⟨s, hs⟩)
+  simp [mk, of, _root_.Localization.mk_eq_mk'_apply]
 
 @[simp] theorem mk_mul_of (a b s : α) (hs : s ∈ S) :
     mk (S := S) a s hs * of (S := S) b = mk (S := S) (a * b) s hs := by
@@ -134,10 +116,8 @@ end Nonzero
 
 theorem isUnit_mk_of_mem {a s : α} (ha : a ∈ S) (hs : s ∈ S) :
     IsUnit (mk (S := S) a s hs) := by
-  apply isUnit_iff_exists_inv.2
-  refine ⟨mk (S := S) s a ha, ?_⟩
-  simpa [mk, _root_.Localization.mk_eq_mk'_apply] using
-    (IsLocalization.mk'_mul_mk'_eq_one' (M := S) (S := Localization S) a ⟨s, hs⟩ ha)
+  simpa only [mk, _root_.Localization.mk_eq_mk'_apply] using
+    (NagataFactoriality.IsLocalization.isUnit_mk'_of_mem (β := Localization S) ha hs)
 
 theorem isUnit_of_mem {s : α} (hs : s ∈ S) : IsUnit (of (S := S) s) := by
   simpa [of] using (IsLocalization.map_units (S := Localization S) ⟨s, hs⟩)
@@ -147,13 +127,8 @@ theorem isUnit_of_isUnit {a : α} (ha : IsUnit a) : IsUnit (of (S := S) a) :=
 
 theorem isUnit_mk_of_isUnit {a s : α} (ha : IsUnit a) (hs : s ∈ S) :
     IsUnit (mk (S := S) a s hs) := by
-  have hmk : mk (S := S) a s hs = of (S := S) a * mk (S := S) 1 s hs := by
-    calc
-      mk (S := S) a s hs = mk (S := S) (a * 1) s hs := by simp
-      _ = of (S := S) a * mk (S := S) 1 s hs := by
-        rw [← of_mul_mk (S := S) a 1 s hs]
-  rw [hmk]
-  exact isUnit_mul (isUnit_of_isUnit (S := S) ha) (isUnit_mk_of_mem (S := S) S.one_mem hs)
+  simpa only [mk, _root_.Localization.mk_eq_mk'_apply] using
+    (NagataFactoriality.IsLocalization.isUnit_mk'_of_isUnit (β := Localization S) ha hs)
 
 section Nonzero
 
@@ -161,34 +136,7 @@ variable [IsDomain α] [Fact ((0 : α) ∉ S)]
 
 theorem dvd_of_iff {a b : α} :
     of (S := S) a ∣ of (S := S) b ↔ ∃ s : α, s ∈ S ∧ a ∣ s * b := by
-  constructor
-  · rintro ⟨x, hx⟩
-    obtain ⟨c, s, hs, rfl⟩ := surj (S := S) x
-    refine ⟨s, hs, ?_⟩
-    have hEq : of (S := S) b = mk (S := S) (a * c) s hs := by
-      calc
-        of (S := S) b = of (S := S) a * mk (S := S) c s hs := hx
-        _ = mk (S := S) (a * c) s hs := of_mul_mk (S := S) a c s hs
-    have hCross :
-        algebraMap α (Localization S) (b * s) = algebraMap α (Localization S) (a * c) := by
-      have hCross' :
-          of (S := S) b * algebraMap α (Localization S) s =
-            algebraMap α (Localization S) (a * c) := by
-        exact (IsLocalization.eq_mk'_iff_mul_eq (M := S) (S := Localization S)
-          (z := of (S := S) b) (x := a * c) (y := ⟨s, hs⟩)).1 <|
-            by simpa [mk, of, _root_.Localization.mk_eq_mk'_apply] using hEq
-      simpa [of, map_mul, mul_assoc, mul_left_comm, mul_comm] using hCross'
-    have hEq' : b * s = a * c := (algebraMap_injective (S := S)) hCross
-    exact ⟨c, by simpa [mul_comm] using hEq'⟩
-  · rintro ⟨s, hs, c, hc⟩
-    refine ⟨mk (S := S) c s hs, ?_⟩
-    symm
-    calc
-      of (S := S) a * mk (S := S) c s hs = mk (S := S) (a * c) s hs :=
-        of_mul_mk (S := S) a c s hs
-      _ = of (S := S) b := by
-        apply (mk_eq_iff (S := S) (hs := hs) (ht := S.one_mem)).2
-        simpa [mul_assoc, mul_left_comm, mul_comm] using hc.symm
+  exact NagataFactoriality.IsLocalization.dvd_map_iff (S := S) (β := Localization S)
 
 end Nonzero
 
