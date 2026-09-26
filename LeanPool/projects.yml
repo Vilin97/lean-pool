@@ -10563,3 +10563,31 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: markoff-modp
+    title: Markoff mod p
+    summary: Lean 4 formalization of strong approximation for the Markoff surface modulo
+      sufficiently large primes. The primary source is Bourgain-Gamburd-Sarnak.
+    branch: number theory
+    entry_module: LeanPool.MarkoffModP
+    authors:
+    - Yuma Mizuno
+    - Guanghao Li
+    source:
+      url: https://github.com/yuma-mizuno/markoff-modp
+      github_repo: yuma-mizuno/markoff-modp
+      commit: ac1099fc96b0f1cf6e6099c74a24b783691c21aa
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - BGS.Markoff.reduction_surjective_of_explicitBound
+    main_results:
+    - declaration: BGS.Markoff.reduction_surjective_of_explicitBound
+      informal: For primes exceeding the explicit bound, reduction of integral Markoff
+        points to the Markoff surface modulo p is surjective as specified by the theorem.
+    tags:
+    - markoff-equation
+    - strong-approximation
+    - finite-fields
+    msc:
+    - 11D25
