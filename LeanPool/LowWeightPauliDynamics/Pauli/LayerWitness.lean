@@ -200,6 +200,28 @@ def reachable : (layers : List (List (PauliString n))) → (p : PauliString n) �
     (p : PauliString n) :
     reachable (L :: Ls) p = (oneLayer L p).biUnion (reachable Ls) := rfl
 
+/-- A string can always sit out a layer: every generator's `branch` retains its input, so `p`
+itself survives the whole layer unbranched. -/
+theorem self_mem_oneLayer (L : List (PauliString n)) (p : PauliString n) : p ∈ oneLayer L p := by
+  induction L with
+  | nil => simp
+  | cons G Gs ih => exact Finset.mem_biUnion.2 ⟨p, self_mem_branch G p, ih⟩
+
+/-- **Inserting a layer only enlarges the reachable set**, by `self_mem_oneLayer`. -/
+theorem reachable_subset_cons (L : List (PauliString n)) (Ls : List (List (PauliString n)))
+    (p : PauliString n) : reachable Ls p ⊆ reachable (L :: Ls) p := by
+  intro q hq
+  rw [reachable_cons]
+  exact Finset.mem_biUnion.2 ⟨p, self_mem_oneLayer L p, hq⟩
+
+/-- Enlarging the reachable set of a suffix enlarges it for the whole sequence: the two sequences
+run the same head layer and only then differ. -/
+theorem reachable_subset_reachable_cons {Ls Ls' : List (List (PauliString n))}
+    (h : ∀ r : PauliString n, reachable Ls r ⊆ reachable Ls' r) (L : List (PauliString n))
+    (p : PauliString n) : reachable (L :: Ls) p ⊆ reachable (L :: Ls') p := by
+  rw [reachable_cons, reachable_cons]
+  exact Finset.biUnion_mono fun r _ => h r
+
 /-- **A layer of `k_h`-local rotations with disjoint supports**: the hypothesis that
 `apd:thm:lightcone` places on each layer of a Trotter step. -/
 structure IsLayer (kh : ℕ) (L : List (PauliString n)) : Prop where
@@ -510,7 +532,12 @@ theorem P₄_mem_reachable : P₄ ∈ reachable (layers := [L₁, L₂]) (Z 3) :
 
 theorem P₆_mem_reachable : P₆ ∈ reachable (layers := [L₁, L₂, L₁]) (Z 3) := by decide
 
-theorem P₆_mem_reachable_unmerged : P₆ ∈ reachable (layers := [L₁, L₂, L₂, L₁]) (Z 3) := by decide
+/-- The literal `2Γ = 4` layer reading, obtained from the merged one by letting `P₆` sit out the
+repeated `L₂`: deciding this directly would re-explore the whole four-layer branching tree. -/
+theorem P₆_mem_reachable_unmerged : P₆ ∈ reachable (layers := [L₁, L₂, L₂, L₁]) (Z 3) :=
+  reachable_subset_reachable_cons
+    (reachable_subset_reachable_cons (reachable_subset_cons L₂ [L₁]) L₂) L₁ (Z 3)
+    P₆_mem_reachable
 
 /-- …and the bound is attained: `P₄` has weight exactly `4` and is reachable in the two brickwork
 layers. Together with `gamma_layers_weight_le`, the maximum reachable weight after `Γ` layers is

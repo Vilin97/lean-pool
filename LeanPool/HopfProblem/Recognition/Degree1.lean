@@ -4472,7 +4472,7 @@ private theorem
   obtain ⟨t, rfl⟩ := Circle.exp_surjective z
   let h := circleExp_localDiffeomorph t
   have hs : ContMDiffAt (𝓡 1) J ∞ ((γ ∘ Circle.exp) ∘ h.localInverse) (Circle.exp t) :=
-    (hγ.contMDiffAt (x := h.localInverse (Circle.exp t))).comp _ h.localInverse_contMDiffAt
+    (hγ.contMDiffAt (x := h.localInverse (Circle.exp t))).comp _ h.contMDiffAt_localInverse
   apply hs.congr_of_eventuallyEq
   filter_upwards [h.localInverse_eventuallyEq_right] with y hy
   exact (congrArg γ hy).symm

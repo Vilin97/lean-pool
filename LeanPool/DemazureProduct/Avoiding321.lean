@@ -785,7 +785,7 @@ theorem eq_s_of_lel
     rw [v_eq_x]; simp
   suffices ⟨x, v⟩ ∈ invSet β ↔ ⟨x, v⟩ ∈ invSet τ by
     rw [β.inv_iff_le x_lt_v, τ.inv_iff_le x_lt_v] at this
-    constructor <;> (intro h; contrapose! h; rwa [this] at *)
+    constructor <;> (intro h; contrapose! h; rw [this] at *; assumption)
   have nested : ⟨x, v⟩ ≼ ⟨u, v⟩ := by constructor <;> linarith
   exact inv_of_lel_iff h_321a h_L uv_inv nested
 
@@ -808,7 +808,7 @@ lemma eq_s'_of_lel
     constructor <;> (intro h; linarith)
   suffices ⟨u, x⟩ ∈ invSet β ↔ ⟨u, x⟩ ∈ invSet τ by
     rw [β.inv_iff_lt u_le_x, τ.inv_iff_lt u_le_x] at this
-    constructor <;> (intro h; contrapose! h; rwa [this] at *)
+    constructor <;> (intro h; contrapose! h; rw [this] at *; assumption)
   have nested : ⟨u, x⟩ ≼ ⟨u, v⟩ := by constructor <;> linarith
   exact inv_of_lel_iff h_321a h_L uv_inv nested
 

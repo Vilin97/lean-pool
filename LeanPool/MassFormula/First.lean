@@ -2108,14 +2108,18 @@ private theorem uniformizer_classes_mass {π : 𝒪[K]} (hπ : Irreducible π) {
       coord hπ hint hei (u - v) =
         coord hπ hint hei u - coord hπ hint hei v := by
     intro u v
+    have h : (basisOfEisenstein hπ hint hei).equivFun (u - v) =
+        (basisOfEisenstein hπ hint hei).equivFun u -
+          (basisOfEisenstein hπ hint hei).equivFun v :=
+      (basisOfEisenstein hπ hint hei).equivFun.toLinearMap.map_sub u v
     unfold coord
-    rw [map_sub, map_sub]
+    rw [h, map_sub]
   have hcadd : ∀ u v : ↥(integers (IntermediateField.adjoin K {x})),
       coord hπ hint hei (u + v) =
         coord hπ hint hei u + coord hπ hint hei v := by
     intro u v
     unfold coord
-    rw [map_add, map_add]
+    rw [LinearEquiv.map_add, map_add]
   have himg : ∀ t : ↥(integers (IntermediateField.adjoin K {x})) ⧸ I,
       coord hπ hint hei '' {w | Ideal.Quotient.mk I w = t} =
         coord hπ hint hei (rep t) +ᵥ
@@ -2411,7 +2415,11 @@ theorem lintegral_rootCount (n : ℕ) (hn : 0 < n)
       have h2 : (basisOfEisenstein hπ hint hei).repr (rep t) i -
           (basisOfEisenstein hπ hint hei).repr (rep t') i ∈ Ideal.span {π ^ ρ} :=
         Ideal.Quotient.eq.mp (congrFun htt' i)
-      rw [map_sub, Finsupp.sub_apply]
+      have hrsub : (basisOfEisenstein hπ hint hei).repr (rep t - rep t') =
+          (basisOfEisenstein hπ hint hei).repr (rep t) -
+            (basisOfEisenstein hπ hint hei).repr (rep t') :=
+        (basisOfEisenstein hπ hint hei).repr.toLinearMap.map_sub _ _
+      rw [hrsub, Finsupp.sub_apply]
       rwa [Ideal.mem_span_singleton, ← addVal_le_iff_dvd, hπ.addVal_pow] at h2
     have h3 : rep t - rep t' ∈ I := by
       rw [hImem, le_addVal_mul_iff_coords hπ hint hei ρ]

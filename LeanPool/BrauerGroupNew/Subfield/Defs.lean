@@ -43,7 +43,7 @@ instance : SetLike (SubField R A) A where
   coe L := L.1
   coe_injective := SetLike.coe_injective.comp toSubalgebra_injective
 
-instance : PartialOrder (SubField R A) := .ofSetLike (SubField R A) A
+instance : PartialOrder (SubField R A) := .ofSetLike (SubField R A)
 
 lemma mem_carrier : a ∈ L.carrier ↔ a ∈ L := .rfl
 @[simp] lemma mem_toSubalgebra : a ∈ L.toSubalgebra ↔ a ∈ L := .rfl

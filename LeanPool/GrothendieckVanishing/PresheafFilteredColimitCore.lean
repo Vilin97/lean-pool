@@ -43,7 +43,7 @@ theorem isSheaf_of_isColimit_of_isSheaf
   obtain ⟨t, ht⟩ := (NoetherianSpace.isCompact (↑(iSup U) : Set X)).elim_finite_subcover
     (fun i ↦ ↑(U i)) (fun i ↦ (U i).isOpen) (by simp [Opens.coe_iSup])
   have hsup_le : iSup U ≤ ⨆ i ∈ t, U i := by
-    rw [SetLike.le_def]
+    rw [IsConcreteLE.le_iff]
     intro x hx
     obtain ⟨i, hi, hxi⟩ := Set.mem_iUnion₂.mp (ht hx)
     exact Opens.mem_iSup.mpr ⟨i, Opens.mem_iSup.mpr ⟨hi, hxi⟩⟩

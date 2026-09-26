@@ -94,7 +94,7 @@ local macro "hsFinish" : tactic =>
           hsInner_sub_left, hsInner_sub_right, hsInner_single, starRingEnd_apply, rt2inv_conj,
           star_I_eq]
        all_goals
-         (split_ifs <;> (try (exfalso; omega)) <;> (try ring) <;>
+         (split_ifs <;> (try (exfalso; omega)) <;> (try (first | ring1 | ring_nf)) <;>
            (try (rw [rt2inv_sq]; norm_num)) <;>
            (try (rw [rt2inv_sq, Complex.I_sq]; norm_num)))))
 

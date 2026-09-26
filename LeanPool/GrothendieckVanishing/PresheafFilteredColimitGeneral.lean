@@ -381,7 +381,7 @@ theorem colimit_restrict_eq_of_eq_on_finite_subcover
     ?_
     (c.pt.map (Opens.leSupr U i).op s - sf i)
     ?_
-  · rw [SetLike.le_def]
+  · rw [IsConcreteLE.le_iff]
     intro x hx
     obtain ⟨k, hk⟩ := Opens.mem_iSup.mp (hsup_le (le_iSup U i hx))
     obtain ⟨hkt, hxk⟩ := Opens.mem_iSup.mp hk

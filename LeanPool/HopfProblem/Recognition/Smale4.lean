@@ -4380,8 +4380,8 @@ private theorem Smale.NativeSubmersion.surjective_fderiv_sourceChart_iff {E F H 
   let A : E →L[ℝ] F := mfderiv I 𝓘(ℝ, F) f (c.symm z)
   let B : E →L[ℝ] E := mfderiv 𝓘(ℝ, E) I c.symm z
   have hd : fderiv ℝ (f ∘ c.symm) z = A.comp B := by
-    rw [← mfderiv_eq_fderiv]
-    exact mfderiv_comp z hf (c.symm.mdifferentiableAt (by simp) hz)
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp z hf (c.symm.mdifferentiableAt (by simp) hz))
   have hB : Function.Surjective B := (Smale.PartialChart.bijective_mfderiv c.symm hz).surjective
   rw [hd]
   change Function.Surjective (A.comp B) ↔ Function.Surjective A
@@ -4521,12 +4521,13 @@ private theorem Smale.RegularValues.exists_null_exceptional_values_in_chart {E F
   have hinner : MDifferentiableAt 𝓘(ℝ, F) I (c.symm ∘ L.symm) z :=
     (c.symm.mdifferentiableAt (by simp) (hcoord z hz).1).comp z
       L.symm.toContinuousLinearMap.differentiableAt.mdifferentiableAt
-  rw [← mfderiv_eq_fderiv] at hbij
-  change Function.Bijective (mfderiv 𝓘(ℝ, F) 𝓘(ℝ, F) (f ∘ (c.symm ∘ L.symm)) z) at hbij
-  rw [mfderiv_comp z hfx' hinner] at hbij
+  have hbijManifold :
+      Function.Bijective (mfderiv 𝓘(ℝ, F) 𝓘(ℝ, F) (f ∘ (c.symm ∘ L.symm)) z) := by
+    simpa only [mfderiv_eq_fderiv] using! hbij
+  rw [mfderiv_comp z hfx' hinner] at hbijManifold
   have hsurj : Function.Surjective (mfderiv I 𝓘(ℝ, F) f (c.symm (L.symm z))) := by
     intro w
-    obtain ⟨v, hv⟩ := hbij.surjective w
+    obtain ⟨v, hv⟩ := hbijManifold.surjective w
     exact ⟨mfderiv 𝓘(ℝ, F) I (c.symm ∘ L.symm) z v, hv⟩
   exact hpoint ▸ hsurj
 

@@ -79,7 +79,7 @@ theorem IsIdempotentElem.comp_idempotent_iff
   {E₂ : Type*} [AddCommGroup E₂] [Module R E₂] (p : E₂ →ₗ[R] E) :
     q.comp p = p ↔ LinearMap.range p ≤ LinearMap.range q := by
   simp_rw [LinearMap.ext_iff, comp_apply, ← IsIdempotentElem.mem_range_iff hq,
-    SetLike.le_def, mem_range, forall_exists_index, forall_apply_eq_imp_iff]
+    IsConcreteLE.le_iff, mem_range, forall_exists_index, forall_apply_eq_imp_iff]
 include hq in
 theorem IsIdempotentElem.comp_idempotent_iff'
   {E₂ : Type*} [AddCommGroup E₂] [Module R E₂] (p : E₂ →ₗ[R] E) :

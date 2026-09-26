@@ -5253,12 +5253,13 @@ private theorem MorseCancel.fderiv_retimed_trace_parameter {U H X N : Type*} [No
     rw [hcenter]
     exact hG
   change fderiv ℝ (G ∘ Ψ) 0 = _
-  rw [← mfderiv_eq_fderiv, mfderiv_comp 0 hG' (Ψ.mdifferentiableAt (by simp) hΨ), hcenter]
+  have hderiv := mfderiv_comp 0 hG' (Ψ.mdifferentiableAt (by simp) hΨ)
+  rw [hcenter] at hderiv
   rw [show
       (mfderiv (𝓘(ℝ, ℝ).prod I) 𝓘(ℝ, N) G (σ, x) : (ℝ × U) →L[ℝ] N) =
         mfderiv (𝓘(ℝ, ℝ).prod I) 𝓘(ℝ, N) F (τ, x)
-      from mfderiv_retime_unit_rate hF hD hpoint]
-  rfl
+      from mfderiv_retime_unit_rate hF hD hpoint] at hderiv
+  simpa only [mfderiv_eq_fderiv] using! hderiv
 
 private theorem MorseCancel.exists_shared_passage_frames {N : Type} [NormedAddCommGroup N]
     [NormedSpace ℝ N] [FiniteDimensional ℝ N]

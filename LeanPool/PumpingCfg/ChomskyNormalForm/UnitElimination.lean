@@ -144,14 +144,14 @@ lemma generatorsProdDiag_unitPairs {p : g.NT × g.NT} (hp : p ∈ g.generatorsPr
     | inl hpr =>
       rw [hpr]
       change UnitPair r.input r.input
-      constructor
+      apply UnitPair.refl
       apply input_mem_generators
       rw [← Finset.mem_toList, heq]
       exact List.mem_cons_self
     | inr hap =>
       obtain ⟨v, hvl, hvp⟩ := hap
       rw [← hvp]
-      constructor
+      apply UnitPair.refl
       apply input_mem_generators
       rw [← Finset.mem_toList, heq]
       exact List.mem_cons_of_mem r hvl

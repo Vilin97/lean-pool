@@ -188,17 +188,18 @@ lemma partition_sum {S : NumericalSemigroup} (G : NumericalSemigroupGenerators S
     ∑ k ∈ (Finset.range (n +
       1)).filter (fun k => !(Classical.propDecidable (k ∈ S.carrier)).decide),
       (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)) := by
-  have h := @Finset.sum_filter_add_sum_filter_not _ _ _ (Finset.range (n + 1))
-    (fun k => k ∈ S.carrier) (Classical.decPred _) (fun x => Classical.dec _)
-    (fun k => (Int.castRingHom ℚ) (G.productPolynomial.coeff (n - k)))
-  rw [← h]
-  congr 1
-  · congr 1
+  classical
+  have hmem : (Finset.range (n + 1)).filter
+      (fun k => (Classical.propDecidable (k ∈ S.carrier)).decide) =
+      (Finset.range (n + 1)).filter (fun k => k ∈ S.carrier) := by
     ext k
     simp only [Finset.mem_filter, decide_eq_true_eq]
-  · congr 1
+  have hnotmem : (Finset.range (n + 1)).filter
+      (fun k => !(Classical.propDecidable (k ∈ S.carrier)).decide) =
+      (Finset.range (n + 1)).filter (fun k => k ∉ S.carrier) := by
     ext k
     simp only [Finset.mem_filter, Bool.not_eq_true', decide_eq_false_iff_not]
+  rw [hmem, hnotmem, Finset.sum_filter_add_sum_filter_not]
 
 lemma filter_not_carrier_eq_gaps {S : NumericalSemigroup} (n : ℕ) :
     (Finset.range (n + 1)).filter (fun k => !(Classical.propDecidable (k ∈ S.carrier)).decide) =

@@ -102,7 +102,7 @@ public import Mathlib.Topology.Sheaves.EtaleSpace
 public import Mathlib.Topology.Subpath
 public import Mathlib.Topology.UniformSpace.Ascoli
 public import Mathlib.Topology.UniformSpace.Uniformizable
-public import Std.Tactic.BVDecide.LRAT.Internal.Formula.RupAddResult
+public import Std.Tactic.BVDecide.LRAT.Internal.Rup
 
 /-!
 # Hopf problem: prelude

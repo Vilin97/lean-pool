@@ -67,8 +67,7 @@ theorem continuous_preservesDirectedSup {f : D → D'}
       (Topology.IsScott.scottContinuousOn_iff_continuous (α := WithScott D) (D := univ)
         (fun _ _ _ => trivial)).2 hf'
   intro S hS hSdir
-  have h := hsc hS hSdir (isLUB_sSup S)
-  simp only [Function.comp_def, WithScott.toScott, WithScott.ofScott] at h
+  have h : IsLUB (f '' S) (f (sSup S)) := hsc hS hSdir (isLUB_sSup S)
   exact h.sSup_eq.symm
 
 /-- **Scott 1972, Proposition 2.5.** Scott continuity ↔ preservation of directed

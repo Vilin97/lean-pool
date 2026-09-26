@@ -2943,8 +2943,7 @@ private theorem elementaryGroup_finitelyGenerated
       rintro _ ⟨i, j, hij, a, rfl⟩
       have ha : a ∈ C := by simp only [hC, Algebra.mem_top]
       exact ha i j hij
-  apply (Group.fg_iff_subgroup_fg (elementaryGroup (Fin n) R)).mpr
-  exact ⟨t, heq⟩
+  exact Subgroup.isMulFG_iff.mpr ⟨t, heq⟩
 
 private theorem elementaryGroup_three_finitelyGenerated
     [Algebra.FiniteType (ZMod 2) R] :
@@ -9725,7 +9724,7 @@ private theorem elementaryReindexGroup_map (e : ι ≃ κ) :
     have hij : e.symm k ≠ e.symm l := e.symm.injective.ne hkl
     refine ⟨elementaryUnit (e.symm k) (e.symm l) hij a,
       elementaryUnit_mem (e.symm k) (e.symm l) hij a, ?_⟩
-    simpa only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, Equiv.apply_symm_apply] using
+    simpa only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, Equiv.apply_symm_apply] using
       elementaryReindexUnitEquiv_elementaryUnit e (e.symm k) (e.symm l) hij a
 
 /-- Internal interface connecting the split non-sofic proof modules. -/

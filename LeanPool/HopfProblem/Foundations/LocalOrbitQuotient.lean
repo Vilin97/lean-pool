@@ -46,7 +46,7 @@ private theorem BranchedQuotientAtlas.project_localInverse_eventuallyEq {E M Q :
     rw [← hcoord]
     exact hf.localInverse_left_inv hf.localInverse_mem_target
   have hcont : ContinuousAt (q ∘ hf.localInverse) z := by
-    have h := hq.continuousAt.comp hf.localInverse_contMDiffAt.continuousAt
+    have h := hq.continuousAt.comp hf.contMDiffAt_localInverse.continuousAt
     simpa only [hcoord] using h
   have hsource : ∀ᶠ w in 𝓝 z, q (hf.localInverse w) ∈ e.source :=
     hcont
@@ -76,7 +76,7 @@ private theorem
     exact hf.localInverse_left_inv hf.localInverse_mem_target
   have hfirst :
     ContMDiffAt (modelWithCornersSelf ℂ E) (modelWithCornersSelf ℂ E) ω hf.localInverse z := by
-    simpa only [hcoord] using hf.localInverse_contMDiffAt
+    simpa only [hcoord] using hf.contMDiffAt_localInverse
   have hsecond : ContMDiffAt (modelWithCornersSelf ℂ E) (modelWithCornersSelf ℂ E) ω (f ∘ q) a :=
     hhol.contMDiffAt
       ((f.open_source.preimage hq).mem_nhds

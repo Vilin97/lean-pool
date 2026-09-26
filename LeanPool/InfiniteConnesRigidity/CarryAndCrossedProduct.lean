@@ -30,6 +30,16 @@ import Mathlib.Topology.Metrizable.Urysohn
 
 noncomputable section
 
+-- `instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent` applies to `F = ZMod 2` and, winning instance
+-- search for `AddCommGroup F`, yields an `AddCommMonoid F` that does not match the one carried by
+-- `Module F F`; that breaks `AddCommGroup (V →ₗ[F] F)` and everything built on it.
+attribute [local instance low] instAddCommGroupOfIsSimpleAddGroupOfIsNilpotent
+
+-- Likewise `AddSubgroupClass.instZModModule` applies to any `AddSubgroupClass` of a `ZMod n`-module
+-- and would take precedence over `Submodule.module` for `↥B`, whose `Module F ↥B` is the one the
+-- `Module.Free`/`Module.Projective` instances are stated for.
+attribute [local instance low] AddSubgroupClass.instZModModule
+
 namespace ConnesRigidity
 section
 
@@ -4655,7 +4665,7 @@ private theorem quadraticRestriction_epsilon (n : ℕ) (v : V) :
 
 /-- Cross-module support for the infinite Connes-rigidity construction. -/
 private theorem quadraticPairing_range_le_quadraticRestriction_range (n : ℕ) :
-    quadraticPairing.range ≤ (quadraticRestriction n).range := by
+    AddMonoidHom.range (G := B) quadraticPairing ≤ (quadraticRestriction n).range := by
   rintro _ ⟨b, rfl⟩
   rcases b with ⟨b, hb⟩
   change b ∈ Submodule.span F (Set.range square) at hb
@@ -4828,8 +4838,11 @@ theorem sigma_characterization (n : ℕ) (η : E n) (q : Y) :
     ZMod.toCircle (q (sigma n η)) =
       Additive.toMul η
         (Multiplicative.ofAdd (⟨0, q⟩ : CarryGroup n)) := by
-  exact pointwisePontryaginDualEquiv_apply_character B
-    (quadraticRestriction n η) q
+  have hsigma : sigma n η =
+      pointwisePontryaginDualEquiv B (quadraticRestriction n η) := rfl
+  rw [hsigma, pointwisePontryaginDualEquiv_apply_character B
+    (quadraticRestriction n η) q]
+  rfl
 
 
 
@@ -4837,7 +4850,7 @@ theorem sigma_characterization (n : ℕ) (η : E n) (q : Y) :
 public
 theorem sigma_surjective (n : ℕ) : Function.Surjective (sigma n) := by
   intro b
-  have hb : quadraticPairing b ∈ quadraticPairing.range := ⟨b, rfl⟩
+  have hb : quadraticPairing b ∈ AddMonoidHom.range (G := B) quadraticPairing := ⟨b, rfl⟩
   obtain ⟨η, hη⟩ :=
     quadraticPairing_range_le_quadraticRestriction_range n hb
   refine ⟨η, ?_⟩
@@ -5770,6 +5783,8 @@ private theorem splitPontryaginCharacter_apply (d : D) (z : X × Y) :
 private theorem splitPontryaginCharacter_injective :
     Function.Injective splitPontryaginCharacter := by
   intro d d' h
+  have : Module.Free F B := Module.Free.of_divisionRing F B
+  have : Module.Projective F B := Module.Projective.of_free
   apply Prod.ext
   · apply Module.eval_apply_injective F
     apply LinearMap.ext

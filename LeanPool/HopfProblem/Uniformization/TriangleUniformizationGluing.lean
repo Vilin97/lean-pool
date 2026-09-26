@@ -1079,7 +1079,7 @@ private theorem TriangleUniformizationGluing.BoundaryMap.quotientMap_holomorphic
   obtain ⟨z, rfl⟩ := SpecialPeriods.triangleOrbitProjection_surjective q
   have hp := SpecialPeriods.triangleOrbitProjection_isLocalDiffeomorphAt_of_not_elliptic h₁ h₂
   have h :=
-    hup.contMDiffAt.comp (SpecialPeriods.triangleOrbitProjection z) hp.localInverse_contMDiffAt
+    hup.contMDiffAt.comp (SpecialPeriods.triangleOrbitProjection z) hp.contMDiffAt_localInverse
   apply h.congr_of_eventuallyEq
   filter_upwards [hp.localInverse_eventuallyEq_right] with y hy
   change
@@ -1141,7 +1141,7 @@ private theorem
       hfinite.comp hq
   have hi := SpecialPeriods.triangleOpenInclusion_isLocalDiffeomorph q
   have h :=
-    hcomp.contMDiffAt.comp (SpecialPeriods.triangleOpenInclusion q) hi.localInverse_contMDiffAt
+    hcomp.contMDiffAt.comp (SpecialPeriods.triangleOpenInclusion q) hi.contMDiffAt_localInverse
   apply h.congr_of_eventuallyEq
   filter_upwards [hi.localInverse_eventuallyEq_right] with z hz
   change

@@ -1092,10 +1092,10 @@ private theorem Smale.ManifoldMorse.mem_criticalPoints_iff {E M : Type*} [Normed
   have hcomp :
     fderiv ℝ (f ∘ e.symm) (e x) =
       (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) f x).comp (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) e.symm (e x)) := by
-    rw [← mfderiv_eq_fderiv,
-      mfderiv_comp (e x) (hf.mdifferentiableAt (by simp))
-        (he'.mdifferentiableAt_symm (e.map_source hx))]
-    rw [e.left_inv hx]
+    ext v
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp_apply_of_eq (e x) (hf.mdifferentiableAt (by simp))
+        (he'.mdifferentiableAt_symm (e.map_source hx)) (e.left_inv hx) v)
   rw [hcomp]
   change mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) f x = 0 ↔ _
   constructor
@@ -1210,10 +1210,10 @@ private theorem Smale.FlowConstruction.mvfderiv_chartDirection {E M : Type*} [No
   have hc :
     fderiv ℝ (f ∘ e.symm) (e x) =
       (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) f x).comp (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, E) e.symm (e x)) := by
-    rw [← mfderiv_eq_fderiv,
-      mfderiv_comp (e x) (hf.mdifferentiableAt (by simp))
-        (he'.mdifferentiableAt_symm (e.map_source hx))]
-    rw [e.left_inv hx]
+    ext v
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp_apply_of_eq (e x) (hf.mdifferentiableAt (by simp))
+        (he'.mdifferentiableAt_symm (e.map_source hx)) (e.left_inv hx) v)
   unfold chartDirection
   rw [VectorField.mpullback_apply, hi]
   exact (congrArg (fun A : E →L[ℝ] ℝ => A w) hc).symm
@@ -1484,10 +1484,10 @@ private theorem
   have hc :
     fderiv ℝ (f ∘ e'.symm) (e' x) =
       (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, ℝ) f x).comp (mfderiv 𝓘(ℝ, F) 𝓘(ℝ, E) e'.symm (e' x)) := by
-    rw [← mfderiv_eq_fderiv,
-      mfderiv_comp (e' x) (hf.mdifferentiableAt (by simp))
-        (he.mdifferentiableAt_symm (e'.map_source hx))]
-    rw [e'.left_inv hx]
+    ext v
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp_apply_of_eq (e' x) (hf.mdifferentiableAt (by simp))
+        (he.mdifferentiableAt_symm (e'.map_source hx)) (e'.left_inv hx) v)
   unfold partialChartField
   rw [VectorField.mpullback_apply]
   change

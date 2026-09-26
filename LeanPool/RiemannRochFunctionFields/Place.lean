@@ -245,14 +245,15 @@ noncomputable def normalization (v : Place k K) :
 /-- The normalized `ℤᵐ⁰`-valued valuation associated to a coordinate-free place. -/
 noncomputable def valuation (v : Place k K) : Valuation K ℤᵐ⁰ :=
   v.toValuationSubring.valuation.restrict.map
-    v.normalization.toMonoidWithZeroHom v.normalization.toOrderIso.monotone
+    (OrderMonoidWithZeroHomClass.toOrderMonoidWithZeroHom v.normalization)
 
 /-- The normalized valuation is equivalent to the canonical valuation of the valuation
 subring. -/
 theorem valuation_isEquiv_canonical (v : Place k K) :
     v.valuation.IsEquiv v.toValuationSubring.valuation := by
   exact (Valuation.isEquiv_map_self_of_strictMono
-    v.normalization.toMonoidWithZeroHom v.normalization.strictMono).trans
+    (OrderMonoidWithZeroHomClass.toOrderMonoidWithZeroHom v.normalization)
+    v.normalization.injective).trans
       v.toValuationSubring.valuation.isEquiv_restrict.symm
 
 /-- Recovering the valuation subring from the normalized valuation gives the original place. -/

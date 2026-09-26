@@ -460,6 +460,9 @@ theorem genericFractionField_finiteDimensional {d : ℕ}
     FiniteDimensional (ContractedFractionField P) (AmbientFractionField P) := by
   let : Module.Finite (ContractedGermQuotient P) (AmbientGermQuotient P) :=
     ambientQuotient_moduleFinite a ha ha0 P hmem
+  let : Module.IsTorsionFree (ContractedGermQuotient P) (AmbientGermQuotient P) :=
+    Module.isTorsionFree_iff_algebraMap_injective.mpr
+      (contractedQuotientMap_injective P)
   infer_instance
 
 /-- In particular, the generic last-coordinate class is algebraic (integral,

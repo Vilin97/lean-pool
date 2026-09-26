@@ -67,7 +67,7 @@ def imply₁' [ModusPonens 𝓢] [HasAxiomImply₁ 𝓢] (h : 𝓢 ⊢ φ) : �
 lemma «imply₁'!» [ModusPonens 𝓢] [HasAxiomImply₁ 𝓢] (d : 𝓢 ⊢! φ) : 𝓢 ⊢! ψ ==> φ := ⟨imply₁' d.some⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[deprecated imply₁' (since := "2026-05-27")]
+@[deprecated "Use `imply₁' (ψ := ψ)`; the replacement takes ψ implicitly." (since := "2026-05-27")]
 def dhyp [ModusPonens 𝓢] [HasAxiomImply₁ 𝓢] (ψ : F) (b : 𝓢 ⊢ φ) : 𝓢 ⊢ ψ ==> φ := imply₁' b
 
 

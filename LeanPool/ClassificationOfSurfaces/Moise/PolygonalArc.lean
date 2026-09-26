@@ -1676,8 +1676,8 @@ theorem resolvedSegment_inter_of_succ_eq (i j : Fin B.resolvedWalk.length)
     ext x
     simp []
   rw [himage, convexHull_singleton]
-  change {B.arrangementMesh.toPlaneComplex.position
-      (B.resolvedWalk.getVert (i.val + 1))} = {B.resolvedVertex i.succ}
+  change {(B.arrangementMesh.toPlaneComplex.position
+      (B.resolvedWalk.getVert (i.val + 1)))} = {B.resolvedVertex i.succ}
   rfl
 
 /-- The shifted affine edge parameters agree wherever two selected path edges meet. -/

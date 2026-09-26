@@ -254,7 +254,7 @@ theorem common_apartment {n : ℕ} (F F' : CompleteFlag K V n) :
       have hP : ∀ i, ∃ j, P i j := by
         intro i
         obtain ⟨x, hxi, hxni⟩ :=
-          SetLike.exists_of_lt (F.strictMono_space Fin.castSucc_lt_succ)
+          IsConcreteLE.exists_of_lt (F.strictMono_space Fin.castSucc_lt_succ)
         refine ⟨Fin.last m, x, hxi, ?_, hxni⟩
         rw [show (Fin.last m).succ = Fin.last (m + 1) by
           ext

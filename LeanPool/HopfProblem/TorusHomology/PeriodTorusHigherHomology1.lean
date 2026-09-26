@@ -38,7 +38,8 @@ private theorem
     PeriodTorusHigherHomology.singularHomologyMap_id (X : Type) [TopologicalSpace X] (n : ℕ) :
     SingularMayerVietoris.singularHomologyMap (ContinuousMap.id X) n = LinearMap.id := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor (ModuleCat ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_id
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_id
       (TopCat.of X)
   exact congrArg ModuleCat.Hom.hom h
 
@@ -49,7 +50,8 @@ theorem PeriodTorusHigherHomology.singularHomologyMap_comp {X Y Z : Type} [Topol
       (SingularMayerVietoris.singularHomologyMap g n).comp
         (SingularMayerVietoris.singularHomologyMap f n) := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor (ModuleCat ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_comp
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) n).obj (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom f) (TopCat.ofHom g)
   exact congrArg ModuleCat.Hom.hom h
 

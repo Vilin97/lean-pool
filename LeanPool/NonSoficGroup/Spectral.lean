@@ -2309,8 +2309,8 @@ private theorem heisenbergFiniteFamily_centerComplement_inner_sq_le
     rw [mem_unitaryFixedSubmodule]
     rintro ⟨_, ⟨g, hg, rfl⟩⟩
     have hga := (mem_unitaryFixedSubmodule π X a).mp ha ⟨g, hg⟩
-    simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_coe, MulAut.conj_apply, map_mul, map_inv,
-      LinearIsometryEquiv.coe_mul, LinearIsometryEquiv.coe_inv, Function.comp_apply,
+    simp only [MulEquiv.toMonoidHom_eq_coe, MonoidHom.coe_ofClass, MulAut.conj_apply, map_mul,
+      map_inv, LinearIsometryEquiv.coe_mul, LinearIsometryEquiv.coe_inv, Function.comp_apply,
         LinearIsometryEquiv.symm_apply_apply,
       hga]
   have horthZ (i : ι) :

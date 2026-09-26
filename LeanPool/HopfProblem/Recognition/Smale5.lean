@@ -2113,7 +2113,8 @@ private theorem Smale.ManifoldImmersion.injective_fderiv_chart_iff {E G F H N : 
     {x : E} (hf : MDifferentiableAt 𝓘(ℝ, E) J f x) (hx : f x ∈ c.source) :
     Function.Injective (fderiv ℝ (c ∘ f) x) ↔ Function.Injective (mfderiv 𝓘(ℝ, E) J f x) := by
   have hderiv : fderiv ℝ (c ∘ f) x = (mfderiv J 𝓘(ℝ, F) c (f x)).comp (mfderiv 𝓘(ℝ, E) J f x) := by
-    rw [← mfderiv_eq_fderiv, mfderiv_comp x (c.mdifferentiableAt (by simp) hx) hf]
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp x (c.mdifferentiableAt (by simp) hx) hf)
   have hc : Function.Injective (mfderiv J 𝓘(ℝ, F) c (f x)) :=
     ((c.isLocalDiffeomorphAt J 𝓘(ℝ, F) ∞ hx).mfderivToContinuousLinearEquiv (by simp)).injective
   rw [hderiv]
@@ -2129,7 +2130,8 @@ private theorem Smale.ManifoldImmersion.fderiv_chart_eq_zero_iff {E G F H N : Ty
     {x : E} (hf : MDifferentiableAt 𝓘(ℝ, E) J f x) (hx : f x ∈ c.source) (v : E) :
     fderiv ℝ (c ∘ f) x v = 0 ↔ mfderiv 𝓘(ℝ, E) J f x v = 0 := by
   have hderiv : fderiv ℝ (c ∘ f) x = (mfderiv J 𝓘(ℝ, F) c (f x)).comp (mfderiv 𝓘(ℝ, E) J f x) := by
-    rw [← mfderiv_eq_fderiv, mfderiv_comp x (c.mdifferentiableAt (by simp) hx) hf]
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp x (c.mdifferentiableAt (by simp) hx) hf)
   have hc : Function.Injective (mfderiv J 𝓘(ℝ, F) c (f x)) :=
     ((c.isLocalDiffeomorphAt J 𝓘(ℝ, F) ∞ hx).mfderivToContinuousLinearEquiv (by simp)).injective
   rw [hderiv]

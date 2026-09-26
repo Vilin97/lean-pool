@@ -1079,7 +1079,8 @@ private theorem
 private theorem FirstHurewicz.inducedHomology_id {X : Type} [TopologicalSpace X] :
     inducedHomology (ContinuousMap.id X) = LinearMap.id := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor (ModuleCat ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_id
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_id
       (TopCat.of X)
   exact congrArg ModuleCat.Hom.hom h
 
@@ -1087,7 +1088,8 @@ private theorem FirstHurewicz.inducedHomology_comp {X Y Z : Type} [TopologicalSp
     [TopologicalSpace Y] [TopologicalSpace Z] (f : C(X, Y)) (g : C(Y, Z)) :
     inducedHomology (g.comp f) = (inducedHomology g).comp (inducedHomology f) := by
   have h :=
-    ((AlgebraicTopology.singularHomologyFunctor (ModuleCat ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_comp
+    ((AlgebraicTopology.singularHomologyFunctor.{0}
+      (ModuleCat.{0} ℤ) 1).obj (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom f) (TopCat.ofHom g)
   exact congrArg ModuleCat.Hom.hom h
 
@@ -1559,7 +1561,7 @@ private theorem SingularMayerVietoris.intersectionToLeft_ambient {X : Type} [Top
     intersectionToLeft U V ≫ FirstHurewicz.singularChainMap (subtypeInclusion U) =
       FirstHurewicz.singularChainMap (subtypeInclusion (U ∩ V)) := by
   have h :=
-    ((AlgebraicTopology.singularChainComplexFunctor (ModuleCat ℤ)).obj
+    ((AlgebraicTopology.singularChainComplexFunctor.{0} (ModuleCat.{0} ℤ)).obj
           (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom (ContinuousMap.inclusion (Set.inter_subset_left : U ∩ V ⊆ U)))
       (TopCat.ofHom (subtypeInclusion U))
@@ -1570,7 +1572,7 @@ private theorem SingularMayerVietoris.intersectionToRight_ambient {X : Type} [To
     intersectionToRight U V ≫ FirstHurewicz.singularChainMap (subtypeInclusion V) =
       FirstHurewicz.singularChainMap (subtypeInclusion (U ∩ V)) := by
   have h :=
-    ((AlgebraicTopology.singularChainComplexFunctor (ModuleCat ℤ)).obj
+    ((AlgebraicTopology.singularChainComplexFunctor.{0} (ModuleCat.{0} ℤ)).obj
           (ModuleCat.of ℤ ℤ)).map_comp
       (TopCat.ofHom (ContinuousMap.inclusion (Set.inter_subset_right : U ∩ V ⊆ V)))
       (TopCat.ofHom (subtypeInclusion V))

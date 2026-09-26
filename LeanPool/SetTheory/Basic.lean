@@ -269,14 +269,14 @@ instance instSetLike : SetLike M M where
     simp only [Set.ext_iff, Set.mem_ofPred_eq] at eq
     exact ext eq
 
-instance instPartialOrderM : PartialOrder M := PartialOrder.ofSetLike M M
+instance instPartialOrderM : PartialOrder M := PartialOrder.ofSetLike M
 
 lemma le_def {x y : M} : x ≤ y ↔ x ⊆ y := Iff.rfl
 lemma le_iff {x y : M} : x ≤ y ↔ ∀ ⦃z : M⦄, z ∈ x → z ∈ y := Iff.rfl
 lemma mem_of_le {x y z : M} (hsub : x ≤ y) (hz : z ∈ x) : z ∈ y := hsub hz
 lemma mem_coe {x y : M} : x ∈ (y : Set M) ↔ x ∈ y := SetLike.mem_coe
 lemma lt_iff_le_and_exists {x y : M} : x < y ↔ x ≤ y ∧ ∃ z ∈ y, z ∉ x :=
-  SetLike.lt_iff_le_and_exists
+  IsConcreteLE.lt_iff_le_and_exists
 
 @[toZFSet_simps] lemma ToZFSet.le (x y : M) : x ≤ y ↔ ⇓x ≤ ⇓y := by
   change x ⊆ y ↔ ⇓x ⊆ ⇓y
