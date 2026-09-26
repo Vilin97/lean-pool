@@ -238,7 +238,6 @@ theorem cut_leftTwoRegular (marker : Fin core.loopCount)
     rw [ExplicitPotential.Core.pairMultiplicity] at hCount
     rw [Finset.sum_boole]
     exact hCount
-
   · subst vertex
     rw [CoreVertexCut.Data.leftIncidentDegree,
       leftSlots_eq_markerPair split marker hCompatible]

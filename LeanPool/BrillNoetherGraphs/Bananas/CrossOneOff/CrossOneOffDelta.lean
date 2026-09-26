@@ -84,7 +84,6 @@ theorem isSemibreak_two_distinct_strand_chips
   funext z
   rcases z with core | ⟨γ, offset⟩
   · simp [semibreakDivisor, oneChip,
-
       SubdivisionGraph.Spec.interiorVertex]
   · by_cases hγα : γ = α
     · subst γ

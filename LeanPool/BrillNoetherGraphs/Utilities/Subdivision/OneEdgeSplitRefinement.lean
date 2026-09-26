@@ -642,7 +642,6 @@ def canonicalSplitStepEquiv
         rw [canonicalSplitStepMapInv_old_split source split first second hFirst hSecond hLength,
           canonicalSplitStepMap_split source split first second hFirst hSecond hLength,
           dite_eq_left hBefore]
-
       · change canonicalSplitStepMap source split first second hFirst hSecond hLength
           (canonicalSplitStepMapInv source split first second hFirst hSecond hLength
             ⟨oldSlot source old, oldOffset⟩) = ⟨oldSlot source old, oldOffset⟩

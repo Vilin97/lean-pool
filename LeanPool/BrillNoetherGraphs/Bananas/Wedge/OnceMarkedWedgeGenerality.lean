@@ -230,7 +230,6 @@ theorem finitePointedDiagram_censusContains
       have hj' : j < (List.ofFn (fun k : Fin (r + 1) =>
           pointedRowLength G hG D q k))[i]'(by simpa using hiBound) := hj
       simpa only [List.getElem_ofFn] using hj'
-
     let raw : ℤ := (i : ℤ) + genus G - deg D -
       pointedRankThreshold G hG D q i
     have hrawPos : 0 < raw := by

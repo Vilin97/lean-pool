@@ -749,7 +749,6 @@ theorem q_reduced_path_zero_add_same_strand_of_lt
     have hPos := congrArg Fin.val (B.pathVertex_injective α h')
     change q.val = 0 at hPos
     omega
-
   have hqp : B.pathVertex α q ≠ B.pathVertex α p := by
     intro h
     have hPos := congrArg Fin.val (B.pathVertex_injective α h)
@@ -872,7 +871,6 @@ theorem q_reduced_same_strand_add_path_length_of_lt
     intro h
     have hPos := congrArg Fin.val (B.pathVertex_injective α h)
     omega
-
   have hqHead : B.pathVertex α q ≠ B.coreVertex (B.core.head α) := by
     intro h
     have h' : B.pathVertex α q =
@@ -1558,7 +1556,6 @@ theorem rank_aux_add_mark_sub_distinct_mark_ne_zero
       have hoff := off.isLt
       have hlen := B.length_pos γ
       omega
-
     have hwPath : B.interiorVertex γ off = B.pathVertex γ k := by
       rw [B.pathVertex_eq_interiorVertex γ k hk]
       congr 1

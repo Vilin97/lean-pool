@@ -88,10 +88,10 @@ lemma eq_config_iff_eq_div {q : G.V} (d : ℤ) (c₁ c₂ : Config G q) : c₁ =
   specialize h_eq v
   dsimp only [toDiv, Pi.add_apply, Pi.smul_apply, Int.zsmul_eq_mul] at h_eq
   by_cases h_v : q = v
-  . -- Case v = q
+  · -- Case v = q
     rw [← h_v]
     rw [c₁.q_zero, c₂.q_zero]
-  . -- Case v ≠ q
+  · -- Case v ≠ q
     simp only [ne_eq, h_v, not_false_eq_true, one_chip_apply_other, mul_zero, add_zero] at h_eq
     exact h_eq
 
@@ -120,7 +120,7 @@ def toConfig {q : G.V} (D : qEffectiveDivisor G q) : Config G q := {
     · -- Case v = q
       simp only [zsmul_eq_mul, h_v, Pi.sub_apply, Pi.mul_apply, Pi.intCast_apply, Int.cast_eq,
           one_chip_apply_v, mul_one, sub_self, ge_iff_le, Std.le_refl]
-    . -- Case v ≠ q
+    · -- Case v ≠ q
       simp only [zsmul_eq_mul, Pi.sub_apply, Pi.mul_apply, Pi.intCast_apply, Int.cast_eq, ne_eq,
           h_v, not_false_eq_true, one_chip_apply_other', mul_zero, sub_zero, ge_iff_le]
       exact D.h_eff v h_v
@@ -161,11 +161,11 @@ private lemma config_of_div_of_config (c : Config G q) (d : ℤ)  :
   apply funext
   intro v
   by_cases h_v : v = q
-  . -- Case v = q
+  · -- Case v = q
     simp only [h_v, Pi.sub_apply, Pi.mul_apply, Pi.intCast_apply, Int.cast_eq, one_chip_apply_v,
         mul_one, sub_self]
     rw [q_zero]
-  . -- Case v ≠ q
+  · -- Case v ≠ q
     dsimp only [toDiv, Pi.add_apply, Pi.smul_apply, oneChip, Int.zsmul_eq_mul, Pi.sub_apply,
         Pi.mul_apply, Pi.intCast_apply, Int.cast_eq]
     simp only [h_v, ↓reduceIte, mul_zero, add_zero, mul_one, sub_zero]
@@ -178,7 +178,7 @@ lemma div_of_config_of_div (D : qEffectiveDivisor G q) :
   funext v
   dsimp only [toDiv, Pi.add_apply, Pi.smul_apply, Int.zsmul_eq_mul]
   by_cases h: v ∈ Vtilde q
-  . -- Case v ∈ Vtilde q
+  · -- Case v ∈ Vtilde q
     dsimp only [toConfig, Pi.sub_apply, Pi.smul_apply, Int.zsmul_eq_mul]
     have : v ≠ q := by
       intro h_eq_q
@@ -186,7 +186,7 @@ lemma div_of_config_of_div (D : qEffectiveDivisor G q) :
       simp only [Finset.mem_filter, mem_univ, ne_eq, not_true_eq_false, and_false] at h
     simp only [ne_eq, this, not_false_eq_true, one_chip_apply_other', mul_zero, sub_zero,
         zsmul_eq_mul, add_zero]
-  . -- Case v ∉ Vtilde q
+  · -- Case v ∉ Vtilde q
     have : v = q := by
       contrapose! h
       simp only [Finset.mem_filter, mem_univ, ne_eq, h, not_false_eq_true, and_self]
@@ -370,7 +370,7 @@ lemma q_reduced_superstable_correspondence (G : CFGraph) (q : G.V) (D : CFDiv G)
   qReduced G q D ↔ ∃ c : Config G q, superstable G q c ∧
   D = toDiv (deg D) c := by
   constructor
-  . -- Forward direction (qReduced → ∃ c, superstable ∧ D = c - δ_q)
+  · -- Forward direction (qReduced → ∃ c, superstable ∧ D = c - δ_q)
     intro h_qred
     refine ⟨toConfig ⟨D, h_qred.1⟩, q_reduced_toConfig_superstable G q D h_qred, ?_⟩
     exact (q_reduced_toDiv_toConfig G q D h_qred).symm
@@ -512,12 +512,12 @@ private lemma extend_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : 
     dsimp only [isBurnList]
     -- Unpack all the conjunctions and use hypotheses one by one
     constructor
-    . simp only [List.toFinset_cons, mem_sdiff, mem_univ, mem_insert, List.mem_toFinset, not_or,
+    · simp only [List.toFinset_cons, mem_sdiff, mem_univ, mem_insert, List.mem_toFinset, not_or,
         true_and] at hv_in_S
       simp only [List.toFinset_cons, mem_insert, List.mem_toFinset, not_or]
       exact hv_in_S
     constructor
-    . exact hv_outdeg
+    · exact hv_outdeg
     constructor
     simp only [List.contains_eq_mem, List.mem_cons, Bool.decide_or, Bool.or_eq_true,
         decide_eq_true_eq, not_or]
@@ -567,13 +567,13 @@ private lemma burn_list_helper (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : 
     rcases this with ⟨w, h_w_burn_list⟩
     use w :: L
     constructor
-    . -- Show cardinality is n+2
+    · -- Show cardinality is n+2
       rw [List.toFinset_cons]
       rw [card_insert_eq_ite]
       -- Need: w ∉ L.toFinset
       simp only [h_w_burn_list.1, ↓reduceIte, Nat.add_right_cancel_iff]
       rw [h_L_length]
-    . -- Show the tail is a burn list
+    · -- Show the tail is a burn list
       exact h_w_burn_list.2
 
 /-- A superstable configuration admits a complete burn list containing every vertex of $G$.
@@ -623,18 +623,18 @@ lemma burn_flow_reverse {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G
   intro u v
   dsimp only [burnFlow]
   by_cases h_uv : L.list.idxOf v < L.list.idxOf u
-  . -- Case: indexOf v < indexOf u
+  · -- Case: indexOf v < indexOf u
     simp only [h_full u, h_uv, and_self, ↓reduceIte, h_full v, true_and, Nat.add_eq_left,
         ite_eq_right_iff]
     intro h
     linarith
-  . -- Case: indexOf v ≥ indexOf u
+  · -- Case: indexOf v ≥ indexOf u
     by_cases h_eq : L.list.idxOf u = L.list.idxOf v
-    . -- Subcase: indexOf u < indexOf v
+    · -- Subcase: indexOf u < indexOf v
       simp only [h_eq, lt_self_iff_false, and_false, ↓reduceIte, add_zero]
       have : u = v := (List.idxOf_inj (h_full u)).mp h_eq
       rw [this, num_edges_self_zero G v]
-    . -- Subcase: indexOf u > indexOf v
+    · -- Subcase: indexOf u > indexOf v
       have h_uv' : L.list.idxOf u < L.list.idxOf v := by
         simp only [not_lt] at h_uv h_eq
         exact lt_of_le_of_ne h_uv h_eq
@@ -648,16 +648,16 @@ lemma burn_flow_directed {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList 
   intro u v
   dsimp only [burnFlow]
   by_cases h_uv : L.list.idxOf v < L.list.idxOf u
-  . -- Case: indexOf v < indexOf u
+  · -- Case: indexOf v < indexOf u
     simp only [h_full u, h_uv, and_self, ↓reduceIte, h_full v, true_and, ite_eq_right_iff]
     right
     intro h
     linarith
-  . -- Case: indexOf v ≥ indexOf u
+  · -- Case: indexOf v ≥ indexOf u
     by_cases h_eq : L.list.idxOf u = L.list.idxOf v
-    . -- Subcase: indexOf u = indexOf v
+    · -- Subcase: indexOf u = indexOf v
       simp only [h_eq, lt_self_iff_false, and_false, ↓reduceIte, or_self]
-    . -- Subcase: indexOf u > indexOf v
+    · -- Subcase: indexOf u > indexOf v
       have h_uv' : L.list.idxOf u < L.list.idxOf v := by
         simp only [not_lt] at h_uv h_eq
         exact lt_of_le_of_ne h_uv h_eq
@@ -689,7 +689,7 @@ lemma burnin_degree {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) 
       dsimp only [isBurnList] at h_bl
       -- Need to analyze the position of v in the list
       by_cases h_vx : v = x
-      . -- Case: v = x
+      · -- Case: v = x
         rw [← h_vx] at h_bl
         suffices ∑ (w : G.V), burnFlow L ⟨w,v⟩ ≥ outdegreeSet G (univ \ (y :: rest').toFinset) v by
           linarith [this, h_bl.1]
@@ -706,10 +706,10 @@ lemma burnin_degree {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) 
           simp only [List.mem_cons]
           have : 0 < List.idxOf w (x :: rest) ↔ 0 ≠ List.idxOf w (x :: rest) := by
             constructor
-            . intro h_pos h_eq
+            · intro h_pos h_eq
               rw [h_eq] at h_pos
               linarith
-            . intro h_neq
+            · intro h_neq
               simp only [ne_eq] at h_neq
               apply Nat.zero_lt_of_ne_zero
               contrapose! h_neq with h_eq_zero
@@ -717,21 +717,21 @@ lemma burnin_degree {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) 
           rw [this]
           have : 0 ≠ List.idxOf w (x :: rest) ↔ w ≠ x := by
             constructor
-            . intro h_neq
+            · intro h_neq
               contrapose! h_neq with h_eq
               rw [h_eq]
               simp only [List.idxOf_cons_self]
-            . intro h_neq
+            · intro h_neq
               rw [List.idxOf_cons_ne _ (Ne.symm h_neq)]
               simp only [Nat.succ_eq_add_one, ne_eq, Nat.right_eq_add, Nat.add_eq_zero_iff,
                   one_ne_zero, and_false, not_false_eq_true]
           rw [this]
           constructor
-          . -- Forward direction
+          · -- Forward direction
             intro h_w
             by_contra!
             simp only [this, or_false, ne_eq, and_not_self] at h_w
-          . -- Reverse direction
+          · -- Reverse direction
             intro h_w_in_rest
             simp only [h_w_in_rest, or_true, ne_eq, true_and]
             by_contra!
@@ -753,7 +753,7 @@ lemma burnin_degree {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) 
         apply sum_le_sum
         intro i _
         rw [num_edges_symmetric G i v]
-      . -- Case: v ≠ x
+      · -- Case: v ≠ x
         let L' := burnList.mk (y :: rest') (h_bl.2.2)
         have h_v_in_L' : v ∈ L'.list := by
           dsimp only [L']
@@ -776,12 +776,12 @@ lemma burnin_degree {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) 
           rw [h]
           rw [List.idxOf_cons_ne _ (Ne.symm h_vx)]
           by_cases h_wx : w = x
-          . -- Subcase: w = x
+          · -- Subcase: w = x
             rw [h_wx]
             have h0 : (x :: y :: rest').idxOf x = 0 := List.idxOf_cons_self
             rw [h0, ite_eq_right (fun ⟨_, h⟩ => Nat.not_lt_zero _ h),
                ite_eq_right (fun ⟨h_mem, _⟩ => (h' ▸ h_x_nin_rest) h_mem)]
-          . -- Subcase: w ≠ x
+          · -- Subcase: w ≠ x
             simp only [List.mem_cons, h_wx, false_or]
             rw [List.idxOf_cons_ne (y :: rest') (Ne.symm h_wx)]
             simp only [Nat.succ_lt_succ_iff]

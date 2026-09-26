@@ -43,7 +43,6 @@ theorem isSemibreak_one_strand_chip
   funext z
   rcases z with core | ⟨γ, offset⟩
   · simp [semibreakDivisor, oneChip,
-
       SubdivisionGraph.Spec.interiorVertex]
   · by_cases hγα : γ = α
     · subst γ

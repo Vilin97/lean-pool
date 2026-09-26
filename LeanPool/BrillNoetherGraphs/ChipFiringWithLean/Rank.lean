@@ -85,7 +85,7 @@ def rankEq (G : CFGraph) (D : CFDiv G) (r : ℤ) : Prop :=
 
 /-- The relation `rankGeq G D k` holds vacuously for $k < 0$, since there are no effective
 divisors of negative degree. -/
-private lemma rank_geq_neg (G : CFGraph) (D : CFDiv G) (k : ℤ): (k < 0) → rankGeq G D k := by
+private lemma rank_geq_neg (G : CFGraph) (D : CFDiv G) (k : ℤ) : (k < 0) → rankGeq G D k := by
   intro k_neg E ⟨h_eff_E, h_deg_E⟩
   have := deg_of_eff_nonneg E h_eff_E
   linarith
@@ -161,7 +161,7 @@ private lemma rank_geq_trans (G : CFGraph) (D : CFDiv G) (r1 r2 : ℤ) :
     have E_deg := h_E_eff.right
     simp only [_root_.map_add] at E_deg h_Ediff_deg ⊢
     linarith
-  . -- Show that D - (E + E_diff) is not winnable
+  · -- Show that D - (E + E_diff) is not winnable
     contrapose! h_E_nonwin
     have E_diff_winnable := winnable_of_effective G E_diff h_Ediff_eff
     have sum_winnable := winnable_add_winnable G _ _ h_E_nonwin E_diff_winnable
@@ -175,7 +175,7 @@ lemma lt_of_rank_geq_not (G : CFGraph) (D : CFDiv G) (r1 r2 : ℤ) :
   contrapose! h_r2
   exact rank_geq_trans G D r1 r2 h_r1 h_r2
 
-private lemma rank_eq_neg_one_iff_unwinnable  (G : CFGraph) (D : CFDiv G) :
+private lemma rank_eq_neg_one_iff_unwinnable (G : CFGraph) (D : CFDiv G) :
   rankEq G D (-1) ↔ ¬(winnable G D) := by
   constructor
   · intro h

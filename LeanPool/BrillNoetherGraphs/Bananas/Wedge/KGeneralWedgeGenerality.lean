@@ -75,7 +75,6 @@ theorem onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission
   let E : CFDiv H := wedgeRestrictRightDivisor G H x y Q
   have hQ : wedgeAddDivisor G H x y D E = Q :=
     wedgeAddDivisor_restrict G H x y Q
-
   obtain ⟨tau, hTau⟩ := exists_transmissionPermutation_of_submodular
     (mark G u x) D hGconn (hGsub D)
   obtain ⟨sigma, hSigma, hSigmaAffine, hSigmaCount⟩ :=
@@ -83,7 +82,6 @@ theorem onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission
   obtain ⟨alpha, beta, hAlpha, hBeta, hWedge⟩ :=
     exists_isTransmissionPermutation_wedgeAddDivisor_star
       G H x y hGconn hHconn D E u v tau sigma hTau hSigma
-
   have hAlphaSci : (sci alpha.func : ℤ) ≤ genus G := by
     have hSize : (weierstrassSize hGconn x D : ℤ) ≤ genus G :=
       hGgeneral (weierstrassPartition hGconn x D)
@@ -91,7 +89,6 @@ theorem onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission
     have hSci := sci_eq_weierstrassSize u x hGconn D tau hTau
     rw [hAlpha, hSci]
     exact hSize
-
   have hGenusH : 0 ≤ genus H := genus_nonneg_of_graph_connected H hHconn
   have hBetaCount : (kInversionCount k beta.func : ℤ) ≤ genus H := by
     rw [hBeta]
@@ -101,12 +98,10 @@ theorem onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission
         (Int.toNat (genus H) : ℤ) := by
       exact_mod_cast hSigmaCount
     rwa [hCast] at hSigmaCountZ
-
   have hStarSci : (sci (alpha ⋆ beta).func : ℤ) ≤ genus G + genus H := by
     apply le_trans (sci_star_le k alpha beta (by simpa [hBeta] using hSigmaAffine) ?_)
     · exact add_le_add hAlphaSci hBetaCount
     · omega
-
   have hWedge' : IsTransmissionPermutation
       (mark W (Sum.inl u) wv) Q (alpha ⋆ beta).func := by
     rw [hQ] at hWedge
@@ -115,7 +110,6 @@ theorem onceMarkedBrillNoetherGeneral_vertexWedge_of_kGeneralTransmission
     apply weierstrassSize_le_genus_of_sci_le (G := W)
       (Sum.inl u) wv hWconn Q (alpha ⋆ beta).func hWedge'
     simpa only [W, genus_vertexWedge] using hStarSci
-
   have hContained : lambda ≤ weierstrassPartition hWconn wv Q :=
     census_partition_le_weierstrassPartition hWconn wv Q lambda hRows
   have hCard : lambda.card ≤ weierstrassSize hWconn wv Q :=

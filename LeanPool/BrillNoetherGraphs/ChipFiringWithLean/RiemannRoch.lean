@@ -57,21 +57,17 @@ theorem maximal_unwinnable_symmetry
   have h_rank_neg : rank G D = -1 := by
     rw [rank_neg_one_iff_unwinnable]
     exact h_max_unwin.1
-
   -- Get degree = g-1 from maximal unwinnable
   have h_deg : deg D = genus G - 1 := maximal_unwinnable_deg h_conn D h_max_unwin
-
   -- Use Riemann-Roch
   have h_RR := riemann_roch_for_graphs h_conn D
   rw [h_rank_neg] at h_RR
-
   -- Get degree of K-D
   have h_deg_K := degree_of_canonical_divisor G
   have h_deg_KD : deg (canonicalDivisor G - D) = genus G - 1 := by
     rw [deg.map_sub]
     rw [h_deg_K, h_deg]
     linarith
-
   constructor
   · -- K-D is unwinnable
     rw [←rank_neg_one_iff_unwinnable]
@@ -106,26 +102,21 @@ private lemma rank_subadditive (G : CFGraph) (D D' : CFDiv G)
   -- Express the two (nonnegative) ranks as natural numbers
   obtain ⟨k₁, h_k₁⟩ : ∃ k : ℕ, (k : ℤ) = rank G D := ⟨_, Int.toNat_of_nonneg h_D⟩
   obtain ⟨k₂, h_k₂⟩ : ∃ k : ℕ, (k : ℤ) = rank G D' := ⟨_, Int.toNat_of_nonneg h_D'⟩
-
   -- Show rank is ≥ k₁ + k₂ by proving rankGeq
   have h_rank_geq : rankGeq G (D + D') (k₁ + k₂) := by
     -- Take any effective divisor E'' of degree k₁ + k₂
     rintro E'' ⟨h_eff, h_deg⟩
-
     -- Decompose E'' into E₁ and E₂ of degrees k₁ and k₂
     obtain ⟨E₁, E₂, h_E₁_eff, h_E₂_eff, h_E₁_deg, h_E₂_deg, h_sum⟩ :=
       effective_divisor_decomposition G E'' k₁ k₂ h_eff h_deg
-
     -- Apply rankGeq to get winnability for both parts
     have h_D_win := (rank_geq_iff G D k₁).mpr (le_of_eq h_k₁) E₁ ⟨h_E₁_eff, h_E₁_deg⟩
     have h_D'_win := (rank_geq_iff G D' k₂).mpr (le_of_eq h_k₂) E₂ ⟨h_E₂_eff, h_E₂_deg⟩
-
     -- Show winnability of sum
     rw [h_sum]
     have h := winnable_add_winnable G (D-E₁) (D'-E₂) h_D_win h_D'_win
     rw [show D - E₁ + (D' - E₂) = (D + D') - (E₁ + E₂) by abel] at h
     exact h
-
   have h_final := (rank_geq_iff G (D+D') (k₁+k₂)).mp h_rank_geq
   linarith
 
@@ -157,7 +148,6 @@ theorem clifford_theorem
     rw [degree_of_canonical_divisor] at h_rr
     -- Solve for rank G K
     linarith
-
   -- Apply rank subadditivity
   have h_subadd := rank_subadditive G D (canonicalDivisor G - D) h_D h_KD
   -- The sum D + (K-D) = K
@@ -166,10 +156,8 @@ theorem clifford_theorem
     simp only [Pi.add_apply, Pi.sub_apply, add_sub_cancel]
   rw [h_sum] at h_subadd
   rw [h_K_rank] at h_subadd
-
   -- Use Riemann-Roch to get r(K-D) in terms of r(D)
   have h_rr := riemann_roch_for_graphs h_conn D
-
   -- Combining subadditivity and Riemann-Roch gives 2 r(D) ≤ deg D; conclude in ℚ
   have h_two : 2 * rank G D ≤ deg D := by linarith
   have h_two' : (2 : ℚ) * (rank G D : ℚ) ≤ (deg D : ℚ) := by exact_mod_cast h_two
@@ -192,7 +180,6 @@ theorem rank_nonspecial_range
   constructor
   · -- Part 1: deg(D) < 0 implies r(D) = -1
     exact rank_neg_one_of_deg_neg G D
-
   constructor
   · -- Part 2: 0 ≤ deg(D) ≤ 2g-2 implies r(D) ≤ deg(D)/2
     intro ⟨h_deg_nonneg, h_deg_upper⟩
@@ -210,12 +197,10 @@ theorem rank_nonspecial_range
         rw [h_rank_eq]
         push_cast
         linarith
-
     · -- Case where r(D) < 0
       rw [rank_neg_one_of_not_nonneg G D h_rank]
       push_cast
       linarith
-
   · -- Part 3: deg(D) > 2g-2 implies r(D) = deg(D) - g
     intro h_deg_large
     -- K-D has negative degree, hence rank -1

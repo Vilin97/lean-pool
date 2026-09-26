@@ -353,9 +353,7 @@ theorem maximal_unwinnable_deg
   {G : CFGraph} (h_conn : graphConnected G) (D : CFDiv G) :
   maximalUnwinnable G D → deg D = genus G - 1 := by
   intro h_max_unwin
-
   let q := Classical.arbitrary G.V
-
   have h_char := maximal_unwinnable_char h_conn q D
   have h_max_cfg : maximalSuperstable G (qReducedConfig h_conn q D) := (h_char.mp h_max_unwin).1
   have h_rep_form :
@@ -442,7 +440,7 @@ lemma unwinnable_of_moderator {G : CFGraph} {D : CFDiv G} (h : isModerator D) : 
 
 /-- For every unwinnable divisor $D$, there exist a moderator $M$ and an effective divisor
 $H$ with $M \sim D + H$. -/
-lemma moderator_of_unwinnable {G : CFGraph} (h_conn: graphConnected G) (D : CFDiv G) (unwin : ¬
+lemma moderator_of_unwinnable {G : CFGraph} (h_conn : graphConnected G) (D : CFDiv G) (unwin : ¬
     winnable G D) :
   ∃ (M H : CFDiv G), isModerator M ∧ effective H ∧ linearEquiv G M (D+H) := by
   let q := Classical.arbitrary G.V
@@ -473,12 +471,10 @@ lemma moderator_of_unwinnable {G : CFGraph} (h_conn: graphConnected G) (D : CFDi
     funext v; simp only [neg_add_rev, Int.reduceNeg, zsmul_eq_mul, Int.cast_add, Int.cast_neg,
         Int.cast_one, Pi.sub_apply, Pi.add_apply, Pi.mul_apply, Pi.neg_apply, Pi.one_apply,
         Pi.intCast_apply, Int.cast_eq, neg_sub]; ring
-
   have h_M_O : M = ordiv G O := by
     have c'_eq : c' = toConfig (orqed O hO) := by
       rw [← h_orient_eq_c']
       exact config_and_divisor_from_O O hO
-
     have : toDiv (genus G - 1) (toConfig (orqed O hO)) = ordiv G O := by
       calc
         toDiv (genus G - 1) (toConfig (orqed O hO))
@@ -522,7 +518,6 @@ theorem rank_degree_inequality
   rcases moderator_of_unwinnable h_conn (D - E) D_E_unwin with ⟨M, F, M_moderator, F_eff, M_equiv⟩
   set M' := canonicalDivisor G - M with M'_eq
   have M'_moderator : isModerator M' := moderator_symmetry M M_moderator
-
   set D' := canonicalDivisor G - D with D'_eq
   have M'_equiv : linearEquiv G (D' - F + E) M' := by
     rw [M'_eq]
@@ -533,20 +528,17 @@ theorem rank_degree_inequality
     use σ
     rw [← eq_σ]
     abel
-
   have h_D'_F : ¬ winnable G (D' - F) := by
     by_contra!
     have := winnable_add_winnable G (D' - F) E this (winnable_of_effective G E E_eff)
     apply unwinnable_of_moderator M'_moderator
     apply winnable_equiv_winnable G (D' - F + E) M' this M'_equiv
-
   have ineq : deg F > rank G D' := by
       contrapose! h_D'_F
       apply (rank_geq_iff G D' (deg F)).mpr at h_D'_F
       dsimp only [rankGeq] at h_D'_F
       specialize h_D'_F F ⟨F_eff, rfl⟩
       exact h_D'_F
-
   -- Finally, degree calculations to finish the inequality
   have degF : deg F = - deg D + deg E + deg M := by
     rw [linear_equiv_preserves_deg G M (D - E + F) M_equiv]
