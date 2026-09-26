@@ -502,6 +502,16 @@ instance stageEmpty : IsEmpty (Fin (0 + 0) ⊕ Fin (0 + 0)) :=
     | Sum.inl a => a.elim0
     | Sum.inr b => b.elim0⟩
 
+/-- At the empty interface the ledger is the circuit count: there
+are no used labels, hence no components to count. -/
+theorem ledgerOf_isEmpty {V : Fragment (Fin (0 + 0) ⊕ Fin (0 + 0))}
+    (F : EdgeSubset V)
+    (hp : SwapPaired F (interfaceSwap (stepIdent 0)))
+    (κ : F.RelTransitionSystem) :
+    ledgerOf F hp κ = κ.openCircuitCount := by
+  have : IsEmpty (UsedLab F) := ⟨fun x => isEmptyElim x.val⟩
+  rw [ledgerOf, DirMatching.unionCount_of_isEmpty, Nat.add_zero]
+
 -- The recursion on the cut count carries the whole
 -- stage data at every step.
 /-- **RS21's (14), transported by the recursion.** -/
@@ -510,11 +520,7 @@ theorem ledger_glueData : ∀ (n : ℕ)
     stageLedger 0 _ (glueData n V D) + glueCount n V D
       = stageLedger n V D
   | 0, V, D => by
-    let : IsEmpty (UsedLab D.sub) := ⟨fun x => isEmptyElim x.val⟩
-    let : IsEmpty (UsedLab (D.sub.relabelUp endEquiv)) :=
-      ⟨fun x => isEmptyElim x.val⟩
-    simp only [glueCount, stageLedger, ledgerOf, glueData,
-      DirMatching.unionCount_of_isEmpty, Nat.add_zero]
+    simp only [glueCount, stageLedger, ledgerOf_isEmpty, Nat.add_zero]
     exact relabel_openCircuitCount endEquiv D.sub D.rel
   | n + 1, V, D => by
     have ih := ledger_glueData n _ (stepData n V D)
@@ -553,16 +559,6 @@ theorem ledger_glueData : ∀ (n : ℕ)
       rw [hgc]
       exact congrArg (fun X => stageLedger 0 _ X + _) hgd]
     omega
-
-/-- At the empty interface the ledger is the circuit count: there
-are no used labels, hence no components to count. -/
-theorem ledgerOf_isEmpty {V : Fragment (Fin (0 + 0) ⊕ Fin (0 + 0))}
-    (F : EdgeSubset V)
-    (hp : SwapPaired F (interfaceSwap (stepIdent 0)))
-    (κ : F.RelTransitionSystem) :
-    ledgerOf F hp κ = κ.openCircuitCount := by
-  have : IsEmpty (UsedLab F) := ⟨fun x => isEmptyElim x.val⟩
-  rw [ledgerOf, DirMatching.unionCount_of_isEmpty, Nat.add_zero]
 
 /-- **RS21's (14).**  The composed system's circuit count, plus one
 for each closed cut whose edge the subset carries, is the starting
