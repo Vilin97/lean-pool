@@ -1,0 +1,261 @@
+/-
+Copyright (c) 2026 Bastiaan J Braams. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Bastiaan J Braams
+-/
+module
+
+public import Mathlib.Analysis.Calculus.Deriv.Pi
+public import Mathlib.Analysis.Calculus.FDeriv.Analytic
+public import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+public import LeanPool.CarlsonFunctions.SeveralComplexVariables.Basic
+
+/-!
+# Coordinate derivatives of holomorphic functions
+
+Coordinate differentiation is defined using one-variable slices, and identified with
+evaluation of the Fréchet derivative on a coordinate vector. Holomorphy of derivatives
+is inherited from Mathlib's general Fréchet derivative theorem.
+-/
+
+@[expose] public noncomputable section
+
+open Complex Filter Function Set
+open scoped Topology
+
+namespace CarlsonFunctions.SeveralComplexVariables
+
+variable {ι F : Type*} [Fintype ι] [NormedAddCommGroup F] [NormedSpace ℂ F]
+
+open scoped Classical in
+/-- Differentiate in coordinate `i`, holding all other coordinates fixed. -/
+def partialDerivCarlson (i : ι) (f : (ι → ℂ) → F) (z : ι → ℂ) : F :=
+  deriv (fun w => f (update z i w)) (z i)
+
+open scoped Classical in
+omit [Fintype ι] in
+/-- The derivative of a coordinate slice is the corresponding Fréchet derivative value. -/
+theorem hasDerivAt_update_of_differentiableAt [Finite ι] {f : (ι → ℂ) → F} {z : ι → ℂ}
+    (hf : DifferentiableAt ℂ f z) (i : ι) :
+    HasDerivAt (fun w => f (update z i w)) (fderiv ℂ f z (Pi.single i 1)) (z i) := by
+  classical
+  let _ := Fintype.ofFinite ι
+  have hf' : HasFDerivAt f (fderiv ℂ f z) (update z i (z i)) := by simpa using hf.hasFDerivAt
+  exact hf'.comp_hasDerivAt (z i) (hasDerivAt_update z i (z i))
+
+open scoped Classical in
+omit [Fintype ι] in
+/-- Coordinate derivatives are Fréchet derivatives evaluated on coordinate vectors. -/
+theorem partialDeriv_eq_fderiv [Finite ι] {f : (ι → ℂ) → F} {z : ι → ℂ}
+    (hf : DifferentiableAt ℂ f z) (i : ι) :
+    partialDerivCarlson i f z = fderiv ℂ f z (Pi.single i 1) := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact (hasDerivAt_update_of_differentiableAt hf i).deriv
+
+open scoped Classical in
+omit [Fintype ι] in
+/-- A coordinate derivative only depends on the germ of the function. -/
+theorem partialDeriv_congr [Finite ι] {f g : (ι → ℂ) → F} {z : ι → ℂ}
+    (hfg : f =ᶠ[𝓝 z] g) (i : ι) : partialDerivCarlson i f z = partialDerivCarlson i g z := by
+  classical
+  let _ := Fintype.ofFinite ι
+  apply Filter.EventuallyEq.deriv_eq
+  have ht : Tendsto (update z i) (𝓝 (z i)) (𝓝 z) := by
+    simpa using (hasDerivAt_update z i (z i)).continuousAt.tendsto
+  exact hfg.comp_tendsto ht
+
+open scoped Classical in
+/-- The Fréchet derivative is recovered from the coordinate derivatives. -/
+theorem fderiv_eq_sum_partialDeriv {f : (ι → ℂ) → F} {z : ι → ℂ}
+    (hf : DifferentiableAt ℂ f z) (v : ι → ℂ) :
+    fderiv ℂ f z v = ∑ i, v i • partialDerivCarlson i f z := by
+  simp_rw [partialDeriv_eq_fderiv hf, ← map_smul, ← map_sum]
+  congr 1
+  ext j
+  simp [Pi.single_apply]
+
+omit [Fintype ι] in
+/-- Coordinate differentiation respects subtraction at differentiability points. -/
+theorem partialDeriv_sub [Finite ι] {f g : (ι → ℂ) → F} {z : ι → ℂ}
+    (hf : DifferentiableAt ℂ f z) (hg : DifferentiableAt ℂ g z) (i : ι) :
+    partialDerivCarlson i (f - g) z = partialDerivCarlson i f z - partialDerivCarlson i g z := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact deriv_sub (hasDerivAt_update_of_differentiableAt hf i).differentiableAt
+    (hasDerivAt_update_of_differentiableAt hg i).differentiableAt
+
+open scoped Classical in
+/-- Holomorphy restricts to each coordinate slice. -/
+theorem _root_.AnalyticOnNhd.analyticAt_updateCarlson {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+    (hf : AnalyticOnNhd ℂ f U) {z : ι → ℂ} (hz : z ∈ U) (i : ι) :
+    AnalyticAt ℂ (fun w => f (update z i w)) (z i) := by
+  classical
+  have hu : AnalyticAt ℂ (update z i) (z i) :=
+    analyticAt_iff_eventually_differentiableAt.mpr
+      (Eventually.of_forall fun w => (hasDerivAt_update z i w).differentiableAt)
+  exact (hf z hz).comp_of_eq hu (update_eq_self i z)
+
+omit [Fintype ι] in
+/-- Coordinate differentiation commutes with a finite sum of differentiable functions. -/
+theorem partialDeriv_finset_sum [Finite ι] {α : Type*} {f : α → (ι → ℂ) → F}
+    (t : Finset α) {z : ι → ℂ} (hf : ∀ a ∈ t, DifferentiableAt ℂ (f a) z) (i : ι) :
+    partialDerivCarlson i (fun w => ∑ a ∈ t, f a w) z = ∑ a ∈ t, partialDerivCarlson i (f a) z := by
+  classical
+  let _ := Fintype.ofFinite ι
+  exact deriv_fun_sum fun a ha => (hasDerivAt_update_of_differentiableAt (hf a ha)
+    i).differentiableAt
+
+variable [CompleteSpace F]
+
+open scoped Classical in
+/-- Every coordinate derivative of an analytic function is analytic. -/
+theorem _root_.AnalyticOnNhd.partialDerivCarlson {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+    (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U) (i : ι) :
+    AnalyticOnNhd ℂ (partialDerivCarlson i f) U := by
+  classical
+  intro z hz
+  have ha : AnalyticAt ℂ (fun w => fderiv ℂ f w (Pi.single i 1)) z := by
+    simpa only [Function.comp_def, ContinuousLinearMap.apply_apply] using!
+      ((ContinuousLinearMap.apply ℂ F (Pi.single i (1 : ℂ))).analyticAt
+        (fderiv ℂ f z)).comp_of_eq (hf z hz).fderiv rfl
+  apply ha.congr
+  filter_upwards [hU.eventually_mem hz] with w hw
+  exact (partialDeriv_eq_fderiv (hf w hw).differentiableAt i).symm
+
+/-- Repeated coordinate differentiation, with the leftmost coordinate acting last. -/
+def iteratedPartialDerivCarlson : List ι → ((ι → ℂ) → F) → (ι → ℂ) → F
+  | [], f => f
+  | i :: is, f => partialDerivCarlson i (iteratedPartialDerivCarlson is f)
+
+open scoped Classical in
+/-- Differentiate a coordinate derivative by composing the second Fréchet derivative
+with evaluation on its coordinate vector. -/
+theorem hasFDerivAt_partialDeriv {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+    (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U) {z : ι → ℂ} (hz : z ∈ U) (i : ι) :
+    HasFDerivAt (partialDerivCarlson i f)
+      ((ContinuousLinearMap.apply ℂ F (Pi.single i 1)).comp
+        (fderiv ℂ (fderiv ℂ f) z)) z := by
+  have H := (ContinuousLinearMap.apply ℂ F (Pi.single i (1 : ℂ))).hasFDerivAt.comp z
+    (hf z hz).fderiv.differentiableAt.hasFDerivAt
+  apply H.congr_of_eventuallyEq
+  filter_upwards [hU.eventually_mem hz] with w hw
+  exact partialDeriv_eq_fderiv (hf w hw).differentiableAt i
+
+open scoped Classical in
+/-- Mixed coordinate derivatives commute for a holomorphic function. -/
+theorem partialDeriv_partialDeriv_comm {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+    (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U) {z : ι → ℂ} (hz : z ∈ U) (i j : ι) :
+    partialDerivCarlson i (partialDerivCarlson j f) z = partialDerivCarlson j (partialDerivCarlson
+      i f) z := by
+  rw [partialDeriv_eq_fderiv (hasFDerivAt_partialDeriv hf hU hz j).differentiableAt,
+    partialDeriv_eq_fderiv (hasFDerivAt_partialDeriv hf hU hz i).differentiableAt,
+    (hasFDerivAt_partialDeriv hf hU hz j).fderiv,
+    (hasFDerivAt_partialDeriv hf hU hz i).fderiv]
+  exact (hf z hz).contDiffAt.isSymmSndFDerivAt_of_omega (Pi.single i 1) (Pi.single j 1)
+
+/-- All iterated coordinate derivatives are holomorphic on the original open domain. -/
+theorem _root_.AnalyticOnNhd.iteratedPartialDerivCarlson {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+    (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U) (is : List ι) :
+    AnalyticOnNhd ℂ (iteratedPartialDerivCarlson is f) U := by
+  induction is with
+  | nil => exact hf
+  | cons i is ih => exact ih.partialDerivCarlson hU i
+
+/-- Iterated coordinate derivatives depend only on the multiplicity of each coordinate,
+not on their order in the differentiation list. -/
+theorem iteratedPartialDeriv_perm {U : Set (ι → ℂ)} {f : (ι → ℂ) → F}
+    (hf : AnalyticOnNhd ℂ f U) (hU : IsOpen U) {is js : List ι} (h : is.Perm js) :
+    EqOn (iteratedPartialDerivCarlson is f) (iteratedPartialDerivCarlson js f) U := by
+  induction h with
+  | nil => intro z hz; rfl
+  | cons i h ih =>
+      intro z hz
+      apply partialDeriv_congr
+      filter_upwards [hU.eventually_mem hz] with w hw
+      exact ih hw
+  | swap i j is =>
+      intro z hz
+      exact partialDeriv_partialDeriv_comm (hf.iteratedPartialDerivCarlson hU is) hU hz j i
+  | trans h₁ h₂ ih₁ ih₂ => exact ih₁.trans ih₂
+
+omit [CompleteSpace F] in
+omit [Fintype ι] in
+/-- Iterated coordinate derivatives agree on an open set where the original functions agree. -/
+theorem iteratedPartialDeriv_congrOn [Finite ι] {U : Set (ι → ℂ)} {f g : (ι → ℂ) → F}
+    (hU : IsOpen U) (hfg : EqOn f g U) (is : List ι) :
+    EqOn (iteratedPartialDerivCarlson is f) (iteratedPartialDerivCarlson is g) U := by
+  classical
+  let _ := Fintype.ofFinite ι
+  induction is with
+  | nil => exact hfg
+  | cons i is ih =>
+    intro z hz
+    apply partialDeriv_congr
+    filter_upwards [hU.eventually_mem hz] with w hw
+    exact ih hw
+
+/-- Mixed coordinate differentiation commutes with finite sums of holomorphic functions. -/
+theorem iteratedPartialDeriv_finset_sum {α : Type*} {U : Set (ι → ℂ)}
+    {f : α → (ι → ℂ) → F} (t : Finset α) (hf : ∀ a ∈ t, AnalyticOnNhd ℂ (f a) U)
+    (hU : IsOpen U) (is : List ι) :
+    EqOn (iteratedPartialDerivCarlson is (fun z => ∑ a ∈ t, f a z))
+      (fun z => ∑ a ∈ t, iteratedPartialDerivCarlson is (f a) z) U := by
+  induction is with
+  | nil => intro z hz; rfl
+  | cons i is ih =>
+    intro z hz
+    change partialDerivCarlson i (iteratedPartialDerivCarlson is (fun w => ∑ a ∈ t, f a w)) z = _
+    have heq : iteratedPartialDerivCarlson is (fun w => ∑ a ∈ t, f a w) =ᶠ[𝓝 z]
+        (fun w => ∑ a ∈ t, iteratedPartialDerivCarlson is (f a) w) :=
+      (hU.eventually_mem hz).mono (fun w hw => ih hw)
+    rw [partialDeriv_congr heq i]
+    exact partialDeriv_finset_sum t
+      (fun a ha => ((hf a ha).iteratedPartialDerivCarlson hU is z hz).differentiableAt) i
+
+/-- The complex Jacobian in the standard coordinate bases. -/
+def complexJacobian {κ : Type*} (f : (ι → ℂ) → (κ → ℂ)) (z : ι → ℂ) : Matrix κ ι ℂ :=
+  fun j i => partialDerivCarlson i (fun w => f w j) z
+
+open scoped Classical in
+omit [Fintype ι] in
+/-- Entries of the complex Jacobian are the coordinate entries of the Fréchet derivative. -/
+theorem complexJacobian_apply [Finite ι] {κ : Type*}
+    {f : (ι → ℂ) → (κ → ℂ)} {z : ι → ℂ} (hf : DifferentiableAt ℂ f z)
+    (j : κ) (i : ι) : complexJacobian f z j i = fderiv ℂ f z (Pi.single i 1) j := by
+  classical
+  let _ := Fintype.ofFinite ι
+  rw [complexJacobian, partialDeriv_eq_fderiv (differentiableAt_pi.mp hf j), fderiv_apply hf j]
+  rfl
+
+omit [CompleteSpace F] in
+omit [Fintype ι] in
+/-- The coordinate chain rule, with an arbitrary complex normed outer target. -/
+theorem partialDeriv_comp [Finite ι] {κ : Type*} [Fintype κ]
+    {f : (ι → ℂ) → (κ → ℂ)} {g : (κ → ℂ) → F} {z : ι → ℂ}
+    (hg : DifferentiableAt ℂ g (f z)) (hf : DifferentiableAt ℂ f z) (i : ι) :
+    partialDerivCarlson i (g ∘ f) z = ∑ j, complexJacobian f z j i • partialDerivCarlson j g (f z)
+      := by
+  classical
+  let _ := Fintype.ofFinite ι
+  rw [partialDeriv_eq_fderiv (hg.comp z hf), fderiv_comp z hg hf]
+  simp only [ContinuousLinearMap.comp_apply]
+  rw [fderiv_eq_sum_partialDeriv hg]
+  simp_rw [complexJacobian_apply hf]
+
+omit [Fintype ι] in
+/-- Jacobians compose by matrix multiplication. -/
+theorem complexJacobian_comp [Finite ι] {κ ν : Type*} [Fintype κ]
+    {f : (ι → ℂ) → (κ → ℂ)} {g : (κ → ℂ) → (ν → ℂ)} {z : ι → ℂ}
+    (hg : DifferentiableAt ℂ g (f z)) (hf : DifferentiableAt ℂ f z) :
+    complexJacobian (g ∘ f) z = complexJacobian g (f z) * complexJacobian f z := by
+  classical
+  let _ := Fintype.ofFinite ι
+  ext j i
+  change partialDerivCarlson i ((fun w => g w j) ∘ f) z = _
+  rw [partialDeriv_comp (differentiableAt_pi.mp hg j) hf]
+  simp [Matrix.mul_apply, complexJacobian, smul_eq_mul, mul_comm]
+
+end CarlsonFunctions.SeveralComplexVariables
+
+end
