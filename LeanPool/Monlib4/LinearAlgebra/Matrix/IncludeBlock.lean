@@ -518,7 +518,7 @@ def semiring {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     simp_rw [IsBlockDiagonal.coe_npow, pow_add, IsBlockDiagonal.coe_mul,
       pow_one, IsBlockDiagonal.coe_npow]
 
-@[reducible, instance]
+@[reducible, instance, expose]
 def algebra {k : Type _} [Fintype k] [DecidableEq k] {s : k → Type _}
     [∀ i, Fintype (s i)] [∀ i, DecidableEq (s i)] :
     Algebra R (BlockDiagonals R k s)

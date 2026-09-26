@@ -98,7 +98,7 @@ theorem closureInclusion_injective (x : ContinuumFreeGroup) :
   exact h
 
 /-- The shifted prepared value, restricted to the local closure. -/
-def localDifference (x : ContinuumFreeGroup)
+@[expose] def localDifference (x : ContinuumFreeGroup)
     (a : RelevantCode N hN M x) (n : ℕ) : closure N hN M x →₀ ℤ :=
   by
     classical
@@ -157,7 +157,7 @@ theorem localDifference_injective
     ← closureInclusion_localDifference N hN M x a n, hmn]
 
 /-- The independent shifted set in one block, now inside the countable local group. -/
-def localDifferenceBlock (x : ContinuumFreeGroup)
+@[expose] def localDifferenceBlock (x : ContinuumFreeGroup)
     (a : RelevantCode N hN M x) (l : ℕ) :
     Finset (closure N hN M x →₀ ℤ) :=
   (blockPositions N hN l).image (localDifference N hN M x a)

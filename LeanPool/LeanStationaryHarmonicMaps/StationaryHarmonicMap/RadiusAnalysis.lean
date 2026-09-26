@@ -106,7 +106,7 @@ def WeakOneDimensionalIBPIntegrability {n m : ℕ}
 /-- The absolute-continuity target for the radius functions used in the weak
 monotonicity proof.  This is the analytic statement one ultimately gets from
 coarea/radius differentiation in the `W^{1,2}_{loc}` setting. -/
-def WeakEnergyAbsolutelyContinuousOnRadii {n m : ℕ}
+@[expose] def WeakEnergyAbsolutelyContinuousOnRadii {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   (∀ {a b : ℝ}, 0 ≤ a → a ≤ b → b ≤ R0 →
     AbsolutelyContinuousOnInterval (weakBallEnergy Du (0 : Domain n)) a b) ∧
@@ -116,7 +116,7 @@ def WeakEnergyAbsolutelyContinuousOnRadii {n m : ℕ}
 /-- Absolute continuity, in the radius variable, of the ball integral generated
 by a scalar integrand.  This is the generic analytic statement supplied by the
 coarea/radius theorem for `L¹` functions. -/
-def BallIntegralRadiusAbsolutelyContinuous {n : ℕ}
+@[expose] def BallIntegralRadiusAbsolutelyContinuous {n : ℕ}
     (f : Domain n → ℝ) (R0 : ℝ) : Prop :=
   ∀ {a b : ℝ}, 0 ≤ a → a ≤ b → b ≤ R0 →
     AbsolutelyContinuousOnInterval
@@ -127,7 +127,7 @@ estimates: in positive dimension, every `L¹` scalar integrand on `B_R0` has an
 absolutely continuous ball-integral radius function on `[0, R0]`.  The positive
 dimension assumption is essential: in dimension zero the open ball jumps at
 radius `0`. -/
-def BallIntegralRadiusACOfIntegrableOnBall (n : ℕ) : Prop :=
+@[expose] def BallIntegralRadiusACOfIntegrableOnBall (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {f : Domain n → ℝ} {R0 : ℝ},
     IntegrableOn f (Metric.ball (0 : Domain n) R0) volume →
@@ -169,7 +169,7 @@ geometrically: every `L¹` scalar density on a ball has the radius integration
 formula against arbitrary scalar radius weights.  The specialized weak energy
 and radial-energy formulas below are just applications of this statement to the
 two relevant densities. -/
-def BallIntegralRadiusDerivativeFormula (n : ℕ) : Prop :=
+@[expose] def BallIntegralRadiusDerivativeFormula (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {f : Domain n → ℝ} {R0 : ℝ},
     IntegrableOn f (Metric.ball (0 : Domain n) R0) volume →
@@ -183,7 +183,7 @@ def BallIntegralRadiusDerivativeFormula (n : ℕ) : Prop :=
 /-- Restricted-weight version of `BallIntegralRadiusDerivativeFormula`, using
 the measurable essentially bounded radius weights that occur in the weak
 monotonicity proof. -/
-def BallIntegralRadiusDerivativeFormulaForWeights (n : ℕ) : Prop :=
+@[expose] def BallIntegralRadiusDerivativeFormulaForWeights (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {f : Domain n → ℝ} {R0 : ℝ},
     IntegrableOn f (Metric.ball (0 : Domain n) R0) volume →
@@ -198,7 +198,7 @@ def BallIntegralRadiusDerivativeFormulaForWeights (n : ℕ) : Prop :=
 /-- Pure radial pushforward/coarea input: a scalar density on a Euclidean ball
 has some one-dimensional radial density `D` representing all integrals against
 radius weights.  No derivative of the ball integral is mentioned here. -/
-def BallIntegralRadiusWeightedRepresentation (n : ℕ) : Prop :=
+@[expose] def BallIntegralRadiusWeightedRepresentation (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {f : Domain n → ℝ} {R0 : ℝ},
     IntegrableOn f (Metric.ball (0 : Domain n) R0) volume →
@@ -210,7 +210,7 @@ def BallIntegralRadiusWeightedRepresentation (n : ℕ) : Prop :=
           (∫ rho in Ioo (0 : ℝ) R0, c rho * D rho)
 
 /-- Restricted-weight version of the pure radial pushforward/coarea input. -/
-def BallIntegralRadiusWeightedRepresentationForWeights (n : ℕ) : Prop :=
+@[expose] def BallIntegralRadiusWeightedRepresentationForWeights (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {f : Domain n → ℝ} {R0 : ℝ},
     IntegrableOn f (Metric.ball (0 : Domain n) R0) volume →
@@ -225,7 +225,7 @@ def BallIntegralRadiusWeightedRepresentationForWeights (n : ℕ) : Prop :=
 /-- One-dimensional identification input: whenever a radial density represents
 all radius-weighted integrals of `f`, it agrees a.e. with the derivative of the
 ball integral radius function. -/
-def BallIntegralRadiusDerivativeIdentification (n : ℕ) : Prop :=
+@[expose] def BallIntegralRadiusDerivativeIdentification (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {f : Domain n → ℝ} {R0 : ℝ} {D : ℝ → ℝ},
     IntegrableOn f (Metric.ball (0 : Domain n) R0) volume →
@@ -241,7 +241,7 @@ def BallIntegralRadiusDerivativeIdentification (n : ℕ) : Prop :=
 /-- Restricted-weight version of the one-dimensional derivative identification
 input.  This is the realistic version of the uniqueness step: bounded
 measurable test weights determine equality a.e. on the radius interval. -/
-def BallIntegralRadiusDerivativeIdentificationForWeights (n : ℕ) : Prop :=
+@[expose] def BallIntegralRadiusDerivativeIdentificationForWeights (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {f : Domain n → ℝ} {R0 : ℝ} {D : ℝ → ℝ},
     IntegrableOn f (Metric.ball (0 : Domain n) R0) volume →
@@ -386,7 +386,7 @@ def EuclideanBallVolumeAbsolutelyContinuous (n : ℕ) : Prop :=
 /-- The radial open shell between two radii.  We use the unordered endpoints so
 that the shell attached to an interval in the absolute-continuity definition is
 independent of its orientation. -/
-def RadialOpenShell {n : ℕ} (r s : ℝ) : Set (Domain n) :=
+@[expose] def RadialOpenShell {n : ℕ} (r s : ℝ) : Set (Domain n) :=
   {x | ‖x‖ ∈ Ioo (min r s) (max r s)}
 
 /-- The union of the radial open shells associated to a finite interval family
@@ -397,7 +397,7 @@ from the absolute-continuity filter. -/
 /-- The geometric thin-annulus estimate needed for the `L¹` radius theorem:
 finite unions of radial shells have volume tending to zero when the total
 one-dimensional length of the generating intervals tends to zero. -/
-def RadialOpenShellsVolumeTendstoZero (n : ℕ) : Prop :=
+@[expose] def RadialOpenShellsVolumeTendstoZero (n : ℕ) : Prop :=
   [NeZero n] →
   ∀ {a b : ℝ}, 0 ≤ a → a ≤ b →
     Filter.Tendsto

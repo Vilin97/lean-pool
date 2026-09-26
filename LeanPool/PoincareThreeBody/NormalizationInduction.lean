@@ -28,7 +28,7 @@ namespace LeanPool.PoincareThreeBody
 
 /-- The sequence obtained by repeatedly subtracting a chosen energy function and dividing by the
 mass parameter. -/
-noncomputable def iteratedMassNormalization
+@[expose] noncomputable def iteratedMassNormalization
     (F : ℝ → PhaseSpace → ℝ) (energyFunction : ℕ → ℝ → ℝ) :
     ℕ → ℝ → PhaseSpace → ℝ
   | 0 => F

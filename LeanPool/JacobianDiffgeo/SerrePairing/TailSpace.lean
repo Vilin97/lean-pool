@@ -86,7 +86,7 @@ omit [IsManifold 𝓘(ℂ, ℂ) ω X] [ChartedSpace ℂ X] in
     τ ∈ TailSpace D ↔ τ.BoundedBy D := Iff.rfl
 
 /-- A single-point, single-exponent test tail. -/
-noncomputable def Tail.single (p : X) (n : ℤ) (c : ℂ) : Tail X :=
+@[expose] noncomputable def Tail.single (p : X) (n : ℤ) (c : ℂ) : Tail X :=
   Finsupp.single p (Finsupp.single n c)
 
 open scoped Classical in

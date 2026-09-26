@@ -300,7 +300,7 @@ theorem oplus_mem_leftN {X : Set Str} (hX : D₀.mem X) :
   · rw [leftN_proper h]; exact oplusTok_mem_embF hX h
 
 /-- The injection `i : 𝒟 → 𝒟 ⊕ ℰ`: `X i W ↔ X ∈ 𝒟 ∧ W ∈ 𝒟⊕ℰ ∧ leftN X ⊆ W`. -/
-def inlInj : ApproximableMap D₀ (oplusTok D₀ D₁ h₀ h₁) where
+@[expose] def inlInj : ApproximableMap D₀ (oplusTok D₀ D₁ h₀ h₁) where
   rel X W := D₀.mem X ∧ (oplusTok D₀ D₁ h₀ h₁).mem W ∧ leftN D₀ D₁ X ⊆ W
   rel_dom h := h.1
   rel_cod h := h.2.1
@@ -431,7 +431,7 @@ theorem toStrictFilter_toStrictMap (φ : (strictFun V₀ V₁).Element) :
   (strictFunEquiv V₀ V₁).symm_apply_apply φ
 
 /-- Element-level inclusion `|𝒟 →⊥ ℰ| → |𝒟 → ℰ|`. -/
-def incl (φ : (strictFun V₀ V₁).Element) : (funSpace V₀ V₁).Element :=
+@[expose] def incl (φ : (strictFun V₀ V₁).Element) : (funSpace V₀ V₁).Element :=
   toFilter (toStrictMap φ).1
 
 /-- Element-level strictification `|𝒟 → ℰ| → |𝒟 →⊥ ℰ|`. -/

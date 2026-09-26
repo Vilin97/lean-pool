@@ -32,7 +32,7 @@ variable {L : Language.{u, v}} {M : Type*} [L.Structure M]
 beyond which all strictly monotone tuples of the sequence agree. Weaker than
 `IsLomega1omegaIndiscernibleOn` (which is the cutoff-`0` case), and the form actually
 produced by Erdős–Rado extraction arguments. -/
-def IsLomega1omegaIndiscernibleOnTail (a : ℕ → M)
+@[expose] def IsLomega1omegaIndiscernibleOnTail (a : ℕ → M)
     (Γ : Set (Σ n, L.BoundedFormulaω Empty n)) : Prop :=
   ∀ {n : ℕ} {φ : L.BoundedFormulaω Empty n}, ⟨n, φ⟩ ∈ Γ →
     ∃ N : ℕ, ∀ s t : Fin n → ℕ, StrictMono s → StrictMono t →

@@ -26,8 +26,16 @@ variable
   {C : Type*} [QuasiBorelSpace C]
 
 /-- View a finite set as its underlying nodup multiset. -/
-@[expose] irreducible_def toSubtype : Finset A → { xs : Multiset A // Multiset.Nodup xs }
-  | ⟨x, h⟩ => ⟨x, h⟩
+@[irreducible, expose] def toSubtype (s : Finset A) :
+    { xs : Multiset A // Multiset.Nodup xs } := ⟨s.val, s.nodup⟩
+
+theorem toSubtype_def (s : Finset A) :
+    toSubtype s = ⟨s.val, s.nodup⟩ := by
+  unfold toSubtype
+  apply Subtype.ext
+  rfl
+
+attribute [eqns toSubtype_def] toSubtype
 
 private irreducible_def ofSubtype : { xs : Multiset A // Multiset.Nodup xs } → Finset A
   | ⟨x, h⟩ => ⟨x, h⟩

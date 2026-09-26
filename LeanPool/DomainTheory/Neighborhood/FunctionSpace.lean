@@ -238,7 +238,7 @@ def toApproxMap (φ : (funSpace V₀ V₁).Element) : ApproximableMap V₀ V₁ 
 
 /-- **Theorem 3.10 (Scott 1981, PRG-19).** The filter `f̂ = {F ∣ f ∈ F}` of an
 approximable map. -/
-def toFilter (f : ApproximableMap V₀ V₁) : (funSpace V₀ V₁).Element where
+@[expose] def toFilter (f : ApproximableMap V₀ V₁) : (funSpace V₀ V₁).Element where
   mem W := (funSpace V₀ V₁).mem W ∧ f ∈ W
   sub h := h.1
   master_mem := ⟨(funSpace V₀ V₁).master_mem, Set.mem_univ f⟩

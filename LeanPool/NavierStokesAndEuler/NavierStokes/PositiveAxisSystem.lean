@@ -91,7 +91,7 @@ noncomputable def timeValue (h power eta X : K) (j : Jet K) : K :=
 
 /-- Axial value, given by `(2 * eta * power * j.value + edge eta * j.parameter - 2 * eta * X *
 j.radial) / ell h eta`. -/
-noncomputable def axialValue (h power eta X : K) (j : Jet K) : K :=
+@[expose] noncomputable def axialValue (h power eta X : K) (j : Jet K) : K :=
   (2 * eta * power * j.value + edge eta * j.parameter - 2 * eta * X * j.radial) / ell h eta
 
 /-- The quotient `V_n/X` obtained from (21) with `Ubar_n=U_n+K_n`. -/
@@ -100,16 +100,17 @@ noncomputable def axialValue (h power eta X : K) (j : Jet K) : K :=
     edge eta * (u.parameter + k.parameter)) / ell h eta
 
 /-- Pressure source, given by `inverseSquare C * s.pressureProduct - s.omegaQuotient / 2`. -/
-noncomputable def pressureSource (C : K) (s : SourceJet K) : K :=
+@[expose] noncomputable def pressureSource (C : K) (s : SourceJet K) : K :=
   inverseSquare C * s.pressureProduct - s.omegaQuotient / 2
 
 /-- Pressure value, given by `2 * inverseSquare C * b.phi.value * phi.value + pressureSource C
 s`. -/
-noncomputable def pressureValue (C : K) (b : BaseJet K) (s : SourceJet K) (phi : Jet K) : K :=
+@[expose] noncomputable def pressureValue (C : K) (b : BaseJet K) (s : SourceJet K)
+    (phi : Jet K) : K :=
   2 * inverseSquare C * b.phi.value * phi.value + pressureSource C s
 
 /-- Angular RHS, constructed using `timeValue`. -/
-noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
+@[expose] noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
     (phi u k : Jet K) : K :=
   timeValue h (angularPower h + lam) eta X phi +
   b.beta * (X * phi.radial + phi.value) +
@@ -118,7 +119,7 @@ noncomputable def angularRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
   u.value * axialValue h (angularPower h) eta X b.phi + s.angular
 
 /-- Axial RHS, constructed using `timeValue`. -/
-noncomputable def axialRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
+@[expose] noncomputable def axialRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
     (_phi u k p : Jet K) : K :=
   timeValue h (axialPower h + lam) eta X u + b.beta * X * u.radial +
   betaValue h lam eta u k * X * b.axial.radial +
@@ -128,7 +129,7 @@ noncomputable def axialRHS (h lam eta X : K) (b : BaseJet K) (s : SourceJet K)
 
 /-- The four equations remaining after the first two components of W have
 been defined as radial derivatives. These are the expanded (21)--(22). -/
-def ExpandedEquations (h lam C eta X : K) (b : BaseJet K) (s : SourceJet K)
+@[expose] def ExpandedEquations (h lam C eta X : K) (b : BaseJet K) (s : SourceJet K)
     (phi u k p : Jet K) : Prop :=
   X * (u.radial + k.radial) + k.value = 0 ∧
   p.radial = pressureValue C b s phi ∧
@@ -140,7 +141,7 @@ def ExpandedEquations (h lam C eta X : K) (b : BaseJet K) (s : SourceJet K)
 
 /-- Jet vector, given by `![phi.value, u.value, k.value, p.value, 2 * r * phi.radial, 2 * r *
 u.radial]`. -/
-noncomputable def jetVector (r : K) (phi u k p : Jet K) : Fin 6 → K :=
+@[expose] noncomputable def jetVector (r : K) (phi u k p : Jet K) : Fin 6 → K :=
   ![phi.value, u.value, k.value, p.value, 2 * r * phi.radial, 2 * r * u.radial]
 
 /-- Radial jet vector as an element of `Fin 6 → K`. -/
@@ -154,7 +155,7 @@ noncomputable def parameterJetVector (phi u k p : Jet K) (q₄ q₅ : K) : Fin 6
   ![phi.parameter, u.parameter, k.parameter, p.parameter, q₄, q₅]
 
 /-- A0 as an element of `Matrix (Fin 6) (Fin 6) K`. -/
-noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
+@[expose] noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
   let M := 1 - 2 * eta * b.axial.value
   let R := M / ell h eta + b.beta
   let Gphi := r ^ 2 * b.phi.radial + b.phi.value
@@ -175,7 +176,7 @@ noncomputable def A0 (h lam C r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6
        4 * eta * (-2 * a h + lam) / ell h eta, 0, r * R]
 
 /-- A1 as an element of `Matrix (Fin 6) (Fin 6) K`. -/
-noncomputable def A1 (h r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
+@[expose] noncomputable def A1 (h r eta : K) (b : BaseJet K) : Matrix (Fin 6) (Fin 6) K :=
   let H := dScale h * eta + edge eta * b.axial.value
   let Gphi := r ^ 2 * b.phi.radial + b.phi.value
   let Gu := r ^ 2 * b.axial.radial
@@ -199,6 +200,20 @@ r eta s`. -/
 @[expose] noncomputable def matrixRHS (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
     (w v : Fin 6 → K) : Fin 6 → K :=
   (A0 h lam C r eta b).mulVec w + (A1 h r eta b).mulVec v + forcing h C r eta s
+
+omit [CharZero K] in
+theorem matrixRHS_zero (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
+    (w v : Fin 6 → K) : matrixRHS h lam C r eta b s w v 0 = w 4 := by
+  change dotProduct (![0, 0, 0, 0, 1, 0] : Fin 6 → K) w +
+    dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 4
+  simp [dotProduct, Fin.sum_univ_succ]
+
+omit [CharZero K] in
+theorem matrixRHS_one (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
+    (w v : Fin 6 → K) : matrixRHS h lam C r eta b s w v 1 = w 5 := by
+  change dotProduct (![0, 0, 0, 0, 0, 1] : Fin 6 → K) w +
+    dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 5
+  simp [dotProduct, Fin.sum_univ_succ]
 
 /-- Jet system as an element of `Prop`. -/
 def JetSystem (h lam C r eta : K) (b : BaseJet K) (s : SourceJet K)
@@ -449,7 +464,7 @@ theorem pressureValue_eq_convolution (h C eta X : K) {n : ℕ} (hn : 0 < n)
 /-- Positive-order equations (22) before extraction of the endpoint terms.
 The average relation is the derivative of `X Ubar = ∫₀ˣ U`, with `K=Ubar-U`.
 The beta hypothesis in the equivalence below is the second identity of (21). -/
-def PositiveOrderEquations (h C eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
+@[expose] def PositiveOrderEquations (h C eta X : K) (n : ℕ) (phi u : ℕ → Jet K)
     (beta : ℕ → K) (k p : Jet K)
     (previousAngularDiffusion previousAxialDiffusion omegaQuotient : K) : Prop :=
   X * ((u n).radial + k.radial) + k.value = 0 ∧
@@ -580,7 +595,7 @@ theorem profileVector_parameter {phi u k p : InnerProfile} {r eta : ℝ}
 
 /-- The displayed first-order system uses actual derivatives of the actual
 profiles, not independent formal jet variables. -/
-def ProfileSystem (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJet ℝ)
+@[expose] def ProfileSystem (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJet ℝ)
     (phi u k p : InnerProfile) : Prop :=
   (fun i => deriv (fun q => profileVector phi u k p q eta i) r +
     diagonal i / r * profileVector phi u k p r eta i) =
@@ -1178,7 +1193,7 @@ theorem matrixRHS_realPart (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJe
   simp [Matrix.mulVec, dotProduct, Matrix.map, Complex.mul_re]
 
 /-- Real trace, given by `(W r (eta : ℂ) i).re`. -/
-noncomputable def realTrace (W : Field) (r eta : ℝ) (i : Fin 6) : ℝ :=
+@[expose] noncomputable def realTrace (W : Field) (r eta : ℝ) (i : Fin 6) : ℝ :=
   (W r (eta : ℂ) i).re
 
 /-- A complex solution with real coefficients yields a real solution by

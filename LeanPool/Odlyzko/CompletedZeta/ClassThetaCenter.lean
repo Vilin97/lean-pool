@@ -66,7 +66,7 @@ theorem fractionalShapeCovolumeConstant_pos
 
 open Classical in
 /-- A fractional shape covolume center used in the Odlyzko-bound argument. -/
-noncomputable def fractionalShapeCovolumeCenter
+@[expose] noncomputable def fractionalShapeCovolumeCenter
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) : ℝ :=
   -Real.log (fractionalShapeCovolumeConstant K I) /
     (Module.finrank ℚ K : ℝ)

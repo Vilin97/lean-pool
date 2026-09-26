@@ -24,7 +24,6 @@ sets, together with its interaction with modular automorphisms and `Psi`.
 public section
 
 /-- The symmetry map sends a linear map to the adjoint of its real conjugate. -/
-@[simps]
 noncomputable def symmMap (R : Type _) [RCLike R] (M₁ M₂ : Type _) [NormedAddCommGroup M₁]
   [NormedAddCommGroup M₂]
     [InnerProductSpace R M₁] [InnerProductSpace R M₂] [StarAddMonoid M₁]
@@ -40,6 +39,20 @@ noncomputable def symmMap (R : Type _) [RCLike R] (M₁ M₂ : Type _) [NormedAd
   map_smul' c f := by
     simp only [LinearMap.real_smul, LinearMap.adjoint_smul, starRingEnd_self_apply,
       RingHom.id_apply]
+
+@[simp] theorem symmMap_apply (R : Type _) [RCLike R] (M₁ M₂ : Type _)
+    [NormedAddCommGroup M₁] [NormedAddCommGroup M₂]
+    [InnerProductSpace R M₁] [InnerProductSpace R M₂]
+    [StarAddMonoid M₁] [StarAddMonoid M₂] [StarModule R M₁] [StarModule R M₂]
+    [FiniteDimensional R M₁] [FiniteDimensional R M₂] (f : M₁ →ₗ[R] M₂) :
+    symmMap R M₁ M₂ f = LinearMap.adjoint (LinearMap.real f) := by rfl
+
+@[simp] theorem symmMap_symm_apply (R : Type _) [RCLike R] (M₁ M₂ : Type _)
+    [NormedAddCommGroup M₁] [NormedAddCommGroup M₂]
+    [InnerProductSpace R M₁] [InnerProductSpace R M₂]
+    [StarAddMonoid M₁] [StarAddMonoid M₂] [StarModule R M₁] [StarModule R M₂]
+    [FiniteDimensional R M₁] [FiniteDimensional R M₂] (f : M₂ →ₗ[R] M₁) :
+    (symmMap R M₁ M₂).symm f = (LinearMap.adjoint f).real := by rfl
 
 theorem symmMap_real {R : Type _} [RCLike R] {M : Type _} [NormedAddCommGroup M]
     [InnerProductSpace R M] [StarAddMonoid M] [StarModule R M] [FiniteDimensional R M] :

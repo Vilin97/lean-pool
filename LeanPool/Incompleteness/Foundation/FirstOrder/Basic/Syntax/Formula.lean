@@ -61,7 +61,7 @@ variable
   {n n₁ n₂ n₂ m m₁ m₂ m₃ : ℕ}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def neg {n} : Semiformula L ξ n → Semiformula L ξ n
+@[expose] def neg {n} : Semiformula L ξ n → Semiformula L ξ n
   | verum    => falsum
   | falsum   => verum
   | rel r v  => nrel r v
@@ -199,7 +199,7 @@ abbrev «rel!» (L : Language) (k) (r : L.Rel k) (v : Fin k → Semiterm L ξ n)
 abbrev «nrel!» (L : Language) (k) (r : L.Rel k) (v : Fin k → Semiterm L ξ n) := nrel r v
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def complexity {n : ℕ} : Semiformula L ξ n → ℕ
+@[expose] def complexity {n : ℕ} : Semiformula L ξ n → ℕ
 | ⊤        => 0
 | ⊥        => 0
 | rel _ _  => 0
@@ -374,7 +374,7 @@ end «lp_section_2»
 section «lp_section_3»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def qr : ∀ {n}, Semiformula L ξ n → ℕ
+@[expose] def qr : ∀ {n}, Semiformula L ξ n → ℕ
   | _, ⊤        => 0
   | _, ⊥        => 0
   | _, rel _ _  => 0
@@ -416,7 +416,7 @@ end «lp_section_3»
 section «lp_section_4»
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Open (φ : Semiformula L ξ n) : Prop := φ.qr = 0
+@[expose] def Open (φ : Semiformula L ξ n) : Prop := φ.qr = 0
 
 lemma open_top : (⊤ : Semiformula L ξ n).Open := rfl
 
@@ -451,7 +451,7 @@ section «lp_section_5»
 variable [DecidableEq ξ]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def freeVariables : {n : ℕ} → Semiformula L ξ n → Finset ξ
+@[expose] def freeVariables : {n : ℕ} → Semiformula L ξ n → Finset ξ
   | _, rel _ v  => .biUnion .univ fun i ↦ (v i).freeVariables
   | _, nrel _ v => .biUnion .univ fun i ↦ (v i).freeVariables
   | _, ⊤        => ∅
@@ -573,7 +573,7 @@ lemma ne_of_ne_complexity {φ ψ : Semiformula L ξ n} (h : φ.complexity ≠ ψ
 variable {L : Language} {L₁ : Language} {L₂ : Language} {L₃ : Language} {ξ : Type*} {Φ : L₁ →ᵥ L₂}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def lMapAux (Φ : L₁ →ᵥ L₂) : ∀ {n}, Semiformula L₁ ξ n → Semiformula L₂ ξ n
+@[expose] def lMapAux (Φ : L₁ →ᵥ L₂) : ∀ {n}, Semiformula L₁ ξ n → Semiformula L₂ ξ n
   | _, ⊤        => ⊤
   | _, ⊥        => ⊥
   | _, rel r v  => rel (Φ.rel r) (Semiterm.lMap Φ ∘ v)
@@ -587,7 +587,7 @@ lemma lMapAux_neg {n} (φ : Semiformula L₁ ξ n) : (∼φ).lMapAux Φ = ∼φ.
   by induction φ using Semiformula.rec' <;> simp[*, lMapAux]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def lMap (Φ : L₁ →ᵥ L₂) {n} : Semiformula L₁ ξ n →ˡᶜ Semiformula L₂ ξ n where
+@[expose] def lMap (Φ : L₁ →ᵥ L₂) {n} : Semiformula L₁ ξ n →ˡᶜ Semiformula L₂ ξ n where
   toTr := lMapAux Φ
   map_top' := by simp[lMapAux]
   map_bot' := by simp[lMapAux]

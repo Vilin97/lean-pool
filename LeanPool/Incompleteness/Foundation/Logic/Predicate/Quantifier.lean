@@ -54,7 +54,7 @@ instance : SigmaSymbol Polarity := ⟨sigma⟩
 instance : PiSymbol Polarity := ⟨pi⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def alt : Polarity → Polarity
+@[expose] def alt : Polarity → Polarity
   | Sg => Pg
   | Pg => Sg
 

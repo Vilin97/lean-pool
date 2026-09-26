@@ -27,7 +27,7 @@ variable (K : Type*) [Field K] [NumberField K]
 
 open Classical in
 /-- An euclidean ideal lattice used in the Odlyzko-bound argument. -/
-noncomputable def euclideanIdealLattice
+@[expose] noncomputable def euclideanIdealLattice
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     Submodule ℤ (mixedEmbedding.euclidean.mixedSpace K) :=
   ZLattice.comap ℝ (mixedEmbedding.idealLattice K I)
@@ -249,7 +249,7 @@ open Classical in
 
 open Classical in
 /-- A trace ideal lattice used in the Odlyzko-bound argument. -/
-noncomputable def traceIdealLattice
+@[expose] noncomputable def traceIdealLattice
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     Submodule ℤ (mixedEmbedding.euclidean.mixedSpace K) :=
   ZLattice.comap ℝ (mixedEmbedding.idealLattice K I)
@@ -481,7 +481,7 @@ theorem traceEmbeddingIntLinearMap_apply (x : K) :
 
 open Classical in
 /-- A conjugate trace ideal lattice used in the Odlyzko-bound argument. -/
-noncomputable def conjugateTraceIdealLattice
+@[expose] noncomputable def conjugateTraceIdealLattice
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     Submodule ℤ (mixedEmbedding.euclidean.mixedSpace K) :=
   (traceIdealLattice K I).map

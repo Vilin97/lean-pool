@@ -81,7 +81,7 @@ noncomputable def Pi.modAut (r : ℝ) : PiQ A ≃ₐ[ℂ] PiQ A :=
 @[simp]
 lemma Pi.modAut_apply (r : ℝ) (x : PiQ A) (i : ι) :
     Pi.modAut r x i = (hA i).modAut r (x i) :=
-  rfl
+  by rfl
 
 @[reducible, instance]
 noncomputable def piStarAlgebra : starAlgebra (PiQ A) where
@@ -96,7 +96,7 @@ noncomputable def piStarAlgebra : starAlgebra (PiQ A) where
 @[simp]
 lemma piStarAlgebra_modAut_apply (r : ℝ) (x : PiQ A) (i : ι) :
     piStarAlgebra.modAut r x i = (hA i).modAut r (x i) :=
-  rfl
+  by rfl
 
 variable [hQ : (i : ι) -> QuantumSet (A i)]
 variable [Fintype ι]
@@ -122,6 +122,7 @@ theorem piInnerProductAlgebra.inner_apply (a b : PiQ A) :
   piInnerProductAlgebra_inner_apply a b
 
 noncomputable instance Pi.quantumSet [Fact (∀ i, (hQ i).k = 0)] : QuantumSet (PiQ A) where
+  toInnerProductAlgebra := piInnerProductAlgebra
   modAut_isSymmetric r x y := by
     rw [piInnerProductAlgebra_inner_apply, piInnerProductAlgebra_inner_apply]
     simp_all

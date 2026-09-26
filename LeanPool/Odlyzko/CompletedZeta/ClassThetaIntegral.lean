@@ -34,7 +34,7 @@ open Classical in
 
 open Classical in
 /-- A class completed theta integral used in the Odlyzko-bound argument. -/
-noncomputable def classCompletedThetaIntegral
+@[expose] noncomputable def classCompletedThetaIntegral
     (C : ClassGroup (𝓞 K)) (s : ℂ) : ℂ :=
   CompletedZeta.discriminantFactor K s *
     (torsionOrder K : ℂ)⁻¹ *

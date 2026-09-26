@@ -84,7 +84,7 @@ computable presentations
 neighbourhood
 relation `Xₙ f Yₘ`, transported to the integer indices, is recursively enumerable. -/
 @[expose]
-def IsComputableMap {V : NeighborhoodSystem α} {W : NeighborhoodSystem β}
+@[expose] def IsComputableMap {V : NeighborhoodSystem α} {W : NeighborhoodSystem β}
     (P : ComputablePresentation V) (Q : ComputablePresentation W) (f : ApproximableMap V W) :
       Prop :=
   REPred₂ (fun n m => f.rel (P.X n) (Q.X m))

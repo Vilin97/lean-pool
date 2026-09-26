@@ -617,6 +617,7 @@ theorem cutoffAlias_arbitrary_order_of_integratedMean_zero (d : Direction)
 /-- The square average is the normalized Haar average of the actual descent. -/
 theorem torusMean_eq_haar {f : Plane → ℂ} (hf : Continuous f) (hp : TorusPeriodic f) :
     torusMean f = ∫ z, SmoothFourierData.descendContinuous f hf hp z ∂torusMeasure := by
+  change SmoothFourierData.UnitPeriodic f at hp
   rw [← SmoothFourierData.coefficient_zero_eq_mean,
     SmoothFourierData.torusLift_descendContinuous]
   exact (SmoothFourierData.coefficient_zero_eq_integral f).symm

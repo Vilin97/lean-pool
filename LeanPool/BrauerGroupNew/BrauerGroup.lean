@@ -72,7 +72,7 @@ instance st : IsScalarTower K K (Module.End K A) where
     change (k₁ * k₂) • f a = k₁ • (k₂ • f a)
     rw [mul_smul]
 /-- The action map from `A ⊗ Aᵐᵒᵖ` to endomorphisms of `A`. -/
-def toEnd : A ⊗[K] Aᵐᵒᵖ →ₐ[K] Module.End K A :=
+@[expose] def toEnd : A ⊗[K] Aᵐᵒᵖ →ₐ[K] Module.End K A :=
   Algebra.TensorProduct.lift
     { toFun a :=
         { toFun x := a * x
@@ -193,7 +193,7 @@ theorem isFinDimOfMop (A : Type*) [Ring A] [Algebra K A] [FiniteDimensional K A]
   exact Module.Finite.equiv f
 
 /-- The opposite algebra representative used for inversion in the Brauer group. -/
-def inv (A : CSA K) : CSA K := {
+@[expose] def inv (A : CSA K) : CSA K := {
   __ := AlgCat.of K Aᵐᵒᵖ
   fin_dim := isFinDimOfMop A }
 

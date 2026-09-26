@@ -464,7 +464,7 @@ namespace Function
 variable {α : Type u} {β : Type v}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def funEqOn (φ : α → Prop) (f g : α → β) : Prop := ∀ a, φ a → f a = g a
+@[expose] def funEqOn (φ : α → Prop) (f g : α → β) : Prop := ∀ a, φ a → f a = g a
 
 lemma _root_.Function.funEqOn.of_subset {φ ψ : α → Prop} {f g : α → β} (e : funEqOn φ f g) (h :
     ∀ a, ψ a → φ a) :

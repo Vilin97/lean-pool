@@ -755,7 +755,7 @@ abbrev PolynomialRowMarkerStage (polynomial : Polynomial ℕ) :=
   Fin (polynomial.natDegree + 1)
 
 /-- Internal support shared across GapCVP continuation modules. -/
-def polynomialRowMarkerTopStage
+@[expose] def polynomialRowMarkerTopStage
     (polynomial : Polynomial ℕ) :
     PolynomialRowMarkerStage polynomial :=
   ⟨polynomial.natDegree, by omega⟩

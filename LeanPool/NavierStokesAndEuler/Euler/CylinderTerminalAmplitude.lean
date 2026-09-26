@@ -42,8 +42,10 @@ theorem constantPath_block_le (directions : ι → LiftTangent) (q : ℕ)
   have hpath : (fun b : LiftTangent => pathTranslate P b (ContinuousMap.const K Y)) =
       fun b => ContinuousMap.const K (translate P b Y) := by
     funext b
-    ext t
-    simp only [pathTranslate_apply, ContinuousMap.const_apply]
+    apply ContinuousMap.ext
+    intro t
+    simpa only [ContinuousMap.const_apply] using
+      pathTranslate_apply P b (ContinuousMap.const K Y) t
   rw [hpath]
   have hb := block_comp_clm_le directions q
     (ContinuousLinearMap.const ℝ K : CylinderL2 P U →L[ℝ] C(K,CylinderL2 P U))

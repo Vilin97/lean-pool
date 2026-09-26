@@ -89,7 +89,6 @@ theorem Module.Dual.apply (φ : Module.Dual R (Matrix n n R)) (a : Matrix n n R)
 /--
 we linear maps `φ_i : M_[n_i] →ₗ[R] R`, we define its direct sum as the linear map `(Π i, M_[n_i])
   →ₗ[R] R`. -/
-@[simps]
 def Module.Dual.pi {k : Type _} [Fintype k] {s : k → Type _}
     (φ : ∀ i, Module.Dual R (Matrix (s i) (s i) R)) : Module.Dual R (PiMat R k s)
     where
@@ -98,12 +97,19 @@ def Module.Dual.pi {k : Type _} [Fintype k] {s : k → Type _}
   map_smul' r x := by
     simp only [_root_.map_smul, Pi.smul_apply, Finset.smul_sum, RingHom.id_apply]
 
+@[simp] theorem Module.Dual.pi_apply {k : Type _} [Fintype k] {s : k → Type _}
+    (φ : ∀ i, Module.Dual R (Matrix (s i) (s i) R)) (a : PiMat R k s) :
+    Module.Dual.pi φ a = ∑ i : k, φ i (a i) := by rfl
+
 /-- Restrict a linear functional on a product of matrix algebras to each block. -/
-@[simps!]
 def Module.Dual.piOf {k : Type _} [DecidableEq k] {s : k → Type _}
     (φ : Module.Dual R (PiMat R k s)) :
     Π i, Module.Dual R (Matrix (s i) (s i) R) :=
 fun _ => φ ∘ₗ includeBlock
+
+@[simp] theorem Module.Dual.piOf_apply {k : Type _} [DecidableEq k] {s : k → Type _}
+    (φ : Module.Dual R (PiMat R k s)) (i : k) (x : Matrix (s i) (s i) R) :
+    Module.Dual.piOf φ i x = φ (includeBlock x) := by rfl
 
 /-- for direct sums, we get `φ x = ∑ i, ((φ i).matrix ⬝ x i).trace` -/
 theorem Module.Dual.pi.apply {k : Type _} [Fintype k] {s : k → Type _} [∀ i, Fintype (s i)]

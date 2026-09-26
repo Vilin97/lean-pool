@@ -130,6 +130,7 @@ theorem translations_commute (a b : LiftDomain period) (f : LiftL2 period) :
   rw [translation_add, translation_add, add_comm a b]
 
 /-- Actual cylinder translation as a bounded operator on the complete Sobolev space. -/
+@[expose]
 def sobolevTranslation (q : ℕ) (a : LiftDomain period) : SobolevSpace period q →L[ℝ] SobolevSpace
     period q :=
   liftOperator period q (translation period a).toContinuousLinearMap (translations_commute period a)

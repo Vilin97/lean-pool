@@ -562,7 +562,7 @@ abbrev liftBoundedFoldWorkerStatement (tm : Turing.FinTM2) :=
       (.goto (fun _ => .inr (2 : Fin 5))))
 
 /-- Internal support shared across GapCVP continuation modules. -/
-noncomputable def boundedDependentRecordFoldMachine
+@[expose] noncomputable def boundedDependentRecordFoldMachine
     {worker : List Bool → List Bool}
     (computer : BitTM worker) : Turing.FinTM2 := by
   classical

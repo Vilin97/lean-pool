@@ -1298,7 +1298,7 @@ where `gN` is the consistency char) the neighbourhood is `stepFun (funListOf
 otherwise we send the junk code to the master neighbourhood `univ`. Choice-free as
 *data* because the
 branch is a `Nat`-equality `if`. -/
-def Xenum (gN : ℕ → ℕ) (c : ℕ) : Set (ApproximableMap V₀ V₁) :=
+@[expose] def Xenum (gN : ℕ → ℕ) (c : ℕ) : Set (ApproximableMap V₀ V₁) :=
   if gN c = 1 then stepFun (funListOf P₀ P₁ (decodeList c)) else Set.univ
 
 theorem Xenum_pos {gN : ℕ → ℕ} {c : ℕ} (h : gN c = 1) :
@@ -1538,7 +1538,7 @@ functions for the
 component presentations' relations (`gN` = function-space consistency,
 `incl0`/`incl1` = inclusion,
 `eq1` = equality), so it is choice-free given those concrete functions. -/
-def funPresentation (gN incl0 incl1 eq1 : ℕ → ℕ)
+@[expose] def funPresentation (gN incl0 incl1 eq1 : ℕ → ℕ)
     (hgN : ∀ c, gN c = 1 ↔ (stepFun (funListOf P₀ P₁ (decodeList c))
       : Set (ApproximableMap V₀ V₁)).Nonempty) (hgNp : Nat.Primrec gN)
     (hincl0 : ∀ s, incl0 s = 1 ↔ P₀.X s.unpair.1 ⊆ P₀.X s.unpair.2) (hincl0p : Nat.Primrec incl0)

@@ -35,18 +35,18 @@ abbrev BVMatrix := BitVec 16
 abbrev BMatrix := Fin 4 → Fin 4 → Bool
 
 /-- Decode a packed matrix in row-major order. -/
-def bvEntry (x : BVMatrix) : BMatrix := fun i j =>
+@[expose] def bvEntry (x : BVMatrix) : BMatrix := fun i j =>
   x.getLsbD (4 * i.val + j.val)
 
 /-- The row-column dot product over the field with two elements. -/
-def boolDot (a b : BMatrix) (i j : Fin 4) : Bool :=
+@[expose] def boolDot (a b : BMatrix) (i j : Fin 4) : Bool :=
   (a i 0 && b 0 j) ^^ (a i 1 && b 1 j) ^^
   (a i 2 && b 2 j) ^^ (a i 3 && b 3 j)
 
 /-- Multiply Boolean matrices over the field with two elements. -/
-def boolMul (a b : BMatrix) : BMatrix := boolDot a b
+@[expose] def boolMul (a b : BMatrix) : BMatrix := boolDot a b
 /-- Transpose a Boolean matrix. -/
-def boolTranspose (a : BMatrix) : BMatrix := fun i j => a j i
+@[expose] def boolTranspose (a : BMatrix) : BMatrix := fun i j => a j i
 
 private def boolMatrixEq (a b : BMatrix) : Prop :=
   a 0 0 = b 0 0 ∧ a 0 1 = b 0 1 ∧ a 0 2 = b 0 2 ∧ a 0 3 = b 0 3 ∧
@@ -55,7 +55,7 @@ private def boolMatrixEq (a b : BMatrix) : Prop :=
   a 3 0 = b 3 0 ∧ a 3 1 = b 3 1 ∧ a 3 2 = b 3 2 ∧ a 3 3 = b 3 3
 
 /-- Decide entrywise equality of Boolean matrices. -/
-def boolMatrixEqB (a b : BMatrix) : Bool :=
+@[expose] def boolMatrixEqB (a b : BMatrix) : Bool :=
   (a 0 0 == b 0 0) && (a 0 1 == b 0 1) &&
   (a 0 2 == b 0 2) && (a 0 3 == b 0 3) &&
   (a 1 0 == b 1 0) && (a 1 1 == b 1 1) &&
@@ -71,32 +71,32 @@ private theorem boolMatrixEqB_eq_true_iff (a b : BMatrix) :
   tauto
 
 /-- The identity matrix in the Boolean representation. -/
-def boolOne : BMatrix := bvEntry (BitVec.ofNat 16 0x8421)
+@[expose] def boolOne : BMatrix := bvEntry (BitVec.ofNat 16 0x8421)
 /-- The standard symplectic form in the Boolean representation. -/
-def boolJ : BMatrix := bvEntry (BitVec.ofNat 16 0x2184)
+@[expose] def boolJ : BMatrix := bvEntry (BitVec.ofNat 16 0x2184)
 /-- The first chosen symplectic generator in the Boolean representation. -/
-def boolG1 : BMatrix := bvEntry (BitVec.ofNat 16 0x13DB)
+@[expose] def boolG1 : BMatrix := bvEntry (BitVec.ofNat 16 0x13DB)
 /-- The inverse of the first chosen symplectic generator. -/
-def boolG1Inv : BMatrix := bvEntry (BitVec.ofNat 16 0x5FC8)
+@[expose] def boolG1Inv : BMatrix := bvEntry (BitVec.ofNat 16 0x5FC8)
 /-- The second chosen symplectic generator in the Boolean representation. -/
-def boolG2 : BMatrix := bvEntry (BitVec.ofNat 16 0x21B7)
+@[expose] def boolG2 : BMatrix := bvEntry (BitVec.ofNat 16 0x21B7)
 /-- The inverse of the second chosen symplectic generator. -/
-def boolG2Inv : BMatrix := bvEntry (BitVec.ofNat 16 0xED84)
+@[expose] def boolG2Inv : BMatrix := bvEntry (BitVec.ofNat 16 0xED84)
 
 private def boolSymplectic (x : BMatrix) : Prop :=
   boolMatrixEq (boolMul (boolMul x boolJ) (boolTranspose x)) boolJ
 
 /-- Conjugate a Boolean matrix using a supplied matrix and its inverse. -/
-def boolConj (g gi x : BMatrix) : BMatrix := boolMul (boolMul g x) gi
+@[expose] def boolConj (g gi x : BMatrix) : BMatrix := boolMul (boolMul g x) gi
 private def boolCommutes (a b : BMatrix) : Prop :=
   boolMatrixEq (boolMul a b) (boolMul b a)
 
 /-- Decide whether two Boolean matrices commute. -/
-def boolCommutesB (a b : BMatrix) : Bool :=
+@[expose] def boolCommutesB (a b : BMatrix) : Bool :=
   boolMatrixEqB (boolMul a b) (boolMul b a)
 
 /-- The standard alternating pairing of Boolean four-vectors. -/
-def boolPairing (a b : Fin 4 → Bool) : Bool :=
+@[expose] def boolPairing (a b : Fin 4 → Bool) : Bool :=
   (a 2 && b 0) ^^ (a 3 && b 1) ^^ (a 0 && b 2) ^^ (a 1 && b 3)
 
 private theorem boolPairing_comm (a b : Fin 4 → Bool) : boolPairing a b = boolPairing b a := by
@@ -110,7 +110,7 @@ private theorem boolMul_symplectic_apply (x : BMatrix) (i j : Fin 4) :
   simp [boolMul, boolDot, boolTranspose, boolJ, bvEntry, boolPairing]
 
 /-- Check preservation of the symplectic form using its six independent row pairings. -/
-def boolSymplecticB (x : BMatrix) : Bool :=
+@[expose] def boolSymplecticB (x : BMatrix) : Bool :=
   -- The unit pairings reject zero rows before checking orthogonality.
   boolPairing (x 0) (x 2) && boolPairing (x 1) (x 3) &&
   !(boolPairing (x 0) (x 1)) && !(boolPairing (x 0) (x 3)) &&
@@ -124,7 +124,7 @@ theorem boolSymplecticB_eq (x : BMatrix) :
     Bool.and_left_comm, Bool.and_comm]
 
 /-- Boolean certificate predicate used by the kernel-checked finite search. -/
-def kernelDetectorCheck (x : BitVec 16) : Bool :=
+@[expose] def kernelDetectorCheck (x : BitVec 16) : Bool :=
   !(boolSymplecticB (bvEntry x)) ||
   boolMatrixEqB (bvEntry x) boolOne ||
   !(boolCommutesB (boolConj boolG1 boolG1Inv (bvEntry x)) (bvEntry x)) ||

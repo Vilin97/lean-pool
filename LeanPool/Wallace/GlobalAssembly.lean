@@ -45,7 +45,7 @@ open TransfiniteExtension
 variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l) (M : ℕ → ℕ)
 
 /-- The exact local output required from the countable fusion. -/
-def HasLocalSeparatingCharacters : Prop :=
+@[expose] def HasLocalSeparatingCharacters : Prop :=
   ∀ x : {x : ContinuumFreeGroup // x ≠ 0},
     ∃ χD : (closure N hN M x.1 →₀ ℤ) →+ UnitAddCircle,
       χD (Finsupp.subtypeDomain (closure N hN M x.1) x.1) ≠ 0 ∧
@@ -69,7 +69,7 @@ theorem localCharacter_admissible (x : {x : ContinuumFreeGroup // x ≠ 0}) :
   (Classical.choose_spec (H x)).2
 
 /-- Extend the chosen local character by the well-founded triangular recursion. -/
-def globalCharacter (x : {x : ContinuumFreeGroup // x ≠ 0}) :
+@[expose] def globalCharacter (x : {x : ContinuumFreeGroup // x ≠ 0}) :
     ContinuumFreeGroup →+ UnitAddCircle :=
   TransfiniteExtension.globalCharacter (transfiniteData N hN M)
     (closure N hN M x.1) (localCharacter N hN M H x)

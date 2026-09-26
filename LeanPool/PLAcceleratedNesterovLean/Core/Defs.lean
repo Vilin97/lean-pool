@@ -103,7 +103,7 @@ def FirstOrderAlgorithm.iterate (alg : FirstOrderAlgorithm d) (f : E d → ℝ) 
 
 /-- Accelerated convergence with explicit prefactor `2`:
     f(xₖ) - f⋆ ≤ 2 · exp(-k / √(L/μ)) · (f(x₀) - f⋆). -/
-def HasAcceleratedRateWithPrefactorTwo (f : E d → ℝ) (iterates : ℕ → E d)
+@[expose] def HasAcceleratedRateWithPrefactorTwo (f : E d → ℝ) (iterates : ℕ → E d)
     (L μ : ℝ) (x₀ : E d) : Prop :=
   ∀ k : ℕ,
     f (iterates k) - fStar f ≤

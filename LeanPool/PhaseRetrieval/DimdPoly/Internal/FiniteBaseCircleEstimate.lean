@@ -245,7 +245,7 @@ private theorem continuous_bandPoly (N : Nat) {L : Nat} (p : Fin L -> ℂ) :
     continuous_const.mul (continuous_circleChar (N + m.1))
 
 /-- `circleL2Sq`: circle L2 Sq. -/
-noncomputable def circleL2Sq (f : AddCircle (2 * Real.pi) -> ℂ) : ℝ :=
+@[expose] noncomputable def circleL2Sq (f : AddCircle (2 * Real.pi) -> ℂ) : ℝ :=
   ∫ t, ‖f t‖ ^ 2 ∂ AddCircle.haarAddCircle
 
 /-- `defectSq`: defect Sq. -/

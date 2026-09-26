@@ -264,7 +264,7 @@ attribute [local instance] compactInterval
 
 @[simp] theorem glueOperator_apply (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) :
-    glueOperator S τ hτ0 hτS u = gluePath S τ hτ0 hτS u := rfl
+    glueOperator S τ hτ0 hτS u = gluePath S τ hτ0 hτS u := by rfl
 
 theorem gluePath_left (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) (t : Icc (0 : ℝ) τ) :
@@ -464,8 +464,9 @@ def shiftPath (S τ : ℝ) : C(Icc (0 : ℝ) (S-τ), E) →L[ℝ] C(Icc τ S,E) 
   ContinuousMap.compCLM ℝ E (elapsedTime S τ)
 
 theorem shiftPath_apply (S τ : ℝ) (u : C(Icc (0 : ℝ) (S - τ), E)) (t : Icc τ S) :
-    shiftPath S τ u t = u ⟨(t:ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ :=
-        rfl
+    shiftPath S τ u t =
+      u ⟨(t:ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ := by
+  rfl
 
 theorem shiftPath_norm_le_one (S τ : ℝ) : ‖shiftPath (E := E) S τ‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one

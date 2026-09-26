@@ -40,7 +40,7 @@ entry is negative, and `0` otherwise. -/
   X ⊙ X + ∑ i, ∑ j, laplacianCoeff X i j • vecMulVec (e i - e j) (e i - e j)
 
 /-- The all-ones matrix, used as the Frobenius partner of `M`. -/
-def ones : Matrix n n ℝ :=
+@[expose] def ones : Matrix n n ℝ :=
   of fun _ _ => 1
 
 omit [Fintype n] [DecidableEq n] in

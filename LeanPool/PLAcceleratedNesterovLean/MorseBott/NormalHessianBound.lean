@@ -61,7 +61,7 @@ variable {E : Type*}
 @[expose] def ExternalThm3.argminSet (f : E → ℝ) : Set E := {x | ∀ y, f x ≤ f y}
 
 /-- The global infimum of `f`. (PLAcceleratedNesterovLean: `fStar`) -/
-def ExternalThm3.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
+@[expose] def ExternalThm3.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
 
 /-- The Polyak–Łojasiewicz condition on a set `U`.
     Uses `‖fderiv ℝ f x‖` which equals `‖gradient f x‖` by Riesz representation.
@@ -71,7 +71,7 @@ def ExternalThm3.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
 
 /-- The gradient of `f` at `x`, as the Riesz representative of `fderiv ℝ f x`.
     Matches Mathlib's `gradient` from `Analysis.Calculus.Gradient.Basic`. -/
-def ExternalThm3.gradient (f : E → ℝ) (x : E) : E :=
+@[expose] def ExternalThm3.gradient (f : E → ℝ) (x : E) : E :=
   (toDual ℝ E).symm (fderiv ℝ f x)
 
 /-- PLAcceleratedNesterovLean's Hessian quadratic form: `⟨D(∇f)(x)·ξ, ξ⟩`.

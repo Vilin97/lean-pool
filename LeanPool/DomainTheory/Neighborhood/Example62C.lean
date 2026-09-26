@@ -671,7 +671,7 @@ theorem toCC_fromCC (s : CC.Element) : toCC (fromCC s) = s := by
 /-! ### The domain equation `C ≅ 𝟙 + C + C`. -/
 
 /-- **Example 6.2 (Scott 1981, PRG-19) — the isomorphism `|C| ≃o |𝟙 + C + C|`.** -/
-def ccEquiv : C.Element ≃o CC.Element where
+@[expose] def ccEquiv : C.Element ≃o CC.Element where
   toFun := toCC
   invFun := fromCC
   left_inv := fromCC_toCC

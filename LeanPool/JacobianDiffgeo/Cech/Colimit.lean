@@ -76,7 +76,7 @@ noncomputable abbrev H1 (D : RS.Divisor X) : Type _ :=
   Module.DirectLimit (fun 𝒰 : FinCover (⊤ : Opens X) => H1Cover D 𝒰) (fun _ _ h => resH1' D h)
 
 /-- The canonical map from a cover-level `H¹` to the colimit. -/
-noncomputable def toH1 (𝒰 : FinCover (⊤ : Opens X)) : H1Cover D 𝒰 →ₗ[ℂ] H1 D :=
+@[expose] noncomputable def toH1 (𝒰 : FinCover (⊤ : Opens X)) : H1Cover D 𝒰 →ₗ[ℂ] H1 D :=
   Module.DirectLimit.of ℂ (FinCover (⊤ : Opens X)) (fun 𝒰 => H1Cover D 𝒰)
       (fun _ _ h => resH1' D h) 𝒰
 
@@ -197,6 +197,7 @@ theorem inclusion_restrictL_comm {V U : Opens X} (h' : V ≤ U) (hD : D ≤ D')
   Subtype.ext rfl
 
 /-- `D`-inclusion of `1`-cochains (`Submodule.inclusion`, componentwise). -/
+@[expose]
 noncomputable def inclC1 {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') : C1 D 𝒰 →ₗ[ℂ] C1 D' 𝒰 :=
   LinearMap.pi fun p => (Submodule.inclusion (RS.Cech.linSysOn_mono h)).comp (LinearMap.proj p)
 
@@ -206,6 +207,7 @@ theorem inclC1_apply {Ω : Opens X} {𝒰 : FinCover Ω} (h : D ≤ D') (f : C1 
     inclC1 D 𝒰 h f p = Submodule.inclusion (RS.Cech.linSysOn_mono h) (f p) := by rfl
 
 /-- `D`-inclusion of `0`-cochains. -/
+@[expose]
 noncomputable def inclC0 {Ω : Opens X} (𝒰 : FinCover Ω) (h : D ≤ D') : C0 D 𝒰 →ₗ[ℂ] C0 D' 𝒰 :=
   LinearMap.pi fun i => (Submodule.inclusion (RS.Cech.linSysOn_mono h)).comp (LinearMap.proj i)
 

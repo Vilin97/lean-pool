@@ -45,7 +45,7 @@ variable {α : Type*} {l : Filter α} {q f g : α → ℝ}
 
 /-- Along `l`, `f` is eventually bounded by a constant times every natural
 power of the absolute value of the scale `q`. -/
-def PowerFlat (l : Filter α) (q f : α → ℝ) : Prop :=
+@[expose] def PowerFlat (l : Filter α) (q f : α → ℝ) : Prop :=
   ∀ n : ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ᶠ x in l, |f x| ≤ C * |q x| ^ n
 
 /-- An exact scalar estimate: `n + loss` powers of smallness absorb `loss`

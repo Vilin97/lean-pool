@@ -23,7 +23,7 @@ open HasSat
   θ.voc ⊆ jvoc X ∧ (¬ satisfiable ({~θ} ∪ X.left) ∧ ¬ satisfiable ({θ} ∪ X.right))
 
 /-- A formula equipped with the partial-interpolant conditions for a sequent. -/
-def PartInterpolant (N : Sequent) := Subtype <| isPartInterpolant N
+@[expose] def PartInterpolant (N : Sequent) := Subtype <| isPartInterpolant N
 
 /-! ## Interpolants for local rules -/
 

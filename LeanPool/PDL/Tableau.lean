@@ -278,7 +278,7 @@ inductive PdlRule : (X : Sequent) → (Y : Sequent) → Type
 deriving DecidableEq
 
 /-- Whether a PDL rule is one of the two modal rules. -/
-def PdlRule.isModal {X Y} : PdlRule X Y → Prop
+@[expose] def PdlRule.isModal {X Y} : PdlRule X Y → Prop
 | .loadL _ _ _ => False
 | .loadR _ _ _ => False
 | .freeL _ _ => False

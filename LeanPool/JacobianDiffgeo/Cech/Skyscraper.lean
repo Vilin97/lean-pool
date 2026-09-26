@@ -57,7 +57,7 @@ noncomputable def C1.retype (f : C1 D' 𝒰) (hf : f.MemLD D) : C1 D 𝒰 :=
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem C1.retype_apply_coe (f : C1 D' 𝒰) (hf : f.MemLD D) (p : Fin 𝒰.n × Fin 𝒰.n) :
     (C1.retype f hf p : RS.MeroGermOn X ((𝒰.U p.1 ⊓ 𝒰.U p.2 : Opens X) : Set X)) =
-      (f p : RS.MeroGermOn X _) := rfl
+      (f p : RS.MeroGermOn X _) := by rfl
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
 theorem C1.retype_mem_Z1 {g : C0 D' 𝒰} (hg : (d0 D' 𝒰 g).MemLD D) :

@@ -169,7 +169,7 @@ end MeroGermOn
 
 /-- The germ-level restriction map: pulling back a `codiscreteWithin U`-germ to a
 `codiscreteWithin V`-germ, for `V ⊆ U`. Meromorphy-free. -/
-noncomputable def restrictGerm (h : V ⊆ U) (γ : Filter.Germ (codiscreteWithin U) ℂ) :
+@[expose] noncomputable def restrictGerm (h : V ⊆ U) (γ : Filter.Germ (codiscreteWithin U) ℂ) :
     Filter.Germ (codiscreteWithin V) ℂ :=
   γ.liftOn (fun f => (f : Filter.Germ (codiscreteWithin V) ℂ))
     (fun _f _g hfg => Filter.Germ.coe_eq.2 (hfg.filter_mono (codiscreteWithin_mono h)))

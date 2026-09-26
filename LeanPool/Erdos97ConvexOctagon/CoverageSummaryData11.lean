@@ -15,7 +15,7 @@ public section
 namespace Erdos97Octagon.RawIncidence
 
 /-- Lightweight monotone-obstruction summaries for this hash-bucket group. -/
-def patternSummaryBuckets11 : Array (List PatternSummary) := #[
+@[expose] def patternSummaryBuckets11 : Array (List PatternSummary) := #[
   [
     ⟨88, 828928737536⟩,
     ⟨600, 42784784065232896⟩,
@@ -72,7 +72,7 @@ def patternSummaryBuckets11 : Array (List PatternSummary) := #[
 ]
 
 /-- Lightweight exact-table summaries for this hash-bucket group. -/
-def hardSummaryBuckets11 : Array (List HardSummary) := #[
+@[expose] def hardSummaryBuckets11 : Array (List HardSummary) := #[
   [
     ⟨88, 6028848096049900830⟩,
     ⟨1112, 3858394538300697630⟩,

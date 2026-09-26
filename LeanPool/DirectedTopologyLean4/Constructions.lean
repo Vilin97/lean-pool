@@ -30,7 +30,7 @@ universe u v
 /-- Any space with a preorder can be equiped with a directedness, by allowing all monotone paths
   as directed paths
 -/
-@[reducible] def DirectedSpace.Preorder (α : Type u) [TopologicalSpace α] [Preorder α] :
+@[reducible, expose] def DirectedSpace.Preorder (α : Type u) [TopologicalSpace α] [Preorder α] :
     DirectedSpace α where
   IsDipath := fun {x y : α} γ => Monotone ↑γ
   isDipath_constant := fun x _ _ _ => le_refl x

@@ -2111,7 +2111,7 @@ theorem positive_equation_change_data {R : ℝ} {U : Set ℂ}
   simp only [equationRHS, matrixAction, h₀ _ htr _ hz, h₁ _ htr _ hz, hf _ htr _ hz]
 
 /-- Side solution, constructed using `NilpotentVolterra.liftedField`. -/
-noncomputable def sideSolution {R : ℝ} (hR : 0 ≤ R) (b : Bool)
+@[expose] noncomputable def sideSolution {R : ℝ} (hR : 0 ≤ R) (b : Bool)
     (A₀ A₁ : ℂ → SymmetricCoefficientPath R) (f : ℂ → SymmetricPath R Vec) : Field :=
   NilpotentVolterra.liftedField hR (sideData hR b A₀) (sideData hR b A₁) (sideData hR b f)
     (NilpotentVolterra.integralSolution hR
@@ -2119,7 +2119,7 @@ noncomputable def sideSolution {R : ℝ} (hR : 0 ≤ R) (b : Bool)
 
 /-- Two independently solved half-intervals are glued at their common zero
 axis trace. No parity of the output occurs in this definition. -/
-noncomputable def symmetricSolution {R : ℝ} (hR : 0 ≤ R)
+@[expose] noncomputable def symmetricSolution {R : ℝ} (hR : 0 ≤ R)
     (A₀ A₁ : ℂ → SymmetricCoefficientPath R) (f : ℂ → SymmetricPath R Vec) : Field :=
   glue (sideSolution hR false A₀ A₁ f) (sideSolution hR true A₀ A₁ f)
 

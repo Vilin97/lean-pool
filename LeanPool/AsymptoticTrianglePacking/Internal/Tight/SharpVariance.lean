@@ -48,11 +48,11 @@ variable {V : Type*} [Fintype V] [DecidableEq V]
 /-! ## The cube picture of a round -/
 
 /-- The retained set at a configuration of the cube. -/
-def retSet (H : Finset (Finset V)) (ω : Finset V → Bool) : Finset (Finset V) :=
+@[expose] def retSet (H : Finset (Finset V)) (ω : Finset V → Bool) : Finset (Finset V) :=
   H.filter (fun e => ω e = true)
 
 /-- The safe degree at `v` as a function on the cube. -/
-def safeDegCube (H : Finset (Finset V)) (v : V) (ω : Finset V → Bool) : ℝ :=
+@[expose] def safeDegCube (H : Finset (Finset V)) (v : V) (ω : Finset V → Bool) : ℝ :=
   (safeDegree H (covered (retSet H ω)) v : ℝ)
 
 /-- The codegree weight of an edge as seen from `v`: `∑_{u ∈ f∖v} codeg(v,u)`. -/

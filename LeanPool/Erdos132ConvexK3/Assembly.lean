@@ -225,7 +225,7 @@ theorem concrete_word_closures
     simpa only [hRoute, WordClosureRoute.degreeBound] using close word hRealizes
 
 /-- Direct short-arc closure or one of the thirteen exceptional words. -/
-def HasThirteenWordReduction
+@[expose] def HasThirteenWordReduction
     {n : ℕ} (degree : Fin n → ℕ) (Realizes : ExceptionalCoverWord → Prop) : Prop :=
   (∃ v, degree v ≤ 6) ∨ ∃ w, Realizes w
 
@@ -249,7 +249,7 @@ theorem thirteen_word_assembly
 
 /-- The proof-producing reduction package still required for an arbitrary
 convex configuration. -/
-def HasConvexK3DraftReduction
+@[expose] def HasConvexK3DraftReduction
     {n : ℕ} [_nonzero : NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) : Prop :=
   ∃ Realizes : ExceptionalCoverWord → Prop,
     HasThirteenWordReduction (vertexDegree P d₁ d₂ d₃) Realizes ∧
@@ -273,7 +273,7 @@ def ConvexTopThreeDegreeSixStatement : Prop :=
 
 /-- Bridge from the two public geometric hypotheses to the complete draft
 reduction package. -/
-def ConvexTopThreeDraftReductionComplete : Prop :=
+@[expose] def ConvexTopThreeDraftReductionComplete : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
       HasConvexK3DraftReduction P d₁ d₂ d₃

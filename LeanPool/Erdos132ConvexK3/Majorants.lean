@@ -65,10 +65,10 @@ structure ErLVK3MaximalGapSetup where
 namespace ErLVK3MaximalGapSetup
 
 /-- The maximal-gap slack `δ = gₓ - gₜ`. -/
-def delta (D : ErLVK3MaximalGapSetup) : ℕ := D.gapX - D.gapT
+@[expose] def delta (D : ErLVK3MaximalGapSetup) : ℕ := D.gapX - D.gapT
 
 /-- The signed side difference `L = |yu|_sides = 3 - δ`. -/
-def L (D : ErLVK3MaximalGapSetup) : ℤ := 3 - (D.delta : ℤ)
+@[expose] def L (D : ErLVK3MaximalGapSetup) : ℤ := 3 - (D.delta : ℤ)
 
 /-- The signed side difference `|yz| = L + M + b`. -/
 @[expose] def yzSides (D : ErLVK3MaximalGapSetup) : ℤ :=

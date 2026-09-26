@@ -185,7 +185,7 @@ lemma highShift_smul (d : ℕ) (c : ℂ) (f : L1Coeff (A × ℕ)) :
   rfl
 
 /-- High shift as a complex-linear map. -/
-def highShiftLinear (d : ℕ) : L1Coeff (A × ℕ) →ₗ[ℂ] L1Coeff (A × ℕ) where
+@[expose] def highShiftLinear (d : ℕ) : L1Coeff (A × ℕ) →ₗ[ℂ] L1Coeff (A × ℕ) where
   toFun := highShift d
   map_add' := highShift_add d
   map_smul' := highShift_smul d

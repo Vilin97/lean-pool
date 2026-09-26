@@ -55,7 +55,7 @@ section «lp_section_1»
 variable (𝓢 : S)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Provable (f : F) : Prop := Nonempty (𝓢 ⊢ f)
+@[expose] def Provable (f : F) : Prop := Nonempty (𝓢 ⊢ f)
 
 /-- Imported declaration from the Incompleteness formalization. -/
 abbrev Unprovable (f : F) : Prop := ¬Provable 𝓢 f
@@ -70,7 +70,7 @@ infix:45 " ⊬ " => Unprovable
 @[expose] def PrfSet (s : Set F) : Type _ := {f : F} → f ∈ s → 𝓢 ⊢ f
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def ProvableSet (s : Set F) : Prop := ∀ {f}, f ∈ s → 𝓢 ⊢! f
+@[expose] def ProvableSet (s : Set F) : Prop := ∀ {f}, f ∈ s → 𝓢 ⊢! f
 
 /-- Imported declaration from the Incompleteness formalization. -/
 infix:45 " ⊢* " => PrfSet
@@ -79,7 +79,7 @@ infix:45 " ⊢* " => PrfSet
 infix:45 " ⊢!* " => ProvableSet
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def theory : Set F := {f | 𝓢 ⊢! f}
+@[expose] def theory : Set F := {f | 𝓢 ⊢! f}
 
 end «lp_section_1»
 

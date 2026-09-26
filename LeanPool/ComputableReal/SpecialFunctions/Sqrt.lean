@@ -686,7 +686,6 @@ end ComputableℝSeq
 
 namespace IsComputable
 
-@[expose]
 noncomputable instance instComputableSqrt (x : ℝ) [hx : IsComputable x] : IsComputable (x.sqrt) :=
   .lift (Real.sqrt) ComputableℝSeq.Sqrt.sqrt
     (by apply ComputableℝSeq.val_ofTendstoLocallyUniformlyContinuous) hx

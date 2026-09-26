@@ -26,7 +26,7 @@ namespace Formula
 variable {φ ψ : Formula α} {s : Substitution α}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def subst (s : Substitution α) : Formula α → Formula α
+@[expose] def subst (s : Substitution α) : Formula α → Formula α
   | atom a  => (s a)
   | ⊥       => ⊥
   | □φ      => □(φ.subst s)

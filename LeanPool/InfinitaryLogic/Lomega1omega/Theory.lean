@@ -157,7 +157,7 @@ theorem BoundedFormulaω.realize_equiv {M N : Type w} [L.Structure M] [L.Structu
 /-! ### Lω₁ω Elementary Equivalence -/
 
 /-- Two structures are Lω₁ω-elementarily equivalent if they satisfy the same Lω₁ω sentences. -/
-def LomegaEquiv (L : Language) (M N : Type*) [L.Structure M] [L.Structure N] : Prop :=
+@[expose] def LomegaEquiv (L : Language) (M N : Type*) [L.Structure M] [L.Structure N] : Prop :=
   ∀ φ : L.Sentenceω, Sentenceω.Realize φ M ↔ Sentenceω.Realize φ N
 
 namespace LomegaEquiv

@@ -175,7 +175,7 @@ variable (K : Type*) [Field K] [NumberField K]
 
 open Classical in
 /-- A radial mixed space unit used in the Odlyzko-bound argument. -/
-noncomputable def radialMixedSpaceUnit
+@[expose] noncomputable def radialMixedSpaceUnit
     (q : InfinitePlace K → ℝ) (hq : ∀ w, q w ≠ 0) :
     (mixedSpace K)ˣ where
   val := mixedSpaceOfRealSpace q
@@ -206,7 +206,7 @@ theorem radialMixedSpaceUnit_val
 
 open Classical in
 /-- A trace radial scale used in the Odlyzko-bound argument. -/
-noncomputable def traceRadialScale
+@[expose] noncomputable def traceRadialScale
     (q : InfinitePlace K → ℝ) (hq : ∀ w, q w ≠ 0) :
     mixedEmbedding.euclidean.mixedSpace K ≃L[ℝ]
       mixedEmbedding.euclidean.mixedSpace K :=
@@ -863,7 +863,7 @@ variable (K : Type*) [Field K] [NumberField K]
 
 open Classical in
 /-- A fractional ideal element shape map used in the Odlyzko-bound argument. -/
-noncomputable def fractionalIdealElementShapeMap
+@[expose] noncomputable def fractionalIdealElementShapeMap
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ)
     (q : InfinitePlace K → ℝ) (hq : ∀ w, q w ≠ 0)
     (x : ↥((I : FractionalIdeal (𝓞 K)⁰ K) :
@@ -900,7 +900,7 @@ theorem fractionalIdealElementShapeMap_bijective
 
 open Classical in
 /-- A fractional ideal element shape equiv used in the Odlyzko-bound argument. -/
-noncomputable def fractionalIdealElementShapeEquiv
+@[expose] noncomputable def fractionalIdealElementShapeEquiv
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ)
     (q : InfinitePlace K → ℝ) (hq : ∀ w, q w ≠ 0) :
     ↥((I : FractionalIdeal (𝓞 K)⁰ K) :

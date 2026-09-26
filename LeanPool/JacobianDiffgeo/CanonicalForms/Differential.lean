@@ -196,10 +196,13 @@ noncomputable def smul (h : ℳ X) (θ : MFormData X) : MFormData X where
     rw [θ.compat x y (chartAt ℂ y p) ⟨p, hp, rfl⟩, hsy, (chartAt ℂ x).left_inv hp.1]
     ring
 
+theorem coeffAt_smul (h : ℳ X) (θ : MFormData X) (x : X) (z : ℂ) :
+    (smul h θ).coeffAt x z = h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z := by rfl
+
 instance : SMul (ℳ X) (MFormData X) := ⟨smul⟩
 
 @[simp] theorem coeffAt_smul_mero (h : ℳ X) (θ : MFormData X) (x : X) (z : ℂ) :
-    (h • θ).coeffAt x z = h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z := rfl
+    (h • θ).coeffAt x z = h.holoRepr ((chartAt ℂ x).symm z) * θ.coeffAt x z := by rfl
 
 /-! ### `MFormData.d`: the differential of a meromorphic function (D7, P1) -/
 

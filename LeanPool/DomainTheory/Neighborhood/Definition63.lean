@@ -203,7 +203,7 @@ structure AlgHom (A B : TAlgebra T) where
 namespace AlgHom
 
 /-- The identity is a homomorphism: `I ∘ k = k ∘ T(I)`. -/
-def id (A : TAlgebra T) : AlgHom A A where
+@[expose] def id (A : TAlgebra T) : AlgHom A A where
   hom := Category.id A.carrier
   comm := by rw [Category.id_comp, T.map_id, Category.comp_id]
 

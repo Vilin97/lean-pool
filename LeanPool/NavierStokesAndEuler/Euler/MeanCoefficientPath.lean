@@ -46,17 +46,18 @@ def translateCoefficientPath (A : C(K, Space →ᵇ V)) (a : Space) : C(K, Space
 
 omit [CompactSpace K] in
 @[simp] theorem translateCoefficientPath_apply (A : C(K, Space →ᵇ V)) (a : Space) (t : K) :
-    translateCoefficientPath A a t = translated (A t) a := rfl
+    translateCoefficientPath A a t = translated (A t) a := by rfl
 
 /-- Path direction, given by `⟨fun t => fieldDerivativeMap (DA t) a, ((derivativeBundling (V :=
 V)).continuous.comp DA.continuous).clm_apply continuous_const⟩`. -/
 def pathDirection (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) (a : Space) : C(K, Space →ᵇ V) :=
   ⟨fun t => fieldDerivativeMap (DA t) a,
-    ((derivativeBundling (V := V)).continuous.comp DA.continuous).clm_apply continuous_const⟩
+    by simpa only [Function.comp_def, derivativeBundling_apply] using
+      ((derivativeBundling (V := V)).continuous.comp DA.continuous).clm_apply continuous_const⟩
 
 omit [CompactSpace K] in
 @[simp] theorem pathDirection_apply (DA : C(K, Space →ᵇ (Space →L[ℝ] V)))
-    (a : Space) (t : K) (x : Space) : pathDirection DA a t x = DA t x a := rfl
+    (a : Space) (t : K) (x : Space) : pathDirection DA a t x = DA t x a := by rfl
 
 theorem pathDirection_norm_le (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) (a : Space) :
     ‖pathDirection DA a‖ ≤ ‖DA‖ * ‖a‖ := by
@@ -80,7 +81,7 @@ def pathDerivativeMap (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) :
     (pathDirection_norm_le DA)
 
 @[simp] theorem pathDerivativeMap_apply (DA : C(K, Space →ᵇ (Space →L[ℝ] V)))
-    (a : Space) (t : K) (x : Space) : pathDerivativeMap DA a t x = DA t x a := rfl
+    (a : Space) (t : K) (x : Space) : pathDerivativeMap DA a t x = DA t x a := by rfl
 
 theorem pathDerivativeMap_norm_le (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) :
     ‖pathDerivativeMap DA‖ ≤ ‖DA‖ :=
@@ -90,8 +91,8 @@ theorem pathDerivativeMap_norm_le (DA : C(K, Space →ᵇ (Space →L[ℝ] V))) 
 def pathDerivativeBundlingLinear : C(K, Space →ᵇ (Space →L[ℝ] V)) →ₗ[ℝ]
     (Space →L[ℝ] C(K, Space →ᵇ V)) where
   toFun := pathDerivativeMap
-  map_add' A B := by ext v t x; rfl
-  map_smul' c A := by ext v t x; rfl
+  map_add' A B := by ext v t x; simp [pathDerivativeMap_apply]
+  map_smul' c A := by ext v t x; simp [pathDerivativeMap_apply]
 
 /-- Path derivative bundling, bundling `toLinearMap`, `cont`. -/
 def pathDerivativeBundling : C(K, Space →ᵇ (Space →L[ℝ] V)) →L[ℝ]
@@ -112,7 +113,9 @@ theorem translateCoefficientPath_taylor (A : C(K, Space →ᵇ V))
       pathDerivativeMap (translateCoefficientPath DA a) (b-a)‖ ≤ M * ‖b-a‖^2 := by
   apply (ContinuousMap.norm_le _ (mul_nonneg hM (sq_nonneg _))).2
   intro t
-  exact translated_taylor_bound (A t) (DA t) (hA t) (hDA t) M hM (h₂ t) a b
+  simpa only [ContinuousMap.sub_apply, translateCoefficientPath_apply,
+    pathDerivativeMap_apply] using
+    translated_taylor_bound (A t) (DA t) (hA t) (hDA t) M hM (h₂ t) a b
 
 /-- Actual spatial differentiation holds in the uniform time-path norm. -/
 theorem translateCoefficientPath_hasFDerivAt (A : C(K, Space →ᵇ V))
@@ -150,6 +153,6 @@ abbrev translatedPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) (a : Space) :
     C(Icc (0 : ℝ) T, Field) := translateCoefficientPath A a
 
 @[simp] theorem translatedPath_apply (T : ℝ) (A : C(Icc (0 : ℝ) T, Field))
-    (a : Space) (t : Icc (0 : ℝ) T) (x : Space) : translatedPath T A a t x = A t (x+a) := rfl
+    (a : Space) (t : Icc (0 : ℝ) T) (x : Space) : translatedPath T A a t x = A t (x+a) := by rfl
 
 end EulerMeanCoefficients

@@ -813,7 +813,7 @@ structure Result where
 
 `Result.lab` is a permutation of `{0, …, n-1}` such that `Result.cert` depends only on the
 isomorphism class of `G`. -/
-def canonical (G : Graph) : Result :=
+@[expose] def canonical (G : Graph) : Result :=
   let (p, tr) := initialRefine G
   let inv0 : Array UInt64 := #[mix tr (p.shapeHash G.n)]
   let st := dfsNode G (G.n + 1) #[] inv0 p

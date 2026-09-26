@@ -46,6 +46,7 @@ theorem resC0_apply (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 �
     resC0 D τ hτ f k = LinSysOn.restrictL D (hτ k) (f (τ k)) := by rfl
 
 /-- Restriction of `1`-cochains along a refinement index `τ`. -/
+@[expose]
 noncomputable def resC1 (τ : Fin 𝒱.n → Fin 𝒰.n) (hτ : IsRefIdx 𝒰 𝒱 τ) : C1 D 𝒰 →ₗ[ℂ] C1 D 𝒱 :=
   LinearMap.pi fun p : Fin 𝒱.n × Fin 𝒱.n =>
     (LinSysOn.restrictL D (inf_le_inf (hτ p.1) (hτ p.2))).comp (LinearMap.proj (τ p.1, τ p.2))
@@ -111,7 +112,7 @@ theorem resC1_mem_Z1 {f : C1 D 𝒰} (hf : f ∈ Z1 D 𝒰) : resC1 D τ hτ f �
 /-! ### `resZ1`, `resH1` -/
 
 /-- The induced map on `1`-cocycles. -/
-noncomputable def resZ1 : Z1 D 𝒰 →ₗ[ℂ] Z1 D 𝒱 :=
+@[expose] noncomputable def resZ1 : Z1 D 𝒰 →ₗ[ℂ] Z1 D 𝒱 :=
   LinearMap.restrict (resC1 D τ hτ) (fun _ hf => resC1_mem_Z1 D τ hτ hf)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in

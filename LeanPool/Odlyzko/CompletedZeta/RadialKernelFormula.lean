@@ -261,7 +261,7 @@ theorem fundamentalConeZeta_eq_integral_tsum_nonzeroIdealElement_radial
 
 open Classical in
 /-- A nonzero ideal shape theta used in the Odlyzko-bound argument. -/
-noncomputable def nonzeroIdealShapeTheta
+@[expose] noncomputable def nonzeroIdealShapeTheta
     (J : (Ideal (𝓞 K))⁰) (y : realSpace K) : ℂ :=
   ∑' x : nonzeroIdealElement K J,
     complexPlaceGaussian K (((x : 𝓞 K) : K)) (expMapBasis y)

@@ -176,7 +176,7 @@ def constVal (n : ℕ) : M :=
   Structure.funMap (L := ladderLang α) (show (ladderLang α).Functions 0 from n) Fin.elim0
 
 /-- The level predicate `U_i`. -/
-def Level (i : Index α) (x : M) : Prop :=
+@[expose] def Level (i : Index α) (x : M) : Prop :=
   Structure.RelMap (L := ladderLang α) (show (ladderLang α).Relations 1 from i) (fun _ => x)
 
 /-- The edge relation `E`. -/

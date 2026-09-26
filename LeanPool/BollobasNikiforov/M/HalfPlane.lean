@@ -38,7 +38,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n] [LinearOrder n]
 noncomputable section
 
 /-- The Gram matrix of a family of planar vectors. -/
-def gram (z : n → Fin 2 → ℝ) : Matrix n n ℝ :=
+@[expose] def gram (z : n → Fin 2 → ℝ) : Matrix n n ℝ :=
   of fun i j => z i ⬝ᵥ z j
 
 omit [Fintype n] [DecidableEq n] [LinearOrder n] in

@@ -109,7 +109,7 @@ theorem nil_mem_Cnat : ([] : Str) ∈ Cnat.sys.master := Set.mem_insert_iff.mpr 
 
 /-- **The one-point domain `{{Λ}} = 𝟙`** (the terminal object of Scott's
 category). -/
-def Cone : ScottSys := singletonSys ({([] : Str)} : Set Str) ⟨[], rfl⟩
+@[expose] def Cone : ScottSys := singletonSys ({([] : Str)} : Set Str) ⟨[], rfl⟩
 
 /-- `Λ ∈ tok(Cone)`. -/
 theorem nil_mem_Cone : ([] : Str) ∈ Cone.sys.master := rfl

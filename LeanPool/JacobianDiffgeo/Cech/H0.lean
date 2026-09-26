@@ -31,7 +31,7 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X] [IsManifold 𝓘(
 variable (D : RS.Divisor X) {Ω : Opens X} (𝒰 : FinCover Ω)
 
 /-- Restriction of a relative section to the cover. -/
-noncomputable def toC0 : RS.LinSysOn D (Ω : Set X) →ₗ[ℂ] C0 D 𝒰 :=
+@[expose] noncomputable def toC0 : RS.LinSysOn D (Ω : Set X) →ₗ[ℂ] C0 D 𝒰 :=
   LinearMap.pi fun i => LinSysOn.restrictL D (𝒰.le_base i)
 
 omit [IsManifold 𝓘(ℂ, ℂ) ω X] in
@@ -50,7 +50,7 @@ theorem toC0_mem_ker (φ : RS.LinSysOn D (Ω : Set X)) :
   exact sub_self _
 
 /-- `toC0`, corestricted to land in `ker d0`. -/
-noncomputable def toC0' : RS.LinSysOn D (Ω : Set X) →ₗ[ℂ] LinearMap.ker (d0 D 𝒰) :=
+@[expose] noncomputable def toC0' : RS.LinSysOn D (Ω : Set X) →ₗ[ℂ] LinearMap.ker (d0 D 𝒰) :=
   LinearMap.codRestrict _ (toC0 D 𝒰) (toC0_mem_ker D 𝒰)
 
 omit [ChartedSpace ℂ X] [IsManifold 𝓘(ℂ, ℂ) ω X] in

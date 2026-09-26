@@ -132,6 +132,7 @@ omit [CompleteSpace E] in
 theorem coefficientAction_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
     coefficientAction (E := E) A u t = A t (u t) := by rfl
 
+omit [CompleteSpace E] in
 theorem coefficientAction_apply_curve (A : Coefficient a b E) (u : Curve a b E) :
     coefficientAction (E := E) A u = applyCoefficient A u := by
   ext t
@@ -238,15 +239,20 @@ theorem contDiff_inverse_family {X Q : Type*}
 
 /-- Equation operator, given by `ContinuousLinearMap.id ℝ (Curve a b E) - volterra (E := E) hab
 A`. -/
-def equationOperator (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
+@[expose] def equationOperator (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
   ContinuousLinearMap.id ℝ (Curve a b E) - volterra (E := E) hab A
+
+theorem equationOperator_apply_curve (A : Coefficient a b E) (u : Curve a b E) :
+    equationOperator hab A u = u - integrator hab (applyCoefficient A u) := by
+  change u - integrator hab (coefficientAction A u) = _
+  rw [coefficientAction_apply_curve]
 
 theorem equationOperator_isInvertible (A : Coefficient a b E) :
     (equationOperator hab A).IsInvertible :=
   id_sub_isInvertible _ (volterra_contracting_iterate hab A)
 
 /-- Resolvent of the actual Volterra integral equation on the full finite interval. -/
-def resolvent (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
+@[expose] def resolvent (A : Coefficient a b E) : Curve a b E →L[ℝ] Curve a b E :=
   (equationOperator hab A).inverse
 
 theorem contDiff_resolvent : ContDiff ℝ ∞ (resolvent (E := E) hab) := by

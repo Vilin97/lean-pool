@@ -11,9 +11,7 @@ import LeanPool.MRiscX.Semantics.MsTheory
 import LeanPool.MRiscX.Semantics.Specification
 import LeanPool.MRiscX.Tactics.HelpCodeProofTactics
 import LeanPool.MRiscX.Util.BasicTheorems
-import Std.Tactic.BVDecide
 import Std.Tactic.BVDecide.Normalize.Prop
-public meta import Std.Tactic.BVDecide.Reflect
 
 /-!
 # SingleProofsOTP
@@ -276,7 +274,11 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     rw [←h_code']
     rw [show ({10} : Set UInt64) = {9 + 1} by simp]
     have h_step : p + (l - x) + 1 = p + (l - (x - 1)) := by
-      bv_decide
+      have h_sub : (l - x) + 1 = l - (x - 1) := by
+        rw [UInt64.sub_eq_add_neg l x, UInt64.sub_eq_add_neg l (x - 1),
+          UInt64.neg_sub, UInt64.sub_eq_add_neg 1 x]
+        ac_rfl
+      simpa only [UInt64.add_assoc] using congrArg (p + ·) h_sub
     apply specification_Increment (dst := 0)
     · simp
     · simp
@@ -286,7 +288,10 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · repeat (constructor <;> try assumption)
       · simp_all
       · have h_index : p + (l - x) = p + (l - (x - 1)) - 1 := by
-          bv_decide
+          calc
+            p + (l - x) = (p + (l - x) + 1) - 1 :=
+              (UInt64.add_sub_cancel _ _).symm
+            _ = p + (l - (x - 1)) - 1 := by rw [h_step]
         simp_all
 
 

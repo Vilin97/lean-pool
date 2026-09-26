@@ -33,7 +33,6 @@ private theorem mul_le_of_le_of_le_one_of_nonneg {a b c : ℝ} (hac : a ≤ c) (
     (ha : 0 ≤ a) : a * b ≤ c :=
   (mul_le_of_le_one_right ha hb).trans hac
 
-@[expose]
 noncomputable instance instComputableSqrtTwoAddSeries (x : ℝ) [hx : IsComputable x] (n : ℕ) :
     IsComputable (Real.sqrtTwoAddSeries x n) :=
   n.rec hx (fun _ _ ↦ IsComputable.instComputableSqrt _)

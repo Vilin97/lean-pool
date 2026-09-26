@@ -609,13 +609,8 @@ theorem matrixRHS_first_rows {K : Type*} [Field K] (h lam C r eta : K)
     (b : BaseJet K) (s : SourceJet K) (w v : Fin 6 → K) :
     matrixRHS h lam C r eta b s w v 0 = w 4 ∧
       matrixRHS h lam C r eta b s w v 1 = w 5 := by
-  constructor
-  · change dotProduct (![0, 0, 0, 0, 1, 0] : Fin 6 → K) w +
-      dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 4
-    simp [dotProduct, Fin.sum_univ_succ]
-  · change dotProduct (![0, 0, 0, 0, 0, 1] : Fin 6 → K) w +
-      dotProduct (![0, 0, 0, 0, 0, 0] : Fin 6 → K) v + 0 = w 5
-    simp [dotProduct, Fin.sum_univ_succ]
+  exact ⟨PositiveAxisSystem.matrixRHS_zero h lam C r eta b s w v,
+    PositiveAxisSystem.matrixRHS_one h lam C r eta b s w v⟩
 
 theorem RealSixSystem.first_derivative {R : ℝ} {J : Set ℝ} {h lam C : ℝ}
     {G : RealCoefficientData} {w : RealField} (hw : RealSixSystem R J h lam C G w)
@@ -2867,7 +2862,7 @@ theorem sequence_profile {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
     (c : Domain (radius core buffer 0) U h) (hcore : 0 < core) (hbuffer : 0 < buffer)
     (C : ℝ) (base : Coefficient (radius core buffer 0) U) (n : ℕ) (i : Fin 5) :
     profile (sequence c hcore hbuffer C base n i) = profile (hierarchy c hcore hbuffer C base n i)
-        := rfl
+        := by rfl
 
 theorem sequence_zero {core buffer : ℝ} {U : Set ℂ} {h : ℝ}
     (c : Domain (radius core buffer 0) U h) (hcore : 0 < core) (hbuffer : 0 < buffer)

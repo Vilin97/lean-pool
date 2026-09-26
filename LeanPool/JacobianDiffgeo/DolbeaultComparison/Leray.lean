@@ -48,7 +48,7 @@ theorem inf_inf_inf_le (a b c : Opens X) : (a ⊓ b) ⊓ (a ⊓ c) ≤ b ⊓ c :
 /-! ### The induced cover of a member -/
 
 /-- The induced cover of a member: `(V ⊓ 𝒱.U α)_α : FinCover V` for `V ≤ ⊤`. -/
-def FinCover.induced (𝒱 : FinCover (⊤ : Opens X)) (V : Opens X) : FinCover V where
+@[expose] def FinCover.induced (𝒱 : FinCover (⊤ : Opens X)) (V : Opens X) : FinCover V where
   n := 𝒱.n
   U := fun α => V ⊓ 𝒱.U α
   le_base := fun _ => inf_le_left
@@ -523,6 +523,6 @@ noncomputable def h1CoverEquiv (h𝒰 : 𝒰.IsGood) : H1Cover D 𝒰 ≃ₗ[ℂ
   LinearEquiv.ofBijective (toH1 D 𝒰) ⟨toH1_injective D 𝒰, toH1_surjective_of_isGood D h𝒰⟩
 
 @[simp] theorem h1CoverEquiv_apply (h𝒰 : 𝒰.IsGood) (c : H1Cover D 𝒰) :
-    h1CoverEquiv D h𝒰 c = toH1 D 𝒰 c := rfl
+    h1CoverEquiv D h𝒰 c = toH1 D 𝒰 c := by rfl
 
 end RS.Cech

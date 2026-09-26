@@ -31,7 +31,7 @@ variable {A : Type _} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A] [
 
 /-- we say a map $f \colon M_1 \to M_2$ is a positive map
   if for all positive $x \in M_1$, we also get $f(x)$ is positive -/
-def LinearMap.IsPosMap
+@[expose] def LinearMap.IsPosMap
   {M₁ M₂ : Type*} [Zero M₁] [Zero M₂] [PartialOrder M₁] [PartialOrder M₂]
   {F : Type*} [FunLike F M₁ M₂] (f : F) : Prop :=
 ∀ ⦃x : M₁⦄, 0 ≤ x → 0 ≤ f x

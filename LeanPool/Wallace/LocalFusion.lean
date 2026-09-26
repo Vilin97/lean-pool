@@ -403,7 +403,7 @@ def nextFusionState
         (FusionSchedule.accumulatedSize_succ l).symm
 
 /-- The dependent natural-number recursion starting from `initial`. -/
-def fusionStates
+@[expose] def fusionStates
     {G : Type} [AddCommGroup G] [DecidableEq G]
     (fresh : ℕ → Finset G) (enumeration : ℕ → G) (x : G)
     (hfresh_card : ∀ l, (fresh l).card ≤ FusionSchedule.blockSize l)

@@ -407,7 +407,7 @@ def WeakEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
         c rho * deriv (weakBallEnergy Du (0 : Domain n)) rho)
 
 /-- Radius-integration formula for weak radial-energy density. -/
-def WeakRadialEnergyRadiusIntegralFormula {n m : ℕ}
+@[expose] def WeakRadialEnergyRadiusIntegralFormula {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ c : ℝ → ℝ,
     (∫ x in Metric.ball (0 : Domain n) R0,
@@ -418,7 +418,7 @@ def WeakRadialEnergyRadiusIntegralFormula {n m : ℕ}
 
 /-- Radius-integration formula for weak radial-energy density, restricted to
 measurable essentially bounded radius weights. -/
-def WeakRadialEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
+@[expose] def WeakRadialEnergyRadiusIntegralFormulaForWeights {n m : ℕ}
     (Du : Domain n → Gradient n m) (R0 : ℝ) : Prop :=
   ∀ c : ℝ → ℝ,
     RadiusWeightOn R0 c →

@@ -29,7 +29,7 @@ section BoundedFields
 variable {V : Type*} [NormedAddCommGroup V]
 
 /-- Translated, given by `A.compContinuous ⟨fun x => x+a, continuous_id.add continuous_const⟩`. -/
-def translated (A : Space →ᵇ V) (a : Space) : Space →ᵇ V :=
+@[expose] def translated (A : Space →ᵇ V) (a : Space) : Space →ᵇ V :=
   A.compContinuous ⟨fun x => x+a, continuous_id.add continuous_const⟩
 
 @[simp] theorem translated_apply (A : Space →ᵇ V) (a x : Space) :

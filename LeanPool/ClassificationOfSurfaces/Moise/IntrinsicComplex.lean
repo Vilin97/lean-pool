@@ -109,7 +109,7 @@ def restrictFaces (p : Finset K.Vertex → Prop) [DecidablePred p] : IntrinsicTw
     (K.restrictFaces p).faces = K.faces.filter p := rfl
 
 /-- The canonical inclusion of a face restriction into the old realization. -/
-def restrictFacesInclusion (p : Finset K.Vertex → Prop)
+@[expose] def restrictFacesInclusion (p : Finset K.Vertex → Prop)
     [decidablePred : DecidablePred p] :
     (K.restrictFaces p).realization → K.realization :=
   fun x => ⟨x.1, x.2.1, by
@@ -118,7 +118,7 @@ def restrictFacesInclusion (p : Finset K.Vertex → Prop)
 
 @[simp] theorem restrictFacesInclusion_val (p : Finset K.Vertex → Prop) [DecidablePred p]
     (x : (K.restrictFaces p).realization) :
-    (K.restrictFacesInclusion p x).1 = x.1 := rfl
+    (K.restrictFacesInclusion p x).1 = x.1 := by rfl
 
 theorem isEmbedding_restrictFacesInclusion (p : Finset K.Vertex → Prop)
     [decidablePred : DecidablePred p] :

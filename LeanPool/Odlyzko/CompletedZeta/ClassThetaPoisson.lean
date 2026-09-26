@@ -30,7 +30,7 @@ variable (K : Type*) [Field K] [NumberField K] [IsTotallyComplex K]
 
 open Classical in
 /-- A fractional shape covolume constant used in the Odlyzko-bound argument. -/
-noncomputable def fractionalShapeCovolumeConstant
+@[expose] noncomputable def fractionalShapeCovolumeConstant
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) : ℝ :=
   FractionalIdeal.absNorm
       (I : FractionalIdeal (𝓞 K)⁰ K) *

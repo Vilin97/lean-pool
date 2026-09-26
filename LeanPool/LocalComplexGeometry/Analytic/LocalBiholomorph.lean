@@ -181,7 +181,7 @@ theorem eventually_bijective_fderiv_invFun [CompleteSpace E] [CompleteSpace F]
   e.symm.eventually_bijective_fderiv_toFun
 
 /-- Compose two local biholomorphisms with matching middle base point. -/
-def trans (e : LocalBiholomorphAt E F a b)
+@[expose] def trans (e : LocalBiholomorphAt E F a b)
     (h : LocalBiholomorphAt F G b c) :
     LocalBiholomorphAt E G a c where
   toFun := h.toFun ∘ e.toFun
@@ -233,7 +233,7 @@ at the origin in both spaces. -/
   right_inv := Filter.Eventually.of_forall e.apply_symm_apply
 
 /-- The affine biholomorphism with linear part `e` sending `a` to `b`. -/
-def affine (e : E ≃L[ℂ] F) (a : E) (b : F) :
+@[expose] def affine (e : E ≃L[ℂ] F) (a : E) (b : F) :
     LocalBiholomorphAt E F a b where
   toFun := fun x ↦ e (x - a) + b
   invFun := fun y ↦ e.symm (y - b) + a
@@ -260,7 +260,7 @@ def translation (a b : E) : LocalBiholomorphAt E E a b :=
 
 /-- A triangular analytic change of coordinates on a product, subtracting an
 analytic function from the second coordinate. -/
-def fiberShearAtZero
+@[expose] def fiberShearAtZero
     {X Y : Type*}
     [NormedAddCommGroup X] [NormedSpace ℂ X]
     [NormedAddCommGroup Y] [NormedSpace ℂ Y]

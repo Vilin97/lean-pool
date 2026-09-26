@@ -467,7 +467,7 @@ lemma seqHighShift_smul (d : ℕ) (c : ℂ) (f : L1Coeff ℕ) :
   rfl
 
 /-- High shift on one-variable sequences as a contraction. -/
-def seqHighShiftCLM (d : ℕ) : L1Coeff ℕ →L[ℂ] L1Coeff ℕ :=
+@[expose] def seqHighShiftCLM (d : ℕ) : L1Coeff ℕ →L[ℂ] L1Coeff ℕ :=
   ({
     toFun := seqHighShift d
     map_add' := seqHighShift_add d
@@ -657,7 +657,7 @@ noncomputable def seqDivisionQuotient (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ 
   seqDivisionInverse d p hp (seqHighShift d f)
 
 /-- The low-degree remainder sequence produced by division. -/
-noncomputable def seqDivisionRemainder (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1)
+@[expose] noncomputable def seqDivisionRemainder (d : ℕ) (p : L1Coeff ℕ) (hp : ‖p‖ < 1)
     (f : L1Coeff ℕ) : L1Coeff ℕ :=
   seqLowCut d (f - convolution (seqDivisionQuotient d p hp f) p)
 

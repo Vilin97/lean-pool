@@ -498,11 +498,11 @@ lemma gff_covariance_timeTranslation_continuous (m : ℝ) [Fact (0 < m)]
   · intro s; exact Filter.Eventually.of_forall (h_bdd' s)
   · exact h_bound_int
   · filter_upwards with ⟨x, y⟩
-    convert
-      (((f.continuous.comp (TimeTranslation.continuous_timeShift_param x)).mul
-        continuous_const).mul continuous_const) using 1
-    ext s
-    simpa only [timeTranslationSchwartzℂ_apply, Function.comp_def, Pi.mul_apply]
+    have h_cont : Continuous (fun s : ℝ =>
+        f (timeShift s x) * (freeCovariance m x y : ℂ) * g y) :=
+      ((f.continuous.comp (TimeTranslation.continuous_timeShift_param x)).mul
+        continuous_const).mul continuous_const
+    simpa only [timeTranslationSchwartzℂ_apply] using h_cont
 
 /-- The GFF covariance function (s, u) ↦ E[A_s · conj(A_u)] - E[A]·conj(E[A]) is continuous.
 

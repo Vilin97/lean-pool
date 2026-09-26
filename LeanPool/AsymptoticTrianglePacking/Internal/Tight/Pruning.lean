@@ -36,11 +36,11 @@ namespace LeanPool.AsymptoticTrianglePacking.Internal
 variable {V : Type*} [DecidableEq V] [Fintype V]
 
 /-- The edges lost at `v` when the vertex set `B` is deleted. -/
-def lostDegree (H : Finset (Finset V)) (B : Finset V) (v : V) : ℕ :=
+@[expose] def lostDegree (H : Finset (Finset V)) (B : Finset V) (v : V) : ℕ :=
   (H.filter (fun e => v ∈ e ∧ ¬ Disjoint e B)).card
 
 /-- The hypergraph with all edges meeting `B` removed. -/
-def prune (H : Finset (Finset V)) (B : Finset V) : Finset (Finset V) :=
+@[expose] def prune (H : Finset (Finset V)) (B : Finset V) : Finset (Finset V) :=
   H.filter (fun e => Disjoint e B)
 
 omit [Fintype V] in

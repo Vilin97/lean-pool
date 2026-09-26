@@ -38,7 +38,7 @@ open Set MeasureTheory ContinuousLinearMap EulerTimeLp EulerTerminalTimePrimitiv
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The actual time average, expressed using the terminal primitive's initial trace. -/
-def mean (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] E :=
+@[expose] def mean (T : ℝ) (hT : 0 ≤ T) : TimeLp T E →L[ℝ] E :=
   (-T)⁻¹ • initialTrace T hT
 
 /-- The constant part of the reconstruction. -/

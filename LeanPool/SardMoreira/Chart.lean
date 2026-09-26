@@ -533,6 +533,17 @@ def _root_.Moreira2001.Atlas.main {E : Type u} [NormedAddCommGroup E] [NormedSpa
         refine mem_biUnion hφ ?_
         aesop }
 
+theorem main_succ_charts {E : Type u} {F : Type v}
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [FiniteDimensional ℝ F]
+    (k : ℕ) (α : I) (s : Set (E × F)) :
+    (main (k + 1) α s).charts =
+      ⋃ ψ ∈ (choice k α s).charts,
+        (fun φ ↦
+          ((ψ.ofLE 1 (by simp)).restr {x | IsLargeAt (k + 1) α ψ.set x}).comp φ one_ne_zero) ''
+          (main k α {x ∈ ψ.set | IsLargeAt (k + 1) α ψ.set x}).charts := by
+  rfl
+
 end Atlas
 
 end Moreira2001

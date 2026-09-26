@@ -54,7 +54,7 @@ noncomputable abbrev TailAt (p : X) (D : RS.Divisor X) : Type _ :=
   RS.MeroGermOn X (chartAt ℂ p).source ⧸ RS.Cech.ordGe p (-(D p))
 
 /-- The quotient map onto `TailAt p D`. -/
-noncomputable def TailAt.mk (p : X) (D : RS.Divisor X) :
+@[expose] noncomputable def TailAt.mk (p : X) (D : RS.Divisor X) :
     RS.MeroGermOn X (chartAt ℂ p).source →ₗ[ℂ] TailAt p D := Submodule.mkQ _
 
 omit [T2Space X] [IsManifold 𝓘(ℂ, ℂ) ω X] in

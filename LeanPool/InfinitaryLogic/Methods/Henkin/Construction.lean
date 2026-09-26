@@ -310,7 +310,7 @@ def termSetoid (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
 
 /-- The carrier of the term model: closed terms quotiented by the equivalence
 relation `t₁ ~ t₂ ↔ (t₁ = t₂) ∈ S*`. -/
-def TermModel (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
+@[expose] def TermModel (C : ConsistencyPropertyEq L) (S : Set L.Sentenceω)
     (hmax : C.toConsistencyProperty.MaximalConsistent S) : Type _ :=
   Quotient (termSetoid C S hmax)
 

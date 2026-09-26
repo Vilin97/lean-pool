@@ -44,7 +44,7 @@ lemma directed (γ : Dipath x y) : DirectedMap.Directed γ.toContinuousMap :=
   fun _ _ _ φ_dipath => isDipath_reparam φ_dipath γ.dipath_toPath
 
 /-- Convert a dipath to its underlying directed map `D(I, X)`. -/
-def toDirectedMap (γ : Dipath x y) : D(I,X) where
+@[expose] def toDirectedMap (γ : Dipath x y) : D(I,X) where
   toFun := γ.toFun
   continuous_toFun := γ.continuous_toFun
   directed_toFun := Dipath.directed γ
@@ -111,7 +111,7 @@ initialize_simps_projections Dipath
 
 lemma coe_toContinuousMap : ⇑γ.toContinuousMap = γ := rfl
 @[simp]
-lemma coe_toDirectedMap : ⇑γ.toDirectedMap = γ := rfl
+lemma coe_toDirectedMap : ⇑γ.toDirectedMap = γ := by rfl
 
 /-- Any function `φ : Π (a : α), Dipath (x a) (y a)` can be seen as a function `α × I → X`. -/
 instance hasUncurryDipath {X α : Type*} [DirectedSpace X] {x y : α → X} :
@@ -153,10 +153,14 @@ lemma image_extend_eq_image (γ : Dipath x y) (a b : I) :
 /-! ### Reflexive dipaths -/
 
 /-- The constant dipath from a point to itself -/
-@[refl, simps!]
+@[refl]
 def refl (x : X) : Dipath x x where
   toPath := Path.refl x
   dipath_toPath := isDipath_constant x
+
+@[simp] theorem refl_toFun (x : X) (t : I) : (refl x).toFun t = x := by rfl
+
+@[simp] theorem refl_apply (x : X) (t : I) : refl x t = x := by rfl
 
 lemma refl_range {a : X} : range (Dipath.refl a) = {a} := Path.refl_range
 
@@ -227,20 +231,20 @@ def cast (γ : Dipath x y) {x' y'} (hx : x' = x) (hy : y' = y) : Dipath x' y' :=
 }
 
 lemma cast_apply (γ : Dipath x y) {x' y'} (hx : x' = x) (hy : y' = y) (t : I) :
-  (γ.cast hx hy) t = γ t := rfl
+  (γ.cast hx hy) t = γ t := by rfl
 
 @[simp] lemma trans_cast {X : Type*} [DirectedSpace X] {a₁ a₂ b₁ b₂ c₁ c₂ : X}
   (γ : Dipath a₂ b₂) (γ' : Dipath b₂ c₂) (ha : a₁ = a₂) (hb : b₁ = b₂) (hc : c₁ = c₂) :
-  (γ.cast ha hb).trans (γ'.cast hb hc) = (γ.trans γ').cast ha hc := rfl
+  (γ.cast ha hb).trans (γ'.cast hb hc) = (γ.trans γ').cast ha hc := by rfl
 
 @[simp] lemma cast_coe (γ : Dipath x y) {x' y'} (hx : x' = x) (hy : y' = y) :
-  (γ.cast hx hy : I → X) = γ := rfl
+  (γ.cast hx hy : I → X) = γ := by rfl
 
 lemma cast_range (γ : Dipath x y) {x' y'} (hx : x' = x) (hy : y' = y) :
-  range (γ.cast hx hy) = range γ := rfl
+  range (γ.cast hx hy) = range γ := by rfl
 
 lemma cast_image (γ : Dipath x y) {x' y'} (hx : x' = x) (hy : y' = y) (a b : ℝ) :
-  (γ.cast hx hy).extend '' Icc a b = γ.extend '' Icc a b := rfl
+  (γ.cast hx hy).extend '' Icc a b = γ.extend '' Icc a b := by rfl
 
 lemma dipath_of_directed_map_of_to_dimap (γ : Dipath x y) :
   Dipath.ofDirectedMap (γ.toDirectedMap) = γ.cast γ.source' γ.target' := by {ext t; rfl }
@@ -277,7 +281,7 @@ def reparam (γ : Dipath x y) (f : D(I,I)) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
 
 @[simp]
 lemma coe_to_fun (γ : Dipath x y) (f : D(I,I)) (hf₀ : f 0 = 0) (hf₁ : f 1 = 1) :
-  ⇑(γ.reparam f hf₀ hf₁) = γ ∘ f := rfl
+  ⇑(γ.reparam f hf₀ hf₁) = γ ∘ f := by rfl
 
 @[simp]
 lemma reparam_id (γ : Dipath x y) : γ.reparam (DirectedMap.id I) rfl rfl = γ :=

@@ -27,7 +27,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
 /-- A PVM intrinsically represents a partial linear operator when its scalar
 spectral measures give the exact domain and first-moment quadratic form. -/
-def PVM.Represents (E_pvm : PVM E) (A : E →ₗ.[ℂ] E) : Prop :=
+@[expose] def PVM.Represents (E_pvm : PVM E) (A : E →ₗ.[ℂ] E) : Prop :=
   ∃ scalarMeasure : E → Measure ℝ,
     (∀ (x : E) (S : Set ℝ), MeasurableSet S →
       scalarMeasure x S =

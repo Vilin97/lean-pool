@@ -161,7 +161,7 @@ lemma swapMiddleTensor_tmul_apply
     (x : A) (y : B) (z : C) (w : D) :
     swapMiddleTensor R A B C D ((x ⊗ₜ[R] y) ⊗ₜ[R] (z ⊗ₜ[R] w)) =
       (x ⊗ₜ z) ⊗ₜ (y ⊗ₜ w) :=
-  rfl
+  by rfl
 
 @[simp]
 lemma swapMiddleTensor_symm
@@ -169,7 +169,7 @@ lemma swapMiddleTensor_symm
     [AddCommMonoid A] [AddCommMonoid B] [AddCommMonoid C] [AddCommMonoid D]
     [Module R A] [Module R B] [Module R C] [Module R D] :
     (swapMiddleTensor R A B C D).symm = swapMiddleTensor R A C B D :=
-  rfl
+  by rfl
 
 lemma swapMiddleTensor_comp_map
     {R : Type*} [CommSemiring R] {A B C D E F G H : Type*}

@@ -43,7 +43,7 @@ free variables) it realizes. -/
 
 /-- **Smallness**: `M` realizes only countably many complete `L_{ω₁ω}`-types, across all finite
 arities. -/
-def Lomega1omegaSmall (M : Type w) [L.Structure M] : Prop :=
+@[expose] def Lomega1omegaSmall (M : Type w) [L.Structure M] : Prop :=
   ∀ n, (RealizedInfinitaryTypes (L := L) M n).Countable
 
 /-- **Isomorphism transport for types**: an `L`-isomorphism carries the complete type of a

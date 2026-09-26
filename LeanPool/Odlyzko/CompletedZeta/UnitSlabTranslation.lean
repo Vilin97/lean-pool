@@ -44,7 +44,7 @@ theorem unitCoordinateShiftHom_apply
 
 open Classical in
 /-- An unit coordinate lattice used in the Odlyzko-bound argument. -/
-noncomputable def unitCoordinateLattice :
+@[expose] noncomputable def unitCoordinateLattice :
     AddSubgroup (mixedEmbedding.realSpace K) :=
   (unitCoordinateShiftHom (K := K)).range
 

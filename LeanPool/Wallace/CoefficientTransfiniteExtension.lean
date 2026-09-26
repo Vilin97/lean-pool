@@ -51,14 +51,14 @@ structure Data (R : Type w) (I : Type u) [Zero R] [LT I] where
   ∀ c, E.codeIndex c ∈ D → ∀ n i, i ∈ (E.prepared c n).support → i ∈ D
 
 /-- The local character already realizes each limit whose code coordinate lies in `D`. -/
-def LocallyAdmissible {R : Type w} {I : Type u} [AddCommMonoid R] [One R] [LT I]
+@[expose] def LocallyAdmissible {R : Type w} {I : Type u} [AddCommMonoid R] [One R] [LT I]
     (E : Data R I) (D : Set I) (character : (D →₀ R) →+ UnitAddCircle) : Prop :=
   ∀ (c : E.Code) (hc : E.codeIndex c ∈ D),
     Tendsto (fun n ↦ character (Finsupp.subtypeDomain D (E.prepared c n))) (E.p c)
       (nhds (character (Finsupp.single ⟨E.codeIndex c, hc⟩ 1)))
 
 /-- The character on a direct sum induced by its coordinate characters. -/
-def finsuppAddHom {R : Type w} {I : Type u} [AddCommMonoid R]
+@[expose] def finsuppAddHom {R : Type w} {I : Type u} [AddCommMonoid R]
     (coordinates : I → (R →+ UnitAddCircle)) : (I →₀ R) →+ UnitAddCircle :=
   Finsupp.liftAddHom coordinates
 
@@ -156,7 +156,7 @@ private theorem globalCoordinate_codeIndex_of_not_mem
   rw [hchosen]
 
 /-- The global character assembled from the recursively constructed coordinates. -/
-def globalCharacter {R : Type w} {I : Type u} [AddCommMonoid R] [One R]
+@[expose] def globalCharacter {R : Type w} {I : Type u} [AddCommMonoid R] [One R]
     [LinearOrder I] [WellFoundedLT I] (extension : CoordinateExtension R)
     (E : Data R I) (D : Set I) (character : (D →₀ R) →+ UnitAddCircle) :
     (I →₀ R) →+ UnitAddCircle :=

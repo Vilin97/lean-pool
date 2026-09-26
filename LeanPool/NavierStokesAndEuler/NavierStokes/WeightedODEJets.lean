@@ -399,8 +399,7 @@ theorem jet_solution_eq_solution (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
     (constantCurve (jet x₀ l p) + integrator hab (jetSource A f u l p))
   symm
   apply (equationOperator_isInvertible hab (A p)).inverse_apply_eq.mpr
-  change constantCurve (jet x₀ l p) + integrator hab (jetSource A f u l p) =
-    jet u l p - integrator hab (applyCoefficient (A p) (jet u l p))
+  rw [equationOperator_apply_curve]
   rw [(integrator hab).map_add] at hj
   exact (eq_sub_iff_add_eq.mpr (by simpa only [add_assoc, add_comm, add_left_comm] using hj.symm))
 

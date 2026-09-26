@@ -229,6 +229,7 @@ theorem resH1_injective : Function.Injective (resH1 D τ hτ) := by
 theorem toH1_injective (𝒰 : FinCover (⊤ : Opens X)) : Function.Injective (toH1 D 𝒰) := by
   intro c c' hc
   obtain ⟨𝒱, hij, hz⟩ := Module.DirectLimit.exists_eq_of_of_eq hc
+  rw [resH1'_eq_resH1 D hij (chosenRefIdx hij) (chosenRefIdx_spec hij)] at hz
   exact resH1_injective D (chosenRefIdx hij) (chosenRefIdx_spec hij) hz
 
 @[simp] theorem toH1_eq_zero_iff {𝒰 : FinCover (⊤ : Opens X)} (c : H1Cover D 𝒰) :

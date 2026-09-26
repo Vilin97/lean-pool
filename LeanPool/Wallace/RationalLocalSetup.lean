@@ -96,7 +96,7 @@ theorem closureInclusion_injective (x : ContinuumRationalGroup) :
   exact h
 
 /-- The prepared difference restricted to the local coordinate closure. -/
-def localDifference (x : ContinuumRationalGroup)
+@[expose] def localDifference (x : ContinuumRationalGroup)
     (a : RelevantCode N hN M x) (n : ℕ) : closure N hN M x →₀ ℚ := by
   classical
   exact Finsupp.subtypeDomain (closure N hN M x)
@@ -153,7 +153,7 @@ theorem localDifference_injective (x : ContinuumRationalGroup)
     ← closureInclusion_localDifference N hN M x a n, hmn]
 
 /-- The finite block of local prepared differences for a relevant code. -/
-def localDifferenceBlock (x : ContinuumRationalGroup)
+@[expose] def localDifferenceBlock (x : ContinuumRationalGroup)
     (a : RelevantCode N hN M x) (l : ℕ) :
     Finset (closure N hN M x →₀ ℚ) :=
   (TriangularPreprocess.blockPositions N hN l).image (localDifference N hN M x a)

@@ -26,7 +26,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
 /-- `U` has infinitesimal generator `A`: its domain is exactly the vectors
 whose Stone difference quotient converges, and the limit is `A`. -/
-def StrongContUnitary.Generates (U : StrongContUnitary E)
+@[expose] def StrongContUnitary.Generates (U : StrongContUnitary E)
     (A : E →ₗ.[ℂ] E) : Prop :=
   (∀ x : E, x ∈ A.domain ↔
     ∃ y, Filter.Tendsto

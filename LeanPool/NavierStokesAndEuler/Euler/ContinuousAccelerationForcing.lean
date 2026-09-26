@@ -38,7 +38,9 @@ variable {K P U E : Type*} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The literal continuous forcing in the projected acceleration equation. -/
-def forcing (Q Q₁ : P → C(K, U →L[ℝ] E)) (f : P → C(K, E)) (v : P → C(K, U)) (x : P) : C(K,U) :=
+@[expose]
+def forcing (Q Q₁ : P → C(K, U →L[ℝ] E)) (f : P → C(K, E))
+    (v : P → C(K, U)) (x : P) : C(K,U) :=
   multiplier (adjointMap (Q x)) (f x - (2 : ℝ) • multiplier (Q₁ x) (v x))
 
 /-- Actual uniform-time regularity of the acceleration forcing. -/

@@ -229,7 +229,7 @@ open scoped QInterval
 namespace ComputableℝSeq
 
 /-- Definition of `ofTendstoLocallyUniformlyContinuous`. -/
-def ofTendstoLocallyUniformlyContinuous
+@[expose] def ofTendstoLocallyUniformlyContinuous
     {f : ℝ → ℝ} (hf : Continuous f)
     (fImpl : ℕ → ℚInterval → ℚInterval)
     (fImpl_l : ℕ → ℚ → ℚ)

@@ -61,7 +61,7 @@ open WithRPowDist
 variable (α hα₀ hα₁) in
 /-- The pushforward of a measure `μ` on `X` under the canonical map
 `X → WithRPowDist X α hα₀ hα₁`. -/
-def withRPowDist (μ : Measure X) : Measure (WithRPowDist X α hα₀ hα₁) :=
+@[expose] def withRPowDist (μ : Measure X) : Measure (WithRPowDist X α hα₀ hα₁) :=
   μ.map .mk
 
 theorem withRPowDist_apply (μ : Measure X) (s : Set (WithRPowDist X α hα₀ hα₁)) :
@@ -116,8 +116,14 @@ instance [TopologicalSpace X] [μ.WeaklyRegular] :
     apply WeaklyRegular.innerRegular.map'
     · exact fun U hU ↦ hU.preimage continuous_mk
     · intro K hK
-      simpa only [homeomorph_symm_apply] using
-        (homeomorph.symm.isClosed_image.mpr hK)
+      have h_image :
+          (measurableEquiv.symm : X → WithRPowDist X α hα₀ hα₁) '' K =
+            (homeomorph.symm : X → WithRPowDist X α hα₀ hα₁) '' K := by
+        apply Set.image_congr
+        intro x hx
+        simp only [measurableEquiv_symm_apply, homeomorph_symm_apply]
+      rw [h_image]
+      exact homeomorph.symm.isClosed_image.mpr hK
 
 instance [TopologicalSpace X] [μ.InnerRegularCompactLTTop] :
     (μ.withRPowDist α hα₀ hα₁).InnerRegularCompactLTTop where

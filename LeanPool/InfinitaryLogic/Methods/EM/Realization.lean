@@ -140,7 +140,7 @@ variable {J : Type u} [LinearOrder J]
 /-- Sequence-based restricted template theory: same content as
 `templateTheoryOn T (Set.range s) J`, with a dedicated name for callers that
 want to hand a sequence rather than a set. -/
-def templateTheoryOfSeq
+@[expose] def templateTheoryOfSeq
     (T : Lomega1omegaTemplate L)
     (s : ℕ → Σ n, L.BoundedFormulaω Empty n)
     (J : Type u) [LinearOrder J] :

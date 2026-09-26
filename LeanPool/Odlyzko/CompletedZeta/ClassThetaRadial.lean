@@ -33,7 +33,7 @@ noncomputable def nonzeroShapeThetaMellinKernel
 
 open Classical in
 /-- A nonzero fractional shape theta mellin kernel used in the Odlyzko-bound argument. -/
-noncomputable def nonzeroFractionalShapeThetaMellinKernel
+@[expose] noncomputable def nonzeroFractionalShapeThetaMellinKernel
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) (s : ℂ)
     (y : mixedEmbedding.realSpace K) : ℂ :=
   logarithmicMellinWeight K s y *

@@ -97,7 +97,7 @@ noncomputable def alphaL (D : RS.Divisor X) : RS.Mero X →ₗ[ℂ] T D where
     rw [DFinsupp.smul_apply, alpha_apply, alpha_apply, map_smul, map_smul]
     rfl
 
-@[simp] theorem alphaL_apply (D : RS.Divisor X) (f : RS.Mero X) : alphaL D f = alpha D f := rfl
+@[simp] theorem alphaL_apply (D : RS.Divisor X) (f : RS.Mero X) : alphaL D f = alpha D f := by rfl
 
 /-- Miranda PDF 192: `L(D) = ker(α_D)`. -/
 theorem ker_alphaL_eq_linSys (D : RS.Divisor X) :

@@ -34,13 +34,13 @@ local infix:50 " ≺ " => rel
 @[expose] def Serial := ∀ x, ∃ y, x ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Confluent := ∀ ⦃x y z⦄, ((x ≺ y ∧ x ≺ z) → ∃ w, (y ≺ w ∧ z ≺ w))
+@[expose] def Confluent := ∀ ⦃x y z⦄, ((x ≺ y ∧ x ≺ z) → ∃ w, (y ≺ w ∧ z ≺ w))
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[expose] def _root_.RelDense := ∀ ⦃x y⦄, x ≺ y → ∃z, x ≺ z ∧ z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Connected := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y
+@[expose] def Connected := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[expose] def Functional := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y = z
@@ -49,7 +49,7 @@ def Connected := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y
 def RightConvergent := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y ∨ y = z
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Coreflexive := ∀ ⦃x y⦄, x ≺ y → x = y
+@[expose] def Coreflexive := ∀ ⦃x y⦄, x ≺ y → x = y
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Equality := ∀ ⦃x y⦄, x ≺ y ↔ x = y

@@ -46,11 +46,11 @@ theorem selector_strictMono (a : ContinuumIndex) : StrictMono (selector N hN M a
   (Classical.choose_spec (triangular_block_preprocess a N hN M)).1
 
 /-- Prepared subsequence represented by code `a`. -/
-def prepared (a : ContinuumIndex) (n : ℕ) : ContinuumRationalGroup :=
+@[expose] def prepared (a : ContinuumIndex) (n : ℕ) : ContinuumRationalGroup :=
   codedSequence a (selector N hN M a n)
 
 /-- Shifted finite set in block `l`. -/
-def differenceBlock (a : ContinuumIndex) (l : ℕ) : Finset ContinuumRationalGroup :=
+@[expose] def differenceBlock (a : ContinuumIndex) (l : ℕ) : Finset ContinuumRationalGroup :=
   (TriangularPreprocess.blockPositions N hN l).image fun n ↦
     prepared N hN M a n - codeBasisVector a
 

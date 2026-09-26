@@ -278,7 +278,7 @@ theorem QuantumSet.modAut_isCoalgHom
     and_true, Algebra.algebraMap_eq_smul_one, map_smul, map_one]
 
 /-- A quantum set carries the Frobenius algebra structure induced by its coalgebra. -/
-@[reducible, instance]
+@[expose, reducible, instance]
 noncomputable def QuantumSet.isFrobeniusAlgebra [QuantumSet A] :
     FrobeniusAlgebra ℂ A :=
   FiniteDimensionalCoAlgebraIsFrobeniusAlgebraOf
@@ -969,7 +969,7 @@ lemma Upsilon_symm_tmul [QuantumSet A] [QuantumSet B] (a : A) (b : B) :
       (rankOne ℂ b (modAut (-k A - 1) (star a))).toLinearMap := by
   rw [Upsilon_symm_apply]
   simp only [LinearEquiv.lTensor_tmul, op_apply,
-    LinearEquiv.TensorProduct.map_tmul, LinearEquiv.coe_coe, unop_apply, MulOpposite.unop_op,
+    LinearEquiv.TensorProduct.map_tmul, unop_apply, MulOpposite.unop_op,
     TensorProduct.comm_tmul, QuantumSet.PsiInvFun_apply, starAlgebra.modAut_zero, neg_zero]
   ring_nf
   rfl
@@ -1010,4 +1010,4 @@ lemma rmulMapLmul_apply_Upsilon_eq [QuantumSet A] [QuantumSet B] (x : A →ₗ[�
   nth_rw 2 [QuantumSet.inner_conj_left]
   simp_rw [starAlgebra.modAut_star, modAut_apply_modAut, star_star,
     add_neg_cancel, starAlgebra.modAut_zero]
-  simp only [lmul_apply]
+  simp [lmul_apply]

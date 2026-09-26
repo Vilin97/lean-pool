@@ -48,7 +48,7 @@ def nonnegativeUnitFundamentalParamSet :
 
 open Classical in
 /-- A negative unit fundamental param set used in the Odlyzko-bound argument. -/
-def negativeUnitFundamentalParamSet :
+@[expose] def negativeUnitFundamentalParamSet :
     Set (mixedEmbedding.realSpace K) :=
   unitFundamentalParamSet K ∩ negativeRadialHalfSpace (K := K)
 

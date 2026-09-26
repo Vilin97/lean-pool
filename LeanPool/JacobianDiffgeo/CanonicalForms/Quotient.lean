@@ -151,13 +151,13 @@ noncomputable def ofCoeffs {ι : Type*} (D : MFormCoeffData X ι) : MForm X :=
 
 /-- D4: the order of a meromorphic 1-form at `x` (read via the preferred chart at `x`; descends
 because `meromorphicOrderAt` is a germ functional). -/
-noncomputable def ord (Θ : MForm X) (x : X) : WithTop ℤ :=
+@[expose] noncomputable def ord (Θ : MForm X) (x : X) : WithTop ℤ :=
   Quotient.liftOn Θ (fun θ => θ.ord x) fun _ _ h => meromorphicOrderAt_congr (h x)
 
 @[simp] theorem ord_mk (θ : MFormData X) (x : X) : (mk θ).ord x = θ.ord x := by rfl
 
 /-- D4: the residue of a meromorphic 1-form at `x`. -/
-noncomputable def resAt (Θ : MForm X) (x : X) : ℂ :=
+@[expose] noncomputable def resAt (Θ : MForm X) (x : X) : ℂ :=
   Quotient.liftOn Θ (fun θ => θ.resAt x) fun _ _ h => resAt_congr (h x)
 
 @[simp] theorem resAt_mk (θ : MFormData X) (x : X) : (mk θ).resAt x = θ.resAt x := by rfl

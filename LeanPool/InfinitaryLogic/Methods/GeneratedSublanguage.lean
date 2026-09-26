@@ -32,7 +32,7 @@ variable {L : Language.{0, 0}}
 /-! ## Function symbols mentioned by a term / formula -/
 
 /-- The function symbols occurring in a term. -/
-def Term.functionsIn {α : Type} : L.Term α → Set (Σ n, L.Functions n)
+@[expose] def Term.functionsIn {α : Type} : L.Term α → Set (Σ n, L.Functions n)
   | .var _ => ∅
   | .func f ts => insert ⟨_, f⟩ (⋃ i, (ts i).functionsIn)
 
@@ -42,7 +42,7 @@ theorem Term.functionsIn_countable {α : Type} (t : L.Term α) : t.functionsIn.C
   | func f ts ih => exact (Set.countable_iUnion ih).insert _
 
 /-- The function symbols occurring in a formula (through all countable connectives). -/
-def BoundedFormulaω.functionsIn {α : Type} :
+@[expose] def BoundedFormulaω.functionsIn {α : Type} :
     ∀ {n : ℕ}, L.BoundedFormulaω α n → Set (Σ n, L.Functions n)
   | _, .falsum => ∅
   | _, .equal t u => t.functionsIn ∪ u.functionsIn
@@ -105,7 +105,7 @@ symbols, both as subtypes. -/
   Relations n := {r : L.Relations n // ⟨n, r⟩ ∈ R}
 
 /-- The inclusion of the two-sorted generated sublanguage. -/
-def symbSublangIncl (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n)) :
+@[expose] def symbSublangIncl (F : Set (Σ n, L.Functions n)) (R : Set (Σ n, L.Relations n)) :
     symbSublang (L := L) F R →ᴸ L where
   onFunction := fun {_} f => f.1
   onRelation := fun {_} r => r.1

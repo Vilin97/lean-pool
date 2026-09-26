@@ -74,6 +74,7 @@ variable {D : NeighborhoodSystem Str}
 /-! ## The lifted system `𝒟_⊥` over `{0,1}*` -/
 
 /-- The master neighbourhood `{Λ} ∪ 0Δ` of the lift. -/
+@[expose]
 def liftTokMaster (D : NeighborhoodSystem Str) : Set Str := insert [] (embBit false D.master)
 
 theorem nil_mem_liftTokMaster : ([] : Str) ∈ liftTokMaster D := Set.mem_insert _ _
@@ -93,7 +94,7 @@ theorem embF_ne_liftTokMaster {X : Set Str} : embBit false X ≠ liftTokMaster D
 the master
 `{Λ} ∪ 0Δ` or a tagged copy `0X` (`X ∈ 𝒟`). `∅`-freeness of `𝒟` (`hD`) keeps it
 `∅`-free. -/
-def liftTok (D : NeighborhoodSystem Str) :
+@[expose] def liftTok (D : NeighborhoodSystem Str) :
     NeighborhoodSystem Str where
   mem W := W = liftTokMaster D ∨ ∃ X, D.mem X ∧ W = embBit false X
   master := liftTokMaster D
@@ -122,7 +123,7 @@ theorem liftTok_nonempty (hD : ∀ X, D.mem X → X.Nonempty) :
   · exact embBit_nonempty (hD X hX)
 
 /-- The **lift object** `𝒟_⊥` of Scott's category. -/
-def ScottSys.lift (A : ScottSys) : ScottSys := ⟨liftTok A.sys, liftTok_nonempty A.ne⟩
+@[expose] def ScottSys.lift (A : ScottSys) : ScottSys := ⟨liftTok A.sys, liftTok_nonempty A.ne⟩
 
 theorem liftTok_mem_master : (liftTok D).mem (liftTokMaster D) := Or.inl rfl
 
@@ -443,7 +444,7 @@ def toSumLift (z : (D.lift.oplus E.lift).sys.Element) : (D.sum E).sys.Element wh
   · intro hz; exact Or.inr (Or.inr ⟨Y, hY, rfl, hz⟩)
 
 /-- The inverse half `|𝒟 + ℰ| → |𝒟_⊥ ⊕ ℰ_⊥|`: reinstate the inner `0`. -/
-def fromSumLift (s : (D.sum E).sys.Element) : (D.lift.oplus E.lift).sys.Element where
+@[expose] def fromSumLift (s : (D.sum E).sys.Element) : (D.lift.oplus E.lift).sys.Element where
   mem W := W = sumTokMaster D.lift.sys E.lift.sys
     ∨ (∃ X, D.sys.mem X ∧ W = embBit false (embBit false X) ∧ s.mem (embBit false X))
     ∨ (∃ Y, E.sys.mem Y ∧ W = embBit true (embBit false Y) ∧ s.mem (embBit true Y))
@@ -672,6 +673,7 @@ def toLiftProd (z : (D.lift.otimes E.lift).sys.Element) : (D.prod E).lift.sys.El
   · intro hz; exact Or.inr ⟨X, Y, hX, hY, rfl, hz⟩
 
 /-- The inverse half `|(𝒟 × ℰ)_⊥| → |𝒟_⊥ ⊗ ℰ_⊥|`. -/
+@[expose]
 def fromLiftProd (s : (D.prod E).lift.sys.Element) : (D.lift.otimes E.lift).sys.Element where
   mem W := W = prodTokNbhd (liftTokMaster D.sys) (liftTokMaster E.sys)
     ∨ (∃ X Y, D.sys.mem X ∧ E.sys.mem Y ∧ W = prodTokNbhd (embBit false X) (embBit false Y) ∧

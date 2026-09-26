@@ -80,9 +80,9 @@ theorem coe_repositionHomeomorph_apply_realization (position' : M.Vertex → Pla
         (M.toPlaneComplex.realizationHomeomorph M.toPlaneComplex_isPure2 x) : Plane) =
       (M.reposition position' hposition_injective haffineIndependent
         htriangle_inter).toPlaneComplex.baryEval x.1 := by
-  simpa only [PlaneComplex.realizationHomeomorph_apply] using
-    congrArg Subtype.val (M.repositionHomeomorph_apply_realization position'
-      hposition_injective haffineIndependent htriangle_inter x)
+  have h := congrArg Subtype.val (M.repositionHomeomorph_apply_realization position'
+    hposition_injective haffineIndependent htriangle_inter x)
+  exact h.trans (PlaneComplex.realizationHomeomorph_apply _ _ x)
 
 theorem coe_repositionHomeomorph_apply (position' : M.Vertex → Plane)
     (hposition_injective : Function.Injective position')

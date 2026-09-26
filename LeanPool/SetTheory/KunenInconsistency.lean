@@ -106,7 +106,9 @@ lemma κ_mem_κω (n : ℕ) : κ n ∈ κω := by
   exact crit_iter_mem_succ n
 
 lemma κ_le_κω (n : ℕ) : κ n ≤ κω := by
-  simpa only [κ] using (le_csSup bddAbove_crit_iter ⟨n, rfl⟩)
+  change (κ n : Set M) ⊆ (κω : Set M)
+  intro x hx
+  exact (le_csSup bddAbove_crit_iter ⟨n, rfl⟩) hx
 
 lemma aleph0_le_κω : ℵ₀ ≤ #κω := by
   simpa only [← card_ωₘ, κω] using card_le_of_sub (le_trans ωₘ_le_crit (κ_le_κω 0))

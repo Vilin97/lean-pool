@@ -155,7 +155,7 @@ theorem exists_scale_normalized_close_half (f : OriginSeq) (d : ℕ)
       nlinarith
 
 /-- Distinguished-variable coefficients at the base origin, weighted by `R^k`. -/
-noncomputable def originWeightedCoeffs {n : ℕ}
+@[expose] noncomputable def originWeightedCoeffs {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (R : ℝ≥0)
     (hR : (R : ℝ≥0∞) < p.radius) : OriginSeq :=
   ⟨fun k ↦ (R : ℂ) ^ k * lastTaylorCoefficient p k 0, by
@@ -220,7 +220,7 @@ lemma scaleSeq_originWeightedCoeffs {n : ℕ}
   ring
 
 /-- Normalize the radially weighted Taylor coefficients at the origin. -/
-noncomputable def normalizedOriginCoeffs {n : ℕ}
+@[expose] noncomputable def normalizedOriginCoeffs {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0)
     (hr : (r : ℝ≥0∞) < p.radius) (d : ℕ) : OriginSeq :=
   ((originWeightedCoeffs p r hr d)⁻¹) • originWeightedCoeffs p r hr
@@ -291,7 +291,7 @@ theorem eventually_norm_normalizedCoefficientMap_sub_monomial_lt_one {n d : ℕ}
 
 /-- The analytic weighted coefficient map normalized by its degree-`d`
 coefficient at the base origin. -/
-noncomputable def analyticNormalizedCoefficientMap {n : ℕ}
+@[expose] noncomputable def analyticNormalizedCoefficientMap {n : ℕ}
     (p : FormalMultilinearSeries ℂ (Ambient n) ℂ) (r : ℝ≥0)
     (hr : (r : ℝ≥0∞) < p.radius) (d : ℕ) : Base n → OriginSeq :=
   normalizedCoefficientMap (weightedCoefficientSeries p r).sum

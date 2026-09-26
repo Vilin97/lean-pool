@@ -44,21 +44,21 @@ structure IsTubularNeighborhood {E : Type*} [PseudoMetricSpace E]
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
 
 /-- The set of global minimizers of f. -/
-def Ext.argminSet (f : E → ℝ) : Set E := {x | ∀ y, f x ≤ f y}
+@[expose] def Ext.argminSet (f : E → ℝ) : Set E := {x | ∀ y, f x ≤ f y}
 
 /-- The infimal value f⋆ = inf_x f(x). -/
-def Ext.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
+@[expose] def Ext.fStar (f : E → ℝ) : ℝ := ⨅ x, f x
 
 /-- μ-PŁ condition using ‖fderiv‖ (PLMB compatibility layer). -/
 def Ext.PolyakLojasiewicz (f : E → ℝ) (μ : ℝ) (U : Set E) : Prop :=
   0 < μ ∧ ∀ x ∈ U, ‖fderiv ℝ f x‖ ^ 2 ≥ 2 * μ * (f x - Ext.fStar f)
 
 /-- The gradient of f at x (Riesz representative of fderiv ℝ f x). -/
-def Ext.gradient (f : E → ℝ) (x : E) : E :=
+@[expose] def Ext.gradient (f : E → ℝ) (x : E) : E :=
   (toDual ℝ E).symm (fderiv ℝ f x)
 
 /-- The Hessian quadratic form ξᵀ D²f(x) ξ = ⟨D(∇f)(x)·ξ, ξ⟩. -/
-def Ext.hessianQuadForm (f : E → ℝ) (x ξ : E) : ℝ :=
+@[expose] def Ext.hessianQuadForm (f : E → ℝ) (x ξ : E) : ℝ :=
   @inner ℝ E _ (fderiv ℝ (Ext.gradient f) x ξ) ξ
 
 end PLAcceleratedNesterovLean

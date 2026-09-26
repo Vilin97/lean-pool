@@ -165,7 +165,7 @@ def rotateCoord {d : Nat} (q : Fin d) (t : ℝ) (z : Cd d) : Cd d :=
   F.sum fun alpha c => c * star (G alpha)
 
 /-- `basePointNormalized`: base Point Normalized. -/
-def basePointNormalized {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) : Prop :=
+@[expose] def basePointNormalized {d : Nat} {kappa : MultiIndex d} (F : Pkappa d kappa) : Prop :=
   F ≠ 0 ∧ ‖F‖ = 1
 
 /-- `orthogonalToPk`: orthogonal To Pk. -/

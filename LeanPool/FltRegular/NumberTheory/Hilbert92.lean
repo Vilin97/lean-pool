@@ -180,7 +180,7 @@ variable
     (hσ : ∀ x, x ∈ Subgroup.zpowers σ)
 
 /-- Relative units of an extension, modulo units coming from the base field. -/
-def RelativeUnits (k K : Type*) [Field k] [Field K] [Algebra k K] :=
+@[expose] def RelativeUnits (k K : Type*) [Field k] [Field K] [Algebra k K] :=
   (𝓞 K)ˣ ⧸ MonoidHom.range
     (Units.map (algebraMap (𝓞 k) (𝓞 K) : (𝓞 k) →* (𝓞 K)))
 
@@ -231,7 +231,7 @@ def relativeUnitsMap (σ : K →ₐ[k] K) : RelativeUnits k K →* RelativeUnits
 
 lemma relativeUnitsMap_mk (σ : K →ₐ[k] K) (x : (𝓞 K)ˣ) :
     relativeUnitsMap σ (QuotientGroup.mk x) =
-      QuotientGroup.mk (Units.map (galRestrictHom (𝓞 k) k K (𝓞 K) σ) x) := rfl
+      QuotientGroup.mk (Units.map (galRestrictHom (𝓞 k) k K (𝓞 K) σ) x) := by rfl
 
 private lemma relativeUnitsMap_addMonoidEndRingEquivInt_apply
     (σ : K →ₐ[k] K) (x : (𝓞 K)ˣ) :

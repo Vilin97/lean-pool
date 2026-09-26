@@ -2159,7 +2159,7 @@ open GapCVP.CLCellRowBounds GapCVP.CLCompleteVerifierSimulation
 open GapCVP.CLPaddedAcceptanceCompiler GapCVP.BinaryEncoding GapCVP.ThreeCNFReduction
 
 /-- GapCVP reduction support. -/
-def paddedStructuralTableauSimulation
+@[expose] def paddedStructuralTableauSimulation
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier) :
@@ -2180,7 +2180,7 @@ def paddedStructuralTableauSimulation
       bound machine x))
 
 /-- GapCVP reduction support. -/
-def structuralWholeThreeCNF
+@[expose] def structuralWholeThreeCNF
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -2189,7 +2189,7 @@ def structuralWholeThreeCNF
     (structuralWholeSourceClauses bound machine x)
 
 /-- GapCVP reduction support. -/
-def structuralWholeCNFWord
+@[expose] def structuralWholeCNFWord
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)

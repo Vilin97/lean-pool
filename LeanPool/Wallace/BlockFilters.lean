@@ -254,7 +254,7 @@ variable (N : ℕ → ℕ) (hN : ∀ l, 0 < N l)
 abbrev blocks : BlockSystem := BlockSystem.ofBlockPositions N hN
 
 /-- A free ultrafilter refining the density filter of a code's label. -/
-def ultrafilter (a : ContinuumIndex) : Ultrafilter ℕ :=
+@[expose] def ultrafilter (a : ContinuumIndex) : Ultrafilter ℕ :=
   Classical.choose ((blocks N hN).exists_free_ultrafilter_le_densityFilter (label_infinite a))
 
 theorem ultrafilter_le_density (a : ContinuumIndex) :

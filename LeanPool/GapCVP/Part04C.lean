@@ -626,7 +626,7 @@ open Computability Turing GapCVP.CL GapCVP.CNFClauseLoop
   mem_clauseLoopFiniteElements α value
 
 /-- GapCVP reduction support. -/
-def executableAtLeastOneFamilyClauses (T S : ℕ) :
+@[expose] def executableAtLeastOneFamilyClauses (T S : ℕ) :
     List (Clause T S) :=
   (clauseLoopFiniteElements (Time T × Position T)).map
     (fun position => atLeastOneClause (S := S)
@@ -645,7 +645,7 @@ def executableAtLeastOneFamilyClauses (T S : ℕ) :
           none)
 
 /-- GapCVP reduction support. -/
-def executableInitialFamilyClauses {T S : ℕ}
+@[expose] def executableInitialFamilyClauses {T S : ℕ}
     (specification : Specification T S) : List (Clause T S) :=
   (clauseLoopFiniteElements (Position T)).map
     (initialClause specification.input)

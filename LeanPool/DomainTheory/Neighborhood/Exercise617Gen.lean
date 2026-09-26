@@ -90,7 +90,7 @@ theorem coneN_trichotomy (σ τ : Strn A) :
     · exact hτσ h))
 
 /-- Membership in `Cₐ`: a cone `σA*` or a singleton `{σ}`. -/
-def memCn (X : Set (Strn A)) : Prop := (∃ σ, X = coneN σ) ∨ (∃ σ, X = {σ})
+@[expose] def memCn (X : Set (Strn A)) : Prop := (∃ σ, X = coneN σ) ∨ (∃ σ, X = {σ})
 
 omit [DecidableEq A] in
 theorem memCn_coneN (σ : Strn A) : memCn (coneN σ) := Or.inl ⟨σ, rfl⟩
@@ -126,7 +126,7 @@ theorem nestedOrDisjointN : NestedOrDisjoint (memCn (A := A)) := by
     · simp_all
 
 /-- **The generic domain `Cₐ`** of finite-or-infinite `A`-sequences. -/
-def Cn (A : Type) : NeighborhoodSystem (Strn A) :=
+@[expose] def Cn (A : Type) : NeighborhoodSystem (Strn A) :=
   NeighborhoodSystem.ofNestedOrDisjoint memCn Set.univ (Or.inl ⟨[],
     coneN_nil.symm⟩) nestedOrDisjointN
     (fun _ => Set.subset_univ _)
@@ -361,7 +361,7 @@ theorem jc_eq_jc {a a' : A} {X X' : Set β} (hXne : X.Nonempty)
 variable (V : NeighborhoodSystem β)
 
 /-- The master neighbourhood `{Λ} ∪ {tu} ∪ ⋃_a aΔ`. -/
-def masterSig : Set (SigTok A β) :=
+@[expose] def masterSig : Set (SigTok A β) :=
   {w | w = none ∨ w = tu ∨ ∃ a t, t ∈ V.master ∧ w = tc a t}
 
 variable {V}
@@ -400,7 +400,7 @@ under the standing
 assumption that no neighbourhood of `V` is empty. The alphabet-generic analogue of
 `sum3 unitSys V V`
 (Example 6.2). -/
-def sumSig (A : Type) [DecidableEq A] (V : NeighborhoodSystem β)
+@[expose] def sumSig (A : Type) [DecidableEq A] (V : NeighborhoodSystem β)
     (h : ∀ X, V.mem X → X.Nonempty) :
     NeighborhoodSystem (SigTok A β) where
   mem W := W = masterSig V ∨ W = jU ∨ ∃ a X, V.mem X ∧ W = jc a X
@@ -756,6 +756,7 @@ end SumMapSig
 /-! ## The endofunctor `Tsig(X) = 𝟙 + Σ_a X` on the `∅`-free category. -/
 
 /-- `Tsig` on objects: `Tsig(D) = 𝟙 + Σ_a D`, again `∅`-free (`sumSig_nonempty`). -/
+@[expose]
 def tsigObj (A : Type) [DecidableEq A] (D : StrictDomainObj.{0}) : StrictDomainObj.{0} where
   carrier := SigTok A D.carrier
   sys := sumSig A D.sys D.nonempty
@@ -766,6 +767,7 @@ attribute [local implicit_reducible] tsigObj
     (tsigObj A D).sys = sumSig A D.sys D.nonempty := rfl
 
 /-- `Tsig` on maps: `Tsig(f) = I_𝟙 + Σ_a f`, strict by `isStrict_sumMapSig`. -/
+@[expose]
 def tsigMapHom (A : Type) [DecidableEq A] {D E : StrictDomainObj.{0}} (f : Category.Hom D E) :
     Category.Hom (tsigObj A D) (tsigObj A E) :=
   ⟨sumMapSig (A := A) (h₀ := D.nonempty) (h₁ := E.nonempty) f.1, isStrict_sumMapSig _⟩
@@ -777,7 +779,7 @@ def tsigMapHom (A : Type) [DecidableEq A] {D E : StrictDomainObj.{0}} (f : Categ
 /-- **The functor `Tsig(X) = 𝟙 + Σ_{a:A} X`** on the category of `∅`-free domains
 and strict
 maps. -/
-def Tsig (A : Type) [DecidableEq A] : Endofunctor StrictDomainObj.{0} where
+@[expose] def Tsig (A : Type) [DecidableEq A] : Endofunctor StrictDomainObj.{0} where
   obj := tsigObj A
   map := tsigMapHom A
   map_id _D := Subtype.ext sumMapSig_id
@@ -1225,7 +1227,7 @@ section Algebra
 variable {A : Type} [DecidableEq A] [Inhabited A]
 
 /-- `Cₐ` as an object of the `∅`-free category. -/
-def Cnobj (A : Type) : StrictDomainObj.{0} := ⟨Strn A, Cn A, Cn_nonempty⟩
+@[expose] def Cnobj (A : Type) : StrictDomainObj.{0} := ⟨Strn A, Cn A, Cn_nonempty⟩
 
 @[simp] theorem Cnobj_sys (A : Type) : (Cnobj A).sys = Cn A := rfl
 

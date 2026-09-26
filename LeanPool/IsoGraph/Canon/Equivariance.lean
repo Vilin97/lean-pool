@@ -4778,7 +4778,9 @@ theorem canonical_ok (n : Nat) (f : Nat → Nat → Bool) :
     | some b =>
       have hbo := hst.1 b hb
       exact ⟨hbo.size, hbo.lt, hbo.inj, hbo.cert⟩
-  exact key _ (dfsNode_ok n f _ _ _ _ _ (initialRefine_wf f)
+  exact key _ (dfsNode_ok n f _ _ _ _
+    { best := none, first := none, autos := #[], nodes := 0, abortTo := none }
+    (initialRefine_wf f)
     (by simp [StOk]))
 
 theorem canonical_cert (n : Nat) (f : Nat → Nat → Bool) :

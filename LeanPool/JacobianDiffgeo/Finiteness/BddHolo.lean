@@ -151,7 +151,7 @@ instance instCompleteSpaceBddHoloOn (S : Opens X) : CompleteSpace (BddHoloOn S) 
 /-! ### `restrictCLM` -/
 
 /-- The underlying restricted bounded continuous function. -/
-noncomputable def restrictFun {S' S : Opens X} (h : S' ≤ S) (f : BddHoloOn S) :
+@[expose] noncomputable def restrictFun {S' S : Opens X} (h : S' ≤ S) (f : BddHoloOn S) :
     ↥(S' : Set X) →ᵇ ℂ :=
   BoundedContinuousFunction.ofNormedAddCommGroup
     (fun z => (f : ↥(S : Set X) →ᵇ ℂ) (Set.inclusion h z))

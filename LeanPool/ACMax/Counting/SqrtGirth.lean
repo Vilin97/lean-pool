@@ -710,7 +710,7 @@ variable {V : Type*}
 
 /-- The number of neighbours of `v` lying inside the finite set `S` — the degree of `v` in the
 induced subgraph `G.induce ↑S`. -/
-def degWithin (G : SimpleGraph V) [DecidableRel G.Adj] (S : Finset V) (v : V) : ℕ :=
+@[expose] def degWithin (G : SimpleGraph V) [DecidableRel G.Adj] (S : Finset V) (v : V) : ℕ :=
   (S.filter (fun w => G.Adj v w)).card
 
 /-- Twice the number of edges of `G` with both endpoints in `S`, written as the within-`S`

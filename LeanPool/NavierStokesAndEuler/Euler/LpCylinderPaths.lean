@@ -106,9 +106,19 @@ theorem projectPath_norm : ‖projectPath (K := K) (V := V) period S hS‖ ≤ 1
   rw [one_mul]
   apply (ContinuousMap.norm_le _ (norm_nonneg f)).2
   intro t
-  simpa only [projectPath_apply] using
-    (cutoff_norm (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
-      (f t)).trans (f.norm_coe_le_norm t)
+  rw [projectPath_apply]
+  calc
+    ‖projection (liftMeasure period) (spatialSet period S)
+        (spatialSet_measurable period S hS) (f t)‖ ≤
+        ‖projection (V := V) (liftMeasure period) (spatialSet period S)
+          (spatialSet_measurable period S hS)‖ * ‖f t‖ :=
+      (projection (V := V) (liftMeasure period) (spatialSet period S)
+        (spatialSet_measurable period S hS)).le_opNorm (f t)
+    _ ≤ 1 * ‖f t‖ := mul_le_mul_of_nonneg_right
+      (projection_norm (V := V) (liftMeasure period) (spatialSet period S)
+        (spatialSet_measurable period S hS)) (norm_nonneg (f t))
+    _ = ‖f t‖ := one_mul _
+    _ ≤ ‖f‖ := f.norm_coe_le_norm t
 
 omit [CompactSpace K] in
 /-- Projecting an already supported continuous path fixes it. -/
@@ -149,9 +159,10 @@ theorem translatedForcing_eq_intoLarger (S₀ : Set Space) (hS₀ : MeasurableSe
           ha).toContinuousLinearMap.compLeftContinuous ℝ K f := by
   apply ContinuousMap.ext
   intro t
-  simpa only [translatedForcing, projectPath_apply, includePath_apply, pathTranslate_apply,
-    translatedData, compLeftContinuous_apply] using
-    translatedData_eq_intoLarger period S hS S₀ hS₀ (f t) a ha
+  simp only [translatedForcing, projectPath_apply, includePath_apply, pathTranslate_apply]
+  change translatedData period S hS (f t : CylinderL2 period V) a =
+    EulerLpCylinderTranslation.intoLarger period a S₀ S hS₀ hS ha (f t)
+  exact translatedData_eq_intoLarger period S hS S₀ hS₀ (f t) a ha
 
 /-- Smoothness is inherited from the true ordinary L² translation orbit. -/
 theorem translatedData_contDiff (u : CylinderL2 period V)

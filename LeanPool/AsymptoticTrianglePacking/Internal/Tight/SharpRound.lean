@@ -47,7 +47,7 @@ admits a retained set `R' ⊆ K` and an exceptional set `B`, `|B| ≤ θ|V|`, su
   `Δ − ((r−1)/r)·γ·(δ − lost(v))·δ·(1−γ)/Δ + εγΔ`, where `lost(v) = lostDegree K Aᶜ v` counts the
   edges at `v` leaving `A`, and
 * the round covers at least a `γ/(8r)` fraction of `A`. -/
-def SharpRoundFor (r : ℕ) (γ ε θ α D₀ c₀ : ℝ) : Prop :=
+@[expose] def SharpRoundFor (r : ℕ) (γ ε θ α D₀ c₀ : ℝ) : Prop :=
   ∀ {V : Type} [Fintype V] [DecidableEq V] (K : Finset (Finset V)) (A : Finset V)
     (δ Δ κ : ℝ),
     IsUniform K r →

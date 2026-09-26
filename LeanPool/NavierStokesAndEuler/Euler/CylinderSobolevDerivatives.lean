@@ -61,13 +61,13 @@ def derivativeOperator (q : ℕ) (i : Fin 4) :
 /-- Truncation acts by the literal inclusion of derivative-word coordinates. -/
 @[simp]
 theorem truncateOperator_apply {q : ℕ} (u : SobolevSpace period (q + 1)) (w : SobolevWord q) :
-    (truncateOperator period q u).val w = u.val (truncateIndex w) := rfl
+    (truncateOperator period q u).val w = u.val (truncateIndex w) := by rfl
 
 /-- A derivative acts by appending its direction to each word. -/
 @[simp]
 theorem derivativeOperator_apply {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q + 1))
     (w : SobolevWord q) :
-    (derivativeOperator period q i u).val w = u.val (derivativeIndex i w) := rfl
+    (derivativeOperator period q i u).val w = u.val (derivativeIndex i w) := by rfl
 
 /-- Truncation is contractive in the complete derivative-array norm. -/
 theorem truncateOperator_bound {q : ℕ} (u : SobolevSpace period (q + 1)) :
@@ -88,7 +88,7 @@ theorem derivativeOperator_bound {q : ℕ} (i : Fin 4) (u : SobolevSpace period 
 /-- Truncation leaves the underlying L² field unchanged. -/
 @[simp]
 theorem value_truncateOperator {q : ℕ} (u : SobolevSpace period (q + 1)) :
-    value period (truncateOperator period q u) = value period u := rfl
+    value period (truncateOperator period q u) = value period u := by rfl
 
 /-- The derivative operator really differentiates the underlying L² translation orbit. -/
 theorem derivativeOperator_hasDerivAt {q : ℕ} (i : Fin 4) (u : SobolevSpace period (q + 1)) :
@@ -111,6 +111,6 @@ theorem derivativeOperator_translation {q : ℕ} (i : Fin 4) (a : LiftDomain per
       sobolevTranslation period q a (derivativeOperator period q i u) := by
   apply Subtype.ext
   funext w
-  rfl
+  simp only [derivativeOperator_apply, sobolevTranslation, liftOperator_apply]
 
 end EulerCylinderSobolevSpace
