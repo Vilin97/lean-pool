@@ -10307,7 +10307,6 @@ projects:
     msc:
       - '12F05'
       - '13F25'
-
   - title: Equal-area and equal-perimeter convex partitions
     summary: Formalizes the Akopyan–Avvakumov–Karasev theorem that every planar convex body can be partitioned
       into any prescribed positive number of convex pieces with equal area and equal perimeter. Area
