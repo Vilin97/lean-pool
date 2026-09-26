@@ -55,7 +55,7 @@ universe u v
 topological space
   creates a directed structure on α by pulling back paths.
 -/
-@[reducible] def DirectedSpace.Induced {α : Type u} {β : Type v} [TopologicalSpace α]
+@[expose, reducible] def DirectedSpace.Induced {α : Type u} {β : Type v} [TopologicalSpace α]
     [hβ : DirectedSpace β] {f : α → β} (hf : Continuous f) : DirectedSpace α where
   IsDipath := fun {x y : α} γ => IsDipath (γ.map hf)
   isDipath_constant := fun x => isDipath_constant (f x)

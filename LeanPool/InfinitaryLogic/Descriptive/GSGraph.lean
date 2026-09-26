@@ -212,7 +212,7 @@ theorem length_canonicalWord (n : ℕ) : (canonicalWord n).length = canonicalLen
   length_padTo (le_canonicalLen n)
 
 /-- The canonical dense and sparse set of finite binary words. -/
-def canonicalS : Set (List Bool) := Set.range canonicalWord
+@[expose] def canonicalS : Set (List Bool) := Set.range canonicalWord
 
 theorem denseWords_canonicalS : DenseWords canonicalS := by
   intro r

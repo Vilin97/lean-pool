@@ -628,7 +628,7 @@ instance (witness : PartsGadgetTriangleWitnessData) (root : Fin 73) :
     (witness.left, witness.right)
 
 /-- Central inversion of both lattice patches. -/
-def partsGadgetNegation (vertex : Fin 73) : Fin 73 :=
+@[expose] def partsGadgetNegation (vertex : Fin 73) : Fin 73 :=
   match vertex.val with
   | 0 => 36
   | 1 => 35

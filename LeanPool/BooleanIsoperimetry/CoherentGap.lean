@@ -51,7 +51,7 @@ abbrev Relation (n : ℕ) := Fin n → ℤ
 
 /-- A relation whose entries and coordinate sum lie in `{-1, 0, 1}` and
 whose value on the weight row is one. -/
-def IsLiftableUnit {n : ℕ} (weights relation : Relation n) : Prop :=
+@[expose] def IsLiftableUnit {n : ℕ} (weights relation : Relation n) : Prop :=
   (∀ i, relation i = -1 ∨ relation i = 0 ∨ relation i = 1) ∧
     dot relation weights = 1 ∧
     (coordinateSum relation = -1 ∨

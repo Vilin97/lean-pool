@@ -162,7 +162,7 @@ def mollifierOperator (n : ℕ) : LiftL2 period →L[ℝ] LiftL2 period :=
     simpa using mollify_norm_le period n f)
 
 theorem mollifierOperator_apply (n : ℕ) (f : LiftL2 period) :
-    mollifierOperator period n f = mollify period n f := rfl
+    mollifierOperator period n f = mollify period n f := by rfl
 
 theorem mollifierOperator_norm_le (n : ℕ) : ‖mollifierOperator period n‖ ≤ 1 :=
   ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by

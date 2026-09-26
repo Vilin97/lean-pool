@@ -37,18 +37,19 @@ variable {E : Type*}
 def familyRate (d : E → CircleDensity) (z : E × ℝ) : ℝ := (d z.1).rate z.2
 
 /-- Family phase, given by `phaseMap (d z.1) z.2`. -/
-def familyPhase (d : E → CircleDensity) (z : E × ℝ) : ℝ := phaseMap (d z.1) z.2
+@[expose] def familyPhase (d : E → CircleDensity) (z : E × ℝ) : ℝ :=
+  phaseMap (d z.1) z.2
 
 /-- Inverse phase, given by `(phaseHomeomorph (d z.1)).symm z.2`. -/
-def inversePhase (d : E → CircleDensity) (z : E × ℝ) : ℝ :=
+@[expose] def inversePhase (d : E → CircleDensity) (z : E × ℝ) : ℝ :=
   (phaseHomeomorph (d z.1)).symm z.2
 
 /-- Forward map, given by `(z.1, familyPhase d z)`. -/
-def forwardMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
+@[expose] def forwardMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
   (z.1, familyPhase d z)
 
 /-- Inverse map, given by `(z.1, inversePhase d z)`. -/
-def inverseMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
+@[expose] def inverseMap (d : E → CircleDensity) (z : E × ℝ) : E × ℝ :=
   (z.1, inversePhase d z)
 
 theorem inverseMap_forwardMap (d : E → CircleDensity) (z : E × ℝ) :

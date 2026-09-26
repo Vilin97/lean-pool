@@ -265,7 +265,10 @@ theorem replicateCol_hMul_replicateCol_conjTranspose_is_kronecker_of_vectors
       reshape.symm
         (Matrix.ofReplicateCol
           (matrixProdUnitRight (replicateCol Unit x ⊗ₖ replicateCol Unit y))) := by
-  ext
+  ext i j
+  rw [reshape_symm_apply]
+  change x i * y j = reshape _ ((i, j), PUnit.unit)
+  rw [reshape_apply]
   rfl
 
 section
@@ -330,10 +333,14 @@ noncomputable abbrev PiLpTensorLinearIsometryEquiv :
   toLinearEquiv := PiLpTensorEquiv
   norm_map' := PiLpTensorEquiv_norm_map
 
+omit [(i : ι₁) → FiniteDimensional 𝕜 (M₁ i)]
+  [(i : ι₂) → FiniteDimensional 𝕜 (M₂ i)] in
 theorem PiLpTensorLinearIsometryEquiv_apply
     (x : PiLp 2 M₁ ⊗[𝕜] PiLp 2 M₂) :
     PiLpTensorLinearIsometryEquiv x = PiLpTensorEquiv x := by rfl
 
+omit [(i : ι₁) → FiniteDimensional 𝕜 (M₁ i)]
+  [(i : ι₂) → FiniteDimensional 𝕜 (M₂ i)] in
 theorem PiLpTensorLinearIsometryEquiv_symm_apply
     (x : PiLp 2 (fun (i : ι₁ × ι₂) => M₁ i.1 ⊗[𝕜] M₂ i.2)) :
     PiLpTensorLinearIsometryEquiv.symm x = PiLpTensorEquiv.symm x := by rfl

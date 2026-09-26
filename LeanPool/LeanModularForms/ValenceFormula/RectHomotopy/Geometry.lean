@@ -145,7 +145,7 @@ lemma arc2_in_closed_unit_ball (t : ℝ) (_ : t ∈ Icc 0 1) :
   simp only [mem_closedBall, dist_zero_right, arc2_on_unit_circle, le_refl]
 
 /-- The straight chord from `ρ'` to `i`. -/
-def chord1 : ℝ → ℂ := chordSegment rho' iPoint
+@[expose] def chord1 : ℝ → ℂ := chordSegment rho' iPoint
 /-- The straight chord from `i` to `ρ`. -/
 def chord2 : ℝ → ℂ := chordSegment iPoint rho
 

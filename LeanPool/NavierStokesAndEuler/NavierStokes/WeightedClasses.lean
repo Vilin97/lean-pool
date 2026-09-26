@@ -149,7 +149,7 @@ def StageClasses (s : StripData D) (w : ℕ → D → ℝ) (α : ℕ → ℝ)
 
 /-- A bound on a band-dependent scalar. There is no spatial derivative of
 the discrete band index. -/
-def BandBound (s : StripData D) (β : ℝ) (a : ℕ → ℝ) : Prop :=
+@[expose] def BandBound (s : StripData D) (β : ℝ) (a : ℕ → ℝ) : Prop :=
   ∃ C : ℝ, 0 ≤ C ∧ ∃ p : ℕ,
     ∀ n, ‖a n‖ ≤ C * s.epsilon n ^ β * s.slow n ^ p
 

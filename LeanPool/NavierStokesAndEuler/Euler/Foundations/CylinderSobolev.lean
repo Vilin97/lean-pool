@@ -143,7 +143,8 @@ theorem euclideanLift_tensor_norm_le (n : ℕ) (f : LiftDomain period → F)
   simpa only [euclideanLift_iteratedFieldDerivative period _ f hf] using h
 
 /-- Sum of the norms of all coordinate words of one fixed order. -/
-noncomputable def wordMagnitude (n : ℕ) (f : LiftDomain period → F) (x : LiftDomain period) : ℝ :=
+@[expose] noncomputable def wordMagnitude (n : ℕ) (f : LiftDomain period → F)
+    (x : LiftDomain period) : ℝ :=
   ∑ w : Fin n → Fin 4, ‖iteratedFieldDerivative period w f x‖
 
 theorem wordMagnitude_nonneg (n : ℕ) (f : LiftDomain period → F) (x : LiftDomain period) :

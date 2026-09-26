@@ -75,7 +75,7 @@ namespace LinearIsometry
 /-- Inverse of a linear isometry : we turn the canonical equivalence
     (available in finite dimension) back into a `LinearIsometry`.
 -/
-noncomputable def inv (g : O4) : O4 :=
+@[expose] noncomputable def inv (g : O4) : O4 :=
   ((g.toLinearIsometryEquiv rfl).symm).toLinearIsometry
 
 @[simp] lemma comp_apply (g h : O4) (x : SpaceTime) :
@@ -264,7 +264,7 @@ private theorem act_inv_poly_bound (g : E) :
     This is the geometric transformation x ↦ g⁻¹ • x that underlies
     all Euclidean actions on function spaces.
 -/
-noncomputable def euclideanPullback (g : E) : SpaceTime → SpaceTime := act g⁻¹
+@[expose] noncomputable def euclideanPullback (g : E) : SpaceTime → SpaceTime := act g⁻¹
 
 /-- The Euclidean pullback map has temperate growth (needed for Schwartz space actions). -/
 lemma euclidean_pullback_temperate_growth (g : E) :
@@ -294,7 +294,7 @@ lemma euclidean_pullback_polynomial_bounds (g : E) :
     This is the standard pullback action: to evaluate the transformed function
     at x, we evaluate the original function at the inverse-transformed point.
 -/
-noncomputable def euclideanAction (g : E) (f : TestFunctionℂ) : TestFunctionℂ :=
+@[expose] noncomputable def euclideanAction (g : E) (f : TestFunctionℂ) : TestFunctionℂ :=
   SchwartzMap.compCLM (𝕜 := ℂ)
     (hg := euclidean_pullback_temperate_growth g)
     (hg_upper := euclidean_pullback_polynomial_bounds g) f

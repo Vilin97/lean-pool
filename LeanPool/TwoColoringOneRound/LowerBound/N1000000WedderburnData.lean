@@ -28,10 +28,12 @@ abbrev Q := ℚ
 
 -- The 7 Wedderburn block sizes are 1,1,1,2,3,3,3 (sorted by size).
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def blockSizes : Array Nat := #[1, 1, 1, 2, 3, 3, 3]
 
 -- Exact rational scaling factors (one per PSD block).
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def blockScales : Array Q :=
 #[
   (Rat.normalize (999997) (3000000)),
@@ -57,6 +59,7 @@ def moduleBasisDen : Array Nat := #[6000000,
   3999972000048000000]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def moduleBasisNum : Array (Array (Array Int)) :=
 #[
   #[

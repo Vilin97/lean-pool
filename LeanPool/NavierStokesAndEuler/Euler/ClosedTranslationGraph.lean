@@ -64,7 +64,8 @@ theorem translation_orbits_tendstoUniformly {ι : Type*} {l : Filter ι}
   simpa only [Metric.mem_ball, dist_comm] using hn
 
 /-- The graph of one genuine strong L² translation derivative, as a linear subspace. -/
-def translationDerivativeGraph (a : LiftTangent) : Submodule ℝ (LiftL2 period × LiftL2 period) where
+@[expose] def translationDerivativeGraph (a : LiftTangent) :
+    Submodule ℝ (LiftL2 period × LiftL2 period) where
   carrier := {p | HasDerivAt (fun t => translation period (translationPath period a t) p.1) p.2 0}
   zero_mem' := by
     change HasDerivAt (fun t => translation period (translationPath period a t) 0) 0 0

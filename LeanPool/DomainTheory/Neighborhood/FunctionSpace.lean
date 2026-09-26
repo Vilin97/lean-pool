@@ -85,12 +85,14 @@ theorem ApproximableMap.le_iff {f g : ApproximableMap V₀ V₁} :
 /-! ### Definition 3.8 — step sets and the function space. -/
 
 /-- Scott's step set `[X, Y] = {f ∣ X f Y}`. -/
+@[expose]
 def step (X : Set α) (Y : Set β) : Set (ApproximableMap V₀ V₁) := {f | f.rel X Y}
 
 @[simp] theorem mem_step {X : Set α} {Y : Set β} {f : ApproximableMap V₀ V₁} :
     f ∈ step X Y ↔ f.rel X Y := Iff.rfl
 
 /-- A finite intersection of step sets, indexed by a list of `(X, Y)` pairs. -/
+@[expose]
 def stepFun (L : List (Set α × Set β)) : Set (ApproximableMap V₀ V₁) :=
   {f | ∀ p ∈ L, f.rel p.1 p.2}
 
@@ -144,6 +146,7 @@ theorem step_subset {X X' : Set α} {Y Y' : Set β} (hX' : V₀.mem X') (hY' : V
 /-- **Definition 3.8 (Scott 1981, PRG-19).** The *function space* `(𝒟₀ → 𝒟₁)`:
 tokens are
 approximable maps, neighbourhoods are non-empty finite intersections of step sets. -/
+@[expose]
 def funSpace (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     NeighborhoodSystem (ApproximableMap V₀ V₁) where
   mem W := (∃ L : List (Set α × Set β), (∀ p ∈ L, V₀.mem p.1 ∧ V₁.mem p.2) ∧ W = stepFun L)
@@ -210,6 +213,7 @@ theorem mem_stepFun_iff (φ : (funSpace V₀ V₁).Element) {L : List (Set α ×
 filter `φ`.
 Intersectivity is the payoff of positivity (`[X,Y]∩[X,Y'] = [X,Y∩Y']` is
 non-empty, so `Y∩Y' ∈ 𝒟₁`). -/
+@[expose]
 def toApproxMap (φ : (funSpace V₀ V₁).Element) : ApproximableMap V₀ V₁ where
   rel X Y := φ.mem (step X Y)
   rel_dom := by intro X Y h; obtain ⟨f, hf⟩ := (φ.sub h).2; exact f.rel_dom hf
@@ -256,6 +260,7 @@ def toFilter (f : ApproximableMap V₀ V₁) : (funSpace V₀ V₁).Element wher
 /-- **Theorem 3.10 (Scott 1981, PRG-19).** The function space is *complete*: every
 filter is fixed
 by a unique approximable mapping, inclusion-preservingly. -/
+@[expose]
 def funSpaceEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     (funSpace V₀ V₁).Element ≃o ApproximableMap V₀ V₁ where
   toFun := toApproxMap
@@ -328,6 +333,7 @@ than `X`, taken
 inside the master neighbourhood `Δ₁` (so the empty intersection is `Δ₁`, per the
 convention 1.1a).
 Indexed by the list `L` of `(Xᵢ, Yᵢ)` pairs. -/
+@[expose]
 def interYs (m : Set β) : List (Set α × Set β) → Set α → Set β
   | [], _ => m
   | p :: L, X => {z | X ⊆ p.1 → z ∈ p.2} ∩ interYs m L X
@@ -379,6 +385,7 @@ Scott's condition (i) in the operational form `hcons`: for every neighbourhood
 `{Yᵢ ∣ X ⊆ Xᵢ}` (consistent in `𝒟₁`, witnessed by `X` being a common lower bound
 of their inputs)
 have their intersection again a neighbourhood. -/
+@[expose]
 def leastMap (L : List (Set α × Set β))
     (hcons : ∀ {X}, V₀.mem X → V₁.mem (interYs V₁.master L X)) : ApproximableMap V₀ V₁ where
   rel X Y := V₀.mem X ∧ V₁.mem Y ∧ interYs V₁.master L X ⊆ Y

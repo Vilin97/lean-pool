@@ -159,6 +159,7 @@ def CovarianceEuclideanInvariant (dμ_config : ProbabilityMeasure FieldConfigura
     SchwingerFunction₂ dμ_config f h
 
 /-- Assumption: The complex covariance is invariant under Euclidean transformations -/
+@[expose]
 def CovarianceEuclideanInvariantℂ (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (g : QFT.E) (f h : TestFunctionℂ),
     SchwingerFunctionℂ₂ dμ_config (QFT.euclideanAction g f) (QFT.euclideanAction g h) =

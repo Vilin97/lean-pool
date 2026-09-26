@@ -43,7 +43,7 @@ allowed to cite through a stable local API.
 abbrev Circle := AddCircle (2 * Real.pi)
 
 /-- `μCircle`: the normalized Haar measure on the circle `AddCircle (2π)`. -/
-noncomputable def μCircle : MeasureTheory.Measure Circle :=
+@[expose] noncomputable def μCircle : MeasureTheory.Measure Circle :=
   AddCircle.haarAddCircle
 
 /-- `muCircle`: mu Circle. -/
@@ -96,7 +96,7 @@ structure CircleArc where
   {x | ∃ t ∈ Set.Icc (0 : ℝ) 1, arcParam I t = x}
 
 /-- `carrierArc`: carrier Arc. -/
-noncomputable def carrierArc (N : Nat) (k : Fin N) : CircleArc where
+@[expose] noncomputable def carrierArc (N : Nat) (k : Fin N) : CircleArc where
   left := (2 * Real.pi) * (k.1 : ℝ) / (N : ℝ)
   right := (2 * Real.pi) * ((k.1 + 1 : Nat) : ℝ) / (N : ℝ)
   left_le_right := by

@@ -28,7 +28,7 @@ local infix:50 " ≺ " => rel
 
 -- NOTE: Another convention uses `x ≺ y → x ≺ z → y ≺ z`.
 /-- Imported declaration from the Incompleteness formalization. -/
-def Euclidean := ∀ ⦃x y z⦄, x ≺ y → x ≺ z → z ≺ y
+@[expose] def Euclidean := ∀ ⦃x y z⦄, x ≺ y → x ≺ z → z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[expose] def Serial := ∀ x, ∃ y, x ≺ y
@@ -37,13 +37,13 @@ def Euclidean := ∀ ⦃x y z⦄, x ≺ y → x ≺ z → z ≺ y
 def Confluent := ∀ ⦃x y z⦄, ((x ≺ y ∧ x ≺ z) → ∃ w, (y ≺ w ∧ z ≺ w))
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.RelDense := ∀ ⦃x y⦄, x ≺ y → ∃z, x ≺ z ∧ z ≺ y
+@[expose] def _root_.RelDense := ∀ ⦃x y⦄, x ≺ y → ∃z, x ≺ z ∧ z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def Connected := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def Functional := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y = z
+@[expose] def Functional := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y = z
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def RightConvergent := ∀ ⦃x y z⦄, x ≺ y ∧ x ≺ z → y ≺ z ∨ z ≺ y ∨ y = z

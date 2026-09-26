@@ -2795,7 +2795,7 @@ theorem radialEvaluation_smul (I : Window) (ε c : ℝ)
   ring
 
 /-- Fixed axis data have radial degree zero; parameter dependence remains unrestricted. -/
-def RadiallyConstant (I : Window) (ε : ℝ) (A : AxisSpace I ε) : Prop :=
+@[expose] def RadiallyConstant (I : Window) (ε : ℝ) (A : AxisSpace I ε) : Prop :=
   ∀ n : ℕ, n ≠ 0 → ∀ η : ℝ, η ∈ I.interval → coefficient I (weight ε) A n η = 0
 
 theorem profile_radiallyConstant (I : Window) (ε : ℝ) (A : AxisSpace I ε)
@@ -3317,6 +3317,11 @@ def referenceCoefficients (I : Window) {ε : ℝ} (hε : 0 < ε)
   AxisContraction.referencePair (AxisContraction.coefficientOperators I hε) d
     (AxisResolvent.naturalResolvent I hε χ)
 
+@[simp] theorem referenceCoefficients_fst (I : Window) {ε : ℝ} (hε : 0 < ε)
+    (χ : AxisSpace I ε) (d : AxisContraction.AxisData (AxisSpace I ε)) :
+    (referenceCoefficients I hε χ d).1 = AxisResolvent.naturalResolvent I hε χ d.one := by
+  rfl
+
 /-- The limiting system is stated directly for actual functions. -/
 structure IsLeadingSolution (I : Window) (d : ParameterData)
     (Φ u : ℝ × ℝ → ℝ) : Prop where
@@ -3379,7 +3384,7 @@ theorem errorConstant_nonneg (I : Window) {ε : ℝ} (hε : 0 < ε)
 
 /-- Simultaneous estimates for every ordinary mixed derivative, uniform on
 each smaller radial interval and on the whole open parameter interval. -/
-def UniformMixedError (I : Window) (ε K : ℝ)
+@[expose] def UniformMixedError (I : Window) (ε K : ℝ)
     (Φ u Φ₀ u₀ : ℝ × ℝ → ℝ) : Prop :=
   ∀ R : ℝ, 1 ≤ R → R < 20 → ∀ k m : ℕ, ∀ p : ℝ × ℝ,
     |p.1| ≤ R → p.2 ∈ Ioo I.left I.right →

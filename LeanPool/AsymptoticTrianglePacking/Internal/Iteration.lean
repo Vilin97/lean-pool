@@ -52,10 +52,12 @@ theorem nibbleIterSeq_const (R : Finset (Finset V) → Finset (Finset V)) (H : F
   rfl
 
 /-- The residual hypergraph after `k` rounds. -/
+@[expose]
 def nibbleResidual (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) (k : ℕ) :
     Finset (Finset V) := (nibbleIter R H k).2
 
 /-- The matching accumulated over `k` rounds. -/
+@[expose]
 def nibbleMatching (R : Finset (Finset V) → Finset (Finset V)) (H : Finset (Finset V)) (k : ℕ) :
     Finset (Finset V) := (nibbleIter R H k).1
 

@@ -17,7 +17,7 @@ can therefore be composed with `A - iI`, and the resulting everywhere-defined li
 isometry, hence continuous.
 -/
 
-@[expose] public section
+public section
 
 open scoped LinearPMap
 

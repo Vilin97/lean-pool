@@ -487,6 +487,7 @@ theorem prod_mem_prodNbhd_iff {X : Set α} {Y : Set β} :
 
 /-- **Lemma 3.6 (Scott 1981, PRG-19).** The constant map at `b : |𝒟₁|`: `X b Y ↔ Y
 ∈ b`. -/
+@[expose]
 def constMap (V₀ : NeighborhoodSystem α) (b : V₁.Element) : ApproximableMap V₀ V₁ where
   rel X Y := V₀.mem X ∧ b.mem Y
   rel_dom h := h.1

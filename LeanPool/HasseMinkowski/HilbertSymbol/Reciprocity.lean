@@ -210,6 +210,7 @@ cases themselves (the content of quadratic reciprocity) are Phase 2. -/
 
 /-- The product of the local Hilbert symbols of `a` and `b` over all places of `ℚ`: the
 finite places `ℚ_[p]` together with the archimedean place `ℝ`. -/
+@[expose]
 noncomputable def hilbertProd (a b : ℚ) : ℤ :=
   (∏ᶠ p : Nat.Primes, hilbertSym (a : ℚ_[p]) (b : ℚ_[p])) * hilbertSym (a : ℝ) (b : ℝ)
 

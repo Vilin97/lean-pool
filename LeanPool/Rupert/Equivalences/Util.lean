@@ -21,7 +21,7 @@ open Pointwise
 open Matrix
 
 /-- Projecting from ℝ³ to ℝ² is linear -/
-noncomputable
+@[expose] noncomputable
 def projXyLinear : ℝ³ →ₗ[ℝ] ℝ² :=
   {
    toFun := projXy,
@@ -34,7 +34,7 @@ def projXyLinear : ℝ³ →ₗ[ℝ] ℝ² :=
    }
 
 /-- Rotation by an element of `SO3`, viewed as an affine map. -/
-noncomputable
+@[expose] noncomputable
 def rotationAffine (rot : SO3) : ℝ³ →ᵃ[ℝ] ℝ³ := (Matrix.toEuclideanLin rot).toAffineMap
 
 /-- Translating is affine. -/

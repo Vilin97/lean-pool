@@ -61,7 +61,7 @@ abbrev Orbit := MulAction.orbitRel.Quotient SL(2, ℤ) ℍ
 @[expose] def orb (p : ℍ) : Orbit := Quotient.mk'' p
 
 /-- The order of vanishing lifted to orbits. Well-defined by `ord_smul_eq`. -/
-def ordOrbit (q : Orbit) : ℤ :=
+@[expose] def ordOrbit (q : Orbit) : ℤ :=
   Quotient.liftOn' q (fun p => orderOfVanishingAt' (⇑f) p) (fun a b hab => by
       rw [MulAction.orbitRel_apply] at hab
       obtain ⟨g, hg⟩ := hab
@@ -77,7 +77,7 @@ def oi : Orbit := orb ellipticPointI'
 def orho : Orbit := orb ellipticPointRho'
 
 /-- A non-elliptic orbit is one distinct from both `oi` and `orho`. -/
-def NonEllOrbit := {q : Orbit // q ≠ oi ∧ q ≠ orho}
+@[expose] def NonEllOrbit := {q : Orbit // q ≠ oi ∧ q ≠ orho}
 
 /-- Every orbit has a representative in the fundamental domain `𝒟`. -/
 theorem orbit_has_fd_rep (q : Orbit) : ∃ p : ℍ, orb p = q ∧ p ∈ 𝒟 := by

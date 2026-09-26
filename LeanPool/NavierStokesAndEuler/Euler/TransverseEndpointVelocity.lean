@@ -87,9 +87,7 @@ theorem initialMomentum_weak
       -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ := by
   have ht := hu ⟨productDerivative T hT Q Q₁ v,
     productDerivative_mem_transverse T hT Q Q₁ hd m hm v hv⟩
-  change ⟪u, productDerivative T hT Q Q₁ v⟫_ℝ -
-    ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u),
-      primitiveTimeLp T hT (productDerivative T hT Q Q₁ v)⟫_ℝ = 0 at ht
+  simp only [transversePrimitive_apply] at ht
   rw [primitiveTimeLp_productDerivative T hT Q Q₁ hd] at ht
   simp only [productDerivative, add_apply, comp_apply, inner_add_right] at ht
   simp only [momentum, initialMomentumForcing, sub_apply, comp_apply,

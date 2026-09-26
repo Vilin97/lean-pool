@@ -740,7 +740,7 @@ noncomputable def actualSlotFamily (s : StripData D) (r0 h : ℝ)
 
 @[simp] theorem actualSlotFamily_length (s : StripData D) (r0 h : ℝ)
     (hr0 : 0 < r0) (hh : 0 ≤ h) (η : D →L[ℝ] ℝ) (center : ℕ → ℝ) (n : ℕ) :
-    (actualSlotFamily s r0 h hr0 hh η center).length n = ChartScales.slotLength r0 h n := rfl
+    (actualSlotFamily s r0 h hr0 hh η center).length n = ChartScales.slotLength r0 h n := by rfl
 
 theorem actualSlotFamily_coordinate (s : StripData D) (r0 h : ℝ)
     (hr0 : 0 < r0) (hh : 0 ≤ h) (η : D →L[ℝ] ℝ) (center : ℕ → ℝ) (n : ℕ) (x : D) :
@@ -969,7 +969,7 @@ noncomputable def omittedSource {s : StripData D} (g : SlotFamily s)
 
 theorem error_eq_sum {s : StripData D} (g : SlotFamily s) (u f : ℕ → D → E)
     (n : ℕ) (x : D) :
-    g.error u f n x = g.derivativeError u n x + g.omittedSource f n x := rfl
+    g.error u f n x = g.derivativeError u n x + g.omittedSource f n x := by rfl
 
 private theorem jet_eq_zero_of_eventually {u : D → E} {x : D}
     (he : u =ᶠ[𝓝 x] fun _ => 0) (j : ℕ) : iteratedFDeriv ℝ j u x = 0 := by

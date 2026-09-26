@@ -76,7 +76,7 @@ def os4PrimeErgodicityGenerating (m : ℝ) [Fact (0 < m)] : Prop :=
 /-- OS4'' (Polynomial Clustering): This is exactly os4PolynomialClustering
     specialized to the GFF with decay exponent α = 6.
 -/
-def os4DoublePrimeClustering (m : ℝ) [Fact (0 < m)] : Prop :=
+@[expose] def os4DoublePrimeClustering (m : ℝ) [Fact (0 < m)] : Prop :=
   os4PolynomialClustering (gaussianFreeFieldFree m) 6 (by norm_num)
 
 /-! ## GFF Integrability Lemmas -/

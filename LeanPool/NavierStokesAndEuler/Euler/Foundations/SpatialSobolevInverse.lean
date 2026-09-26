@@ -354,7 +354,7 @@ namespace SpatialJet
 variable {period} {directions : Fin 4 → LiftTangent}
 
 /-- Construct every finite-order derivative of actual coefficient multiplication. -/
-def multiply {n : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
+@[expose] def multiply {n : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
     (K : CoefficientJet period directions n A) (J : SpatialJet period directions n f) :
     SpatialJet period directions n (A.operator f) :=
   match n, K, J with
@@ -572,7 +572,8 @@ theorem word_hasDerivAt {s n : ℕ} {f : LiftL2 period}
       rfl
 
 /-- Split a coordinate word into its last direction and its initial word. -/
-def wordSnocEquiv (n : ℕ) : (Fin (n + 1) → Fin 4) ≃ Fin 4 × (Fin n → Fin 4) where
+@[expose] def wordSnocEquiv (n : ℕ) :
+    (Fin (n + 1) → Fin 4) ≃ Fin 4 × (Fin n → Fin 4) where
   toFun w := (w (Fin.last n), Fin.init w)
   invFun v := Fin.snoc v.2 v.1
   left_inv w := Fin.snoc_init_self w

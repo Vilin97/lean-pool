@@ -30,6 +30,7 @@ namespace Gate
 /-! ## Pauli, Hadamard, and CNOT -/
 
 /-- Raw Hadamard operator `H = (1/sqrt 2) [[1, 1], [1, -1]]`. -/
+@[expose]
 def HOp : HilbertOperator 1 :=
   invSqrt2 • !![(1 : ℂ), 1; 1, -1]
 
@@ -49,6 +50,7 @@ theorem HOp_mem_unitaryGroup :
   simp_all
 
 /-- The Hadamard gate. -/
+@[expose]
 def H : Gate 1 := ofUnitary HOp HOp_mem_unitaryGroup
 
 /-- The Pauli-X (NOT) gate, as the basis permutation `|0> ↔ |1>`. -/
@@ -81,6 +83,7 @@ theorem ZOp_mem_unitaryGroup :
 def Z : Gate 1 := ofUnitary ZOp ZOp_mem_unitaryGroup
 
 /-- The controlled-NOT gate on two qubits, control = qubit 0. -/
+@[expose]
 def CNOT : Gate 2 := ofPerm (Equiv.swap 2 3)
 
 theorem X_mem_unitaryGroup : (X : HilbertOperator 1)

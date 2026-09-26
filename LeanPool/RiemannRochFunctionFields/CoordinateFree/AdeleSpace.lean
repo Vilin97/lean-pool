@@ -34,6 +34,7 @@ variable [Algebra k K] [Algebra k[X] K] [Algebra k⟮X⟯ K]
   [Algebra.IsSeparable k⟮X⟯ K]
 
 /-- The `k`-submodule of tuples over intrinsic places that are integral almost everywhere. -/
+@[expose]
 def adeleSubmodule : Submodule k (Place k K → K) where
   carrier := {a | ∀ᶠ v in cofinite, a v ∈ v.toValuationSubring}
   zero_mem' := by

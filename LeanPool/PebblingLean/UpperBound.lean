@@ -107,7 +107,7 @@ target. This is the Lean version of `X_t` in the proof. -/
 /-- The high-demand conclusion used as a target for the probabilistic lemma:
 a `T`-solvable distribution whose size is bounded and whose occupied piles are
 large. -/
-def HasHighDemandDistribution (n T : ℕ) (costBound minPile : ℕ) : Prop :=
+@[expose] def HasHighDemandDistribution (n T : ℕ) (costBound minPile : ℕ) : Prop :=
   ∃ D : Pebbling (HypercubeVertex n),
     size D ≤ costBound ∧
       SolvableAtLeast (graph n) D T ∧

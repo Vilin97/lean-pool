@@ -1118,7 +1118,7 @@ theorem exists_proofUniversalHarmonicCatalyst
     _ ≤ ε := hsqrt
 
 /-- The unitary operator implementing coherent shared random controlled. -/
-def coherentSharedRandomControlledUnitary
+@[expose] def coherentSharedRandomControlledUnitary
     {Ω d : Type*}
     [Fintype Ω] [Fintype d]
     [DecidableEq Ω] [DecidableEq d]
@@ -1143,7 +1143,7 @@ def coherentSharedRandomControlledUnitary
         Matrix.one_apply, hων, hij]
 
 /-- The positive operator-valued measurement implementing spectral partition. -/
-def spectralPartitionPOVM
+@[expose] def spectralPartitionPOVM
     {κ d : Type*}
     [Fintype κ] [Fintype d] [DecidableEq κ] [DecidableEq d]
     (F : Matrix d d ℂ) (hF : F.PosSemidef)
@@ -2156,7 +2156,7 @@ open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 /-- The positive operator-valued measurement implementing DSV global projector binary. -/
-def dSVGlobalProjectorBinaryPOVM
+@[expose] def dSVGlobalProjectorBinaryPOVM
     {κ d : Type*} [Fintype κ] [Fintype d]
     [DecidableEq κ] [DecidableEq d]
     (P : κ → Matrix d d ℂ)
@@ -2367,7 +2367,7 @@ theorem dSVSoftBobLeftReducedDensity_trace
     _ = 1 := targetReducedDensity_trace ζ
 
 /-- The unitary operator implementing DSV original computational reindexed. -/
-def dSVOriginalComputationalReindexedUnitary
+@[expose] def dSVOriginalComputationalReindexedUnitary
     {ι : Type*} [Fintype ι] [DecidableEq ι]
     {D : ℕ} (e : ι ≃ Fin D)
     (U : Matrix.unitaryGroup ι ℂ) :
@@ -2477,7 +2477,7 @@ abbrev DSVUniformDensityThresholdLocalIndex
   Σ _ : Fin N, Fin d
 
 /-- The quantum state representing DSV uniform density threshold shared. -/
-def dSVUniformDensityThresholdSharedState
+@[expose] def dSVUniformDensityThresholdSharedState
     (N d : ℕ) :
     EuclideanSpace ℂ
       (DSVUniformDensityThresholdLocalIndex N d ×
@@ -4641,7 +4641,7 @@ private theorem dSVUniformLeftDensityConjugateSwap_distance
 The DSV uniform left density schmidt coefficient construction used in the quantum parallel-
 repetition argument.
 -/
-def dSVUniformLeftDensitySchmidtCoefficient
+@[expose] def dSVUniformLeftDensitySchmidtCoefficient
     {d : ℕ} (ξ : BipartiteUnitVector d)
     (i : Fin d) : ℝ :=
   Real.sqrt
@@ -5021,7 +5021,7 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 The DSV canonical failure unit rank family construction used in the quantum parallel-repetition
 argument.
 -/
-def dSVCanonicalFailureUnitRankFamily
+@[expose] def dSVCanonicalFailureUnitRankFamily
     (d : ℕ) (positive : 0 < d) (rank : Fin (d + 1)) :
     BipartiteUnitVector d :=
   ⟨normalizeOrDefault
@@ -5064,7 +5064,7 @@ open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 The DSV uniform density threshold left bob basis construction used in the quantum parallel-
 repetition argument.
 -/
-def dSVUniformDensityThresholdLeftBobBasis
+@[expose] def dSVUniformDensityThresholdLeftBobBasis
     {d : ℕ} (ζ : BipartiteUnitVector d) :
     Matrix.unitaryGroup (Fin d) ℂ :=
   (dSVSoftBobLeftReducedDensity_posSemidef ζ).isHermitian.eigenvectorUnitary
@@ -5321,7 +5321,7 @@ def dSVUniformDensityThresholdWholeHistoryTargetSplitEquiv
 The DSV uniform density alice history spectral copy construction used in the quantum parallel-
 repetition argument.
 -/
-def dSVUniformDensityAliceHistorySpectralCopy
+@[expose] def dSVUniformDensityAliceHistorySpectralCopy
     {N d : ℕ} (ξ : BipartiteUnitVector d) :
     Matrix.unitaryGroup
       (DSVUniformDensityThresholdLocalIndex N d) ℂ :=
@@ -5643,6 +5643,7 @@ private theorem spectralPurificationFilterEntryLp_eq_eigen_sum
     rw [ht]
   filter_upwards [hentry, hsum, hgenerator] with s he hs hg
   rw [he, hs]
+  rw [spectralPurificationFilter, spectralConjugationCLM_apply]
   change
     ((U : Matrix d d ℂ) *
       Matrix.diagonal (fun k =>
@@ -5689,7 +5690,7 @@ theorem mean_spectralPurificationFilterEntryLp_mem_common
 The ensemble purification subspace entry construction used in the quantum parallel-repetition
 argument.
 -/
-def ensemblePurificationSubspaceEntry
+@[expose] def ensemblePurificationSubspaceEntry
     {ι d : Type*} [Fintype d] [DecidableEq d]
     (F : ι → Matrix d d ℂ) (M : Matrix d d ℂ)
     (positive : ∀ i, (F i).PosSemidef)

@@ -26,7 +26,7 @@ functions by a monotone-limit construction, giving the partial operator
 `E_pvm.unboundedIntegral f hf` for a PVM `E_pvm` and measurable `f`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open Function

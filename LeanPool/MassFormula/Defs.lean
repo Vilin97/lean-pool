@@ -126,6 +126,7 @@ integral `K`-basis spans a sublattice of finite index in `integers L`, and the d
 sublattice is the square of the index times the discriminant of `integers L`. The present form needs
 no freeness or Dedekind-domain instances. For `L` infinite over `K` no such basis exists and the
 ideal is `⊥`—junk, as usual. -/
+@[expose]
 noncomputable def discIdeal (L : IntermediateField K (SeparableClosure K)) : Ideal ↥𝒪[K] :=
   Ideal.span {x : ↥𝒪[K] | ∃ b : Module.Basis (Fin (Module.finrank K ↥L)) K ↥L,
     (∀ i, IsIntegral 𝒪[K] (b i)) ∧ algebraMap 𝒪[K] K x = Algebra.discr K ⇑b}
@@ -143,7 +144,7 @@ theorem `sub_one_le_d`. -/
   d L + 1 - Module.finrank K ↥L
 
 /-- The number of `K`-automorphisms of `L` ([Serre 1978, Remark 3°, p.1031][Serre1978]). -/
-noncomputable def w (L : IntermediateField K (SeparableClosure K)) : ℕ :=
+@[expose] noncomputable def w (L : IntermediateField K (SeparableClosure K)) : ℕ :=
   Nat.card (↥L ≃ₐ[K] ↥L)
 
 /-- The paper's set of representatives, as a predicate rather than a quotient: `R` is a *set of

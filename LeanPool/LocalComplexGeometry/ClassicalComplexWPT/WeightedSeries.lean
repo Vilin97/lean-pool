@@ -45,7 +45,7 @@ section Convolution
 variable {A : Type*} [AddCommMonoid A] [Finset.HasAntidiagonal A]
 
 /-- Antidiagonal Cauchy product of two `ℓ¹` coefficient families. -/
-def convolutionFun (f g : L1Coeff A) (n : A) : ℂ :=
+@[expose] def convolutionFun (f g : L1Coeff A) (n : A) : ℂ :=
   ∑ kl ∈ Finset.antidiagonal n, f kl.1 * g kl.2
 
 lemma summable_antidiagonal_norm_product (f g : L1Coeff A) :
@@ -115,7 +115,7 @@ lemma convolution_smul_left (c : ℂ) (f g : L1Coeff A) :
     Finset.mul_sum]
 
 /-- Right convolution as a linear map. -/
-def convolutionRightLinear (g : L1Coeff A) : L1Coeff A →ₗ[ℂ] L1Coeff A where
+@[expose] def convolutionRightLinear (g : L1Coeff A) : L1Coeff A →ₗ[ℂ] L1Coeff A where
   toFun f := convolution f g
   map_add' f₁ f₂ := convolution_add_left f₁ f₂ g
   map_smul' c f := convolution_smul_left c f g
@@ -142,7 +142,7 @@ section DistinguishedShift
 variable {A : Type*}
 
 /-- Index map which discards the first `d` distinguished-variable coefficients. -/
-def highIndex (d : ℕ) : A × ℕ → A × ℕ := fun x ↦ (x.1, x.2 + d)
+@[expose] def highIndex (d : ℕ) : A × ℕ → A × ℕ := fun x ↦ (x.1, x.2 + d)
 
 lemma highIndex_injective (d : ℕ) : Function.Injective (highIndex (A := A) d) := by
   rintro ⟨a, n⟩ ⟨b, m⟩ h

@@ -27,7 +27,7 @@ public section
 namespace DirectedMap
 
 /-- A continuous map between two directed spaces is `Directed` if it maps dipaths to dipaths. -/
-def Directed {α β : Type*} [DirectedSpace α] [DirectedSpace β] (f : C(α, β)) : Prop :=
+@[expose] def Directed {α β : Type*} [DirectedSpace α] [DirectedSpace β] (f : C(α, β)) : Prop :=
   ∀ ⦃x y : α⦄ (γ : Path x y), IsDipath γ → IsDipath (γ.map f.continuous_toFun)
 
 end DirectedMap
@@ -110,7 +110,7 @@ def const (b : β) : D(α,β) where
 variable {α}
 
 /-- The composition of directed maps is directed -/
-def comp (f : D(β,γ)) (g : D(α,β)) : D(α,γ) where
+@[expose] def comp (f : D(β,γ)) (g : D(α,β)) : D(α,γ) where
   toFun := f ∘ g
   directed_toFun := fun x y p hp => f.directed_toFun (p.map g.continuous_toFun)
       (g.directed_toFun p hp)

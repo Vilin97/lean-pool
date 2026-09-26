@@ -85,7 +85,7 @@ def IsPoint (X Y Z : K) : Prop :=
 /-- `IsKernelPoint k X Y Z` says that `(1 + π^k) [X : Y : Z] = O`, equivalently
 `π^k [X : Y : Z] = -[X : Y : Z]`, i.e. that the triples `(X^(2^k), Y^(2^k), Z^(2^k))` and
 `(Y, X, Z)` define the same projective point. -/
-def IsKernelPoint (k : ℕ) (X Y Z : K) : Prop :=
+@[expose] def IsKernelPoint (k : ℕ) (X Y Z : K) : Prop :=
   ∃ c : K, c ≠ 0 ∧ X ^ 2 ^ k = c * Y ∧ Y ^ 2 ^ k = c * X ∧ Z ^ 2 ^ k = c * Z
 
 /-! ### Basic facts about the origin and the points at infinity -/

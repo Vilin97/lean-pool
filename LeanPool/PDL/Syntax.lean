@@ -1171,7 +1171,7 @@ instance : Std.Antisymm (fun (a b : Formula) ↦ a ≤ b) := ⟨Formula.le_antis
 instance : Std.Total (fun (a b : Formula) ↦ a ≤ b) := ⟨Formula.le_total⟩
 
 /-- List the elements of a formula finset in the fixed formula order. -/
-def _root_.Finset.pdlSort : Finset Formula → List Formula | FS => FS.sort
+@[expose] def _root_.Finset.pdlSort : Finset Formula → List Formula | FS => FS.sort
 
 @[simp]
 lemma Formula.mem_pdlSort {X : Finset Formula} : φ ∈ X.pdlSort ↔ φ ∈ X := by simp [Finset.pdlSort]

@@ -32,7 +32,7 @@ abbrev E (d : ℕ) := EuclideanSpace ℝ (Fin d)
 /-! ## Definitions for the optimization problem -/
 
 /-- The set of global minimizers of f. -/
-def argminSet (f : E d → ℝ) : Set (E d) :=
+@[expose] def argminSet (f : E d → ℝ) : Set (E d) :=
   {x | ∀ y, f x ≤ f y}
 
 /-- The infimal value f⋆ = inf_x f(x). -/

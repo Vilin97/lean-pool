@@ -63,7 +63,7 @@ r X n  |             pushout   |
 ```
 `X.IProd.sk 0 = {0, 1} × X ≅ X.IProd.sk 1`
 -/
-noncomputable def sk (n : ℕ) : TopCat.{u} :=
+@[expose] noncomputable def sk (n : ℕ) : TopCat.{u} :=
   match n with
   | 0 => TopCat.of (zeroOne × X.toTopCat)
   | n + 1 => Limits.pushout (IProd.l X n) (IProd.r X n)
@@ -607,7 +607,7 @@ noncomputable abbrev desc : IProd.sk X (n + 1 + 1) ⟶ Z.pt :=
   Limits.pushout.desc (l'' X n Z) (r'' X n Z) (w'' X n Z)
 
 /-- `cocone` -/
-noncomputable def cocone (n : ℕ) :
+@[expose] noncomputable def cocone (n : ℕ) :
     Limits.PushoutCocone
       (Limits.Sigma.desc (IProd.attachMaps X))
       (Limits.Sigma.map fun _ ↦ diskBoundaryIncl (n + 1)) :=

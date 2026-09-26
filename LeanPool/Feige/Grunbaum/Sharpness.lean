@@ -298,6 +298,7 @@ theorem sharpHalfspaceSet_volume_ratio {n : ℕ} (hn : 0 < n) :
 
 /-- The standard simplex, regarded as a full-dimensional body in project
 dimension `d + 1`. -/
+@[expose]
 def simplexFullBody (d : ℕ) : FullDimensionalConvexBody d where
   carrier := simplexSet (d + 1)
   convex' := convex_simplexSet (d + 1)

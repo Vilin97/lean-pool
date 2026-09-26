@@ -26,7 +26,7 @@ namespace CKN.Core.Step4
 
 /-- The global componentwise source majorant in `eq:pressure-gradient-decomposition`,
 including the constant-mean correction and the localized force norm. -/
-def centredSWSCentredMajorant (x : Vec3) (ρ q : ℝ)
+@[expose] def centredSWSCentredMajorant (x : Vec3) (ρ q : ℝ)
     (u : ParabolicPoint → Vec3) (Du : ParabolicPoint → Fin 3 → Vec3)
     (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ≥0∞ :=
   let μ := volume.restrict (vec3Ball x ρ)

@@ -47,7 +47,7 @@ on the positive-scale domain. -/
   ∑' j : ℕ, cutStage a q A j x
 
 /-- Partial potential, given by `∑ j ∈ Finset.range N, cutStage a q A j x`. -/
-def partialPotential (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V)
+@[expose] def partialPotential (a : ℕ → ℝ) (q : X → ℝ) (A : ℕ → X → V)
     (N : ℕ) (x : X) : V :=
   ∑ j ∈ Finset.range N, cutStage a q A j x
 

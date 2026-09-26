@@ -468,7 +468,7 @@ theorem span_traceDual_basisOfFractionalIdeal
 
 open Classical in
 /-- A trace embedding int linear map used in the Odlyzko-bound argument. -/
-noncomputable def traceEmbeddingIntLinearMap :
+@[expose] noncomputable def traceEmbeddingIntLinearMap :
     K →ₗ[ℤ] mixedEmbedding.euclidean.mixedSpace K :=
   ((traceToMixed K).symm.toLinearEquiv.toLinearMap.restrictScalars ℤ).comp
     (mixedEmbedding K).toIntAlgHom.toLinearMap

@@ -164,7 +164,7 @@ def smash (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) : Neighb
     · exact prodNbhd_subset_iff.mpr ⟨V₀.sub_master hX, V₁.sub_master hY⟩
 
 @[simp] theorem smash_master :
-    (smash V₀ V₁).master = prodNbhd V₀.master V₁.master := rfl
+    (smash V₀ V₁).master = prodNbhd V₀.master V₁.master := by rfl
 
 theorem smash_mem_iff {W : Set (α ⊕ β)} :
     (smash V₀ V₁).mem W ↔
@@ -437,7 +437,7 @@ def strictFun (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
     · exact hL' p h
   sub_master := fun _ => Set.subset_univ _
 
-@[simp] theorem strictFun_master : (strictFun V₀ V₁).master = Set.univ := rfl
+@[simp] theorem strictFun_master : (strictFun V₀ V₁).master = Set.univ := by rfl
 
 theorem strictFun_mem_iff {W : Set (StrictMap V₀ V₁)} :
     (strictFun V₀ V₁).mem W ↔

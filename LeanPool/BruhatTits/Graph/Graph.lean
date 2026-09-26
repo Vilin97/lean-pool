@@ -35,7 +35,6 @@ The Bruhat-Tits graph defined as a simple graph. The vertices are given by the h
 classes of lattices. Two vertices are connected by an edge if they are neighbours, i.e. if their
 distance is equal to `1`.
 -/
-@[simps -isSimp]
 def BTgraph : SimpleGraph (Vertices R) where
   Adj L M := BruhatTits.IsNeighbour L M
   symm := ⟨fun L M => (isNeighbour_symm L M).mp⟩
@@ -43,6 +42,9 @@ def BTgraph : SimpleGraph (Vertices R) where
     intro L (h : inv L L = 1)
     rw [inv_self] at h
     simp at h⟩
+
+lemma BTgraph_adj (L M : Vertices R) :
+    (BTgraph (R := R)).Adj L M = IsNeighbour L M := by rfl
 
 /-- There is a path between any two vertices. -/
 lemma reachable (M L : Vertices R) {n : ℕ} : (h : inv M L = n) → BTgraph.Reachable M L := by

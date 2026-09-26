@@ -301,6 +301,7 @@ noncomputable def nKD (k d : ℕ) : ℕ :=
 
 /-- A finite simple graph with `m` edges, maximum degree at most `d`, and line-graph diameter at
 most `ell`. -/
+@[expose]
 noncomputable def EdgeAdmissible (ell d m : ℕ) : Prop :=
   ∃ (V : Type) (G : SimpleGraph V),
     Finite V ∧ G.edgeSet.ncard = m ∧ MaxDegreeLE G d ∧

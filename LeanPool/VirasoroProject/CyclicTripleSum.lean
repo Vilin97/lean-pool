@@ -163,7 +163,7 @@ section cyclicTripleSumBilin
 
 -- TODO: Does a more convenient coercion exist? Should this be made to a literal coercion?
 /-- "Coerce" a bilinear map into a biadditive map. -/
-def _root_.LinearMap.toBiadditive
+@[expose] def _root_.LinearMap.toBiadditive
     {V₁ V₂ V₃ : Type*} [AddCommMonoid V₁] [AddCommMonoid V₂] [AddCommMonoid V₃]
     {R₁ R₂ R₃ : Type*} [CommSemiring R₁] [CommSemiring R₂] [CommSemiring R₃]
     {σ : R₁ →+* R₃} {τ : R₂ →+* R₃}

@@ -23,7 +23,7 @@ variable {K : Type*} (L J : Type*) [CommRing K] [LieRing L] [LieRing J] [LieAlge
 /-- The semidirect product of two Lie algebras `L` and `J`, defined by specifying a homomorphism
 from `L` to the Lie algebra of derivations of `J`. The homomorphism `φ` indexes the type, but does
 not appear in the underlying carrier; consuming it via `id` keeps the linter happy. -/
-def LieSemidirectProduct (φ : L →ₗ⁅K⁆ LieDerivation K J J) : Type _ :=
+@[expose] def LieSemidirectProduct (φ : L →ₗ⁅K⁆ LieDerivation K J J) : Type _ :=
   (id φ : L →ₗ⁅K⁆ LieDerivation K J J) |> fun _ ↦ L × J
 attribute [local implicit_reducible] LieSemidirectProduct
 

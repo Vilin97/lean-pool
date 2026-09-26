@@ -26,7 +26,7 @@ namespace LeanPool.PoincareThreeBody
 
 
 /-- Mean anomaly along a general lifted Delaunay flow line. -/
-noncomputable def liftedDelaunayMeanAnomalyAlongFlow
+@[expose] noncomputable def liftedDelaunayMeanAnomalyAlongFlow
     (firstAction meanAnomaly time : ℝ) : ℝ :=
   meanAnomaly + time / firstAction ^ 3
 

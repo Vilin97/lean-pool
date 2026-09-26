@@ -160,19 +160,20 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- Fixed-radius coefficient for the Newtonian potential. -/
-def originNewtonianCoefficient (R : ℝ) : ℝ≥0∞ :=
+@[expose] def originNewtonianCoefficient (R : ℝ) : ℝ≥0∞ :=
   eLpNorm (truncatedNewtonianPotentialKernel (R + 2 * R)) (ENNReal.ofReal (6 / 5 : ℝ)) volume +
     ENNReal.ofReal (2 * (4 * Real.pi)⁻¹ * invNormBallConstant ^ (2 / 3 : ℝ)) *
       volume (closedBall (0 : Vec3) R) ^ (1 / 6 : ℝ)
 
 /-- Fixed-radius coefficient for the derivative Newtonian potential. -/
-def originNewtonianDerivativeCoefficient (R : ℝ) (i : Fin 3) : ℝ≥0∞ :=
+@[expose] def originNewtonianDerivativeCoefficient (R : ℝ) (i : Fin 3) : ℝ≥0∞ :=
   eLpNorm (truncatedNewtonianDerivative (R + 2 * R) i) (ENNReal.ofReal (6 / 5 : ℝ)) volume +
     ENNReal.ofReal (4 * (4 * Real.pi)⁻¹ / (2 * R) * invNormBallConstant ^ (2 / 3 : ℝ)) *
       volume (closedBall (0 : Vec3) R) ^ (1 / 6 : ℝ)
 
 /-- The force-growth envelope uses only spatial norms on the origin ball. -/
-def originForceGrowthEnvelope (R : ℝ) (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ≥0∞ :=
+@[expose] def originForceGrowthEnvelope
+    (R : ℝ) (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ≥0∞ :=
   ENNReal.ofReal (1 + R) * ∑ j : Fin 3,
     (originNewtonianDerivativeCoefficient R j +
       ENNReal.ofReal (cutoffGradientConstant / R) * originNewtonianCoefficient R) *

@@ -19,7 +19,7 @@ Stone's theorem in the direction from self-adjoint operators to unitary
 groups.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory Filter
 

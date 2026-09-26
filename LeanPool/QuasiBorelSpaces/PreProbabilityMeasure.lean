@@ -307,7 +307,7 @@ instance : CoeFun (Var A) (fun _ ↦ ℝ → PreProbabilityMeasure A) where
   coe := apply
 
 /-- The constant variable. -/
-def const (μ : PreProbabilityMeasure A) : Var A where
+@[expose] def const (μ : PreProbabilityMeasure A) : Var A where
   eval := μ.eval
   base _ := μ.base
 
@@ -315,7 +315,7 @@ def const (μ : PreProbabilityMeasure A) : Var A where
 lemma apply_const (μ : PreProbabilityMeasure A) (r : ℝ) : apply (const μ) r = μ := rfl
 
 /-- Precomposition of variables by measurable functions. -/
-def comp {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) : Var A where
+@[expose] def comp {f : ℝ → ℝ} (hf : Measurable f) (φ : Var A) : Var A where
   eval := φ.eval
   base r := φ.base (f r)
 

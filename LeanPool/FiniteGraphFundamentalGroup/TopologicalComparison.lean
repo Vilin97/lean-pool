@@ -528,7 +528,7 @@ noncomputable instance graphCoverSymmetricRootedConnected
   graphCoverSymmetric_rootedConnected root
 
 /-- The canonical geodesic spanning tree of the symmetrified graph cover. -/
-noncomputable def graphCoverSymmetricTree {V : Type u} [Quiver.{u} V]
+@[expose] noncomputable def graphCoverSymmetricTree {V : Type u} [Quiver.{u} V]
     (root : V) :
     WideSubquiver (Symmetrify (graphCoverVertex root)) :=
   geodesicSubtree (graphCoverRootVertex root)
@@ -648,7 +648,7 @@ theorem graphCoverSymmetric_edge_or_reverse_mem_tree {V : Type u} [Quiver.{u} V]
         exact hfmem
 
 /-- The representative-level realization map induced by a signed edge map. -/
-def graphRealizationSignedPreMap {U W : Type u} [Quiver.{u} U] [Quiver.{u} W]
+@[expose] def graphRealizationSignedPreMap {U W : Type u} [Quiver.{u} U] [Quiver.{u} W]
     (f : U → W) (g : Quiver.Total U → Quiver.Total W)
     (r : Quiver.Total U → C(I, I)) :
     graphRealizationPre U → graphRealizationPre W :=
@@ -678,7 +678,7 @@ theorem graphRealizationSignedPreMap_continuous
       (r (graphEdgeUnderlying e)).continuous
 
 /-- The continuous realization map induced by a signed edge map. -/
-def graphRealizationSignedMap {U W : Type u} [Quiver.{u} U] [Quiver.{u} W]
+@[expose] def graphRealizationSignedMap {U W : Type u} [Quiver.{u} U] [Quiver.{u} W]
     (f : U → W) (g : Quiver.Total U → Quiver.Total W)
     (r : Quiver.Total U → C(I, I))
     (h0 : ∀ e : Quiver.Total U,
@@ -737,7 +737,7 @@ theorem graphRealizationSignedMap_vertex
           (Sum.inr ⟨graphDiscreteEdge (g e), r e 1⟩) =
         graphVertex (f e.right))
     (v : U) :
-    graphRealizationSignedMap f g r h0 h1 (graphVertex v) = graphVertex (f v) := rfl
+    graphRealizationSignedMap f g r h0 h1 (graphVertex v) = graphVertex (f v) := by rfl
 
 @[simp]
 theorem graphRealizationSignedMap_edgePath
@@ -754,7 +754,7 @@ theorem graphRealizationSignedMap_edgePath
         graphVertex (f e.right))
     (e : Quiver.Total U) (t : I) :
     graphRealizationSignedMap f g r h0 h1 (graphEdgePath e t) =
-      graphEdgePath (g e) (r e t) := rfl
+      graphEdgePath (g e) (r e t) := by rfl
 
 /-- The underlying cover edge represented by an edge of the symmetric cover tree. -/
 def graphCoverTreeEdgeBase {V : Type u} [Quiver.{u} V]
@@ -817,7 +817,7 @@ def graphCoverTreeVertexForget {V : Type u} [Quiver.{u} V]
   exact v
 
 /-- The continuous orientation-reversing involution of the unit interval. -/
-def graphRealizationIntervalSymm : C(I, I) where
+@[expose] def graphRealizationIntervalSymm : C(I, I) where
   toFun := σ
   continuous_toFun := by fun_prop
 
@@ -907,7 +907,7 @@ theorem graphCoverTreeFold_h1 {V : Type u} [Quiver.{u} V]
       rfl
 
 /-- The realization map folding the symmetric cover tree onto the canonical cover. -/
-noncomputable def graphCoverTreeToCover {V : Type u} [Quiver.{u} V]
+@[expose] noncomputable def graphCoverTreeToCover {V : Type u} [Quiver.{u} V]
     (root : V) :
     graphRealization (graphCoverSymmetricTree root) →
       graphRealization (graphCoverVertex root) :=
@@ -927,7 +927,7 @@ theorem continuous_graphCoverTreeToCover {V : Type u} [Quiver.{u} V]
 theorem graphCoverTreeToCover_vertex {V : Type u} [Quiver.{u} V]
     (root : V) (v : graphCoverSymmetricTree root) :
     graphCoverTreeToCover root (graphVertex v) =
-      graphVertex (graphCoverTreeVertexForget root v) := rfl
+      graphVertex (graphCoverTreeVertexForget root v) := by rfl
 
 @[simp]
 theorem graphCoverTreeToCover_edgePath {V : Type u} [Quiver.{u} V]
@@ -935,7 +935,7 @@ theorem graphCoverTreeToCover_edgePath {V : Type u} [Quiver.{u} V]
     (e : Quiver.Total (graphCoverSymmetricTree root)) (t : I) :
     graphCoverTreeToCover root (graphEdgePath e t) =
       graphEdgePath (graphCoverTreeEdgeBase root e)
-        (graphCoverTreeFoldCoordinate root e t) := rfl
+        (graphCoverTreeFoldCoordinate root e t) := by rfl
 
 /-- Embeds a canonical-cover vertex into the symmetric cover tree. -/
 def graphCoverVertexEmbed {V : Type u} [Quiver.{u} V]
@@ -1055,7 +1055,7 @@ theorem graphCoverSection_h1 {V : Type u} [Quiver.{u} V]
       rfl
 
 /-- A continuous section from the canonical cover realization to its symmetric tree model. -/
-noncomputable def graphCoverToTree {V : Type u} [Quiver.{u} V]
+@[expose] noncomputable def graphCoverToTree {V : Type u} [Quiver.{u} V]
     (root : V) :
     graphRealization (graphCoverVertex root) →
       graphRealization (graphCoverSymmetricTree root) :=
@@ -1075,7 +1075,7 @@ theorem continuous_graphCoverToTree {V : Type u} [Quiver.{u} V]
 theorem graphCoverToTree_vertex {V : Type u} [Quiver.{u} V]
     (root : V) (v : graphCoverVertex root) :
     graphCoverToTree root (graphVertex v) =
-      graphVertex (graphCoverVertexEmbed root v) := rfl
+      graphVertex (graphCoverVertexEmbed root v) := by rfl
 
 @[simp]
 theorem graphCoverToTree_edgePath {V : Type u} [Quiver.{u} V]
@@ -1083,7 +1083,7 @@ theorem graphCoverToTree_edgePath {V : Type u} [Quiver.{u} V]
     (t : I) :
     graphCoverToTree root (graphEdgePath e t) =
       graphEdgePath (graphCoverTreeEdgeChoice root e)
-        (graphCoverSectionCoordinate root e t) := rfl
+        (graphCoverSectionCoordinate root e t) := by rfl
 
 theorem graphRealization_map_ext {U W : Type u} [Quiver.{u} U] [Quiver.{u} W]
     (F G : graphRealization U → graphRealization W)

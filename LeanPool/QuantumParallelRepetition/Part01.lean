@@ -1812,7 +1812,7 @@ theorem spectralPurificationFilter_gram_integrable
     spectralPurificationGram_integrable F hF
 
 /-- The born trace pairing construction used in the quantum parallel-repetition argument. -/
-def bornTracePairing
+@[expose] def bornTracePairing
     {dA dB : Type*} [Fintype dA] [Fintype dB]
     (ρ : Matrix (dA × dB) (dA × dB) ℂ) :
     Matrix dA dA ℂ →ₗ[ℝ] Matrix dB dB ℂ →ₗ[ℝ] ℝ where
@@ -3174,7 +3174,7 @@ theorem fullHistoryBobFilter_posSemidef
       (fullHistoryHiddenBobWeight_nonneg G h hidden)
 
 /-- The indicator function for full history win. -/
-def fullHistoryWinIndicator
+@[expose] def fullHistoryWinIndicator
     (G : Game X Y A B) {n : ℕ}
     {D L : Finset (Fin n)}
     (h : FullSubsetHistory X Y n D L)
@@ -6065,7 +6065,7 @@ theorem sharedThresholdResource_norm
     inv_mul_cancel₀ hnorm]
 
 /-- The positive operator-valued measurement implementing transpose. -/
-def transposePOVM
+@[expose] def transposePOVM
     {ι d : Type*} [Fintype ι] [Fintype d] [DecidableEq d]
     (P : POVM ι d) : POVM ι d where
   effect b := (P.effect b).transpose
@@ -6668,7 +6668,7 @@ theorem unitary_col_norm_sq_sum
     sub_neg_eq_add, hnorm, Matrix.one_apply_eq, Complex.one_re] using h
 
 /-- The overlap quantity for unitary basis. -/
-def unitaryBasisOverlap
+@[expose] def unitaryBasisOverlap
     {d : Type*} [Fintype d] [DecidableEq d]
     (U V : Matrix.unitaryGroup d ℂ) :
     Matrix.unitaryGroup d ℂ := U⁻¹ * V

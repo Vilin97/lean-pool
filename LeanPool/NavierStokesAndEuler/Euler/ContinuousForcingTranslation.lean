@@ -97,7 +97,7 @@ def derivativeMap (D : C(K, Space →L[ℝ] V)) : Space →L[ℝ] C(K,V) where
     (direction_norm_le D)
 
 @[simp] theorem derivativeMap_apply (D : C(K, Space →L[ℝ] V)) (a : Space) (t : K) :
-    derivativeMap D a t = D t a := rfl
+    derivativeMap D a t = D t a := by rfl
 
 theorem derivativeMap_norm_le (D : C(K, Space →L[ℝ] V)) : ‖derivativeMap D‖ ≤ ‖D‖ :=
   (derivativeMap D).opNorm_le_bound (norm_nonneg D) (direction_norm_le D)
@@ -221,7 +221,7 @@ def derivative (A : SpatialFamily K V) : SpatialFamily K (Space →L[ℝ] V) whe
     exact A.bounded (n+1) a t
 
 @[simp] theorem derivative_bound (A : SpatialFamily K V) (n : ℕ) :
-    A.derivative.bound n = A.bound (n+1) := rfl
+    A.derivative.bound n = A.bound (n+1) := by rfl
 
 theorem taylor_bound (A : SpatialFamily K V) (a b : Space) :
     ‖A.field b-A.field a-derivativeMap (A.derivative.field a) (b-a)‖ ≤
@@ -332,7 +332,7 @@ def translate (a : Space) (f : C(K, L2Space V)) : C(K,L2Space V) :=
 
 omit [CompactSpace K] in
 @[simp] theorem translate_apply (a : Space) (f : C(K, L2Space V)) (t : K) :
-    translate a f t = EulerLpTranslation.translation a (f t) := rfl
+    translate a f t = EulerLpTranslation.translation a (f t) := by rfl
 
 variable (A : K → SmoothL2Field V)
   (hA : ∀ n, Continuous (fun t => (A t).jetLp n))

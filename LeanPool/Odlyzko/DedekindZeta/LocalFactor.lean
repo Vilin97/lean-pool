@@ -24,7 +24,7 @@ public section
 namespace NumberField.Odlyzko
 
 /-- An inverse norm power used in the Odlyzko-bound argument. -/
-noncomputable def inverseNormPower (q : ℕ) (s : ℂ) : ℂ :=
+@[expose] noncomputable def inverseNormPower (q : ℕ) (s : ℂ) : ℂ :=
   (q : ℂ) ^ (-s)
 
 /-- A local factor used in the Odlyzko-bound argument. -/

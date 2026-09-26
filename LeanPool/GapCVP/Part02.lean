@@ -67,6 +67,7 @@ namespace CLPhaseCompleteness
 open Computability Turing GapCVP.CL GapCVP.CLCompleteVerifierSimulation
 
 /-- GapCVP reduction support. -/
+@[expose]
 def decodeCorrectedPhaseRow
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1555,6 +1556,7 @@ private theorem canonicalVerifierScriptHints_occupied
         window.2.2.2 = acceptingPhaseCell machine.tm
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
+@[expose]
 def stackSoundAnchoredPhaseAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1598,6 +1600,7 @@ private theorem stackSoundAnchoredPhaseAllowed_implies_anchored
     simpa only [mode] using hallowed'.2
 
 /-- GapCVP reduction support. -/
+@[expose]
 def stackSoundAnchoredPhaseSymbolAllowed
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
@@ -1609,6 +1612,7 @@ def stackSoundAnchoredPhaseSymbolAllowed
       (completePhaseSymbolEquiv machine.tm).symm window.2.2.2)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def stackSoundAnchoredPhaseSpecification
     (bound : Polynomial ℕ)
     {verifier : List Bool × List Bool → Bool}

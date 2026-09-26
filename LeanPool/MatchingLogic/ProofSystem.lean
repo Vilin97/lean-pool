@@ -74,7 +74,7 @@ inductive PForm where
   | .imp a b => !(a.eval v) || b.eval v
 
 /-- A propositional tautology. -/
-def PForm.Taut (p : PForm) : Prop := ∀ v, p.eval v = true
+@[expose] def PForm.Taut (p : PForm) : Prop := ∀ v, p.eval v = true
 
 /-- Substituting patterns for the propositional atoms. -/
 @[expose] def PForm.subst (θ : Nat → Pattern S Var) : PForm → Pattern S Var

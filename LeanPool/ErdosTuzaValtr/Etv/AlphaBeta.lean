@@ -180,7 +180,7 @@ namespace Config
 variable (C) (S)
 
 /-- A candidate beta-cup ending at `a`: a cup in `S` ending at `a`. -/
-def IsBetaCup (a : α) (c : List α) : Prop :=
+@[expose] def IsBetaCup (a : α) (c : List α) : Prop :=
   (c ++ [a]).In S ∧ C.Cup (c ++ [a])
 
 open Classical in

@@ -76,7 +76,7 @@ def prodEnum (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation
   prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2)
 
 @[simp] theorem prodEnum_apply (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁)
-    (t : ℕ) : prodEnum P₀ P₁ t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := rfl
+    (t : ℕ) : prodEnum P₀ P₁ t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := by rfl
 
 /-- **Theorem 7.4 (Scott 1981, PRG-19) — `𝒟₀ × 𝒟₁` is effectively given.** The
 presentation
@@ -153,7 +153,7 @@ def prodPresentation (P₀ : ComputablePresentation V₀) (P₁ : ComputablePres
 
 @[simp] theorem prodPresentation_X (P₀ : ComputablePresentation V₀) (P₁ : ComputablePresentation V₁)
     (t : ℕ) :
-    (prodPresentation P₀ P₁).X t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := rfl
+    (prodPresentation P₀ P₁).X t = prodNbhd (P₀.X t.unpair.1) (P₁.X t.unpair.2) := by rfl
 
 /-- **Theorem 7.4 (Scott 1981, PRG-19).** The product of effectively given domains
 is effectively

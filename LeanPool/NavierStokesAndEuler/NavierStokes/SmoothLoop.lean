@@ -764,7 +764,7 @@ theorem phaseMap_surjective (d : CircleDensity) : Function.Surjective (phaseMap 
   exact ⟨θ, heq⟩
 
 /-- The phase map is an actual global homeomorphism, not an assumed inverse. -/
-def phaseHomeomorph (d : CircleDensity) : ℝ ≃ₜ ℝ :=
+@[expose] def phaseHomeomorph (d : CircleDensity) : ℝ ≃ₜ ℝ :=
   (StrictMono.orderIsoOfSurjective (phaseMap d) (phaseMap_strictMono d)
     (phaseMap_surjective d)).toHomeomorph
 

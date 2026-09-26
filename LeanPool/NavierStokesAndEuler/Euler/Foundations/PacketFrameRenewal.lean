@@ -306,7 +306,7 @@ theorem perturbed_target_compression
   linarith only [hnumtime, hden]
 
 /-- The coordinate quadratic form of a real three-by-three matrix. -/
-def quadraticForm3 (B : Fin 3 → Fin 3 → ℝ) (p q n : ℝ) : ℝ :=
+@[expose] def quadraticForm3 (B : Fin 3 → Fin 3 → ℝ) (p q n : ℝ) : ℝ :=
   p * (B 0 0 * p + B 0 1 * q + B 0 2 * n) +
   q * (B 1 0 * p + B 1 1 * q + B 1 2 * n) +
   n * (B 2 0 * p + B 2 1 * q + B 2 2 * n)

@@ -37,10 +37,12 @@ abbrev Block := Fin 7
 abbrev Mu := Fin muSupport.size
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def xEdge (x : Var → Q) : Q :=
   x ⟨edgeVar, by decide⟩
 
 /-- The empty dual-certificate entry used as a default value. -/
+@[expose]
 def defaultMu : Nat × Array Int × Int := (0, #[], 0)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
@@ -56,10 +58,12 @@ def muVal (k : Mu) : Q :=
   (muSupport.getD k.1 defaultMu).2.1
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def aCoeffInt (k : Mu) (i : Var) : Int :=
   coeffAt (aVec k) i.1
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def aCoeff (k : Mu) (i : Var) : Q :=
   (aCoeffInt k i : Q)
 

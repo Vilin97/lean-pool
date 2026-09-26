@@ -21,7 +21,7 @@ open scoped unitInterval Topology Topology.Homotopy
 
 
 /-- relative generalized loops -/
-def RelGenLoop (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
+@[expose] def RelGenLoop (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :
     Set C(I^ Fin n, X) :=
   {f | (∀ y ∈ ∂I^n, f y ∈ A) ∧ ∀ y ∈ ⊔I^n, f y = a}
 
@@ -92,7 +92,7 @@ end RelGenLoop
 
 /-- We have defined relative homotopy "groups" as mere sets.
 The group structure is not needed for the Whitehead theorem. -/
-def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :=
+@[expose] def RelHomotopyGroup (n : ℕ) (X : Type*) [TopologicalSpace X] (A : Set X) (a : A) :=
   Quotient (RelGenLoop.Homotopic.setoid n X A a)
 
 -- scoped[Topology] notation "π_" => RelHomotopyGroup

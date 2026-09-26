@@ -93,7 +93,7 @@ theorem record_floor (hr : RecordsContinue r) (i : ℕ) {j : ℕ} (hj1 : 1 ≤ j
 
 /-- The nearest-neighbour distance of the `q`-th point among `{x_0,…,x_N}`, abstractly: the minimum
 cost `min_{1 ≤ j ≤ max(q, N−q)} r(j)` (junk `0` outside the valid range). -/
-noncomputable def gapVal (N q : ℕ) : ℝ :=
+@[expose] noncomputable def gapVal (N q : ℕ) : ℝ :=
   if h : (Finset.Icc 1 (max q (N - q))).Nonempty then
     (Finset.Icc 1 (max q (N - q))).inf' h r else 0
 

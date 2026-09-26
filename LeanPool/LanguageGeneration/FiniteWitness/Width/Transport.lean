@@ -18,6 +18,7 @@ namespace GenLimit.FiniteWitness
 variable {α β : Type*}
 
 /-- Transport a language family along an equivalence of universes. -/
+@[expose]
 def transportClass (e : α ≃ β) (H : Set (Set α)) : Set (Set β) :=
   {K | e ⁻¹' K ∈ H}
 

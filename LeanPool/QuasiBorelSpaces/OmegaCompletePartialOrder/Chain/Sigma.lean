@@ -22,7 +22,7 @@ namespace OmegaCompletePartialOrder.Chain.Sigma
 variable {I : Type*} {P : I → Type*} [∀ i, Preorder (P i)]
 
 /-- Injects a chain into a chain of coproducts. -/
-def inj {i} (c : Chain (P i)) : Chain ((i : I) × P i) where
+@[expose] def inj {i} (c : Chain (P i)) : Chain ((i : I) × P i) where
   toFun n := ⟨i, c n⟩
   monotone' n₁ n₂ hn := by
     simp only [Sigma.mk_le_mk_iff]
@@ -32,7 +32,7 @@ def inj {i} (c : Chain (P i)) : Chain ((i : I) × P i) where
 lemma inj_coe {i} (c : Chain (P i)) (n : ℕ) : inj c n = ⟨i, c n⟩ := by rfl
 
 /-- Converts a chain of coproducts into a coproduct of chains. -/
-def distrib (c : Chain ((i : I) × P i)) : (i : I) × Chain (P i) where
+@[expose] def distrib (c : Chain ((i : I) × P i)) : (i : I) × Chain (P i) where
   fst := (c 0).fst
   snd.toFun n :=
     have : (c 0).fst = (c n).fst := by

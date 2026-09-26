@@ -217,7 +217,7 @@ theorem sliceForceGradientConstant_nonneg : 0 ≤ sliceForceGradientConstant :=
 /-- The `L^{6/5}` size of the force slot of display (3.5) on one time slice: the
 Calderón–Zygmund norm of the cut-off force together with the `ρ^{-1/2}`-weighted
 `L¹` norm of the force on the ball. -/
-noncomputable def sliceForceGradientBound (C_CZ C₈ : ℝ) (x₀ : Vec3) {ρ : ℝ}
+@[expose] noncomputable def sliceForceGradientBound (C_CZ C₈ : ℝ) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (f : ParabolicPoint → Vec3) (s : ℝ) : ℝ :=
   C_CZ * (∑ j : Fin 3,
       lpNorm (fun y : Vec3 => mollifiedBallCutoff x₀ hρ y * f (y, s) j)

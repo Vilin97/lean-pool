@@ -73,7 +73,8 @@ theorem timeApply_bound (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[
     (mul_le_mul_of_nonneg_right (extendPath_norm_le T hT A t) (norm_nonneg (u t)))
 
 /-- The bounded actual time multiplier on Bochner L² spaces. -/
-def timeMultiplier (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
+@[expose] def timeMultiplier (T : ℝ) (hT : 0 ≤ T)
+    (A : C(Icc (0 : ℝ) T, E →L[ℝ] F)) :
     TimeLp T E →L[ℝ] TimeLp T F :=
   (timeApplyLinear T hT A).mkContinuous ‖A‖ (timeApply_bound T hT A)
 

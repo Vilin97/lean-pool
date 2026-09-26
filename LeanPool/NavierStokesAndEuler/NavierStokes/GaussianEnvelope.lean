@@ -410,7 +410,7 @@ theorem referenceSlope_bounds {lam u s : ℝ} (hlam : 0 < lam) (hu : 0 < u)
   constructor <;> linarith
 
 /-- The reference rate expressed in slot time. -/
-noncomputable def referenceRate (lam u ell time : ℝ) : ℝ :=
+@[expose] noncomputable def referenceRate (lam u ell time : ℝ) : ℝ :=
   PulseGrowth.netGrowth lam u (PulseGrowth.slotMagnitude u ell time)
 
 theorem hasDerivAt_referenceRate (lam u ell time : ℝ) :

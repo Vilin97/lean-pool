@@ -111,8 +111,7 @@ local infixr: 100 " × " => AddMonoidHom.prodMap
 /-- The action of `Q` on `K` by automorphisms.
 The action can be given a component-wise description in terms of `id` and `neg`, the
 identity and negation homomorphisms. -/
-@[aesop norm unfold (rule_sets := [P]), reducible]
-@[expose] def action : Q → (K →+ K)
+@[expose, aesop norm unfold (rule_sets := [P]), reducible] def action : Q → (K →+ K)
   | .e => .id ℤ × .id ℤ × .id ℤ
   | .a => .id ℤ × neg ℤ × neg ℤ
   | .b => neg ℤ × .id ℤ × neg ℤ
@@ -129,8 +128,7 @@ instance : AutAction action :=
 
 open K Q in
 /-- The cocycle in the construction of `P`. -/
-@[aesop norm unfold (rule_sets := [P]), reducible]
-@[expose] def cocycle : Q → Q → K
+@[expose, aesop norm unfold (rule_sets := [P]), reducible] def cocycle : Q → Q → K
   | a , a => x
   | a , c => x
   | b , b => y

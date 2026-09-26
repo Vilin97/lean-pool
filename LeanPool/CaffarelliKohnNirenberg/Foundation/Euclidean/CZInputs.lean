@@ -122,7 +122,7 @@ theorem eLpNorm_bound_of_l2_interpolation
   simpa only [ENNReal.toReal_ofReal hp0.le] using hres
 
 /-- Build extension data from subadditivity, weak-(1,1), measurability and an L² bound. -/
-def l2ExtensionInput
+@[expose] def l2ExtensionInput
     {T : (Vec3 → ℝ) → Vec3 → ℝ} {A₁ A₂ p : ℝ}
     (hTsub : ∀ f g, Measurable f → Integrable f volume → MemLp f 2 volume →
       Measurable g → MemLp g 2 volume → ∀ᵐ x ∂volume, |T (f + g) x| ≤

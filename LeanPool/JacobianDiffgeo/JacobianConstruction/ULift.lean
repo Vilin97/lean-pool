@@ -49,6 +49,7 @@ variable (L : AddSubgroup V) [DiscreteTopology L]
 
 /-- The chart family for `ULift (V ⧸ L)`: `chartAt' L x`, transported through
 `Homeomorph.ulift`. -/
+@[expose]
 def uliftChartAt (x : V) : OpenPartialHomeomorph (ULift.{u} (V ⧸ L)) V :=
   (Homeomorph.ulift (X := V ⧸ L)).toOpenPartialHomeomorph.trans (chartAt' L x)
 

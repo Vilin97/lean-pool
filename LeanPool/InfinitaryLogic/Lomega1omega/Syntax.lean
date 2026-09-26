@@ -109,15 +109,15 @@ the fix belongs upstream on the fork, not here. -/
 /-! ### Derived connectives Mathlib does not provide -/
 
 /-- Conjunction of two formulas, defined via De Morgan. -/
-@[match_pattern]
-protected def and (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
+@[expose, match_pattern] protected def and
+    (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
   (φ.imp ψ.not).not
 
 instance : Min (L.BoundedFormulaω α n) := ⟨BoundedFormulaω.and⟩
 
 /-- Disjunction of two formulas. -/
-@[match_pattern]
-protected def or (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
+@[expose, match_pattern] protected def or
+    (φ ψ : L.BoundedFormulaω α n) : L.BoundedFormulaω α n :=
   φ.not.imp ψ
 
 instance : Max (L.BoundedFormulaω α n) := ⟨BoundedFormulaω.or⟩

@@ -45,7 +45,7 @@ def mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) : SmoothL2Field W where
         simp)).symm))
 
 @[simp] theorem mapField_field (L : V →L[ℝ] W) (A : SmoothL2Field V) (x : Space) :
-    (mapField L A).field x = L (A.field x) := rfl
+    (mapField L A).field x = L (A.field x) := by rfl
 
 theorem toLp_mapField (L : V →L[ℝ] W) (A : SmoothL2Field V) :
     (mapField L A).toLp = L.compLpL 2 volume A.toLp := by
@@ -70,7 +70,7 @@ def addField (A B : SmoothL2Field V) : SmoothL2Field V where
       (A.smooth.contDiffAt.of_le (by simp)) (B.smooth.contDiffAt.of_le (by simp))).symm))
 
 @[simp] theorem addField_field (A B : SmoothL2Field V) (x : Space) :
-    (addField A B).field x = A.field x+B.field x := rfl
+    (addField A B).field x = A.field x+B.field x := by rfl
 
 theorem toLp_addField (A B : SmoothL2Field V) : (addField A B).toLp = A.toLp+B.toLp := by
   apply Lp.ext
@@ -118,7 +118,7 @@ def directionalField (A : SmoothL2Field V) (v : Space) : SmoothL2Field V :=
   mapField (ContinuousLinearMap.apply ℝ V v) A.derivative
 
 @[simp] theorem directionalField_field (A : SmoothL2Field V) (v x : Space) :
-    (directionalField A v).field x = fderiv ℝ A.field x v := rfl
+    (directionalField A v).field x = fderiv ℝ A.field x v := by rfl
 
 theorem toLp_eq_jet_zero (A : SmoothL2Field V) :
     A.toLp = (continuousMultilinearCurryFin0 ℝ Space

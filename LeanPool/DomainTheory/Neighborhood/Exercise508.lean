@@ -164,6 +164,7 @@ structure Dom where
 and its system
 is the
 function space `funSpace A.sys B.sys`. -/
+@[expose]
 def Dom.arrow (A B : Dom) : Dom := ⟨ApproximableMap A.sys B.sys, funSpace A.sys B.sys⟩
 attribute [local implicit_reducible] Dom.arrow
 

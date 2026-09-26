@@ -54,7 +54,7 @@ namespace Piece
 @[expose] def interior (P : Piece) : Set Plane := openSegment ℝ P.1 P.2
 
 /-- A piece is nondegenerate when its two ends differ. -/
-def Nondeg (P : Piece) : Prop := P.1 ≠ P.2
+@[expose] def Nondeg (P : Piece) : Prop := P.1 ≠ P.2
 
 end Piece
 

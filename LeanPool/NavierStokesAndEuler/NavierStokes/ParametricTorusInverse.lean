@@ -362,22 +362,23 @@ theorem multiplied_coeff_rapid {m : Frequency → ℂ} (hm : PolynomialGrowth m)
   hm.rapid_mul (SmoothFourierData.rapid_coefficient (slice_smooth hf p) (hp p))
 
 /-- Joint DP, given by `ContinuousLinearMap.fst ℝ ℝ Plane`. -/
-noncomputable def jointDP : Point →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ Plane
+@[expose] noncomputable def jointDP : Point →L[ℝ] ℝ :=
+  ContinuousLinearMap.fst ℝ ℝ Plane
 /-- Joint DX, given by `TorusInverse.dx.comp (ContinuousLinearMap.snd ℝ ℝ Plane)`. -/
-noncomputable def jointDX : Point →L[ℝ] ℝ :=
+@[expose] noncomputable def jointDX : Point →L[ℝ] ℝ :=
   TorusInverse.dx.comp (ContinuousLinearMap.snd ℝ ℝ Plane)
 /-- Joint DY, given by `TorusInverse.dy.comp (ContinuousLinearMap.snd ℝ ℝ Plane)`. -/
-noncomputable def jointDY : Point →L[ℝ] ℝ :=
+@[expose] noncomputable def jointDY : Point →L[ℝ] ℝ :=
   TorusInverse.dy.comp (ContinuousLinearMap.snd ℝ ℝ Plane)
 
 /-- Joint lift P, given by `ContinuousLinearMap.smulRightL ℝ Point ℂ jointDP`. -/
-noncomputable def jointLiftP : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
+@[expose] noncomputable def jointLiftP : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
   ContinuousLinearMap.smulRightL ℝ Point ℂ jointDP
 /-- Joint lift X, given by `ContinuousLinearMap.smulRightL ℝ Point ℂ jointDX`. -/
-noncomputable def jointLiftX : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
+@[expose] noncomputable def jointLiftX : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
   ContinuousLinearMap.smulRightL ℝ Point ℂ jointDX
 /-- Joint lift Y, given by `ContinuousLinearMap.smulRightL ℝ Point ℂ jointDY`. -/
-noncomputable def jointLiftY : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
+@[expose] noncomputable def jointLiftY : ℂ →L[ℝ] (Point →L[ℝ] ℂ) :=
   ContinuousLinearMap.smulRightL ℝ Point ℂ jointDY
 
 @[simp] theorem jointLiftP_apply (c : ℂ) (v : Point) : jointLiftP c v = v.1 • c := by rfl

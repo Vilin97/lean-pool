@@ -74,7 +74,8 @@ def coefficientLinear : C(Icc (0 : ℝ) T, E →L[ℝ] F) →ₗ[ℝ] (TimeLp T 
   map_smul' := timeMultiplier_smul T hT
 
 /-- The coefficient map is bounded for the actual uniform and operator norms. -/
-def coefficientMap : C(Icc (0 : ℝ) T, E →L[ℝ] F) →L[ℝ] (TimeLp T E →L[ℝ] TimeLp T F) where
+@[expose] def coefficientMap : C(Icc (0 : ℝ) T, E →L[ℝ] F) →L[ℝ]
+    (TimeLp T E →L[ℝ] TimeLp T F) where
   toLinearMap := coefficientLinear T hT
   cont := AddMonoidHomClass.continuous_of_bound (coefficientLinear T hT) 1 (fun A => by
     change ‖timeMultiplier T hT A‖ ≤ (1 : ℝ) * ‖A‖

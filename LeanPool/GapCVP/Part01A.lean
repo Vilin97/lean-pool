@@ -2008,10 +2008,12 @@ abbrev Window (T : ℕ) :=
   ⟨w.1.1.val + 1, w.2⟩
 
 /-- GapCVP reduction support. -/
+@[expose]
 def leftPosition {T : ℕ} (w : Window T) : Position T :=
   ⟨w.1.2.val - 1, Nat.lt_of_le_of_lt (Nat.sub_le _ _) w.1.2.isLt⟩
 
 /-- GapCVP reduction support. -/
+@[expose]
 def rightPosition {T : ℕ} (w : Window T) : Position T :=
   ⟨min (w.1.2.val + 1) T,
     Nat.lt_succ_of_le (Nat.min_le_right _ _)⟩
@@ -4657,6 +4659,7 @@ private theorem statementStackActions_le_max
     (Finset.mem_univ label)
 
 /-- GapCVP reduction support. -/
+@[expose]
 def blockSize (tm : Turing.FinTM2) : ℕ :=
   maxStackEditsPerStep tm + 1
 

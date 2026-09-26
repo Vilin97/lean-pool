@@ -43,7 +43,7 @@ structure Config.Label (S : Finset α) where
 
 /-- The canonical slope on a finset: `a, b` has this slope when every earlier
 point forms a 3-cup with `a, b`. -/
-def Cap4FreeSlope (S : Finset α) (a b : α) : Prop :=
+@[expose] def Cap4FreeSlope (S : Finset α) (a b : α) : Prop :=
   ∀ c : S, ↑c < a → C.Cup3 c a b
 
 instance decidableCap4FreeSlope (S : Finset α) :

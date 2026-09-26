@@ -200,6 +200,7 @@ Like `cenHashFrom` above this is a structural recursion on an explicit fuel (onl
 `nbrs.size - j`) rather than a `for` loop, so that the equivariance proof can read off the
 resulting count at each index; the `j < nbrs.size` that a `for` loop hides is exactly what the
 proof needs. -/
+@[expose]
 def bumpFrom (nbrs : Array Nat) : Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, cnt, touched => (cnt, touched)
   | fuel + 1, j, cnt, touched =>
@@ -212,7 +213,7 @@ def bumpFrom (nbrs : Array Nat) : Nat → Nat → Array Nat → Array Nat → Ar
 /-- Accumulate into `cnt` the number of neighbours each vertex has among `lab[k:e]`, recording in
 `touched` the vertices whose count became nonzero.  This is phase (1) of `refineStep`, and is the
 hot loop of the whole algorithm: it costs the splitter cell's degree sum. -/
-def countFrom (G : Graph) (lab : Array Nat) (e : Nat) :
+@[expose] def countFrom (G : Graph) (lab : Array Nat) (e : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, cnt, touched => (cnt, touched)
   | fuel + 1, k, cnt, touched =>
@@ -235,7 +236,7 @@ def sortNats (a : Array Nat) : Array Nat := (a.toList.mergeSort (fun x y => x �
 /-- Collect the distinct cell starts of the vertices in `touched[j:]`, using `hit` to deduplicate.
 Phase (2) of `refineStep`, as a structural recursion on fuel; `fuel` is only ever
 `touched.size - j`. -/
-def collectFrom (pos cst touched : Array Nat) :
+@[expose] def collectFrom (pos cst touched : Array Nat) :
     Nat → Nat → Array Bool → Array Nat → Array Bool × Array Nat
   | 0, _, hit, cells => (hit, cells)
   | fuel + 1, j, hit, cells =>
@@ -248,7 +249,7 @@ def collectFrom (pos cst touched : Array Nat) :
 /-- Bucket the cell `lab[k:ec]` by neighbour count: `bc[t]` counts the members whose count is `t`,
 and `ks` lists the counts that occur, in first-occurrence order.  Phase (3a) of `refineStep`, and
 another fuel recursion in place of a `for` loop; `fuel` is only ever `ec - k`. -/
-def bucketFrom (lab cnt : Array Nat) (ec : Nat) :
+@[expose] def bucketFrom (lab cnt : Array Nat) (ec : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, bc, ks => (bc, ks)
   | fuel + 1, k, bc, ks =>
@@ -260,7 +261,7 @@ def bucketFrom (lab cnt : Array Nat) (ec : Nat) :
 
 /-- Turn the bucket sizes into the fragment sizes `sizes[j]` and the bucket *offsets* `bc[ks[j]]`
 (relative to the start of the cell).  `acc` is the running offset.  Phase (3b). -/
-def offsetFrom (ks : Array Nat) :
+@[expose] def offsetFrom (ks : Array Nat) :
     Nat → Nat → Array Nat → Array Nat → Nat → Array Nat × Array Nat
   | 0, _, sizes, bc, _ => (sizes, bc)
   | fuel + 1, j, sizes, bc, acc =>
@@ -272,7 +273,7 @@ def offsetFrom (ks : Array Nat) :
 
 /-- Scatter the cell's vertices into `block` in count order, each bucket keeping the order it had
 in the cell.  Phase (3c). -/
-def scatterFrom (lab cnt : Array Nat) (ec : Nat) :
+@[expose] def scatterFrom (lab cnt : Array Nat) (ec : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, block, bc => (block, bc)
   | fuel + 1, k, block, bc =>
@@ -284,13 +285,13 @@ def scatterFrom (lab cnt : Array Nat) (ec : Nat) :
       scatterFrom lab cnt ec fuel (k + 1) (block.set! o v) (bc.set! t (o + 1))
 
 /-- Zero the buckets the cell used, leaving `bc` clear for the next cell.  Phase (3d). -/
-def clearBcFrom (ks : Array Nat) : Nat → Nat → Array Nat → Array Nat
+@[expose] def clearBcFrom (ks : Array Nat) : Nat → Nat → Array Nat → Array Nat
   | 0, _, bc => bc
   | fuel + 1, j, bc =>
     if j ≥ ks.size then bc else clearBcFrom ks fuel (j + 1) (bc.set! ks[j]! 0)
 
 /-- Copy the sorted block back into `lab[c:]`, keeping `pos` its inverse.  Phase (3e). -/
-def writeFrom (block : Array Nat) (c : Nat) :
+@[expose] def writeFrom (block : Array Nat) (c : Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, lab, pos => (lab, pos)
   | fuel + 1, k, lab, pos =>
@@ -300,6 +301,7 @@ def writeFrom (block : Array Nat) (c : Nat) :
       writeFrom block c fuel (k + 1) (lab.set! (c + k) v) (pos.set! v (c + k))
 
 /-- Write the boundaries of the fragment `[st, en)` into `cst`/`cen`.  Phase (4a). -/
+@[expose]
 def fillBoundsFrom (st en : Nat) : Nat → Nat → Array Nat → Array Nat → Array Nat × Array Nat
   | 0, _, cst, cen => (cst, cen)
   | fuel + 1, i, cst, cen =>
@@ -308,7 +310,7 @@ def fillBoundsFrom (st en : Nat) : Nat → Nat → Array Nat → Array Nat → A
 
 /-- Install the boundaries of every fragment of a split cell, collecting the fragment starts and
 hashing each fragment's size and count into the trace.  Phase (4). -/
-def boundsFrom (ks sizes : Array Nat) :
+@[expose] def boundsFrom (ks sizes : Array Nat) :
     Nat → Nat → Array Nat → Array Nat → Array Nat → Nat → UInt64 →
       Array Nat × Array Nat × Array Nat × UInt64
   | 0, _, cst, cen, starts, _, tr => (cst, cen, starts, tr)
@@ -343,13 +345,13 @@ def markExceptFrom (starts : Array Nat) (bi : Nat) : Nat → Nat → Array Bool 
     else markExceptFrom starts bi fuel (k + 1) (if k != bi then inW.set! starts[k]! true else inW)
 
 /-- Zero the counts of the touched vertices.  Phase (6). -/
-def clearCntFrom (touched : Array Nat) : Nat → Nat → Array Nat → Array Nat
+@[expose] def clearCntFrom (touched : Array Nat) : Nat → Nat → Array Nat → Array Nat
   | 0, _, cnt => cnt
   | fuel + 1, j, cnt =>
     if j ≥ touched.size then cnt else clearCntFrom touched fuel (j + 1) (cnt.set! touched[j]! 0)
 
 /-- Unmark the cells that were collected.  Phase (6). -/
-def clearHitFrom (cells : Array Nat) : Nat → Nat → Array Bool → Array Bool
+@[expose] def clearHitFrom (cells : Array Nat) : Nat → Nat → Array Bool → Array Bool
   | 0, _, hit => hit
   | fuel + 1, j, hit =>
     if j ≥ cells.size then hit else clearHitFrom cells fuel (j + 1) (hit.set! cells[j]! false)
@@ -421,6 +423,7 @@ Returns the new partition, the updated worklist (`inW`, indexed by cell start po
 updated trace hash, and the scratch space, restored to its cleared state.  Cells created by a
 split are pushed onto the worklist following Hopcroft's rule: all fragments if the parent was
 queued, otherwise all but a largest fragment. -/
+@[expose]
 def refineStep (G : Graph) (p : Part) (inW : Array Bool) (s : Nat) (tr : UInt64) (sc : Scratch) :
     Part × Array Bool × UInt64 × Scratch :=
   let e := p.cen[s]!
@@ -459,7 +462,7 @@ The guard `s < G.n && p.cst[s]! == s` is never false in a real run — only cell
 queued, and a cell start stays one when its cell is split — but checking it costs one array read
 per pop and saves `Equivariance.refineLoop_equiv` from having to carry the worklist invariant.
 Popping a position that is not a cell start simply drops it. -/
-def refineLoop (G : Graph) : Nat → Part → Array Bool → UInt64 → Scratch → Part × UInt64
+@[expose] def refineLoop (G : Graph) : Nat → Part → Array Bool → UInt64 → Scratch → Part × UInt64
   | 0, p, _, tr, _ => (p, tr)
   | fuel + 1, p, inW, tr, sc =>
     match firstSet inW with
@@ -477,11 +480,11 @@ the trace hash of the refinement.
 The fuel `n² + n + 1` is a genuine bound: a cell start enters the worklist once initially and once
 per fragment of each split, there are at most `n - 1` splits, and each split creates at most `n`
 fragments. -/
-def refine (G : Graph) (p : Part) (inW : Array Bool) (tr : UInt64) : Part × UInt64 :=
+@[expose] def refine (G : Graph) (p : Part) (inW : Array Bool) (tr : UInt64) : Part × UInt64 :=
   refineLoop G (G.n * G.n + G.n + 1) p inW tr (Scratch.empty G.n)
 
 /-- Refine from the unit partition: equivalently, the coarsest equitable partition of `G`. -/
-def initialRefine (G : Graph) : Part × UInt64 :=
+@[expose] def initialRefine (G : Graph) : Part × UInt64 :=
   let p := Part.unit G.n
   let inW := if G.n == 0 then #[] else (Array.replicate G.n false).set! 0 true
   refine G p inW hashSeed
@@ -511,7 +514,7 @@ the input partition is assumed equitable). -/
 /-! ## Certificates -/
 
 /-- Number of 64-bit words used for one row of a certificate. -/
-def rowWords (n : Nat) : Nat := (n + 63) / 64
+@[expose] def rowWords (n : Nat) : Nat := (n + 63) / 64
 
 /-- An `n × n` bit matrix packed into 64-bit words: row `i` occupies words
 `[i * rowWords n, (i+1) * rowWords n)`, and column `j` of a row is bit `63 - j % 64` of word
@@ -654,7 +657,7 @@ pruning, so this is a pure performance guard. -/
 def maxGens : Nat := 256
 
 /-- Record a newly found automorphism, ignoring the identity and duplicates. -/
-def St.addAuto (st : St) (g : Array Nat) : St :=
+@[expose] def St.addAuto (st : St) (g : Array Nat) : St :=
   if !moves g then st
   else if st.autos.size ≥ maxGens then st
   else if st.autos.any (fun h => h == g) then st
@@ -663,7 +666,7 @@ def St.addAuto (st : St) (g : Array Nat) : St :=
 /-- Invariant pruning at a node.  Returns `none` if the whole subtree is dominated by the current
 best leaf, and otherwise the state to continue with (with the incumbent discarded if the subtree
 is guaranteed to beat it). -/
-def pruneNode (invPath : Array UInt64) (st : St) : Option St :=
+@[expose] def pruneNode (invPath : Array UInt64) (st : St) : Option St :=
   match st.best with
   | none => some st
   | some b =>
@@ -682,7 +685,7 @@ onto `ζ`'s.  Since depth-first search had already *finished* `ζ`'s branch befo
 every leaf still unexplored below `ν`'s branch is a `γ`-image of one already seen, and carries the
 same certificate.  So the whole remainder of that branch can be abandoned: we request a backjump
 to depth `k`. -/
-def leafUpdate (G : Graph) (path : Array Nat) (invPath : Array UInt64) (lab : Array Nat)
+@[expose] def leafUpdate (G : Graph) (path : Array Nat) (invPath : Array UInt64) (lab : Array Nat)
     (st : St) : St := Id.run do
   let cert := certOf G lab
   let leaf : Leaf := { path, invPath, cert, lab }
@@ -732,6 +735,7 @@ mutual
 
 /-- Visit one node of the search tree.  `p` is the (already refined) ordered partition, `path`
 the vertices individualised to reach it, and `invPath` the node invariants along that path. -/
+@[expose]
 def dfsNode (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UInt64) (p : Part)
     (st : St) : St :=
   match fuel with
@@ -754,6 +758,7 @@ def dfsNode (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UInt64)
 
 /-- Visit the remaining children `verts` of a node, skipping those in the orbit of an already
 visited child, and honouring any backjump request coming back from below. -/
+@[expose]
 def dfsChildren (G : Graph) (fuel : Nat) (path : Array Nat) (invPath : Array UInt64) (p : Part)
     (verts : List Nat) (processed : Array Nat) (orb : Orbits) (st : St) : St :=
   match verts with
@@ -826,7 +831,7 @@ def canonicalForm (G : Graph) : Array UInt64 :=
 /-- Positional inverse of `a`: if `a` is a permutation of `{0, …, n-1}` then this is the array
 with `invLab n a` at position `a[i]!` equal to `i`.  Used only to *check* that, so nothing is
 claimed about it when `a` is not a permutation. -/
-def invLab (n : Nat) (a : Array Nat) : Array Nat :=
+@[expose] def invLab (n : Nat) (a : Array Nat) : Array Nat :=
   (List.range n).foldl (init := Array.replicate n 0) fun b i =>
     if a[i]! < n then b.set! a[i]! i else b
 

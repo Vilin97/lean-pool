@@ -583,7 +583,7 @@ theorem curl_lifted_split (κ : ℝ) (m : Space) (L : LiftTangent →L[ℝ] Spac
 
 /-- Covering slow curl, given by `curlMatrix ((fderiv ℝ q z).comp ((ContinuousLinearMap.inl ℝ
 Space ℝ).comp G))`. -/
-def coveringSlowCurl (G : Space →L[ℝ] Space) (q : LiftTangent → Space)
+@[expose] def coveringSlowCurl (G : Space →L[ℝ] Space) (q : LiftTangent → Space)
     (z : LiftTangent) : Space :=
   curlMatrix ((fderiv ℝ q z).comp ((ContinuousLinearMap.inl ℝ Space ℝ).comp G))
 

@@ -261,7 +261,7 @@ theorem graphRealizationPre_join_vertex {V : Type u} [Quiver.{u} V]
     reverse. -/
 
 /-- The realization path of a symmetric edge, reversing the interval when necessary. -/
-def graphRealizationSymmetricEdgePath {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationSymmetricEdgePath {V : Type u} [Quiver.{u} V]
     {a b : V} (e : (Quiver.symmetrifyQuiver V).Hom a b) :
     Path (graphVertex (V := V) a) (graphVertex (V := V) b) :=
   match e with
@@ -269,7 +269,7 @@ def graphRealizationSymmetricEdgePath {V : Type u} [Quiver.{u} V]
   | Sum.inr e => (graphRealizationForwardPath e).symm
 
 /-- Concatenates realized edge paths along a quiver path. -/
-def graphRealizationQuiverPath {V : Type u} [Quiver.{u} V]
+@[expose] def graphRealizationQuiverPath {V : Type u} [Quiver.{u} V]
     {a b : V}
     (p : @Quiver.Path (Quiver.Symmetrify V)
       (Quiver.symmetrifyQuiver V) a b) :

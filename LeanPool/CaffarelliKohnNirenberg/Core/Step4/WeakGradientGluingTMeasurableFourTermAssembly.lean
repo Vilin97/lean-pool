@@ -58,18 +58,18 @@ namespace CKN.Core.Step4
 /-- The scale-free part of the far-force gradient coefficient of display (3.5):
 the numeral `400 = (3/20)⁻²` of the separation of `lem:cutoff`, the order-one
 constant of `eq:har-Ck`, and the cutoff gradient constant. -/
-def originASlotForceIncrementConstant : ℝ :=
+@[expose] def originASlotForceIncrementConstant : ℝ :=
   400 * sliceForcePotentialConstant * cutoffGradientConstant
 
 /-- The far-force gradient coefficient at collar radii at least `1/128`, where
 the scale factor `ρ⁻³` of display (3.5) is at most `128³`. -/
-def originASlotForceIncrementCoefficient : ℝ :=
+@[expose] def originASlotForceIncrementCoefficient : ℝ :=
   originASlotForceIncrementConstant * (128 : ℝ) ^ 3
 
 /-- The absolute Calderón–Zygmund threshold at which the affine slot pays for
 the far-force increment: the coefficient of display (3.5) times the cell-volume
 factor `4π/3 ≤ 5`. -/
-def originASlotForceIncrementThreshold : ℝ :=
+@[expose] def originASlotForceIncrementThreshold : ℝ :=
   5 * originASlotForceIncrementCoefficient
 
 end CKN.Core.Step4

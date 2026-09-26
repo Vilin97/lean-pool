@@ -89,7 +89,7 @@ def originKPAffineASlot (q C_CZ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
 /-- The enlarged origin pressure-gradient majorant: the small-cell budget
 `originKPAffineASlot` together with the whole-carrier budget of
 `oneSidedPressureGradientKP'`, which carries the clipped-scale inflation. -/
-def oneSidedPressureGradientKPAffine
+@[expose] def oneSidedPressureGradientKPAffine
     (q τ C_CZ R₀ R₁ ε : ℝ) (KU KD : ℝ≥0∞) : ℝ≥0∞ :=
   oneSidedMorreyBound (6 / 5) (min ((1 / τ + 8 / 25)⁻¹) q) R₁
     (originKPAffineASlot q C_CZ ε KU KD)

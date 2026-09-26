@@ -30,6 +30,7 @@ namespace StateVector
 section
 
 /-- Tensor product of raw Hilbert-space vectors. -/
+@[expose]
 noncomputable def tensor (ψ : StateVector m) (φ : StateVector n) : StateVector (m + n) :=
   WithLp.toLp 2 fun i => ψ (prodEquiv.symm i).1 * φ (prodEquiv.symm i).2
 
@@ -154,6 +155,7 @@ namespace PureState
 section
 
 /-- Tensor product of pure states. -/
+@[expose]
 noncomputable def tensor (ψ : PureState m) (φ : PureState n) : PureState (m + n) :=
   ofVec (StateVector.tensor (ψ : StateVector m) (φ : StateVector n)) (by
     rw [StateVector.norm_tensor, ψ.norm_eq_one, φ.norm_eq_one, one_mul])
@@ -254,6 +256,7 @@ namespace HilbertOperator
 section
 
 /-- Tensor product of Hilbert-space operators. -/
+@[expose]
 noncomputable def tensor
     (G : HilbertOperator m) (K : HilbertOperator n) : HilbertOperator (m + n) :=
   Matrix.reindex prodEquiv prodEquiv (G ⊗ₖ K)
@@ -339,6 +342,7 @@ namespace Gate
 noncomputable section
 
 /-- Tensor product of unitary gates. -/
+@[expose]
 def tensor (G : Gate m) (K : Gate n) : Gate (m + n) :=
   ofUnitary (HilbertOperator.tensor (G : HilbertOperator m) (K : HilbertOperator n))
     (HilbertOperator.tensor_mem_unitaryGroup G.unitary K.unitary)

@@ -267,7 +267,8 @@ def endpointDerivative (L : U →L[ℝ] TimeLp T E) : U →L[ℝ] TimeLp T E :=
     (1 / 2) (by norm_num) (energyOperator_coercive T hT H K hK hH hsmall) L
 
 /-- The constructed physical stationary path. -/
-def endpointDisplacement (L : U →L[ℝ] TimeLp T E) : U →L[ℝ] C(Icc (0 : ℝ) T, E) :=
+@[expose] def endpointDisplacement (L : U →L[ℝ] TimeLp T E) :
+    U →L[ℝ] C(Icc (0 : ℝ) T, E) :=
   (initialPrimitive T hT).comp (endpointDerivative T hT m H K hK hH hsmall L)
 
 /-- The genuine endpoint quadratic form represented by a bounded operator. -/

@@ -54,6 +54,7 @@ This is the Hasse norm theorem for the quadratic extension `ℚ(√B)` (or `√A
 rank-three local–global principle; it is proved by elementary descent (CRT plus the norm
 criterion) in `HasseMinkowski/Legendre.lean` (`hilbertSymLocalGlobal`).  It is kept as a
 `def`/`Prop` here so that the rank-three reduction does not depend on that proof. -/
+@[expose]
 def HilbertSymLocalGlobal : Prop :=
   ∀ A B : ℚ, A ≠ 0 → B ≠ 0 →
     (∀ (p : ℕ) [Fact (Nat.Prime p)], hilbertSym (A : ℚ_[p]) (B : ℚ_[p]) = 1) →

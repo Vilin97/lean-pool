@@ -2111,7 +2111,8 @@ local instance planeVolumeHaar : Measure.IsAddHaarMeasure (volume : Measure Plan
   infer_instance
 
 /-- Quotient point, given by `((z.1 : UnitAddCircle), (z.2 : UnitAddCircle))`. -/
-noncomputable def quotientPoint (z : Plane) : Torus := ((z.1 : UnitAddCircle), (z.2 :
+@[expose] noncomputable def quotientPoint (z : Plane) : Torus :=
+  ((z.1 : UnitAddCircle), (z.2 :
     UnitAddCircle))
 
 /-- The manuscript's real covering matrix `[[3,1],[1,5]]`. -/
@@ -2196,8 +2197,9 @@ theorem squareAverage_covering_iterate {f : Plane → ℂ}
     funext z
     change g (torusCovering^[n] (quotientPoint z)) = f (covering^[n] z)
     rw [← quotient_covering_iterate]
-    rfl
-  have hg : squareAverage f = ∫ z, g z ∂torusMeasure := squareAverage_torusLift g
+    exact congrFun (torusLift_descendContinuous f hf hp) (covering^[n] z)
+  have hg : squareAverage f = ∫ z, g z ∂torusMeasure := by
+    simpa only [g, torusLift_descendContinuous] using squareAverage_torusLift g
   rw [← heq, squareAverage_torusLift]
   exact (integral_torusCovering_iterate g g.continuous n).trans hg.symm
 

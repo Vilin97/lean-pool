@@ -157,6 +157,7 @@ def encodeBaseOrbit (k : DirIdx) (u : BaseOrbit k) : FreeCol k ↪ AvailFrom3 :=
 private theorem base_val_lt_three (i : Fin 3) : (baseVertex.1 i).1 < 3 := by fin_cases i <;> decide
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 noncomputable def decodeTuple (k : DirIdx) (g : FreeCol k ↪ AvailFrom3) : Tuple 3 n :=
   fun j =>
     if hc : colMatch (maskAt k) j = none then
@@ -226,6 +227,7 @@ private theorem decodeTuple_injective (k : DirIdx) (g : FreeCol k ↪ AvailFrom3
     simp [this]
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 noncomputable def decodeVertex (k : DirIdx) (g : FreeCol k ↪ AvailFrom3) : V :=
   ⟨decodeTuple (k := k) g, by exact decodeTuple_injective (k := k) g⟩
 

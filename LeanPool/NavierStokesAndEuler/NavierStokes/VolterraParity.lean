@@ -69,7 +69,7 @@ noncomputable def exponent (i : Fin 6) : ℕ :=
 
 /-- Normalized form of the regular inverse. It includes r = 0 without
 division by the radial coordinate. -/
-noncomputable def radialInverse (F : Field) : Field :=
+@[expose] noncomputable def radialInverse (F : Field) : Field :=
   fun r z i => r • ∫ t : ℝ in (0)..(1), (t ^ exponent i) • F (t * r) z i
 
 /-- Matrix action, defined pointwise by `(A r z).mulVec (F r z)`. -/

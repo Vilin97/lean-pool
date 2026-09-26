@@ -17,7 +17,7 @@ infinitesimal-generator relation between such a group and a partial operator,
 via the Stone difference quotient.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

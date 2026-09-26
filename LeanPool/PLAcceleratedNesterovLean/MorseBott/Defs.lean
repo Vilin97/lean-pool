@@ -68,7 +68,7 @@ theorem self_mem_localMinSet {f : E → ℝ} {x₀ : E} (hmin : IsLocalMin f x�
 /-- The μ-Polyak–Łojasiewicz condition (Definition 1.2 in the paper):
       ∀ x near x₀, f(x) − f(x₀) ≤ (2μ)⁻¹ ‖Df(x)‖²
     where ‖Df(x)‖ = ‖fderiv ℝ f x‖ equals the gradient norm by Riesz. -/
-def MuPL (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
+@[expose] def MuPL (f : E → ℝ) (μ : ℝ) (x₀ : E) : Prop :=
   ∀ᶠ x in 𝓝 x₀, f x - f x₀ ≤ (2 * μ)⁻¹ * ‖fderiv ℝ f x‖ ^ 2
 
 -- ════════════════════════════════════════════════════════════════════════════

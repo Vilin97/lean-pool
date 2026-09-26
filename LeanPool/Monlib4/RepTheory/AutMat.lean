@@ -1097,7 +1097,7 @@ theorem AlgEquiv.matrix_prod_aut' {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       AlgEquiv.ofProdMap₂₂ f h.2
     use f₁, f₂
     ext1 x
-    simp_rw [AlgEquiv.prodMap_apply, Prod.map_apply']
+    simp_rw [AlgEquiv.prodMap_apply]
     calc
       f x = f (x.1, 0) + f (0, x.2) := by
         rw [← map_add, Prod.fst_add_snd]
@@ -1117,8 +1117,7 @@ theorem AlgEquiv.matrix_prod_aut' {𝕜 n m : Type*} [Field 𝕜] [Fintype n]
       AlgEquiv.ofProdMap₂₁ f h.2
     use g₂, g₁
     ext1 x
-    simp_rw [Function.comp_apply, Prod.swap, AlgEquiv.prodMap_apply,
-      Prod.map_apply]
+    simp_rw [Function.comp_apply, Prod.swap, AlgEquiv.prodMap_apply]
     calc
       f x = f (0, x.2) + f (x.1, 0) := by
         rw [← map_add, add_comm, Prod.fst_add_snd]

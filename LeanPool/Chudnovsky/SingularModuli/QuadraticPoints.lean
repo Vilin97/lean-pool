@@ -60,6 +60,7 @@ deriving DecidableEq
 def IsPosDef (f : BQF) : Prop := 0 < f.a ∧ disc f < 0
 
 /-- A form is primitive when its coefficients have no common non-unit divisor. -/
+@[expose]
 def IsPrimitive (f : BQF) : Prop :=
   ∀ d : ℤ, d ∣ f.a → d ∣ f.b → d ∣ f.c → IsUnit d
 

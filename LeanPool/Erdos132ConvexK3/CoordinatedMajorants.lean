@@ -565,7 +565,7 @@ theorem coordinated_exceptional_22_forces_cross_top_three
 joint minimum admits another actual pair with fewer facing-endpoint moves.
 Neither ErLV89 p.548 nor the 1986 preprint states a selection rule or proves
 this replacement. -/
-def ErLVCoordinatedMajorantExchangeComplete : Prop :=
+@[expose] def ErLVCoordinatedMajorantExchangeComplete : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
     (∀ v, 7 ≤ vertexDegree P d₁ d₂ d₃ v) →

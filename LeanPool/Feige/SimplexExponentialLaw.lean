@@ -36,6 +36,7 @@ theorem normalizedExponentialSimplexMeasure_eq_uniform :
   rw [inv_inv]
 
 /-- The normalized-coordinate map on real product coordinates. -/
+@[expose]
 noncomputable def normalizedExponentialCoordinates
     (e : ℝ × (Fin n → ℝ)) : Fin n → ℝ :=
   (exponentialSimplexInverse e).2

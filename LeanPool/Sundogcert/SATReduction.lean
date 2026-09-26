@@ -123,7 +123,7 @@ instance instDecidableEqTripleIdx : DecidableEq (TripleIdx n m) :=
 /-- **The reduction.**  Re-index the gadget triple map along the canonical finite equiv, giving the
     `Fin s → Tip × XNode × YNode` shape the matching problem wants (`s = card TripleIdx`).
     `noncomputable` because `Fintype.equivFin` is. -/
-noncomputable def reduce (φ : Formula n m) :
+@[expose] noncomputable def reduce (φ : Formula n m) :
     Fin (Fintype.card (TripleIdx n m)) → Tip n m × XNode n m × YNode n m :=
   fun i => tripleFn φ ((Fintype.equivFin _).symm i)
 

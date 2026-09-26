@@ -81,7 +81,7 @@ def evaluation (C : SeparationPackage I) :
     exact map_add (C.character z) x y
 
 /-- The initial topology induced by the compatible separating characters. -/
-@[reducible] def initialTopology (C : SeparationPackage I) :
+@[expose, reducible] def initialTopology (C : SeparationPackage I) :
     TopologicalSpace (I →₀ ℤ) :=
   TopologicalSpace.induced C.evaluation inferInstance
 

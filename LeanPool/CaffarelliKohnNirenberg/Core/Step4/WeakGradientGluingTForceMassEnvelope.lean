@@ -134,7 +134,7 @@ noncomputable section
 namespace CKN.Core.Step4
 
 /-- An explicit absolute threshold for the force-potential increment. -/
-def gapForceIncrementThreshold : ℝ := 5 * gapForceIncrementCoefficient
+@[expose] def gapForceIncrementThreshold : ℝ := 5 * gapForceIncrementCoefficient
 
 end CKN.Core.Step4
 end

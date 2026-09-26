@@ -80,7 +80,7 @@ theorem standardRankMap_apply (n m r : ℕ)
   simp [standardRankMap]
 
 /-- Restrict a coordinate vector to its first `r` coordinates. -/
-def takeFirstContinuousLinearMap {n r : ℕ} (hrn : r ≤ n) :
+@[expose] def takeFirstContinuousLinearMap {n r : ℕ} (hrn : r ≤ n) :
     ComplexEuclidean n →L[ℂ] ComplexEuclidean r :=
   ContinuousLinearMap.pi fun j ↦
     ContinuousLinearMap.proj (R := ℂ) (i := Fin.castLE hrn j)

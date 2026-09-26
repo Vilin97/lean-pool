@@ -33,6 +33,7 @@ variable {m n : ℕ}
 
 /-- Big-endian pairing of basis labels: `(x, y) ↦ y + 2 ^ n * x`, so the
 first (lower-qubit-index) factor carries the most significant bits. -/
+@[expose]
 def prodEquiv : Fin (2 ^ m) × Fin (2 ^ n) ≃ Fin (2 ^ (m + n)) :=
   finProdFinEquiv.trans (finCongr (pow_add (2 : ℕ) m n).symm)
 

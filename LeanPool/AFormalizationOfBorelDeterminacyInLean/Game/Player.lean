@@ -106,7 +106,8 @@ def swap : Player → Player
 end Player
 
 /-- is player `p` to move in position `x`? -/
-@[simp_isPosition] def IsPosition (x : List A) (p : Player) : Prop := x.length % 2 = p.toNat
+@[expose, simp_isPosition] def IsPosition (x : List A) (p : Player) : Prop :=
+  x.length % 2 = p.toNat
 
 
 

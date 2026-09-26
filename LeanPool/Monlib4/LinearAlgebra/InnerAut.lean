@@ -682,8 +682,7 @@ def _root_.Matrix.unitaryGroup.conj [Fintype n] [DecidableEq n]
 @[norm_cast]
 theorem _root_.Matrix.unitaryGroup.conj_coe [Fintype n] [DecidableEq n]
     (U : unitaryGroup n 𝕜) :
-    (unitaryGroup.conj U : Matrix n n 𝕜) = (U : Matrix n n 𝕜)ᴴᵀ :=
-  rfl
+    (unitaryGroup.conj U : Matrix n n 𝕜) = (U : Matrix n n 𝕜)ᴴᵀ := by rfl
 
 theorem _root_.Matrix.innerAut.conj [Fintype n] [DecidableEq n]
     (U : unitaryGroup n 𝕜) (x : Matrix n n 𝕜) :
@@ -714,8 +713,7 @@ def _root_.Matrix.unitaryGroup.kronecker [Fintype n] [DecidableEq n]
 theorem _root_.Matrix.unitaryGroup.kronecker_coe [Fintype n] [DecidableEq n]
     [Fintype p] [DecidableEq p] (U₁ : unitaryGroup n 𝕜) (U₂ : unitaryGroup p 𝕜) :
     (unitaryGroup.kronecker U₁ U₂ : Matrix (n × p) (n × p) 𝕜) =
-      (U₁ : Matrix n n 𝕜) ⊗ₖ (U₂ : Matrix p p 𝕜) :=
-  rfl
+      (U₁ : Matrix n n 𝕜) ⊗ₖ (U₂ : Matrix p p 𝕜) := by rfl
 
 theorem _root_.Matrix.innerAut_kronecker [Fintype n] [DecidableEq n]
     [Fintype p] [DecidableEq p] (U₁ : unitaryGroup n 𝕜) (U₂ : unitaryGroup p 𝕜)

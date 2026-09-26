@@ -63,6 +63,7 @@ variable {α : Type*}
 /-! ### Fibers of a set of `(copy index, token)` pairs. -/
 
 /-- The `i`-th *fiber* of a set `W ⊆ ℕ × α`: the tokens appearing in copy `i`. -/
+@[expose]
 def fiber (W : Set (ℕ × α)) (i : ℕ) : Set α := {a | (i, a) ∈ W}
 
 @[simp] theorem mem_fiber {W : Set (ℕ × α)} {i : ℕ} {a : α} : a ∈ fiber W i ↔ (i, a) ∈ W := Iff.rfl
@@ -119,6 +120,7 @@ theorem single_inter {n : ℕ} (X X' : Set α) :
 ℕ × Δ`:
 `W ∈ 𝒟^∞` iff every fiber is a neighbourhood of `𝒟` and all but finitely many
 fibers equal `Δ`. -/
+@[expose]
 def iterSys (V : NeighborhoodSystem α) : NeighborhoodSystem (ℕ × α) where
   mem W := (∀ i, V.mem (fiber W i)) ∧ ∃ N, ∀ i, N ≤ i → fiber W i = V.master
   master := {p | p.2 ∈ V.master}

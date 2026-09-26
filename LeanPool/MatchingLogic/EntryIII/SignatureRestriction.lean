@@ -31,7 +31,7 @@ variable {S : Signature} {Var : Type} [DecidableEq Var]
 namespace Signature
 
 /-- The sub-signature containing exactly the symbols in `F`. -/
-def restrict (F : Finset S.Sym) : Signature where
+@[expose] def restrict (F : Finset S.Sym) : Signature where
   Sym := {sigma : S.Sym // sigma ∈ F}
   arity sigma := S.arity sigma.1
 

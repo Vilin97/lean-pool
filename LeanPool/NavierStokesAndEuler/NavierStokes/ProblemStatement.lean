@@ -132,7 +132,7 @@ structure CandidateProperties (u : VelocityField) (p : PressureField)
 /-- The primary existential content of Candidate Theorem 1.1.
 Maximal lifespan, Sobolev blow-up, and force derivative decay are derived
 from these candidate conditions in separate theorems. -/
-def candidateStatement : Prop :=
+@[expose] def candidateStatement : Prop :=
   ∃ u : VelocityField, ∃ p : PressureField, ∃ f : VelocityField,
     CandidateProperties u p f
 

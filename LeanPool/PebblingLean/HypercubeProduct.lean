@@ -37,7 +37,7 @@ def appendVertex {a m : ℕ}
   Fin.append p.1 p.2
 
 /-- Coordinate splitting gives a vertex equivalence `Q_{a+m} ≃ Q_a × Q_m`. -/
-def splitVertexEquiv (a m : ℕ) :
+@[expose] def splitVertexEquiv (a m : ℕ) :
     HypercubeVertex (a + m) ≃ HypercubeVertex a × HypercubeVertex m where
   toFun := splitVertex a m
   invFun := appendVertex

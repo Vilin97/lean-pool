@@ -275,7 +275,7 @@ end IntegerDependence
 section BoundedDeletion
 
 /-- A bounded relation using both the finite families `A` and `Y`. -/
-def HasMixedRelation (Q : ℕ) (A Y : Finset G) : Prop :=
+@[expose] def HasMixedRelation (Q : ℕ) (A Y : Finset G) : Prop :=
   ∃ (b c : G → ℤ),
     (∀ a ∈ A, Int.natAbs (b a) ≤ Q) ∧
     (∀ y ∈ Y, Int.natAbs (c y) ≤ Q) ∧

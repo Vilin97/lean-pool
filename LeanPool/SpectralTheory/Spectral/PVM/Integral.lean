@@ -19,7 +19,7 @@ This file constructs the spectral integral first for complex-valued simple funct
 bounded measurable functions.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

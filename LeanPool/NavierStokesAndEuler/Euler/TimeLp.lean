@@ -41,7 +41,8 @@ theorem path_memLp (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, E)) :
     (Filter.Eventually.of_forall (extendPath_norm_le T hT f))
 
 /-- A continuous time path represented in the actual Bochner L² space. -/
-def pathLp (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, E)) : TimeLp T E :=
+@[expose] def pathLp (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, E)) :
+    TimeLp T E :=
   (path_memLp T hT f).toLp (extendPath T hT f)
 
 /-- The Bochner path representative is the genuine clamped continuous path almost everywhere. -/

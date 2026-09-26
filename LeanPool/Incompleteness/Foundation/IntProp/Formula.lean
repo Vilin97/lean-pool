@@ -82,7 +82,7 @@ lemma top_def : (⊤ : Formula α) = ⊥ ==> ⊥ := rfl
 lemma iff_def (φ ψ : Formula α) : φ <=> ψ = (φ ==> ψ) ⋏ (ψ ==> φ) := by rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def complexity : Formula α → ℕ
+@[expose] def complexity : Formula α → ℕ
 | atom _  => 0
 | ⊥       => 0
 | φ ==> ψ  => max φ.complexity ψ.complexity + 1

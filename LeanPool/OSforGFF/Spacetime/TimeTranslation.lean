@@ -140,7 +140,7 @@ lemma timeShift_antilipschitz (s : ℝ) : AntilipschitzWith 1 (timeShift s) :=
   (timeShift_isometry s).antilipschitzWith
 
 /-- The constant vector used to express timeShift as id + const. -/
-def timeShiftConst (s : ℝ) : SpaceTime :=
+@[expose] def timeShiftConst (s : ℝ) : SpaceTime :=
   WithLp.toLp 2 (fun i => if i.val = 0 then s else 0)
 
 /-- timeShift s equals addition of a constant. -/
@@ -218,7 +218,7 @@ def timeTranslationSchwartzℂCLM (s : ℝ) : TestFunctionℂ →L[ℂ] TestFunc
   SchwartzMap.compCLMOfAntilipschitz ℂ (timeShift_hasTemperateGrowth s) (timeShift_antilipschitz s)
 
 /-- Time translation on complex-valued Schwartz functions. -/
-def timeTranslationSchwartzℂ (s : ℝ) (f : TestFunctionℂ) : TestFunctionℂ :=
+@[expose] def timeTranslationSchwartzℂ (s : ℝ) (f : TestFunctionℂ) : TestFunctionℂ :=
   timeTranslationSchwartzℂCLM s f
 
 /-- Time translation evaluated at a point. -/

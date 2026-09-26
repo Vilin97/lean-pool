@@ -36,9 +36,10 @@ def Set.toZFSet {A : ZFSet} (B : Set A) : ZFSet :=
 namespace SetTheory
 
 /-- The `IsWellFoundedRevMem` declaration. -/
-@[realize] def IsWellFoundedRevMem (x : M) := ∀ S ∈ 𝓟 x, S ≠ ∅ → ∃ y ∈ S, ∀ z ∈ S, y ∉ z
+@[expose, realize] def IsWellFoundedRevMem (x : M) :=
+  ∀ S ∈ 𝓟 x, S ≠ ∅ → ∃ y ∈ S, ∀ z ∈ S, y ∉ z
 /-- The `MemOmega` declaration. -/
-@[realize] def MemOmega (x : M) := IsOrdinal x ∧ IsWellFoundedRevMem x
+@[expose, realize] def MemOmega (x : M) := IsOrdinal x ∧ IsWellFoundedRevMem x
 @[toV_simps] lemma IsWellFoundedRevMem.toV (x : M) :
     IsWellFoundedRevMem ↓x ↔ IsWellFoundedRevMem x := by
   simp only [IsWellFoundedRevMem, toV_simps, empty.toV (M := M)]

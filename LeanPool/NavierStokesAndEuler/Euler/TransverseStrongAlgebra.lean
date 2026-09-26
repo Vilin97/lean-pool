@@ -39,7 +39,7 @@ variable (T : ℝ) (Q Q₁ Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
     ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous).clm_comp Q₁.continuous⟩
 
 /-- The actual product-rule derivative `Q_t* Q_t + Q* Q_tt`. -/
-def mixedDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
+@[expose] def mixedDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
   ⟨fun t => (Q₁ t).adjoint.comp (Q₁ t) + (Q t).adjoint.comp (Q₂ t),
     (((realAdjoint (U := U) (E := E)).continuous.comp Q₁.continuous).clm_comp
       Q₁.continuous).add

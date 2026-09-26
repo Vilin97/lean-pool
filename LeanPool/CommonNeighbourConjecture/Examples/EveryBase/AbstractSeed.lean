@@ -648,7 +648,7 @@ noncomputable def quotientBaseArrayColours (S : EveryBaseSeed) (tail : Nat) :
 
 /-- A technically convenient strengthening of `Saxl.ExactBaseSize`: smaller
 ordered tuples are excluded even before imposing injectivity. -/
-def ExactTupleBaseSize
+@[expose] def ExactTupleBaseSize
     (G X : Type*) [Group G] [MulAction G X] (n : Nat) : Prop :=
   (∃ x : Fin n → X, Saxl.IsBaseTuple G X x) ∧
     ∀ m < n, ¬ ∃ x : Fin m → X, Saxl.IsBaseTuple G X x

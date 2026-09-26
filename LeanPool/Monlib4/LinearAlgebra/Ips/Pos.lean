@@ -195,7 +195,7 @@ noncomputable def rePow
 section
 
 /-- Complex functional calculus power of a positive linear map. -/
-noncomputable def cpow [InnerProductSpace ℂ E] [FiniteDimensional ℂ E]
+@[expose] noncomputable def cpow [InnerProductSpace ℂ E] [FiniteDimensional ℂ E]
     (T : E →ₗ[ℂ] E) (hT : T.IsPositive') (c : ℂ) : E →ₗ[ℂ] E
     where
   toFun v := ∑ i, (α hT.1 rfl i ^ c : ℂ) • ⟪e hT.1 rfl i, v⟫_ℂ • e hT.1 rfl i

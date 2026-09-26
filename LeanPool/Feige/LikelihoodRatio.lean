@@ -65,10 +65,12 @@ theorem measurable_expWeight : Measurable expWeight := by
   fun_prop
 
 /-- The positive-shift density `f₊`, expressed as a nonnegative integral. -/
+@[expose]
 noncomputable def fPlus (f : ℝ → ℝ≥0∞) (a x : ℝ) : ℝ≥0∞ :=
   ∫⁻ s in Ici 0, f (x - a * s) * expWeight s
 
 /-- The negative-shift density `f₋`, expressed as a nonnegative integral. -/
+@[expose]
 noncomputable def fMinus (f : ℝ → ℝ≥0∞) (b x : ℝ) : ℝ≥0∞ :=
   ∫⁻ t in Ici 0, f (x + b * t) * expWeight t
 

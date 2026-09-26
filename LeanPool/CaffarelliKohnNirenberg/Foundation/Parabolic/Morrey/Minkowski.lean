@@ -459,7 +459,7 @@ theorem morreyENorm_parabolicConvolution_le
       exact lintegral_mul_const' _ _ hfinit
 
 /-- Spatial convolution of a parabolic source at each fixed time. -/
-def spatialConvolution (K : Vec3 → ℝ≥0∞) (f : ParabolicPoint → ℝ≥0∞)
+@[expose] def spatialConvolution (K : Vec3 → ℝ≥0∞) (f : ParabolicPoint → ℝ≥0∞)
     (z : ParabolicPoint) : ℝ≥0∞ :=
   ∫⁻ y, K y * f (parabolicTranslate (-y) 0 z) ∂volume
 

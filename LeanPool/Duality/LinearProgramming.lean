@@ -60,17 +60,17 @@ section extended_LP_definitions
 /-- A nonnegative vector `x` is a solution to a linear program `P` iff
     its multiplication by matrix `A` from the left yields a vector whose
     all entries are less or equal to corresponding entries of the vector `b`. -/
-def ExtendedLP.IsSolution [Fintype J] (P : ExtendedLP I J F) (x : J → F≥0) : Prop :=
+@[expose] def ExtendedLP.IsSolution [Fintype J] (P : ExtendedLP I J F) (x : J → F≥0) : Prop :=
   P.A ₘ* x ≤ P.b
 
 /-- Linear program `P` reaches objective value `r` iff there is a solution `x` such that,
     when its entries are elementwise multiplied by the the coefficients `c` and summed up,
     the result is the value `r`. -/
-def ExtendedLP.Reaches [Fintype J] (P : ExtendedLP I J F) (r : F∞) : Prop :=
+@[expose] def ExtendedLP.Reaches [Fintype J] (P : ExtendedLP I J F) (r : F∞) : Prop :=
   ∃ x : J → F≥0, P.IsSolution x ∧ P.c ᵥ⬝ x = r
 
 /-- Linear program `P` is feasible iff `P` reaches a value that is not `⊤`. -/
-def ExtendedLP.IsFeasible [Fintype J] (P : ExtendedLP I J F) : Prop :=
+@[expose] def ExtendedLP.IsFeasible [Fintype J] (P : ExtendedLP I J F) : Prop :=
   ∃ p : F∞, P.Reaches p ∧ p ≠ ⊤
 
 /-- Linear program `P` is bounded by `r` iff every value reached by `P` is
@@ -79,7 +79,7 @@ def ExtendedLP.IsFeasible [Fintype J] (P : ExtendedLP I J F) : Prop :=
   ∀ p : F∞, P.Reaches p → r ≤ p
 
 /-- Linear program `P` is unbounded iff values reached by `P` have no finite lower bound. -/
-def ExtendedLP.IsUnbounded [Fintype J] (P : ExtendedLP I J F) : Prop :=
+@[expose] def ExtendedLP.IsUnbounded [Fintype J] (P : ExtendedLP I J F) : Prop :=
   ¬∃ r : F, P.IsBoundedBy r
 
 open scoped Classical in
@@ -110,7 +110,7 @@ abbrev ExtendedLP.dualize (P : ExtendedLP I J F) : ExtendedLP J I F :=
   ⟨-P.Aᵀ, P.c, P.b⟩
 
 /-- Dualize a valid extended linear program. -/
-def ValidELP.dualize (P : ValidELP I J F) : ValidELP J I F where
+@[expose] def ValidELP.dualize (P : ValidELP I J F) : ValidELP J I F where
   toExtendedLP := P.toExtendedLP.dualize
   hAi := by aeply P.hAj
   hAj := by aeply P.hAi

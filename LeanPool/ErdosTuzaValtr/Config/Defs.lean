@@ -47,8 +47,7 @@ attribute [instance] DecidableCap3
   l.IsChain (· < ·) ∧ l.Chain3' C.Cup3
 
 /-- A gon is a cap and a cup of length at least 2 sharing their first and last endpoints. -/
-@[simp]
-@[expose] def Gon (l1 l2 : List α) : Prop :=
+@[simp, expose] def Gon (l1 l2 : List α) : Prop :=
   2 ≤ l1.length ∧
     C.Cap l1 ∧ 2 ≤ l2.length ∧ C.Cup l2 ∧ l1.head? = l2.head? ∧ l1.getLast? = l2.getLast?
 

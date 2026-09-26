@@ -79,10 +79,10 @@ def iterMap (f : ApproximableMap V V) : ℕ → ApproximableMap V V
   | 0 => idMap V
   | (n + 1) => f.comp (f.iterMap n)
 
-@[simp] theorem iterMap_zero (f : ApproximableMap V V) : f.iterMap 0 = idMap V := rfl
+@[simp] theorem iterMap_zero (f : ApproximableMap V V) : f.iterMap 0 = idMap V := by rfl
 
 @[simp] theorem iterMap_succ (f : ApproximableMap V V) (n : ℕ) :
-    f.iterMap (n + 1) = f.comp (f.iterMap n) := rfl
+    f.iterMap (n + 1) = f.comp (f.iterMap n) := by rfl
 
 /-- Composition is monotone in both arguments. -/
 theorem comp_mono {f g a b : ApproximableMap V V} (hfg : f ≤ g) (hab : a ≤ b) :

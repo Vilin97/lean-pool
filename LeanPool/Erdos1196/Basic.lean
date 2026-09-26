@@ -34,7 +34,7 @@ open scoped ArithmeticFunction BigOperators
 namespace PrimitiveSetsAboveX
 
 /-- The primitive-set predicate used throughout the local development. -/
-def PrimitiveSet (A : Set ℕ) : Prop :=
+@[expose] def PrimitiveSet (A : Set ℕ) : Prop :=
   ∀ ⦃m n : ℕ⦄, m ∈ A → n ∈ A → m ∣ n → m = n
 
 /-- Partial sums of `Λ(q) / q`. -/

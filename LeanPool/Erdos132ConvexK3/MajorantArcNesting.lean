@@ -856,7 +856,7 @@ theorem k3_inner_endpoint_budget_partition
 convention.  It asks for a jointly minimal pair of actual cover paths whose
 facing endpoints consume strictly fewer than the three sides between `x`
 and `t`. -/
-def ErLVInnerEndpointSeparationComplete : Prop :=
+@[expose] def ErLVInnerEndpointSeparationComplete : Prop :=
   ∀ {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ),
     CyclicStrictConvex P → HasTopThreeDistanceClasses P d₁ d₂ d₃ →
     (∀ v, 7 ≤ vertexDegree P d₁ d₂ d₃ v) →

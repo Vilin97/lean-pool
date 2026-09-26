@@ -289,7 +289,8 @@ section LieTwoCoboundary
 variable {𝕜 𝓰 𝓪}
 
 /-- A Lie algebra 1-cochain determines a bilinear map via the differential. -/
-def _root_.VirasoroProject.LieOneCochain.bdry' (β : LieOneCochain 𝕜 𝓰 𝓪) : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
+@[expose] def _root_.VirasoroProject.LieOneCochain.bdry'
+    (β : LieOneCochain 𝕜 𝓰 𝓪) : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓪 where
   toFun := fun X ↦ β ∘ₗ LieAlgebra.bracketHom 𝕜 𝓰 X
   map_add' X₁ X₂ := by ext; simp
   map_smul' c X := by ext; simp
@@ -302,7 +303,8 @@ def _root_.VirasoroProject.LieOneCochain.bdryHom'
   map_smul' c Z := by ext X Y; rfl
 
 /-- The `∂` of a Lie algebra 1-cochain as a Lie algebra 2-cocycle. -/
-def _root_.VirasoroProject.LieOneCochain.bdry (β : LieOneCochain 𝕜 𝓰 𝓪) : LieTwoCocycle 𝕜 𝓰 𝓪 where
+@[expose] def _root_.VirasoroProject.LieOneCochain.bdry
+    (β : LieOneCochain 𝕜 𝓰 𝓪) : LieTwoCocycle 𝕜 𝓰 𝓪 where
   toBilin := LieOneCochain.bdryHom' β
   self' X := by simp [LieOneCochain.bdryHom', LieOneCochain.bdry']
   leibniz' X Y Z := by simp [LieOneCochain.bdryHom', LieOneCochain.bdry']
@@ -334,7 +336,8 @@ section LieTwoCohomology
 /-! ### Lie algebra 2-cohomology -/
 
 /-- The 2-cohomology `H²(𝓰,𝓪)` of a Lie algebra `𝓰` with coefficients in `𝓪`. -/
-def _root_.VirasoroProject.LieTwoCohomology := LieTwoCocycle 𝕜 𝓰 𝓪 ⧸ LieTwoCoboundary 𝕜 𝓰 𝓪
+@[expose] def _root_.VirasoroProject.LieTwoCohomology :=
+  LieTwoCocycle 𝕜 𝓰 𝓪 ⧸ LieTwoCoboundary 𝕜 𝓰 𝓪
 
 namespace LieTwoCohomology
 
@@ -352,7 +355,7 @@ namespace LieTwoCocycle
 
 /-- The linear map from 2-cocycles to 2-cohomologies of a Lie algebra `𝓰` with coefficients
 in `𝓪`. -/
-def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomology
+@[expose] def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomology
     : LieTwoCocycle 𝕜 𝓰 𝓪 →ₗ[𝕜] LieTwoCohomology 𝕜 𝓰 𝓪 :=
   (LieTwoCoboundary 𝕜 𝓰 𝓪).mkQ
 
@@ -418,7 +421,7 @@ lemma _root_.VirasoroProject.LieTwoCocycle.ker_toLieTwoCohomology_eq_bot_of_isLi
 
 /-- For abelian Lie algebras, the map from 2-cocycles to their cohomology classes is a linear
 equivalence. -/
-noncomputable def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomologyEquiv :
+@[expose] noncomputable def _root_.VirasoroProject.LieTwoCocycle.toLieTwoCohomologyEquiv :
     LieTwoCocycle 𝕜 𝓰 𝓪 ≃ₗ[𝕜] LieTwoCohomology 𝕜 𝓰 𝓪 :=
   LinearEquiv.ofBijective (LieTwoCocycle.toLieTwoCohomology 𝕜 𝓰 𝓪)
     ⟨LinearMap.ker_eq_bot.mp <| LieTwoCocycle.ker_toLieTwoCohomology_eq_bot_of_isLieAbelian ..,

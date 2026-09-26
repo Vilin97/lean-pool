@@ -34,7 +34,7 @@ def Config.MainGoal (n : ℕ) : Prop :=
       ¬C.HasNCap 4 S → ¬C.HasNCup (n + 3) S → ∃ p q r s, C.HasInterweavedLaced (n + 2) S p q r s
 
 /-- The main goal under the without-loss-of-generality assumption that a certain join is absent. -/
-def Config.MainGoalWlog (n : ℕ) : Prop :=
+@[expose] def Config.MainGoalWlog (n : ℕ) : Prop :=
   ∀ S : Finset α,
     ¬C.HasJoin (n + 2) (n + 1) S →
       Nat.choose (n + 2) 2 + 2 ≤ S.card →

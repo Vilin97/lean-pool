@@ -220,6 +220,7 @@ theorem analyticOnNhd_traceCoeffFun (η : Form1 X) (y : Y) :
 /-- The canonical (stack-independent) contribution of a fibre point `x` to the trace's
 coefficient in a target chart `e₀`: the coefficient of `η` at `x`, divided by the chart
 derivative of `f`. (Junk `0` at ramified `x`, where the chart derivative vanishes.) -/
+@[expose]
 def qCoeff (f : X → Y) (η : Form1 X) (e₀ : OpenPartialHomeomorph Y ℂ) (x : X) : ℂ :=
   (deriv (⇑e₀ ∘ f ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x))⁻¹ * coeffAt x η
 

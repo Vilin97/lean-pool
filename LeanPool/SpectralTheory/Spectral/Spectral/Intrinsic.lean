@@ -18,7 +18,7 @@ operator domain is exactly the finite-second-moment space, and the operator's
 diagonal matrix coefficient is the first moment.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 

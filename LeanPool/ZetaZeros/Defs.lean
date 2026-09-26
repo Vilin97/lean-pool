@@ -127,7 +127,7 @@ every result depending on it names it in its own statement.
 
 /-- **Riemann--von Mangoldt** (`lem_rvm`, external input). `N T ∼ (T / 2π) log T`. -/
 @[expose, zz_tag "lem_rvm"]
-@[expose] def RiemannVonMangoldt : Prop :=
+def RiemannVonMangoldt : Prop :=
   ∀ ε > 0, ∃ T₀ : ℝ, ∀ T ≥ T₀,
     |(zeroCount T : ℝ) / (T / (2 * Real.pi) * Real.log T) - 1| < ε
 

@@ -148,7 +148,7 @@ theorem exists_weak_pressure_gradient_of_rieszSecond_l2_extension_unconditional
       (fun i j => rieszSecondL2_weak_type i j))
 
 /-- Tensor second-Riesz operator at exponent three-halves, built from L² and weak-(1,1) data. -/
-def rieszSecondP1ExtensionTensorOperator
+@[expose] def rieszSecondP1ExtensionTensorOperator
     (hL2 : ∀ i j : Fin 3, RieszSecondL2Input i j)
     (hWeak11 : ∀ i j : Fin 3, ∀ f, Measurable f → Integrable f volume →
       MemLp f 2 volume → ∀ l : ℝ, 0 < l →

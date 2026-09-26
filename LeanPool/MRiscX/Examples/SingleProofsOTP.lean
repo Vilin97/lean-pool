@@ -122,7 +122,7 @@ theorem help_I_pre''''' : ∀ (p k c l i x: UInt64),
 
 /-- The One-Time-Pad program, parameterised by the plaintext `p`, key `k`,
 ciphertext `c`, and length `l` memory addresses. -/
-def otpCode (p k c l : UInt64) :=
+@[expose] def otpCode (p k c l : UInt64) :=
     mriscx
       main:
           la x 0, p
@@ -281,7 +281,7 @@ theorem inc_otp_0 : ∀ (p k c l : UInt64),
     · exact h_pc
     · repeat (constructor <;> try assumption)
       · simp at *
-        grind
+        grind <;> omega
       · simp_all
 
 

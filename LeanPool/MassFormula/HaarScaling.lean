@@ -224,7 +224,7 @@ theorem card_quotient_range {n : ℕ} (M : Matrix (Fin n) (Fin n) 𝒪[K]) (hdet
 variable (K) in
 /-- The integer box of the coefficient space—the normalizing set of the paper's measure, which
 gives `𝒪[K]` volume `1` coordinatewise ([Serre 1978, p.1032][Serre1978]). -/
-def integerBox (n : ℕ) : Set (Fin n → K) :=
+@[expose] def integerBox (n : ℕ) : Set (Fin n → K) :=
   Set.univ.pi fun _ => (𝒪[K] : Set K)
 
 /-- The image lattice `M · 𝒪^n` of an integral matrix, inside the coefficient space. -/

@@ -253,7 +253,8 @@ def rawKernel (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) (t : ℝ) : ℝ :=
 
 /-- Kernel, given by `(1 / 2 : ℝ) * Real.exp (-c * t) * (denominator y.2 t ^ j / denominator y.2
 t ^ 3) * b (y.1, coordinate y.2 t)`. -/
-def kernel (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ) (y : E × ℝ) (t : ℝ) : ℝ :=
+@[expose] def kernel (c : ℝ) (j : ℕ) (b : E × ℝ → ℝ)
+    (y : E × ℝ) (t : ℝ) : ℝ :=
   (1 / 2 : ℝ) * Real.exp (-c * t) *
     (denominator y.2 t ^ j / denominator y.2 t ^ 3) *
     b (y.1, coordinate y.2 t)

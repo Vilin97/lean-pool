@@ -29,7 +29,7 @@ open scoped Pointwise
 variable (H V : Type*) [Group H] [AddCommGroup V] [DistribMulAction H V]
 
 /-- A vector whose stabilizer in the linear group is trivial. -/
-def IsRegularVector (v : V) : Prop :=
+@[expose] def IsRegularVector (v : V) : Prop :=
   ∀ h : H, h • v = v → h = 1
 
 /-- The set of regular vectors for the linear action. -/
@@ -66,7 +66,7 @@ theorem threefold_add_eq_univ_of_card_compl_twofold_lt
   simp
 
 /-- The action of `H` on the multiplicative wrapper of the additive group `V`. -/
-def affineLinearAut : H →* MulAut (Multiplicative V) :=
+@[expose] def affineLinearAut : H →* MulAut (Multiplicative V) :=
   (MulAutMultiplicative V).symm.toMonoidHom.comp
     (DistribMulAction.toAddAut H V)
 
@@ -148,7 +148,7 @@ theorem affine_isBaseTuple_cons_iff {n : Nat} (x : V) (w : Fin n → V) :
 An element belongs when it can be completed by `tail` further vectors so that
 the resulting linear tuple has trivial kernel, while adjoining zero keeps the
 full affine tuple set-like. -/
-def generalizedAffineKernelSet (tail : Nat) : Set V :=
+@[expose] def generalizedAffineKernelSet (tail : Nat) : Set V :=
   {v | ∃ z : Fin tail → V,
     Function.Injective (Fin.cons 0 (Fin.cons v z)) ∧
       IsBaseTuple H V (Fin.cons v z)}

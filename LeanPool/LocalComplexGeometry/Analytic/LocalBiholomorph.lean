@@ -284,7 +284,7 @@ def fiberShearAtZero
     ext <;> simp
 
 /-- An analytic map with an explicitly invertible derivative is locally biholomorphic. -/
-def ofAnalyticAtOfFDerivEquiv [CompleteSpace E]
+@[expose] def ofAnalyticAtOfFDerivEquiv [CompleteSpace E]
     {f : E → F} {a : E} (hf : AnalyticAt ℂ f a)
     (e : E ≃L[ℂ] F) (he : fderiv ℂ f a = (e : E →L[ℂ] F)) :
     LocalBiholomorphAt E F a (f a) := by

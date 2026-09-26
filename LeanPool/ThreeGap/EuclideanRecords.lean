@@ -38,6 +38,7 @@ open scoped Real
 open ThreeGap.SimApprox ThreeGap.Chevallier ThreeGap.DeltaCost ThreeGap.SimDirichlet
 
 /-- The **Euclidean defect cost** as a function of a natural denominator. -/
+@[expose]
 noncomputable def deltaE (α : Fin 2 → ℝ) : ℕ → ℝ := fun q => deltaN (euclNorm 2) α (q : ℤ)
 
 /-- The Euclidean norm is at most `√2 ·` the sup norm in the plane. -/

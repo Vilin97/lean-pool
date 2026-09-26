@@ -147,7 +147,8 @@ def IsLocallyPolyConnAt (S : Set Plane) (p : Plane) : Prop :=
   ∃ U : Set Plane, IsOpen U ∧ p ∈ U ∧ ∀ x ∈ U ∩ S, ∀ y ∈ U ∩ S, PolyConnIn S x y
 
 /-- `S` is locally polygonally connected: polygonally connected near each of its points. -/
-def IsLocallyPolyConn (S : Set Plane) : Prop := ∀ p ∈ S, IsLocallyPolyConnAt S p
+@[expose] def IsLocallyPolyConn (S : Set Plane) : Prop :=
+  ∀ p ∈ S, IsLocallyPolyConnAt S p
 
 /-- If the relative neighbourhood is itself convex there is nothing to do. -/
 theorem isLocallyPolyConnAt_of_convex {U : Set Plane} {p : Plane} (hU : IsOpen U) (hpU : p ∈ U)

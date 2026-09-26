@@ -71,7 +71,7 @@ def delta (D : ErLVK3MaximalGapSetup) : ℕ := D.gapX - D.gapT
 def L (D : ErLVK3MaximalGapSetup) : ℤ := 3 - (D.delta : ℤ)
 
 /-- The signed side difference `|yz| = L + M + b`. -/
-def yzSides (D : ErLVK3MaximalGapSetup) : ℤ :=
+@[expose] def yzSides (D : ErLVK3MaximalGapSetup) : ℤ :=
   D.L + (D.M : ℤ) + (D.first.rightMoves : ℤ)
 
 end ErLVK3MaximalGapSetup

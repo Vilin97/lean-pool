@@ -518,7 +518,7 @@ theorem schwartz_bilinear_prod_integrable
 /-! ## Main theorem -/
 
 /-- The bilinear integral of Schwartz functions against a decaying kernel -/
-def schwartzBilinearIntegral (f g : SchwartzMap E ℂ) (K : E → ℝ) (a : E) : ℂ :=
+@[expose] def schwartzBilinearIntegral (f g : SchwartzMap E ℂ) (K : E → ℝ) (a : E) : ℂ :=
   ∫ x : E, ∫ y : E, f x * (K (x - y) : ℂ) * g (y - a)
 
 private lemma schwartz_bilinear_kernelSingular_vanish

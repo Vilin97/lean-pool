@@ -51,6 +51,7 @@ variable {V : Type*} [DecidableEq V] {Ω : Type*} [MeasureSpace Ω]
 /-! ## The safe degree -/
 
 /-- **The safe degree.**  The number of edges at `v` whose vertices OTHER than `v` all avoid `C`. -/
+@[expose]
 def safeDegree (H : Finset (Finset V)) (C : Finset V) (v : V) : ℕ :=
   (H.filter (fun e => v ∈ e ∧ Disjoint (e.erase v) C)).card
 

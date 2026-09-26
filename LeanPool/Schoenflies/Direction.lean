@@ -78,7 +78,7 @@ variable {u w d d₁ d₂ r₁ r₂ v : Plane} {r t s : ℝ}
 
 /-- A *direction* is a unit vector. Only the ray a direction spans ever matters below, but
 normalising to unit length gives a canonical representative of that ray. -/
-def IsDirection (u : Plane) : Prop := ‖u‖ = 1
+@[expose] def IsDirection (u : Plane) : Prop := ‖u‖ = 1
 
 theorem IsDirection.ne_zero (hu : IsDirection u) : u ≠ 0 := by
   intro h

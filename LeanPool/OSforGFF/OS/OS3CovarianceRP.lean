@@ -54,7 +54,7 @@ avoids non-convergent pointwise integrals.
     This is the distributional formulation that is mathematically well-defined
     for Schwartz test functions.
 -/
-noncomputable def rpInnerProduct (m : ℝ) (f : TestFunctionℂ) : ℂ :=
+@[expose] noncomputable def rpInnerProduct (m : ℝ) (f : TestFunctionℂ) : ℂ :=
   freeCovarianceℂBilinear m (star f) f
 
 /-! ## Direct Proof of Reflection Positivity

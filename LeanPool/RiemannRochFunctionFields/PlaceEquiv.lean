@@ -438,6 +438,7 @@ theorem ofChart_toChart (v : Place k K) :
   Classical.choose_spec (exists_chart k K v)
 
 /-- Coordinate places and intrinsic places are equivalent. -/
+@[expose]
 noncomputable def chartToPlaceCore : PlaceA k K ≃ Place k K where
   toFun := Place.ofChart k K
   invFun := toChart k K

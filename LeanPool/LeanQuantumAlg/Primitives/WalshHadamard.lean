@@ -69,6 +69,7 @@ abbrev oracleGate (f : Oracle n) : Gate (n + 1) := Gate.xorOracle f
 /-- The bit of a basis label used in the Walsh-Hadamard character. The bit
 order only affects nonzero rows; the zero row used by Deutsch-Jozsa is
 independent of it. -/
+@[expose]
 def bit (x : Fin (2 ^ n)) (k : Fin n) : Bool := x.val.testBit k.val
 
 /-- Parity of the bitwise inner product of two basis labels. -/
@@ -317,8 +318,7 @@ def uniformState (n : ℕ) : PureState n :=
   PureState.ofVec (uniformStateVec n) (norm_uniformStateVec n)
 
 @[simp]
-theorem uniformState_apply (x : Fin (2 ^ n)) : uniformState n x = invSqrtCard n :=
-  rfl
+theorem uniformState_apply (x : Fin (2 ^ n)) : uniformState n x = invSqrtCard n := by rfl
 
 /-- The first Hadamard layer sends `|0^n⟩` to the uniform superposition. -/
 theorem hadamardLayer_apply_zero :
@@ -378,6 +378,7 @@ theorem postOracleState_eq_afterPhaseQuery_tensor (f : Oracle n) :
 
 /-- The final input-register state after the second Hadamard layer, in the
 phase-query view. -/
+@[expose]
 def finalState (f : Oracle n) : PureState n :=
   (hadamardLayer n).apply (afterPhaseQuery f)
 

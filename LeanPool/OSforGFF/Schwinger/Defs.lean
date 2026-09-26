@@ -49,7 +49,7 @@ S_n(f₁,...,fₙ) = (-i)ⁿ (coefficient of (iJ)ⁿ/n! in Z[J])
     This is the fundamental object in constructive QFT - all physics is contained
     in the infinite sequence of Schwinger functions {S_n}_{n=1}^∞.
 -/
-def SchwingerFunction (dμ_config : ProbabilityMeasure FieldConfiguration) (n : ℕ)
+@[expose] def SchwingerFunction (dμ_config : ProbabilityMeasure FieldConfiguration) (n : ℕ)
   (f : Fin n → OSforGFF.TestFunction) : ℝ :=
   ∫ ω, (∏ i, distributionPairing ω (f i)) ∂dμ_config.toMeasure
 
@@ -59,7 +59,7 @@ def SchwingerFunction₁ (dμ_config : ProbabilityMeasure FieldConfiguration)
   SchwingerFunction dμ_config 1 ![f]
 
 /-- The 2-point Schwinger function: the covariance -/
-def SchwingerFunction₂ (dμ_config : ProbabilityMeasure FieldConfiguration)
+@[expose] def SchwingerFunction₂ (dμ_config : ProbabilityMeasure FieldConfiguration)
   (f g : OSforGFF.TestFunction) : ℝ :=
   SchwingerFunction dμ_config 2 ![f, g]
 

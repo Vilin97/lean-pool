@@ -27,7 +27,7 @@ variable (X Q ι : Type*) [Group X] [Group Q] [MulAction Q ι]
 
 /-- The action of `Q` on the base group `ι → X` by contravariant
 reindexing. -/
-def reindexAut : Q →* MulAut (ι → X) where
+@[expose] def reindexAut : Q →* MulAut (ι → X) where
   toFun q := MulEquiv.arrowCongr (MulAction.toPerm q) (MulEquiv.refl X)
   map_one' := by
     ext f i

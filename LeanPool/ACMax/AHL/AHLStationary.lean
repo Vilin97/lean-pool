@@ -168,7 +168,7 @@ omit [DecidableEq V] in
 /-- Unfolding of `nbWeight` on an explicit sigma constructor. -/
 theorem nbWeight_mk {x v : V} (p : G.Walk x v) :
     nbWeight (⟨v, p⟩ : Σ w : V, G.Walk x w) =
-      ∏ j ∈ Finset.Ico 1 p.length, ((G.degree (p.getVert j) : ℝ) - 1)⁻¹ := rfl
+      ∏ j ∈ Finset.Ico 1 p.length, ((G.degree (p.getVert j) : ℝ) - 1)⁻¹ := by rfl
 
 omit [DecidableEq V] in
 /-- **The weight is `1` on short walks.**  For a walk of length `≤ 1` the intermediate range

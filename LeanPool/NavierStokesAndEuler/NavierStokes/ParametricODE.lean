@@ -167,6 +167,8 @@ theorem volterra_eq_next (A : Coefficient a b E) :
     (volterra (E := E) hab A : Curve a b E → Curve a b E) = (homogeneousSystem hab A).next := by
   funext u
   ext t
+  dsimp only [homogeneousSystem]
+  rw [TangentODE.IntervalSystem.next_apply, volterra_apply]
   change (∫ s in a..(t : ℝ), extend hab A s (extend hab u s)) =
     0 + ∫ s in a..(t : ℝ), extend hab A (projIcc a b hab s) (u (projIcc a b hab s))
   simp only [zero_add, extend, projIcc_val]

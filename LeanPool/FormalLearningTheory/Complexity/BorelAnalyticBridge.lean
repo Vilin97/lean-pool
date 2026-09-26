@@ -74,6 +74,7 @@ def paramBadEvent
 /-- Patched evaluation: combine two concept families using a region selector.
     patchEval(θ₁, θ₂, ρ)(x) = e₁(θ₁)(x) if r(ρ)(x), else e₂(θ₂)(x).
     Used for the closure principle (Theorem F). -/
+@[expose]
 def patchEval
     {X : Type u}
     {Θ₁ Θ₂ Ρ : Type*}

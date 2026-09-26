@@ -220,7 +220,7 @@ variable (K : Type*) [Field K] [NumberField K]
 
 open scoped Classical in
 /-- A complex place mellin gaussian used in the Odlyzko-bound argument. -/
-noncomputable def complexPlaceMellinGaussian
+@[expose] noncomputable def complexPlaceMellinGaussian
     (x : K) (s : ℂ) (q : InfinitePlace K → ℝ) : ℂ :=
   ∏ w,
     (q w : ℂ) ^ (2 * s - 1) *

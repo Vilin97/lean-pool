@@ -332,6 +332,7 @@ theorem apply_ket (G : Gate n) (x : Fin (2 ^ n)) (i : Fin (2 ^ n)) :
 
 /-- The gate permuting the computational basis by `σ`:
 `(ofPerm σ).apply (ket x) = ket (σ⁻¹ x)`. Unitary by construction. -/
+@[expose]
 def ofPerm (σ : Equiv.Perm (Fin (2 ^ n))) : Gate n :=
   ofUnitary (σ.permMatrix ℂ) (by
     rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose,

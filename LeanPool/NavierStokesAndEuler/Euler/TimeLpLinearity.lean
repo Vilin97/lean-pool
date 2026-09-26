@@ -44,7 +44,8 @@ theorem pathLp_smul (T : ℝ) (hT : 0 ≤ T) (r : ℝ) (f : C(Icc (0 : ℝ) T, E
   rfl
 
 /-- The genuine continuous-path to Bochner L² embedding is a bounded linear map. -/
-def pathLpOperator (T : ℝ) (hT : 0 ≤ T) : C(Icc (0 : ℝ) T, E) →L[ℝ] TimeLp T E :=
+@[expose] def pathLpOperator (T : ℝ) (hT : 0 ≤ T) :
+    C(Icc (0 : ℝ) T, E) →L[ℝ] TimeLp T E :=
   ({ toFun := pathLp T hT
      map_add' := pathLp_add T hT
      map_smul' := fun r f => by simpa only [RingHom.id_apply] using pathLp_smul T hT r f } :

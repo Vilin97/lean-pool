@@ -18,7 +18,7 @@ a measurable function `f`, and shows it recovers `A` on the coordinate
 function.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

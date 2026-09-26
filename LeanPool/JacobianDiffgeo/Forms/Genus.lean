@@ -31,6 +31,7 @@ open scoped ContDiff Manifold
 
 /-- The genus of a compact Riemann surface: the dimension of the space of global holomorphic
 1-forms. -/
+@[expose]
 noncomputable def genus (X : Type*) [TopologicalSpace X] [ChartedSpace ℂ X]
     [IsManifold 𝓘(ℂ) ω X] : ℕ :=
   Module.finrank ℂ (RS.Form1 X)

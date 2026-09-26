@@ -319,7 +319,7 @@ instance graphCoverVertexOver_discrete {V : Type u} [Quiver.{u} V]
   exact discreteTopology_bot _
 
 /-- The symmetric-edge prefunctor from the canonical cover into the base free groupoid. -/
-def graphCoverSymmetricFreeGroupoidMap {V : Type u} [Quiver.{u} V]
+@[expose] def graphCoverSymmetricFreeGroupoidMap {V : Type u} [Quiver.{u} V]
     (root : V) :
     (Quiver.Symmetrify (graphCoverVertex root)) ⥤q
       Quiver.FreeGroupoid V :=

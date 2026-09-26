@@ -188,7 +188,7 @@ lemma evenPoly_normPoly (a : ℤ) : EvenPoly (normPoly a) := evenPoly_C_mul_X_sq
 
 /-- Nonzero rationals `a_1, …, a_n` are *2-independent* if their classes in `ℚ*/(ℚ*)²` are
 `𝔽₂`-linearly independent: no nonempty subfamily has product a square in `ℚ`. -/
-def TwoIndependent {n : ℕ} (v : Fin n → ℚ) : Prop :=
+@[expose] def TwoIndependent {n : ℕ} (v : Fin n → ℚ) : Prop :=
   (∀ i, v i ≠ 0) ∧
     ∀ S : Finset (Fin n), S.Nonempty → ¬IsSquare (∏ i ∈ S, v i)
 

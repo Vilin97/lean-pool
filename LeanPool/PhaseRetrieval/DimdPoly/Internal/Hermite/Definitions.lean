@@ -48,7 +48,7 @@ instance : Fact (0 < T) := ⟨T_pos⟩
 abbrev Circle := AddCircle T
 
 /-- Positive part. -/
-def posPart (x : ℝ) : ℝ := max x 0
+@[expose] def posPart (x : ℝ) : ℝ := max x 0
 
 /-- The signed modulus defect imported from the Fock-space argument. -/
 @[expose] def rho (w : ℂ) : ℝ := |‖(1 : ℂ) + w‖ - 1|

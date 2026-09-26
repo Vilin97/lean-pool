@@ -447,7 +447,7 @@ theorem three_terms_power_bound (a b c : ℝ≥0∞) :
     _ = _ := by ring
 
 /-- The three coefficients of the slice-energy, pressure, and force integrals. -/
-def fixedRemainderCoefficients (C ρ : ℝ) : Fin 3 → ℝ≥0∞ := ![
+@[expose] def fixedRemainderCoefficients (C ρ : ℝ) : Fin 3 → ℝ≥0∞ := ![
   ENNReal.ofReal (C * ρ ^ (-3 : ℝ) / ρ),
   ENNReal.ofReal (C * ρ ^ (-3 : ℝ) / ((Real.pi * 4 / 3) ^ (1/3 : ℝ) * ρ)),
   ENNReal.ofReal |400 * sliceForcePotentialConstant * (cutoffGradientConstant / ρ) * (ρ ^ 2)⁻¹|]

@@ -29,7 +29,7 @@ namespace Graph
 variable {V : Type u} {W : Type v}
 
 /-- Cartesian product of simple graphs. -/
-def cartesianProduct (G : Graph V) (H : Graph W) : Graph (V × W) where
+@[expose] def cartesianProduct (G : Graph V) (H : Graph W) : Graph (V × W) where
   Adj p q :=
     (G.Adj p.1 q.1 ∧ p.2 = q.2) ∨ (p.1 = q.1 ∧ H.Adj p.2 q.2)
   symm := by

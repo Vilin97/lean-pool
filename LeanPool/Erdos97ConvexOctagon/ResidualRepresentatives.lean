@@ -154,7 +154,7 @@ def residualRepresentative12 : OctagonIncidence where
   centre_not_mem v := by fin_cases v <;> decide
 
 /-- The thirteen residual representatives as one finite family. -/
-def residualRepresentative : Fin 13 → OctagonIncidence := ![
+@[expose] def residualRepresentative : Fin 13 → OctagonIncidence := ![
   residualRepresentative00, residualRepresentative01, residualRepresentative02,
   residualRepresentative03, residualRepresentative04, residualRepresentative05,
   residualRepresentative06, residualRepresentative07, residualRepresentative08,

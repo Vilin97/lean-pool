@@ -125,7 +125,7 @@ theorem principalDivisorA_nonneg_at_finite_of_mem_ringOfIntegers {a : ringOfInte
       FractionalIdeal.count K w
         (FractionalIdeal.spanSingleton (ringOfIntegers k K)⁰
           (Units.mk0 (a : K) (ringOfIntegers_coe_ne_zero k K ha))) := by
-    rw [FractionalIdeal.principalDivisor_apply, Additive.toMul_ofMul]
+    rw [FractionalIdeal.principalDivisor_apply, toMul_ofMul]
   have hnonneg :
       0 ≤ FractionalIdeal.count K w
         (FractionalIdeal.spanSingleton (ringOfIntegers k K)⁰

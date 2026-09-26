@@ -29,7 +29,7 @@ variable {F : Type*} [Field F] [Fintype F] [DecidableEq F]
 -- Deployed instance: `F := ZMod 2` (the [n=128, k=64] GF(2) certificate). Field-generic below.
 
 /-- Hamming weight = number of nonzero coordinates (the error weight). -/
-def wt {n : ℕ} (e : Fin n → F) : ℕ := hammingNorm e
+@[expose] def wt {n : ℕ} (e : Fin n → F) : ℕ := hammingNorm e
 
 /-! ### THE TRUST SURFACE — a reviewer audits these definitions; the rest is machine-checked. -/
 

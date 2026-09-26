@@ -112,7 +112,7 @@ isolated-vertex sentinel. -/
 
 /-- First clockwise graph neighbor, with the vertex itself as the
 isolated-vertex sentinel. -/
-noncomputable def firstClockwiseNeighbor
+@[expose] noncomputable def firstClockwiseNeighbor
     {n : ℕ} [NeZero n] (P : Fin n → Point ℝ) (d₁ d₂ d₃ : ℝ) (v : Fin n) : Fin n :=
   cyclicRetreat v (firstClockwiseNeighborOffset P d₁ d₂ d₃ v).val
 

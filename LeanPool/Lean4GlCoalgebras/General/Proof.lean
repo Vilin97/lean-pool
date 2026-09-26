@@ -36,7 +36,7 @@ inductive RuleApp
   | box : (Δ : Sequent) → (φ : Formula) → (□ φ) ∈ Δ → RuleApp
 
 /-- Endofunctor for the GL-proof system. -/
-@[simp] def T : (CategoryTheory.Functor Type Type) where
+@[expose, simp] def T : (CategoryTheory.Functor Type Type) where
   obj := fun X ↦ (RuleApp × List X)
   map := fun {X Y} f ↦
     TypeCat.ofHom fun x ↦

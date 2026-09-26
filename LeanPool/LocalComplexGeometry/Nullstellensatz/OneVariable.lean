@@ -44,7 +44,7 @@ def oneCoordinateLinearEquiv : ComplexEuclidean 1 ≃ₗ[ℂ] ℂ where
   map_smul' _ _ := rfl
 
 /-- The continuous complex-linear identification `ℂ¹ ≃ ℂ`. -/
-def oneCoordinateEquiv : ComplexEuclidean 1 ≃L[ℂ] ℂ :=
+@[expose] def oneCoordinateEquiv : ComplexEuclidean 1 ≃L[ℂ] ℂ :=
   oneCoordinateLinearEquiv.toContinuousLinearEquiv
 
 @[simp]

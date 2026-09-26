@@ -253,7 +253,7 @@ open ProblemStatement
 
 /-- The actual time-integrated heat Hessian with cutoff cancellation already
 inserted into the time integrand. -/
-def heatCommutatorKernel (i j : Fin 3) (φ : Space → ℝ) (x y : Space) : ℝ :=
+@[expose] def heatCommutatorKernel (i j : Fin 3) (φ : Space → ℝ) (x y : Space) : ℝ :=
   cancelledTimeKernel (fun s z => heatKernelSecond s i j z) φ x y
 
 /-- A universal positive constant for the paired commutator estimate. -/

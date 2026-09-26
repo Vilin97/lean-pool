@@ -225,6 +225,7 @@ because WellBehavedVC's event is one-sided.
 The paper-faithful ABSOLUTE version is KrappWirthVAbs, kept separately. -/
 
 /-- V-measurability (one-sided): the ghost gap sup map is measurable. -/
+@[expose]
 def KrappWirthV (X : Type u) [MeasurableSpace X]
     (C : ConceptClass X Bool) : Prop :=
   ∀ (c : Concept X Bool) (m : ℕ),
@@ -413,6 +414,7 @@ def WellBehavedVCMeasTarget
 /-- OPEN QUESTION (measurable-target version):
     Does WellBehavedVCMeasTarget separate from KrappWirthWellBehaved?
     The Borel-analytic bridge (BorelAnalyticBridge.lean) closes this. -/
+@[expose]
 def KrappWirthSeparationMeasTarget : Prop :=
   ∃ (C : ConceptClass ℝ Bool),
     MeasurableHypotheses ℝ C ∧

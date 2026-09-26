@@ -51,11 +51,11 @@ open scoped MeasureTheory Complex BigOperators SchwartzMap
       GJGeneratingFunctionalℂ dμ_config (∑ i, z i • J i)) Set.univ
 
 /-- Two-point function local integrability condition for p = 2 -/
-def TwoPointIntegrable (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def TwoPointIntegrable (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   LocallyIntegrable (fun x => SchwingerTwoPointFunction dμ_config x) volume
 
 /-- OS1 (Regularity): The complex generating functional satisfies exponential bounds. -/
-def os1Regularity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def os1Regularity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∃ (p : ℝ) (c : ℝ), 1 ≤ p ∧ p ≤ 2 ∧ c > 0 ∧
     (∀ (f : TestFunctionℂ),
       ‖GJGeneratingFunctionalℂ dμ_config f‖ ≤
@@ -82,7 +82,7 @@ def os1Regularity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
     (see `star_toComplex_eq_compTimeReflection`), so this reduces to
     `os3ReflectionPositivityReal`.
 -/
-def os3ReflectionPositivity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def os3ReflectionPositivity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (f : Fin n → PositiveTimeTestFunctionℂ) (c : Fin n → ℂ),
     0 ≤ (∑ i, ∑ j, starRingEnd ℂ (c i) * c j *
       GJGeneratingFunctionalℂ dμ_config
@@ -93,6 +93,7 @@ def os3ReflectionPositivity (dμ_config : ProbabilityMeasure FieldConfiguration)
     for measures where the generating functional is real on real test functions
     (in particular for Gaussian measures).
 -/
+@[expose]
 def os3ReflectionPositivityReal (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (f : Fin n → PositiveTimeTestFunction) (c : Fin n → ℝ),
     let reflection_matrix := fun i j : Fin n =>
@@ -116,7 +117,7 @@ def os3ReflectionPositivityReal (dμ_config : ProbabilityMeasure FieldConfigurat
     positive definiteness of the covariance. The complex extension follows from
     analyticity (OS0) and regularity (OS1).
 -/
-def os4Clustering (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def os4Clustering (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (f g : OSforGFF.TestFunction) (ε : ℝ), ε > 0 → ∃ (R : ℝ), R > 0 ∧ ∀ (a : SpaceTime),
     ‖a‖ > R →
     ‖GJGeneratingFunctional dμ_config (f + g.translate a) -
@@ -129,7 +130,7 @@ def os4Clustering (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
 
     This is the standard ergodicity formulation from Glimm-Jaffe.
 -/
-def OS4Ergodicity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
+@[expose] def OS4Ergodicity (dμ_config : ProbabilityMeasure FieldConfiguration) : Prop :=
   ∀ (n : ℕ) (z : Fin n → ℂ) (f : Fin n → TestFunctionℂ),
     let μ := dμ_config.toMeasure
     let A : FieldConfiguration → ℂ := fun ω =>

@@ -19,7 +19,7 @@ self-adjoint generator, and every self-adjoint operator generates such a
 group.
 -/
 
-@[expose] public section
+public section
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
   [CompleteSpace E]

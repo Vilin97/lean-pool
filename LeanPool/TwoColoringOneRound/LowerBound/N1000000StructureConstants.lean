@@ -74,6 +74,7 @@ def freeCols (m : Mask) : Nat :=
   (Finset.univ.filter fun j : Fin 3 => colMatch m j = none).card
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def freeCoords (a d : Mask) : Nat :=
   (Finset.univ.filter fun j : Fin 3 => colMatch a j = none ∧ rowMatch d j = none).card
 

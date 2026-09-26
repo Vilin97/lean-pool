@@ -310,7 +310,7 @@ theorem influence_le_four_covariance_iff {D B : Family ι}
 omit [Fintype ι] in
 /-- The star property asserted for each hereditary family in Theorem 1.1:
 every intersecting subfamily is no larger than some star. -/
-def HasStarProperty (D : Family ι) : Prop :=
+@[expose] def HasStarProperty (D : Family ι) : Prop :=
   ∀ A : Family ι, A ⊆ D → A.IsIntersecting → ∃ i : ι, A.card ≤ (D.star i).card
 
 end Family

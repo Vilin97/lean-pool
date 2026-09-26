@@ -70,6 +70,7 @@ def NibbleTheoremMost : Prop :=
 Freedman assembly: in addition to majority near-regularity and codegree boundedness, every vertex
 has
 degree at most `(1+μ)d`. -/
+@[expose]
 def NibbleTheoremMostCeil : Prop :=
   ∀ (r : ℕ), 2 ≤ r → ∀ (β : ℝ), 0 < β → ∃ μ : ℝ, 0 < μ ∧ ∃ η : ℝ, 0 < η ∧ ∃ d₀ : ℝ, 0 < d₀ ∧
     ∀ {V : Type} [Fintype V] [DecidableEq V] (H : Finset (Finset V)) (d : ℝ), 0 < d → d₀ ≤ d →

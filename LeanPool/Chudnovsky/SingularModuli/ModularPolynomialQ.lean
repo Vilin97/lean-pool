@@ -515,6 +515,7 @@ identity. -/
 
 /-- Specialization of a `ℚ[Y][X]`-polynomial at `Y = Y₀ ∈ ℂ`: map each `ℚ[Y]`-coefficient to
 its value at `Y₀`, landing in `ℂ[X]`. Applied at `Y₀ = j τ` this is `Φ_m(X, j τ)`. -/
+@[expose]
 def specializeY (Y₀ : ℂ) : Polynomial (Polynomial ℚ) →+* Polynomial ℂ :=
   Polynomial.mapRingHom (Polynomial.aeval Y₀).toRingHom
 

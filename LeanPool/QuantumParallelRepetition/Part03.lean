@@ -686,7 +686,7 @@ theorem dSVDensityRationalGrid_density_defect_le
 The DSV density rational canonical accepted coefficient construction used in the quantum
 parallel-repetition argument.
 -/
-def dSVDensityRationalCanonicalAcceptedCoefficient
+@[expose] def dSVDensityRationalCanonicalAcceptedCoefficient
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) (i : Fin d) : ℝ :=
   Real.sqrt (w * dSVUniformDensityGridPrefix N
@@ -2030,7 +2030,7 @@ open WithLp
 open scoped BigOperators Kronecker ComplexOrder MatrixOrder
 
 /-- The diagonal mask selecting accepted threshold and spectral coordinates. -/
-def dSVDensityRationalCanonicalPrefixMask
+@[expose] def dSVDensityRationalCanonicalPrefixMask
     {d : ℕ} (w : ℝ) (N : ℕ)
     (ξ : BipartiteUnitVector d) :
     Matrix (DSVUniformDensityThresholdLocalIndex N d)
@@ -2094,7 +2094,7 @@ private theorem dSVDensityRationalPhysicalAcceptedProjector_eq_spectralMask
     dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  rfl
+  simp only [spectralConjugationCLM_apply]
 
 /-- The finite outcome encoding for DSV density rational canonical prefix spectral. -/
 @[expose] def dSVDensityRationalCanonicalPrefixSpectralOutcome
@@ -2257,7 +2257,7 @@ theorem dSVDensityRationalFirstAcceptPhysicalEffect_eq_spectralMask
   unfold dSVDensityRationalLeftProjectiveThresholdPOVM
     dSVDensityRationalProjectiveThresholdPOVM
   rw [spectralPartitionPOVM_effect_eq_spectralDiagonal]
-  rfl
+  simp only [spectralConjugationCLM_apply]
 
 theorem dSVDensityRationalFirstAcceptLocalSpectralMask_transpose
     {d : ℕ} (w : ℝ) (N : ℕ)
@@ -4005,7 +4005,7 @@ open scoped BigOperators ComplexOrder Kronecker MatrixOrder
 The DSV density rational public log phase actual target first local lift construction used in
 the quantum parallel-repetition argument.
 -/
-def dSVDensityRationalPublicLogPhaseActualTargetFirstLocalLift
+@[expose] def dSVDensityRationalPublicLogPhaseActualTargetFirstLocalLift
     (B N d L m : ℕ)
     (U : Matrix.unitaryGroup
       (DSVDensityRationalPublicLogPhaseHistoryLocalIndex
@@ -5804,7 +5804,7 @@ def fullHistoryAtomCountingWeight
     fullHistoryWinIndicator G t.1 t.2.1 t.2.2
 
 /-- The total probability mass of full history atom born. -/
-def fullHistoryAtomBornMass
+@[expose] def fullHistoryAtomBornMass
     (G : Game X Y A B) (n : ℕ)
     (S : Strategy (G.repeat n))
     (D L : Finset (Fin n))
@@ -6679,7 +6679,7 @@ def fullCoordinateAliceMeanFilter
     (fullCoordinateOldHistory D L i r y) α
 
 /-- Bob's history filter for the selected question and the previously revealed history. -/
-def fullCoordinateBobQuestionFilter
+@[expose] def fullCoordinateBobQuestionFilter
     (G : Game X Y A B) (n : ℕ) (S : Strategy (G.repeat n))
     (D L : Finset (Fin n)) (i : Fin n)
     (r : FullCoordinateRevealHistory X Y n D L i)

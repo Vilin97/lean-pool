@@ -20,6 +20,7 @@ universe u v
 open OrderDual
 
 /-- Mirror a binary relation/function to the order dual, swapping argument order. -/
+@[expose]
 def Mirror2 {α : Type u} {β : Sort v} (f : α → α → β) : αᵒᵈ → αᵒᵈ → β := fun a b =>
   f (ofDual b) (ofDual a)
 

@@ -216,7 +216,8 @@ variable {α : Type*}
 @[expose] def target (D : PhysicalGeometryData α) : ℝ := D.y⁻¹/D.σ
 
 /-- Time, given by `physicalTime D.t₀ D.a D.ε τ`. -/
-def time (D : PhysicalGeometryData α) (τ : ℝ) : ℝ := physicalTime D.t₀ D.a D.ε τ
+@[expose] def time (D : PhysicalGeometryData α) (τ : ℝ) : ℝ :=
+  physicalTime D.t₀ D.a D.ε τ
 
 /-- Target time, given by `D.time D.target`. -/
 @[expose] def targetTime (D : PhysicalGeometryData α) : ℝ := D.time D.target
@@ -260,7 +261,7 @@ def nextCompression (D : PhysicalGeometryData α) : ℝ :=
     (D.r D.center D.targetTime) (D.r D.center D.targetTime)
 
 /-- Target shear, given by `primaryShear D.c D.m D.v D.targetTime`. -/
-def targetShear (D : PhysicalGeometryData α) : ℝ :=
+@[expose] def targetShear (D : PhysicalGeometryData α) : ℝ :=
   primaryShear D.c D.m D.v D.targetTime
 
 end PhysicalGeometryData

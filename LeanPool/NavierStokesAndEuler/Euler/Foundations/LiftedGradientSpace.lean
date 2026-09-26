@@ -169,7 +169,8 @@ theorem measurePreserving_translation (a : LiftDomain period) :
     (measurePreserving_add_right (volume : Measure (AddCircle period)) a.2)
 
 /-- The measure preserving translation isometry on the actual L² space. -/
-def translation (a : LiftDomain period) : LiftL2 period →ₗᵢ[ℝ] LiftL2 period :=
+@[expose] def translation (a : LiftDomain period) :
+    LiftL2 period →ₗᵢ[ℝ] LiftL2 period :=
   Lp.compMeasurePreservingₗᵢ ℝ (fun x : LiftDomain period => x + a)
     (measurePreserving_translation period a)
 

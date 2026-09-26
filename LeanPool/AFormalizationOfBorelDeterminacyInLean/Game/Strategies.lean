@@ -45,7 +45,7 @@ instance : PartialOrder (PreStrategy T p) where
 variable (S : PreStrategy T p)
 
 /-- the tree of plays valid with a `PreStrategy` -/
-def subtree : tree A where
+@[expose] def subtree : tree A where
   val := { x | ∃ (hx : x ∈ T), ∀ {y} {a}, (hpr : y ++ [a] <+: x) → (hpo : IsPosition y p)
     → ⟨a, mem_of_prefix hpr hx⟩ ∈ S ⟨y, mem_of_append (mem_of_prefix hpr hx)⟩ hpo }
   property := fun _ _ ⟨hx, h⟩ ↦
@@ -54,7 +54,7 @@ def subtree : tree A where
 @[simp] lemma subtree_ne : [] ∈ S.subtree ↔ [] ∈ T := by simp [subtree]
 @[simp] lemma subtree_sub : S.subtree ≤ T := fun _ ⟨h, _⟩ ↦ h
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def subtreeIncl (x : S.subtree) : T := ⟨x.val, S.subtree_sub x.prop⟩
+@[expose] def subtreeIncl (x : S.subtree) : T := ⟨x.val, S.subtree_sub x.prop⟩
 @[simp] lemma subtreeIncl_coe (x : S.subtree) : (S.subtreeIncl x : List A) = x.val := by rfl
 attribute [simp_lengths] subtreeIncl_coe
 
@@ -143,7 +143,7 @@ lemma sub_residual_subtree (x : List A) :
 end PreStrategy
 variable (T p) in
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-def QuasiStrategy := PSigma (@PreStrategy.IsQuasi A T p)
+@[expose] def QuasiStrategy := PSigma (@PreStrategy.IsQuasi A T p)
 @[ext] lemma QuasiStrategy.ext {f g : QuasiStrategy T p} (h : f.1 = g.1) : f = g := by
   obtain ⟨f, hf⟩ := f; obtain ⟨g, hg⟩ := g
   have h' : f = g := h
@@ -207,9 +207,12 @@ lemma PreStrategy.IsQuasi.restrict_isQuasi {S : PreStrategy T p} (rto : PreStrat
 abbrev QuasiStrategy.restrict (S : QuasiStrategy T p) (rto : PreStrategy T p.swap) :
   QuasiStrategy rto.subtree p := ⟨_, S.2.restrict_isQuasi rto⟩
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def QuasiStrategy.residual (S : QuasiStrategy T p) (x : List A) :
+@[expose] def QuasiStrategy.residual (S : QuasiStrategy T p) (x : List A) :
   QuasiStrategy (subAt T x) (p.residual x) := ⟨S.1.residual x, by
   intro y hy; have ne := S.2 ⟨x ++ y.val, y.prop⟩ (by synthIsPosition)
   use ⟨ne.choose.val, by simpa using ne.choose.prop⟩, ne.choose_spec⟩
+
+@[simp] theorem QuasiStrategy.residual_fst (S : QuasiStrategy T p) (x : List A) :
+    (S.residual x).fst = S.fst.residual x := by rfl
 
 end GaleStewartGame

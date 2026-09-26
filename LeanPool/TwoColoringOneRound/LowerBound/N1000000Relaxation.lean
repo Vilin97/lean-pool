@@ -167,6 +167,7 @@ theorem varRepVAt_injective : ∀ i : Var, Function.Injective (tupleOfLabels (va
   fun i => corrAvg (n := n) f (varRepVertexU i) (varRepVertexV i)
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def edgeVarVar : Var :=
   ⟨edgeVar, by decide⟩
 

@@ -27,7 +27,7 @@ section Action
 variable [MulAction X Δ]
 
 /-- The product action of an arbitrary permutation wreath product. -/
-@[expose] instance permWreathMulAction : MulAction (PermWreath X Q ι) (ι → Δ) where
+instance permWreathMulAction : MulAction (PermWreath X Q ι) (ι → Δ) where
   smul g x i := g.left i • x (g.right⁻¹ • i)
   one_smul x := by
     funext i
@@ -49,7 +49,7 @@ section Additive
 variable [AddMonoid Δ] [DistribMulAction X Δ]
 
 /-- The product action is additive whenever the component action is additive. -/
-@[expose] instance permWreathDistribMulAction :
+instance permWreathDistribMulAction :
     DistribMulAction (PermWreath X Q ι) (ι → Δ) where
   toMulAction := permWreathMulAction X Q ι Δ
   smul_zero g := by
@@ -69,7 +69,7 @@ variable {F : Type*} [MulAction X Δ] [SMul F Δ]
 variable [SMulCommClass X F Δ]
 
 /-- The product action commutes with scalars whenever the component action does. -/
-@[expose] instance permWreathSMulCommClass :
+instance permWreathSMulCommClass :
     SMulCommClass (PermWreath X Q ι) F (ι → Δ) where
   smul_comm g a x := by
     funext i

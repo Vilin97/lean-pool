@@ -82,7 +82,7 @@ def frameWitnesses {t : ℕ} (T I : Finset (Fin t)) (S : SupportPattern t) : Boo
   decide (S.1 ⊆ T ∧ ((S.1 ∩ I).card = 1))
 
 /-- The computable count of support occurrences contributing to the frame inequality. -/
-def FrameSpec.countWitnesses (spec : FrameSpec)
+@[expose] def FrameSpec.countWitnesses (spec : FrameSpec)
     (T I : Finset (Fin spec.t)) : ℕ :=
   spec.supportList.countP (frameWitnesses T I)
 

@@ -31,7 +31,7 @@ taken from layer `r`.
 The final disjunct makes the decomposition canonical at layer boundaries:
 when a layer is completely full, we move to the next layer with residual `0`.
 -/
-def IsBinomialCascade (n k r t : ℕ) : Prop :=
+@[expose] def IsBinomialCascade (n k r t : ℕ) : Prop :=
   r ≤ n + 1 ∧
   t ≤ Nat.choose n r ∧
   k = binomPrefix n r + t ∧

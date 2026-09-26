@@ -206,7 +206,7 @@ def hqRepresentation (d : Nat) : Representation F2 (Hq d) (Vq d) :=
   Representation.ofDistribMulAction F2 (Hq d) (Vq d)
 
 /-- The characteristic vector of `{0,1}`, written as a deleted vector. -/
-noncomputable def pairVector (d : Nat) : Vq d :=
+@[expose] noncomputable def pairVector (d : Nat) : Vq d :=
   ⟨Pi.basisFun F2 (Fq d) 0 + Pi.basisFun F2 (Fq d) 1, by
     change coordSum (Pi.basisFun F2 (Fq d) 0 +
       Pi.basisFun F2 (Fq d) 1) = 0

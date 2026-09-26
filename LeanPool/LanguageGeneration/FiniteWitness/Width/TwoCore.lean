@@ -20,15 +20,20 @@ namespace GenLimit.FiniteWitness.TwoCore
 abbrev Point := Anchored.Point
 
 /-- A language contains the entire left copy of the natural numbers. -/
+@[expose]
 def HasLeft (L : Set Point) : Prop := ∀ n, Sum.inl n ∈ L
 /-- A language contains the entire right copy of the natural numbers. -/
+@[expose]
 def HasRight (L : Set Point) : Prop := ∀ n, Sum.inr n ∈ L
 /-- The languages containing at least one of the two infinite copies. -/
+@[expose]
 def family : Set (Set Point) := {L | HasLeft L ∨ HasRight L}
 
 /-- A full left copy together with an arbitrary subset of the right copy. -/
+@[expose]
 def leftTarget (D : Set ℕ) : Set Point := Sum.elim (fun _ => True) (fun n => n ∈ D)
 /-- A full right copy together with an arbitrary subset of the left copy. -/
+@[expose]
 def rightTarget (E : Set ℕ) : Set Point := Sum.elim (fun n => n ∈ E) (fun _ => True)
 
 @[simp] theorem inl_left (D : Set ℕ) (n : ℕ) : Sum.inl n ∈ leftTarget D := trivial

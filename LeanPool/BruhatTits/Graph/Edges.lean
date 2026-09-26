@@ -62,6 +62,7 @@ variable [IsDiscreteValuationRing R] [IsFractionRing R K]
 
 /-- Two vertices `x` and `y` in the Bruhat-Tits tree are neighbours if `inv L M = 1`.
 For a common alternative definition see `BruhatTits.isNeighbour_iff`. -/
+@[expose]
 def IsNeighbour (x y : Vertices R) : Prop := inv x y = 1
 
 lemma isNeighbour_def (x y : Vertices R) :

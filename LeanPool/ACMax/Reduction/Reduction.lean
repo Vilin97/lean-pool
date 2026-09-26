@@ -74,7 +74,7 @@ open Classical in
 `n`-uniform weighted-cut inequality `n·(∑deg − 6) ≤ 2·(3·(n−3))`.  (The triangle `A = {x,y,z}`
 sends exactly `∑deg − 6` edges to `Aᶜ`, so this is precisely the hypothesis of
 `algConn_le_two_of_weighted_cut`.)  At `n = 19` this is `∑deg ≤ 11`. -/
-def HasGoodTriangle (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
+@[expose] def HasGoodTriangle (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
   ∃ x y z : Fin n, x ≠ y ∧ y ≠ z ∧ x ≠ z ∧
     G.Adj x y ∧ G.Adj y z ∧ G.Adj x z ∧
     n * (G.degree x + G.degree y + G.degree z - 6) ≤ 2 * (3 * (n - 3))
@@ -92,7 +92,7 @@ open Classical in
 /-- A **good `C₄`**: an induced `4`-cycle `a-b-c-d-a` with the `n`-uniform threshold
 `n·(∑deg − 8) ≤ 2·(4·(n−4))` — exactly the hypothesis of `algConn_le_two_of_good_C4`.
 At `n = 19` this is `∑deg ≤ 14`. -/
-def HasGoodC4 (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
+@[expose] def HasGoodC4 (n : ℕ) (G : SimpleGraph (Fin n)) : Prop :=
   ∃ a b c d : Fin n, ({a, b, c, d} : Finset (Fin n)).card = 4 ∧
     G.Adj a b ∧ G.Adj b c ∧ G.Adj c d ∧ G.Adj d a ∧ ¬G.Adj a c ∧ ¬G.Adj b d ∧
     n * (G.degree a + G.degree b + G.degree c + G.degree d - 8) ≤ 2 * (4 * (n - 4))

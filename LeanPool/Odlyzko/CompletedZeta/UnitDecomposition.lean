@@ -47,7 +47,7 @@ theorem fundamentalUnitForShift_unitExponentReindex
     (fun _ ↦ by simp [unitExponentReindex])).symm
 
 /-- An unit decomposition map used in the Odlyzko-bound argument. -/
-noncomputable def unitDecompositionMap :
+@[expose] noncomputable def unitDecompositionMap :
     torsion K × ({w : InfinitePlace K // w ≠ w₀} → ℤ) →
       (𝓞 K)ˣ :=
   fun p ↦ p.1 * fundamentalUnitForShift p.2

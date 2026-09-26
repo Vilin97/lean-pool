@@ -410,9 +410,9 @@ def omega : ℂ := 2 * Real.pi * Complex.I
 @[expose] def freqY (k : Frequency) : ℂ := omega * (k.2 : ℂ)
 
 /-- Dx, given by `ContinuousLinearMap.fst ℝ ℝ ℝ`. -/
-def dx : Plane →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
+@[expose] def dx : Plane →L[ℝ] ℝ := ContinuousLinearMap.fst ℝ ℝ ℝ
 /-- Dy, given by `ContinuousLinearMap.snd ℝ ℝ ℝ`. -/
-def dy : Plane →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
+@[expose] def dy : Plane →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
 
 /-- Lift X, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dx`. -/
 @[expose] def liftX : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dx
@@ -724,7 +724,7 @@ instance : IsProbabilityMeasure torusMeasure := by
   infer_instance
 
 /-- Torus mode, bundling `toFun`, `continuous_toFun`. -/
-def torusMode (k : Frequency) : C(Torus, ℂ) where
+@[expose] def torusMode (k : Frequency) : C(Torus, ℂ) where
   toFun z := fourier k.1 z.1 * fourier k.2 z.2
   continuous_toFun := ((fourier k.1).continuous.comp continuous_fst).mul
     ((fourier k.2).continuous.comp continuous_snd)

@@ -128,7 +128,7 @@ theorem cutoffBound_le_of_support (χ : Cutoff) (R M₀ M₁ : ℝ)
     (mul_nonneg (by norm_num) cutoffCurlConstant_pos.le)
 
 /-- Difference error, given by `(χ.differenceQuotient a h).sub (χ.directional a)`. -/
-def Cutoff.differenceError (χ : Cutoff) (a : Space) (h : ℝ) : Cutoff :=
+@[expose] def Cutoff.differenceError (χ : Cutoff) (a : Space) (h : ℝ) : Cutoff :=
   (χ.differenceQuotient a h).sub (χ.directional a)
 
 theorem Cutoff.differenceError_support (χ : Cutoff) (R : ℝ)

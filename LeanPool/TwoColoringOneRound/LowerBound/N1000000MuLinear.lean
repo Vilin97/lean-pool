@@ -65,6 +65,7 @@ def vertexOfLabels (t : N1000000MuWitness.LabelTriple) : Vertex n :=
     varRepVertexU ⟨0, by decide⟩
 
 /-- Imported auxiliary declaration for the 2-coloring one-round formalization. -/
+@[expose]
 def PairMapOk (i : Var) (pm : PairMapData) : Prop :=
   pm.srcU = varRepUAt i ∧
     pm.srcV = varRepVAt i ∧

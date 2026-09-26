@@ -64,7 +64,7 @@ section PosDetInt
 
 /-- An element of `GL_n(ℚ)` has integer matrix entries if its underlying matrix
     is the image of an integer matrix under `ℤ → ℚ`. -/
-def HasIntEntries (g : GL (Fin n) ℚ) : Prop :=
+@[expose] def HasIntEntries (g : GL (Fin n) ℚ) : Prop :=
   ∃ A : Matrix (Fin n) (Fin n) ℤ,
     (↑g : Matrix (Fin n) (Fin n) ℚ) = A.map (Int.cast : ℤ → ℚ)
 

@@ -122,7 +122,7 @@ This is the map `Φ : ℚ^S → ℚ^R` in Lemma 2.1 (`lem:supported`). -/
 theorem multiplierMap_apply (Φ : Laurent) (R S : Finset Lattice) (b : S → ℚ) (z : R) :
     multiplierMap Φ R S b z = (Φ * windowPolynomial S b).coeff z.1 := by
   simp only [multiplierMap, LinearMap.comp_apply, LinearMap.mulLeft_apply,
-    coefficientRestriction, windowPolynomialLinear]
+    coefficientRestriction, windowPolynomialLinear, LinearMap.coe_mk, AddHom.coe_mk]
 
 /-- Support containment makes coefficient restriction lossless.
 This is the identification of supported multiples in Lemma 2.1 (`lem:supported`). -/

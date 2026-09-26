@@ -131,7 +131,7 @@ open MeasureTheory InnerProductSpace Laplacian EulerSmoothLimit EulerNoncompactT
 open scoped ContDiff Convolution Topology
 
 /-- Harmonicity tested against genuine smooth compactly supported scalar functions. -/
-def ScalarWeakHarmonicOn (U : Set Space) (f : Space → ℝ) : Prop :=
+@[expose] def ScalarWeakHarmonicOn (U : Set Space) (f : Space → ℝ) : Prop :=
   ∀ φ : Space → ℝ, HasCompactSupport φ → ContDiff ℝ ∞ φ → tsupport φ ⊆ U →
     (∫ x, f x * Δ φ x) = 0
 

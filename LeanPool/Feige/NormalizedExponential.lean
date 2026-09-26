@@ -47,6 +47,7 @@ def exponentialSimplexForward
 
 /-- Inverse normalized-coordinate map.  It is used only on the domain where
 the total is positive. -/
+@[expose]
 noncomputable def exponentialSimplexInverse
     (e : ℝ × (Fin n → ℝ)) : ℝ × (Fin n → ℝ) :=
   (exponentialTotal e, fun i ↦ e.2 i / exponentialTotal e)
@@ -240,6 +241,7 @@ theorem fderiv_exponentialSimplexForward
 
 /-- Identify an `Option (Fin n)` coordinate vector with radial/product
 coordinates. -/
+@[expose]
 def optionVectorToProduct (v : Option (Fin n) → ℝ) :
     ℝ × (Fin n → ℝ) :=
   (v none, fun i ↦ v (some i))

@@ -20,6 +20,7 @@ namespace GenLimit.FiniteWitness
 variable {α : Type*}
 
 /-- The family of all infinite subsets of a universe. -/
+@[expose]
 def allInfinite (α : Type*) : Set (Set α) := {L | L.Infinite}
 /-- The family of subsets with finite complement. -/
 @[expose] def cofinite (α : Type*) : Set (Set α) := {L | Lᶜ.Finite}

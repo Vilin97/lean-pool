@@ -112,7 +112,6 @@ theorem full_cutoff (S : Set α) (hS : MeasurableSet S)
     cutoff_ae μ S hS (full μ A u),full_ae μ A u] with x ha hi ho hu
   simp only [cutoffOperator_apply] at ha
   simp only [cutoffOperator_apply]
-  change full μ A (cutoff μ S hS u) x = cutoff μ S hS (full μ A u) x
   rw [ha,hi,ho]
   by_cases hx : x ∈ S
   · simp only [indicator_of_mem hx,hu]
@@ -155,7 +154,6 @@ theorem cutoffOperator_adjoint :
   apply integral_congr_ae
   filter_upwards [cutoff_ae μ S hS v,cutoff_ae μ S hS u] with x hv hu
   simp only [cutoffOperator_apply]
-  change ⟪u x,cutoff μ S hS v x⟫_ℝ = ⟪cutoff μ S hS u x,v x⟫_ℝ
   rw [hv,hu]
   by_cases hx : x ∈ S
   · simp only [indicator_of_mem hx]

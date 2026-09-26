@@ -236,10 +236,12 @@ theorem coeffAt_dbar (f : SmoothC X) (x : X) {z : ℂ} (hz : z ∈ (chartAt ℂ 
 /-! ### `IsDbarAt` / `IsDbarOn` (D7): chart-free local `dbar`-equations -/
 
 /-- `u` solves `dbaru = η` at `x`, evaluated in `x`'s own preferred chart. -/
+@[expose]
 def IsDbarAt (u : X → ℂ) (η : Form01 X) (x : X) : Prop :=
   wirtingerDbar (u ∘ ⇑(chartAt ℂ x).symm) (chartAt ℂ x x) = η.coeffAt x (chartAt ℂ x x)
 
 /-- `u` solves `dbaru = η` at every point of `s`. -/
+@[expose]
 def IsDbarOn (u : X → ℂ) (η : Form01 X) (s : Set X) : Prop := ∀ x ∈ s, IsDbarAt u η x
 
 theorem isDbarOn_dbar (f : SmoothC X) : IsDbarOn (⇑f) (dbar f) Set.univ := by

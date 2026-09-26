@@ -439,7 +439,7 @@ def timeProfileDerivative (G : Profile) (p : ProfilePoint) : ℝ →L[ℝ] ℝ :
   (fderiv ℝ G p).comp timeProfileJacobian
 
 @[simp] theorem timeProfileDerivative_one (G : Profile) (p : ProfilePoint) :
-    timeProfileDerivative G p 1 = partialT G p := rfl
+    timeProfileDerivative G p 1 = partialT G p := by rfl
 
 theorem hasFDerivAt_time_lift {G : Profile} {t : ℝ} (hG : SliceDifferentiable G t) (x : Space) :
     HasFDerivAt (fun s => lift G s x) (timeProfileDerivative G (profilePoint t x)) t := by

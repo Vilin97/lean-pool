@@ -47,7 +47,7 @@ def IsWallaceSemigroup (S : Type u) [TopologicalSpace S] [AddMonoid S] : Prop :=
 
 /-- A convenient unbundled form of the accumulation-point criterion used for countable
 compactness. -/
-def HasInfiniteSetAccumulationProperty
+@[expose] def HasInfiniteSetAccumulationProperty
     (X : Type u) [TopologicalSpace X] : Prop :=
   ∀ B : Set X, B.Infinite → ∃ x : X, AccPt x (Filter.principal B)
 

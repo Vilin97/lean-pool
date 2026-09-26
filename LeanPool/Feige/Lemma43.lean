@@ -88,6 +88,7 @@ theorem w_pos
 
 /-- Explicit, auditable identification between the actual tail
 probabilities of two laws and the four likelihood-ratio integrals. -/
+@[expose]
 def DensityIdentification
     (f : ℝ → ℝ≥0∞) (νP νM : Measure ℝ)
     (a b c d : ℝ) : Prop :=
@@ -102,6 +103,7 @@ def DensityIdentification
 
 /-- The four elementary relations among `A,B,F,u,v,w`, kept as an
 explicit proposition so that no probability identification is hidden. -/
+@[expose]
 def ProbabilityRelations
     (νP νM : Measure ℝ) (c d : ℝ) : Prop :=
   B νP c = A νP d + w νP c d ∧

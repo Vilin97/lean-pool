@@ -33,7 +33,7 @@ def translated (A : Space →ᵇ V) (a : Space) : Space →ᵇ V :=
   A.compContinuous ⟨fun x => x+a, continuous_id.add continuous_const⟩
 
 @[simp] theorem translated_apply (A : Space →ᵇ V) (a x : Space) :
-    translated A a x = A (x+a) := rfl
+    translated A a x = A (x+a) := by rfl
 
 @[simp] theorem translated_zero (A : Space →ᵇ V) : translated A 0 = A := by
   ext x
@@ -65,7 +65,7 @@ def fieldDirection (DA : Space →ᵇ (Space →L[ℝ] V)) (a : Space) : Space �
       (mul_le_mul_of_nonneg_right (DA.norm_coe_le_norm x) (norm_nonneg a)))
 
 @[simp] theorem fieldDirection_apply (DA : Space →ᵇ (Space →L[ℝ] V)) (a x : Space) :
-    fieldDirection DA a x = DA x a := rfl
+    fieldDirection DA a x = DA x a := by rfl
 
 theorem fieldDirection_norm_le (DA : Space →ᵇ (Space →L[ℝ] V)) (a : Space) :
     ‖fieldDirection DA a‖ ≤ ‖DA‖ * ‖a‖ :=
@@ -87,7 +87,7 @@ def fieldDerivativeMap (DA : Space →ᵇ (Space →L[ℝ] V)) : Space →L[ℝ]
     (fieldDirection_norm_le DA)
 
 @[simp] theorem fieldDerivativeMap_apply (DA : Space →ᵇ (Space →L[ℝ] V)) (a x : Space) :
-    fieldDerivativeMap DA a x = DA x a := rfl
+    fieldDerivativeMap DA a x = DA x a := by rfl
 
 theorem translated_taylor_bound (A : Space →ᵇ V) (DA : Space →ᵇ (Space →L[ℝ] V))
     (hA : ContDiff ℝ ∞ (A : Space → V))

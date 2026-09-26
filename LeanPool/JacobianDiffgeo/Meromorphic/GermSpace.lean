@@ -62,6 +62,7 @@ variable {U V : Set X} {f g : X → ℂ}
 
 variable (X) in
 /-- Germs over `codiscreteWithin U` admitting a meromorphic representative. -/
+@[expose]
 noncomputable def meroGermSubalgebra (U : Set X) :
     Subalgebra ℂ (Filter.Germ (Filter.codiscreteWithin U) ℂ) where
   carrier := {γ | ∃ f, MeromorphicOnX f U ∧ γ = (f : Filter.Germ (codiscreteWithin U) ℂ)}
@@ -101,6 +102,7 @@ instance instNontrivialMero [Nonempty X] : Nontrivial (ℳ X) := by
 namespace MeroGermOn
 
 /-- Constructor: the class of a meromorphic function. -/
+@[expose]
 noncomputable def mk (f : X → ℂ) (hf : MeromorphicOnX f U) : MeroGermOn X U :=
   ⟨(f : Filter.Germ (codiscreteWithin U) ℂ), f, hf, rfl⟩
 

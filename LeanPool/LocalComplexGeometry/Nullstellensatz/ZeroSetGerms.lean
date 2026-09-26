@@ -292,7 +292,7 @@ theorem finiteCommonZeroSet_eq_of_span_eq {n : ℕ}
   · exact finiteCommonZeroSet_antitone_span S T h.le
 
 /-- A fixed finite generating set selected from Noetherianity. -/
-def idealGeneratorFinset {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
+@[expose] def idealGeneratorFinset {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
     (I : Ideal (HolomorphicGerm n)) : Finset (HolomorphicGerm n) :=
   Classical.choose (Ideal.fg_of_isNoetherianRing I)
 
@@ -303,7 +303,7 @@ theorem span_idealGeneratorFinset {n : ℕ}
   Classical.choose_spec (Ideal.fg_of_isNoetherianRing I)
 
 /-- The zero-set germ of an ideal, defined through a finite generating set. -/
-def idealZeroSetGerm {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
+@[expose] def idealZeroSetGerm {n : ℕ} [IsNoetherianRing (HolomorphicGerm n)]
     (I : Ideal (HolomorphicGerm n)) : LocalSetGerm n :=
   finiteCommonZeroSet (idealGeneratorFinset I)
 

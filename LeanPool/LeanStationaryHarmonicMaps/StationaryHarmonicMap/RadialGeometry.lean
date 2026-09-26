@@ -52,7 +52,7 @@ def radialUnit {n : ℕ} (a x : Domain n) : Domain n :=
 
 /-- Radial derivative associated to a pointwise gradient matrix, evaluated in the
 radial direction from the origin to `x`. -/
-def gradientRadialDerivative {n m : ℕ} (A : Gradient n m) (x : Domain n) : Target m :=
+@[expose] def gradientRadialDerivative {n m : ℕ} (A : Gradient n m) (x : Domain n) : Target m :=
   SMul.smul (‖x‖⁻¹) (∑ i : Fin n, SMul.smul (x i) (A i))
 
 /-- Radial energy associated to a pointwise gradient matrix. -/
@@ -184,7 +184,7 @@ theorem radialVectorFieldDerivativeFormula {n : ℕ} {phi : ℝ → ℝ}
 
 /-- Divergence formula for the radial vector field:
 `div X = n φ(r) + r φ'(r)`. -/
-def RadialVectorFieldDivergenceFormula {n : ℕ} (phi : ℝ → ℝ) : Prop :=
+@[expose] def RadialVectorFieldDivergenceFormula {n : ℕ} (phi : ℝ → ℝ) : Prop :=
   ∀ x : Domain n, x ≠ 0 →
     divergence (radialVectorField phi) x =
       (n : ℝ) * phi ‖x‖ + ‖x‖ * deriv phi ‖x‖

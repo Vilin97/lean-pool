@@ -488,16 +488,16 @@ noncomputable def len : ℝ := ‖P.vertex (i + 1) - P.vertex i‖
 noncomputable def tang : Plane := dir (P.vertex (i + 1) - P.vertex i)
 
 /-- The incoming ray at vertex `i`: the direction back along the edge that arrives there. -/
-noncomputable def rayIn : Plane := dir (P.vertex (i - 1) - P.vertex i)
+@[expose] noncomputable def rayIn : Plane := dir (P.vertex (i - 1) - P.vertex i)
 
 /-- The point of the plane at progress `t` and signed offset `s` in the frame of edge `i`. -/
-noncomputable def off : Plane := P.vertex i + t • P.tang i + s • perp (P.tang i)
+@[expose] noncomputable def off : Plane := P.vertex i + t • P.tang i + s • perp (P.tang i)
 
 /-- The point of edge `i` at distance `c` from its initial vertex. -/
-noncomputable def pt : Plane := P.off i c 0
+@[expose] noncomputable def pt : Plane := P.off i c 0
 
 /-- The edge leaving vertex `i`. -/
-def edge : Set Plane := segment ℝ (P.vertex i) (P.vertex (i + 1))
+@[expose] def edge : Set Plane := segment ℝ (P.vertex i) (P.vertex (i + 1))
 
 /-- The carrier of the polygon: the union of its edges. -/
 @[expose] def carrier : Set Plane := ⋃ i, P.edge i
@@ -688,21 +688,21 @@ def blockR (i : ZMod (m + 3)) : Set Plane :=
 
 /-- The left sector at vertex `i`: the arc `arcCCW (tang i) (rayIn i)` is the one carrying both
 left germs, by `Plane.germs_split'`. -/
-def sectorL (i : ZMod (m + 3)) : Set Plane :=
+@[expose] def sectorL (i : ZMod (m + 3)) : Set Plane :=
   cone (P.vertex i) (arcCCW (P.tang i) (P.rayIn i)) D.R
 
 /-- The right sector at vertex `i`. -/
-def sectorR (i : ZMod (m + 3)) : Set Plane :=
+@[expose] def sectorR (i : ZMod (m + 3)) : Set Plane :=
   cone (P.vertex i) (arcCCW (P.rayIn i) (P.tang i)) D.R
 
 /-- The left side of the collar. -/
-def sideL : Set Plane := ⋃ i, (D.sectorL i ∪ D.blockL i)
+@[expose] def sideL : Set Plane := ⋃ i, (D.sectorL i ∪ D.blockL i)
 
 /-- The right side of the collar. -/
-def sideR : Set Plane := ⋃ i, (D.sectorR i ∪ D.blockR i)
+@[expose] def sideR : Set Plane := ⋃ i, (D.sectorR i ∪ D.blockR i)
 
 /-- The collar itself. -/
-def nbhd : Set Plane := D.sideL ∪ D.sideR ∪ P.carrier
+@[expose] def nbhd : Set Plane := D.sideL ∪ D.sideR ∪ P.carrier
 
 theorem mem_blockL_iff : x ∈ D.blockL i ↔
     D.lam < coordAlong (P.vertex i) (P.tang i) x ∧

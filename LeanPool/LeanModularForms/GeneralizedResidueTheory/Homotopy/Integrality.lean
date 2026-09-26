@@ -50,7 +50,7 @@ Use this when working with closed piecewise-smooth curves; it is strictly
 stronger than `CurvesHomotopicAvoiding` (which handles open-endpoint curves
 fixed at `z₀`) but weaker than `ClosedCurvesHomotopicAvoiding` (which requires
 a globally continuous derivative without a partition). -/
-def PiecewiseCurvesHomotopicAvoiding (γ₀ γ₁ : ℝ → ℂ)
+@[expose] def PiecewiseCurvesHomotopicAvoiding (γ₀ γ₁ : ℝ → ℂ)
     (a b : ℝ) (z₀ : ℂ) (P : Finset ℝ) : Prop :=
   ∃ H : ℝ × ℝ → ℂ,
     Continuous H ∧
@@ -80,7 +80,7 @@ the curves and homotopy are genuinely smooth; it implies
 `PiecewiseCurvesHomotopicAvoiding` (via `ClosedCurvesHomotopicAvoiding.toPiecewise`)
 but does **not** directly imply `CurvesHomotopicAvoiding`, which has a different
 endpoint condition (endpoints fixed at `z₀` rather than identified). -/
-def ClosedCurvesHomotopicAvoiding (γ₀ γ₁ : ℝ → ℂ)
+@[expose] def ClosedCurvesHomotopicAvoiding (γ₀ γ₁ : ℝ → ℂ)
     (a b : ℝ) (z₀ : ℂ) : Prop :=
   ∃ H : ℝ × ℝ → ℂ,
     Continuous H ∧

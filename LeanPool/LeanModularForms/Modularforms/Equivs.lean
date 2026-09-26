@@ -31,7 +31,7 @@ open TopologicalSpace Set
 
 
 /-- Negation as an equivalence `ℤ ≃ ℤ`. -/
-def negEquiv : ℤ ≃ ℤ where
+@[expose] def negEquiv : ℤ ≃ ℤ where
   toFun n := -n
   invFun n := -n
   left_inv := neg_neg

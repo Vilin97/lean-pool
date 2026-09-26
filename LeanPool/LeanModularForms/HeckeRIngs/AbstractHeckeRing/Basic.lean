@@ -200,7 +200,7 @@ noncomputable def toSet (D : HeckeLeftCoset P) : Set G :=
     (fun _ _ (h : lcRel P _ _) => h) D
 
 /-- A representative `g : Δ`. -/
-noncomputable def rep (D : HeckeLeftCoset P) : P.Δ := Quotient.out D
+@[expose] noncomputable def rep (D : HeckeLeftCoset P) : P.Δ := Quotient.out D
 
 /-- The identity left coset `1H = H`. -/
 def one (P : HeckePair G) : HeckeLeftCoset P := ⟦⟨1, P.Δ.one_mem⟩⟧

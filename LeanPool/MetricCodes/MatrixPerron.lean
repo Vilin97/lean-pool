@@ -43,7 +43,7 @@ structure ConnectedNonnegativeMatrix (A : Matrix I I ℝ) : Prop where
   Matrix.toEuclideanLin A
 
 /-- The continuous linear operator associated to a finite real matrix. -/
-def continuousOperator (A : Matrix I I ℝ) : Space I →L[ℝ] Space I :=
+@[expose] def continuousOperator (A : Matrix I I ℝ) : Space I →L[ℝ] Space I :=
   LinearMap.toContinuousLinearMap (operator A)
 
 /-- The Rayleigh quotient of the matrix operator. -/

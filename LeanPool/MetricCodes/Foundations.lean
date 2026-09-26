@@ -390,11 +390,11 @@ theorem card_level (n k : ℕ) :
   ∑ a : Fin n, lowerAt a f S
 
 /-- The predicate asserting level. -/
-def IsLevel {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
+@[expose] def IsLevel {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
   ∀ S : Finset (Fin n), S.card ≠ k → f S = 0
 
 /-- The predicate asserting harmonic. -/
-def IsHarmonic {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
+@[expose] def IsHarmonic {n : ℕ} (k : ℕ) (f : Function n) : Prop :=
   IsLevel k f ∧ ∀ S : Finset (Fin n), lower f S = 0
 
 variable {n : ℕ}
@@ -1862,7 +1862,7 @@ theorem mem_harmonicLayer_iff {k : ℕ} (f : LayerFunction n k) :
 abbrev EuclideanLayer (n k : ℕ) := EuclideanSpace ℝ (Level n k)
 
 /-- The harmonic euclidean layer used in the binary-code argument. -/
-def harmonicEuclideanLayer (n k : ℕ) :
+@[expose] def harmonicEuclideanLayer (n k : ℕ) :
     Submodule ℝ (EuclideanLayer n k) :=
   (harmonicLayer n k).map
     (WithLp.linearEquiv 2 ℝ (LayerFunction n k)).symm.toLinearMap
@@ -4715,7 +4715,7 @@ abbrev Index (k L : ℕ) := Fin (L - k + 1)
 abbrev Space (k L : ℕ) := EuclideanSpace ℝ (Index k L)
 
 /-- The matrix used in the binary-code argument. -/
-def matrix (n k L : ℕ) : Matrix (Index k L) (Index k L) ℝ :=
+@[expose] def matrix (n k L : ℕ) : Matrix (Index k L) (Index k L) ℝ :=
   MetricCodes.hammingJacobiMatrix n k L
 
 theorem matrix_hermitian (n k L : ℕ) : (matrix n k L).IsHermitian := by
@@ -7317,7 +7317,7 @@ abbrev Index (p q L : ℕ) := Fin (L - (p + q) + 1)
 abbrev Space (p q L : ℕ) := EuclideanSpace ℝ (Index p q L)
 
 /-- The matrix used in the Johnson-code argument. -/
-def matrix (n w p q L : ℕ) :
+@[expose] def matrix (n w p q L : ℕ) :
     Matrix (Index p q L) (Index p q L) ℝ :=
   MetricCodes.johnsonJacobiMatrix n w p q L
 

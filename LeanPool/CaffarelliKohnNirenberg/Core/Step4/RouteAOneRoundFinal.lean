@@ -43,7 +43,7 @@ namespace CKN.Core.Step4
    theorem.  Its test functions are supported in the same local product box
    as the cutoff. -/
 /-- Heat-potential representation interface with an explicitly selected weak pressure gradient. -/
-def routeAGradientSlotRepresentation : Prop :=
+@[expose] def routeAGradientSlotRepresentation : Prop :=
   ∀ {Ω : Set Vec3} {I : Set ℝ} {q : ℝ}
     {u : ParabolicPoint → Vec3} {Du : ParabolicPoint → Fin 3 → Vec3}
     {p : ParabolicPoint → ℝ} {f : ParabolicPoint → Vec3},

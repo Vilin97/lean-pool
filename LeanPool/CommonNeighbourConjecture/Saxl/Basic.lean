@@ -29,7 +29,7 @@ variable (G Ω : Type*) [Group G] [MulAction G Ω]
   ∀ g : G, (∀ i, g • x i = x i) → g = 1
 
 /-- An injective ordered tuple corresponding literally to a base as a set. -/
-def IsSetBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
+@[expose] def IsSetBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
   Function.Injective x ∧ IsBaseTuple G Ω x
 
 /-- Base-two adjacency: the displayed ordered pair has trivial stabilizer. -/
@@ -46,7 +46,7 @@ def IsSetBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
   ∃ z, R x z ∧ R z y
 
 /-- Exact base size `n`, stated without a global minimum operator. -/
-def ExactBaseSize (n : Nat) : Prop :=
+@[expose] def ExactBaseSize (n : Nat) : Prop :=
   (∃ x : Fin n → Ω, IsSetBaseTuple G Ω x) ∧
     ∀ m < n, ¬ ∃ x : Fin m → Ω, IsSetBaseTuple G Ω x
 

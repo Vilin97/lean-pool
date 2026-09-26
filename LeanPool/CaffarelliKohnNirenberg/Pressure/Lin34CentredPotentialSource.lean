@@ -310,20 +310,20 @@ tensor `eq:Uhat` multiplied by the mixed second derivative `∂_i ∂_j η` of t
 
 /-- The source of the centred potential `p₄`: the entry `i j` of the centred tensor
 `eq:Uhat` multiplied by the first derivative `∂_j η` of the cut-off. -/
-def lin34CentredTensorGradientJ (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredTensorGradientJ (u : ParabolicPoint → Vec3) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) (i j : Fin 3) : Vec3 → ℝ :=
   fun y => pressureUTensor (lin34CentredVelocity u x₀ ρ) 0 ((y, s) : ParabolicPoint) i j *
     spatialDeriv (mollifiedBallCutoff x₀ hρ) j y
 
 /-- The source of the centred potential `p₅`: the pressure slice multiplied by the
 spatial Laplacian `Δη` of the cut-off. -/
-def lin34CentredPressureLaplacian (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredPressureLaplacian (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) : Vec3 → ℝ :=
   fun y => p (y, s) * spatialLaplacian (mollifiedBallCutoff x₀ hρ) y
 
 /-- The source of the centred potential `p₆`: the first derivative `∂_j η` of the
 cut-off multiplied by the pressure slice. -/
-def lin34CentredPressureGradient (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
+@[expose] def lin34CentredPressureGradient (p : ParabolicPoint → ℝ) (x₀ : Vec3) {ρ : ℝ}
     (hρ : 0 < ρ) (s : ℝ) (j : Fin 3) : Vec3 → ℝ :=
   fun y => spatialDeriv (mollifiedBallCutoff x₀ hρ) j y * p (y, s)
 

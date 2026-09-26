@@ -120,7 +120,7 @@ theorem eventuallyEq_comp_wptAmbientEquiv_iff (n : ℕ)
 /-! ## Pullback of function germs and holomorphic germs -/
 
 /-- Precomposition of function germs by a continuous linear map fixing the origin. -/
-def functionGermPullbackHom {n m : ℕ}
+@[expose] def functionGermPullbackHom {n m : ℕ}
     (L : ComplexEuclidean n →L[ℂ] ComplexEuclidean m) :
     FunctionGerm m →+* FunctionGerm n where
   toFun φ := φ.compTendsto L (by
@@ -231,7 +231,7 @@ theorem functionGermPullbackHom_rightInverse {n m : ℕ}
   rfl
 
 /-- Pullback of holomorphic germs by a continuous complex-linear map. -/
-def holomorphicGermPullbackHom {n m : ℕ}
+@[expose] def holomorphicGermPullbackHom {n m : ℕ}
     (L : ComplexEuclidean n →L[ℂ] ComplexEuclidean m) :
     HolomorphicGerm m →+* HolomorphicGerm n where
   toFun φ :=
@@ -302,7 +302,7 @@ theorem holomorphicGermPullbackHom_comp {n m k : ℕ}
 The direction is contravariant: an equivalence `L : ℂⁿ ≃L[ℂ] ℂᵐ` induces an
 equivalence from germs on `ℂᵐ` to germs on `ℂⁿ`.
 -/
-def coordinatePullback {n m : ℕ}
+@[expose] def coordinatePullback {n m : ℕ}
     (L : ComplexEuclidean n ≃L[ℂ] ComplexEuclidean m) :
     HolomorphicGerm m ≃+* HolomorphicGerm n where
   toFun := holomorphicGermPullbackHom

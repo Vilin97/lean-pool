@@ -28,7 +28,7 @@ open CategoryTheory Descriptive
 
 noncomputable section «Section1»
 /-- A tree with a chosen base node -/
-def PointedTrees := Σ (T : Trees), T
+@[expose] def PointedTrees := Σ (T : Trees), T
 
 /-- a base node preserving morphism of trees -/
 @[ext (flat := false)] structure PointedLenHom (S T : PointedTrees)

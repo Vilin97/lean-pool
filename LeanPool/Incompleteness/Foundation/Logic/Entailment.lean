@@ -67,7 +67,7 @@ infix:45 " ⊢! " => Provable
 infix:45 " ⊬ " => Unprovable
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def PrfSet (s : Set F) : Type _ := {f : F} → f ∈ s → 𝓢 ⊢ f
+@[expose] def PrfSet (s : Set F) : Type _ := {f : F} → f ∈ s → 𝓢 ⊢ f
 
 /-- Imported declaration from the Incompleteness formalization. -/
 def ProvableSet (s : Set F) : Prop := ∀ {f}, f ∈ s → 𝓢 ⊢! f
@@ -278,14 +278,14 @@ variable [Entailment F'' S'']
 instance (𝓢 : S) (𝓣 : S') : CoeFun (𝓢 ↝ 𝓣) (fun _ ↦ F → F') := ⟨Translation.toFun⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def id (𝓢 : S) : 𝓢 ↝ 𝓢 where
+@[expose] protected def id (𝓢 : S) : 𝓢 ↝ 𝓢 where
   toFun := id
   prf := id
 
 @[simp] lemma id_app (𝓢 : S) (f : F) : Translation.id 𝓢 f = f := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def comp {𝓢 : S} {𝓣 : S'} {𝓤 : S''} (φ : 𝓣 ↝ 𝓤) (ψ : 𝓢 ↝ 𝓣) : 𝓢 ↝ 𝓤 where
+@[expose] def comp {𝓢 : S} {𝓣 : S'} {𝓤 : S''} (φ : 𝓣 ↝ 𝓤) (ψ : 𝓢 ↝ 𝓣) : 𝓢 ↝ 𝓤 where
   toFun := φ.toFun ∘ ψ.toFun
   prf := φ.prf ∘ ψ.prf
 
@@ -336,7 +336,7 @@ variable [Entailment F'' S'']
 instance (𝓢 : S) (𝓣 : S') : CoeFun (𝓢 ↝¹ 𝓣) (fun _ ↦ F → F') := ⟨fun t ↦ t.toFun⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-protected def id (𝓢 : S) : 𝓢 ↝¹ 𝓢 where
+@[expose] protected def id (𝓢 : S) : 𝓢 ↝¹ 𝓢 where
   toFun := id
   prf := id
   prfInv := id
@@ -344,7 +344,7 @@ protected def id (𝓢 : S) : 𝓢 ↝¹ 𝓢 where
 @[simp] lemma id_app (𝓢 : S) (f : F) : FaithfulTranslation.id 𝓢 f = f := rfl
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def comp {𝓢 : S} {𝓣 : S'} {𝓤 : S''} (φ : 𝓣 ↝¹ 𝓤) (ψ : 𝓢 ↝¹ 𝓣) : 𝓢 ↝¹ 𝓤 where
+@[expose] def comp {𝓢 : S} {𝓣 : S'} {𝓤 : S''} (φ : 𝓣 ↝¹ 𝓤) (ψ : 𝓢 ↝¹ 𝓣) : 𝓢 ↝¹ 𝓤 where
   toFun := φ.toFun ∘ ψ.toFun
   prf := φ.prf ∘ ψ.prf
   prfInv := ψ.prfInv ∘ φ.prfInv

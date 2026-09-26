@@ -1132,7 +1132,7 @@ theorem monom_coeff_eq_of_coord_eq (x : X) (a₀ a₁ : R) :
 
 
 /-- For `x: X`, the functions `a : R ↦ ⟦[(a, x)]⟧` -/
-def coeffInclusion (x₀ : X) : R → R[X] :=
+@[expose] def coeffInclusion (x₀ : X) : R → R[X] :=
   fun a₀ => ⟦[(a₀, x₀)]⟧
 
 /-- Injectivity of `coeffInclusion` -/
@@ -1145,7 +1145,7 @@ theorem coeffInclusion_injective (x₀ : X)
   exact monom_coeff_eq_of_coord_eq x₀ a₀ a₁ hyp
 
 /-- For `a: A`, the function `x: X ↦ ⟦[(a, x)]⟧` -/
-def baseInclusion (a₀ : R) : X → R[X] :=
+@[expose] def baseInclusion (a₀ : R) : X → R[X] :=
   fun x₀ => ⟦[(a₀, x₀)]⟧
 
 /-- Injectivity of `baseInclusion a` give `a ≠0` -/

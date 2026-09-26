@@ -49,7 +49,7 @@ of elements from the carrier type α. -/
 @[expose] def RelQueryOn (α : Type*) := Σ (R : Σ l, L.Relations l), (Fin R.1 → α)
 
 /-- A relation query for carrier ℕ. -/
-def RelQuery := RelQueryOn L ℕ
+@[expose] def RelQuery := RelQueryOn L ℕ
 
 variable {L}
 

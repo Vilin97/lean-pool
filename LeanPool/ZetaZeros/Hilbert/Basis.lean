@@ -64,8 +64,8 @@ structure IsAdaptedBasis (h : IsAdmissible lam eta) (Z : Finset ℂ) (m : ℂ �
 
 /-- The Bessel coefficient of a single `L²` element: the coefficient of the two-variable kernel
 against its tensor square. -/
-@[zz_tag "def_alpha"]
-@[expose] noncomputable def alphaOf (eta : ℝ → ℝ) (lam : ℝ) (Z : Finset ℂ) (m : ℂ → ℕ)
+@[expose, zz_tag "def_alpha"]
+noncomputable def alphaOf (eta : ℝ → ℝ) (lam : ℝ) (Z : Finset ℂ) (m : ℂ → ℕ)
     (psi : L2Interval lam) : ℂ :=
   ∫ u in Set.Ioo (-lam) lam, ∫ v in Set.Ioo (-lam) lam,
     bigF eta Z m u v * (starRingEnd ℂ) ((psi : ℝ → ℂ) u * (psi : ℝ → ℂ) v)

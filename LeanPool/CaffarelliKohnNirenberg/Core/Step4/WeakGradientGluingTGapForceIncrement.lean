@@ -34,7 +34,7 @@ def gapForceIncrement (z : ParabolicPoint) {ρ : ℝ} (hρ : 0 < ρ)
     classicalGradient (harmonicPressurePart η u c p w.2) w.1 i
 
 /-- An absolute coefficient for the force increment on either half-gap collar. -/
-def gapForceIncrementCoefficient : ℝ :=
+@[expose] def gapForceIncrementCoefficient : ℝ :=
   400 * sliceForcePotentialConstant * cutoffGradientConstant * (128 : ℝ)^3
 
 /-- The absolute force-increment coefficient is nonnegative. -/

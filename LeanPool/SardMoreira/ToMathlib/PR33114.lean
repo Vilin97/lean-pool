@@ -129,10 +129,15 @@ def homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X where
 
 theorem toEquiv_homeomorph : homeomorph.toEquiv = equiv X α hα₀ hα₁ := by rfl
 
+@[simp] theorem homeomorph_toEquiv : homeomorph.toEquiv = equiv X α hα₀ hα₁ :=
+  toEquiv_homeomorph
+
 @[simp] theorem homeomorph_apply (x : WithRPowDist X α hα₀ hα₁) :
     homeomorph x = x.val := by rfl
 
-@[simp] theorem homeomorph_symm_apply (x : X) : homeomorph.symm x = mk x := by rfl
+@[simp] theorem homeomorph_symm_apply (x : X) :
+    (homeomorph : WithRPowDist X α hα₀ hα₁ ≃ₜ X).symm x =
+      (mk x : WithRPowDist X α hα₀ hα₁) := by rfl
 
 /-!
 We copy some instances from the underlying space `X` to `WithRPowDist X α hα₀ hα₁`.
@@ -218,7 +223,9 @@ theorem uniformEquiv_toEquiv : uniformEquiv.toEquiv = equiv X α hα₀ hα₁ :
 @[simp] theorem uniformEquiv_apply (x : WithRPowDist X α hα₀ hα₁) :
     uniformEquiv x = x.val := by rfl
 
-@[simp] theorem uniformEquiv_symm_apply (x : X) : uniformEquiv.symm x = mk x := by rfl
+@[simp] theorem uniformEquiv_symm_apply (x : X) :
+    (uniformEquiv : WithRPowDist X α hα₀ hα₁ ≃ᵤ X).symm x =
+      (mk x : WithRPowDist X α hα₀ hα₁) := by rfl
 
 end UniformSpace
 

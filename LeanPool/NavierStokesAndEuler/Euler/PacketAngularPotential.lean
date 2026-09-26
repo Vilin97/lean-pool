@@ -70,7 +70,7 @@ open EulerSmoothLimit EulerPacketCrossProduct EulerAngleMeanZeroPrimitive
   MeasureTheory Set InnerProductSpace
 
 /-- Potential, given by `primitive P (fun θ => potentialMultiplier m (A θ))`. -/
-def potential (P : ℝ) (m : Space) (A : ℝ → Space) : ℝ → Space :=
+@[expose] def potential (P : ℝ) (m : Space) (A : ℝ → Space) : ℝ → Space :=
   primitive P (fun θ => potentialMultiplier m (A θ))
 
 theorem potential_hasDerivAt (P : ℝ) (m : Space) (A : ℝ → Space)

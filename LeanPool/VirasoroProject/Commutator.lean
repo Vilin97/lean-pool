@@ -33,7 +33,7 @@ section commutator
 variable {𝕜 : Type*} [Semiring 𝕜] {V : Type*} [AddCommGroup V] [Module 𝕜 V]
 
 /-- Commutator `[A,B] := AB-BA` of two linear operators `A`, `B`. -/
-def commutator (A B : V →ₗ[𝕜] V) : V →ₗ[𝕜] V :=
+@[expose] def commutator (A B : V →ₗ[𝕜] V) : V →ₗ[𝕜] V :=
   A * B - B * A
 
 /-- `[A,B] = -[B,A]` -/

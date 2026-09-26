@@ -57,6 +57,7 @@ def roundMatching (R : Finset (Finset V)) : Finset (Finset V) :=
 def covered (R : Finset (Finset V)) : Finset V := support (roundMatching R)
 
 /-- The residual hypergraph: edges of `H` that avoid the covered vertices. -/
+@[expose]
 def residual (H R : Finset (Finset V)) : Finset (Finset V) :=
   H.filter (fun e => Disjoint e (covered R))
 

@@ -499,8 +499,10 @@ private lemma freeCovarianceℂ_bilinear_star_star_conj
   --     = ∫∫ conj(f(Θx)) · ↑K(x,y) · conj(g(Θy))   (definitionally, by star_apply = rfl)
   -- RHS = conj(∫∫ f(x) · ↑K(x,y) · g(y))
   -- Step 1: Rewrite (star h)(z) = conj(h(Θz)) explicitly so simp_rw can work with it.
-  have hstarf : ∀ x, (star f) x = starRingEnd ℂ (f (QFT.timeReflection x)) := fun _ => rfl
-  have hstarg : ∀ y, (star g) y = starRingEnd ℂ (g (QFT.timeReflection y)) := fun _ => rfl
+  have hstarf : ∀ x, (star f) x = starRingEnd ℂ (f (QFT.timeReflection x)) :=
+    fun x => QFT.RPProof.star_apply f x
+  have hstarg : ∀ y, (star g) y = starRingEnd ℂ (g (QFT.timeReflection y)) :=
+    fun y => QFT.RPProof.star_apply g y
   simp_rw [hstarf, hstarg]
   -- Now LHS = ∫∫ conj(f(Θx)) · ↑K(x,y) · conj(g(Θy))
   -- Step 2: Pull conj inside the RHS integrals.
@@ -583,6 +585,7 @@ private def IsHermitianMatrix {n : ℕ} (M : Fin n → Fin n → ℂ) : Prop :=
 /-- Star is involutive on `TestFunctionℂ`: `star (star f) = f`. -/
 private lemma star_star_testFunctionℂ (f : TestFunctionℂ) : star (star f) = f := by
   ext x
+  rw [QFT.RPProof.star_apply, QFT.RPProof.star_apply]
   change starRingEnd ℂ (starRingEnd ℂ (f (QFT.timeReflection (QFT.timeReflection x)))) = f x
   rw [QFT.timeReflection_involutive, RCLike.conj_conj]
 
@@ -822,7 +825,7 @@ private lemma gff_complexZ_entry_factor (fi fj : TestFunctionℂ) :
     and `compTimeReflection` is a continuous linear map.
 -/
 private lemma star_apply (f : TestFunctionℂ) (x : SpaceTime) :
-    (star f) x = starRingEnd ℂ (f (QFT.timeReflection x)) := rfl
+    (star f) x = starRingEnd ℂ (f (QFT.timeReflection x)) := QFT.RPProof.star_apply f x
 
 private lemma star_sum_antilinear {n : ℕ} (v : Fin n → ℂ) (g : Fin n → TestFunctionℂ) :
     star (∑ j, starRingEnd ℂ (v j) • g j) = ∑ j, v j • star (g j) := by

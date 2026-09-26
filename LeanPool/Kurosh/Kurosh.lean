@@ -1058,7 +1058,7 @@ def rawBassSerreOrbitEdgeTarget {ι : Type v} (G : ι → Type u)
         (rawBassSerreEdgeDataTarget G y)) e
 
 /-- The quotient quiver whose edges are subgroup orbits with prescribed endpoints. -/
-@[reducible]
+@[expose, reducible]
 def rawBassSerreOrbitQuiver {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Quiver (RawBassSerreOrbitVertex G H) where
@@ -1182,7 +1182,7 @@ noncomputable instance rawBassSerreOrbitTreeArborescence {ι : Type v}
 
 /- The distinguished quotient vertex corresponding to the identity of the subgroup. -/
 /-- The subgroup orbit of the central vertex represented by the identity. -/
-def rawBassSerreOrbitRoot {ι : Type v} (G : ι → Type u)
+@[expose] def rawBassSerreOrbitRoot {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     RawBassSerreOrbitVertex G H :=
   actionOrbitMk H (RawBassSerreVertex G) (RawBassSerreVertex.central 1)
@@ -1204,7 +1204,7 @@ theorem rawOrbitAlign_spec {ι : Type v} (G : ι → Type u)
   Classical.choose_spec ((actionOrbitMk_eq_iff H (RawBassSerreVertex G) x y).1 h)
 
 /-- The prefunctor forgetting membership in a wide subquiver. -/
-def wideSubquiverInclusion {V : Type u} [Quiver.{v} V]
+@[expose] def wideSubquiverInclusion {V : Type u} [Quiver.{v} V]
     (W : WideSubquiver V) : W ⥤q V where
   obj := id
   map e := e.1
@@ -1315,7 +1315,7 @@ theorem rawTreePathMap_cons_raw {ι : Type v} (G : ι → Type u)
   simp [rawTreePathMap]
 
 /-- Choose a representative of a path endpoint by successively lifting quotient edges. -/
-noncomputable def rawTreeLiftPath {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def rawTreeLiftPath {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G))
     {b : RawBassSerreOrbitVertex G H} :
     ∀ _p : @Quiver.Path (Quiver.Symmetrify (RawBassSerreOrbitVertex G H)) _

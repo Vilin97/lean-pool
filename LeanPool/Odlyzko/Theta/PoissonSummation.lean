@@ -217,7 +217,7 @@ theorem inner_dualRealBasis_apply [InnerProductSpace ℝ E] [FiniteDimensional �
     Basis.coe_dualBasis]
 
 /-- A dual lattice used in the Odlyzko-bound argument. -/
-noncomputable def dualLattice [InnerProductSpace ℝ E]
+@[expose] noncomputable def dualLattice [InnerProductSpace ℝ E]
     (L : Submodule ℤ E) : Submodule ℤ E :=
   LinearMap.BilinForm.dualSubmodule (innerₗ E) L
 

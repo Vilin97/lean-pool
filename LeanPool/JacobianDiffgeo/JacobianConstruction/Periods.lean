@@ -49,6 +49,7 @@ noncomputable def basis : Basis (Fin (genus X)) ℂ (Form1 X) := Module.finBasis
 
 /-- The period subgroup `Λ ≤ Fin (genus X) → ℂ`: the `ℤ`-span (as an additive subgroup) of the
 period vectors of based loops at a fixed basepoint. -/
+@[expose]
 def periodSubgroup : AddSubgroup (Fin (genus X) → ℂ) :=
   AddSubgroup.closure (Set.range fun γ : Path (Classical.arbitrary X) (Classical.arbitrary X) =>
     periodVector (basis X) γ)

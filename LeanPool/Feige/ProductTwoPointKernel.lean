@@ -198,7 +198,7 @@ theorem recursiveAugmentedKernel_comp_latent
 /-- Zero-dimensional recursive product. -/
 theorem recursiveRealProduct_zero (μ : Fin 0 → Measure ℝ) :
     recursiveRealProduct 0 μ =
-      Measure.dirac (fun i : Fin 0 => Fin.elim0 i) := rfl
+      Measure.dirac (fun i : Fin 0 => Fin.elim0 i) := by rfl
 
 /-- The head/tail recursive product is the standard finite `Measure.pi`. -/
 theorem recursiveRealProduct_eq_pi
