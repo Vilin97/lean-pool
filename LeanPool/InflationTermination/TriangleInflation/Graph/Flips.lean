@@ -6,6 +6,7 @@ Authors: William Blair
 module
 
 
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 public import Mathlib.Analysis.SpecialFunctions.Sqrt
 public import LeanPool.InflationTermination.TriangleInflation.Graph.Defs
 
@@ -111,44 +112,11 @@ theorem flipKernel_marginal {ι κ : Type} [Fintype ι] [DecidableEq ι] [Fintyp
     (z : κ → Bool) :
     pushforward (flipKernel η x) (fun ω j => ω (f j)) z = flipKernel η (fun j => x (f j)) z := by
   classical
-  set s : Finset ι := Finset.univ.map ⟨f, hf⟩ with hs
-  set Z : ι → Bool := Function.extend f z (fun _ => false) with hZdef
-  have hZf : ∀ j, Z (f j) = z j := fun j => hf.extend_apply z _ j
-  have hmem : ∀ j, f j ∈ s := by intro j; simp [hs]
-  have hcond : ∀ ω : ι → Bool, ((fun j => ω (f j)) = z) ↔ (∀ i ∈ s, ω i = Z i) := by
-    intro ω
-    constructor
-    · intro h i hi
-      simp only [hs, Finset.mem_map, Function.Embedding.coeFn_mk, Finset.mem_univ, true_and] at hi
-      obtain ⟨j, rfl⟩ := hi
-      rw [hZf]
-      exact congrFun h j
-    · intro h
-      funext j
-      rw [h _ (hmem j), hZf]
-  set g : ι → Bool → ℝ := fun i b =>
-    (if i ∈ s then (if b = Z i then (1 : ℝ) else 0) else 1) * (if x i = b then 1 - η else η)
-    with hg
-  have key : ∀ ω : ι → Bool,
-      (if (fun j => ω (f j)) = z then flipKernel η x ω else 0) = ∏ i, g i (ω i) := by
-    intro ω
-    rw [hg]
-    simp only
-    rw [Finset.prod_mul_distrib, Finset.prod_ite_mem, Finset.univ_inter, Finset.prod_boole]
-    simp only [flipKernel]
-    by_cases hcc : (∀ i ∈ s, ω i = Z i)
-    · rw [ite_eq_left hcc, ite_eq_left ((hcond ω).mpr hcc), one_mul]
-    · rw [ite_eq_right hcc, ite_eq_right (fun hh => hcc ((hcond ω).mp hh)), zero_mul]
-  have hstep : ∀ i, (∑ b, g i b) = if i ∈ s then (if x i = Z i then 1 - η else η) else 1 := by
+  have hw : ∀ i : ι, ∑ b : Bool, (if x i = b then 1 - η else η) = 1 := by
     intro i
-    rw [hg]
-    by_cases hi : i ∈ s <;> simp only [hi, ite_true, ite_false, Fintype.sum_bool] <;>
-      cases hzi : Z i <;> cases hxi : x i <;> norm_num
-  simp only [pushforward]
-  rw [Finset.sum_congr rfl (fun ω _ => key ω), sum_prod_pi g,
-    Finset.prod_congr rfl (fun i _ => hstep i), Finset.prod_ite_mem, Finset.univ_inter, hs,
-    Finset.prod_map]
-  simp only [flipKernel, Function.Embedding.coeFn_mk, hZf]
+    cases x i <;> simp
+  simpa [flipKernel, FiniteWeights.prodLaw, pushforward, FiniteWeights.pushforward] using
+    congrFun (FiniteWeights.pushforward_prodLaw_sel hw hf) z
 
 /-! ## Flips against marginals and products -/
 

@@ -6,9 +6,9 @@ Authors: William Blair
 module
 
 
+public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 public import Mathlib.Analysis.SpecialFunctions.Sqrt
 public import LeanPool.InflationTermination.TriangleInflation.Graph.Linear
-public import LeanPool.InflationTermination.TriangleInflation.FiniteWeights
 
 /-!
 # Transport and exhaustion (A6)
@@ -652,68 +652,20 @@ theorem unifLaw_isLaw (A : Type*) [Fintype A] [DecidableEq A] : IsLaw (unifLaw A
   rw [← mul_pow]
   norm_num
 
+theorem unifLaw_eq_prodLaw (C : Type*) [Fintype C] : unifLaw C =
+    FiniteWeights.prodLaw (fun (_ : C) (_ : Bool) => (1 / 2 : ℝ)) := by
+  funext x
+  simp [unifLaw, FiniteWeights.prodLaw]
+
 /-- Restricting independent fair bits along an injection again gives independent fair bits. -/
 theorem unifLaw_restrict {A B : Type*} [Fintype A] [DecidableEq A] [Fintype B]
     (ρ : B → A) (hρ : Function.Injective ρ) :
     pushforward (unifLaw A) (fun ξ => fun b => ξ (ρ b)) = unifLaw B := by
   classical
-  funext η
-  simp only [pushforward, unifLaw]
-  have key : ∀ ξ : A → Bool,
-      (if (fun b => ξ (ρ b)) = η then ((1:ℝ) / 2) ^ Fintype.card A else 0)
-        = ∏ a : A, ((1 / 2 : ℝ) *
-            ∏ b : B, (if ρ b = a then (if ξ a = η b then (1:ℝ) else 0) else 1)) := by
-    intro ξ
-    rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Finset.prod_comm]
-    have h1 : ∀ b : B, (∏ a : A, (if ρ b = a then (if ξ a = η b then (1:ℝ) else 0) else 1))
-        = (if ξ (ρ b) = η b then (1:ℝ) else 0) := by
-      intro b
-      rw [Finset.prod_ite_eq]
-      simp
-    rw [Finset.prod_congr rfl (fun b _ => h1 b), Finset.prod_boole]
-    have hiff : (∀ b ∈ (Finset.univ : Finset B), ξ (ρ b) = η b) ↔ ((fun b => ξ (ρ b)) = η) := by
-      simp [funext_iff]
-    by_cases hc : (fun b => ξ (ρ b)) = η
-    · rw [ite_eq_left hc, ite_eq_left (hiff.2 hc), mul_one]
-    · rw [ite_eq_right hc, ite_eq_right (fun h => hc (hiff.1 h)), mul_zero]
-  rw [Finset.sum_congr rfl (fun ξ _ => key ξ),
-    sum_prod_pi (ι := A) (α := fun _ => Bool)
-      (fun a x => (1 / 2 : ℝ) * ∏ b : B, (if ρ b = a then (if x = η b then (1:ℝ) else 0) else 1))]
-  have h3 : ∀ a : A,
-      (∑ x : Bool, (1 / 2 : ℝ) * ∏ b : B, (if ρ b = a then (if x = η b then (1:ℝ) else 0) else 1))
-        = if a ∈ Finset.image ρ Finset.univ then (1 / 2 : ℝ) else 1 := by
-    intro a
-    by_cases ha : a ∈ Finset.image ρ Finset.univ
-    · obtain ⟨b₀, -, hb₀⟩ := Finset.mem_image.1 ha
-      have hp : ∀ x : Bool,
-          (∏ b : B, (if ρ b = a then (if x = η b then (1:ℝ) else 0) else 1))
-            = (if x = η b₀ then (1:ℝ) else 0) := by
-        intro x
-        rw [Finset.prod_eq_single b₀ (by
-          intro b _ hb
-          have : ρ b ≠ a := by
-            intro hc; exact hb (hρ (hc.trans hb₀.symm))
-          simp [this]) (by simp)]
-        simp [hb₀]
-      rw [ite_eq_left ha]
-      simp only [hp, Fintype.sum_bool]
-      cases η b₀ <;> norm_num
-    · have hp : ∀ x : Bool,
-          (∏ b : B, (if ρ b = a then (if x = η b then (1:ℝ) else 0) else 1)) = 1 := by
-        intro x
-        refine Finset.prod_eq_one fun b _ => ?_
-        have : ρ b ≠ a := fun hc => ha (Finset.mem_image.2 ⟨b, Finset.mem_univ b, hc⟩)
-        simp [this]
-      rw [ite_eq_right ha]
-      simp only [hp, Fintype.sum_bool]
-      norm_num
-  rw [Finset.prod_congr rfl (fun a _ => h3 a), ← Finset.prod_filter, Finset.prod_const]
-  congr 1
-  have : (Finset.univ.filter (fun a => a ∈ Finset.image ρ Finset.univ)) =
-      Finset.image ρ Finset.univ := by
-    ext a; simp
-  rw [this, Finset.card_image_of_injective _ hρ, Finset.card_univ]
-
+  change FiniteWeights.pushforward (unifLaw A) (fun ξ b => ξ (ρ b)) = unifLaw B
+  rw [unifLaw_eq_prodLaw A, unifLaw_eq_prodLaw B]
+  exact FiniteWeights.pushforward_prodLaw_sel
+    (by intro a; norm_num [Fintype.sum_bool]) hρ
 
 /-! ## The induced edge map -/
 
