@@ -10563,3 +10563,32 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: bkarforestformula
+    title: The BKAR forest interpolation formula
+    summary: Proves the Brydges–Kennedy–Abdesselam–Rivasseau forest interpolation formula for smooth functions
+      on a finite complete graph’s edge-coupling space, with unordered forest-cube contributions, ordered
+      sector variants, and choice independence.
+    branch: analysis and mathematical physics
+    entry_module: LeanPool.BKARForestFormula
+    authors:
+    - Scott Armstrong
+    source:
+      url: https://github.com/scottnarmstrong/bkarforestformula
+      github_repo: scottnarmstrong/bkarforestformula
+      commit: a07f44a534240fe6339558951dd78a19e4ef7c51
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - BKAR.bkar_formula_forestIndex_cube_contributions
+    main_results:
+    - declaration: BKAR.bkar_formula_forestIndex_cube_contributions
+      informal: A smooth function evaluated at the all-one configuration is the sum over forests of cube
+        integrals of mixed partial derivatives at path-minimum interpolation points.
+    tags:
+    - analysis
+    - graph-theory
+    - mathematical-physics
+    msc:
+    - 81T08
+    - 05C05
