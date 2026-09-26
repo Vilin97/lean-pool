@@ -5261,6 +5261,7 @@ private theorem Smale.CollarHeight.mfderiv_height_zero {D H X : Type*} [NormedAd
     rw [mfderiv_eq_fderiv, htime.hasFDerivAt.fderiv]
     apply ContinuousLinearMap.ext
     intro t
+    change ℝ at t
     change t * (1 : ℝ) = t
     exact mul_one t
   apply ContinuousLinearMap.ext
