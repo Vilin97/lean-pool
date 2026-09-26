@@ -1,0 +1,38 @@
+/-
+Copyright (c) 2026 Gabriel Dahia. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Gabriel Dahia
+-/
+
+module
+
+public import LeanPool.DensityHalesJewett.DensityHalesJewett
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Canonization
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.CorrelatedFibers
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.Parameters
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.DensityIncrement.StructuredCorrelation
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.FiniteUnions
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.GrahamRothschild
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Insensitive
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Main
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Subspace
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Szemeredi
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.UniformFibers
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Varnavides
+public import LeanPool.DensityHalesJewett.DensityHalesJewett.Word
+public import LeanPool.DensityHalesJewett.Solution
+
+
+/-!
+# The density Hales–Jewett theorem and Szemerédi's theorem
+
+Source: url:https://github.com/gdahia/densityhalesjewett
+Authors: Gabriel Dahia
+Status: verified
+Main declarations: `Combinatorics.Line.exists_of_density_atTop`
+Tags: combinatorics
+MSC: 05D10, 05A05, 11B75, 68R15
+-/
+
+@[expose] public section
