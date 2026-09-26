@@ -1005,64 +1005,22 @@ private lemma sum_const_mul
 
 /-! ### Finite-sum algebra helpers (inline when needed) -/
 
-/-- Li's coefficient formula for finite set (Theorem 1, equation 1.4) -/
+/-- Finite-product coefficient identity related to Li's equation (1.4).
+For an arbitrary finite set, the transformed logarithmic derivative has negative-power
+summands. Passing to Li's positive-power zero sum uses the symmetry `ρ ↦ 1 - ρ`. -/
 lemma taylorCoeff_finite_Li (S : Finset ℂ) (hS : 0 ∉ S) (n : ℕ)
     (hS_safe : ∀ ρ ∈ S, ρ ≠ 1) :
     let fS := fun s => ∏ ρ ∈ S, (1 - s/ρ)
     let φS := fun z => fS (1/(1-z))
-    -- Li's λₙ coefficient (note: our indexing is off by 1)
     (deriv^[n] (logDeriv φS)) 0 / n.factorial =
       ∑ ρ ∈ S, (1 - (1 - 1 / ρ)^(-(n+1 : ℤ))) := by
   intro fS φS
- -- For φ(z) = ξ(1/(1-z)), the Taylor coefficients of φ′/φ at zero are λ_{n+1}.
- -- By (1.3), λ_n = Σ_ρ [1 - (1 - 1 / ρ)^{n+1}] expressed via zeros of ζ.
-  -- This is Li's key formula (1.4) from the 1997 paper
-  -- Following Li's proof from the 1997 paper:
-  -- Step 1: Use logDeriv_phi_finite to get φ'(z)/φ(z) = ∑ρ [1/(1-z) - 1/( (1-1 / ρ) - z )]
+  -- The coefficient of z^n in the finite logarithmic derivative is the displayed inverse-power sum.
   have expansion : ∀ z, ‖z‖ < 1 → (∀ ρ ∈ S, z ≠ 1 - 1 / ρ) →
       deriv φS z / φS z = ∑ ρ ∈ S, (1/(1-z) - 1/((1-1 / ρ)-z)) := by
     intros z hz hz_safe
     exact logDeriv_phi_finite S hS hz hz_safe
-  -- DETAILED POWER SERIES EXPANSION STRATEGY:
-  -- Step 2: Power series expansions
-  -- For |z| < 1: 1/(1-z) = ∑_{k=0}^∞ z^k (standard geometric series)
-  -- For the second term, we need to be careful about the transformation:
-  -- 1/(1-(1-1 / ρ)-z) = 1/(1 / ρ-z) = ρ/(1-ρz) when ρ ≠ 0
-  -- Now, when |ρz| < 1 (which needs |z| < 1/|ρ|):
-  -- ρ/(1-ρz) = ρ ∑_{k=0}^∞ (ρz)^k = ∑_{k=0}^∞ ρ^{k+1} z^k
-  -- BUT this is NOT the form Li uses! Li's formula has (1 - (1-1 / ρ)^{n+1})
-  -- The key insight: We need a different expansion
-  -- Step 3: Alternative expansion using Li's approach
-  -- Write a = 1 - 1 / ρ, so 1 - a = 1 / ρ
-  -- Then: 1/(1-a-z) = 1/((1-a)(1 - z/(1-a)))
-  --                 = (1/(1-a)) · (1 / (1 - z/(1-a)))
-  --                 = (1/(1-a)) · ∑_{k=0}^∞ (z/(1-a))^k
-  --                 = ∑_{k=0}^∞ (1-a)^{-(k+1)} z^k
-  --                 = ∑_{k=0}^∞ (1 / ρ)^{-(k+1)} z^k  [since 1-a = 1 / ρ]
-  -- Step 4: The difference of series
-  -- 1/(1-z) - 1/(1-(1-1 / ρ)-z) = ∑_{k=0}^∞ z^k - ∑_{k=0}^∞ (1-a)^{-(k+1)} z^k
-  --                            = ∑_{k=0}^∞ [1 - (1-a)^{-(k+1)}] z^k
-  --                            = ∑_{k=0}^∞ [1 - (1 - 1 / ρ)^{-(k+1)}] z^k
-  --                              [substituting back a = 1 - 1 / ρ]
-  -- Step 5: Extracting the n-th Taylor coefficient
-  -- The coefficient of z^n in φ'(z)/φ(z) is: ∑ρ [1 - (1-1 / ρ)^{-(n+1)}]
-  -- But Li's formula has [1 - (1-1 / ρ)^{n+1}], not the negative power!
-  -- Step 6: The resolution - sign convention
-  -- When |1-1 / ρ| < 1 (which happens when Re(ρ) > 1 / 2):
-  -- (1-1 / ρ)^{-(n+1)} = 1/(1-1 / ρ)^{n+1}
-  -- So: 1 - (1-1 / ρ)^{-(n+1)} = 1 - 1/(1-1 / ρ)^{n+1}
-  --                          = [(1-1 / ρ)^{n+1} - 1]/(1-1 / ρ)^{n+1}
-  -- But Li writes it as: 1 - (1-1 / ρ)^{n+1}
-  -- The apparent contradiction comes from different conventions in defining λₙ
-  -- Li uses the convention where zeros inside |z| < 1 contribute positively
- -- "Let n (cid:31).(z)=1+: a zj. (1.5) We find that n (&amp;1)l&amp;1 * =n:: a }}}a"
- -- This is the recurrence-relation step from the original paper.
-  -- The complete proof requires:
-  -- 1. Verifying convergence of the power series for φ'(z)/φ(z) near z = 0
-  -- 2. Using Cauchy's formula for derivatives: f^(n)(0) = n! · [coefficient of z^n]
-  -- 3. Carefully tracking the sign conventions through the transformations
-  -- Step 7: Coefficient/derivative extraction at 0 (analytic on a neighborhood of 0)
- -- Equality of the logarithmic derivative with the explicit finite sum
+  -- Differentiate the two rational terms directly near zero; no infinite zero sum is used here.
   classical
   let H : ℂ → ℂ := fun z => logDeriv φS z
   let G : ℂ → ℂ := fun z => ∑ ρ ∈ S, (1 / (1 - z) - 1/((1 - 1 / ρ) - z))
@@ -1176,11 +1134,7 @@ lemma taylorCoeff_finite_Li (S : Finset ℂ) (hS : 0 ∉ S) (n : ℕ)
         _   = (n.factorial : ℂ) * (1 - (1 - 1 / ρ) ^ (-(n+1 : ℤ))) := by
               ring
     exact this
-  -- Sum and factor out n!
- -- φ(z) = ∑_{n≥0} λₙ z^{n+1}, so λₙ is the zⁿ coefficient of φ′/φ.
- -- λₙ = ∑_ρ [1 − (1 − 1 / ρ)^{n+1}] (Equation (1.4)); the calculation below
-  --          turns `(deriv^[n] G) 0` into `n!` times a finite sum of `(1 − a_ρ)`
-  --          with `a_ρ = (1 − 1 / ρ)^{−(n+1)}`.
+  -- Sum the finite inverse-power identities and factor out n!.
   have hDG : (deriv^[n] G) 0
       = (n.factorial : ℂ) * ∑ ρ ∈ S, (1 - (1 - 1 / ρ)^(-(n+1 : ℤ))) := by
     classical
