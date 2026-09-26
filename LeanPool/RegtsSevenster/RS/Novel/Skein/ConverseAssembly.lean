@@ -641,8 +641,7 @@ noncomputable def pairRelLeft {t : ℕ} {F G : Fragment (Fin t)}
     (hc : ∀ f ∈ closeJoin s₁ s₂,
       (closeBase F G).pairing f ∈ closeJoin s₁ s₂)
     (κ₁ : (EdgeSubset.mk s₁ hc₁ : EdgeSubset
-      (F.relabel (finCongr (by omega : t = 0 + t)))
-      ).RelTransitionSystem) :
+      (F.relabel (finCongr (by omega : t = 0 + t)))).RelTransitionSystem) :
     (leftSub (EdgeSubset.mk (closeJoin s₁ s₂) hc)
       ).RelTransitionSystem :=
   relOfEq (leftSub_closeJoin hc hc₁).symm κ₁
@@ -657,8 +656,7 @@ noncomputable def pairRelRight {t : ℕ} {F G : Fragment (Fin t)}
     (hc : ∀ f ∈ closeJoin s₁ s₂,
       (closeBase F G).pairing f ∈ closeJoin s₁ s₂)
     (κ₂ : (EdgeSubset.mk s₂ hc₂ : EdgeSubset
-      (G.relabel (finCongr (by omega : t = t + 0)))
-      ).RelTransitionSystem) :
+      (G.relabel (finCongr (by omega : t = t + 0)))).RelTransitionSystem) :
     (rightSub (EdgeSubset.mk (closeJoin s₁ s₂) hc)
       ).RelTransitionSystem :=
   relOfEq (rightSub_closeJoin hc hc₂).symm κ₂
@@ -673,8 +671,7 @@ theorem openCircuitCount_pairRelLeft {t : ℕ} {F G : Fragment (Fin t)}
     (hc : ∀ f ∈ closeJoin s₁ s₂,
       (closeBase F G).pairing f ∈ closeJoin s₁ s₂)
     (κ₁ : (EdgeSubset.mk s₁ hc₁ : EdgeSubset
-      (F.relabel (finCongr (by omega : t = 0 + t)))
-      ).RelTransitionSystem) :
+      (F.relabel (finCongr (by omega : t = 0 + t)))).RelTransitionSystem) :
     (pairRelLeft (s₂ := s₂) hc₁ hc κ₁).openCircuitCount
       = κ₁.openCircuitCount :=
   openCircuitCount_relOfEq _ κ₁
@@ -690,8 +687,7 @@ theorem openCircuitCount_pairRelRight {t : ℕ}
     (hc : ∀ f ∈ closeJoin s₁ s₂,
       (closeBase F G).pairing f ∈ closeJoin s₁ s₂)
     (κ₂ : (EdgeSubset.mk s₂ hc₂ : EdgeSubset
-      (G.relabel (finCongr (by omega : t = t + 0)))
-      ).RelTransitionSystem) :
+      (G.relabel (finCongr (by omega : t = t + 0)))).RelTransitionSystem) :
     (pairRelRight (s₁ := s₁) hc₂ hc κ₂).openCircuitCount
       = κ₂.openCircuitCount :=
   openCircuitCount_relOfEq _ κ₂

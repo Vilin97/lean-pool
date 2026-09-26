@@ -270,9 +270,11 @@ A tower whose hook-confined characters vanish has vanishing
 super power sums, which is what makes the trace zeta rational.
 -/
 
-/- Upstream audit output: 'RS.superPowerSums_of_hook_vanishing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.superPowerSums_of_hook_vanishing' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.powerSums_zero_of_eventually_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.powerSums_zero_of_eventually_zero' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### Hook confinement and nilpotent traces
 
@@ -281,11 +283,14 @@ to a hook, nilpotents then have vanishing trace, and the trace
 criterion makes every endomorphism algebra semisimple.
 -/
 
-/- Upstream audit output: 'RS.PermTower.hook_confinement' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.PermTower.hook_confinement' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.FrobeniusTower.traceA_eq_zero_of_isNilpotent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.FrobeniusTower.traceA_eq_zero_of_isNilpotent' depends on axioms:
+  [propext, Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.isSemisimpleRing_of_trace' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.isSemisimpleRing_of_trace' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### The classical bases
 
@@ -293,9 +298,11 @@ The symplectic and orthonormal standard bases the super model is
 written in.
 -/
 
-/- Upstream audit output: 'RS.exists_symplectic_basis' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_symplectic_basis' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.exists_orthonormal_basis' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_orthonormal_basis' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### Definition 5 and its transport
 
@@ -303,9 +310,11 @@ The mixed partition value of an edge subset, and its invariance
 under a fragment equivalence.
 -/
 
-/- Upstream audit output: 'RS.EdgeSubset.mixedSummand_transport' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.EdgeSubset.mixedSummand_transport' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.mixedPartition_transport' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.mixedPartition_transport' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### The hypothesis class
 
@@ -314,7 +323,8 @@ literature bounds the ranks of the finite submatrices of the
 connection matrix.  The two are the same condition.
 -/
 
-/- Upstream audit output: 'RS.edgeRankBounded_iff_submatrixRank' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.edgeRankBounded_iff_submatrixRank' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### The gluing calculus
 
@@ -322,23 +332,32 @@ Gluing a list of label pairs: permuting the list, appending,
 normalising an interface, and the existence of transition data.
 -/
 
-/- Upstream audit output: 'RS.Fragment.glueListPerm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.glueListPerm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.glueInterfaceNormal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.glueInterfaceNormal' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.Fragment.glueListAppend' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.glueListAppend' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.EdgeRankParameter.val_union' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.EdgeRankParameter.val_union' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.EdgeSubset.exists_transition_orientation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.EdgeSubset.exists_transition_orientation' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.RegtsSevensterStatement' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.RegtsSevensterStatement' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.composeStrandBundleLeft' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.composeStrandBundleLeft' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.Fragment.gluePairComm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.gluePairComm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.composeStrandBundleRight' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.composeStrandBundleRight' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### Coordinates and the standard model
 
@@ -346,19 +365,26 @@ Contraction families, the standard form and copairing, and the
 coordinates a nondegenerate pairing gives.
 -/
 
-/- Upstream audit output: 'RS.exists_coordinates' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_coordinates' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.exists_contraction_families' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_contraction_families' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.exists_coordinates_of_snake' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_coordinates_of_snake' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.exists_std_iso' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_std_iso' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdCopair_unique' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdCopair_unique' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.exists_std_model' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_std_model' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdForm_comp_stdCopair' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdForm_comp_stdCopair' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /-! ### Gluing across a disjoint union
 
@@ -366,50 +392,70 @@ The glue list distributes over a disjoint union and commutes with
 swaps and folds — the associativity engine of the category.
 -/
 
-/- Upstream audit output: 'RS.Fragment.glueListDisjUnionLeft' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.glueListDisjUnionLeft' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.Fragment.glueListDisjUnionRight' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.glueListDisjUnionRight' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.Fragment.glueListSwap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.glueListSwap' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.composeAssoc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.composeAssoc' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairCloseComposeRotate' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairCloseComposeRotate' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairCloseComposeRotateLeft' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairCloseComposeRotateLeft' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.composeFinsupp_ker_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.composeFinsupp_ker_left' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.composeFinsupp_ker_right' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.composeFinsupp_ker_right' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.HomSpace.comp_ofFragment' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.HomSpace.comp_ofFragment' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.HomSpace.comp_assoc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.HomSpace.comp_assoc' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.HomSpace.comp_id_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.HomSpace.comp_id_left' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.HomSpace.comp_id_right' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.HomSpace.comp_id_right' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.HomSpace.eq_zero_of_traces_vanish' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.HomSpace.eq_zero_of_traces_vanish' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.skeinCategory' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skeinCategory' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starDecomposition' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starDecomposition' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.homSpace_zero_spanned' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.homSpace_zero_spanned' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.interfaceShift' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.interfaceShift' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.Fragment.pairCloseComm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.pairCloseComm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /-! ### The exact pairing
 
 The self-duality of the standard model, and that it is braided.
 -/
 
-/- Upstream audit output: 'RS.ExactPairing.map' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.ExactPairing.map' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.braided_std_model' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.braided_std_model' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /-! ### The trace calculus
 
@@ -417,27 +463,38 @@ Closing a fragment against the strand bundle: relabels cross it,
 tensors absorb, and permutation fragments compose.
 -/
 
-/- Upstream audit output: 'RS.pairCloseRelabel' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairCloseRelabel' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.fragTrace_comm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.fragTrace_comm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.permFragmentCompose' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.permFragmentCompose' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.mem_ker_of_traces_vanish' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.mem_ker_of_traces_vanish' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairCloseTensorAbsorb' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairCloseTensorAbsorb' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.tensorFinsupp_ker_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.tensorFinsupp_ker_left' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.tensorFinsupp_ker_right' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.tensorFinsupp_ker_right' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.HomSpace.tensor_ofFragment' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.HomSpace.tensor_ofFragment' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.tensorFragmentAssoc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.tensorFragmentAssoc' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.tensorFragmentUnitLeft' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.tensorFragmentUnitLeft' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.tensorFragmentUnitRight' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.tensorFragmentUnitRight' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### The braided envelope
 
@@ -445,13 +502,17 @@ The Karoubi and matrix envelopes inherit the braiding and its
 symmetry.
 -/
 
-/- Upstream audit output: 'RS.karoubiBraided' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.karoubiBraided' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.karoubiSymmetric' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.karoubiSymmetric' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.matBraided' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.matBraided' depends on axioms: [propext, Classical.choice, Quot.sound]
+  -/
 
-/- Upstream audit output: 'RS.matSymmetric' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.matSymmetric' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /-! ### The skein category
 
@@ -459,49 +520,71 @@ Linear, monoidal and rigid structure on the skein category, and
 the trace map it carries.
 -/
 
-/- Upstream audit output: 'RS.skeinPreadditive' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skeinPreadditive' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.skeinLinear' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skeinLinear' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.HomSpace.traceMap_comp_comm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.HomSpace.traceMap_comp_comm' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.partialCloseTensor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.partialCloseTensor' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairCloseUnionRight' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairCloseUnionRight' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.fragTrace_tensor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.fragTrace_tensor' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.composeRelabelOut' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.composeRelabelOut' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.composePermFragment' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.composePermFragment' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.partialCloseEqCompose' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.partialCloseEqCompose' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.ofFragment_eq_smul_empty' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.ofFragment_eq_smul_empty' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairCloseStrandBundle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairCloseStrandBundle' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starDecomposition' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starDecomposition' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.snake_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.snake_left' depends on axioms: [propext, Classical.choice, Quot.sound]
+  -/
 
-/- Upstream audit output: 'RS.snake_right' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.snake_right' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.braid_comp_evClass' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.braid_comp_evClass' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.Fragment.tensorComposeInterchange' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.Fragment.tensorComposeInterchange' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.skeinMonoidal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skeinMonoidal' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.skeinBraided' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skeinBraided' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.skeinSymmetric' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skeinSymmetric' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.strandExactPairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.strandExactPairing' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.strand_ev_symmetry' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.strand_ev_symmetry' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.star_comp_class' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.star_comp_class' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /-! ### The coordinate model
 
@@ -509,113 +592,163 @@ The fibre functor's image of a star, the standard model it is
 identified with, and the transport between them.
 -/
 
-/- Upstream audit output: 'RS.omega_star_scalar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.omega_star_scalar' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.skein_std_model' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skein_std_model' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starUnionFactor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starUnionFactor' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starClass_factor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starClass_factor' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.omegaVec_tensor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.omegaVec_tensor' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.parameter_star_factor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.parameter_star_factor' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.circleVal_model' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.circleVal_model' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdFromOmega_stdToOmega' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdFromOmega_stdToOmega' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.adjWord_spec' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.adjWord_spec' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdToOmega_powBraid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdToOmega_powBraid' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdToOmega_bmc_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdToOmega_bmc_perm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.bundleCapClass_peel' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.bundleCapClass_peel' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /- Upstream audit output: 'RS.point_cotensor' depends on axioms: [propext, Quot.sound] -/
 
-/- Upstream audit output: 'RS.omegaFun_tensor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.omegaFun_tensor' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /- Upstream audit output: 'RS.evForm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.vertexStarClass_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.vertexStarClass_perm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdToOmega_merge' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdToOmega_merge' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdToOmega_modelStarVec' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdToOmega_modelStarVec' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.toColour_whisker' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.toColour_whisker' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.parameter_model' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.parameter_model' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.colourExtend_colourSwap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colourExtend_colourSwap' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.colourSwapWord_evenMap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colourSwapWord_evenMap' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.parameter_capVal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.parameter_capVal' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.ClosedFragment.eulerian_transition_nonempty' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.ClosedFragment.eulerian_transition_nonempty' depends on axioms:
+  [propext, Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.omegaFun_capTensor_merge' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.omegaFun_capTensor_merge' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.omegaFun_tensor_oddPair' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.omegaFun_tensor_oddPair' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.colourMerge_coord' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colourMerge_coord' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.colourMerge_coord_oddPair' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colourMerge_coord_oddPair' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.coordOf_modelStarVec' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.coordOf_modelStarVec' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.evenBasisVec_split' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.evenBasisVec_split' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.evFormOdd' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.evFormOdd' depends on axioms: [propext, Classical.choice, Quot.sound]
+  -/
 
-/- Upstream audit output: 'RS.stdToOmega_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdToOmega_one' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdToOmega_one_even' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdToOmega_one_even' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdToOmega_one_odd' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdToOmega_one_odd' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.evenBasisVec_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.evenBasisVec_one' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddBasisVec_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddBasisVec_one' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdForm_evenPair' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdForm_evenPair' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdForm_oddPair' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdForm_oddPair' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.omegaFun_ev_basis' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.omegaFun_ev_basis' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.capVal_expansion' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.capVal_expansion' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.splitCapVal_expansion' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.splitCapVal_expansion' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.splitCapVal_merge' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.splitCapVal_merge' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.capVal_succ' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.capVal_succ' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.coordOf_evenBasisVec' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.coordOf_evenBasisVec' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.splitCapVal_oddMerge' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.splitCapVal_oddMerge' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /- Upstream audit output: 'RS.peelColour_spec' depends on axioms: [propext, Quot.sound] -/
 
 /- Upstream audit output: 'RS.eq_peelColour_of' depends on axioms: [propext, Quot.sound] -/
 
-/- Upstream audit output: 'RS.peelColour_isEven' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.peelColour_isEven' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairing_starFlagEnum_symm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairing_starFlagEnum_symm' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.powMerge_topBraid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.powMerge_topBraid' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.wordSign_eq_oddInversions' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.wordSign_eq_oddInversions' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.toColour_topBraid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.toColour_topBraid' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.toColour_powBraid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.toColour_powBraid' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.toColour_powBraidWord' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.toColour_powBraidWord' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /-! ### The master colour sum
 
@@ -624,183 +757,270 @@ diagonal cap pairing, every sign family, and the reindexing that
 turns the sum into Definition 5.
 -/
 
-/- Upstream audit output: 'RS.wordPerm_adjWord' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.wordPerm_adjWord' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.coordOf_modelPermMap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.coordOf_modelPermMap' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.coordOf_modelPermMap'' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.coordOf_modelPermMap'' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.capVal_closed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.capVal_closed' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.parameter_colour_sum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.parameter_colour_sum' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starVec_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starVec_perm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.stdFromOmega_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.stdFromOmega_perm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starCoord_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starCoord_perm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddInversions_adjacent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddInversions_adjacent' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starCoord_repeat_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starCoord_repeat_zero' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.parameter_masterSummand' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.parameter_masterSummand' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.masterSum_partition' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.masterSum_partition' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.colourFlags_pairing_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colourFlags_pairing_mem' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.colourFlags_colouringOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colourFlags_colouringOf' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.EdgeSubset.card_even' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.EdgeSubset.card_even' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.colouringOf_isEven' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colouringOf_isEven' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.colouringOf_diagonal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colouringOf_diagonal' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.blockRestrict_parity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.blockRestrict_parity' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.masterSummand_vanish_of_block_odd' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.masterSummand_vanish_of_block_odd' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.masterSummand_vanish_of_not_eulerian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.masterSummand_vanish_of_not_eulerian' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.mem_colourFlags_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.mem_colourFlags_iff' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.starFlagEnum_pairing_low' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starFlagEnum_pairing_low' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.starFlagEnum_pairing_high' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starFlagEnum_pairing_high' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddDataOf_constancy' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddDataOf_constancy' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.evenDataOf_constancy' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.evenDataOf_constancy' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.betaDiag_eq_betaColour' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.betaDiag_eq_betaColour' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.betaColour_perm'' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.betaColour_perm'' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.masterSummand_vanish_of_impure' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.masterSummand_vanish_of_impure' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.masterSummand_vanish_of_not_closed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.masterSummand_vanish_of_not_closed' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.colouringOf_reconstruct' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colouringOf_reconstruct' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddColouringOf_colouringOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddColouringOf_colouringOf' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.evenColouringOf_colouringOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.evenColouringOf_colouringOf' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.masterSummand_vanish_of_not_diagonal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.masterSummand_vanish_of_not_diagonal' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairPure_of_pattern_closed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairPure_of_pattern_closed' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.fibreSum_eq_dataSum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.fibreSum_eq_dataSum' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.koszulCrossings_colouringOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.koszulCrossings_colouringOf' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.image_blockFlag' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.image_blockFlag' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.blockRestrict_colouringOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.blockRestrict_colouringOf' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.blockRestrict_colouringOf_isRight' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.blockRestrict_colouringOf_isRight' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.repFlag_pairing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.repFlag_pairing' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.outRepSet_pairing_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.outRepSet_pairing_mem' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.colourFormEntry_inr_partner' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.colourFormEntry_inr_partner' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.betaDiag_colouringOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.betaDiag_colouringOf' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.evenColoursAt_blockVertex' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.evenColoursAt_blockVertex' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.EdgeSubset.OddColouring.sum_flip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.EdgeSubset.OddColouring.sum_flip' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.blockRestrict_colouringOfFlip_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.blockRestrict_colouringOfFlip_mem' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.map_flagsAt_blockVertex' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.map_flagsAt_blockVertex' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddInversions_colouringOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddInversions_colouringOf' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.sortSign_ofFn_comp_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sortSign_ofFn_comp_perm' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.prod_out_sign_eq_prod_edges' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.prod_out_sign_eq_prod_edges' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.edge_sign_sector' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.edge_sign_sector' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddListAt_coe_multiset' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddListAt_coe_multiset' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.prod_oddSignAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.prod_oddSignAt' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.betaDiag_colouringOfFlip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.betaDiag_colouringOfFlip' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-
-info: 'RS.EdgeSubset.TransitionSystem.circuitCount_eq_orbitCount_outPerm' depends on axioms: [propext,
+info: 'RS.EdgeSubset.TransitionSystem.circuitCount_eq_orbitCount_outPerm' depends on axioms:
+  [propext,
  Classical.choice,
  Quot.sound]
 -/
 
-/- Upstream audit output: 'RS.EdgeSubset.TransitionSystem.neg_one_pow_circuitCount' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.EdgeSubset.TransitionSystem.neg_one_pow_circuitCount' depends on
+  axioms: [propext, Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddListAt_eq_map' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddListAt_eq_map' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.pairFlagList_nodup' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.pairFlagList_nodup' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.mem_blockOddFlagList_iff_pairFlagList' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.mem_blockOddFlagList_iff_pairFlagList' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.prod_blockVertex' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.prod_blockVertex' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.sortSign_map_listIndexPerm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sortSign_map_listIndexPerm' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.sign_listIndexPerm_trans' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sign_listIndexPerm_trans' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.sortSign_pairFlagList_key' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sortSign_pairFlagList_key' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.exists_canonPerm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.exists_canonPerm' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddListOf_blockRestrict' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddListOf_blockRestrict' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.evenMultisetOf_blockRestrict' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.evenMultisetOf_blockRestrict' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.starCoord_block_flip_nodup' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starCoord_block_flip_nodup' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.starCoord_block_flip_not_nodup' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.starCoord_block_flip_not_nodup' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.oddListOf_blockRestrict_eq_map' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.oddListOf_blockRestrict_eq_map' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.vertex_sign_collapse' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.vertex_sign_collapse' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.patternOddInv_eq_inversions' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.patternOddInv_eq_inversions' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.sortSign_globalPairList' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sortSign_globalPairList' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.sign_listIndexPerm_slot_edge' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sign_listIndexPerm_slot_edge' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.sign_listIndexPerm_edge_oriented' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sign_listIndexPerm_edge_oriented' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.hMaster_vertex_nodup' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.hMaster_vertex_nodup' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.defFiveNF_eq_flip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.defFiveNF_eq_flip' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.sign_listIndexPerm_oriented_matched' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sign_listIndexPerm_oriented_matched' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.sign_listIndexPerm_matched_global' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.sign_listIndexPerm_matched_global' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.core_parity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.core_parity' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.grand_parity' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.grand_parity' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.masterSummand_colouringOfFlip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.masterSummand_colouringOfFlip' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.fibreSum_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.fibreSum_eq' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.parameter_eq_mixedPartition' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.parameter_eq_mixedPartition' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.hMaster_colouringOfFlip' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.hMaster_colouringOfFlip' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.mixedSummand_eq_nf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.mixedSummand_eq_nf' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.eulerian_independence_closed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.eulerian_independence_closed' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.mixedValue_eq_summand_closed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.mixedValue_eq_summand_closed' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
 /-! ### Deligne's hypotheses for the envelope
 
@@ -808,14 +1028,19 @@ Each hypothesis of the cited theorem, discharged for the concrete
 envelope, and the package they assemble into.
 -/
 
-/- Upstream audit output: 'RS.env_deligneSemisimple' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.env_deligneSemisimple' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.env_deligneGenerated' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.env_deligneGenerated' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.env_deligneModerateGrowth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.env_deligneModerateGrowth' depends on axioms: [propext,
+  Classical.choice, Quot.sound] -/
 
-/- Upstream audit output: 'RS.env_delignePackage' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.env_delignePackage' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
-/- Upstream audit output: 'RS.skein_delignePackage' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/- Upstream audit output: 'RS.skein_delignePackage' depends on axioms: [propext, Classical.choice,
+  Quot.sound] -/
 
 /-! ### The forward theorem -/
