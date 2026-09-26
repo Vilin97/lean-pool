@@ -87,8 +87,7 @@ theorem protectedExtensionTargetLinear_norm
     (hattach : ∀ p q, dist (attachmentMap V y p) (attachmentMap V y q) ≤
       dist (attachmentPoint a H p) (attachmentPoint a H q)) (n : N) :
     ‖protectedExtensionTargetLinear V a y H hattach n‖ = ‖n‖ := by
-  exact norm_protectedTargetLinear_eq _
-    (adjunctionTargetMk_isometry V a y H hattach) n
+  exact norm_protectedTargetLinear_eq _ n
 
 /-- The assembled old-target map is a linear isometric embedding. -/
 noncomputable def protectedExtensionTargetLinearIsometry

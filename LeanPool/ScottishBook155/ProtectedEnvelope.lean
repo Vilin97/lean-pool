@@ -145,19 +145,19 @@ noncomputable def protectedTargetLinear {P : Type u} {N : Type v}
 
 theorem norm_protectedTargetLinear_eq {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N]
-    (j : N → P) (hj : Isometry j) (n : N) :
+    (j : N → P) (n : N) :
     ‖protectedTargetLinear j n‖ = ‖n‖ := by
   change max ‖retractiveTargetLinear j n‖ ‖(0 :
     ℓ^∞(CollapsedQuotient P (Set.range j), ℝ))‖ = ‖n‖
-  rw [norm_retractiveTargetLinear_eq j hj n, _root_.norm_zero, max_eq_left]
+  rw [norm_retractiveTargetLinear_eq j n, _root_.norm_zero, max_eq_left]
   exact norm_nonneg n
 
 /-- The old target is a linear isometric subspace of the protected envelope. -/
 noncomputable def protectedTargetLinearIsometry {P : Type u} {N : Type v}
     [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N]
-    (j : N → P) (hj : Isometry j) : N →ₗᵢ[ℝ] ProtectedEnvelope P N j where
+    (j : N → P) : N →ₗᵢ[ℝ] ProtectedEnvelope P N j where
   toLinearMap := protectedTargetLinear j
-  norm_map' := norm_protectedTargetLinear_eq j hj
+  norm_map' := norm_protectedTargetLinear_eq j
 
 /-- Projection through the first two product coordinates. -/
 noncomputable def protectedEnvelopeProjection {P : Type u} {N : Type v}
@@ -242,7 +242,7 @@ theorem protectedEnvelopeEmbedding_injective {P : Type u} {N : Type v}
     rcases hy with ⟨m, rfl⟩
     rw [retractiveEmbedding_target j R hR n,
       retractiveEmbedding_target j R hR m] at hxy
-    exact congrArg j ((retractiveTargetLinearIsometry j hj).injective hxy)
+    exact congrArg j ((retractiveTargetLinearIsometry j).injective hxy)
 
 end
 

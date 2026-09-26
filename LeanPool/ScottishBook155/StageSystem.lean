@@ -61,20 +61,8 @@ structure ProtectedSuccessor {r : ℝ} (S : ProtectedStage.{u} r)
 
 /-- The canonical old-source embedding into an l-one successor source. -/
 noncomputable def oneSumSourceEmbedding (M : RealBanachSpace.{u}) :
-    M →ₗᵢ[ℝ] OneSum M where
-  toLinearMap :=
-    { toFun := fun m => toLp 1 (m, 0)
-      map_add' := by
-        intro x y
-        rw [← WithLp.toLp_add]
-        apply (WithLp.toLp_injective (p := (1 : ℝ≥0∞)))
-        simp
-      map_smul' := by
-        intro c x
-        rw [← WithLp.toLp_smul]
-        apply (WithLp.toLp_injective (p := (1 : ℝ≥0∞)))
-        simp }
-  norm_map' m := WithLp.norm_toLp_fst 1 M ℝ m
+    M →ₗᵢ[ℝ] OneSum M :=
+  protectedSourceBaseLinearIsometry
 
 /-- The source embedding associated to a protected successor. -/
 noncomputable def ProtectedSuccessor.sourceEmbedding

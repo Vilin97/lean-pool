@@ -45,17 +45,17 @@ noncomputable def retractiveTargetLinear {P : Type u} {N : Type v} [MetricSpace 
   map_smul' c n := by simp
 
 theorem norm_retractiveTargetLinear_eq {P : Type u} {N : Type v} [MetricSpace P]
-    [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) (hj : Isometry j)
+    [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P)
     (n : N) : ‖retractiveTargetLinear j n‖ = ‖n‖ := by
   change max ‖n‖ ‖relativeTargetLinear j n‖ = ‖n‖
-  rw [norm_relativeTargetLinear_eq j hj n, max_self]
+  exact max_eq_left (norm_relativeTargetLinear_le j n)
 
 /-- The old target is a linear isometric subspace of the retractive envelope. -/
 noncomputable def retractiveTargetLinearIsometry {P : Type u} {N : Type v}
-    [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P)
-    (hj : Isometry j) : N →ₗᵢ[ℝ] RetractiveEnvelope P N j where
+    [MetricSpace P] [NormedAddCommGroup N] [NormedSpace ℝ N] (j : N → P) :
+    N →ₗᵢ[ℝ] RetractiveEnvelope P N j where
   toLinearMap := retractiveTargetLinear j
-  norm_map' := norm_retractiveTargetLinear_eq j hj
+  norm_map' := norm_retractiveTargetLinear_eq j
 
 /-- First-coordinate projection is the contractive linear retraction. -/
 noncomputable def retractiveProjection {P : Type u} {N : Type v} [MetricSpace P]
