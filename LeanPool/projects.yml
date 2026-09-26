@@ -6,8 +6,9 @@ projects:
       the Gao-Leung characterization of order-continuous norms on
       sigma-order-complete Banach lattices, and the Solovay/Stone-space
       construction of order-complete C(K) spaces with arbitrarily large
-      density and separable order-dense sublattices. Constructs solid sets
-      with a prescribed infinite number kappa of solid generators whose
+      density and norm-closed separable sublattices whose only order-closed
+      vector-sublattice extension is the whole C(K) space. Constructs solid
+      sets with a prescribed infinite number kappa of solid generators whose
       adherence towers are strict below any ordinal at most kappa's
       successor cardinal. Constructs a complete weakly Fatou lattice norm
       with constant 2 that is not equivalent to any Fatou lattice norm.
@@ -45,7 +46,7 @@ projects:
           such that C(K, R) is order complete and has density at least
           kappa, with a norm-closed separable vector sublattice Y whose
           only order-closed vector-sublattice extension is all of C(K, R).
-        source_ref: Paper Theorem 2.1, via the Solovay Boolean algebra.
+        source_ref: Paper Proposition 2.1, via the Solovay Boolean algebra.
       - declaration: OrderClosures.solid_sets_require_arbitrarily_many_iterations
         informal: >-
           For every infinite cardinal kappa and ordinal xi at most the

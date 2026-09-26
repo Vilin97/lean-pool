@@ -39,8 +39,9 @@ end GaoLeungTheorem
 
 section Counterexample
 
-/-- Paper Theorem 2.1: an order-complete `C(K)` of arbitrarily large density,
-with a closed separable sublattice whose order closure is all of `C(K)`. -/
+/-- Paper Proposition 2.1: an order-complete `C(K)` of arbitrarily large density,
+with a closed separable sublattice whose only order-closed vector-sublattice
+extension is all of `C(K)`. -/
 theorem gao_counterexample (κ : Cardinal.{u}) :
     ∃ (K : Type u) (_ : TopologicalSpace K) (_ : CompactSpace K) (_ : T2Space K),
       IsOrderComplete C(K, ℝ) ∧ κ ≤ densityCharacter C(K, ℝ) ∧

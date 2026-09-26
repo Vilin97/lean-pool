@@ -458,7 +458,7 @@ def closeByTransfer (type : Expr) (lhsQ rhsQ : Quoted) (atoms : Array Expr) (asL
         | convert $hIdent:ident using 1 <;> abel_nf))
 
 /-- Implementation of the user-facing `llarith` tactic. -/
-def evalLlarith : TacticM Unit := withMainContext do
+def evalLlarith : TacticM Unit := focus <| withMainContext do
   let goal ← getMainGoal
   evalTactic (← `(tactic| try rfl))
   if ← goal.isAssigned then return
@@ -539,5 +539,44 @@ example (x y : E) (hx : 0 ≤ x) (hy : y ≤ 0) : y ≤ x := by llarith
 example (x : E) : x⁺ - x⁻ = x := by llarith
 
 example : (0 : E) = 0 := by llarith
+
+-- The evaluator sees all three goals and must return precisely the original two siblings.
+example (x y : E) (P Q : Prop) (hP : P) (hQ : Q) :
+    (x ⊔ y) + (x ⊓ y) = x + y ∧ P ∧ Q := by
+  run_tac
+    let [mainGoal, rest] ← (← Lean.Elab.Tactic.getMainGoal).applyConst ``And.intro
+      | Lean.throwError "expected the main goal and sibling conjunction"
+    let [pGoal, qGoal] ← rest.applyConst ``And.intro
+      | Lean.throwError "expected two sibling goals"
+    Lean.Elab.Tactic.setGoals [mainGoal, pGoal, qGoal]
+    LLexpr.Tactic.evalLlarith
+    unless ← mainGoal.isAssigned do
+      Lean.throwError "llarith did not close its main goal"
+    unless (← Lean.Elab.Tactic.getGoals) == [pGoal, qGoal] do
+      Lean.throwError "llarith changed or reordered its sibling goals"
+    pGoal.withContext do
+      pGoal.assign (← Lean.Meta.getFVarFromUserName `hP)
+    qGoal.withContext do
+      qGoal.assign (← Lean.Meta.getFVarFromUserName `hQ)
+    Lean.Elab.Tactic.setGoals []
+
+example (x y : E) (hx : 0 ≤ x) (hy : y ≤ 0) (P Q : Prop) (hP : P) (hQ : Q) :
+    y ≤ x ∧ P ∧ Q := by
+  run_tac
+    let [mainGoal, rest] ← (← Lean.Elab.Tactic.getMainGoal).applyConst ``And.intro
+      | Lean.throwError "expected the main goal and sibling conjunction"
+    let [pGoal, qGoal] ← rest.applyConst ``And.intro
+      | Lean.throwError "expected two sibling goals"
+    Lean.Elab.Tactic.setGoals [mainGoal, pGoal, qGoal]
+    LLexpr.Tactic.evalLlarith
+    unless ← mainGoal.isAssigned do
+      Lean.throwError "llarith did not close its main goal"
+    unless (← Lean.Elab.Tactic.getGoals) == [pGoal, qGoal] do
+      Lean.throwError "llarith changed or reordered its sibling goals"
+    pGoal.withContext do
+      pGoal.assign (← Lean.Meta.getFVarFromUserName `hP)
+    qGoal.withContext do
+      qGoal.assign (← Lean.Meta.getFVarFromUserName `hQ)
+    Lean.Elab.Tactic.setGoals []
 
 end Tests

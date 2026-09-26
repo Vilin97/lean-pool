@@ -50,8 +50,9 @@ precise human/AI fraction is claimed. The Lean Pool port and proof repairs were
 performed with Codex.
 
 `gao_counterexample` states the order-complete `C(K)` construction with a
-norm-closed separable order-dense sublattice. It does not itself state the
-negation of the Gao-Leung conjecture: the paper derives that consequence by a
+norm-closed separable sublattice whose only order-closed vector-sublattice
+extension is all of `C(K)`. It does not itself state the negation of the
+Gao-Leung conjecture: the paper derives that consequence by a
 cardinality argument. The registered informal statement describes the actual
 Lean endpoint.
 -/
