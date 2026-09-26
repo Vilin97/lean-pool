@@ -57,7 +57,7 @@ theorem
       (p : ℝ) ^ (5 / 6 : ℝ) ≤
           maximalCoordinateRotationOrder z.1 →
       SameNormalizedComponent
-        (normalizedPuncturedPointExactOrderEulerSeven c) z)
+        (normalizedSurfaceOfPunctured (puncturedNormalizationEquiv (ZMod p) c)) z)
     (hlinear : ∀ d : ℕ,
       (d : ℝ) < (p : ℝ) ^ (5 / 6 : ℝ) →
       24 * (middleGameMaximalOrders p d).card * d < p)
@@ -235,7 +235,7 @@ theorem
       (p : ℝ) ^ (5 / 6 : ℝ) ≤
           maximalCoordinateRotationOrder z.1 →
       SameNormalizedComponent
-        (normalizedPuncturedPointExactOrderEulerSeven c) z)
+        (normalizedSurfaceOfPunctured (puncturedNormalizationEquiv (ZMod p) c)) z)
     (hlinear : ∀ d : ℕ,
       (d : ℝ) < (p : ℝ) ^ (5 / 6 : ℝ) →
       24 * (middleGameMaximalOrders p d).card * d < p)

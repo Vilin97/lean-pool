@@ -70,7 +70,7 @@ theorem puncturedMarkoffTransitiveAt_of_maximalDivisor_frontier
       (p : ℝ) ^ (5 / 6 : ℝ) ≤
           maximalCoordinateRotationOrder z.1 →
       SameNormalizedComponent
-        (normalizedPuncturedPointMaximalDivisors c) z) :
+        (normalizedSurfaceOfPunctured (puncturedNormalizationEquiv (ZMod p) c)) z) :
     PuncturedMarkoffTransitiveAt p Fact.out := by
   classical
   have hpTwo : p ≠ 2 := by omega
