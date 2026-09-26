@@ -8011,6 +8011,13 @@ public import LeanPool.Stafford38.Stafford38.Weyl.Symplectic
 public import LeanPool.Stafford38.Stafford38.Weyl.Transposition
 public import LeanPool.Stafford38.Stafford38.Weyl.TranspositionFiltration
 public import LeanPool.Stafford38.Stafford38.Weyl.Universal
+public import LeanPool.StallingsFolding
+public import LeanPool.StallingsFolding.BasisRose
+public import LeanPool.StallingsFolding.Flower
+public import LeanPool.StallingsFolding.Folding
+public import LeanPool.StallingsFolding.InverseAutomaton
+public import LeanPool.StallingsFolding.Recognizer
+public import LeanPool.StallingsFolding.Restriction
 public import LeanPool.SteinhausThreeGap
 public import LeanPool.SteinhausThreeGap.Basic
 public import LeanPool.SumDifferenceExponent
