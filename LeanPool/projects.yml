@@ -10208,44 +10208,6 @@ projects:
       - 35B65
       - 42B20
       - 28A78
-
-  - slug: densityhalesjewett
-    title: The density Hales–Jewett theorem and Szemerédi's theorem
-    summary: 'A Lean 4 formalization of the density Hales–Jewett theorem: for every finite alphabet
-      α and every density δ > 0, all sufficiently large n have the property that any set of
-      at least δ·|α|^n words of length n over α contains a combinatorial line. The basis for
-      the formalization is the combinatorial proof of Dodos, Kanellopoulos, and Tyros. As a
-      consequence, we also formalize Szemerédi''s theorem on the integers: for every k ≥ 3 and
-      δ > 0, the following holds for all sufficiently large n. Any subset of {0, …, n−1} of
-      size at least δ·n contains a nonconstant arithmetic progression of length k.'
-    branch: combinatorics
-    entry_module: LeanPool.DensityHalesJewett
-    authors:
-    - Gabriel Dahia
-    source:
-      url: https://github.com/gdahia/densityhalesjewett
-      github_repo: gdahia/densityhalesjewett
-      commit: 1c2f5aa1b99caa8e2a87beacf80f07f066c309d3
-    license: Apache-2.0
-    status: verified
-    main_declarations:
-    - Combinatorics.Line.exists_of_density_atTop
-    main_results:
-    - declaration: Combinatorics.Line.exists_of_density_atTop
-      informal: Every positive-density subset of sufficiently long words over a finite nontrivial
-        alphabet contains a combinatorial line.
-    - declaration: Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop
-      informal: Every positive-density subset of a sufficiently long initial interval of the
-        natural numbers contains an arithmetic progression of any prescribed length at least
-        three with nonzero common difference.
-    tags:
-    - combinatorics
-    msc:
-    - 05D10
-    - 05A05
-    - 11B75
-    - 68R15
-    provenance: AI
   - slug: hasse-minkowski
     title: The Hasse–Minkowski theorem over ℚ
     summary: >-
@@ -10294,3 +10256,91 @@ projects:
       - '11E12'
       - '11E08'
       - '11E88'
+
+  - slug: puiseux
+    title: Puiseux's theorem
+    summary: >-
+      Constructs Puiseux series as the bounded-denominator subfield of rational-exponent
+      Hahn series. Proves that this field is algebraic over Laurent series over any
+      coefficient field, and is an algebraic closure when the coefficient field is
+      algebraically closed of characteristic zero. The Newton-Puiseux proof includes
+      reusable Hensel splitting and polynomial translation lemmas. Dean Cureton directed
+      the AI formalization and subsequently simplified its proofs.
+    branch: algebra
+    entry_module: LeanPool.Puiseux
+    authors:
+      - Dean Cureton
+    source:
+      title: Puiseux's theorem in Lean 4
+      url: https://github.com/deancureton/Puiseux/tree/73e78681d7bb78ddb202e29cb92ab3c16b723126
+      github_repo: deancureton/Puiseux
+      commit: 73e78681d7bb78ddb202e29cb92ab3c16b723126
+      announcement: https://x.com/deancureton/status/2082886228517564682
+      announced_at: '2026-07-30T17:49:09Z'
+      provenance_evidence: https://x.com/deancureton/status/2082886230266487252
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+      - PuiseuxSeries.isAlgClosure
+    main_results:
+      - declaration: PuiseuxSeries.isAlgClosure
+        informal: >-
+          For an algebraically closed field K of characteristic zero, the field of
+          Puiseux series over K is an algebraic closure of the Laurent series field K((t)).
+      - declaration: PuiseuxSeries.isAlgebraic
+        informal: >-
+          Over any field K, the Puiseux series field is algebraic over the Laurent series field.
+      - declaration: PuiseuxSeries.mem_subfield_iff_support
+        informal: >-
+          A rational-exponent Hahn series belongs to the Puiseux subfield if and only if
+          its support lies in (1/n) times the integers for some positive integer n.
+      - declaration: Polynomial.Monic.exists_factorization_rootMultiplicity
+        informal: >-
+          A monic degree-m polynomial over K[[t]] whose reduction has a root of multiplicity
+          k, with 0 < k < m, factors into monic polynomials of degrees k and m-k.
+    tags:
+      - field-theory
+      - puiseux-series
+      - algebraic-closure
+      - hensel-lemma
+    msc:
+      - '12F05'
+      - '13F25'
+  - slug: densityhalesjewett
+    title: The density Hales–Jewett theorem and Szemerédi's theorem
+    summary: 'A Lean 4 formalization of the density Hales–Jewett theorem: for every finite alphabet
+      α and every density δ > 0, all sufficiently large n have the property that any set of
+      at least δ·|α|^n words of length n over α contains a combinatorial line. The basis for
+      the formalization is the combinatorial proof of Dodos, Kanellopoulos, and Tyros. As a
+      consequence, we also formalize Szemerédi''s theorem on the integers: for every k ≥ 3 and
+      δ > 0, the following holds for all sufficiently large n. Any subset of {0, …, n−1} of
+      size at least δ·n contains a nonconstant arithmetic progression of length k.'
+    branch: combinatorics
+    entry_module: LeanPool.DensityHalesJewett
+    authors:
+    - Gabriel Dahia
+    source:
+      url: https://github.com/gdahia/densityhalesjewett
+      github_repo: gdahia/densityhalesjewett
+      commit: 1c2f5aa1b99caa8e2a87beacf80f07f066c309d3
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - Combinatorics.Line.exists_of_density_atTop
+    main_results:
+    - declaration: Combinatorics.Line.exists_of_density_atTop
+      informal: Every positive-density subset of sufficiently long words over a finite nontrivial
+        alphabet contains a combinatorial line.
+    - declaration: Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop
+      informal: Every positive-density subset of a sufficiently long initial interval of the
+        natural numbers contains an arithmetic progression of any prescribed length at least
+        three with nonzero common difference.
+    tags:
+    - combinatorics
+    msc:
+    - 05D10
+    - 05A05
+    - 11B75
+    - 68R15
+    provenance: AI
