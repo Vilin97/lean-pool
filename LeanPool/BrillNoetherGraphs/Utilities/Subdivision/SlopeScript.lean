@@ -265,7 +265,7 @@ theorem slotValueScript_stepLeft {potential : Fin n → ℤ}
   · rw [dite_eq_left hzero, hzero]
     exact (hCompat.tail edge).symm
   · rw [dite_eq_right hzero]
-    show value edge (offset.val - 1 + 1) = value edge offset.val
+    change value edge (offset.val - 1 + 1) = value edge offset.val
     congr 1
     omega
 

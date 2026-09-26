@@ -191,7 +191,7 @@ theorem endpoint_marking_not_kGeneral
   rw [hEq] at hLower
   have hGenus : Int.toNat (genus (mark B.graph (leftEndpoint B)
       (rightEndpoint B)).graph) = g := by
-    show Int.toNat (genus B.graph) = g
+    change Int.toNat (genus B.graph) = g
     rw [B.genus_graph]
     omega
   rw [hGenus] at hCount

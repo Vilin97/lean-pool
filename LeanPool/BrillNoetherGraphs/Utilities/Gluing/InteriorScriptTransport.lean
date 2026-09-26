@@ -114,7 +114,7 @@ theorem prin_extendScript_of_not_mem {A : Finset G.V} {hA : A.Nonempty}
     {v : G.V} (hv : v ∉ A) :
     prin G (extendScript G A hA t) v = 0 := by
   classical
-  show (∑ u : G.V, (extendScript G A hA t u - extendScript G A hA t v)
+  change (∑ u : G.V, (extendScript G A hA t u - extendScript G A hA t v)
       * (numEdges G v u : ℤ)) = 0
   rw [extendScript_of_not_mem t hv]
   refine Finset.sum_eq_zero fun u _ => ?_
@@ -134,7 +134,7 @@ theorem prin_extendScript_of_mem {A : Finset G.V} {hA : A.Nonempty}
     prin G (extendScript G A hA t) v =
       prin (inducedSubgraph G A hA) t ⟨v, hv⟩ := by
   classical
-  show (∑ u : G.V, (extendScript G A hA t u - extendScript G A hA t v)
+  change (∑ u : G.V, (extendScript G A hA t u - extendScript G A hA t v)
       * (numEdges G v u : ℤ))
     = ∑ x : (inducedSubgraph G A hA).V,
         (t x - t ⟨v, hv⟩) * (numEdges (inducedSubgraph G A hA) ⟨v, hv⟩ x : ℤ)
@@ -194,12 +194,12 @@ theorem reaches_of_induced_script {A : Finset G.V} (hA : A.Nonempty)
     Reaches G D p := by
   classical
   refine ⟨D - oneChip p + prin G (extendScript G A hA t), ?_, ?_⟩
-  · show effective (D - oneChip p + prin G (extendScript G A hA t))
+  · change effective (D - oneChip p + prin G (extendScript G A hA t))
     intro v
     by_cases hv : v ∈ A
     · have hchip : oneChip p v
           = oneChip (G := inducedSubgraph G A hA) ⟨p, hp⟩ ⟨v, hv⟩ := by
-        show (if v = p then (1 : ℤ) else 0)
+        change (if v = p then (1 : ℤ) else 0)
             = if (⟨v, hv⟩ : (inducedSubgraph G A hA).V) = ⟨p, hp⟩ then (1 : ℤ) else 0
         refine if_congr ?_ rfl rfl
         simp [Subtype.ext_iff]

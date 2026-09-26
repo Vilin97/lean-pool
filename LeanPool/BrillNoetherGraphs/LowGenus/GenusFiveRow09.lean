@@ -687,15 +687,15 @@ theorem t4Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t4Coeff d v := by
     ⟨htal, hthc, hth0, hcht⟩, -, ⟨hvh0, hvht, hchv, hthv, hvhcr, hvbe⟩, -⟩ :=
     boundsT4 d
   fin_cases v
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ positiveChip (d.length 4)
+  · change (0 : ℤ) ≤ positiveChip (d.length 4)
       + tailContribution (d.length 4) 0 (htT4 d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ positiveChip (d.length 3)
+  · change (0 : ℤ) ≤ positiveChip (d.length 3)
       + tailContribution (d.length 3) 0 (hvT4 d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ 1 + zeroChip (d.length 9)
+  · change (0 : ℤ) ≤ 1 + zeroChip (d.length 9)
         - lend (d.length 7) (hcT4 d) (d.length 3)
         + (tailContribution (d.length 9) (hcT4 d) 0
             + tailContribution (d.length 5) (hcT4 d) (htT4 d)
@@ -708,7 +708,7 @@ theorem t4Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t4Coeff d v := by
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at this
     omega
-  · show (0 : ℤ) ≤ zeroChip (d.length 4)
+  · change (0 : ℤ) ≤ zeroChip (d.length 4)
         + (headContribution (d.length 4) 0 (htT4 d)
             + headContribution (d.length 5) (hcT4 d) (htT4 d)
             + tailContribution (d.length 6) (htT4 d) (hvT4 d))
@@ -720,7 +720,7 @@ theorem t4Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t4Coeff d v := by
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at this
     omega
-  · show (0 : ℤ) ≤ zeroChip (d.length 3)
+  · change (0 : ℤ) ≤ zeroChip (d.length 3)
         + lend (d.length 7) (hcT4 d) (d.length 3)
         + (headContribution (d.length 3) 0 (hvT4 d)
             + tailContribution (d.length 7) (hvT4 d) (hcT4 d)
@@ -733,9 +733,9 @@ theorem t4Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t4Coeff d v := by
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at this
     omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ positiveChip (d.length 9)
+  · change (0 : ℤ) ≤ positiveChip (d.length 9)
       + headContribution (d.length 9) (hcT4 d) 0
     exact positiveChip_add_head_nonneg (by omega)
 
@@ -755,7 +755,7 @@ theorem t4Coeff_owner (d : DegSpec 8 12) : 1 ≤ t4Coeff d (ownerFour d) := by
   by_cases hDel : Delivers (d.length 4) (d.length 5) (d.length 6) (hcT4 d)
       (h0T4 d) (htT4 d)
   · rw [ite_eq_left hDel]
-    show (1 : ℤ) ≤ zeroChip (d.length 4)
+    change (1 : ℤ) ≤ zeroChip (d.length 4)
         + (headContribution (d.length 4) 0 (htT4 d)
             + headContribution (d.length 5) (hcT4 d) (htT4 d)
             + tailContribution (d.length 6) (htT4 d) (hvT4 d))
@@ -770,7 +770,7 @@ theorem t4Coeff_owner (d : DegSpec 8 12) : 1 ≤ t4Coeff d (ownerFour d) := by
     by_cases hFall :
         d.length 5 = 0 ∧ lend (d.length 7) (hcT4 d) (d.length 3) = 0
     · rw [ite_eq_left hFall]
-      show (1 : ℤ) ≤ 1 + zeroChip (d.length 9)
+      change (1 : ℤ) ≤ 1 + zeroChip (d.length 9)
           - lend (d.length 7) (hcT4 d) (d.length 3)
           + (tailContribution (d.length 9) (hcT4 d) 0
               + tailContribution (d.length 5) (hcT4 d) (htT4 d)
@@ -783,7 +783,7 @@ theorem t4Coeff_owner (d : DegSpec 8 12) : 1 ≤ t4Coeff d (ownerFour d) := by
       simp only [fwd_tail, rev_tail] at this
       omega
     · rw [ite_eq_right hFall]
-      show (1 : ℤ) ≤ zeroChip (d.length 3)
+      change (1 : ℤ) ≤ zeroChip (d.length 3)
           + lend (d.length 7) (hcT4 d) (d.length 3)
           + (headContribution (d.length 3) 0 (hvT4 d)
               + tailContribution (d.length 7) (hvT4 d) (hcT4 d)
@@ -864,15 +864,15 @@ theorem t5Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t5Coeff d v := by
     ⟨htbe, hthc, hth0, hcht⟩, -, ⟨hvh0, hvht, hchv, hthv, hvhcr, hval⟩, -⟩ :=
     boundsT5 d
   fin_cases v
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ positiveChip (d.length 4)
+  · change (0 : ℤ) ≤ positiveChip (d.length 4)
       + tailContribution (d.length 4) 0 (hvT5 d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ positiveChip (d.length 3)
+  · change (0 : ℤ) ≤ positiveChip (d.length 3)
       + tailContribution (d.length 3) 0 (htT5 d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ 1 + zeroChip (d.length 9)
+  · change (0 : ℤ) ≤ 1 + zeroChip (d.length 9)
         - lend (d.length 5) (hcT5 d) (d.length 4)
         + (tailContribution (d.length 9) (hcT5 d) 0
             + headContribution (d.length 7) (htT5 d) (hcT5 d)
@@ -885,7 +885,7 @@ theorem t5Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t5Coeff d v := by
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at this
     omega
-  · show (0 : ℤ) ≤ zeroChip (d.length 4)
+  · change (0 : ℤ) ≤ zeroChip (d.length 4)
         + lend (d.length 5) (hcT5 d) (d.length 4)
         + (headContribution (d.length 4) 0 (hvT5 d)
             + headContribution (d.length 5) (hcT5 d) (hvT5 d)
@@ -898,7 +898,7 @@ theorem t5Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t5Coeff d v := by
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at this
     omega
-  · show (0 : ℤ) ≤ zeroChip (d.length 3)
+  · change (0 : ℤ) ≤ zeroChip (d.length 3)
         + (headContribution (d.length 3) 0 (htT5 d)
             + tailContribution (d.length 7) (htT5 d) (hcT5 d)
             + headContribution (d.length 6) (hvT5 d) (htT5 d))
@@ -910,9 +910,9 @@ theorem t5Coeff_nonneg (d : DegSpec 8 12) (v : Fin 8) : 0 ≤ t5Coeff d v := by
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at this
     omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ positiveChip (d.length 9)
+  · change (0 : ℤ) ≤ positiveChip (d.length 9)
       + headContribution (d.length 9) (hcT5 d) 0
     exact positiveChip_add_head_nonneg (by omega)
 
@@ -932,7 +932,7 @@ theorem t5Coeff_owner (d : DegSpec 8 12) : 1 ≤ t5Coeff d (ownerFive d) := by
   by_cases hDel : Delivers (d.length 3) (d.length 7) (d.length 6) (hcT5 d)
       (h0T5 d) (htT5 d)
   · rw [ite_eq_left hDel]
-    show (1 : ℤ) ≤ zeroChip (d.length 3)
+    change (1 : ℤ) ≤ zeroChip (d.length 3)
         + (headContribution (d.length 3) 0 (htT5 d)
             + tailContribution (d.length 7) (htT5 d) (hcT5 d)
             + headContribution (d.length 6) (hvT5 d) (htT5 d))
@@ -947,7 +947,7 @@ theorem t5Coeff_owner (d : DegSpec 8 12) : 1 ≤ t5Coeff d (ownerFive d) := by
     by_cases hFall :
         d.length 7 = 0 ∧ lend (d.length 5) (hcT5 d) (d.length 4) = 0
     · rw [ite_eq_left hFall]
-      show (1 : ℤ) ≤ 1 + zeroChip (d.length 9)
+      change (1 : ℤ) ≤ 1 + zeroChip (d.length 9)
           - lend (d.length 5) (hcT5 d) (d.length 4)
           + (tailContribution (d.length 9) (hcT5 d) 0
               + headContribution (d.length 7) (htT5 d) (hcT5 d)
@@ -960,7 +960,7 @@ theorem t5Coeff_owner (d : DegSpec 8 12) : 1 ≤ t5Coeff d (ownerFive d) := by
       simp only [fwd_tail, rev_tail] at this
       omega
     · rw [ite_eq_right hFall]
-      show (1 : ℤ) ≤ zeroChip (d.length 4)
+      change (1 : ℤ) ≤ zeroChip (d.length 4)
           + lend (d.length 5) (hcT5 d) (d.length 4)
           + (headContribution (d.length 4) 0 (hvT5 d)
               + headContribution (d.length 5) (hcT5 d) (hvT5 d)

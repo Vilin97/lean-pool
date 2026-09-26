@@ -239,7 +239,7 @@ theorem rerootSep_separates (hhome : ∀ x ∈ X, x ∈ D.bag (home x))
   -- Three membership facts about the separator, used throughout.
   have S1 : ∀ z : V, z ∈ D.bag t → z ∉ C → z ∉ X → z ∈ rerootSep D s X C home t := by
     intro z hzt hzC hzX
-    show z ∈ (D.bag t \ (C ∪ X)) ∪ (X \ (rerootZ D s X home t \ D.bag t))
+    change z ∈ (D.bag t \ (C ∪ X)) ∪ (X \ (rerootZ D s X home t \ D.bag t))
     refine Finset.mem_union_left _ (Finset.mem_sdiff.mpr ⟨hzt, ?_⟩)
     intro h
     rcases Finset.mem_union.mp h with h | h
@@ -256,7 +256,7 @@ theorem rerootSep_separates (hhome : ∀ x ∈ X, x ∈ D.bag (home x))
       (Finset.mem_sdiff.mp h3).2⟩
   have S4 : ∀ z : V, z ∈ X → z ∈ D.bag s → z ∈ rerootSep D s X C home s := by
     intro z hzX hzs
-    show z ∈ (D.bag s \ (C ∪ X)) ∪ (X \ (rerootZ D s X home s \ D.bag s))
+    change z ∈ (D.bag s \ (C ∪ X)) ∪ (X \ (rerootZ D s X home s \ D.bag s))
     refine Finset.mem_union_right _ (Finset.mem_sdiff.mpr ⟨hzX, ?_⟩)
     intro hh
     exact (Finset.mem_sdiff.mp hh).2 hzs

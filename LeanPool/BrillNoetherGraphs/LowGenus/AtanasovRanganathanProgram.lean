@@ -214,7 +214,7 @@ theorem brillNoetherConjecture_twoVertex_sixEdges
     (spec : Spec 2 6) (r d : ℤ) :
     brillNoetherConjecture
       (graph_connected_twoVertex_sixEdges spec) r d := by
-  show 0 ≤ genus spec.graph - (r + 1) * (genus spec.graph - d + r) →
+  change 0 ≤ genus spec.graph - (r + 1) * (genus spec.graph - d + r) →
     ∃ D : CFDiv spec.graph, rank spec.graph D ≥ r ∧ deg D = d
   intro hRho
   by_cases hR : 0 ≤ r

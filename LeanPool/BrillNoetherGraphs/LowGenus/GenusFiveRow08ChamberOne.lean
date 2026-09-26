@@ -392,7 +392,7 @@ theorem lbCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
     (by rw [tail_three hCore]; rfl)
     (by rw [rowMark_three]; simp only [markY]; omega)
     (by rw [head_three hCore, rowMark_three]
-        show d.length 4 ≤ d.length 3 - markY d
+        change d.length 4 ≤ d.length 3 - markY d
         simp only [markY]; omega)
   have hT2 := slotTailForm_of_arm d (mark := rowMark d) (h := heightLB d) (e := 2)
     (by rw [head_two hCore]; rfl) (by intro _; rw [tail_two hCore]; rfl)
@@ -416,17 +416,17 @@ theorem lbCoeff_nonneg {d : DegSpec 8 12} (hA : d.length 4 ≤ d.length 3)
     (v : Fin 8) : 0 ≤ lbCoeff d v := by
   have hM : markY d = d.length 3 - d.length 4 := rfl
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       (if markY d = 0 then (0 : ℤ) else if d.length 3 ≤ markY d then 1 else 0)
         + headContribution (d.length 3 - markY d) 0 (d.length 4)
     have h := headContribution_nonneg (L := d.length 3 - markY d) (hu := 0)
       (hv := d.length 4) (Nat.zero_le _) (by omega)
     split_ifs <;> omega
-  · show (0 : ℤ) ≤ tailContribution (d.length 4) (d.length 4) 0
+  · change (0 : ℤ) ≤ tailContribution (d.length 4) (d.length 4) 0
     exact tailContribution_nonneg (Nat.zero_le _) (by omega)
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ (if markY d = 0 then (1 : ℤ) else 0)
+  · change (0 : ℤ) ≤ (if markY d = 0 then (1 : ℤ) else 0)
         + (if markX d = 0 then (0 : ℤ)
             else if d.length 2 ≤ markX d then 1 else 0)
         + (if 0 < markY d then (0 : ℤ)
@@ -434,15 +434,15 @@ theorem lbCoeff_nonneg {d : DegSpec 8 12} (hA : d.length 4 ≤ d.length 3)
     have h := tailContribution_ge_neg_one (L := d.length 3) (hu := 0)
       (hv := d.length 4) (by omega) (by omega)
     split_ifs <;> omega
-  · show (0 : ℤ) ≤ 1 + headContribution (d.length 4) (d.length 4) 0
+  · change (0 : ℤ) ≤ 1 + headContribution (d.length 4) (d.length 4) 0
     have h := headContribution_ge_neg_one (L := d.length 4) (hu := d.length 4)
       (hv := 0) (by omega) (by omega)
     omega
-  · show (0 : ℤ) ≤ (1 : ℤ)
+  · change (0 : ℤ) ≤ (1 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ (if markX d = 0 then (1 : ℤ) else 0)
+  · change (0 : ℤ) ≤ (if markX d = 0 then (1 : ℤ) else 0)
     split_ifs <;> norm_num
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
 
 /-- Target representative for vertex 0, moved to vertex 3 when slot 3 is contracted. -/
@@ -457,7 +457,7 @@ theorem lbCoeff_owner_zero {d : DegSpec 8 12} (hA : d.length 4 ≤ d.length 3) :
   unfold ownerZero
   by_cases hz : d.length 3 = 0
   · rw [ite_eq_left hz]
-    show (1 : ℤ) ≤ (if markY d = 0 then (1 : ℤ) else 0)
+    change (1 : ℤ) ≤ (if markY d = 0 then (1 : ℤ) else 0)
         + (if markX d = 0 then (0 : ℤ)
             else if d.length 2 ≤ markX d then 1 else 0)
         + (if 0 < markY d then (0 : ℤ)
@@ -469,7 +469,7 @@ theorem lbCoeff_owner_zero {d : DegSpec 8 12} (hA : d.length 4 ≤ d.length 3) :
     rw [hzero]
     split_ifs <;> omega
   · rw [ite_eq_right hz]
-    show (1 : ℤ) ≤
+    change (1 : ℤ) ≤
       (if markY d = 0 then (0 : ℤ) else if d.length 3 ≤ markY d then 1 else 0)
         + headContribution (d.length 3 - markY d) 0 (d.length 4)
     by_cases h4 : d.length 4 = 0
@@ -489,11 +489,11 @@ theorem lbCoeff_owner_one {d : DegSpec 8 12} : 1 ≤ lbCoeff d (ownerOne d) := b
   unfold ownerOne
   by_cases hz : d.length 4 = 0
   · rw [ite_eq_left hz]
-    show (1 : ℤ) ≤ 1 + headContribution (d.length 4) (d.length 4) 0
+    change (1 : ℤ) ≤ 1 + headContribution (d.length 4) (d.length 4) 0
     rw [hz, headContribution_zero_zero]
     norm_num
   · rw [ite_eq_right hz]
-    show (1 : ℤ) ≤ tailContribution (d.length 4) (d.length 4) 0
+    change (1 : ℤ) ≤ tailContribution (d.length 4) (d.length 4) 0
     rw [tailContribution_eq_one_of_full (L := d.length 4) (hu := d.length 4)
       (hv := 0) (by omega) (by omega)]
 
@@ -532,13 +532,13 @@ theorem rbCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
     (by rw [head_two hCore]; rfl)
     (by intro hz; rw [tail_two hCore]
         rw [rowMark_two] at hz
-        show d.length 7 = 0
+        change d.length 7 = 0
         simpa [markX] using hz)
   have hH2 := slotHeadForm_of_flat_head d (mark := rowMark d) (h := heightRB d)
     (e := 2) (by rw [head_two hCore]; rfl)
     (by intro hz; rw [tail_two hCore]
         rw [rowMark_two] at hz
-        show d.length 7 = 0
+        change d.length 7 = 0
         simpa [markX] using hz)
   simp only [tail_three hCore, head_three hCore, tail_two hCore,
     rowMark_three, rowMark_two] at hT3 hH3 hT2 hH2
@@ -556,14 +556,14 @@ theorem rbCoeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
     (v : Fin 8) : 0 ≤ rbCoeff d v := by
   have hN : markX d = d.length 7 := rfl
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       (if markY d = 0 then (0 : ℤ) else if d.length 3 ≤ markY d then 1 else 0)
     split_ifs <;> norm_num
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ (if markY d = 0 then (1 : ℤ) else 0)
+  · change (0 : ℤ) ≤ (if markY d = 0 then (1 : ℤ) else 0)
         + (if markX d = 0 then (0 : ℤ)
             else if d.length 2 ≤ markX d then 1 else 0)
         + (if markX d < d.length 2 then (0 : ℤ)
@@ -583,20 +583,20 @@ theorem rbCoeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
         split_ifs <;> norm_num
       · rw [ite_eq_right h0, ite_eq_left (by omega : d.length 2 ≤ markX d)]
         split_ifs <;> omega
-  · show (0 : ℤ) ≤ (1 : ℤ)
+  · change (0 : ℤ) ≤ (1 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ 1 + tailContribution (d.length 7) 0 (d.length 7)
+  · change (0 : ℤ) ≤ 1 + tailContribution (d.length 7) 0 (d.length 7)
     have h := tailContribution_ge_neg_one (L := d.length 7) (hu := 0)
       (hv := d.length 7) (by omega) (by omega)
     omega
-  · show (0 : ℤ) ≤ (if markX d = 0 then (1 : ℤ) else 0)
+  · change (0 : ℤ) ≤ (if markX d = 0 then (1 : ℤ) else 0)
         + tailContribution (d.length 7) (d.length 7) 0
     have h := zeroChip_add_tail_full (d.length 7)
     have hz : zeroChip (d.length 7) = if markX d = 0 then (1 : ℤ) else 0 := by
       unfold zeroChip
       rw [hN]
     omega
-  · show (0 : ℤ) ≤ headContribution (d.length 7) 0 (d.length 7)
+  · change (0 : ℤ) ≤ headContribution (d.length 7) 0 (d.length 7)
     exact headContribution_nonneg (Nat.zero_le _) (by omega)
 
 /-- Target representative for vertex 7, moved to vertex 5 when slot 7 is contracted. -/
@@ -604,7 +604,7 @@ def ownerSeven (d : DegSpec 8 12) : Fin 8 := if d.length 7 = 0 then 5 else 7
 
 theorem rbCoeff_owner_six {d : DegSpec 8 12} : 1 ≤ rbCoeff d 6 := by
   have hN : markX d = d.length 7 := rfl
-  show (1 : ℤ) ≤ (if markX d = 0 then (1 : ℤ) else 0)
+  change (1 : ℤ) ≤ (if markX d = 0 then (1 : ℤ) else 0)
       + tailContribution (d.length 7) (d.length 7) 0
   have h := zeroChip_add_tail_full (d.length 7)
   have hz : zeroChip (d.length 7) = if markX d = 0 then (1 : ℤ) else 0 := by
@@ -616,11 +616,11 @@ theorem rbCoeff_owner_seven {d : DegSpec 8 12} : 1 ≤ rbCoeff d (ownerSeven d) 
   unfold ownerSeven
   by_cases hz : d.length 7 = 0
   · rw [ite_eq_left hz]
-    show (1 : ℤ) ≤ 1 + tailContribution (d.length 7) 0 (d.length 7)
+    change (1 : ℤ) ≤ 1 + tailContribution (d.length 7) 0 (d.length 7)
     rw [hz, tailContribution_zero_zero]
     norm_num
   · rw [ite_eq_right hz]
-    show (1 : ℤ) ≤ headContribution (d.length 7) 0 (d.length 7)
+    change (1 : ℤ) ≤ headContribution (d.length 7) 0 (d.length 7)
     rw [headContribution_eq_one_of_full (L := d.length 7) (hu := 0)
       (hv := d.length 7) (by omega) (by omega)]
 
@@ -665,7 +665,7 @@ theorem t2Coeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
     intro hz
     rw [rowMark_three] at hz
     rw [tail_three hCore]
-    show pairLow d = 0
+    change pairLow d = 0
     simp only [pairLow, armThree]
     omega
   have hT3 := slotTailForm_of_arm d (mark := rowMark d) (h := heightT2 d) (e := 3)
@@ -678,7 +678,7 @@ theorem t2Coeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
     (by rw [tail_two hCore]; rfl)
     (by rw [rowMark_two]; simpa [markX] using hC)
     (by rw [head_two hCore, rowMark_two]
-        show pairLow d ≤ d.length 2 - markX d
+        change pairLow d ≤ d.length 2 - markX d
         simp only [pairLow, armThree]; omega)
   simp only [tail_three hCore, head_two hCore,
     rowMark_three, rowMark_two] at hT3 hH3 hT2 hH2
@@ -706,7 +706,7 @@ theorem t2Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
   have hMY : markY d ≤ d.length 3 := by simp only [markY]; omega
   have hMX : markX d ≤ d.length 2 := by simpa [markX] using hC
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       (if markY d = 0 then (0 : ℤ) else if d.length 3 ≤ markY d then 1 else 0)
         + (if markY d < d.length 3 then (0 : ℤ)
             else headContribution (d.length 3) (pairLow d) 0)
@@ -724,9 +724,9 @@ theorem t2Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
         norm_num
       · rw [ite_eq_right h0, ite_eq_left (by omega : d.length 3 ≤ markY d)]
         omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
+  · change (0 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
         + (tailContribution (d.length 5) (targetTwo d) 0
             + headContribution (d.length 8) 0 (targetTwo d)
             + tailContribution (d.length 9) (targetTwo d) (pairLow d))
@@ -737,7 +737,7 @@ theorem t2Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at hpair
     omega
-  · show (0 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
+  · change (0 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
         + (tailContribution (markY d) (pairLow d) 0
             + headContribution (d.length 2 - markX d) 0 (pairLow d)
             + headContribution (d.length 9) (targetTwo d) (pairLow d))
@@ -748,13 +748,13 @@ theorem t2Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at hpair
     omega
-  · show (0 : ℤ) ≤ positiveChip (d.length 5)
+  · change (0 : ℤ) ≤ positiveChip (d.length 5)
         + headContribution (d.length 5) (targetTwo d) 0
     exact positiveChip_add_head_nonneg (by omega)
-  · show (0 : ℤ) ≤ positiveChip (d.length 8)
+  · change (0 : ℤ) ≤ positiveChip (d.length 8)
         + tailContribution (d.length 8) 0 (targetTwo d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ (zeroChip (markX d) - zeroChip (d.length 2))
+  · change (0 : ℤ) ≤ (zeroChip (markX d) - zeroChip (d.length 2))
         + (if 0 < markX d then (0 : ℤ)
             else tailContribution (d.length 2) 0 (pairLow d))
     by_cases hp : 0 < markX d
@@ -776,7 +776,7 @@ theorem t2Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
         unfold positiveChip zeroChip
         split_ifs <;> omega
       omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
 
 /-- Target representative for vertex 2, moved to vertex 3 when their connecting slot 9 is
@@ -789,7 +789,7 @@ theorem t2Coeff_owner {d : DegSpec 8 12} : 1 ≤ t2Coeff d (ownerTwo d) := by
   by_cases hc : d.length 9 = 0 ∧ ¬ (armTwo d ≤ armThree d)
   · obtain ⟨hc1, hc2⟩ := hc
     rw [ite_eq_left ⟨hc1, hc2⟩]
-    show (1 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
+    change (1 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
         + (tailContribution (markY d) (pairLow d) 0
             + headContribution (d.length 2 - markX d) 0 (pairLow d)
             + headContribution (d.length 9) (targetTwo d) (pairLow d))
@@ -800,7 +800,7 @@ theorem t2Coeff_owner {d : DegSpec 8 12} : 1 ≤ t2Coeff d (ownerTwo d) := by
     simp only [fwd_tail, rev_tail] at hpair
     omega
   · rw [ite_eq_right hc]
-    show (1 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
+    change (1 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
         + (tailContribution (d.length 5) (targetTwo d) 0
             + headContribution (d.length 8) 0 (targetTwo d)
             + tailContribution (d.length 9) (targetTwo d) (pairLow d))
@@ -850,7 +850,7 @@ theorem t3Coeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
     intro hz
     rw [rowMark_three] at hz
     rw [tail_three hCore]
-    show targetThree d = 0
+    change targetThree d = 0
     simp only [targetThree, armThree]
     omega
   have hT3 := slotTailForm_of_arm d (mark := rowMark d) (h := heightT3 d) (e := 3)
@@ -863,7 +863,7 @@ theorem t3Coeff_eq {d : DegSpec 8 12} (hCore : d.core = row08Core)
     (by rw [tail_two hCore]; rfl)
     (by rw [rowMark_two]; simpa [markX] using hC)
     (by rw [head_two hCore, rowMark_two]
-        show targetThree d ≤ d.length 2 - markX d
+        change targetThree d ≤ d.length 2 - markX d
         simp only [targetThree, armThree]; omega)
   simp only [tail_three hCore, head_two hCore,
     rowMark_three, rowMark_two] at hT3 hH3 hT2 hH2
@@ -891,7 +891,7 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
   have hMY : markY d ≤ d.length 3 := by simp only [markY]; omega
   have hMX : markX d ≤ d.length 2 := by simpa [markX] using hC
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       (if markY d = 0 then (0 : ℤ) else if d.length 3 ≤ markY d then 1 else 0)
         + (if markY d < d.length 3 then (0 : ℤ)
             else headContribution (d.length 3) (targetThree d) 0)
@@ -909,9 +909,9 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
         norm_num
       · rw [ite_eq_right h0, ite_eq_left (by omega : d.length 3 ≤ markY d)]
         omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
+  · change (0 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
         + (tailContribution (d.length 5) (pairLow d) 0
             + headContribution (d.length 8) 0 (pairLow d)
             + tailContribution (d.length 9) (pairLow d) (targetThree d))
@@ -922,7 +922,7 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at hpair
     omega
-  · show (0 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
+  · change (0 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
         + (tailContribution (markY d) (targetThree d) 0
             + headContribution (d.length 2 - markX d) 0 (targetThree d)
             + headContribution (d.length 9) (pairLow d) (targetThree d))
@@ -933,13 +933,13 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
       (by intro hcon; exact absurd hcon (by norm_num))
     simp only [fwd_tail, rev_tail] at hpair
     omega
-  · show (0 : ℤ) ≤ positiveChip (d.length 5)
+  · change (0 : ℤ) ≤ positiveChip (d.length 5)
         + headContribution (d.length 5) (pairLow d) 0
     exact positiveChip_add_head_nonneg (by omega)
-  · show (0 : ℤ) ≤ positiveChip (d.length 8)
+  · change (0 : ℤ) ≤ positiveChip (d.length 8)
         + tailContribution (d.length 8) 0 (pairLow d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ (zeroChip (markX d) - zeroChip (d.length 2))
+  · change (0 : ℤ) ≤ (zeroChip (markX d) - zeroChip (d.length 2))
         + (if 0 < markX d then (0 : ℤ)
             else tailContribution (d.length 2) 0 (targetThree d))
     by_cases hp : 0 < markX d
@@ -961,7 +961,7 @@ theorem t3Coeff_nonneg {d : DegSpec 8 12} (hC : d.length 7 ≤ d.length 2)
         unfold positiveChip zeroChip
         split_ifs <;> omega
       omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
 
 /-- Target representative for vertex 3, moved to vertex 2 when their connecting slot 9 is
@@ -974,7 +974,7 @@ theorem t3Coeff_owner {d : DegSpec 8 12} : 1 ≤ t3Coeff d (ownerThree d) := by
   by_cases hc : d.length 9 = 0 ∧ ¬ (armThree d ≤ armTwo d)
   · obtain ⟨hc1, hc2⟩ := hc
     rw [ite_eq_left ⟨hc1, hc2⟩]
-    show (1 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
+    change (1 : ℤ) ≤ zeroChip (d.length 5) + zeroChip (d.length 8)
         + (tailContribution (d.length 5) (pairLow d) 0
             + headContribution (d.length 8) 0 (pairLow d)
             + tailContribution (d.length 9) (pairLow d) (targetThree d))
@@ -985,7 +985,7 @@ theorem t3Coeff_owner {d : DegSpec 8 12} : 1 ≤ t3Coeff d (ownerThree d) := by
     simp only [fwd_tail, rev_tail] at hpair
     omega
   · rw [ite_eq_right hc]
-    show (1 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
+    change (1 : ℤ) ≤ zeroChip (markY d) + zeroChip (d.length 2 - markX d)
         + (tailContribution (markY d) (targetThree d) 0
             + headContribution (d.length 2 - markX d) 0 (targetThree d)
             + headContribution (d.length 9) (pairLow d) (targetThree d))

@@ -537,7 +537,7 @@ theorem classVal_injective : Function.Injective (classVal d) := by
 
 theorem classVal_classIndex (r : Fin n) (hr : d.rep r = r) :
     classVal d (d.classIndex ⟨r, hr⟩) = r := by
-  show (d.classIndex.symm (d.classIndex ⟨r, hr⟩)).val = r
+  change (d.classIndex.symm (d.classIndex ⟨r, hr⟩)).val = r
   rw [Equiv.symm_apply_apply]
 
 theorem slotOf_injective : Function.Injective (slotOf d) := by
@@ -549,18 +549,18 @@ theorem slotOf_pos (e' : Fin d.slotCard) : 0 < d.length (slotOf d e') :=
 
 theorem slotOf_surj {e : Fin p} (he : 0 < d.length e) : ∃ e', slotOf d e' = e := by
   refine ⟨d.slotIndex ⟨e, he⟩, ?_⟩
-  show (d.slotIndex.symm (d.slotIndex ⟨e, he⟩)).val = e
+  change (d.slotIndex.symm (d.slotIndex ⟨e, he⟩)).val = e
   rw [Equiv.symm_apply_apply]
 
 theorem classVal_tail (e' : Fin d.slotCard) :
     classVal d (d.contractedCore.tail e') = d.rep (d.core.tail (slotOf d e')) := by
-  show (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
+  change (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
   rw [Equiv.symm_apply_apply]
   rfl
 
 theorem classVal_head (e' : Fin d.slotCard) :
     classVal d (d.contractedCore.head e') = d.rep (d.core.head (slotOf d e')) := by
-  show (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
+  change (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
   rw [Equiv.symm_apply_apply]
   rfl
 
@@ -771,13 +771,13 @@ theorem contractedCut_leftGenus (hValid : cut.Valid) (hRep : d.RepIsContraction)
   omega
 
 theorem classCard_add_zero : d.classCard + d.zeroSlotSet.card = n := by
-  show Fintype.card d.Class + _ = n
+  change Fintype.card d.Class + _ = n
   rw [d.card_class]
   exact d.forest'
 
 theorem slotCard_add_zero : d.slotCard + d.zeroSlotSet.card = p := by
   have h1 : d.slotCard = (Finset.univ.filter (fun e : Fin p => 0 < d.length e)).card := by
-    show Fintype.card d.PositiveSlot = _
+    change Fintype.card d.PositiveSlot = _
     rw [Fintype.card_subtype]
   rw [h1]
   exact d.card_pos_add_card_zero

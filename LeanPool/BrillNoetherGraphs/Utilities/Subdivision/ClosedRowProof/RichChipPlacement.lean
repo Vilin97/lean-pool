@@ -204,7 +204,7 @@ theorem rawChipDivisor_interiorVertex_eq_rawChipMassAt (w : RichWitness)
         d.interiorVertex e o := by
       refine (pathVertex_congr d hfin (k' := ⟨o.val + 1, by have := o.isLt; omega⟩)
         ?_).trans (pathVertex_eq_interiorVertex d e _ o rfl)
-      show (eval c.2.1 x).toNat = o.val + 1
+      change (eval c.2.1 x).toNat = o.val + 1
       have := hcond.2
       omega
     rw [ite_eq_left hpos, ite_eq_left]

@@ -111,11 +111,11 @@ private theorem fineVertex_eq_inr (c : spec.Chip N)
     rw [Nat.mul_succ] at h1
     omega
   unfold Chip.fineVertex pathVertex
-  rw [dite_eq_right (by show ¬ N * c.step + c.offset = 0; omega),
-    dite_eq_right (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
+  rw [dite_eq_right (by change ¬ N * c.step + c.offset = 0; omega),
+    dite_eq_right (by change ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
   simp only [interiorVertex, Sum.inr.injEq, Sigma.mk.injEq, heq_eq_eq, true_and]
   apply Fin.ext
-  show N * c.step + c.offset - 1 = k.val
+  change N * c.step + c.offset - 1 = k.val
   omega
 
 /-- A chip whose `toRight` flag is the nearest-end decision is within `N / 2`
@@ -151,7 +151,7 @@ theorem eq_fineOf_of_roundData_eq_inl {y : (spec.scale N hN).Vertex} {x : spec.V
         · exact h0
       simp only [interiorVertex, fineOf, Sum.inr.injEq, Sigma.mk.injEq, heq_eq_eq, true_and]
       apply Fin.ext
-      show j.val = N * ((j.val + 1) / N - 1 + 1) - 1
+      change j.val = N * ((j.val + 1) / N - 1 + 1) - 1
       rw [Nat.sub_add_cancel hpos, hmul]
       omega
     · rw [dite_eq_right hr] at h

@@ -243,7 +243,7 @@ theorem strandVertex_surjective {g : ℕ} (B : Banana g) (x : B.graph.V) :
       · simp only [hTail, ↓reduceIte]
         apply Fin.ext
         have hp0le : p0.val ≤ B.length edge := Nat.le_of_lt_succ p0.isLt
-        show B.length edge - (B.length edge - p0.val) = p0.val
+        change B.length edge - (B.length edge - p0.val) = p0.val
         omega
     refine ⟨edge, normalizedPathPosition B edge p0, ?_⟩
     rw [strandVertex_eq_pathVertex_normalized, hInvol,

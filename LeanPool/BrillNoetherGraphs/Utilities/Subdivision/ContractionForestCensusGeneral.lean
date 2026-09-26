@@ -303,11 +303,11 @@ This is the loop invariant `foldRep_idem` inducts on. -/
 theorem unionStep_idem {rep : Fin n → Fin n} (hidem : ∀ x, rep (rep x) = rep x)
     (u v x : Fin n) :
     unionStep rep u v (unionStep rep u v x) = unionStep rep u v x := by
-  show (if rep (unionStep rep u v x) = rep u then rep v else rep (unionStep rep u v x))
+  change (if rep (unionStep rep u v x) = rep u then rep v else rep (unionStep rep u v x))
       = unionStep rep u v x
   by_cases hx : rep x = rep u
   · have hux : unionStep rep u v x = rep v := by
-      show (if rep x = rep u then rep v else rep x) = rep v
+      change (if rep x = rep u then rep v else rep x) = rep v
       rw [ite_eq_left hx]
     rw [hux]
     have hrv : rep (rep v) = rep v := hidem v
@@ -316,7 +316,7 @@ theorem unionStep_idem {rep : Fin n → Fin n} (hidem : ∀ x, rep (rep x) = rep
     · rw [ite_eq_right (by rw [hrv]; exact hcase)]
       exact hrv
   · have hux : unionStep rep u v x = rep x := by
-      show (if rep x = rep u then rep v else rep x) = rep x
+      change (if rep x = rep u then rep v else rep x) = rep x
       rw [ite_eq_right hx]
     rw [hux]
     have hrx : rep (rep x) = rep x := hidem x
@@ -338,7 +338,7 @@ theorem card_image_le_card_image_unionStep_succ (rep : Fin n → Fin n) (u v : F
     by_cases hx : rep x = rep u
     · exact Finset.mem_insert.mpr (Or.inl hx)
     · refine Finset.mem_insert.mpr (Or.inr (Finset.mem_image.mpr ⟨x, Finset.mem_univ x, ?_⟩))
-      show (if rep x = rep u then rep v else rep x) = rep x
+      change (if rep x = rep u then rep v else rep x) = rep x
       rw [ite_eq_right hx]
   calc (Finset.image rep Finset.univ).card
       ≤ (insert (rep u) (Finset.image (unionStep rep u v) Finset.univ)).card :=
@@ -371,7 +371,7 @@ theorem foldRep_iff (l : List (Fin p)) : ∀ x y : Fin n,
         exact List.not_mem_nil he
       unfold ReachInList
       rw [Relation.reflTransGen_iff_eq hFalse]
-      show foldRep core [] x = foldRep core [] y ↔ y = x
+      change foldRep core [] x = foldRep core [] y ↔ y = x
       rw [foldRep_nil]
       exact eq_comm
   | append_singleton l e ih =>

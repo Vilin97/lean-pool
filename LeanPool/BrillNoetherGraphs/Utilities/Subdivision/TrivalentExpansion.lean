@@ -427,7 +427,7 @@ theorem bigEndOfEnd_mem (w : Fin n) (x : slotEnds C w)
       refine mem_slotEnds_tail C hDeg (Sum.inr j) ⟨C.tail j, i⟩ ?_
       have hend : tailEnd C j = (⟨(j, false), hx⟩ : slotEnds C (C.tail j)) :=
         Subtype.ext rfl
-      show (⟨C.tail j, legOf C hDeg (C.tail j) (tailEnd C j)⟩ : BigV C) = ⟨C.tail j, i⟩
+      change (⟨C.tail j, legOf C hDeg (C.tail j) (tailEnd C j)⟩ : BigV C) = ⟨C.tail j, i⟩
       rw [hend, hleg]
   | true =>
       simp only [ite_true] at hx'
@@ -435,7 +435,7 @@ theorem bigEndOfEnd_mem (w : Fin n) (x : slotEnds C w)
       refine mem_slotEnds_head C hDeg (Sum.inr j) ⟨C.head j, i⟩ ?_
       have hend : headEnd C j = (⟨(j, true), hx⟩ : slotEnds C (C.head j)) :=
         Subtype.ext rfl
-      show (⟨C.head j, legOf C hDeg (C.head j) (headEnd C j)⟩ : BigV C) = ⟨C.head j, i⟩
+      change (⟨C.head j, legOf C hDeg (C.head j) (headEnd C j)⟩ : BigV C) = ⟨C.head j, i⟩
       rw [hend, hleg]
 
 include hDeg in
@@ -448,7 +448,7 @@ theorem legEnd_mem (w : Fin n) (i : Fin (slotValence C w - 2))
       slotEnds (data C hDeg).bigCore (vEquiv C hDeg ⟨w, i⟩) := by
   refine bigEndOfEnd_mem C hDeg w _ i ?_
   apply Fin.ext
-  show legIndex (slotValence C w)
+  change legIndex (slotValence C w)
       ((endEquiv C w) ((endEquiv C w).symm ⟨k, hkD⟩)).val = i.val
   rw [Equiv.apply_symm_apply]
   exact hk
@@ -523,7 +523,7 @@ theorem three_le_valence (v : Fin (2 * (p - n))) :
           unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
         ?_
       refine mem_slotEnds_tail C hDeg (Sum.inl ⟨w, ⟨0, hc⟩⟩) ⟨w, i⟩ (bigV_eq C ?_)
-      show (0 : ℕ) = i.val
+      change (0 : ℕ) = i.val
       omega
     · by_cases hilast : i.val = slotValence C w - 3
       · have h0 : slotValence C w - 2 < slotValence C w := by omega
@@ -539,7 +539,7 @@ theorem three_le_valence (v : Fin (2 * (p - n))) :
             (by unfold legIndex; split_ifs <;> first | exact ‹False›.elim | omega))
           ?_
         refine mem_slotEnds_head C hDeg (Sum.inl ⟨w, ⟨i.val - 1, hc⟩⟩) ⟨w, i⟩ (bigV_eq C ?_)
-        show i.val - 1 + 1 = i.val
+        change i.val - 1 + 1 = i.val
         omega
       · have h0 : i.val + 1 < slotValence C w := by omega
         have hcl : i.val - 1 < slotValence C w - 3 := by omega
@@ -553,11 +553,11 @@ theorem three_le_valence (v : Fin (2 * (p - n))) :
           split_ifs <;> first | exact ‹False›.elim | omega
         · refine mem_slotEnds_head C hDeg (Sum.inl ⟨w, ⟨i.val - 1, hcl⟩⟩) ⟨w, i⟩
             (bigV_eq C ?_)
-          show i.val - 1 + 1 = i.val
+          change i.val - 1 + 1 = i.val
           omega
         · refine mem_slotEnds_tail C hDeg (Sum.inl ⟨w, ⟨i.val, hcr⟩⟩) ⟨w, i⟩
             (bigV_eq C ?_)
-          show i.val = i.val
+          change i.val = i.val
           rfl
 
 include hDeg in

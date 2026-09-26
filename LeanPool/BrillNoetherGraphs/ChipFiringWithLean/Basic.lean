@@ -57,7 +57,7 @@ attribute [instance] CFGraph.instDecidableEq CFGraph.instFintype CFGraph.instNon
 When working with chip-firing graphs in this repository, prefer this function to the
 underlying multiset of edges. -/
 def numEdges (G : CFGraph) (v w : G.V) : ℕ :=
-  Multiset.card (G.edges.filter (λ e => e = (v, w) ∨ e = (w, v)))
+  Multiset.card (G.edges.filter (fun e => e = (v, w) ∨ e = (w, v)))
 
 /-- A graph is *connected* if its vertices cannot be partitioned into two nonempty sets
 with no edges between them.
@@ -138,13 +138,13 @@ def oneChip {G : CFGraph} (v_chip : G.V) : CFDiv G :=
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Definition 1.5. -/
 def firingMove (G : CFGraph) (D : CFDiv G) (v : G.V) : CFDiv G :=
-  λ w => if w = v then D v - vertexDegree G v else D w + numEdges G v w
+  fun w => if w = v then D v - vertexDegree G v else D w + numEdges G v w
 
 /-- The result of borrowing at a vertex $v$, starting from a divisor $D$.
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Definition 1.5. -/
 def borrowingMove (G : CFGraph) (D : CFDiv G) (v : G.V) : CFDiv G :=
-  λ w => if w = v then D v + vertexDegree G v else D w - numEdges G v w
+  fun w => if w = v then D v + vertexDegree G v else D w - numEdges G v w
 
 /-- The out-degree of `v` relative to `S`, counted with edge multiplicity. -/
 def outdegreeSet (G : CFGraph) (S : Finset G.V) (v : G.V) : ℤ :=
@@ -172,7 +172,7 @@ theorem outdeg_S_antitone (G : CFGraph) {S T : Finset G.V} (h : S ⊆ T) (v : G.
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Definition 1.6. -/
 def setFiring (G : CFGraph) (D : CFDiv G) (S : Finset G.V) : CFDiv G :=
-  λ w => if w ∈ S then D w - outdegreeSet G S w else D w + outdegreeSet G Sᶜ w
+  fun w => if w ∈ S then D w - outdegreeSet G S w else D w + outdegreeSet G Sᶜ w
 
 theorem set_firing_apply_of_mem (G : CFGraph) (D : CFDiv G) {S : Finset G.V}
     {v : G.V} (hv : v ∈ S) :
@@ -192,7 +192,7 @@ theorem le_set_firing_apply_of_not_mem (G : CFGraph) (D : CFDiv G)
 
 /-- The principal divisor associated to firing a single vertex. -/
 def firingVector (G : CFGraph) (v : G.V) : CFDiv G :=
-  λ w => if w = v then -vertexDegree G v else numEdges G v w
+  fun w => if w = v then -vertexDegree G v else numEdges G v w
 
 /-!
 ## Principal divisors and linear equivalence
@@ -334,7 +334,7 @@ lemma principal_iff_eq_prin (G : CFGraph) (D : CFDiv G) :
     . -- Case 1: h_inp is a firing vector
       intro x h_firing
       rcases h_firing with ⟨v, rfl⟩
-      let σ : firingScript G := λ u => if u = v then 1 else 0
+      let σ : firingScript G := fun u => if u = v then 1 else 0
       use σ
       unfold firingVector prin
       funext w
@@ -473,7 +473,7 @@ Applying the Laplacian to a firing script produces the corresponding principal d
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Definition 1.4. -/
 def deg {G : CFGraph} : CFDiv G →+ ℤ := {
-  toFun := λ D => ∑ v, D v,
+  toFun := fun D => ∑ v, D v,
   map_zero' := by
     simp only [Pi.zero_apply, sum_const_zero],
   map_add' := by
@@ -649,7 +649,7 @@ open Matrix
 
 See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Definition 2.6. -/
 def laplacianMatrix (G : CFGraph) : Matrix G.V G.V ℤ :=
-  λ i j => if i = j then vertexDegree G i else - (numEdges G i j)
+  fun i j => if i = j then vertexDegree G i else - (numEdges G i j)
 
 -- Note: The Laplacian matrix L is given by Deg(G) - A, where Deg(G) is the diagonal
 -- matrix of degrees and A is the adjacency matrix.
@@ -915,7 +915,7 @@ private lemma constant_script_of_zero_prin {G : CFGraph} (h_conn : graphConnecte
   have h_reducer : ∀ v : G.V, σ q ≤ σ v := by
     intro v; specialize h_reducer v
     simp only [mem_univ, forall_const] at h_reducer; exact h_reducer
-  let S := Finset.univ.filter (λ v => σ v = σ q)
+  let S := Finset.univ.filter (fun v => σ v = σ q)
   have q_in_S : q ∈ S := by
     dsimp only [S]
     simp only [Finset.mem_filter, mem_univ, and_self]
@@ -1367,7 +1367,7 @@ theorem q_effective_to_q_reduced {G : CFGraph} (h_conn : graphConnected G) {q : 
   ∃ E : CFDiv G, qReduced G q E ∧ linearEquiv G D E := by
   -- Use induction on reductionExcess
   classical -- In order to filter using the undecidable "active"
-  let S := Finset.univ.filter (λ v : G.V => active G q D v)
+  let S := Finset.univ.filter (fun v : G.V => active G q D v)
   have q_nin_S : q ∉ S := by
     intro h_contra
     dsimp only [S] at h_contra
@@ -1645,7 +1645,7 @@ private lemma sum_filter_eq_map (G : CFGraph) (M : Multiset (G.V × G.V)) (crit 
     Prop)
     [∀ v e, Decidable (crit v e)] :
   ∑ v : G.V, Multiset.card (M.filter (crit v))
-    = Multiset.sum (M.map (λ e => (Finset.univ.filter (λ v => (crit v e) )).card)) := by
+    = Multiset.sum (M.map (fun e => (Finset.univ.filter (fun v => (crit v e) )).card)) := by
   -- Define P and g using Prop for clarity in the proof - Available throughout
   let P : G.V → G.V × G.V → Prop := fun v e => crit v e
   let g : G.V × G.V → ℕ := fun e => (Finset.univ.filter (P · e)).card
@@ -1680,7 +1680,7 @@ private lemma sum_filter_eq_map (G : CFGraph) (M : Multiset (G.V × G.V)) (crit 
 filtered counts over all vertices gives $c$ times the size of $M$. -/
 lemma sum_card_filter_eq_mul (G : CFGraph) (M : Multiset (G.V × G.V))
     (crit : G.V → G.V × G.V → Prop) [∀ v e, Decidable (crit v e)] (c : ℕ)
-    (h_count : ∀ e ∈ M, (Finset.univ.filter (λ v => crit v e)).card = c) :
+    (h_count : ∀ e ∈ M, (Finset.univ.filter (fun v => crit v e)).card = c) :
   ∑ v : G.V, Multiset.card (M.filter (crit v)) = c * Multiset.card M := by
   rw [sum_filter_eq_map G M crit, Multiset.map_congr rfl h_count, Multiset.map_const',
     Multiset.sum_replicate, Nat.nsmul_eq_mul, Nat.mul_comm]
@@ -1696,7 +1696,7 @@ private lemma edge_endpoints_distinct (G : CFGraph) (e : G.V × G.V) (he : e ∈
 
 /-- Each edge is incident to exactly two vertices. -/
 private lemma edge_incident_vertices_count (G : CFGraph) (e : G.V × G.V) (he : e ∈ G.edges) :
-    (Finset.univ.filter (λ v => e.1 = v ∨ e.2 = v)).card = 2 := by
+    (Finset.univ.filter (fun v => e.1 = v ∨ e.2 = v)).card = 2 := by
   rw [Finset.card_eq_two]
   refine ⟨e.1, e.2, edge_endpoints_distinct G e he, ?_⟩
   ext v
@@ -1706,7 +1706,7 @@ private lemma edge_incident_vertices_count (G : CFGraph) (e : G.V × G.V) (he : 
 private lemma degree_eq_total_flow {T : Type*} [DecidableEq T] [Fintype T] :
     ∀ (S : Multiset (T × T)) (v : T), (∀ e ∈ S, e.1 ≠ e.2) →
       ∑ u : T, Multiset.card (Multiset.filter (fun e ↦ e = (v, u) ∨ e = (u, v)) S) =
-        Multiset.card (S.filter (λ e => e.fst = v ∨ e.snd = v)) := by
+        Multiset.card (S.filter (fun e => e.fst = v ∨ e.snd = v)) := by
   -- Induct on the multiset S
   intro S v h_loopless
   induction S using Multiset.induction_on with
@@ -1754,7 +1754,7 @@ private lemma degree_eq_total_flow {T : Type*} [DecidableEq T] [Fintype T] :
 
 -- Key lemma for handshaking theorem: Sum of edge counts equals incident edge count
 private lemma sum_num_edges_eq_filter_count (G : CFGraph) (v : G.V) :
-  ∑ u, numEdges G v u = Multiset.card (G.edges.filter (λ e => e.fst = v ∨ e.snd = v)) := by
+  ∑ u, numEdges G v u = Multiset.card (G.edges.filter (fun e => e.fst = v ∨ e.snd = v)) := by
   dsimp only [numEdges]
   have h_loopless: ∀ e ∈ G.edges, e.1 ≠ e.2 := by
     intro e he
@@ -1774,12 +1774,12 @@ theorem sum_vertex_degree_eq_twice_card_edges (G : CFGraph) :
   calc ∑ v, vertexDegree G v
     = ∑ v, ∑ u, (numEdges G v u : ℤ) := by simp_rw [vertexDegree]
     _ = ∑ v, ↑(∑ u, numEdges G v u) := by simp_rw [← Nat.cast_sum]
-    _ = ∑ v, ↑(Multiset.card (G.edges.filter (λ e => e.fst = v ∨ e.snd = v)))  := by
+    _ = ∑ v, ↑(Multiset.card (G.edges.filter (fun e => e.fst = v ∨ e.snd = v)))  := by
       simp_rw [sum_num_edges_eq_filter_count G]
-    _ = ↑(∑ v, Multiset.card (G.edges.filter (λ e => e.fst = v ∨ e.snd = v)))  := by
+    _ = ↑(∑ v, Multiset.card (G.edges.filter (fun e => e.fst = v ∨ e.snd = v)))  := by
       rw [← Nat.cast_sum]
     _ = ↑(2 * Multiset.card G.edges) := by
       -- Each edge is incident to exactly two vertices
-      rw [sum_card_filter_eq_mul G G.edges (λ v e => e.fst = v ∨ e.snd = v) 2
+      rw [sum_card_filter_eq_mul G G.edges (fun v e => e.fst = v ∨ e.snd = v) 2
         (edge_incident_vertices_count G)]
     _ = 2 * ↑(Multiset.card G.edges) := by rw [Nat.cast_mul, Nat.cast_two]

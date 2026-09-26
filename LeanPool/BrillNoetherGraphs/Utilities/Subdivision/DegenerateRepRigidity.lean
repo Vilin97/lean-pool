@@ -94,9 +94,9 @@ theorem canonicalContraction_coreVertex_contractedClass (d : DegSpec n p)
         (d.contractedSpec.coreVertex (d.contractedClass v))
       = d.coreVertex v := by
   have hvtx : d.canonicalContraction.vtx (d.contractedClass v) = d.rep v := by
-    show (d.classIndex.symm (d.contractedClass v)).val = d.rep v
+    change (d.classIndex.symm (d.contractedClass v)).val = d.rep v
     rw [contractedClass, Equiv.symm_apply_apply]
-  show d.canonicalContraction.vertexEquiv
+  change d.canonicalContraction.vertexEquiv
       (d.contractedSpec.coreVertex (d.contractedClass v)) = d.coreVertex v
   rw [Contraction.vertexEquiv_coreVertex, hvtx]
   exact (d.coreVertex_eq_iff (d.rep v) v).mpr (d.rep_idem v)
@@ -142,17 +142,17 @@ noncomputable def contractionOfRepIff
     · rw [Equiv.symm_apply_apply]
   length_eq := by
     intro e'
-    show d₂.length _ = d₁.length _
+    change d₂.length _ = d₁.length _
     rw [hlength]
   tail_eq := by
     intro e'
-    show d₁.rep (d₂.classIndex.symm
+    change d₁.rep (d₂.classIndex.symm
         (d₂.classIndex ⟨d₂.rep (d₂.core.tail _), _⟩)).val = _
     rw [Equiv.symm_apply_apply, hcore]
     exact (hiff _ _).mpr (d₂.rep_idem _)
   head_eq := by
     intro e'
-    show d₁.rep (d₂.classIndex.symm
+    change d₁.rep (d₂.classIndex.symm
         (d₂.classIndex ⟨d₂.rep (d₂.core.head _), _⟩)).val = _
     rw [Equiv.symm_apply_apply, hcore]
     exact (hiff _ _).mpr (d₂.rep_idem _)
@@ -172,19 +172,19 @@ theorem repEquiv_coreVertex (v : Fin n) :
     repEquiv d₁ d₂ hcore hlength hiff (d₁.coreVertex v) = d₂.coreVertex v := by
   set c := contractionOfRepIff d₁ d₂ hcore hlength hiff with hc
   have hvtx : c.vtx (d₂.contractedClass v) = d₁.rep v := by
-    show d₁.rep (d₂.classIndex.symm (d₂.contractedClass v)).val = d₁.rep v
+    change d₁.rep (d₂.classIndex.symm (d₂.contractedClass v)).val = d₁.rep v
     rw [contractedClass, Equiv.symm_apply_apply]
     exact (hiff _ _).mpr (d₂.rep_idem v)
   have hforward : c.laplacianEquiv.toEquiv
       (d₂.contractedSpec.coreVertex (d₂.contractedClass v)) = d₁.coreVertex v := by
-    show c.vertexEquiv (d₂.contractedSpec.coreVertex (d₂.contractedClass v))
+    change c.vertexEquiv (d₂.contractedSpec.coreVertex (d₂.contractedClass v))
         = d₁.coreVertex v
     rw [Contraction.vertexEquiv_coreVertex, hvtx]
     exact (d₁.coreVertex_eq_iff (d₁.rep v) v).mpr (d₁.rep_idem v)
   have hback : c.laplacianEquiv.toEquiv.symm (d₁.coreVertex v)
       = d₂.contractedSpec.coreVertex (d₂.contractedClass v) := by
     rw [← hforward, Equiv.symm_apply_apply]
-  show d₂.canonicalContraction.laplacianEquiv.toEquiv
+  change d₂.canonicalContraction.laplacianEquiv.toEquiv
       (c.laplacianEquiv.toEquiv.symm (d₁.coreVertex v)) = d₂.coreVertex v
   rw [hback]
   exact d₂.canonicalContraction_coreVertex_contractedClass v

@@ -143,7 +143,7 @@ theorem not_rank_ge_one_of_burningOrder
     (hzero : (D + prin G x) v ≤ 0) : ¬ (rank G D ≥ 1) := by
   intro hrank
   have hequiv : linearEquiv G D (D + prin G x) := by
-    show (D + prin G x) - D ∈ principalDivisors G
+    change (D + prin G x) - D ∈ principalDivisors G
     rw [principal_iff_eq_prin]
     exact ⟨x, by ring⟩
   have hrank' : rank G (D + prin G x) ≥ 1 := by

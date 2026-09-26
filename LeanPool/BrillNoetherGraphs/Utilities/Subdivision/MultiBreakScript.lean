@@ -281,7 +281,7 @@ theorem sortedBreaks_of_coordinate_lt
         (script.entry j).position.coordinate certificate point) :
     script.SortedBreaks certificate point := by
   intro edge
-  show (script.breaks certificate point edge).Pairwise (fun a c => a.1 < c.1)
+  change (script.breaks certificate point edge).Pairwise (fun a c => a.1 < c.1)
   rw [breaks, List.pairwise_filterMap, List.pairwise_ofFn]
   intro i j hij pairA hA pairB hB
   by_cases hiEdge : (script.entry i).position.edge = edge

@@ -50,7 +50,7 @@ variable {G : CFGraph} {u v : G.V}
 the integer-indexed twist used by the torsion API. -/
 private theorem genusOneZeroTwist_eq_degreeTwistInt (D : CFDiv G) (b : ℤ) :
     genusOneZeroTwist (u := u) (v := v) D b = degreeTwistInt (mark G u v) D 0 b := by
-  show D + (b - deg D) • oneChip u - b • oneChip v
+  change D + (b - deg D) • oneChip u - b • oneChip v
       = D + (0 - deg D + b) • oneChip u - b • oneChip v
   have hcoeff : b - deg D = 0 - deg D + b := by ring
   rw [hcoeff]

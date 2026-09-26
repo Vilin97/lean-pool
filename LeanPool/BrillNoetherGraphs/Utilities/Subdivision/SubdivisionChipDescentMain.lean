@@ -57,7 +57,7 @@ private theorem coarseStep_eq_iff (c : spec.Chip N) (e : Fin p)
     exact ⟨rfl, congrArg (fun s : spec.Step => s.2.val) h⟩
   · rintro ⟨he, hs⟩
     subst he
-    show (⟨c.edge, ⟨c.step, c.step_lt⟩⟩ : spec.Step) = ⟨c.edge, o⟩
+    change (⟨c.edge, ⟨c.step, c.step_lt⟩⟩ : spec.Step) = ⟨c.edge, o⟩
     have hfin : (⟨c.step, c.step_lt⟩ : Fin (spec.length c.edge)) = o := Fin.ext hs
     rw [hfin]
 
@@ -74,7 +74,7 @@ private theorem coarseChips_apply {ι : Type*} [Fintype ι] (chips : ι → spec
     (v : spec.Vertex) :
     spec.coarseChips N chips v =
       ∑ i, (if (chips i).coarseVertex = v then (1 : ℤ) else 0) := by
-  show (∑ i, oneChip ((chips i).coarseVertex) : CFDiv spec.graph) v = _
+  change (∑ i, oneChip ((chips i).coarseVertex) : CFDiv spec.graph) v = _
   rw [Finset.sum_apply]
   refine Finset.sum_congr rfl fun i _ => ?_
   by_cases h : (chips i).coarseVertex = v
@@ -193,7 +193,7 @@ private theorem chip_core_sum (c : spec.Chip N) (u : Fin n) :
     constructor
     · rintro ⟨h1, h2, -⟩
       refine ⟨?_, h1⟩
-      show c.step + 1 = spec.length c.edge
+      change c.step + 1 = spec.length c.edge
       omega
     · rintro ⟨h1, h2⟩
       have h1' : c.step + 1 = spec.length c.edge := h1
@@ -324,7 +324,7 @@ theorem prin_roundedScript_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chi
             (if spec.core.head e = u then
               -spec.fineSlope N hN σ e (N * spec.length e - 1) else 0)) :=
       (spec.scale N hN).prin_coreVertex_eq_endpointSum hslopeF u
-    show prin (spec.scale N hN).graph σ ((spec.scale N hN).coreVertex u) -
+    change prin (spec.scale N hN).graph σ ((spec.scale N hN).coreVertex u) -
         spec.coarseChips N chips (spec.coreVertex u) ≤
       prin spec.graph (spec.roundedScript N hN κ σ) (spec.coreVertex u)
     rw [hC, hF, ← spec.core_chip_count N chips u, ← Finset.sum_sub_distrib]
@@ -353,7 +353,7 @@ theorem prin_roundedScript_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chi
       have h2 : j.val + 2 ≤ spec.length e := by omega
       have h3 : N * (j.val + 2) ≤ N * spec.length e := Nat.mul_le_mul_left N h2
       rw [show N * (j.val + 2) = N * (j.val + 1) + N from by ring] at h3
-      show N * (j.val + 1) - 1 < N * spec.length e - 1
+      change N * (j.val + 1) - 1 < N * spec.length e - 1
       omega
     have hC : prin spec.graph (spec.roundedScript N hN κ σ) (spec.interiorVertex e j) =
         spec.roundedSlope N hN κ σ e (j.val + 1) -
@@ -366,7 +366,7 @@ theorem prin_roundedScript_ge {ι : Type*} [Fintype ι] (chips : ι → spec.Chi
       have hbase := (spec.scale N hN).prin_interiorVertex_eq_slopeDifference hslopeF e
         ⟨N * (j.val + 1) - 1, hfineLt⟩
       rw [hbase, show N * (j.val + 1) - 1 + 1 = N * (j.val + 1) from by omega]
-    show prin (spec.scale N hN).graph σ
+    change prin (spec.scale N hN).graph σ
         ((spec.scale N hN).interiorVertex e ⟨N * (j.val + 1) - 1, hfineLt⟩) -
         spec.coarseChips N chips (spec.interiorVertex e j) ≤
       prin spec.graph (spec.roundedScript N hN κ σ) (spec.interiorVertex e j)
@@ -438,7 +438,7 @@ theorem winnable_of_winnable_scale_cost {ι : Type*} [Fintype ι] (chips : ι �
   have hfineChips : ∀ v : spec.Vertex,
       spec.fineChips N hN chips (spec.fineOf N hN v) = 0 := by
     intro v
-    show (∑ i, oneChip ((chips i).fineVertex hN) :
+    change (∑ i, oneChip ((chips i).fineVertex hN) :
       CFDiv (spec.scale N hN).graph) (spec.fineOf N hN v) = 0
     rw [Finset.sum_apply]
     refine Finset.sum_eq_zero fun i _ => ?_
@@ -447,14 +447,14 @@ theorem winnable_of_winnable_scale_cost {ι : Type*} [Fintype ι] (chips : ι �
     exact (chips i).fineVertex_not_mem_range hN ⟨v, hEq⟩
   refine ⟨D₀ + spec.coarseChips N chips +
     prin spec.graph (spec.roundedScript N hN κ σ), ?_, ?_⟩
-  · show effective (D₀ + spec.coarseChips N chips +
+  · change effective (D₀ + spec.coarseChips N chips +
       prin spec.graph (spec.roundedScript N hN κ σ))
     intro v
     have hvertex := spec.prin_roundedScript_ge N hN chips D₀ σ hσ κ hκ v
     have hfine := hσ (spec.fineOf N hN v)
     rw [Pi.add_apply, Pi.add_apply, spec.embed_apply_fineOf N hN D₀ v,
       hfineChips v] at hfine
-    show D₀ v + spec.coarseChips N chips v +
+    change D₀ v + spec.coarseChips N chips v +
       prin spec.graph (spec.roundedScript N hN κ σ) v ≥ 0
     omega
   · have hdiff : D₀ + spec.coarseChips N chips +

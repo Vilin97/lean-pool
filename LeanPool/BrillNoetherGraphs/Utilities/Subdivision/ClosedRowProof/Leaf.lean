@@ -559,7 +559,7 @@ theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
       List.mem_flatMap, List.mem_finRange, List.mem_cons, List.not_mem_nil,
       or_false, true_and] at hf
     rcases hf with ⟨e, rfl⟩ | ⟨a, e, (rfl | rfl)⟩
-    · show (0 : ℤ) ≤ _
+    · change (0 : ℤ) ≤ _
       rw [eval_toAffineForm, hxp e]
       exact hslot e
     · exact hlow a e
@@ -567,7 +567,7 @@ theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
   -- The slot lengths read off the point are `ℓ`.
   have hseg : ∀ e : Fin p, (leafCertificate m core w).segmentNat point e = ℓ e := by
     intro e
-    show (((toAffineForm m (coordForm e.val)) :
+    change (((toAffineForm m (coordForm e.val)) :
       ExplicitPotential.AffineForm m).eval point).toNat = ℓ e
     rw [eval_toAffineForm, hxp e, ← hlen e]
     simp
@@ -577,7 +577,7 @@ theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
     · exact hW7
     · intro a e
       have := hLoHi a e
-      show (w.block a.val e.val).lo + -(w.block a.val e.val).hi ≤ 0
+      change (w.block a.val e.val).lo + -(w.block a.val e.val).hi ≤ 0
       omega
     · intro e
       refine Or.inr (Or.inr (Or.inr ?_))
@@ -617,7 +617,7 @@ theorem leaf_sound (hp : p ≤ m) (hn : 0 < n)
       ((leafCertificate m core w).censusRep_forest point hForest')
       = censusSpec core hn ℓ hForest hNotLoopy := by
     refine DegSpec.ext' rfl (funext hseg) ?_
-    show ExplicitPotential.Certificate.censusRep _ point = compFold core (zeroSet ℓ)
+    change ExplicitPotential.Certificate.censusRep _ point = compFold core (zeroSet ℓ)
     unfold ExplicitPotential.Certificate.censusRep
     rw [hzs]
     rfl

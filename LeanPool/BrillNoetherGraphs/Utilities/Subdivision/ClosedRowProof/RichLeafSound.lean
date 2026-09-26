@@ -569,7 +569,7 @@ theorem w4_checked_or_separated_of_w4Checks (w : RichWitness)
     have hEq : formEq (w.point a.val e.val i) [] = true := by
       simpa [tailConfined] using hc
     refine hNotTail ?_
-    show eval (w.point a.val e.val i) x = 0
+    change eval (w.point a.val e.val i) x = 0
     rw [eval_eq_of_formEq hEq x, eval_nil]
   have hHeadFalse : w.headConfined a.val e.val j = false := by
     by_contra hc

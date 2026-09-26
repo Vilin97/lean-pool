@@ -1062,10 +1062,10 @@ theorem bnExists_closed (ℓ : Fin 9 → ℕ)
         1 3).mp ?_
       refine bnExists_one_three isCore097_core
         (repGen_censusSpec _ _ _) ?_ ?_
-      · show ℓ ((tau.slotPerm.symm : Fin 9 → Fin 9) 5) ≤
+      · change ℓ ((tau.slotPerm.symm : Fin 9 → Fin 9) 5) ≤
           ℓ ((tau.slotPerm.symm : Fin 9 → Fin 9) 0)
         rw [ht5, ht0]; exact h50
-      · show ℓ ((tau.slotPerm.symm : Fin 9 → Fin 9) 4) ≤
+      · change ℓ ((tau.slotPerm.symm : Fin 9 → Fin 9) 4) ≤
           ℓ ((tau.slotPerm.symm : Fin 9 → Fin 9) 3)
         rw [ht4, ht3]; omega
   · by_cases h87 : ℓ 8 ≤ ℓ 7
@@ -1073,10 +1073,10 @@ theorem bnExists_closed (ℓ : Fin 9 → ℕ)
         1 3).mp ?_
       refine bnExists_one_three isCore097_core
         (repGen_censusSpec _ _ _) ?_ ?_
-      · show ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9) 5) ≤
+      · change ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9) 5) ≤
           ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9) 0)
         rw [hs5, hs0]; omega
-      · show ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9) 4) ≤
+      · change ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9) 4) ≤
           ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9) 3)
         rw [hs4, hs3]; exact h87
     · refine (ClosedCoreSymmetry.bnExists_iff sigma ℓ (by norm_num) hForest hNotLoopy
@@ -1086,12 +1086,12 @@ theorem bnExists_closed (ℓ : Fin 9 → ℕ)
         (by norm_num) _ _ 1 3).mp ?_
       refine bnExists_one_three isCore097_core
         (repGen_censusSpec _ _ _) ?_ ?_
-      · show ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9)
+      · change ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9)
             ((tau.slotPerm.symm : Fin 9 → Fin 9) 5)) ≤
           ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9)
             ((tau.slotPerm.symm : Fin 9 → Fin 9) 0))
         rw [ht5, ht0, hs5, hs0]; omega
-      · show ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9)
+      · change ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9)
             ((tau.slotPerm.symm : Fin 9 → Fin 9) 4)) ≤
           ℓ ((sigma.slotPerm.symm : Fin 9 → Fin 9)
             ((tau.slotPerm.symm : Fin 9 → Fin 9) 3))

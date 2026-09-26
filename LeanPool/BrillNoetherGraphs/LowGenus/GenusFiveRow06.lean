@@ -897,7 +897,7 @@ def row06Guard : GuardingSet row06Core where
       by_cases h : IsChipVertex v
       · simp [chipWeight, h] at hv
       · exact h
-    show Reaches d.graph (rowDivisor d) (d.coreVertex v)
+    change Reaches d.graph (rowDivisor d) (d.coreVertex v)
     rcases centers_cover v hNotChip with hTripod | hBanana
     · have h := row06TripodConfig.reaches_center d hCore (zeroSlots d.length)
         hRepReach hTripod

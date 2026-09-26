@@ -70,7 +70,7 @@ theorem rank_ge_of_add_effective {G : CFGraph} {D E : CFDiv G} (hE : effective E
     have := hE v
     simp only [Pi.add_apply]
     omega
-  · show (A + E) - (D + E - F) ∈ principalDivisors G
+  · change (A + E) - (D + E - F) ∈ principalDivisors G
     have hrw : (A + E) - (D + E - F) = A - (D - F) := by ring
     rw [hrw]
     exact hAequiv
@@ -113,7 +113,7 @@ theorem le_divisorialGonality_of_no_small {G : CFGraph} (h_conn : graphConnected
     intro w
     by_cases hw : w = v <;> simp [hE, hw]
   have hEdeg : deg E = (m : ℤ) := by
-    show (∑ w : G.V, if w = v then (m : ℤ) else 0) = (m : ℤ)
+    change (∑ w : G.V, if w = v then (m : ℤ) else 0) = (m : ℤ)
     simp
   have hrank' : rank G (D + E) ≥ 1 := rank_ge_of_add_effective hEeff hRank
   have hdeg' : deg (D + E) = (k : ℤ) - 1 := by

@@ -142,11 +142,11 @@ theorem rankSupport_two_interior_distinct_strands
     rw [hneg] at hx
     omega
   · rintro (rfl | rfl)
-    · show 0 ≤ rank B.graph (oneChip (strandVertex B α i) +
+    · change 0 ≤ rank B.graph (oneChip (strandVertex B α i) +
         oneChip (strandVertex B β j) - oneChip (strandVertex B α i))
       rw [add_sub_cancel_left]
       exact heff _
-    · show 0 ≤ rank B.graph (oneChip (strandVertex B α i) +
+    · change 0 ≤ rank B.graph (oneChip (strandVertex B α i) +
         oneChip (strandVertex B β j) - oneChip (strandVertex B β j))
       rw [add_comm (oneChip (strandVertex B α i))
         (oneChip (strandVertex B β j)), add_sub_cancel_left]

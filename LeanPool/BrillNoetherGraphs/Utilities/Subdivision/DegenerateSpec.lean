@@ -270,7 +270,7 @@ theorem pathAt_interior {e : Fin p} {k : ℕ} (h0 : k ≠ 0) (hk : k < d.length 
   rw [d.pathVertex_interior e (d.clampPos e k)
       (by simp only [clampPos]; omega) (by simp only [clampPos]; omega)]
   exact congrArg (d.interiorVertex e)
-    (Fin.ext (by show min k (d.length e) - 1 = k - 1; omega))
+    (Fin.ext (by change min k (d.length e) - 1 = k - 1; omega))
 
 /-! ## Genus: the whole point of the `forest` field -/
 
@@ -515,7 +515,7 @@ noncomputable def stepEquiv : target.Step ≃ d.Step :=
 
 @[simp] theorem vertexEquiv_coreVertex (v' : Fin n') :
     c.vertexEquiv (target.coreVertex v') = d.coreVertex (c.vtx v') := by
-  show Sum.inl (c.classMap v') = d.coreVertex (c.vtx v')
+  change Sum.inl (c.classMap v') = d.coreVertex (c.vtx v')
   unfold coreVertex classMap
   exact congrArg Sum.inl (Subtype.ext (c.vtx_rep v').symm)
 

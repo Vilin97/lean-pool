@@ -144,11 +144,11 @@ noncomputable def canonicalContraction : Contraction d d.contractedSpec where
   length_eq := fun _ => rfl
   tail_eq := by
     intro e'
-    show (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
+    change (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
     rw [Equiv.symm_apply_apply]
   head_eq := by
     intro e'
-    show (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
+    change (d.classIndex.symm (d.classIndex ⟨_, _⟩)).val = _
     rw [Equiv.symm_apply_apply]
 
 /-! ## Separator and connectivity through a contraction -/

@@ -408,7 +408,7 @@ theorem slotValueScript_stepLeft {potential : Fin n → ℤ}
   · rw [dite_eq_left hz, hz]
     exact (hCompat.tail e).symm
   · rw [dite_eq_right hz]
-    show value e (o.val - 1 + 1) = value e o.val
+    change value e (o.val - 1 + 1) = value e o.val
     congr 1
     omega
 

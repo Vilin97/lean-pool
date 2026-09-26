@@ -68,11 +68,11 @@ private theorem chip_fineVertex_eq_interior (c : spec.Chip N) (e : Fin p) (o : �
     omega
   have hfv : c.fineVertex hN =
       (spec.scale N hN).interiorVertex c.edge ⟨N * c.step + c.offset - 1, by
-        show N * c.step + c.offset - 1 < N * spec.length c.edge - 1
+        change N * c.step + c.offset - 1 < N * spec.length c.edge - 1
         omega⟩ := by
     unfold Chip.fineVertex pathVertex
-    rw [dite_eq_right (by show ¬ N * c.step + c.offset = 0; omega),
-      dite_eq_right (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
+    rw [dite_eq_right (by change ¬ N * c.step + c.offset = 0; omega),
+      dite_eq_right (by change ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
     rfl
   rw [hfv]
   constructor
@@ -146,7 +146,7 @@ theorem step_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀
     obtain ⟨o, hodef⟩ : ∃ o, o = N * k.val + t := ⟨_, rfl⟩
     have hopos : 0 < o := by omega
     have hj : o - 1 < (spec.scale N hN).length e - 1 := by
-      show o - 1 < N * spec.length e - 1
+      change o - 1 < N * spec.length e - 1
       omega
     obtain ⟨v, hvdef⟩ : ∃ v, v = (spec.scale N hN).interiorVertex e ⟨o - 1, hj⟩ := ⟨_, rfl⟩
     -- `o` is not a multiple of `N`, so `v` carries no chip of the coarse divisor
@@ -185,7 +185,7 @@ theorem step_bounds {ι : Type*} [Fintype ι] (chips : ι → spec.Chip N) (D₀
         have hstepk : (chips i).step = k.val :=
           Nat.eq_of_mul_eq_mul_left hN (Nat.add_right_cancel h3)
         refine ⟨?_, hofft⟩
-        show (⟨(chips i).edge, ⟨(chips i).step, (chips i).step_lt⟩⟩ : spec.Step) = ⟨e, k⟩
+        change (⟨(chips i).edge, ⟨(chips i).step, (chips i).step_lt⟩⟩ : spec.Step) = ⟨e, k⟩
         subst hedge
         exact congrArg (Sigma.mk (chips i).edge) (Fin.ext hstepk)
     have hcount : spec.fineChips N hN chips v =

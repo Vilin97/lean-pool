@@ -1424,7 +1424,7 @@ theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
   refine ⟨k, pc, splitData, hSmall, hValid, ⟨?_, ?_, ?_⟩, spec', rfl, ?_⟩
   · -- marker multiplicities
     intro i
-    show (Finset.univ.filter fun m : Fin pc.loopCount =>
+    change (Finset.univ.filter fun m : Fin pc.loopCount =>
       fmap (markIndex.symm m) = i).card = pc.loops i
     rw [hLoops i]
     have hImage : (Finset.univ.filter fun m : Fin pc.loopCount =>
@@ -1440,7 +1440,7 @@ theorem pseudocorePresentation_of_markedShapeAt {N P g : ℕ} (spec : Spec N P)
     rw [hImage, Finset.card_map]
   · -- looplessness
     intro edge
-    show vEquiv (spec.core.tail (sEquiv.symm edge))
+    change vEquiv (spec.core.tail (sEquiv.symm edge))
       ≠ vEquiv (spec.core.head (sEquiv.symm edge))
     simp only [ne_eq, EmbeddingLike.apply_eq_iff_eq]
     exact spec.core_loopless _

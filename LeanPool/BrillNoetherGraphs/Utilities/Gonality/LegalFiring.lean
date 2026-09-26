@@ -85,7 +85,7 @@ theorem effective_add_prin_truncate {D : CFDiv G} {x : firingScript G}
       rw [prin_apply]
       refine Finset.sum_nonneg fun u _ => ?_
       have : (0:ℤ) ≤ (fun w => max (x w - c) 0) u - (fun w => max (x w - c) 0) v := by
-        show (0:ℤ) ≤ max (x u - c) 0 - max (x v - c) 0
+        change (0:ℤ) ≤ max (x u - c) 0 - max (x v - c) 0
         rw [hyv]
         have := hynonneg u
         omega
@@ -99,7 +99,7 @@ theorem effective_add_prin_truncate {D : CFDiv G} {x : firingScript G}
       rw [prin_apply, prin_apply]
       refine Finset.sum_le_sum fun u _ => ?_
       refine mul_le_mul_of_nonneg_right ?_ (Int.natCast_nonneg _)
-      show x u - x v ≤ max (x u - c) 0 - max (x v - c) 0
+      change x u - x v ≤ max (x u - c) 0 - max (x v - c) 0
       rw [hyv]
       have := hyge u
       omega
@@ -229,11 +229,11 @@ theorem exists_nested_legal_chain (h_conn : graphConnected G) (q : G.V)
         have hge : x m ≤ x v := hm v (Finset.mem_univ v)
         by_cases h : x v = x m
         · have hvW : v ∈ W := by simp [hW, h]
-          show max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
+          change max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
           rw [indicatorScript, ite_eq_left hvW]
           omega
         · have hvW : v ∉ W := by simp [hW, h]
-          show max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
+          change max (-x v - (-(x m) - 1)) 0 = indicatorScript G W v
           rw [indicatorScript, ite_eq_right hvW]
           omega
       rw [heq, ← set_firing_eq_add_prin_indicator_script] at htr
@@ -265,7 +265,7 @@ theorem exists_nested_legal_chain (h_conn : graphConnected G) (q : G.V)
         have h0 : (fun v => max (x v - (K - ((0 : ℕ) : ℤ))) 0) = (0 : firingScript G) := by
           funext v
           have hpv := hp v (Finset.mem_univ v)
-          show max (x v - (K - ((0 : ℕ) : ℤ))) 0 = 0
+          change max (x v - (K - ((0 : ℕ) : ℤ))) 0 = 0
           push_cast
           omega
         rw [fireChain_zero, h0, map_zero]
@@ -274,7 +274,7 @@ theorem exists_nested_legal_chain (h_conn : graphConnected G) (q : G.V)
         have key : (fun v : G.V => max (x v - (K - ((t : ℤ) + 1))) 0)
             = (fun v : G.V => max (x v - (K - (t : ℤ))) 0) + indicatorScript G (U t) := by
           funext v
-          show max (x v - (K - ((t : ℤ) + 1))) 0
+          change max (x v - (K - ((t : ℤ) + 1))) 0
               = max (x v - (K - (t : ℤ))) 0 + indicatorScript G (U t) v
           by_cases h : K - (t : ℤ) ≤ x v
           · rw [indicatorScript, ite_eq_left ((hmemU t v).mpr h)]
@@ -323,7 +323,7 @@ theorem exists_nested_legal_chain (h_conn : graphConnected G) (q : G.V)
       congr 1
       funext v
       have := hxnonneg v
-      show max (x v - (K - K)) 0 = x v
+      change max (x v - (K - K)) 0 = x v
       omega
     rw [hend]
     exact hred

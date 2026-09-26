@@ -466,7 +466,7 @@ theorem fCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
     (by rw [rowMark_four]; simp only [markC]; omega)
     (by rw [head_four hCore, rowMark_four]
         show heightFlat d 4 ≤ d.length 4 - markC d
-        show d.length 10 ≤ d.length 4 - markC d
+        change d.length 10 ≤ d.length 4 - markC d
         simp only [markC]; omega)
   simp only [head_four hCore, rowMark_four] at hT4 hH4
   rw [armC_len hb] at hH4
@@ -481,7 +481,7 @@ theorem fCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
   all_goals (try omega)
 
 theorem fCoeff_owner_three {d : DegSpec 8 12} : 1 ≤ fCoeff d 3 := by
-  show (1 : ℤ) ≤
+  change (1 : ℤ) ≤
     zeroChip (d.length 10) + headContribution (d.length 10) 0 (d.length 10)
   have h := armFull_ge_one rev rev fwd (gamma := d.length 10) (lx := d.length 9)
     (ly := d.length 5) (hx := d.length 10) rfl
@@ -490,17 +490,17 @@ theorem fCoeff_owner_three {d : DegSpec 8 12} : 1 ≤ fCoeff d 3 := by
   omega
 
 theorem fCoeff_owner_four {d : DegSpec 8 12} : 1 ≤ fCoeff d 4 := by
-  show (1 : ℤ) ≤
+  change (1 : ℤ) ≤
     zeroChip (d.length 10) + headContribution (d.length 10) 0 (d.length 10)
   exact fCoeff_owner_three
 
 theorem fCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
     (hc : d.length 10 ≤ d.length 3) (v : Fin 8) : 0 ≤ fCoeff d v := by
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       positiveChip (d.length 10) + tailContribution (d.length 10) 0 (d.length 10)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ zeroChip (markC d) - zeroChip (d.length 4)
+  · change (0 : ℤ) ≤ zeroChip (markC d) - zeroChip (d.length 4)
       + (if 0 < markC d then (0 : ℤ)
           else tailContribution (d.length 4) 0 (d.length 10))
     by_cases hp : 0 < markC d
@@ -518,7 +518,7 @@ theorem fCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
       have h3 : positiveChip (d.length 4) = 1 - zeroChip (d.length 4) := by
         unfold positiveChip zeroChip; split_ifs <;> omega
       omega
-  · show (0 : ℤ) ≤ 1 + tailContribution (d.length 3) 0 (d.length 10)
+  · change (0 : ℤ) ≤ 1 + tailContribution (d.length 3) 0 (d.length 10)
     have := tailContribution_ge_neg_one (L := d.length 3) (hu := 0)
       (hv := d.length 10) (by omega) (by omega)
     omega
@@ -528,11 +528,11 @@ theorem fCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
   · have := fCoeff_owner_four (d := d)
     have hv : fCoeff d ⟨4, by norm_num⟩ = fCoeff d 4 := rfl
     rw [hv]; omega
-  · show (0 : ℤ) ≤ headContribution (d.length 3) 0 (d.length 10)
+  · change (0 : ℤ) ≤ headContribution (d.length 3) 0 (d.length 10)
     exact headContribution_nonneg (Nat.zero_le _) (by omega)
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ (1 : ℤ)
+  · change (0 : ℤ) ≤ (1 : ℤ)
     norm_num
 
 /-! ## The target-`B` profile -/
@@ -571,7 +571,7 @@ theorem bCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
     (by rw [rowMark_four]; simp only [markC]; omega)
     (by rw [head_four hCore, rowMark_four]
         show heightB d 4 ≤ d.length 4 - markC d
-        show d.length 10 ≤ d.length 4 - markC d
+        change d.length 10 ≤ d.length 4 - markC d
         simp only [markC]; omega)
   simp only [head_four hCore, rowMark_four] at hT4 hH4
   rw [armC_len hb] at hH4
@@ -597,10 +597,10 @@ theorem bCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
   have hlo := ten_le_htB (d := d) hc
   have hhi := htB_le_three (d := d)
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       positiveChip (d.length 10) + tailContribution (d.length 10) 0 (d.length 10)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ zeroChip (markC d) - zeroChip (d.length 4)
+  · change (0 : ℤ) ≤ zeroChip (markC d) - zeroChip (d.length 4)
       + (if 0 < markC d then (0 : ℤ)
           else tailContribution (d.length 4) 0 (d.length 10))
     have := fCoeff_nonneg (d := d) hb hc 1
@@ -609,10 +609,10 @@ theorem bCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
           else tailContribution (d.length 4) 0 (d.length 10)) := rfl
     rw [hv] at this
     exact this
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       positiveChip (d.length 3) + tailContribution (d.length 3) 0 (htB d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ zeroChip (d.length 10)
+  · change (0 : ℤ) ≤ zeroChip (d.length 10)
       + (headContribution (d.length 10) 0 (d.length 10)
           + headContribution (d.length 9) (htB d) (d.length 10))
     have h := armFull_nonneg rev rev fwd (gamma := d.length 10) (lx := d.length 9)
@@ -627,7 +627,7 @@ theorem bCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
       zeroChip (d.length 10) + headContribution (d.length 10) 0 (d.length 10) := rfl
     rw [hf] at this
     omega
-  · show (0 : ℤ) ≤ zeroChip (d.length 3)
+  · change (0 : ℤ) ≤ zeroChip (d.length 3)
       + (headContribution (d.length 3) 0 (htB d)
           + tailContribution (d.length 9) (htB d) (d.length 10)
           + tailContribution (d.length 11) (htB d) (d.length 10))
@@ -636,9 +636,9 @@ theorem bCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
       hc (by simp only [htB, resB]; omega)
     simp only [fwd_tail, rev_tail] at h
     omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ 1 + headContribution (d.length 11) (htB d) (d.length 10)
+  · change (0 : ℤ) ≤ 1 + headContribution (d.length 11) (htB d) (d.length 10)
     have := headContribution_ge_neg_one (L := d.length 11) (hu := htB d)
       (hv := d.length 10) (by omega) (by simp only [htB, resB]; omega)
     omega
@@ -654,7 +654,7 @@ theorem bCoeff_owner {d : DegSpec 8 12} (hc : d.length 10 ≤ d.length 3) :
   unfold ownerB
   by_cases h9 : d.length 9 = 0
   · rw [ite_eq_left h9]
-    show (1 : ℤ) ≤ zeroChip (d.length 10)
+    change (1 : ℤ) ≤ zeroChip (d.length 10)
       + (headContribution (d.length 10) 0 (d.length 10)
           + headContribution (d.length 9) (htB d) (d.length 10))
     have hEq : htB d = d.length 10 := by simp only [htB, resB]; omega
@@ -665,12 +665,12 @@ theorem bCoeff_owner {d : DegSpec 8 12} (hc : d.length 10 ≤ d.length 3) :
   · rw [ite_eq_right h9]
     by_cases h11 : d.length 11 = 0
     · rw [ite_eq_left h11]
-      show (1 : ℤ) ≤ 1 + headContribution (d.length 11) (htB d) (d.length 10)
+      change (1 : ℤ) ≤ 1 + headContribution (d.length 11) (htB d) (d.length 10)
       have hEq : htB d = d.length 10 := by simp only [htB, resB]; omega
       rw [hEq, h11, headContribution_same]
       norm_num
     · rw [ite_eq_right h11]
-      show (1 : ℤ) ≤ zeroChip (d.length 3)
+      change (1 : ℤ) ≤ zeroChip (d.length 3)
         + (headContribution (d.length 3) 0 (htB d)
             + tailContribution (d.length 9) (htB d) (d.length 10)
             + tailContribution (d.length 11) (htB d) (d.length 10))
@@ -736,7 +736,7 @@ theorem pCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
     (by rw [rowMark_four]; simp only [markC]; omega)
     (by rw [head_four hCore, rowMark_four]
         show heightP d 4 ≤ d.length 4 - markC d
-        show d.length 10 ≤ d.length 4 - markC d
+        change d.length 10 ≤ d.length 4 - markC d
         simp only [markC]; omega)
   simp only [head_four hCore, rowMark_four] at hT4 hH4
   rw [armC_len hb] at hH4
@@ -770,10 +770,10 @@ theorem pCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
     (D := htD d) (C := htC d) hc hm hpq hG hE hD hC
   obtain ⟨hgC, hCD, hDE, hEG, hCb, hCS, hDCu, hEm1, hEm2⟩ := hbnd
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       positiveChip (d.length 10) + tailContribution (d.length 10) 0 (d.length 10)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ zeroChip (markC d) - zeroChip (d.length 4)
+  · change (0 : ℤ) ≤ zeroChip (markC d) - zeroChip (d.length 4)
       + (if 0 < markC d then (0 : ℤ)
           else tailContribution (d.length 4) 0 (d.length 10))
     have := fCoeff_nonneg (d := d) hb hc 1
@@ -782,10 +782,10 @@ theorem pCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
           else tailContribution (d.length 4) 0 (d.length 10)) := rfl
     rw [hv] at this
     exact this
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       positiveChip (d.length 3) + tailContribution (d.length 3) 0 (htC d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ zeroChip (d.length 10) - zeroChip (d.length 9)
+  · change (0 : ℤ) ≤ zeroChip (d.length 10) - zeroChip (d.length 9)
       + (headContribution (d.length 10) 0 (d.length 10)
           + headContribution (d.length 9) (htC d) (d.length 10))
     have h := apex_nonneg rev rev fwd (gamma := d.length 10) (lx := d.length 9)
@@ -793,7 +793,7 @@ theorem pCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
       (by intro h9; simp only [htC, htD, htE, resB, capG, parq] at *; omega)
     simp only [fwd_tail, rev_tail, tailContribution_same, add_zero] at h
     omega
-  · show (0 : ℤ) ≤ zeroChip (d.length 10)
+  · change (0 : ℤ) ≤ zeroChip (d.length 10)
       + (headContribution (d.length 10) 0 (d.length 10)
           + tailContribution (d.length 6) (d.length 10) (htE d))
     have h := armFull_nonneg rev fwd rev (gamma := d.length 10) (lx := d.length 6)
@@ -801,7 +801,7 @@ theorem pCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
       (by simp only [htE, capG, resB, parq] at *; omega) (by omega)
     simp only [fwd_tail, rev_tail, headContribution_same, add_zero] at h
     omega
-  · show (0 : ℤ) ≤ zeroChip (d.length 3) + zeroChip (d.length 9) - shift d
+  · change (0 : ℤ) ≤ zeroChip (d.length 3) + zeroChip (d.length 9) - shift d
       + (headContribution (d.length 3) 0 (htC d)
           + tailContribution (d.length 9) (htC d) (d.length 10)
           + tailContribution (d.length 11) (htC d) (htD d))
@@ -812,7 +812,7 @@ theorem pCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
       (C := htC d) hc hm hpq hG hE hD hC rfl
     simp only [fwd_tail, rev_tail] at h
     omega
-  · show (0 : ℤ) ≤ tailContribution (d.length 7) (htE d) (htD d)
+  · change (0 : ℤ) ≤ tailContribution (d.length 7) (htE d) (htD d)
       + tailContribution (d.length 8) (htE d) (htD d)
       + headContribution (d.length 6) (d.length 10) (htE d)
     have h := center_nonneg fwd fwd rev
@@ -822,7 +822,7 @@ theorem pCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
       (C := htC d) hc hm hpq hG hE hD hC
     simp only [fwd_tail, rev_tail] at h
     omega
-  · show (0 : ℤ) ≤ 1 + shift d
+  · change (0 : ℤ) ≤ 1 + shift d
       + (headContribution (d.length 11) (htC d) (htD d)
           + headContribution (d.length 7) (htE d) (htD d)
           + headContribution (d.length 8) (htE d) (htD d))
@@ -847,7 +847,7 @@ theorem pCoeff_owner {d : DegSpec 8 12} (_hb : d.length 10 ≤ d.length 4)
   unfold ownerP
   by_cases h6 : d.length 6 = 0
   · rw [ite_eq_left h6]
-    show (1 : ℤ) ≤ zeroChip (d.length 10)
+    change (1 : ℤ) ≤ zeroChip (d.length 10)
       + (headContribution (d.length 10) 0 (d.length 10)
           + tailContribution (d.length 6) (d.length 10) (htE d))
     have hEq : htE d = d.length 10 := by
@@ -859,7 +859,7 @@ theorem pCoeff_owner {d : DegSpec 8 12} (_hb : d.length 10 ≤ d.length 4)
   · rw [ite_eq_right h6]
     by_cases hq : parq d = 0 ∧ resB d + d.length 11 < capG d
     · rw [ite_eq_left hq]
-      show (1 : ℤ) ≤ 1 + shift d
+      change (1 : ℤ) ≤ 1 + shift d
         + (headContribution (d.length 11) (htC d) (htD d)
             + headContribution (d.length 7) (htE d) (htD d)
             + headContribution (d.length 8) (htE d) (htD d))
@@ -871,7 +871,7 @@ theorem pCoeff_owner {d : DegSpec 8 12} (_hb : d.length 10 ≤ d.length 4)
       simp only [rev_tail] at h
       omega
     · rw [ite_eq_right hq]
-      show (1 : ℤ) ≤ tailContribution (d.length 7) (htE d) (htD d)
+      change (1 : ℤ) ≤ tailContribution (d.length 7) (htE d) (htD d)
         + tailContribution (d.length 8) (htE d) (htD d)
         + headContribution (d.length 6) (d.length 10) (htE d)
       have h := center_ge_one fwd fwd rev
@@ -921,7 +921,7 @@ theorem tCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
     intro hz
     rw [rowMark_four] at hz
     rw [tail_four hCore]
-    show tripod d = 0
+    change tripod d = 0
     simp only [tripod]; omega
   have hT4 := slotTailForm_of_arm d (mark := rowMark d) (h := heightT d) (e := 4)
     (by rw [head_four hCore]; rfl) hlow
@@ -940,7 +940,7 @@ theorem tCoeff_eq {d : DegSpec 8 12} (hCore : d.core = row10Core)
   all_goals (try omega)
 
 theorem tCoeff_owner {d : DegSpec 8 12} : 1 ≤ tCoeff d 1 := by
-  show (1 : ℤ) ≤
+  change (1 : ℤ) ≤
     zeroChip (d.length 2) + zeroChip (d.length 1) + zeroChip (markC d)
       + (tailContribution (d.length 2) (tripod d) 0
           + headContribution (d.length 1) 0 (tripod d)
@@ -957,18 +957,18 @@ theorem tCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
   have hO3 : tripod d ≤ markC d := le_third rfl
   have hMC : markC d ≤ d.length 4 := by simp only [markC]; omega
   fin_cases v
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       positiveChip (d.length 2) + headContribution (d.length 2) (tripod d) 0
     exact positiveChip_add_head_nonneg (by omega)
   · have := tCoeff_owner (d := d)
     have hv : tCoeff d ⟨1, by norm_num⟩ = tCoeff d 1 := rfl
     rw [hv]; omega
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       positiveChip (d.length 1) + tailContribution (d.length 1) 0 (tripod d)
     exact positiveChip_add_tail_nonneg (by omega)
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤
+  · change (0 : ℤ) ≤
       (if markC d = 0 then (0 : ℤ) else if d.length 4 ≤ markC d then 1 else 0)
         + (if markC d < d.length 4 then (0 : ℤ)
             else headContribution (d.length 4) (tripod d) 0)
@@ -988,11 +988,11 @@ theorem tCoeff_nonneg {d : DegSpec 8 12} (hb : d.length 10 ≤ d.length 4)
         have hne : d.length 4 ≠ 0 := by omega
         have : positiveChip (d.length 4) = 1 := by simp [positiveChip, hne]
         omega
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ (0 : ℤ)
+  · change (0 : ℤ) ≤ (0 : ℤ)
     norm_num
-  · show (0 : ℤ) ≤ (1 : ℤ)
+  · change (0 : ℤ) ≤ (1 : ℤ)
     norm_num
 
 /-! ## Every contracted core class is reached -/

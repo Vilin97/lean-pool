@@ -129,9 +129,9 @@ theorem chamber_covers (length : Fin 12 → ℕ) :
   · by_cases hB : length 4 ≤ length 10 ∧ length 4 ≤ length 3
     · exact ⟨idSym, Or.inr hB⟩
     · refine ⟨sigma, Or.inr ⟨?_, ?_⟩⟩
-      · show length 3 ≤ length 10
+      · change length 3 ≤ length 10
         omega
-      · show length 3 ≤ length 4
+      · change length 3 ≤ length 4
         omega
 
 end AtanasovRanganathan.GenusFiveRow10Symmetry

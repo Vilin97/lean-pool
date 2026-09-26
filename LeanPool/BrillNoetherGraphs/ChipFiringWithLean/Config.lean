@@ -33,7 +33,7 @@ relevant threshold for the superstability condition.
 
 /-- The set of vertices other than $q$: $\widetilde V = V(G) \setminus \{q\}$. -/
 abbrev Vtilde {G : CFGraph} (q : G.V) : Finset G.V :=
-  univ.filter (λ v => v ≠ q)
+  univ.filter (fun v => v ≠ q)
 
 /-- A *configuration* on $G$ with respect to distinguished vertex $q$ is a nonnegative integer
 assignment to all vertices, with the convention that $q$ holds zero chips. This is what
@@ -256,7 +256,7 @@ lemma config_eff {q : G.V} (d : ℤ) (c : Config G q) : effective (toDiv d c) �
     exact c.non_negative v
 
 instance : PartialOrder (Config G q) := {
-  le := λ c₁ c₂ => c₁.chips ≤ c₂.chips,
+  le := fun c₁ c₂ => c₁.chips ≤ c₂.chips,
   le_refl := by
     intro _
     simp only [Std.le_refl],
@@ -612,7 +612,7 @@ lemma superstable_burn_list (G : CFGraph) {q : G.V} (c : Config G q) (h_ss : sup
 words, the orientation indicates the direction of the spreading fire in Dhar's burning
 algorithm. -/
 def burnFlow {G : CFGraph} {q : G.V} {c : Config G q} (L : burnList G c) : (G.V × G.V) → ℕ :=
-  λ e => if (e.1 ∈ L.list) ∧ (L.list.idxOf e.2 < L.list.idxOf e.1) then numEdges G e.1 e.2 else 0
+  fun e => if (e.1 ∈ L.list) ∧ (L.list.idxOf e.2 < L.list.idxOf e.1) then numEdges G e.1 e.2 else 0
 
 /-- The `burnFlow` of a complete burn list is a valid orientation: for every edge
 $\{u,v\}$, exactly `numEdges G u v` units of flow are directed in one of the two

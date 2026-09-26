@@ -507,7 +507,7 @@ theorem markedDivisorTwo_coreVertex (e f : Fin 12) (r : Fin 8) :
       ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
         baseTwo d W mark e f v := by
   classical
-  show d.coreClassDivisor W (d.coreVertex r)
+  change d.coreClassDivisor W (d.coreVertex r)
       + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r)
       + oneChip (G := d.graph) (d.pathAt f (mark f)) (d.coreVertex r) = _
   rw [d.coreClassDivisor_coreVertex, markChip_classSum_eq d mark e r,
@@ -520,7 +520,7 @@ theorem markedDivisorOne_coreVertex (e : Fin 12) (r : Fin 8) :
       ∑ v ∈ Finset.univ.filter (fun v : Fin 8 => d.rep v = d.rep r),
         baseOne d W mark e v := by
   classical
-  show d.coreClassDivisor W (d.coreVertex r)
+  change d.coreClassDivisor W (d.coreVertex r)
       + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.coreVertex r) = _
   rw [d.coreClassDivisor_coreVertex, markChip_classSum_eq d mark e r]
   unfold baseOne
@@ -548,7 +548,7 @@ theorem markedDivisorTwo_chip {e f : Fin 12}
   have hpath : d.pathAt g (mark g) = d.interiorVertex g o := by
     rw [d.pathAt_interior (by omega) hlt]
     exact congrArg (d.interiorVertex g) (Fin.ext (by simp; omega))
-  show 1 ≤ d.coreClassDivisor W (d.interiorVertex g o)
+  change 1 ≤ d.coreClassDivisor W (d.interiorVertex g o)
       + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.interiorVertex g o)
       + oneChip (G := d.graph) (d.pathAt f (mark f)) (d.interiorVertex g o)
   rw [d.coreClassDivisor_interiorVertex]
@@ -571,7 +571,7 @@ theorem markedDivisorOne_chip {e : Fin 12}
   have hpath : d.pathAt g (mark g) = d.interiorVertex g o := by
     rw [d.pathAt_interior (by omega) hlt]
     exact congrArg (d.interiorVertex g) (Fin.ext (by simp; omega))
-  show 1 ≤ d.coreClassDivisor W (d.interiorVertex g o)
+  change 1 ≤ d.coreClassDivisor W (d.interiorVertex g o)
       + oneChip (G := d.graph) (d.pathAt e (mark e)) (d.interiorVertex g o)
   rw [d.coreClassDivisor_interiorVertex]
   rcases hsupp g hpos with rfl

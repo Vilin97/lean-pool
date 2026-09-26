@@ -186,8 +186,8 @@ private theorem raw_strand_prefix_from_length_linearEquiv
           have hSlide := path_pair_linearEquiv_head_excess B α
             ⟨B.length α - 1, by omega⟩
             ⟨B.length α - r, by omega⟩
-              (by show B.length α - 1 < B.length α; omega)
-              (by show B.length α - r < B.length α; omega) hsum
+              (by change B.length α - 1 < B.length α; omega)
+              (by change B.length α - r < B.length α; omega) hsum
           have hStep : linearEquiv B.graph
               (oneChip (B.pathVertex α ⟨B.length α - 1, by omega⟩) -
                 oneChip (B.pathVertex α ⟨B.length α, by omega⟩))

@@ -402,7 +402,7 @@ private theorem crossOneOff_cutoff_of_negativeRise
   have hwTge : g - 1 ≤ w * T := by
     have h1 : T ≤ w * T := Nat.le_mul_of_pos_left T hw1
     omega
-  show crossOneOffCutoff g b ≤ m
+  change crossOneOffCutoff g b ≤ m
   unfold crossOneOffCutoff
   rw [show b - 1 = bm1 from hbm1_def, ← hF_def]
   omega
@@ -488,7 +488,7 @@ theorem crossOneOff_cutoff_le_torsionWitness_of_not_both_two
       have hbpos : (0 : ℤ) ≤ b := by positivity
       nlinarith [hBetaEq, mul_le_mul_of_nonneg_left hbetaLe hbpos]
     have hbg : b * g ≤ m := by exact_mod_cast hbgZ
-    show crossOneOffCutoff g b ≤ m
+    change crossOneOffCutoff g b ≤ m
     unfold crossOneOffCutoff
     have hdiv : g / (b - 1) ≤ g := Nat.div_le_self g (b - 1)
     have h2g : g + g ≤ b * g := by

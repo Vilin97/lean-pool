@@ -52,10 +52,10 @@ noncomputable def stepEquivEdges (spec : Spec n p) :
   classical
   refine (Equiv.sigmaFiberEquiv spec.unitEdge).symm.trans
     (Equiv.sigmaCongrRight fun y => (Fintype.equivFin _).trans (finCongr ?_))
-  show Fintype.card {step : spec.Step // spec.unitEdge step = y}
+  change Fintype.card {step : spec.Step // spec.unitEdge step = y}
       = Multiset.count y spec.graph.edges
   rw [Fintype.card_subtype, graph_edges, Multiset.count_map, ← Finset.filter_val]
-  show Finset.card _ = Finset.card _
+  change Finset.card _ = Finset.card _
   exact congrArg Finset.card (Finset.filter_congr fun step _ => by simp [eq_comm])
 
 @[simp] theorem stepEquivEdges_coe (spec : Spec n p) (step : spec.Step) :
@@ -94,9 +94,9 @@ theorem unitEdge_unitStepEquiv (e : Fin p) :
     spec.unitEdge (unitStepEquiv spec hlen e) =
       (spec.coreVertex (spec.core.tail e), spec.coreVertex (spec.core.head e)) := by
   refine Prod.ext ?_ ?_
-  · show spec.stepLeft e ⟨0, spec.length_pos e⟩ = _
+  · change spec.stepLeft e ⟨0, spec.length_pos e⟩ = _
     exact spec.stepLeft_zero e
-  · show spec.stepRight e ⟨0, spec.length_pos e⟩ = _
+  · change spec.stepRight e ⟨0, spec.length_pos e⟩ = _
     rw [show (⟨0, spec.length_pos e⟩ : Fin (spec.length e))
         = ⟨spec.length e - 1, by have := spec.length_pos e; omega⟩ from
       Fin.ext (by have := hlen e; omega)]
@@ -132,18 +132,18 @@ noncomputable def scaleRelabeling (k : ℕ) (hk : 0 < k) :
   reversed := fun _ => false
   length_eq := by
     intro e
-    show k * spec.length e = k * 1
+    change k * spec.length e = k * 1
     rw [hlen e]
   tail_eq := by
     intro e
-    show UnitSubdivisionPresentation.vertexEquiv spec.graph
+    change UnitSubdivisionPresentation.vertexEquiv spec.graph
         (UnitSubdivisionPresentation.edgeAt spec.graph (unitSlotEquiv spec hlen e)).1
       = _
     rw [edgeAt_unitSlotEquiv spec hlen e]
     simp [unitCoreEquiv]
   head_eq := by
     intro e
-    show UnitSubdivisionPresentation.vertexEquiv spec.graph
+    change UnitSubdivisionPresentation.vertexEquiv spec.graph
         (UnitSubdivisionPresentation.edgeAt spec.graph (unitSlotEquiv spec hlen e)).2
       = _
     rw [edgeAt_unitSlotEquiv spec hlen e]

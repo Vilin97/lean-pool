@@ -380,8 +380,8 @@ See: [Corry-Perkinson](https://pubs.ams.org/ebooks/mbk/114), Corollary 4.9(3)
 for the injectivity claim. -/
 theorem acyclic_orientation_maximal_unwinnable_correspondence_and_degree
     {G : CFGraph} (h_conn : graphConnected G) (q : G.V) :
-    (Function.Injective (λ (O : {O : CFOrientation G // isAcyclic G O ∧ isSource G O q}) =>
-      λ v => (indeg G O.val v) - if v = q then 1 else 0)) ∧
+    (Function.Injective (fun (O : {O : CFOrientation G // isAcyclic G O ∧ isSource G O q}) =>
+      fun v => (indeg G O.val v) - if v = q then 1 else 0)) ∧
     (∀ D : CFDiv G, maximalUnwinnable G D → deg D = genus G - 1) := by
   constructor
   { -- Part 1: Injection proof

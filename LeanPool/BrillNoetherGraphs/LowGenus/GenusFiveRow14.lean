@@ -494,7 +494,7 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
       simp [indicatorWeight, hOwner, hP, h1, h2]
   clear hOwner
   fin_cases v
-  · show (0:ℤ) ≤ bananaCoefficient d 0 -
+  · change (0:ℤ) ≤ bananaCoefficient d 0 -
         indicatorWeight (0 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 0 = positiveChip (d.length 0) +
         rev.head (d.length 0) (endHeight d) 0 := rfl
@@ -502,7 +502,7 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
     have h := leaf_nonneg rev (L := d.length 0) (hu := endHeight d) (hv := 0)
       (Nat.zero_le _) hEu
     omega
-  · show (0:ℤ) ≤ bananaCoefficient d 1 -
+  · change (0:ℤ) ≤ bananaCoefficient d 1 -
         indicatorWeight (1 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 1 =
         zeroChip (d.length 6) + zeroChip (d.length 7) - shiftWeight d +
@@ -517,12 +517,12 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
       (D := midHeight d) (E := endHeight d)
       (shiftWeight d) hm hpq hE hD hC hshift
     omega
-  · show (0:ℤ) ≤ bananaCoefficient d 2 -
+  · change (0:ℤ) ≤ bananaCoefficient d 2 -
         indicatorWeight (2 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 2 = 0 := rfl
     rw [hc, hkOff 2 (by decide) (by decide)]
     norm_num
-  · show (0:ℤ) ≤ bananaCoefficient d 3 -
+  · change (0:ℤ) ≤ bananaCoefficient d 3 -
         indicatorWeight (3 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 3 = positiveChip (d.length 6) +
         rev.head (d.length 6) (armHeight d) 0 := rfl
@@ -530,12 +530,12 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
     have h := leaf_nonneg rev (L := d.length 6) (hu := armHeight d) (hv := 0)
       (Nat.zero_le _) hCla
     omega
-  · show (0:ℤ) ≤ bananaCoefficient d 4 -
+  · change (0:ℤ) ≤ bananaCoefficient d 4 -
         indicatorWeight (4 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 4 = 0 := rfl
     rw [hc, hkOff 4 (by decide) (by decide)]
     norm_num
-  · show (0:ℤ) ≤ bananaCoefficient d 5 -
+  · change (0:ℤ) ≤ bananaCoefficient d 5 -
         indicatorWeight (5 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 5 = positiveChip (d.length 7) +
         fwd.head (d.length 7) (armHeight d) 0 := rfl
@@ -543,7 +543,7 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
     have h := leaf_nonneg fwd (L := d.length 7) (hu := armHeight d) (hv := 0)
       (Nat.zero_le _) hClb
     omega
-  · show (0:ℤ) ≤ bananaCoefficient d 6 -
+  · change (0:ℤ) ≤ bananaCoefficient d 6 -
         indicatorWeight (6 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 6 =
         zeroChip (d.length 0) +
@@ -565,7 +565,7 @@ theorem bananaResidual_nonneg (d : DegSpec 8 12) (v : Fin 8) :
         · rw [ite_eq_left hP] at hk; norm_num at hk
         · exact hP)
     omega
-  · show (0:ℤ) ≤ bananaCoefficient d 7 -
+  · change (0:ℤ) ≤ bananaCoefficient d 7 -
         indicatorWeight (7 : Fin 8) (targetOwner d)
     have hc : bananaCoefficient d 7 =
         1 + shiftWeight d +
@@ -675,7 +675,7 @@ def row14Guard : GuardingSet row14Core where
       by_cases h : IsChipVertex v
       · simp [chipWeight, h] at hv
       · exact h
-    show Reaches d.graph (rowDivisor d) (d.coreVertex v)
+    change Reaches d.graph (rowDivisor d) (d.coreVertex v)
     rcases centers_cover v hNotChip with hTripod | hSix
     · have h := row14TripodConfig.reaches_center d hCore (zeroSlots d.length)
         hRepReach hTripod

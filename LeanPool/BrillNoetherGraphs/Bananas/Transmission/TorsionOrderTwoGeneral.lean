@@ -199,7 +199,7 @@ theorem kInversionCount_two_le_genus
   have hCard : ((↑(Finset.Ico (0 : ℤ) (genus M.graph)) : Set ℤ)).ncard =
       Int.toNat (genus M.graph) := by
     rw [Set.ncard_coe_finset, Int.card_Ico, sub_zero]
-  show (kInversions 2 τ).ncard ≤ Int.toNat (genus M.graph)
+  change (kInversions 2 τ).ncard ≤ Int.toNat (genus M.graph)
   rw [← hCard]
   exact hle
 

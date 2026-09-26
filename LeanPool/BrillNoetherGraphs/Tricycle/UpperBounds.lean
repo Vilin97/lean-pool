@@ -59,7 +59,7 @@ instance decidableEffective {G : CFGraph} (D : CFDiv G) : Decidable (effective D
 theorem winnable_of_effective_add_prin {G : CFGraph} (D : CFDiv G)
     (x : firingScript G) (h : effective (D + prin G x)) : winnable G D := by
   refine ⟨D + prin G x, h, ?_⟩
-  show (D + prin G x) - D ∈ principalDivisors G
+  change (D + prin G x) - D ∈ principalDivisors G
   rw [principal_iff_eq_prin]
   exact ⟨x, by ring⟩
 

@@ -195,7 +195,7 @@ theorem gonalityConjecture_of_onceMarkedBNExistence
   obtain ⟨D, hDeg, hRank⟩ := bnExists_one_of_onceMarkedBNExistence hG u hCensus d hBN
   have hgle : gonalityLeq G d := ⟨D, hRank, hDeg⟩
   have hle := gonality_le_of_gonality_leq hG hgle
-  show gonality hG ≤ (genus G + 3) / 2
+  change gonality hG ≤ (genus G + 3) / 2
   omega
 
 /-- The Brill--Noether conjecture in this genus follows from once-marked Brill--Noether
@@ -206,7 +206,7 @@ theorem brillNoetherConjecture_of_onceMarkedBNExistence
     {G : CFGraph} (hG : graphConnected G) (u : G.V)
     (hCensus : OnceMarkedBNExistence G u) (r d : ℤ) :
     brillNoetherConjecture hG r d := by
-  show 0 ≤ genus G - (r + 1) * (genus G - d + r) → ∃ D : CFDiv G, rank G D ≥ r ∧ deg D = d
+  change 0 ≤ genus G - (r + 1) * (genus G - d + r) → ∃ D : CFDiv G, rank G D ≥ r ∧ deg D = d
   intro hrho
   rcases le_or_gt 0 r with hr0 | hrneg
   · lift r to ℕ using hr0 with rNat

@@ -142,7 +142,7 @@ theorem brillNoetherConjecture_of_genus_le_five_of_criticalPencils
     (critical : LowGenusCriticalPencils)
     (G : CFGraph.{0}) (hG : graphConnected G) (hGenus : genus G ≤ 5)
     (r d : ℤ) : brillNoetherConjecture hG r d := by
-  show 0 ≤ genus G - (r + 1) * (genus G - d + r) →
+  change 0 ≤ genus G - (r + 1) * (genus G - d + r) →
     ∃ D : CFDiv G, rank G D ≥ r ∧ deg D = d
   intro hRho
   by_cases hR : 0 ≤ r

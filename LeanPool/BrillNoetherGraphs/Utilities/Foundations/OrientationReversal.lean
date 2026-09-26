@@ -998,7 +998,7 @@ theorem isAcyclic_reverseCut (O : CFOrientation G) (W : Finset G.V) (hO : isAcyc
     refine List.IsChain.imp_of_mem_imp (fun a b ha hb hab => ?_) hc₂
     rw [directed_edge_iff_flow_pos] at hab ⊢
     rwa [flow_reverseCut_same O W (iff_of_true (h₂ a ha) (h₂ b hb))] at hab
-  show path.vertices.Nodup
+  change path.vertices.Nodup
   rw [← hsplit, List.nodup_append]
   refine ⟨nodup_of_isChain hO hc₁O, nodup_of_isChain hO hc₂O, fun a ha b hb hab => ?_⟩
   exact h₁ a ha (hab ▸ h₂ b hb)

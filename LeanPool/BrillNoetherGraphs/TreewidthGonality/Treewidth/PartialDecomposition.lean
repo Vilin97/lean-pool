@@ -297,9 +297,9 @@ def join (D₁ : PartialDecomposition H U₁) (r₁ : D₁.Node) (h₁ : D₁.ba
         (connected_induce_inl_image hle (D₁.coherent v (hX₁ hvX))).preconnected
         (connected_induce_inr_image hle (D₂.coherent v (hX₂ hvX))).preconnected
         (v := Sum.inl r₁) (w := Sum.inr r₂) ⟨r₁, ?_, rfl⟩ ⟨r₂, ?_, rfl⟩ hbridge
-      · show v ∈ D₁.bag r₁
+      · change v ∈ D₁.bag r₁
         rw [h₁]; exact hvX
-      · show v ∈ D₂.bag r₂
+      · change v ∈ D₂.bag r₂
         rw [h₂]; exact hvX
     · by_cases hv1 : v ∈ U₁
       · have hempty : Sum.inr '' {t : D₂.Node | v ∈ D₂.bag t} = (∅ : Set (D₁.Node ⊕ D₂.Node)) := by

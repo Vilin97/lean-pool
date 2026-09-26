@@ -141,7 +141,7 @@ theorem notLoopy_lift : ¬ IsLoopy core (zeroSet (c.lift s)) := by
 theorem rep_censusSpec (hn : 0 < n) :
     (censusSpec core hn (c.lift s) (c.isForest_lift s) (c.notLoopy_lift s)).rep
       = compFold core c.F := by
-  show compFold core (zeroSet (c.lift s)) = compFold core c.F
+  change compFold core (zeroSet (c.lift s)) = compFold core c.F
   rw [c.zeroSet_lift s]
 
 /-- The face `{ℓ = 0 on F}` of the closed orthant of `core`, matched with the

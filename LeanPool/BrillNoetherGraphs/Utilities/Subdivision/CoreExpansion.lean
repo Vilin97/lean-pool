@@ -397,7 +397,7 @@ theorem kindSum_eq (fallback : Fin n) (k : SlotKind p)
         have h2 := kindVertex_double_shift fallback hMid' (i + 1)
         simp only [kindStepTerm, smallStepTerm]
         rw [h1, show small.length j₁ + i + 1 = small.length j₁ + (i + 1) by omega, h2]
-      show (∑ i : Fin (small.length j₁ + small.length j₂),
+      change (∑ i : Fin (small.length j₁ + small.length j₂),
           kindStepTerm small fallback (.double j₁ j₂) a b i.val) = _
       rw [Fin.sum_univ_add]
       simp only [slotSum, kindSlotSum]
@@ -554,7 +554,7 @@ theorem kindVertex_last_double (j₁ j₂ : Fin p) :
       = small.pathVertex j₂ ⟨small.length j₂, by omega⟩ := by
     rw [kindVertex_double_gt j₁ j₂ fallback (by omega)]
     refine PathHelpers.pathVertex_congr small j₂ _ _ ?_
-    show min (small.length j₁ + small.length j₂ - small.length j₁)
+    change min (small.length j₁ + small.length j₂ - small.length j₁)
       (small.length j₂) = small.length j₂
     omega
   rw [h]
@@ -596,7 +596,7 @@ theorem vertexMap_pathVertex (hCond : D.Conditions small.core) (e : Fin Q)
   by_cases h0 : q.val = 0
   · rw [PathHelpers.pathVertex_of_zero _ e q h0, h0,
       vertexMap_coreVertex]
-    show small.coreVertex (D.fib (D.bigCore.tail e)) =
+    change small.coreVertex (D.fib (D.bigCore.tail e)) =
       kindVertex small (D.fib (D.bigCore.tail e)) (D.kind e) 0
     cases hk : D.kind e with
     | contracted => rfl
@@ -607,7 +607,7 @@ theorem vertexMap_pathVertex (hCond : D.Conditions small.core) (e : Fin Q)
   · by_cases hlast : q.val = (D.bigSpec small hN hL).length e
     · rw [PathHelpers.pathVertex_of_last _ e q h0 hlast, hlast,
         vertexMap_coreVertex]
-      show small.coreVertex (D.fib (D.bigCore.head e)) =
+      change small.coreVertex (D.fib (D.bigCore.head e)) =
         kindVertex small (D.fib (D.bigCore.tail e)) (D.kind e)
           (kindLength small (D.kind e))
       cases hk : D.kind e with
@@ -622,7 +622,7 @@ theorem vertexMap_pathVertex (hCond : D.Conditions small.core) (e : Fin Q)
     · rw [PathHelpers.pathVertex_of_interior _ e q h0 hlast,
         vertexMap_interiorVertex]
       congr 1
-      show q.val - 1 + 1 = q.val
+      change q.val - 1 + 1 = q.val
       omega
 
 theorem vertexMap_stepLeft (hCond : D.Conditions small.core) (e : Fin Q)
@@ -658,14 +658,14 @@ theorem owner_aggregate (hCond : D.Conditions small.core)
   classical
   cases hk : D.kind e with
   | contracted =>
-      show (0 : ℕ) = _
+      change (0 : ℕ) = _
       refine (Finset.sum_eq_zero fun j _ => ?_).symm
       by_cases ho : D.owner j = e
       · exact absurd (by rw [ho]; exact hk) (claimed_of_conditions hCond j).1
       · exact ite_eq_right ho
   | single j₀ =>
       obtain ⟨ho1, _⟩ := (indexed_of_conditions hCond e).1 j₀ hk
-      show slotSum small j₀ a b = _
+      change slotSum small j₀ a b = _
       symm
       have hzero : ∀ j ∈ (Finset.univ : Finset (Fin p)), j ≠ j₀ →
           (if D.owner j = e then slotSum small j a b else 0) = 0 := by
@@ -682,7 +682,7 @@ theorem owner_aggregate (hCond : D.Conditions small.core)
         intro h
         rw [h, hs2] at hs1
         exact Bool.noConfusion hs1
-      show slotSum small j₁ a b + slotSum small j₂ a b = _
+      change slotSum small j₁ a b + slotSum small j₂ a b = _
       symm
       have hsub : (∑ j ∈ ({j₁, j₂} : Finset (Fin p)),
           (if D.owner j = e then slotSum small j a b else 0))
@@ -817,11 +817,11 @@ theorem kindVertex_interior_cases (fallback : Fin n) (k : SlotKind p)
       have hcast : kindVertex small fallback (.single j) q
           = small.pathVertex j ⟨q, by omega⟩ := by
         refine PathHelpers.pathVertex_congr small j _ _ ?_
-        show min q (small.length j) = q
+        change min q (small.length j) = q
         omega
       rw [hcast]
       exact PathHelpers.pathVertex_of_interior small j _
-        (by show q ≠ 0; omega) (by show q ≠ small.length j; omega)
+        (by change q ≠ 0; omega) (by change q ≠ small.length j; omega)
   | double j₁ j₂ =>
       simp only [kindLength] at hq
       by_cases hle : q ≤ small.length j₁
@@ -830,8 +830,8 @@ theorem kindVertex_interior_cases (fallback : Fin n) (k : SlotKind p)
           refine ⟨j₁, j₂, rfl, ?_⟩
           rw [kindVertex_double_le j₁ j₂ fallback hle]
           exact PathHelpers.pathVertex_of_last small j₁ _
-            (by show min q (small.length j₁) ≠ 0; omega)
-            (by show min q (small.length j₁) = small.length j₁; omega)
+            (by change min q (small.length j₁) ≠ 0; omega)
+            (by change min q (small.length j₁) = small.length j₁; omega)
         · left
           refine ⟨j₁, Or.inr (Or.inl ⟨j₂, rfl⟩), ⟨q - 1, by omega⟩, ?_⟩
           rw [kindVertex_double_le j₁ j₂ fallback hle]
@@ -839,11 +839,11 @@ theorem kindVertex_interior_cases (fallback : Fin n) (k : SlotKind p)
               ⟨min q (small.length j₁), by omega⟩
               = small.pathVertex j₁ ⟨q, by omega⟩ :=
             PathHelpers.pathVertex_congr small j₁ _ _ (by
-              show min q (small.length j₁) = q
+              change min q (small.length j₁) = q
               omega)
           rw [hcast]
           exact PathHelpers.pathVertex_of_interior small j₁ _
-            (by show q ≠ 0; omega) (by show q ≠ small.length j₁; omega)
+            (by change q ≠ 0; omega) (by change q ≠ small.length j₁; omega)
       · left
         refine ⟨j₂, Or.inr (Or.inr ⟨j₁, rfl⟩),
           ⟨q - small.length j₁ - 1, by omega⟩, ?_⟩
@@ -852,13 +852,13 @@ theorem kindVertex_interior_cases (fallback : Fin n) (k : SlotKind p)
             ⟨min (q - small.length j₁) (small.length j₂), by omega⟩
             = small.pathVertex j₂ ⟨q - small.length j₁, by omega⟩ :=
           PathHelpers.pathVertex_congr small j₂ _ _ (by
-            show min (q - small.length j₁) (small.length j₂)
+            change min (q - small.length j₁) (small.length j₂)
               = q - small.length j₁
             omega)
         rw [hcast]
         exact PathHelpers.pathVertex_of_interior small j₂ _
-          (by show q - small.length j₁ ≠ 0; omega)
-          (by show q - small.length j₁ ≠ small.length j₂; omega)
+          (by change q - small.length j₁ ≠ 0; omega)
+          (by change q - small.length j₁ ≠ small.length j₂; omega)
 
 theorem kindVertex_interior_injective (fallback : Fin n) (k : SlotKind p)
     (hne : ∀ j₁ j₂ : Fin p, k = .double j₁ j₂ → j₁ ≠ j₂)
@@ -875,11 +875,11 @@ theorem kindVertex_interior_injective (fallback : Fin n) (k : SlotKind p)
       have e1 : kindVertex small fallback (.single j) q
           = small.pathVertex j ⟨q, by omega⟩ :=
         PathHelpers.pathVertex_congr small j _ _ (by
-          show min q (small.length j) = q; omega)
+          change min q (small.length j) = q; omega)
       have e2 : kindVertex small fallback (.single j) q'
           = small.pathVertex j ⟨q', by omega⟩ :=
         PathHelpers.pathVertex_congr small j _ _ (by
-          show min q' (small.length j) = q'; omega)
+          change min q' (small.length j) = q'; omega)
       rw [e1, e2] at h
       exact congrArg Fin.val (small.pathVertex_injective j h)
   | double j₁ j₂ =>
@@ -891,7 +891,7 @@ theorem kindVertex_interior_injective (fallback : Fin n) (k : SlotKind p)
         intro r hle
         rw [kindVertex_double_le j₁ j₂ fallback hle]
         exact PathHelpers.pathVertex_congr small j₁ _ _ (by
-          show min r (small.length j₁) = r; omega)
+          change min r (small.length j₁) = r; omega)
       have hpathB : ∀ r : ℕ, ∀ _hr : r < small.length j₁ + small.length j₂,
           ∀ _hgt : ¬ r ≤ small.length j₁,
           kindVertex small fallback (.double j₁ j₂) r
@@ -899,7 +899,7 @@ theorem kindVertex_interior_injective (fallback : Fin n) (k : SlotKind p)
         intro r hr hgt
         rw [kindVertex_double_gt j₁ j₂ fallback hgt]
         exact PathHelpers.pathVertex_congr small j₂ _ _ (by
-          show min (r - small.length j₁) (small.length j₂)
+          change min (r - small.length j₁) (small.length j₂)
             = r - small.length j₁
           omega)
       by_cases hle : q ≤ small.length j₁ <;> by_cases hle' : q' ≤ small.length j₁
@@ -908,42 +908,42 @@ theorem kindVertex_interior_injective (fallback : Fin n) (k : SlotKind p)
       · exfalso
         rw [hpathA q hle, hpathB q' hq' hle'] at h
         by_cases hlast : q = small.length j₁
-        · rw [PathHelpers.pathVertex_of_last small j₁ _ (by show q ≠ 0; omega)
-              (by show q = small.length j₁; omega),
+        · rw [PathHelpers.pathVertex_of_last small j₁ _ (by change q ≠ 0; omega)
+              (by change q = small.length j₁; omega),
             PathHelpers.pathVertex_of_interior small j₂ _
-              (by show q' - small.length j₁ ≠ 0; omega)
-              (by show q' - small.length j₁ ≠ small.length j₂; omega)] at h
+              (by change q' - small.length j₁ ≠ 0; omega)
+              (by change q' - small.length j₁ ≠ small.length j₂; omega)] at h
           simp [SubdivisionGraph.Spec.coreVertex,
             SubdivisionGraph.Spec.interiorVertex] at h
         · rw [PathHelpers.pathVertex_of_interior small j₁ _
-              (by show q ≠ 0; omega) (by show q ≠ small.length j₁; omega),
+              (by change q ≠ 0; omega) (by change q ≠ small.length j₁; omega),
             PathHelpers.pathVertex_of_interior small j₂ _
-              (by show q' - small.length j₁ ≠ 0; omega)
-              (by show q' - small.length j₁ ≠ small.length j₂; omega)] at h
+              (by change q' - small.length j₁ ≠ 0; omega)
+              (by change q' - small.length j₁ ≠ small.length j₂; omega)] at h
           simp only [SubdivisionGraph.Spec.interiorVertex, Sum.inr.injEq,
             Sigma.mk.injEq] at h
           exact hjne h.1
       · exfalso
         rw [hpathB q hq hle, hpathA q' hle'] at h
         by_cases hlast : q' = small.length j₁
-        · rw [PathHelpers.pathVertex_of_last small j₁ _ (by show q' ≠ 0; omega)
-              (by show q' = small.length j₁; omega),
+        · rw [PathHelpers.pathVertex_of_last small j₁ _ (by change q' ≠ 0; omega)
+              (by change q' = small.length j₁; omega),
             PathHelpers.pathVertex_of_interior small j₂ _
-              (by show q - small.length j₁ ≠ 0; omega)
-              (by show q - small.length j₁ ≠ small.length j₂; omega)] at h
+              (by change q - small.length j₁ ≠ 0; omega)
+              (by change q - small.length j₁ ≠ small.length j₂; omega)] at h
           simp [SubdivisionGraph.Spec.coreVertex,
             SubdivisionGraph.Spec.interiorVertex] at h
         · rw [PathHelpers.pathVertex_of_interior small j₁ _
-              (by show q' ≠ 0; omega) (by show q' ≠ small.length j₁; omega),
+              (by change q' ≠ 0; omega) (by change q' ≠ small.length j₁; omega),
             PathHelpers.pathVertex_of_interior small j₂ _
-              (by show q - small.length j₁ ≠ 0; omega)
-              (by show q - small.length j₁ ≠ small.length j₂; omega)] at h
+              (by change q - small.length j₁ ≠ 0; omega)
+              (by change q - small.length j₁ ≠ small.length j₂; omega)] at h
           simp only [SubdivisionGraph.Spec.interiorVertex, Sum.inr.injEq,
             Sigma.mk.injEq] at h
           exact hjne h.1.symm
       · rw [hpathB q hq hle, hpathB q' hq' hle'] at h
         have := congrArg Fin.val (small.pathVertex_injective j₂ h)
-        show q = q'
+        change q = q'
         simp only [] at this
         omega
 
@@ -1071,45 +1071,45 @@ theorem vertexMap_surjective (hCond : D.Conditions small.core) :
     have hcompat := compatible_of_conditions hCond (D.owner j)
     rcases exists_carrier hCond j with ⟨hk, _⟩ | ⟨j₂, hk, _⟩ | ⟨j₁, hk, _⟩
     · have hlen : (D.bigSpec small hN hL).length (D.owner j) = small.length j := by
-        show kindLength small (D.kind (D.owner j)) = small.length j
+        change kindLength small (D.kind (D.owner j)) = small.length j
         simp only [hk, kindLength]
       refine ⟨(D.bigSpec small hN hL).pathVertex (D.owner j)
         ⟨q.val, by omega⟩, ?_⟩
       rw [vertexMap_pathVertex hCond]
-      show kindVertex small (D.fib (D.bigCore.tail (D.owner j)))
+      change kindVertex small (D.fib (D.bigCore.tail (D.owner j)))
         (D.kind (D.owner j)) q.val = _
       rw [hk]
       exact PathHelpers.pathVertex_congr small j _ _ (by
-        show min q.val (small.length j) = q.val
+        change min q.val (small.length j) = q.val
         omega)
     · have hlen : (D.bigSpec small hN hL).length (D.owner j)
           = small.length j + small.length j₂ := by
-        show kindLength small (D.kind (D.owner j)) = _
+        change kindLength small (D.kind (D.owner j)) = _
         simp only [hk, kindLength]
       have hj₂ := small.length_pos j₂
       refine ⟨(D.bigSpec small hN hL).pathVertex (D.owner j)
         ⟨q.val, by omega⟩, ?_⟩
       rw [vertexMap_pathVertex hCond]
-      show kindVertex small (D.fib (D.bigCore.tail (D.owner j)))
+      change kindVertex small (D.fib (D.bigCore.tail (D.owner j)))
         (D.kind (D.owner j)) q.val = _
       rw [hk, kindVertex_double_le j j₂ _ (by omega)]
       exact PathHelpers.pathVertex_congr small j _ _ (by
-        show min q.val (small.length j) = q.val
+        change min q.val (small.length j) = q.val
         omega)
     · have hlen : (D.bigSpec small hN hL).length (D.owner j)
           = small.length j₁ + small.length j := by
-        show kindLength small (D.kind (D.owner j)) = _
+        change kindLength small (D.kind (D.owner j)) = _
         simp only [hk, kindLength]
       have hMid : small.core.head j₁ = small.core.tail j :=
         (hcompat.2.2 j₁ j hk).2.1
       refine ⟨(D.bigSpec small hN hL).pathVertex (D.owner j)
         ⟨small.length j₁ + q.val, by omega⟩, ?_⟩
       rw [vertexMap_pathVertex hCond]
-      show kindVertex small (D.fib (D.bigCore.tail (D.owner j)))
+      change kindVertex small (D.fib (D.bigCore.tail (D.owner j)))
         (D.kind (D.owner j)) (small.length j₁ + q.val) = _
       rw [hk, kindVertex_double_shift _ hMid]
       exact PathHelpers.pathVertex_congr small j _ _ (by
-        show min q.val (small.length j) = q.val
+        change min q.val (small.length j) = q.val
         omega)
   intro w
   cases w with
@@ -1124,7 +1124,7 @@ theorem vertexMap_surjective (hCond : D.Conditions small.core) :
         obtain ⟨x, hx⟩ := key j ⟨small.length j, by omega⟩
         refine ⟨x, ?_⟩
         rw [hx, PathHelpers.pathVertex_of_last small j _
-          (by show small.length j ≠ 0; omega) (by show small.length j = small.length j; rfl), h]
+          (by change small.length j ≠ 0; omega) (by change small.length j = small.length j; rfl), h]
         rfl
   | inr yy =>
       obtain ⟨j, oo⟩ := yy
@@ -1133,8 +1133,8 @@ theorem vertexMap_surjective (hCond : D.Conditions small.core) :
       obtain ⟨x, hx⟩ := key j ⟨oo.val + 1, by omega⟩
       refine ⟨x, ?_⟩
       rw [hx, PathHelpers.pathVertex_of_interior small j _
-        (by show oo.val + 1 ≠ 0; omega)
-        (by show oo.val + 1 ≠ small.length j; omega)]
+        (by change oo.val + 1 ≠ 0; omega)
+        (by change oo.val + 1 ≠ small.length j; omega)]
       exact congrArg (small.interiorVertex j) (Fin.ext (by simp))
 
 end ExpansionData
@@ -1191,7 +1191,7 @@ theorem certificate_connectedFibres (hCond : D.Conditions small.core) :
   obtain ⟨e, hkc, hfe, hcross⟩ :=
     fibre_of_conditions hCond (D.fib v) T ⟨v, hvT, rfl⟩ ⟨w, hwT, hfvw.symm⟩
   have hlen1 : (D.bigSpec small hN hL).length e = 1 := by
-    show kindLength small (D.kind e) = 1
+    change kindLength small (D.kind e) = 1
     simp only [hkc, kindLength]
   have hL0 : (D.bigSpec small hN hL).stepLeft e ⟨0, by omega⟩
       = (D.bigSpec small hN hL).coreVertex (D.bigCore.tail e) := by
@@ -1210,12 +1210,12 @@ theorem certificate_connectedFibres (hCond : D.Conditions small.core) :
     exact hstep
   have htargetTail : vertexMap D small hN hL (Sum.inl (D.bigCore.tail e))
       = target := by
-    show small.coreVertex (D.fib (D.bigCore.tail e)) = target
+    change small.coreVertex (D.fib (D.bigCore.tail e)) = target
     rw [hfe]
     exact hmapIn'
   have htargetHead : vertexMap D small hN hL (Sum.inl (D.bigCore.head e))
       = target := by
-    show small.coreVertex (D.fib (D.bigCore.head e)) = target
+    change small.coreVertex (D.fib (D.bigCore.head e)) = target
     rw [← (compatible_of_conditions hCond e).1 hkc, hfe]
     exact hmapIn'
   rcases hcross with ⟨htI, hhO⟩ | ⟨hhI, htO⟩

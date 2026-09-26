@@ -189,7 +189,7 @@ theorem helper_lemma_b (hcore : spec.core = tricycleCore)
         have h1 : spec.length (spokeOf i) = 1 := by
           have := spec.length_pos (spokeOf i); omega
         refine hnot ?_
-        show spec.slotVertex (spokeOf i) 1 ∈ _
+        change spec.slotVertex (spokeOf i) 1 ∈ _
         rw [← h1]
         exact hburn
     obtain ⟨k, hk1, hk2, hk3, -, -⟩ :=

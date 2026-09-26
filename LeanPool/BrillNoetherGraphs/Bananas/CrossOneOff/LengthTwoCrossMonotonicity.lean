@@ -785,7 +785,7 @@ theorem basePointDrop_bananaNormalForm_sub_occupied_endpoint_pair_eq_zero
       B.pathVertex β (⟨B.length β - p.val, by omega⟩ : B.PathPosition β) := by
     congr 1
     apply Fin.ext
-    show B.length β - (oldChip.val + 1) = B.length β - p.val
+    change B.length β - (oldChip.val + 1) = B.length β - p.val
     omega
   have hPair := endpoint_sum_linearEquiv_path_reflection B β
     (⟨oldChip.val + 1, by omega⟩ : B.PathPosition β)

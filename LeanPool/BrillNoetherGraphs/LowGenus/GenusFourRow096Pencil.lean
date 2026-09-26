@@ -313,7 +313,7 @@ theorem one_chip_pathVertex_int (e : Fin p) (q : spec.PathPosition e)
         by_cases hv : off.val + 1 = q.val
         · rw [ite_eq_left hv, ite_eq_left]
           exact (interiorVertex_eq_iff spec e e off _).mpr
-            ⟨rfl, by show off.val = q.val - 1; omega⟩
+            ⟨rfl, by change off.val = q.val - 1; omega⟩
         · rw [ite_eq_right hv, ite_eq_right]
           intro hEq
           have hv' : off.val = q.val - 1 :=

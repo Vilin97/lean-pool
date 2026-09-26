@@ -463,7 +463,7 @@ theorem one_chip_pathVertex_interiorVertex (e : Fin p) (k : d.PathPosition e)
         by_cases hoff : k.val = o.val + 1
         · rw [ite_eq_left hoff, ite_eq_left]
           exact congrArg (d.interiorVertex e)
-            (Fin.ext (by show (o : ℕ) = k.val - 1; omega))
+            (Fin.ext (by change (o : ℕ) = k.val - 1; omega))
         · rw [ite_eq_right hoff, ite_eq_right]
           intro hEq
           have hs : (⟨e, o⟩ : d.Interior)

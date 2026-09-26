@@ -367,7 +367,7 @@ theorem one_chip_pV_int (e : Fin p) (k : ℕ) (hk : k ≤ spec.length e)
         by_cases hoff : k = off.val + 1
         · rw [ite_eq_left hoff, ite_eq_left]
           exact (interiorVertex_eq_iff spec e e off _).mpr
-            ⟨rfl, by show off.val = k - 1; omega⟩
+            ⟨rfl, by change off.val = k - 1; omega⟩
         · rw [ite_eq_right hoff, ite_eq_right]
           intro hh
           obtain ⟨-, hv⟩ := (interiorVertex_eq_iff spec e e off _).mp hh

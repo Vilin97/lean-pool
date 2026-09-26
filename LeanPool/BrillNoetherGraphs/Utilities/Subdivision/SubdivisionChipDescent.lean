@@ -107,7 +107,7 @@ def fineOf : spec.Vertex → (spec.scale N hN).Vertex
           exact this
         have h5 : N * (offset.val + 1) < N * spec.length edge := by omega
         have h6 : 1 ≤ N * (offset.val + 1) := Nat.mul_pos hN (Nat.succ_pos _)
-        show N * (offset.val + 1) - 1 < N * spec.length edge - 1
+        change N * (offset.val + 1) - 1 < N * spec.length edge - 1
         omega⟩⟩
 
 @[simp] theorem fineOf_coreVertex (vertex : Fin n) :
@@ -172,7 +172,7 @@ theorem fineOf_pathVertex (edge : Fin p) (position : spec.PathPosition edge) :
       simp only [interiorVertex, fineOf, scaledPosition_val, Sum.inr.injEq, Sigma.mk.injEq,
         heq_eq_eq, true_and]
       apply Fin.ext
-      show N * (position.val - 1 + 1) - 1 = N * position.val - 1
+      change N * (position.val - 1 + 1) - 1 = N * position.val - 1
       rw [Nat.sub_add_cancel hpos0]
 
 /-! ## Embedding coarse divisors -/
@@ -320,11 +320,11 @@ theorem fineVertex_not_mem_range (c : spec.Chip N) :
     omega
   have hfv : c.fineVertex hN =
       Sum.inr ⟨c.edge, ⟨N * c.step + c.offset - 1, by
-        show N * c.step + c.offset - 1 < N * spec.length c.edge - 1
+        change N * c.step + c.offset - 1 < N * spec.length c.edge - 1
         omega⟩⟩ := by
     unfold fineVertex pathVertex
-    rw [dite_eq_right (by show ¬ N * c.step + c.offset = 0; omega),
-      dite_eq_right (by show ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
+    rw [dite_eq_right (by change ¬ N * c.step + c.offset = 0; omega),
+      dite_eq_right (by change ¬ N * c.step + c.offset = N * spec.length c.edge; omega)]
     rfl
   rcases x with v | ⟨e, j⟩
   · rw [hfv] at hx
