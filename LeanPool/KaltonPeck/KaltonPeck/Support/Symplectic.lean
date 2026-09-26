@@ -852,10 +852,10 @@ theorem canonicalKaltonSwansonForm_finite_coordinates
             (canonicalRealKaltonPeckPresentation.coordinates z).2 n) := by
   rfl
 
-/-- The Kalton--Swanson form transported to an arbitrary complete presented model.
+/-- The Kalton--Swanson form transported to an arbitrary presented model.
 Blueprint label: `thm:ks-transport`; audit ID `EXT-KS-STRONG`. -/
 def transportedKaltonSwansonForm {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) : StrongSymplecticForm X := by
+    (hX : RealKaltonPeckPresentation X) : StrongSymplecticForm X := by
   let e := presentationEquiv hX canonicalRealKaltonPeckPresentation
   let dualELinear : StrongDual ℝ CanonicalRealKaltonPeck ≃ₗ[ℝ] StrongDual ℝ X :=
     { toFun := transpose e.toContinuousLinearMap
@@ -884,7 +884,7 @@ def transportedKaltonSwansonForm {X : Type*} [NormedAddCommGroup X] [NormedSpace
 Blueprint label: `thm:ks-transport`; audit IDs `EXT-KS-STRONG` and
 `INF-KP-COORDINATE-EQUIVALENCE`. -/
 theorem transportedKaltonSwansonForm_apply {X : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] (hX : RealKaltonPeckPresentation X) (x y : X) :
+    [NormedSpace ℝ X] (hX : RealKaltonPeckPresentation X) (x y : X) :
     (transportedKaltonSwansonForm hX).toDual x y =
       canonicalKaltonSwansonForm.toDual
         (presentationEquiv hX canonicalRealKaltonPeckPresentation x)
@@ -1695,10 +1695,10 @@ theorem canonicalNormalizedBlock (w : ℕ → ℕ → ℝ)
   refine ⟨hfirst, hsecond, hleft.injective, hclosed, hpreserves, hadjoint, ?_⟩
   exact ⟨hprojection, hprojectionRange, hcross⟩
 
-/-- The block operator conjugated to an arbitrary complete presented model.
+/-- The block operator conjugated to an arbitrary presented model.
 Blueprint label: `thm:block-transport`; audit ID `RES-BLOCK-OPERATOR-IDENTITIES`. -/
 def transportedBlockOperator {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) (w : ℕ → ℕ → ℝ)
+    (hX : RealKaltonPeckPresentation X) (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) : X →L[ℝ] X := by
   let e := presentationEquiv hX canonicalRealKaltonPeckPresentation
   exact e.symm.toContinuousLinearMap.comp
@@ -1708,7 +1708,7 @@ def transportedBlockOperator {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ
 Blueprint label: `thm:block-transport`; audit IDs `INF-KP-COORDINATE-EQUIVALENCE`,
 `EXT-KS-STRONG`, `EXT-K-BLOCK`, and `HID-EVEN-ODD-BLOCK-RELATIONS`. -/
 theorem transportedNormalizedBlock {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) (w : ℕ → ℕ → ℝ)
+    (hX : RealKaltonPeckPresentation X) (w : ℕ → ℕ → ℝ)
     (hw : IsSuccessiveNormalizedBlockSequence w) :
     let e := presentationEquiv hX canonicalRealKaltonPeckPresentation
     let W := transportedBlockOperator hX w hw

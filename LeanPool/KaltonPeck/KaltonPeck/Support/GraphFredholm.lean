@@ -2607,7 +2607,7 @@ theorem cgpPrimary (A : CanonicalRealKaltonPeck →L[ℝ] CanonicalRealKaltonPec
 /-- The CGP theorem transported to an arbitrary complete presented real Kalton--Peck model.
 Blueprint label: `thm:cgp-transport`; audit ID `EXT-CGP-UPPER-SEMI`. -/
 theorem cgpTransport {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) (A : X →L[ℝ] X)
+    (hX : RealKaltonPeckPresentation X) (A : X →L[ℝ] X)
     (hA : IsUpperSemiFredholm A) :
     IsFredholm ((transportedKaltonSwansonForm hX).adjoint A * A) := by
   let e := presentationEquiv hX canonicalRealKaltonPeckPresentation
@@ -2731,19 +2731,19 @@ theorem evenOddBlockSequences :
 /-- The transported even-coordinate block embedding.
 Support definition for blueprint label `lem:even-odd-blocks`. -/
 def evenBlockEmbedding {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) : X →L[ℝ] X := by
+    (hX : RealKaltonPeckPresentation X) : X →L[ℝ] X := by
   exact transportedBlockOperator hX evenBlockSequence evenOddBlockSequences.1
 
 /-- The transported odd-coordinate block embedding.
 Support definition for blueprint label `lem:even-odd-blocks`. -/
 def oddBlockEmbedding {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) : X →L[ℝ] X := by
+    (hX : RealKaltonPeckPresentation X) : X →L[ℝ] X := by
   exact transportedBlockOperator hX oddBlockSequence evenOddBlockSequences.2.1
 
 /-- The graph operator `R₀ + R₁T` on a presented model.
 Support definition for blueprint labels `lem:even-odd-blocks` and `prop:graph-fredholm`. -/
 def graphBlockOperator {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) (T : X →L[ℝ] X) :
+    (hX : RealKaltonPeckPresentation X) (T : X →L[ℝ] X) :
     X →L[ℝ] X := by
   exact evenBlockEmbedding hX + oddBlockEmbedding hX * T
 
@@ -2751,7 +2751,7 @@ def graphBlockOperator {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 Blueprint label: `lem:even-odd-blocks`; audit IDs `HID-EVEN-ODD-BLOCK-RELATIONS`,
 `HID-LEFT-INVERSE-UPPER-SEMI`, and `HID-ADJOINT-EXPANSION`. -/
 theorem evenOddBlocks {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) :
+    (hX : RealKaltonPeckPresentation X) :
     let ω := transportedKaltonSwansonForm hX
     let R₀ := evenBlockEmbedding hX
     let R₁ := oddBlockEmbedding hX
@@ -2806,7 +2806,7 @@ theorem evenOddBlocks {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 /-- Every graph operator `I + T⁺T` on a complete presented real Kalton--Peck model is Fredholm.
 Blueprint label: `prop:graph-fredholm`; audit ID `PROP-GRAPH-FREDHOLM`. -/
 theorem graphFredholm {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) (T : X →L[ℝ] X) :
+    (hX : RealKaltonPeckPresentation X) (T : X →L[ℝ] X) :
     IsFredholm (1 + (transportedKaltonSwansonForm hX).adjoint T * T) := by
   let W := graphBlockOperator hX T
   have hblocks := evenOddBlocks hX
@@ -2818,7 +2818,7 @@ theorem graphFredholm {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 /-- The weak alternating form `bₜ(x,y) = Ω(x,y) + t Ω(Tx,Ty)`.
 Blueprint label: `lem:kp-alternating-path`; audit ID `HID-ALTERNATING-PATH`. -/
 def kaltonPeckAlternatingPath {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] (hX : RealKaltonPeckPresentation X) (T : X →L[ℝ] X) (t : ℝ) :
+    (hX : RealKaltonPeckPresentation X) (T : X →L[ℝ] X) (t : ℝ) :
     ContinuousAlternatingForm X := by
   let omega := transportedKaltonSwansonForm hX
   refine
@@ -2833,7 +2833,7 @@ def kaltonPeckAlternatingPath {X : Type*} [NormedAddCommGroup X] [NormedSpace �
 Blueprint label: `lem:kp-alternating-path`; audit IDs `HID-ALTERNATING-PATH`,
 `HID-SQRT-SCALING`, and `HID-D-COMPOSITION`. -/
 theorem kaltonPeckAlternatingPath_spec {X : Type*} [NormedAddCommGroup X]
-    [NormedSpace ℝ X] [CompleteSpace X] (hX : RealKaltonPeckPresentation X)
+    [NormedSpace ℝ X] (hX : RealKaltonPeckPresentation X)
     (T : X →L[ℝ] X) :
     let ω := transportedKaltonSwansonForm hX
     (∀ t x y, (kaltonPeckAlternatingPath hX T t).toDual x y =

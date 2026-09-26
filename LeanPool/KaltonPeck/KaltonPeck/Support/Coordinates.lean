@@ -1599,11 +1599,9 @@ private theorem norm_le_mul_of_coordinate_match
 Blueprint label: `thm:presentation-equivalence`; audit ID
 `INF-KP-COORDINATE-EQUIVALENCE`. -/
 def presentationEquiv {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] [NormedAddCommGroup Y] [NormedSpace ℝ Y] [CompleteSpace Y]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
     (hX : RealKaltonPeckPresentation X) (hY : RealKaltonPeckPresentation Y) :
     X ≃L[ℝ] Y := by
-  let hCompleteX : CompleteSpace X := inferInstance
-  let hCompleteY : CompleteSpace Y := inferInstance
   let f : X → Y := fun x ↦ Classical.choose
     (hY.coordinates_surjective (hX.coordinates x) (hX.coordinates_mem x))
   have hf_coordinates (x : X) : hY.coordinates (f x) = hX.coordinates x :=
@@ -1669,7 +1667,7 @@ def presentationEquiv {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 Blueprint label: `thm:presentation-equivalence`; audit IDs
 `INF-KP-COORDINATE-EQUIVALENCE` and `COV-LINEAR-EQUIV-OF-BOUNDS`. -/
 theorem presentationEquiv_spec {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
-    [CompleteSpace X] [NormedAddCommGroup Y] [NormedSpace ℝ Y] [CompleteSpace Y]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y]
     (hX : RealKaltonPeckPresentation X) (hY : RealKaltonPeckPresentation Y) :
     (∀ x, hY.coordinates (presentationEquiv hX hY x) = hX.coordinates x) ∧
       (∀ e : X ≃ₗ[ℝ] Y, (∀ x, hY.coordinates (e x) = hX.coordinates x) →
