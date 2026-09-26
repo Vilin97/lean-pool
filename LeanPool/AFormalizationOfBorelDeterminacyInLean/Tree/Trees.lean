@@ -37,19 +37,22 @@ variable {n : ℕ} {x : T} (a : ExtensionsAt x)
 /-- The underlying list of a child -/
 @[expose] def val' := x.val ++ [a.val]
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps coe] def valT' : T := ⟨a.val', a.prop⟩
+def valT' : T := ⟨a.val', a.prop⟩
+@[simp] lemma valT'_coe : (a.valT' : List A) = a.val' := by rfl
 @[ext] lemma ext {a b : ExtensionsAt x} (h : a.val = b.val) : a = b := Subtype.ext h
 lemma ext_val' {a b : ExtensionsAt x} (h : a.val' = b.val') : a = b := by
   ext; simpa [val'] using h
 lemma ext_valT' {a b : ExtensionsAt x} (h : a.valT' = b.valT') : a = b :=
   ext_val' <| congr_arg Subtype.val h
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-@[simps] def drop {T : tree A} {n : ℕ} {x : T} :
+def drop {T : tree A} {n : ℕ} {x : T} :
   ExtensionsAt x ≃ ExtensionsAt (Tree.drop T n x) where --TODO fix T explicit
   toFun a := ⟨a.val, by simpa [← List.append_assoc] using a.prop⟩
   invFun a := ⟨a.val, by simpa [← List.append_assoc] using a.prop⟩
   left_inv _ := rfl
   right_inv _ := rfl
+@[simp] lemma drop_apply_coe {T : tree A} {n : ℕ} {x : T} (a : ExtensionsAt x) :
+    (drop (n := n) a).val = a.val := by rfl
 @[simp] lemma val'_length :
   a.val' (A := no_index _).length (α := no_index _) = x.val.length (α := no_index _) + 1 := by
   simp [ExtensionsAt.val']

@@ -239,7 +239,7 @@ carrying exactly the walk's own edges.
 This is the construction an ear decomposition needs — a path found inside a big graph, turned
 into a graph of its own so that it can be unioned back in. It is built from Mathlib's
 `Graph.domRestrict` and `Graph.induce`, so that `Graph.pathGraphOf_le` is almost free. -/
-def pathGraphOf (G : Graph α β) (u : α) (W : List β) : Graph α β :=
+@[expose] def pathGraphOf (G : Graph α β) (u : α) (W : List β) : Graph α β :=
   (G.restrict {e | e ∈ W}).induce (G.walkVertices u W)
 
 @[simp]

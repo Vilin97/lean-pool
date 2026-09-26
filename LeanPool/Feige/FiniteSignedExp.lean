@@ -240,7 +240,7 @@ instance instIsProbabilityMeasureWithDensityFiniteSignedExpSum
 
 /-- The same finite signed-exponential law constructed directly by
 successive convolution of its absolutely continuous factor laws. -/
-def finiteSignedExpSumMeasure :
+@[expose] def finiteSignedExpSumMeasure :
     List SignedExpFactor → Measure ℝ
   | [] => volume.withDensity (rightExponentialDensity 1)
   | F :: Fs =>

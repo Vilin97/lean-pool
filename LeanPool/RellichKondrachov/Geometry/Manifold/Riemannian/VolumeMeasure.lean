@@ -55,7 +55,7 @@ local instance instBorelSpaceVolumeMeasure : BorelSpace M := ⟨rfl⟩
 
 This uses `EMetricSpace.ofRiemannianMetric` to construct the emetric structure in a way that is
 defeq to the existing topology on `M`, as recommended by the Mathlib Riemannian manifold API. -/
-noncomputable def riemannianVolumeMeasure : Measure M := by
+@[expose] noncomputable def riemannianVolumeMeasure : Measure M := by
   classical
   letI : EMetricSpace M := EMetricSpace.ofRiemannianMetric I M
   letI : BorelSpace M := ⟨rfl⟩

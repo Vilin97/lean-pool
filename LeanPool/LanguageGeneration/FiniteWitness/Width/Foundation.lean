@@ -83,7 +83,7 @@ theorem HasBoundedWitnesses.mono_bound {H : Set (Set α)} {d e : ℕ}
 
 /-- Every nonempty subfamily with finite intersection contains targets separated by an assigned
 set. -/
-def SetSeparates (H : Set (Set α)) (P : Set α → Set α) : Prop :=
+@[expose] def SetSeparates (H : Set (Set α)) (P : Set α → Set α) : Prop :=
   ∀ F : Set (Set α), F ⊆ H → F.Nonempty → (⋂₀ F).Finite →
     ∃ L ∈ F, ∃ K ∈ F, ¬ P L ⊆ K
 

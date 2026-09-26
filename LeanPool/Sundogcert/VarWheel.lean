@@ -69,7 +69,7 @@ abbrev Selection (m : ℕ) := Fin m → Bool
 /-- The internal node `a j` is covered EXACTLY ONCE: exactly one of
     `σ j = true` (the positive triple `t_j` touches `a j`) and
     `σ (j-1) = false` (the negative triple `t⁻_(j-1)` touches `a j`) holds. -/
-def aCoveredOnce (σ : Selection m) (j : Fin m) : Prop :=
+@[expose] def aCoveredOnce (σ : Selection m) (j : Fin m) : Prop :=
   Xor (σ j = true) (σ (j - 1) = false)
 
 /-- The covered-once exclusive-or collapses to the local agreement `σ j = σ (j-1)`:
@@ -80,7 +80,7 @@ lemma aCoveredOnce_iff (σ : Selection m) (j : Fin m) :
   cases h1 : σ j <;> cases h2 : σ (j - 1) <;> simp [Xor]
 
 /-- A valid internal cover: every internal node `a j` is covered exactly once. -/
-def ValidCover (σ : Selection m) : Prop :=
+@[expose] def ValidCover (σ : Selection m) : Prop :=
   ∀ j : Fin m, aCoveredOnce σ j
 
 /-! ### Decidability.

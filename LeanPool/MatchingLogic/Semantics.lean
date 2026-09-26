@@ -124,7 +124,7 @@ def Model.Sat (M : Model S) (φ : Pattern S Var) : Prop := ∀ ρ, M.Total ρ φ
   ∀ (M : Model S) (ρ : Var → M.carrier), M.denoteSet ρ Δ ⊆ M.denote ρ φ
 
 /-- `Γ ⊨ φ`: global consequence, asking for totality. -/
-def GlobalCons (Γ : Set (Pattern S Var)) (φ : Pattern S Var) : Prop :=
+@[expose] def GlobalCons (Γ : Set (Pattern S Var)) (φ : Pattern S Var) : Prop :=
   ∀ M : Model S, M.SatSet Γ → M.Sat φ
 
 /-- For closed `φ`, `M ⊨ φ` says exactly `⟦φ⟧ = M`, with no valuation

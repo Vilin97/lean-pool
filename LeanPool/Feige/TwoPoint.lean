@@ -71,7 +71,7 @@ variable {ι : Type*} [Fintype ι]
 
 /-- The vector encoded by a high set `S`: coordinates in `S` take their
 high value, and all remaining coordinates take their low value. -/
-noncomputable def twoPointVector (γ β : ι → ℝ) (S : Set ι) (i : ι) : ℝ :=
+@[expose] noncomputable def twoPointVector (γ β : ι → ℝ) (S : Set ι) (i : ι) : ℝ :=
   by
     classical
     exact if i ∈ S then highValue (β i) else lowValue (γ i)

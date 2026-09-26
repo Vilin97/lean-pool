@@ -32,7 +32,7 @@ namespace Wallace
 noncomputable section
 
 /-- An injective sequence bundled with the proof of injectivity. -/
-def InjectiveSequence' (G : Type u) :=
+@[expose] def InjectiveSequence' (G : Type u) :=
   {s : ℕ → G // Function.Injective s}
 
 /--

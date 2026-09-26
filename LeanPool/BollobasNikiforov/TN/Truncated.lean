@@ -38,7 +38,7 @@ def unrestrictedSquare (a : ι → ℝ) (t : κ → ℝ) : Matrix ι κ ℝ :=
 
 @[simp] lemma unrestrictedSquare_apply (a : ι → ℝ) (t : κ → ℝ) (i : ι) (j : κ) :
     unrestrictedSquare a t i j = (t j - a i) ^ 2 :=
-  rfl
+  by rfl
 
 @[simp] lemma truncatedSquare_apply (a : ι → ℝ) (t : κ → ℝ) (i : ι) (j : κ) :
     truncatedSquare a t i j = (max (t j - a i) 0) ^ 2 :=
@@ -234,7 +234,7 @@ lemma truncatedSquare_submatrix_eq {r c n m : ℕ}
 lemma unrestrictedSquare_submatrix_eq {r c n m : ℕ}
     (a : Fin r → ℝ) (t : Fin c → ℝ) (I : Fin n → Fin r) (J : Fin m → Fin c) :
     (unrestrictedSquare a t).submatrix I J = unrestrictedSquare (a ∘ I) (t ∘ J) :=
-  rfl
+  by rfl
 
 lemma monotone_comp_of_monotone {α β γ : Type*} [Preorder α] [Preorder β] [Preorder γ]
     {f : β → γ} {g : α → β} (hf : Monotone f) (hg : Monotone g) :
@@ -520,12 +520,12 @@ def stepKernel (a : ι → ℝ) (t : κ → ℝ) : Matrix ι κ ℝ :=
 
 lemma stepKernel_apply (a : ι → ℝ) (t : κ → ℝ) (i : ι) (j : κ) :
     stepKernel a t i j = if a i ≤ t j then (1 : ℝ) else 0 :=
-  rfl
+  by rfl
 
 lemma stepKernel_submatrix_eq {r c n m : ℕ}
     (a : Fin r → ℝ) (t : Fin c → ℝ) (I : Fin n → Fin r) (J : Fin m → Fin c) :
     (stepKernel a t).submatrix I J = stepKernel (a ∘ I) (t ∘ J) :=
-  rfl
+  by rfl
 
 /-- Columns where the `i`-th step-row is one. -/
 def stepSupport {n : ℕ} (a t : Fin n → ℝ) (i : Fin n) : Finset (Fin n) :=

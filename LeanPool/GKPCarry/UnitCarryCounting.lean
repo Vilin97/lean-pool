@@ -112,7 +112,7 @@ theorem card_ternaryUnitWords (length : ℕ) :
 
 /-- Convert a ternary unit word to the corresponding unit modulo a power of
 three. -/
-def ternaryUnitWordToUnit (length : ℕ) :
+@[expose] def ternaryUnitWordToUnit (length : ℕ) :
     TernaryUnitWords length → (ZMod (3 ^ (length + 1)))ˣ :=
   fun word => ZMod.unitOfCoprime (ternaryWordValue word.val)
     ((ternaryWordValue_coprime_three_pow_iff word.val).mpr word.property)
@@ -138,7 +138,7 @@ lemma ternaryUnitWordToUnit_injective (length : ℕ) :
 
 /-- Unit words are equivalent to the full unit group modulo the corresponding
 power of three. -/
-noncomputable def ternaryUnitWordEquiv (length : ℕ) :
+@[expose] noncomputable def ternaryUnitWordEquiv (length : ℕ) :
     TernaryUnitWords length ≃ (ZMod (3 ^ (length + 1)))ˣ :=
   Equiv.ofBijective (ternaryUnitWordToUnit length) <|
     (Fintype.bijective_iff_injective_and_card _).2

@@ -182,7 +182,7 @@ def Certificate.sum {n : ℕ} {weights : Relation n} :
   Fin.cases head fun i => head + weights i
 
 /-- Lift a relation by adding the negative coordinate sum at the front. -/
-def lift {n : ℕ} (relation : Relation n) : Relation (n + 1) :=
+@[expose] def lift {n : ℕ} (relation : Relation n) : Relation (n + 1) :=
   Fin.cases (-coordinateSum relation) relation
 
 @[simp]
@@ -210,13 +210,13 @@ lemma lift_aggregate {n : ℕ} (relations : List (Relation n)) :
       rw [inductionHypothesis, lift_add]
 
 /-- Iterate the dimension lift. -/
-def iteratedLift {n : ℕ} (relation : Relation n) :
+@[expose] def iteratedLift {n : ℕ} (relation : Relation n) :
     (steps : ℕ) → Relation (n + steps)
   | 0 => relation
   | steps + 1 => lift (iteratedLift relation steps)
 
 /-- Transport a relation through an equality of dimensions. -/
-def castRelation {firstDimension secondDimension : ℕ}
+@[expose] def castRelation {firstDimension secondDimension : ℕ}
     (hdimension : firstDimension = secondDimension)
     (relation : Relation firstDimension) : Relation secondDimension := by
   subst secondDimension

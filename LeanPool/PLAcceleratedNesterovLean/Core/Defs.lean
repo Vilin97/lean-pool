@@ -97,7 +97,7 @@ def FirstOrderAlgorithm.iterate (alg : FirstOrderAlgorithm d) (f : E d → ℝ) 
 /-! ## Convergence rate -/
 
 /-- Accelerated convergence rate: f(xₖ) - f⋆ ≤ C · exp(-k / √(L/μ)). -/
-def HasAcceleratedRate (f : E d → ℝ) (iterates : ℕ → E d) (L μ : ℝ) : Prop :=
+@[expose] def HasAcceleratedRate (f : E d → ℝ) (iterates : ℕ → E d) (L μ : ℝ) : Prop :=
   ∃ C : ℝ, 0 < C ∧
     ∀ k : ℕ, f (iterates k) - fStar f ≤ C * Real.exp (-(↑k / Real.sqrt (L / μ)))
 

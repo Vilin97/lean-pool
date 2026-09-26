@@ -60,7 +60,7 @@ them directly. -/
 def E₄trunc (τ : ℍ) : ℂ := 1 + 240 * (q τ + 9 * q τ ^ 2)
 
 /-- The quadratic truncation `Y := E₆⁽²⁾ = 1 - 504(q + 33q²)` of `E₆` (paper Lemma `lemxy`). -/
-def E₆trunc (τ : ℍ) : ℂ := 1 - 504 * (q τ + 33 * q τ ^ 2)
+@[expose] def E₆trunc (τ : ℍ) : ℂ := 1 - 504 * (q τ + 33 * q τ ^ 2)
 
 /-- The quadratic truncation
 `Z := E₂⁽²⁾ - 3/(π·Im τ) = 1 - 24(q + 3q²) - 3/(π·Im τ)` of `E₂*` (paper Lemma `lemxy`). -/

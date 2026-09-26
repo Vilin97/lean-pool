@@ -95,8 +95,8 @@ variable {L} {ι : Type uι} {α : Type u'} {n : ℕ}
 namespace BoundedFormulaInf
 
 /-- The negation of an infinitary formula. -/
-@[match_pattern]
-@[expose] protected def not (φ : L.BoundedFormulaInf ι α n) : L.BoundedFormulaInf ι α n :=
+@[expose, match_pattern]
+protected def not (φ : L.BoundedFormulaInf ι α n) : L.BoundedFormulaInf ι α n :=
   φ.imp .falsum
 
 /-- The true formula. -/
@@ -110,8 +110,8 @@ instance : Top (L.BoundedFormulaInf ι α n) :=
   ⟨BoundedFormulaInf.verum⟩
 
 /-- Existential quantification over the last bound variable. -/
-@[match_pattern]
-@[expose] protected def ex (φ : L.BoundedFormulaInf ι α (n + 1)) : L.BoundedFormulaInf ι α n :=
+@[expose, match_pattern]
+protected def ex (φ : L.BoundedFormulaInf ι α (n + 1)) : L.BoundedFormulaInf ι α n :=
   φ.not.all.not
 
 end BoundedFormulaInf

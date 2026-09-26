@@ -70,7 +70,7 @@ def decodeMap (code : UInt64) (vertex : Vertex) : Vertex :=
   Fin.ofNat 8 (((code >>> UInt64.ofNat (3 * vertex.val)) &&& 7).toNat)
 
 /-- Decode an eight-bit row mask as a set of octagon vertices. -/
-def packedRow (mask : UInt64) : Finset Vertex :=
+@[expose] def packedRow (mask : UInt64) : Finset Vertex :=
   Finset.univ.filter fun target => bitSetB mask target.val
 
 @[simp] theorem mem_packedRow (mask : UInt64) (target : Vertex) :
@@ -78,7 +78,7 @@ def packedRow (mask : UInt64) : Finset Vertex :=
   simp [packedRow]
 
 /-- Vertex pairs in the lexicographic order used by the finite search. -/
-def vertexPairs : List (List Vertex) :=
+@[expose] def vertexPairs : List (List Vertex) :=
   ((List.finRange 8).sublistsLen 2).reverse
 
 /-- Read one directed incidence from a packed table. -/

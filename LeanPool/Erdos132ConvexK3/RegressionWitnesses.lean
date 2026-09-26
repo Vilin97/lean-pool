@@ -23,7 +23,7 @@ namespace LeanPool.Erdos132ConvexK3.Witnesses
 open LeanPool.Erdos132ConvexK3
 
 /-- Attempt 2's exact integer heptagon, in positive cyclic order. -/
-def heptagon : Fin 7 → Point ℚ :=
+@[expose] def heptagon : Fin 7 → Point ℚ :=
   ![(0, 0), (72, 0), (45, 68), (40, 75), (36, 77), (32, 75), (27, 68)]
 
 theorem heptagon_strict_convex : CyclicStrictConvex heptagon := by
@@ -48,7 +48,7 @@ theorem heptagon_x_degree : vertexDegree heptagon 7225 6649 5353 0 = 5 := by
   decide +kernel
 
 /-- Attempt 3's exact nine-point low-altitude insertion witness. -/
-def ninePoint : Fin 9 → Point ℚ :=
+@[expose] def ninePoint : Fin 9 → Point ℚ :=
   ![(0, 0), (180, -1), (370, -1), (570, 0), (309, 862),
     (300, 875), (285, 880), (270, 875), (261, 862)]
 
@@ -67,7 +67,7 @@ theorem ninePoint_insertions_isolated :
   decide +kernel
 
 /-- A second exact rational hexagon, in positive cyclic order. -/
-def rationalHexagon : Fin 6 → Point ℚ :=
+@[expose] def rationalHexagon : Fin 6 → Point ℚ :=
   ![(0, -20),
     (24171 / 50380, -(12571661 / 629750)),
     (48331 / 50380, -(12546661 / 629750)),

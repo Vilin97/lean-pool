@@ -58,7 +58,7 @@ noncomputable def tsaiPhi (u : ParabolicPoint → Vec3) (p : ParabolicPoint → 
     tsaiPressureExcess p z r ^ (2 / 3 : ℝ)
 
 /-- Tsai's drift functional `Ψ`. -/
-noncomputable def tsaiPsi (u : ParabolicPoint → Vec3)
+@[expose] noncomputable def tsaiPsi (u : ParabolicPoint → Vec3)
     (z : ParabolicPoint) (r : ℝ) : ℝ :=
   r * vec3EuclideanNorm (⨍ w in parabolicCylinder z.1 z.2 r, u w)
 

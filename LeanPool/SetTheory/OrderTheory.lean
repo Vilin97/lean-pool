@@ -21,7 +21,7 @@ open Function OrderDual Set
 variable {α β : Type*} [ConditionallyCompleteLattice α] [ConditionallyCompleteLattice β]
 
 /-- The `sInfClosed` declaration. -/
-def sInfClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddBelow s → sInf s ∈ S
+@[expose] def sInfClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddBelow s → sInf s ∈ S
 /-- The `sSupClosed` declaration. -/
 def sSupClosed (S : Set α) := ∀ s ⊆ S, s.Nonempty → BddAbove s → sSup s ∈ S
 

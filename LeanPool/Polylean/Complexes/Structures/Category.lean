@@ -93,7 +93,7 @@ namespace Path
 variable {C : Sort _} [𝓒 : Category C]
 
 /-- Compose the arrows appearing in a category path. -/
-def compose {X Y : C} : @Path C 𝓒.toQuiver X Y → (X ⟶ Y)
+@[expose] def compose {X Y : C} : @Path C 𝓒.toQuiver X Y → (X ⟶ Y)
   | .nil => 𝟙 _
   | .cons e p => e ≫ p.compose
 

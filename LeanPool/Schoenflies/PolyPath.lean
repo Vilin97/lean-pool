@@ -42,7 +42,7 @@ theorem isCompact_segment (x y : Plane) : IsCompact (segment ℝ x y) := by
 
 /-- The carrier of a polygonal path: the union of the segments joining consecutive vertices.
 A single vertex carries itself, so that a path may be constant. -/
-def poly : List Plane → Set Plane
+@[expose] def poly : List Plane → Set Plane
   | [] => ∅
   | [v] => {v}
   | u :: v :: rest => segment ℝ u v ∪ poly (v :: rest)

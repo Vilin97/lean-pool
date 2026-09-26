@@ -59,7 +59,7 @@ def holomorphicGermSubring (n : ℕ) : Subring (FunctionGerm n) where
 abbrev HolomorphicGerm (n : ℕ) := holomorphicGermSubring n
 
 /-- Pass from an analytic representative to its holomorphic germ. -/
-def HolomorphicGerm.ofFunction {n : ℕ} (f : ComplexEuclidean n → ℂ)
+@[expose] def HolomorphicGerm.ofFunction {n : ℕ} (f : ComplexEuclidean n → ℂ)
     (hf : AnalyticAt ℂ f 0) : HolomorphicGerm n :=
   ⟨(f : FunctionGerm n), ⟨f, hf, rfl⟩⟩
 
@@ -76,7 +76,7 @@ theorem HolomorphicGerm.exists_rep {n : ℕ} (φ : HolomorphicGerm n) :
   φ.property
 
 /-- Evaluation at the origin, as a ring homomorphism. -/
-def evalAtOriginHom (n : ℕ) : HolomorphicGerm n →+* ℂ :=
+@[expose] def evalAtOriginHom (n : ℕ) : HolomorphicGerm n →+* ℂ :=
   (Filter.Germ.valueRingHom : FunctionGerm n →+* ℂ).comp
     (holomorphicGermSubring n).subtype
 

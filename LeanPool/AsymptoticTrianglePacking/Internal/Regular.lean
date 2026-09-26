@@ -35,7 +35,7 @@ namespace Hypergraph
 variable {V : Type*} [DecidableEq V]
 
 /-- `H` is `(1 ± μ)`-nearly `d`-regular: every degree lies in `[(1-μ)d, (1+μ)d]`. -/
-def NearlyRegular (H : Finset (Finset V)) (d μ : ℝ) : Prop :=
+@[expose] def NearlyRegular (H : Finset (Finset V)) (d μ : ℝ) : Prop :=
   ∀ v : V, (1 - μ) * d ≤ (degree H v : ℝ) ∧ (degree H v : ℝ) ≤ (1 + μ) * d
 
 /-- `H` has codegree bounded by `C`: every distinct pair lies in at most `C` edges. -/

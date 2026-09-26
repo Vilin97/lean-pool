@@ -191,7 +191,7 @@ theorem splitAllAt_avoids (p : Plane) {pieces : List Piece} (h : ∀ P ∈ piece
 
 /-- Subdivide a list of pieces at a list of points, recursing on the POINT list: cut every
 current piece at the head, then carry on with the tail. -/
-noncomputable def subdivide (pieces : List Piece) : List Plane → List Piece
+@[expose] noncomputable def subdivide (pieces : List Piece) : List Plane → List Piece
   | [] => pieces
   | p :: ps => subdivide (splitAllAt p pieces) ps
 

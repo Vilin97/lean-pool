@@ -23,7 +23,7 @@ open scoped unitInterval Topology Topology.Homotopy
 namespace Cube
 
 /-- `Cube.boundaryJar (n + 1) = ∂Iⁿ × I ∪ Iⁿ × {0} ⊆ Iⁿ⁺¹` -/
-def boundaryJar (n : ℕ) : Set (I^ Fin n) :=
+@[expose] def boundaryJar (n : ℕ) : Set (I^ Fin n) :=
   match n with
   | 0 => ∅
   | _ + 1 => {y | (∃ i, y i = 0 ∨ y i = 1) ∧
@@ -379,7 +379,7 @@ lemma cubeBoundaryIncl_apply_down_eq {n : ℕ} (y : I^Fin n) (hy : y ∈ ∂I^n)
     (cubeBoundaryIncl n ⟨⟨y, hy⟩⟩).down = y := rfl
 
 /-- `cubeSplitAtLast` -/
-def cubeSplitAtLast {n : ℕ} : 𝕀 (n + 1) ≅ TopCat.of (I × 𝕀 n) where
+@[expose] def cubeSplitAtLast {n : ℕ} : 𝕀 (n + 1) ≅ TopCat.of (I × 𝕀 n) where
   hom := ofHom ⟨fun ⟨y⟩ ↦ ⟨(Cube.splitAtLast y).fst, ⟨(Cube.splitAtLast y).snd⟩⟩, by fun_prop⟩
   inv := ofHom ⟨fun ⟨t, ⟨y⟩⟩ ↦ ⟨Cube.splitAtLast.symm ⟨t, y⟩⟩, by fun_prop⟩
   hom_inv_id := by

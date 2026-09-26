@@ -700,8 +700,8 @@ lemma loadMulti_of_splitLast_cons {α αs βs β φ} (h : splitLast (α :: αs) 
 
 mutual
   /-- The syntactic length of a program, mutually defined with formula length. -/
-  @[simp, implicit_reducible]
-  @[expose] def lengthOfProgram : Program → Nat
+  @[expose, simp, implicit_reducible]
+  def lengthOfProgram : Program → Nat
     | ·_ => 1
     | α;'β => 1 + lengthOfProgram α + lengthOfProgram β
     | α⋓β => 1 + lengthOfProgram α + lengthOfProgram β

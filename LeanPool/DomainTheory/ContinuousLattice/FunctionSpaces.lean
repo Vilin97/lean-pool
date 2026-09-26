@@ -237,7 +237,7 @@ noncomputable def sSupMaps (F : Set (ScottMap D D')) : ScottMap D D' :=
 theorem sSupMaps_apply (F : Set (ScottMap D D')) (x : D) :
     (sSupMaps F : D → D') x =
       sSup (Set.image (fun f : ScottMap D D' => (f : D → D') x) F) :=
-  rfl
+  by rfl
 
 /-! ### The complete lattice `[D → D']` (Theorem 3.3, order content)
 
@@ -262,7 +262,7 @@ noncomputable instance instSupSet : SupSet (ScottMap D D') := ⟨sSupMaps⟩
 theorem sSup_apply (F : Set (ScottMap D D')) (x : D) :
     ((sSup F : ScottMap D D') : D → D') x =
       sSup (Set.image (fun f : ScottMap D D' => (f : D → D') x) F) :=
-  rfl
+  by rfl
 
 theorem isLUB_sSup (F : Set (ScottMap D D')) : IsLUB F (sSup F) := by
   constructor
@@ -288,10 +288,10 @@ def idMap : ScottMap D D :=
     show sSup S = sSup (Set.image (fun x => x) S)
     rw [Set.image_id']⟩
 
-@[simp] theorem idMap_apply (x : D) : (idMap : ScottMap D D) x = x := rfl
+@[simp] theorem idMap_apply (x : D) : (idMap : ScottMap D D) x = x := by rfl
 
 @[simp] theorem comp_apply (f : ScottMap D' D'') (g : ScottMap D D') (x : D) :
-    (f.comp g : D → D'') x = f (g x) := rfl
+    (f.comp g : D → D'') x = f (g x) := by rfl
 
 /-- The (completeLatticeOfSup-derived) binary join of Scott maps is computed
 pointwise. -/
@@ -306,7 +306,7 @@ theorem bot_apply (x : D) : ((⊥ : ScottMap D D') : D → D') x = ⊥ := by
   have h : (⊥ : ScottMap D D') = sSup (∅ : Set (ScottMap D D')) := rfl
   rw [h, sSup_apply, Set.image_empty, sSup_empty]
 
-@[simp] theorem const_apply (c : D') (x : D) : (ScottMap.const c : D → D') x = c := rfl
+@[simp] theorem const_apply (c : D') (x : D) : (ScottMap.const c : D → D') x = c := by rfl
 
 end ScottMap
 
@@ -749,7 +749,7 @@ noncomputable def scottLambda (f : ScottMap (D × D') D'') : ScottMap D (ScottMa
 
 @[simp] theorem scottLambda_apply (f : ScottMap (D × D') D'') (x : D) (y : D') :
     ((scottLambda f x : ScottMap D' D'') : D' → D'') y = (f : (D × D') → D'') (x, y) :=
-  rfl
+  by rfl
 
 /-- `lambda` preserves directed suprema: both sides evaluate, pointwise at `(x,
 y)`, to
@@ -1633,9 +1633,9 @@ noncomputable def min : ScottMap (ScottMap D D) D :=
       = sSup (Set.image (fun f : ScottMap D D => (f : D → D) ⊥) F)
     rw [ScottMap.sSup_apply])⟩
 
-@[simp] theorem con_apply (x y : D) : ((con x : ScottMap D D) : D → D) y = x := rfl
+@[simp] theorem con_apply (x y : D) : ((con x : ScottMap D D) : D → D) y = x := by rfl
 
-@[simp] theorem min_apply (f : ScottMap D D) : (min f : D) = (f : D → D) ⊥ := rfl
+@[simp] theorem min_apply (f : ScottMap D D) : (min f : D) = (f : D → D) ⊥ := by rfl
 
 /-- **Scott 1972, Proposition 3.13.** `(con, min)` makes `D` a projection of `[D →
 D]`:
@@ -1733,7 +1733,7 @@ Scott-continuous map. -/
 noncomputable def fixMap : ScottMap (ScottMap D D) D :=
   ⟨fix, continuous_of_preservesDirectedSup fix_preservesDirectedSup⟩
 
-@[simp] theorem fixMap_apply (f : ScottMap D D) : (fixMap f : D) = fix f := rfl
+@[simp] theorem fixMap_apply (f : ScottMap D D) : (fixMap f : D) = fix f := by rfl
 
 /-- Uniqueness: any value that is a fixed point of `f` and below every pre-fixed
 point equals

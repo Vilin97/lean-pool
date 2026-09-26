@@ -37,11 +37,11 @@ variable {X : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 variable {f g : X → ℂ} {x : X} {c : ℂ}
 
 /-- CC3 (frozen): meromorphy of the standard-chart composite. Junk-robust. -/
-def MeromorphicAtX (f : X → ℂ) (x : X) : Prop :=
+@[expose] def MeromorphicAtX (f : X → ℂ) (x : X) : Prop :=
   MeromorphicAt (f ∘ (chartAt ℂ x).symm) (chartAt ℂ x x)
 
 /-- Relative CC3 predicate; the frozen global one is `MeromorphicOnX f Set.univ`. -/
-def MeromorphicOnX (f : X → ℂ) (U : Set X) : Prop := ∀ x ∈ U, MeromorphicAtX f x
+@[expose] def MeromorphicOnX (f : X → ℂ) (U : Set X) : Prop := ∀ x ∈ U, MeromorphicAtX f x
 
 theorem meromorphicOnX_univ : MeromorphicOnX f univ ↔ ∀ x, MeromorphicAtX f x := by
   simp [MeromorphicOnX]

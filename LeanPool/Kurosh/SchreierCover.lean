@@ -120,7 +120,7 @@ Nielsen--Schreier instance uses an abstract chosen basis; this version keeps
 the original generator type visible for the cardinality computation. -/
 
 /-- Present the free-group action groupoid by its Schreier quiver of generator edges. -/
-@[reducible] def freeActionGroupoidIsFree (α : Type u) (A : Type u)
+@[expose, reducible] def freeActionGroupoidIsFree (α : Type u) (A : Type u)
     [MulAction (FreeGroup α) A] :
     IsFreeGroupoid (ActionCategory (FreeGroup α) A) where
   quiverGenerators :=

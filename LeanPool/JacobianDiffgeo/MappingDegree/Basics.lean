@@ -51,7 +51,7 @@ variable {X Y : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 /-- Total multiplicity of `F` over `y` (the fiber-sum). Junk-free by convention: for
 holomorphic nonconstant `F` on compact `X` the fiber is finite and every summand is `≥ 1`; for
 constant `F` all summands are junk `0` (CC4), so the value is `0`. -/
-noncomputable def fiberMultSum (F : X → Y) (y : Y) : ℕ :=
+@[expose] noncomputable def fiberMultSum (F : X → Y) (y : Y) : ℕ :=
   ∑ᶠ x ∈ F ⁻¹' {y}, multiplicity F x
 
 theorem fiberMultSum_def (F : X → Y) (y : Y) :

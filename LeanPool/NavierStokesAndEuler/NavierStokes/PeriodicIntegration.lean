@@ -42,7 +42,7 @@ abbrev Coords := Fin 3 → ℝ
 @[expose] def toSpace : Coords ≃L[ℝ] Space := (EuclideanSpace.equiv (Fin 3) ℝ).symm
 
 /-- Cube, given by `Icc 0 1`. -/
-def cube : Set Coords := Icc 0 1
+@[expose] def cube : Set Coords := Icc 0 1
 
 /-- Cube measure, constructed using `volume.restrict`. -/
 def cubeMeasure : Measure Coords := volume.restrict cube
@@ -52,15 +52,15 @@ instance : IsFiniteMeasure cubeMeasure := by
   exact isFiniteMeasure_restrict.mpr isCompact_Icc.measure_lt_top.ne
 
 /-- Cube integral, given by `∫ y, f (toSpace y) ∂cubeMeasure`. -/
-def cubeIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+@[expose] def cubeIntegral {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f : Space → E) : E := ∫ y, f (toSpace y) ∂cubeMeasure
 
 /-- Unit periods, given by `∀ x i, f (x + coordinateVector i) = f x`. -/
-def UnitPeriods {E : Type*} (f : Space → E) : Prop :=
+@[expose] def UnitPeriods {E : Type*} (f : Space → E) : Prop :=
   ∀ x i, f (x + coordinateVector i) = f x
 
 /-- Spatial partial, given by `fderiv ℝ f x (coordinateVector i)`. -/
-def spatialPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+@[expose] def spatialPartial {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (i : Fin 3) (f : Space → E) (x : Space) : E :=
   fderiv ℝ f x (coordinateVector i)
 

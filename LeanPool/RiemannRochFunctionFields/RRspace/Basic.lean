@@ -120,7 +120,7 @@ theorem pow_mem {D : DivisorA k K} {f : K} (hf : memRRspace k K D f) :
 end memRRspace
 
 /-- The Riemann–Roch space `L(D)`. -/
-def RRspace (D : DivisorA k K) : Submodule k K where
+@[expose] def RRspace (D : DivisorA k K) : Submodule k K where
   carrier := {f | memRRspace k K D f}
   zero_mem' := memRRspace.zero_mem (k := k) (K := K) D
   add_mem' hf hg := memRRspace.add_mem (k := k) (K := K) hf hg

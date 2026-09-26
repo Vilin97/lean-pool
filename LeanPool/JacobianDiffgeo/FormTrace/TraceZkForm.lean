@@ -55,7 +55,7 @@ noncomputable def traceZkForm (h : ℂ → ℂ) (k : ℕ) (w : ℂ) : ℂ :=
 
 theorem traceZkForm_def (h : ℂ → ℂ) (k : ℕ) (w : ℂ) :
     traceZkForm h k w = RS.MTrace.traceZk (fun v => h v * ((k : ℂ) * v ^ ((k : ℤ) - 1))⁻¹) k w :=
-  rfl
+  by rfl
 
 /-- The cancellation identity (task item 2's core step), `w ≠ 0` form (see the module docstring
 for why the design's unconditional claim is false at `w = 0`). -/

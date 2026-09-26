@@ -39,7 +39,7 @@ structure ConnectedNonnegativeMatrix (A : Matrix I I ℝ) : Prop where
     ⟨fun i j => PLift (0 < A i j)⟩
 
 /-- The linear operator associated to a real matrix. -/
-def operator (A : Matrix I I ℝ) : Space I →ₗ[ℝ] Space I :=
+@[expose] def operator (A : Matrix I I ℝ) : Space I →ₗ[ℝ] Space I :=
   Matrix.toEuclideanLin A
 
 /-- The continuous linear operator associated to a finite real matrix. -/
@@ -93,7 +93,7 @@ theorem exists_topEigenvector (A : Matrix I I ℝ)
   exact ⟨x, hx.2, hx.apply_eq_smul⟩
 
 /-- Take the absolute value of each coordinate. -/
-def coordinateAbs (x : Space I) : Space I :=
+@[expose] def coordinateAbs (x : Space I) : Space I :=
   WithLp.toLp 2 fun i : I => |x i|
 
 omit [DecidableEq I] [Nonempty I] in

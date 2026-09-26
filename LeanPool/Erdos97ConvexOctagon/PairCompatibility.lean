@@ -24,7 +24,7 @@ namespace Erdos97Octagon.RawIncidence
     bitSetB previous.2 a.val && bitSetB previous.2 b.val).length
 
 /-- Boolean guard that prevents a new row from making any pair occur three times. -/
-def pairCompatibleB
+@[expose] def pairCompatibleB
     (assignments : List (Vertex × UInt64)) (row : UInt64) : Bool :=
   (((List.finRange 8).sublistsLen 2).reverse).all fun pair =>
     match pair with

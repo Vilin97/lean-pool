@@ -119,7 +119,7 @@ def «repeat» (G : Game X Y A B) (n : ℕ) :
 @[simp] theorem repeat_questionWeight (G : Game X Y A B) (n : ℕ)
     (xs : Fin n → X) (ys : Fin n → Y) :
     (G.repeat n).questionWeight xs ys =
-      ∏ i : Fin n, G.questionWeight (xs i) (ys i) := rfl
+      ∏ i : Fin n, G.questionWeight (xs i) (ys i) := by rfl
 
 @[simp] theorem repeat_predicate_eq_true (G : Game X Y A B) (n : ℕ)
     (xs : Fin n → X) (ys : Fin n → Y)

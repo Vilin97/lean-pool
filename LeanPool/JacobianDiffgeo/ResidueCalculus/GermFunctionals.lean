@@ -33,7 +33,7 @@ namespace RS
 variable {z₀ : ℂ}
 
 /-- Meromorphy is a property of the punctured germ. -/
-def MeromorphicGerm (z₀ : ℂ) (γ : Filter.Germ (𝓝[≠] z₀) ℂ) : Prop :=
+@[expose] def MeromorphicGerm (z₀ : ℂ) (γ : Filter.Germ (𝓝[≠] z₀) ℂ) : Prop :=
   γ.liftOn (MeromorphicAt · z₀) fun _ _ hfg => propext (MeromorphicAt.meromorphicAt_congr hfg)
 
 @[simp] theorem meromorphicGerm_coe {f : ℂ → ℂ} :

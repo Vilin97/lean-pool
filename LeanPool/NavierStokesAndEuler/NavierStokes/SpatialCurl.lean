@@ -32,7 +32,7 @@ def derivativeEntry (i j : Fin 3) : (Space →L[ℝ] Space) →L[ℝ] ℝ :=
   (EuclideanSpace.proj j).comp (ContinuousLinearMap.apply ℝ Space (coordinateVector i))
 
 @[simp] theorem derivativeEntry_apply (i j : Fin 3) (L : Space →L[ℝ] Space) :
-    derivativeEntry i j L = (L (coordinateVector i)) j := rfl
+    derivativeEntry i j L = (L (coordinateVector i)) j := by rfl
 
 /-- The usual antisymmetric part of a Jacobian, identified with a vector. -/
 def curlLinear : (Space →L[ℝ] Space) →L[ℝ] Space :=

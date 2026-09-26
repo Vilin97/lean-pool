@@ -30,7 +30,7 @@ namespace Rose
 
 /-- The fold operation over trees. -/
 @[simp]
-def fold (f : A → List B → B) : Rose A → B
+@[expose] def fold (f : A → List B → B) : Rose A → B
   | ⟨x, xs⟩ => f x (xs.map (fold f))
 
 /-- Grafts a tree to every sub-node in a `Rose` tree. -/
@@ -51,7 +51,7 @@ instance : Monad Rose where
   | ⟨x, xs⟩ => Nat.pair (Encodable.encode x) (Encodable.encode (List.map encode xs))
 
 /-- The inverse of `encode`. -/
-def decode [Encodable A] (n : ℕ) : Option (Rose A) :=
+@[expose] def decode [Encodable A] (n : ℕ) : Option (Rose A) :=
   match Nat.unpair n, Nat.unpair_right_le n with
   | (i, j), h => do
     let x ← Encodable.decode₂ A i

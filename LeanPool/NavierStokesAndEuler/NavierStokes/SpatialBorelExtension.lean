@@ -123,7 +123,8 @@ def timeScale (b : ℝ) : (ℝ × X) →L[ℝ] (ℝ × X) :=
   (b • ContinuousLinearMap.fst ℝ ℝ X).prod (ContinuousLinearMap.snd ℝ ℝ X)
 
 omit [FiniteDimensional ℝ X] in
-@[simp] theorem timeScale_apply (b : ℝ) (z : ℝ × X) : timeScale b z = (b * z.1, z.2) := rfl
+@[simp] theorem timeScale_apply (b : ℝ) (z : ℝ × X) :
+    timeScale b z = (b * z.1, z.2) := by rfl
 
 omit [FiniteDimensional ℝ X] in
 theorem norm_timeScale_le {b : ℝ} (hb : 1 ≤ b) : ‖timeScale (X := X) b‖ ≤ b := by

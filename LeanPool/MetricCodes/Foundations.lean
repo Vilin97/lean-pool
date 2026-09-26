@@ -562,7 +562,7 @@ def lowerLinear (n : ℕ) : Function n →ₗ[ℝ] Function n where
   map_smul' := lower_smul
 
 @[simp] theorem raiseLinear_apply (f : Function n) :
-    raiseLinear n f = raise f := rfl
+    raiseLinear n f = raise f := by rfl
 
 theorem IsLevel.raise {k : ℕ} {f : Function n} (hf : IsLevel k f) :
     IsLevel (k + 1) (raise f) := by
@@ -1402,11 +1402,11 @@ def layerDown (n k : ℕ) :
     ((lowerLinear n).comp (layerExtendLinear n (k + 1)))
 
 @[simp] theorem layerUp_apply {k : ℕ} (f : LayerFunction n k) :
-    layerUp n k f = layerRestrict (k + 1) (raise (layerExtend f)) := rfl
+    layerUp n k f = layerRestrict (k + 1) (raise (layerExtend f)) := by rfl
 
 @[simp] theorem layerDown_apply {k : ℕ}
     (f : LayerFunction n (k + 1)) :
-    layerDown n k f = layerRestrict k (lower (layerExtend f)) := rfl
+    layerDown n k f = layerRestrict k (lower (layerExtend f)) := by rfl
 
 theorem layerUp_injective {k : ℕ} (hk : 2 * k < n) :
     Function.Injective (layerUp n k) := by
@@ -4727,7 +4727,7 @@ theorem matrix_hermitian (n k L : ℕ) : (matrix n k L).IsHermitian := by
   simpa only [matrix, star_trivial, Matrix.transpose_apply] using h
 
 /-- The operator used in the binary-code argument. -/
-def operator (n k L : ℕ) : Space k L →ₗ[ℝ] Space k L :=
+@[expose] def operator (n k L : ℕ) : Space k L →ₗ[ℝ] Space k L :=
   Matrix.toEuclideanLin (matrix n k L)
 
 theorem operator_isSymmetric (n k L : ℕ) :
@@ -4780,7 +4780,7 @@ theorem rayleigh_eq_inner (n k L : ℕ) (x : Space k L) :
   rfl
 
 /-- The coordinate abs used in the binary-code argument. -/
-abbrev coordinateAbs (k L : ℕ) (x : Space k L) : Space k L :=
+@[expose] abbrev coordinateAbs (k L : ℕ) (x : Space k L) : Space k L :=
   MetricCodes.Spherical.HigherHierarchyFinitePerron.coordinateAbs x
 
 theorem coordinateAbs_nonneg (k L : ℕ)
@@ -7331,7 +7331,7 @@ theorem matrix_hermitian (n w p q L : ℕ) :
   simpa only [matrix, star_trivial, Matrix.transpose_apply] using h
 
 /-- The operator used in the Johnson-code argument. -/
-def operator (n w p q L : ℕ) : Space p q L →ₗ[ℝ] Space p q L :=
+@[expose] def operator (n w p q L : ℕ) : Space p q L →ₗ[ℝ] Space p q L :=
   Matrix.toEuclideanLin (matrix n w p q L)
 
 theorem operator_isSymmetric (n w p q L : ℕ) :

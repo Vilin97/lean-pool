@@ -205,7 +205,7 @@ theorem isClosed_integerAnnihilator {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) 
   exact isClosed_singleton.preimage (by fun_prop)
 
 /-- Distance to the relation annihilator, as a bounded continuous real-valued function. -/
-def annihilatorDistance {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
+@[expose] def annihilatorDistance {m : ℕ} (R : AddSubgroup (Fin m → ℤ)) :
     BoundedContinuousFunction (UnitAddTorus (Fin m)) ℝ :=
   BoundedContinuousFunction.mkOfCompact
     (⟨fun x ↦ Metric.infDist x (integerAnnihilator R),

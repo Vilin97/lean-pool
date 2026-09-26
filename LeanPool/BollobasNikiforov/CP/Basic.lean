@@ -25,7 +25,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 
 /-- A real matrix is completely positive if it is a sum of outer products of
 entrywise nonnegative vectors. -/
-def IsCompletelyPositive (C : Matrix n n ℝ) : Prop :=
+@[expose] def IsCompletelyPositive (C : Matrix n n ℝ) : Prop :=
   ∃ (q : ℕ) (p : Fin q → n → ℝ),
     (∀ a i, 0 ≤ p a i) ∧ C = ∑ a, vecMulVec (p a) (p a)
 

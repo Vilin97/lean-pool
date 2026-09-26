@@ -45,7 +45,7 @@ noncomputable def pressureP56Constant : ℝ :=
     (4 * Real.pi / 3) ^ (2 / 3 : ℝ)
 
 /-- Common coefficient dominating the velocity and pressure cutoff contributions. -/
-noncomputable def pressureP12Constant : ℝ :=
+@[expose] noncomputable def pressureP12Constant : ℝ :=
   max pressureP234Constant pressureP56Constant
 
 /-- Exponent-dependent coefficient for the force-cutoff contribution. -/

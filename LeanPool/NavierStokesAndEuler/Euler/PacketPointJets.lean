@@ -33,7 +33,7 @@ abbrev VectorJet := Jet Space
 abbrev ScalarJet := Jet ℝ
 
 /-- Time direction, given by `(1, (0, 0))`. -/
-def timeDirection : Domain := (1, (0, 0))
+@[expose] def timeDirection : Domain := (1, (0, 0))
 /-- Angle direction, given by `(0, (0, 1))`. -/
 @[expose] def angleDirection : Domain := (0, (0, 1))
 

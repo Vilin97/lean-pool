@@ -56,7 +56,7 @@ assumptions in their own signatures -- only `C.Nonempty`, which the carrier
 needs.  Backward closure, and `star ∉ C`, are hypotheses of Lemma 11 instead.
 So `cover` and `proj` are well formed outside the paper's domain, where they
 mean nothing; every theorem about them restores the assumptions. -/
-def cover (hne : C.Nonempty) : Model S where
+@[expose] def cover (hne : C.Nonempty) : Model S where
   carrier := C × Bool
   nonempty := ⟨(⟨hne.choose, hne.choose_spec⟩, false)⟩
   interp := coverInterp M C

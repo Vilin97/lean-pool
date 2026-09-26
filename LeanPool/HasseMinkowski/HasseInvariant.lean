@@ -70,7 +70,7 @@ noncomputable def hasseMinkowskiInvAux {n : ℕ} (w : Fin n → kˣ) : ℤ :=
 -- Theorem: definitional unfolding of `hasseMinkowskiInvAux`.
 theorem hasseMinkowskiInvAux_def {n : ℕ} (w : Fin n → kˣ) :
     hasseMinkowskiInvAux w =
-      ∏ p : Fin n × Fin n with p.1 < p.2, hilbertSym (w p.1 : k) (w p.2 : k) := rfl
+      ∏ p : Fin n × Fin n with p.1 < p.2, hilbertSym (w p.1 : k) (w p.2 : k) := by rfl
 
 -- Theorem: the invariant of the empty diagonal form (rank `0`) is `1`.
 theorem hasseMinkowskiInvAux_zero (w : Fin 0 → kˣ) : hasseMinkowskiInvAux w = 1 := by

@@ -51,7 +51,7 @@ def iterFrom (f : ApproximableMap V V) (a : V.Element) (n : ℕ) : V.Element :=
   (f.toElementMap)^[n] a
 
 @[simp] theorem iterFrom_zero (f : ApproximableMap V V) (a : V.Element) :
-    f.iterFrom a 0 = a := rfl
+    f.iterFrom a 0 = a := by rfl
 
 theorem iterFrom_succ (f : ApproximableMap V V) (a : V.Element) (n : ℕ) :
     f.iterFrom a (n + 1) = f.toElementMap (f.iterFrom a n) := by

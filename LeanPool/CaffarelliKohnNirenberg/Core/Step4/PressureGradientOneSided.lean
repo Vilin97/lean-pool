@@ -212,7 +212,7 @@ theorem oneSidedPressureGradientKP_lt_top
 
 /-- Uniform quantitative pressure-gradient conclusion on the prescribed range of Morrey exponents.
 -/
-def oneSidedPressureGradientQuantitative : Prop :=
+@[expose] def oneSidedPressureGradientQuantitative : Prop :=
   ∀ q τ C_CZ R₀ R₁ ε : ℝ, ∀ KU KD : ℝ≥0∞,
     5 / 2 < q → 25 / 3 ≤ τ → τ ≤ 25 →
     0 ≤ C_CZ →

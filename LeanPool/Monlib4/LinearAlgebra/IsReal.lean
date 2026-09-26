@@ -46,7 +46,6 @@ def LinearMap.real
   map_smul' _ _ := by simp only [star_smul, _root_.map_smul, star_star, RingHom.id_apply]
 
 /-- Star-conjugating a linear map is a semilinear involution. -/
-@[simps! apply_apply]
 def LinearMap.realSLinearEquiv
     [CommSemiring K] [Module K E] [Module K F]
     [StarRing K] [StarModule K E] [StarModule K F] :
@@ -66,6 +65,12 @@ def LinearMap.realSLinearEquiv
     ext
     simp only [LinearMap.smul_apply, star_smul, real_apply]
     rfl
+
+@[simp]
+theorem LinearMap.realSLinearEquiv_apply_apply
+    [CommSemiring K] [Module K E] [Module K F]
+    [StarRing K] [StarModule K E] [StarModule K F] (φ : E →ₗ[K] F) (x : E) :
+    LinearMap.realSLinearEquiv φ x = star (φ (star x)) := by rfl
 
 variable [Semiring K] [Module K E] [Module K F]
   [InvolutiveStar K] [StarModule K E] [StarModule K F]

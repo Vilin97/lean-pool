@@ -166,7 +166,7 @@ approximable mapping: `f(x) = {Y ∈ 𝒟₁ ∣ ∃ X ∈ x, X f Y}`. The four 
 Definition 2.1: `master_mem` uses (i); `inter_mem` uses (ii) together with (iii)
 (to pull both
 outputs back along the common input `X ∩ X'`); `up_mem` uses (iii). -/
-def toElementMap (f : ApproximableMap V₀ V₁) (x : V₀.Element) : V₁.Element where
+@[expose] def toElementMap (f : ApproximableMap V₀ V₁) (x : V₀.Element) : V₁.Element where
   mem Y := ∃ X, x.mem X ∧ f.rel X Y
   sub := fun ⟨_, _, hXY⟩ => f.rel_cod hXY
   master_mem := ⟨V₀.master, x.master_mem, f.master_rel⟩

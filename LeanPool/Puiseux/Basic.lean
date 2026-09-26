@@ -174,7 +174,7 @@ end PuiseuxSeries
 
 /-- The type of Puiseux series over `K`: the carrier of the Puiseux subfield of
 `HahnSeries ℚ K`. A field, by the generic subfield instances. -/
-def PuiseuxSeries (K : Type*) [Field K] : Type _ :=
+@[expose] def PuiseuxSeries (K : Type*) [Field K] : Type _ :=
   ↥(PuiseuxSeries.subfield K)
 
 namespace PuiseuxSeries

@@ -31,7 +31,7 @@ open scoped ArithmeticFunction BigOperators
 namespace PrimitiveSetsAboveX
 
 /-- The least threshold satisfying both `q ≥ Y` and `x ≤ m * q`. -/
-def entryThreshold (x Y m : ℕ) : ℕ :=
+@[expose] def entryThreshold (x Y m : ℕ) : ℕ :=
   max Y (x ⌈/⌉ m)
 
 /-- The first-entry tail sum starting from a parent state `m`. -/

@@ -243,14 +243,14 @@ def box {n : ℕ} (π : 𝒪[K]) (e : Fin n → ℕ) : Set (Fin n → K) :=
 
 /-- The coordinatewise inclusion of the integer box into the coefficient space, as an additive
 monoid homomorphism—the integral picture of the box. -/
-def toCoeff {n : ℕ} : (Fin n → 𝒪[K]) →+ (Fin n → K) where
+@[expose] def toCoeff {n : ℕ} : (Fin n → 𝒪[K]) →+ (Fin n → K) where
   toFun y := fun i => (y i : K)
   map_zero' := by funext i; simp
   map_add' y z := by funext i; simp
 
 omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
 lemma toCoeff_apply {n : ℕ} (y : Fin n → 𝒪[K]) (i : Fin n) :
-    toCoeff y i = (y i : K) := rfl
+    toCoeff y i = (y i : K) := by rfl
 
 omit [UniformSpace K] [IsUniformAddGroup K] [IsNonarchimedeanLocalField K] in
 lemma toCoeff_injective {n : ℕ} : Function.Injective (toCoeff (K := K) (n := n)) := by

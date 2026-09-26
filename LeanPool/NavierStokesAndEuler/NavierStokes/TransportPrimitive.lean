@@ -58,7 +58,7 @@ def wholeAlias (M : ℝ) (v Y : E) (f : ℝ × E → F) : F :=
   ∫ u : ℝ, f (shift M v Y u)
 
 /-- Support in a fixed radial interval, uniformly in the auxiliary variable. -/
-def RadiallySupported (a b : ℝ) (f : ℝ × E → F) : Prop :=
+@[expose] def RadiallySupported (a b : ℝ) (f : ℝ × E → F) : Prop :=
   support f ⊆ Prod.fst ⁻¹' Icc a b
 
 /-- The derivative in the slow radial coordinate, holding the auxiliary variable fixed. -/

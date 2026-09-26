@@ -172,7 +172,7 @@ def wordInv {G : ι → Type u} [∀ i, Group (G i)]
 @[simp]
 theorem wordInv_toList {G : ι → Type u} [∀ i, Group (G i)] (w : Word G) :
     (wordInv w).toList = w.toList.reverse.map (fun x : Σ i, G i => ⟨x.1, x.2⁻¹⟩) :=
-  rfl
+  by rfl
 
 theorem wordInv_prod {G : ι → Type u} [∀ i, Group (G i)] (w : Word G) :
     (wordInv w).prod = w.prod⁻¹ := by
@@ -468,7 +468,7 @@ theorem bassSerre_rootedConnected {ι : Type v} (G : ι → Type u)
   | factor i w => exact bassSerreFactor_path G i w
 
 /-- A geodesic spanning tree of the symmetrified word model. -/
-noncomputable def bassSerreTree {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def bassSerreTree {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] :
     WideSubquiver (Quiver.Symmetrify (BassSerreVertex G)) :=
   @Quiver.geodesicSubtree (Quiver.Symmetrify (BassSerreVertex G))
@@ -678,7 +678,7 @@ theorem rawBassSerre_rootedConnected {ι : Type v} (G : ι → Type u)
   | factor i c => exact rawBassSerreFactor_path G i c
 
 /-- A geodesic spanning tree of the symmetrified group-and-coset model. -/
-noncomputable def rawBassSerreTree {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def rawBassSerreTree {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] :
     WideSubquiver (Quiver.Symmetrify (RawBassSerreVertex G)) :=
   @Quiver.geodesicSubtree (Quiver.Symmetrify (RawBassSerreVertex G))
@@ -1153,7 +1153,7 @@ theorem rawBassSerreOrbitQuiver_rootedConnected {ι : Type v} (G : ι → Type u
             ⟨(rawBassSerreOrbitSymmPrefunctor G H).mapPath p⟩
 
 /-- A geodesic spanning tree of the symmetrified quotient graph. -/
-noncomputable def rawBassSerreOrbitTree {ι : Type v} (G : ι → Type u)
+@[expose] noncomputable def rawBassSerreOrbitTree {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     WideSubquiver (Quiver.Symmetrify (RawBassSerreOrbitVertex G H)) :=
   @Quiver.geodesicSubtree (Quiver.Symmetrify (RawBassSerreOrbitVertex G H))
@@ -1235,7 +1235,7 @@ def rawTreeEdgeMap {ι : Type v} (G : ι → Type u)
   (rawTreeInclusion G H).map e
 
 /-- The quotient spanning tree expressed as a quiver on the ambient vertex type. -/
-@[reducible] def rawTreeQuiver {ι : Type v} (G : ι → Type u)
+@[expose, reducible] def rawTreeQuiver {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     Quiver (RawBassSerreOrbitVertex G H) :=
   { Hom := fun a b =>
@@ -1269,7 +1269,7 @@ noncomputable instance rawTreeQuiverArborescence {ι : Type v}
       Quiver.Path.cons (rawTreePathMap G H p) e.1
 
 /-- The root of the quotient spanning tree on the ambient vertex type. -/
-def rawTreeQuiverRoot {ι : Type v} (G : ι → Type u)
+@[expose] def rawTreeQuiverRoot {ι : Type v} (G : ι → Type u)
     [∀ i, Group (G i)] (H : Subgroup (FreeProduct G)) :
     RawBassSerreOrbitVertex G H :=
   @Quiver.Arborescence.root (RawBassSerreOrbitVertex G H)

@@ -47,7 +47,7 @@ instance : SigmaFinite (volume : Measure Torus3) := inferInstance
 -- ============================================================================
 
 /-- The quotient map ℝ³ → T³, sending each coordinate to its equivalence class. -/
-def torusMk (x : Fin 3 → ℝ) : Torus3 := fun i => QuotientAddGroup.mk (x i)
+@[expose] def torusMk (x : Fin 3 → ℝ) : Torus3 := fun i => QuotientAddGroup.mk (x i)
 
 -- torusMk is surjective (every point in T³ has a preimage)
 lemma torusMk_surjective : Function.Surjective torusMk := by

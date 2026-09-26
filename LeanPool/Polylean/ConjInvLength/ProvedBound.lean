@@ -63,10 +63,10 @@ def provedSplits (z : Letter) : (w : Word) → List (ProvedSplit z w)
 abbrev Length := Word → Nat
 
 /-- A length function invariant under conjugation by letters. -/
-def conjInv (l : Length) : Prop := (x : Letter) → (g : Word) → l (g^x) = l (g)
+@[expose] def conjInv (l : Length) : Prop := (x : Letter) → (g : Word) → l (g^x) = l (g)
 
 /-- The triangle inequality for a length function. -/
-def triangIneq (l : Length) : Prop := (g h : Word) → l (g ++ h) ≤ l g + l h
+@[expose] def triangIneq (l : Length) : Prop := (g h : Word) → l (g ++ h) ≤ l g + l h
 
 /-- A length function normalized on single letters. -/
 def normalized (l : Length) : Prop := (x : Letter) → l [x] = 1

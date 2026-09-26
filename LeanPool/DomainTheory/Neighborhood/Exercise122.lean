@@ -71,7 +71,7 @@ of the domain
 `|𝒟|` that contain the neighbourhood `X`. These sets are the basic opens of the
 topology of
 Exercise 1.22. -/
-def basicOpen (X : Set α) : Set V.Element := {x | x.mem X}
+@[expose] def basicOpen (X : Set α) : Set V.Element := {x | x.mem X}
 
 @[simp] theorem mem_basicOpen {X : Set α} {x : V.Element} :
     x ∈ V.basicOpen X ↔ x.mem X := Iff.rfl

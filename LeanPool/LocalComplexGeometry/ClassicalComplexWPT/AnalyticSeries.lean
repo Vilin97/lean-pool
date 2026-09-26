@@ -23,7 +23,7 @@ public section
 namespace ClassicalComplexWPT
 
 /-- Continuous-linear inclusion of the distinguished complex axis. -/
-noncomputable def lastAxis (n : ℕ) : ℂ →L[ℂ] Ambient n :=
+@[expose] noncomputable def lastAxis (n : ℕ) : ℂ →L[ℂ] Ambient n :=
   ContinuousLinearMap.inr ℂ (Base n) ℂ
 
 @[simp]

@@ -544,7 +544,7 @@ noncomputable def Phi51Equiv :
 
 lemma Phi51Equiv_apply (x : CategoryTheory.End
     ((CatToDila (centerOfMulticenter M)).obj (CategoryTheory.SingleObj.star A'))) :
-    Phi51Equiv M x = (Phi51 M).map x := rfl
+    Phi51Equiv M x = (Phi51 M).map x := by rfl
 
 lemma Phi51Equiv_one : Phi51Equiv M 1 = 1 := by
   change (Phi51 M).map (1 : CategoryTheory.End _) = (1 : A'[M])

@@ -87,7 +87,7 @@ private lemma symm_mapsTo_remaining {π : Equiv.Perm (Fin (2 * n + 2))}
 
     Construction: build the restricted permutation on `{x | 2 ≤ x.val}`,
     then conjugate through `shiftTwoEquiv`. -/
-def contractZeroOne (π : Equiv.Perm (Fin (2 * n + 2)))
+@[expose] def contractZeroOne (π : Equiv.Perm (Fin (2 * n + 2)))
     (h₀ : π ⟨0, by omega⟩ = ⟨1, by omega⟩)
     (h₁ : π ⟨1, by omega⟩ = ⟨0, by omega⟩) :
     Equiv.Perm (Fin (2 * n)) :=

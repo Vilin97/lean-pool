@@ -107,7 +107,7 @@ theorem dotProduct_mem_dualAnnihilator_iff (d : Configuration ℚ) (R : Finset L
 
 /-- Restrict Laurent coefficients to a finite window.
 This implements the identification with `ℚ^R` at the start of Section 2. -/
-def coefficientRestriction (R : Finset Lattice) : Laurent →ₗ[ℚ] (R → ℚ) where
+@[expose] def coefficientRestriction (R : Finset Lattice) : Laurent →ₗ[ℚ] (R → ℚ) where
   toFun f z := f.coeff z.1
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
@@ -120,7 +120,9 @@ This is the map `Φ : ℚ^S → ℚ^R` in Lemma 2.1 (`lem:supported`). -/
 
 /-- The coefficient formula for multiplication in Lemma 2.1 (`lem:supported`). -/
 theorem multiplierMap_apply (Φ : Laurent) (R S : Finset Lattice) (b : S → ℚ) (z : R) :
-    multiplierMap Φ R S b z = (Φ * windowPolynomial S b).coeff z.1 := rfl
+    multiplierMap Φ R S b z = (Φ * windowPolynomial S b).coeff z.1 := by
+  simp only [multiplierMap, LinearMap.comp_apply, LinearMap.mulLeft_apply,
+    coefficientRestriction, windowPolynomialLinear]
 
 /-- Support containment makes coefficient restriction lossless.
 This is the identification of supported multiples in Lemma 2.1 (`lem:supported`). -/

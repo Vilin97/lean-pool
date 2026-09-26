@@ -62,7 +62,7 @@ theorem for the relevant `α` — the best approximations improve without bound)
 `q ≥ 1` is essential: the cost `r 0 = δ_0 = 0` is the global minimum (the zero denominator has zero
 defect), so no `q'` can beat it — a `∀ q` version would be vacuously unsatisfiable. Denominators are
 `≥ 1` throughout (`bestDenom` starts at `1`), so this is exactly the right hypothesis. -/
-def RecordsContinue : Prop := ∀ q : ℕ, 1 ≤ q → ∃ q' > q, r q' < r q
+@[expose] def RecordsContinue : Prop := ∀ q : ℕ, 1 ≤ q → ∃ q' > q, r q' < r q
 
 open Classical in
 /-- **The best-approximation denominators** `qₙ`, with the positivity proof carried alongside (so

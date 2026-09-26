@@ -92,7 +92,7 @@ structure CircleArc where
   QuotientAddGroup.mk (I.left + t * arcLength I)
 
 /-- `arcSet`: arc Set. -/
-def arcSet (I : CircleArc) : Set Circle :=
+@[expose] def arcSet (I : CircleArc) : Set Circle :=
   {x | ∃ t ∈ Set.Icc (0 : ℝ) 1, arcParam I t = x}
 
 /-- `carrierArc`: carrier Arc. -/
@@ -469,7 +469,7 @@ theorem carrierArc_mk_image_Ioc_integral_eq_scaled
           f (QuotientAddGroup.mk t : Circle) := by rfl
 
 /-- `arcAverage`: arc Average. -/
-noncomputable def arcAverage (I : CircleArc) (f : Circle -> ℂ) : ℂ :=
+@[expose] noncomputable def arcAverage (I : CircleArc) (f : Circle -> ℂ) : ℂ :=
   (arcLength I)⁻¹ • ∫ x in arcSet I, f x ∂ μCircle
 
 theorem intervalParam_mem_arc (I : CircleArc) :

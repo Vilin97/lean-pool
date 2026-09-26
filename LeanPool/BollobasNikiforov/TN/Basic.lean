@@ -34,7 +34,7 @@ variable {m n : Type*} [LinearOrder m] [LinearOrder n]
 increasing row and column index maps has nonnegative determinant. The
 `k = 0` case is included: `Matrix.det_fin_zero` says the empty minor equals
 `1`. -/
-def IsTotallyNonneg (A : Matrix m n ℝ) : Prop :=
+@[expose] def IsTotallyNonneg (A : Matrix m n ℝ) : Prop :=
   ∀ k : ℕ, ∀ I : Fin k → m, ∀ J : Fin k → n,
     StrictMono I → StrictMono J → 0 ≤ (A.submatrix I J).det
 

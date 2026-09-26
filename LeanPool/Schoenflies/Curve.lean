@@ -43,12 +43,12 @@ namespace Schoenflies
 /-! ### Arcs -/
 
 /-- A simple arc: the image of a continuous injective map on `[0, 1]`. -/
-def IsArc (A : Set Plane) : Prop :=
+@[expose] def IsArc (A : Set Plane) : Prop :=
   ∃ f : ℝ → Plane, ContinuousOn f I ∧ InjOn f I ∧ f '' I = A
 
 /-- An arc between two named points: the set-level reading, and the form gluing and cutting
 are stated in. -/
-def IsArcBetween (A : Set Plane) (p q : Plane) : Prop :=
+@[expose] def IsArcBetween (A : Set Plane) (p q : Plane) : Prop :=
   ∃ f : ℝ → Plane, ContinuousOn f I ∧ InjOn f I ∧ f '' I = A ∧ f 0 = p ∧ f 1 = q
 
 /-- A loop: continuous on `[0, 1]`, returning to its start, and injective before it does. -/

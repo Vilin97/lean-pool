@@ -128,7 +128,7 @@ noncomputable def skInclToSk (X : RelCWComplex) {n : ℕ} {m : ℕ} (hnm : n ≤
   (Functor.ofSequence X.skInclSucc).map (homOfLE hnm)
 
 /-- The topology on a relative CW-complex -/
-noncomputable def toTopCat (X : RelCWComplex) : TopCat.{u} :=
+@[expose] noncomputable def toTopCat (X : RelCWComplex) : TopCat.{u} :=
   Limits.colimit (Functor.ofSequence X.skInclSucc)
 
 noncomputable instance : Coe RelCWComplex TopCat where

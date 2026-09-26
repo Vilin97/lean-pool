@@ -37,7 +37,7 @@ noncomputable def tensor (ψ : StateVector m) (φ : StateVector n) : StateVector
 theorem tensor_apply (ψ : StateVector m) (φ : StateVector n)
     (i : Fin (2 ^ (m + n))) :
     tensor ψ φ i = ψ (prodEquiv.symm i).1 * φ (prodEquiv.symm i).2 :=
-  rfl
+  by rfl
 
 theorem tensor_apply_prod (ψ : StateVector m) (φ : StateVector n)
     (x : Fin (2 ^ m)) (y : Fin (2 ^ n)) :
@@ -263,7 +263,7 @@ theorem tensor_apply (G : HilbertOperator m) (K : HilbertOperator n)
     (i j : Fin (2 ^ (m + n))) :
     tensor G K i j
       = G (prodEquiv.symm i).1 (prodEquiv.symm j).1
-        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := rfl
+        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := by rfl
 
 @[simp]
 theorem zero_tensor (K : HilbertOperator n) :
@@ -348,7 +348,7 @@ theorem tensor_apply (G : Gate m) (K : Gate n)
     (i j : Fin (2 ^ (m + n))) :
     G.tensor K i j
       = G (prodEquiv.symm i).1 (prodEquiv.symm j).1
-        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := rfl
+        * K (prodEquiv.symm i).2 (prodEquiv.symm j).2 := by rfl
 
 theorem tensor_mul_tensor (G G' : Gate m) (K K' : Gate n) :
     G.tensor K * G'.tensor K' = tensor (G * G') (K * K') := by

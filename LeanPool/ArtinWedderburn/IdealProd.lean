@@ -27,7 +27,7 @@ namespace LeanPool.ArtinWedderburn
 
 -- bothMul a b is the set aRb
 /-- The set `aRb = {a * r * b | r : R}` of two-sided products through `R`. -/
-def bothMul {R : Type*} [Ring R] (a b : R) : Set R := {x | ∃ r : R, x = a * r * b}
+@[expose] def bothMul {R : Type*} [Ring R] (a b : R) : Set R := {x | ∃ r : R, x = a * r * b}
 
 /-- Notation `(a ⬝ R ⬝ b)` for `bothMul R a b`. -/
 notation:55 "(" a:55 "⬝" R:55 "⬝" b:55 ")" => bothMul R a b

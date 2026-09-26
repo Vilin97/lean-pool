@@ -47,7 +47,7 @@ inductive RuleApp
   | boxᵣ : (Δ : SplitSequent) → (A : Formula) → Sum.inr (□ A) ∈ Δ → RuleApp
 
 /-- Endofunctor for the GL-split proof system. -/
-@[simp] def T : (CategoryTheory.Functor Type Type) where
+@[expose, simp] def T : (CategoryTheory.Functor Type Type) where
   obj := fun X ↦ (RuleApp × List X)
   map := fun {X Y} f ↦
     TypeCat.ofHom fun x ↦

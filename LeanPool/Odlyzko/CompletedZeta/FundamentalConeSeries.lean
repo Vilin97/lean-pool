@@ -37,7 +37,7 @@ noncomputable def fundamentalConeNormCount (J : (Ideal (𝓞 K))⁰) (n : ℕ) :
     mixedEmbedding.norm (a : mixedSpace K) = n}
 
 /-- An ideal set int norm used in the Odlyzko-bound argument. -/
-noncomputable def idealSetIntNorm (J : (Ideal (𝓞 K))⁰) (a : idealSet K J) : ℕ :=
+@[expose] noncomputable def idealSetIntNorm (J : (Ideal (𝓞 K))⁰) (a : idealSet K J) : ℕ :=
   intNorm (idealSetEquiv K J a).val
 
 /-- An ideal set int norm fiber equiv used in the Odlyzko-bound argument. -/

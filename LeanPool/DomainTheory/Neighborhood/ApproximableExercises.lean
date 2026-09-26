@@ -298,7 +298,7 @@ Z}`. The filter
 laws use all three conditions: `inter_mem` pulls both outputs back to `(X ∩ X', Y
 ∩ Y')` via `mono`
 then `inter_right`. -/
-def toElementMap₂ (f : ApproximableMap₂ V₀ V₁ V₂) (x : V₀.Element) (y : V₁.Element) :
+@[expose] def toElementMap₂ (f : ApproximableMap₂ V₀ V₁ V₂) (x : V₀.Element) (y : V₁.Element) :
   V₂.Element where
   mem Z := ∃ X Y, x.mem X ∧ y.mem Y ∧ f.rel X Y Z
   sub := fun ⟨_, _, _, _, hrel⟩ => f.rel_cod hrel

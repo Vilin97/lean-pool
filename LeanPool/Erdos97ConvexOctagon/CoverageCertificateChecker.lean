@@ -464,7 +464,7 @@ theorem rejectedRowValid_of_word
   nodePruningValidB claims identifier && nodeTransitionsValidB claims identifier
 
 /-- Validate a bounded consecutive chunk of postorder node identifiers. -/
-def nodeClaimChunkValidB
+@[expose] def nodeClaimChunkValidB
     (claims : BranchClaims) (start count : Nat) : Bool :=
   (List.range count).all fun offset => nodeLocalValidB claims (start + offset)
 
@@ -521,7 +521,7 @@ def allNodeClaimsValidB (claims : BranchClaims) : Bool :=
   else false
 
 /-- Validate the immediate pattern or exact fixed-row state of one branch claim. -/
-def branchClaimRootValidB
+@[expose] def branchClaimRootValidB
     (orbit : Fin 7) (rowTwo : Fin 35) (claim : BranchClaim) : Bool :=
   let codeTwo := addRowCode (addRowCode 0 30 0) (canonicalRowMask orbit) 1
   match claim with

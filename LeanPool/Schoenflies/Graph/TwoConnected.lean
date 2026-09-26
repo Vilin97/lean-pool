@@ -276,7 +276,7 @@ theorem IsTwoConnected.no_bridge (h : G.IsTwoConnected) (hl : G.IsLink e u v) :
 needed, since two graphs may disagree about the ends of a shared edge name; for
 `Graph.Compatible` graphs, which is the only case the development forms, the disjunction
 collapses to the naive one. -/
-protected def union (G H : Graph α β) : Graph α β where
+@[expose] protected def union (G H : Graph α β) : Graph α β where
   vertexSet := V(G) ∪ V(H)
   edgeSet := E(G) ∪ E(H)
   IsLink e x y := G.IsLink e x y ∨ (e ∉ E(G) ∧ H.IsLink e x y)

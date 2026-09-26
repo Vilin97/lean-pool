@@ -245,7 +245,7 @@ end inducedMap
 
 /-- `π_n` is a functor sending a based topological space `(X, x₀)`
 to its `n`-th homotopy group (as a type, ignoring its group structure) based at `x₀`. -/
-noncomputable def functorToType (n : ℕ) : PointedTopCat.{u} ⥤ Type u where
+@[expose] noncomputable def functorToType (n : ℕ) : PointedTopCat.{u} ⥤ Type u where
   obj X := π_ n X.as X.point
   map {X Y} f := TypeCat.ofHom (inducedMap' n f)
   map_id X := by

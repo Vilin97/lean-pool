@@ -129,7 +129,7 @@ theorem inj₁_injective {Y Y' : Set β} (h : (inj₁ Y : Set (Option (α ⊕ β
 variable (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
 
 /-- The master neighbourhood of the sum: `{Λ} ∪ 0Δ₀ ∪ 1Δ₁`. -/
-def sumMaster : Set (Option (α ⊕ β)) := insert none (inj₀ V₀.master ∪ inj₁ V₁.master)
+@[expose] def sumMaster : Set (Option (α ⊕ β)) := insert none (inj₀ V₀.master ∪ inj₁ V₁.master)
 
 variable {V₀ V₁}
 
@@ -159,7 +159,7 @@ theorem sumMaster_inter_inj₁ {Y : Set β} (hY : V₁.mem Y) :
 /-- **Exercise 3.18 (Scott 1981, PRG-19).** The *sum system* `𝒟₀ + 𝒟₁` over `{Λ} ∪
 0Δ₀ ∪ 1Δ₁`,
 under the standing assumption that no neighbourhood of `𝒟₀` or `𝒟₁` is empty. -/
-def sum (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
+@[expose] def sum (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β)
     (h₀ : ∀ X, V₀.mem X → X.Nonempty) (h₁ : ∀ Y, V₁.mem Y → Y.Nonempty) :
     NeighborhoodSystem (Option (α ⊕ β)) where
   mem W := W = sumMaster V₀ V₁ ∨ (∃ X, V₀.mem X ∧ W = inj₀ X) ∨ (∃ Y, V₁.mem Y ∧ W = inj₁ Y)
@@ -330,7 +330,7 @@ theorem rightPart_mem {W : Set (Option (α ⊕ β))} (hW : (sum V₀ V₁ h₀ h
 /-- **Exercise 3.18 (Scott 1981, PRG-19).** The left injection `in₀ : 𝒟₀ → 𝒟₀ +
 𝒟₁`,
 `X (in₀) W ↔ 0X ⊆ W`. -/
-def inMap₀ : ApproximableMap V₀ (sum V₀ V₁ h₀ h₁) where
+@[expose] def inMap₀ : ApproximableMap V₀ (sum V₀ V₁ h₀ h₁) where
   rel X W := V₀.mem X ∧ (sum V₀ V₁ h₀ h₁).mem W ∧ inj₀ X ⊆ W
   rel_dom h := h.1
   rel_cod h := h.2.1
@@ -345,7 +345,7 @@ def inMap₀ : ApproximableMap V₀ (sum V₀ V₁ h₀ h₁) where
 
 /-- **Exercise 3.18 (Scott 1981, PRG-19).** The right injection `in₁ : 𝒟₁ → 𝒟₀ +
 𝒟₁`. -/
-def inMap₁ : ApproximableMap V₁ (sum V₀ V₁ h₀ h₁) where
+@[expose] def inMap₁ : ApproximableMap V₁ (sum V₀ V₁ h₀ h₁) where
   rel Y W := V₁.mem Y ∧ (sum V₀ V₁ h₀ h₁).mem W ∧ inj₁ Y ⊆ W
   rel_dom h := h.1
   rel_cod h := h.2.1
@@ -362,7 +362,7 @@ def inMap₁ : ApproximableMap V₁ (sum V₀ V₁ h₀ h₁) where
 𝒟₀`,
 `W (out₀) X ↔ leftPart W ⊆ X` (right/basepoint neighbourhoods relate only to
 `Δ₀`). -/
-def outMap₀ : ApproximableMap (sum V₀ V₁ h₀ h₁) V₀ where
+@[expose] def outMap₀ : ApproximableMap (sum V₀ V₁ h₀ h₁) V₀ where
   rel W X := (sum V₀ V₁ h₀ h₁).mem W ∧ V₀.mem X ∧ leftPart V₀ W ⊆ X
   rel_dom h := h.1
   rel_cod h := h.2.1
@@ -377,7 +377,7 @@ def outMap₀ : ApproximableMap (sum V₀ V₁ h₀ h₁) V₀ where
 
 /-- **Exercise 3.18 (Scott 1981, PRG-19).** The right projection `out₁ : 𝒟₀ + 𝒟₁ →
 𝒟₁`. -/
-def outMap₁ : ApproximableMap (sum V₀ V₁ h₀ h₁) V₁ where
+@[expose] def outMap₁ : ApproximableMap (sum V₀ V₁ h₀ h₁) V₁ where
   rel W Y := (sum V₀ V₁ h₀ h₁).mem W ∧ V₁.mem Y ∧ rightPart V₁ W ⊆ Y
   rel_dom h := h.1
   rel_cod h := h.2.1

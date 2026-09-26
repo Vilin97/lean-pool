@@ -27,7 +27,7 @@ namespace HypergraphLowerBound
 /-! ## Support patterns and frames -/
 
 /-- A support pattern on `[t]` is a subset of `Fin t` of size at least `2`. -/
-def SupportPattern (t : ℕ) := { S : Finset (Fin t) // 2 ≤ S.card }
+@[expose] def SupportPattern (t : ℕ) := { S : Finset (Fin t) // 2 ≤ S.card }
 
 /-- The block hypergraphs used in a substitution construction. -/
 abbrev BlockFamily (t : ℕ) := HypergraphFamily (Fin t) ℕ
@@ -57,7 +57,7 @@ abbrev SupportOcc {t : ℕ} (F : Multiset (SupportPattern t)) := Fin F.card
 
 /-- A support multiset `F` is an `n`-frame if the frame inequality holds for every
     `I ⊆ T ⊆ [t]`. -/
-def IsFrame {t : ℕ}
+@[expose] def IsFrame {t : ℕ}
     (F : Multiset (SupportPattern t))
     (cap : Fin t → ℕ) : Prop :=
   ∀ T I : Finset (Fin t), I ⊆ T →

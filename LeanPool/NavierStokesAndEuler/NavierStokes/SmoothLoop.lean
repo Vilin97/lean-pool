@@ -769,7 +769,7 @@ def phaseHomeomorph (d : CircleDensity) : ℝ ≃ₜ ℝ :=
     (phaseMap_surjective d)).toHomeomorph
 
 theorem phaseHomeomorph_apply (d : CircleDensity) (θ : ℝ) :
-    phaseHomeomorph d θ = phaseMap d θ := rfl
+    phaseHomeomorph d θ = phaseMap d θ := by rfl
 
 theorem phaseInverse_contDiff (d : CircleDensity) :
     ContDiff ℝ (∞ : WithTop ℕ∞) (phaseHomeomorph d).symm := by

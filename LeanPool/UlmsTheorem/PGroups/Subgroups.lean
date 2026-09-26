@@ -26,7 +26,7 @@ variable (p : ℕ)
 /-! ### Natural-number Ulm subgroups -/
 
 /-- `p^n·G = { p^n • y | y : G }`. -/
-def pPow {G : Type*} [AddCommGroup G] (n : ℕ) : AddSubgroup G where
+@[expose] def pPow {G : Type*} [AddCommGroup G] (n : ℕ) : AddSubgroup G where
   carrier   := {x | ∃ y : G, p ^ n • y = x}
   zero_mem' := ⟨0, by simp⟩
   add_mem'  := by

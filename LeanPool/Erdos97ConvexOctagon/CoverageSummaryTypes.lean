@@ -47,7 +47,7 @@ structure SummaryRowChoice where
   patterns : PatternSummaryBuckets
 
 /-- Vertex pairs in tuple form for packed pair masks. -/
-def vertexPairTuples : List (Vertex × Vertex) :=
+@[expose] def vertexPairTuples : List (Vertex × Vertex) :=
   vertexPairs.filterMap fun pair =>
     match pair with
     | [first, second] => some (first, second)

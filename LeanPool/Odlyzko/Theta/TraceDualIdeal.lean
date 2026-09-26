@@ -23,7 +23,7 @@ namespace NumberField.Odlyzko
 variable (K : Type*) [Field K] [NumberField K]
 
 /-- A trace dual ideal unit used in the Odlyzko-bound argument. -/
-noncomputable def traceDualIdealUnit
+@[expose] noncomputable def traceDualIdealUnit
     (I : (FractionalIdeal (𝓞 K)⁰ K)ˣ) :
     (FractionalIdeal (𝓞 K)⁰ K)ˣ :=
   Units.mk0

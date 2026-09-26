@@ -83,6 +83,6 @@ def leftIdealOfElement (a : R) : Ideal R :=
       noncomm_ring }
 
 theorem carrier_of_left_ideal_of_element (a : R) :
-    (leftIdealOfElement a).carrier = leftMul a := rfl
+    (leftIdealOfElement a).carrier = leftMul a := by rfl
 
 end LeanPool.ArtinWedderburn

@@ -78,7 +78,7 @@ theorem eventually_mem_placeValuationSubring (f : K) :
 abbrev AdeleSpace := adeleSubmodule k K
 
 /-- Pointwise multiplication of an adele by an element of `K`. -/
-def smulAdele (x : K) (a : AdeleSpace k K) : AdeleSpace k K := ⟨fun v => x * a.val v, by
+@[expose] def smulAdele (x : K) (a : AdeleSpace k K) : AdeleSpace k K := ⟨fun v => x * a.val v, by
   have hx := eventually_mem_placeValuationSubring k K x
   have ha := a.property
   change ∀ᶠ v : PlaceA k K in cofinite, a.val v ∈ placeValuationSubring k K v at ha

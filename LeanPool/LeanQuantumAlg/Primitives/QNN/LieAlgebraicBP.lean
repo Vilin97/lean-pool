@@ -71,7 +71,7 @@ variable {N : ℕ}
 /-- The **dimension of the dynamical Lie algebra** of a generator set: the `ℂ`-finrank
 of the formalized `dynamicalLieAlgebra` (a subspace of `gl(N, ℂ)`). This is the genuine
 `dim g` of the Lie-algebraic variance law, not an opaque parameter. -/
-def dlaDim (gens : Set (Matrix (Fin N) (Fin N) ℂ)) : ℕ :=
+@[expose] def dlaDim (gens : Set (Matrix (Fin N) (Fin N) ℂ)) : ℕ :=
   Module.finrank ℂ (dynamicalLieAlgebra gens).toSubmodule
 
 /-! ### Tier 1 — barren plateau from exponential growth of the *real* dimension -/

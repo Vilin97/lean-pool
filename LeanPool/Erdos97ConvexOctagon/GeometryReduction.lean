@@ -25,7 +25,7 @@ def HasFourEquidistant (p : Vertex → Plane) (v : Vertex) : Prop :=
     ∃ r : ℝ, ∀ w ∈ S, dist (p v) (p w) = r
 
 /-- A labelled incidence system is realised by equal-distance rows in the plane. -/
-def Realises (p : Vertex → Plane) (Q : OctagonIncidence) : Prop :=
+@[expose] def Realises (p : Vertex → Plane) (Q : OctagonIncidence) : Prop :=
   ∀ v, ∃ r : ℝ, ∀ w ∈ Q.targets v, dist (p v) (p w) = r
 
 private lemma three_centres_collinear

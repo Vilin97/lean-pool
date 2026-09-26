@@ -99,7 +99,7 @@ noncomputable def flipCLM (K : Set Z) [CompactSpace K] :
 omit [NormedSpace ℝ Z] in
 theorem flipCLM_apply (K : Set Z) [CompactSpace K]
     (g : C(K, P →L[ℝ] E)) (v : P) (z : K) :
-    flipCLM (P := P) (E := E) K g v z = g z v := rfl
+    flipCLM (P := P) (E := E) K g v z = g z v := by rfl
 
 omit [NormedSpace ℝ Z] in
 /-- Actual slice derivatives and their joint continuity give the Fréchet

@@ -1294,7 +1294,7 @@ theorem good_matching_exists_of_ratio_sum_lt_one
 /-! ## Constructing FiniteExpanderWitness from a good edge function -/
 
 /-- Package a good edge function into a FiniteExpanderWitness. -/
-noncomputable def finiteExpanderOfGoodEdge
+@[expose] noncomputable def finiteExpanderOfGoodEdge
     (N L r : ℕ) (A : ℕ) (hN : 0 < N)
     (edge : Fin N → Fin r → Fin L)
     (hcov : ∀ w : Fin L, ∃ v : Fin N, ∃ e : Fin r, edge v e = w)

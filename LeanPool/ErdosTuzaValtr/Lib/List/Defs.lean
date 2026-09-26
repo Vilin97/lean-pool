@@ -48,7 +48,7 @@ inductive Chain3 : α → α → List α → Prop
   | cons : ∀ {a b c : α} {l : List α}, R a b c → Chain3 b c l → Chain3 a b (c :: l)
 
 /-- `Chain3' R l` means `R` holds for every three consecutive entries of `l`. -/
-def Chain3' : List α → Prop
+@[expose] def Chain3' : List α → Prop
   | nil => True
   | [_] => True
   | a :: b :: l => Chain3 R a b l

@@ -144,7 +144,7 @@ instance (a b c x y z : Fin 73) :
   infer_instance
 
 /-- Exact validity conditions for a triangle witness. -/
-def PartsGadgetTriangleWitnessData.Valid
+@[expose] def PartsGadgetTriangleWitnessData.Valid
     (witness : PartsGadgetTriangleWitnessData) (root : Fin 73) : Prop :=
   partsGadgetSameTriple witness.a witness.b witness.c
       root witness.left witness.right ∧

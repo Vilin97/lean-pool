@@ -70,7 +70,7 @@ omit [CompleteSpace V] [NormedSpace ℂ V] in
 /-- `Homeomorph.ulift`'s associated `OpenPartialHomeomorph.symm`, precomposed into a
 `uliftChartAt`, cancels by `rfl` (`PartialEquiv.coe_trans_symm`). -/
 theorem uliftChartAt_symm_apply (x w : V) :
-    (uliftChartAt L x).symm w = ULift.up ((chartAt' L x).symm w) := rfl
+    (uliftChartAt L x).symm w = ULift.up ((chartAt' L x).symm w) := by rfl
 
 omit [CompleteSpace V] [NormedSpace ℂ V] in
 theorem uliftChartAt_target (x : V) : (uliftChartAt L x).target = (chartAt' L x).target := by

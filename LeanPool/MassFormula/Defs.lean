@@ -68,7 +68,7 @@ variable (K : Type*) [Field K] [ValuativeRel K] [UniformSpace K] [IsUniformAddGr
 
 /-- `q K` is the cardinality of the finite residue field `𝓀[K]` of `K`, that is `Nat.card 𝓀[K]`
 ([Serre 1978, p.1031][Serre1978]). -/
-noncomputable def q : ℕ :=
+@[expose] noncomputable def q : ℕ :=
   Nat.card 𝓀[K]
 
 omit [IsUniformAddGroup K] in
@@ -81,7 +81,7 @@ variable {K}
 /-- The ring of integers of a subextension `L` of `SeparableClosure K` / `K`: the integral closure
 of `𝒪[K]` in `L` ([Serre 1978, §3, p.1032][Serre1978]). (Introduced by the paper only in Section 3,
 but needed already here to say what *totally ramified* means.) -/
-noncomputable def integers (L : IntermediateField K (SeparableClosure K)) :
+@[expose] noncomputable def integers (L : IntermediateField K (SeparableClosure K)) :
     Subalgebra ↥𝒪[K] ↥L :=
   integralClosure ↥𝒪[K] ↥L
 

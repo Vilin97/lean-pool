@@ -135,7 +135,7 @@ def C : NeighborhoodSystem Str :=
 
 @[simp] theorem C_mem {X : Set Str} : C.mem X ↔ memC X := Iff.rfl
 
-@[simp] theorem C_master : C.master = Set.univ := rfl
+@[simp] theorem C_master : C.master = Set.univ := by rfl
 
 /-- Every cone is a neighbourhood of `𝒞` — this is the inclusion `𝔹 ⊆ 𝒞`. -/
 theorem memC_cone (σ : Str) : C.mem (cone σ) := Or.inl ⟨σ, rfl⟩

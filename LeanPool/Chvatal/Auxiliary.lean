@@ -151,7 +151,7 @@ noncomputable def twistedMonomial (S : Finset ι) : Finset ι → ℝ :=
 
 /-- Coordinate description of the twisted monomials of Lemma 3.1. -/
 @[simp] theorem twistedMonomial_apply (S x : Finset ι) :
-    twistedMonomial S x = monomial S x * walsh Finset.univ x := rfl
+    twistedMonomial S x = monomial S x * walsh Finset.univ x := by rfl
 
 /-- Lemma 3.1(iii) for the second family: the full character is an invertible
 multiplier, so independence of the monomials is preserved. -/

@@ -49,7 +49,7 @@ def IsBinomialCascade (n k r t : ℕ) : Prop :=
 The algebraic lower/upper split for the canonical cascade of `k` in dimension
 `n + 1`. It is independent of `slice0`, `slice1`, `rank`, and neighborhoods.
 -/
-def CascadeSplit (n k p q : ℕ) : Prop :=
+@[expose] def CascadeSplit (n k p q : ℕ) : Prop :=
   ∃ r t, IsBinomialCascade (n + 1) k r t ∧
     p = cascadeSlice0Value n r t ∧
     q = cascadeSlice1Value n r t

@@ -77,14 +77,14 @@ def lmul : H₁ →ₗ[R] l(R,H₁) where
     simp only [LinearMap.mulLeft_apply, LinearMap.smul_apply, RingHom.id_apply, smul_mul_assoc]
 
 theorem lmul_apply (x y : H₁) : (lmul x : l(R,H₁)) y = x * y :=
-  rfl
+  by rfl
 
 theorem lmul_eq_mul (x : H₁) : lmul x = LinearMap.mulLeft R x :=
-  rfl
+  by rfl
 
 theorem lmul_eq_alg_lmul {H₁ : Type _} [Semiring H₁] [Algebra R H₁] (x : H₁) :
     (lmul x : l(R,H₁)) = Algebra.lmul R H₁ x :=
-  rfl
+  by rfl
 
 theorem lmul_one {H₁ : Type _} [NonAssocSemiring H₁] [Module R H₁] [SMulCommClass R H₁ H₁]
     [IsScalarTower R H₁ H₁] : (lmul (1 : H₁) : l(R,H₁)) = 1 := by
@@ -102,10 +102,10 @@ def rmul : H₂ →ₗ[R] l(R,H₂) where
     simp only [LinearMap.mulRight_apply, LinearMap.smul_apply, RingHom.id_apply, mul_smul_comm]
 
 theorem rmul_apply (x y : H₂) : (rmul x : l(R,H₂)) y = y * x :=
-  rfl
+  by rfl
 
 theorem rmul_eq_mul (x : H₂) : rmul x = LinearMap.mulRight R x :=
-  rfl
+  by rfl
 
 theorem rmul_one {H₁ : Type _} [NonAssocSemiring H₁] [Module R H₁] [SMulCommClass R H₁ H₁]
     [IsScalarTower R H₁ H₁] : (rmul (1 : H₁) : l(R,H₁)) = 1 := by
@@ -217,14 +217,14 @@ theorem LinearMap.mulLeft_apply_inj {H₁ : Type _} [Semiring H₁] [Module R H�
 theorem lmul_op {R A : Type*} [CommSemiring R] [NonUnitalNonAssocSemiring A] [Module R A]
   [SMulCommClass R A A] [IsScalarTower R A A] (x : Aᵐᵒᵖ) :
     lmul x = (rmul (x.unop) : A →ₗ[R] A).op :=
-  rfl
+  by rfl
 
 theorem lmul_op' {R A : Type*} [CommSemiring R] [NonUnitalNonAssocSemiring A] [Module R A]
   [SMulCommClass R A A] [IsScalarTower R A A] (x : A) :
     lmul (MulOpposite.op x) = (rmul x : A →ₗ[R] A).op :=
-  rfl
+  by rfl
 
 theorem rmul_op' {R A : Type*} [CommSemiring R] [NonUnitalNonAssocSemiring A] [Module R A]
   [SMulCommClass R A A] [IsScalarTower R A A] (x : A) :
     rmul (MulOpposite.op x) = (lmul x : A →ₗ[R] A).op :=
-  rfl
+  by rfl

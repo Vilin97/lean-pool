@@ -47,7 +47,7 @@ variable {X Y : Type*} [TopologicalSpace X] [ChartedSpace ℂ X]
 def ramificationLocus (F : X → Y) : Set X := {x | IsRamifiedAt F x}
 
 /-- Branch values (critical values): images of ramification points. -/
-def branchLocus (F : X → Y) : Set Y := F '' ramificationLocus F
+@[expose] def branchLocus (F : X → Y) : Set Y := F '' ramificationLocus F
 
 /-- `y` is a regular value iff every point of its fiber is unramified. (For holomorphic
 nonconstant `F` this is equivalent to `y ∉ branchLocus F`, and then every fiber point has

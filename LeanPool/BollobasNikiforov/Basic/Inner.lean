@@ -86,7 +86,7 @@ def posPart (X : Matrix m n ℝ) : Matrix m n ℝ :=
 @[simp]
 lemma posPart_apply (X : Matrix m n ℝ) (i : m) (j : n) :
     posPart X i j = max (X i j) 0 :=
-  rfl
+  by rfl
 
 lemma posPart_nonneg (X : Matrix m n ℝ) (i : m) (j : n) :
     0 ≤ posPart X i j :=

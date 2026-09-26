@@ -120,7 +120,7 @@ noncomputable def funLidHasCoe {A : Type _} :
   coe f x := f x
 
 @[reducible, instance]
-noncomputable def LinearMap.tensorProductLidHasCoe {A : Type _} [AddCommMonoid A] [Module R A] :
+@[expose] noncomputable def LinearMap.tensorProductLidHasCoe {A : Type _} [AddCommMonoid A] [Module R A] :
     Coe (R ⊗[R] E →ₗ[R] A) (E →ₗ[R] A) where
   coe f := f ∘ₗ ↑(TensorProduct.lid R E).symm
 
@@ -130,7 +130,7 @@ noncomputable def funLidHasCoe' {A : Type _} :
   coe f x := f x
 
 @[reducible, instance]
-noncomputable def LinearMap.tensorProductLidHasCoe' {A : Type _} [AddCommMonoid A] [Module R A] :
+@[expose] noncomputable def LinearMap.tensorProductLidHasCoe' {A : Type _} [AddCommMonoid A] [Module R A] :
     Coe (E →ₗ[R] A) (R ⊗[R] E →ₗ[R] A) where
   coe f := f ∘ₗ ↑(TensorProduct.lid R E)
 
@@ -140,7 +140,7 @@ noncomputable def funRidHasCoe {A : Type _} :
   coe f x := f x
 
 @[reducible, instance]
-noncomputable def LinearMap.tensorProductRidHasCoe {A : Type _} [AddCommMonoid A] [Module R A] :
+@[expose] noncomputable def LinearMap.tensorProductRidHasCoe {A : Type _} [AddCommMonoid A] [Module R A] :
     Coe (E ⊗[R] R →ₗ[R] A) (E →ₗ[R] A) where
   coe f := f ∘ₗ ↑(TensorProduct.rid R E).symm
 
@@ -150,7 +150,7 @@ noncomputable def funRidHasCoe' {A : Type _} :
   coe f x := f x
 
 @[reducible, instance]
-noncomputable def LinearMap.tensorProductRidHasCoe' {A : Type _} [AddCommMonoid A] [Module R A] :
+@[expose] noncomputable def LinearMap.tensorProductRidHasCoe' {A : Type _} [AddCommMonoid A] [Module R A] :
     Coe (E →ₗ[R] A) (E ⊗[R] R →ₗ[R] A) where
   coe f := f ∘ₗ ↑(TensorProduct.rid R E)
 

@@ -23,7 +23,7 @@ namespace NumberField.Odlyzko
 variable (K : Type*) [Field K] [NumberField K]
 
 /-- A prime ideal norm used in the Odlyzko-bound argument. -/
-noncomputable def primeIdealNorm (P : HeightOneSpectrum (𝓞 K)) : ℕ :=
+@[expose] noncomputable def primeIdealNorm (P : HeightOneSpectrum (𝓞 K)) : ℕ :=
   absNorm P.asIdeal
 
 lemma one_lt_primeIdealNorm (P : HeightOneSpectrum (𝓞 K)) :

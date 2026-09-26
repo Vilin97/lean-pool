@@ -268,19 +268,19 @@ theorem integral_psi_two_sided_prod
 section Equation23
 
 /-- Analytic `A₊ = E φ(Z₊)`. -/
-noncomputable def APlus (μ : Measure ℝ) (d a : ℝ) : ℝ :=
+@[expose] noncomputable def APlus (μ : Measure ℝ) (d a : ℝ) : ℝ :=
   ∫ y, phiPlus d a y ∂μ
 
 /-- Analytic `A₋ = E φ(Z₋)`. -/
-noncomputable def AMinus (μ : Measure ℝ) (d b : ℝ) : ℝ :=
+@[expose] noncomputable def AMinus (μ : Measure ℝ) (d b : ℝ) : ℝ :=
   ∫ y, phiMinus d b y ∂μ
 
 /-- Analytic `B₊ = E ψ(Z₊)`. -/
-noncomputable def BPlus (μ : Measure ℝ) (c a : ℝ) : ℝ :=
+@[expose] noncomputable def BPlus (μ : Measure ℝ) (c a : ℝ) : ℝ :=
   ∫ y, psiPlus c a y ∂μ
 
 /-- Analytic `B₋ = E ψ(Z₋)`. -/
-noncomputable def BMinus (μ : Measure ℝ) (c b : ℝ) : ℝ :=
+@[expose] noncomputable def BMinus (μ : Measure ℝ) (c b : ℝ) : ℝ :=
   ∫ y, psiMinus c b y ∂μ
 
 /-- `u₊`, normalized as `d` times the `φ'` expectation.  Since

@@ -121,7 +121,7 @@ abbrev graphRealizationQuotient {V : Type u} [Quiver.{u} V] :
   Quotient.mk'
 
 /-- The point of the realization corresponding to a vertex. -/
-def graphVertex {V : Type u} [Quiver.{u} V] (v : V) : graphRealization V :=
+@[expose] def graphVertex {V : Type u} [Quiver.{u} V] (v : V) : graphRealization V :=
   graphRealizationQuotient (Sum.inl (graphDiscreteVertex v))
 
 /-- The endpoint label descends to the quotient as a set-theoretic invariant. -/
@@ -134,7 +134,7 @@ def graphRealizationEndpointLabelQuotient {V : Type u} [Quiver.{u} V] :
 theorem graphRealizationEndpointLabelQuotient_mk {V : Type u} [Quiver.{u} V]
     (x : graphRealizationPre V) :
     graphRealizationEndpointLabelQuotient (graphRealizationQuotient x) =
-      graphRealizationEndpointLabel x := rfl
+      graphRealizationEndpointLabel x := by rfl
 
 @[simp]
 theorem graphRealizationEndpointLabelQuotient_vertex {V : Type u} [Quiver.{u} V]
@@ -182,7 +182,7 @@ def graphEdgePath {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
 
 @[simp]
 theorem graphRealizationQuotient_vertex {V : Type u} [Quiver.{u} V] (v : V) :
-    graphRealizationQuotient (Sum.inl (graphDiscreteVertex v)) = graphVertex v := rfl
+    graphRealizationQuotient (Sum.inl (graphDiscreteVertex v)) = graphVertex v := by rfl
 
 @[simp]
 theorem graphEdgePath_zero {V : Type u} [Quiver.{u} V] (e : Quiver.Total V) :
@@ -282,7 +282,7 @@ theorem graphRealizationQuiverPath_nil {V : Type u} [Quiver.{u} V]
     (a : V) :
     graphRealizationQuiverPath
       (Quiver.Path.nil : @Quiver.Path (Quiver.Symmetrify V)
-        (Quiver.symmetrifyQuiver V) a a) = Path.refl (graphVertex a) := rfl
+        (Quiver.symmetrifyQuiver V) a a) = Path.refl (graphVertex a) := by rfl
 
 theorem graphRealization_pathConnected {V : Type u} [Quiver.{u} V]
     [WeaklyConnected V] (root : V) :
@@ -306,7 +306,7 @@ theorem graphRealization_compact {V : Type u} [Quiver.{u} V]
   infer_instance
 
 /-- The prefunctor sending graph vertices and edges to their realization paths. -/
-def graphRealizationQuiverMap {V : Type u} [Quiver.{u} V] :
+@[expose] def graphRealizationQuiverMap {V : Type u} [Quiver.{u} V] :
     V ⥤q FundamentalGroupoid (graphRealization V) where
   obj v := FundamentalGroupoid.mk (graphVertex v)
   map e := FundamentalGroupoid.fromPath

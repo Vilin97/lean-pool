@@ -82,7 +82,7 @@ local instance instMeasurableAddSmoothing1 : MeasurableAdd E := by
 variable {K : Set E}
 
 /-- Extend an `L²` function on `K` by zero to a pointwise function on the ambient space. -/
-def extendByZeroFun (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) : E → ℝ :=
+@[expose] def extendByZeroFun (u : MeasureTheory.Lp ℝ (2 : ℝ≥0∞) (volume.restrict K)) : E → ℝ :=
   K.indicator fun x : E => u x
 
 lemma hasCompactSupport_extendByZeroFun (hK : IsCompact K)

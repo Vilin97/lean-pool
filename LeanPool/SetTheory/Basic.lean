@@ -759,7 +759,8 @@ lemma func_sub_pairs {A B f : M} (hf : IsFunc f ∧ Dom f = A ∧ Ran f ⊆ B) :
   exact ⟨y, hy, fun z hz => (hf.2 hy hz).symm⟩
 
 /-- The `PreserveMem` declaration. -/
-@[expose, realize] def PreserveMem (f : M) := ∀ x ∈ Dom f, ∀ y ∈ Dom f, x ∈ y → apply f x ∈ apply f y
+@[expose, realize] def PreserveMem (f : M) :=
+  ∀ x ∈ Dom f, ∀ y ∈ Dom f, x ∈ y → apply f x ∈ apply f y
 
 /-- The `funcToSet` declaration. -/
 @[expose] def funcToSet {A B : M} (f : A → B) : M :=

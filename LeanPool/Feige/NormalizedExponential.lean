@@ -283,26 +283,26 @@ theorem exponentialSimplexJacobianMatrix_none_none
     (z : ℝ × (Fin n → ℝ)) :
     exponentialSimplexJacobianMatrix z none none =
       1 - ∑ i, z.2 i :=
-  rfl
+  by rfl
 
 @[simp]
 theorem exponentialSimplexJacobianMatrix_none_some
     (z : ℝ × (Fin n → ℝ)) (j : Fin n) :
     exponentialSimplexJacobianMatrix z none (some j) = -z.1 :=
-  rfl
+  by rfl
 
 @[simp]
 theorem exponentialSimplexJacobianMatrix_some_none
     (z : ℝ × (Fin n → ℝ)) (i : Fin n) :
     exponentialSimplexJacobianMatrix z (some i) none = z.2 i :=
-  rfl
+  by rfl
 
 @[simp]
 theorem exponentialSimplexJacobianMatrix_some_some
     (z : ℝ × (Fin n → ℝ)) (i j : Fin n) :
     exponentialSimplexJacobianMatrix z (some i) (some j) =
       if i = j then z.1 else 0 :=
-  rfl
+  by rfl
 
 theorem exponentialSimplexJacobianMatrix_mulVec_none
     (z : ℝ × (Fin n → ℝ)) (v : Option (Fin n) → ℝ) :

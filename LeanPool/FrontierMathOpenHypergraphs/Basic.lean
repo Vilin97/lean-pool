@@ -38,7 +38,7 @@ abbrev HypergraphFamily (ι : Type*) (V : Type*) := ι → Hypergraph V
   (vertexSet edges).filter (fun v => (P.filter (fun e => v ∈ e)).card = 1) |>.card
 
 /-- A hypergraph contains no partition of size greater than n. -/
-def NoLargePartition {V : Type*} [DecidableEq V]
+@[expose] def NoLargePartition {V : Type*} [DecidableEq V]
     (edges : Hypergraph V) (n : ℕ) : Prop :=
   ∀ P : Hypergraph V, P ⊆ edges → uniqueCoverage edges P ≤ n
 

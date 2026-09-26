@@ -18,7 +18,7 @@ variable (𝕜 : Type*) [CommRing 𝕜]
 variable (𝓰 : Type u) [LieRing 𝓰] [LieAlgebra 𝕜 𝓰]
 
 /-- `⁅·,·⁆` as a bilinear map. -/
-def LieAlgebra.bracketHom : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓰 where
+@[expose] def LieAlgebra.bracketHom : 𝓰 →ₗ[𝕜] 𝓰 →ₗ[𝕜] 𝓰 where
   toFun := fun X ↦ {
     toFun := fun Y ↦ ⁅X, Y⁆
     map_add' := by simp

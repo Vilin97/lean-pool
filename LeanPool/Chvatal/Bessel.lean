@@ -89,7 +89,7 @@ theorem inner_uniformEuclidean (f g : Ω → ℝ) :
 
 /-- Orthonormality with respect to uniform probability, as in Theorem 2.1 and
 Corollary 3.2. The index type may be empty. -/
-def UniformOrthonormal {κ : Type*} (u : κ → Ω → ℝ) : Prop := by
+@[expose] def UniformOrthonormal {κ : Type*} (u : κ → Ω → ℝ) : Prop := by
   classical
   exact ∀ i j, uniformInner (u i) (u j) = if i = j then 1 else 0
 

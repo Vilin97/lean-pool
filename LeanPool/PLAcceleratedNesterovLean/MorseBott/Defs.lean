@@ -126,7 +126,7 @@ abbrev hessian (f : E → ℝ) (x : E) : E →L[ℝ] (E →L[ℝ] ℝ) :=
   fderiv ℝ (fderiv ℝ f) x
 
 /-- The kernel of the Hessian at `x`, as a submodule of E. -/
-def hessianKer (f : E → ℝ) (x : E) : Submodule ℝ E :=
+@[expose] def hessianKer (f : E → ℝ) (x : E) : Submodule ℝ E :=
   LinearMap.ker (hessian f x).toLinearMap
 
 -- ════════════════════════════════════════════════════════════════════════════

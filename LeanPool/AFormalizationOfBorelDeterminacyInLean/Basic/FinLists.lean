@@ -112,7 +112,7 @@ variable (x y : List α) (a : α) (f : α → List α → β)
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
 def zipInitsMap := x.zipWith f x.inits.tail
 @[simp] lemma zipInitsMap_nil : [].zipInitsMap f = [] := by simp [zipInitsMap]
-@[simp] lemma zipInitsMap_singleton : [a].zipInitsMap f = [f a [a]] := rfl
+@[simp] lemma zipInitsMap_singleton : [a].zipInitsMap f = [f a [a]] := by rfl
 lemma zipInitsMap_append : (x ++ y).zipInitsMap f
   = x.zipInitsMap f ++ y.zipInitsMap (fun a z ↦ f a (x ++ z)) := by
   have h : ¬ x.inits.isEmpty := by rw [List.isEmpty_iff_length_eq_zero]; simp

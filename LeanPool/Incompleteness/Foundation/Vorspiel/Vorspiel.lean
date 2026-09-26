@@ -31,7 +31,7 @@ namespace Nat
 variable {α : ℕ → Sort u}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def cases (hzero : α 0) (hsucc : ∀ n, α (n + 1)) : ∀ n, α n
+@[expose] def cases (hzero : α 0) (hsucc : ∀ n, α (n + 1)) : ∀ n, α n
   | 0     => hzero
   | n + 1 => hsucc n
 
@@ -227,7 +227,7 @@ end «lp_section_1»
 variable {α : Type _}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def toList : {n : ℕ} → (Fin n → α) → List α
+@[expose] def toList : {n : ℕ} → (Fin n → α) → List α
   | 0,     _ => []
   | _ + 1, v => v 0 :: toList (v ∘ Fin.succ)
 
@@ -303,7 +303,7 @@ def vecEmpty : Fin 0 → α :=
 variable {n} {α : Fin (n + 1) → Type*}
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def vecCons (h : α 0) (t : (i : Fin n) → α i.succ) : (i : Fin n.succ) → α i :=
+@[expose] def vecCons (h : α 0) (t : (i : Fin n) → α i.succ) : (i : Fin n.succ) → α i :=
   Fin.cons h t
 
 /-- Imported declaration from the Incompleteness formalization. -/
@@ -483,7 +483,7 @@ lemma inductionOnVec {φ : (Fin n → Quotient s) → Prop} (v : Fin n → Quoti
   Quotient.induction_on_pi v h
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def liftVec : ∀ {n} (f : (Fin n → α) → β),
+@[expose] def liftVec : ∀ {n} (f : (Fin n → α) → β),
   (∀ v₁ v₂ : Fin n → α, (∀ n, v₁ n ≈ v₂ n) → f v₁ = f v₂) → (Fin n → Quotient s) → β
 | 0,     f, _, _ => f ![]
 | n + 1, f, h, v =>
@@ -531,7 +531,7 @@ def subsetSet (l : List α) (s : Set α) [DecidablePred s] : Bool :=
   l.foldr (fun a ih => s a && ih) true
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def upper : List ℕ → ℕ
+@[expose] def upper : List ℕ → ℕ
   | []      => 0
   | n :: ns => max (n + 1) ns.upper
 
@@ -565,7 +565,7 @@ section «lp_section_6»
 variable [SemilatticeSup α] [OrderBot α]
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def sup : List α → α
+@[expose] def sup : List α → α
   |      [] => ⊥
   | a :: as => a ⊔ as.sup
 

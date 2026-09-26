@@ -75,7 +75,7 @@ local instance instDecidableEqRatFuncPolar : DecidableEq k⟮X⟯ := Classical.d
 section PolarDivisor
 
 /-- The pole divisor `(x)_∞` of a nonzero function. -/
-noncomputable def polarDivisor (x : K) : DivisorA k K :=
+@[expose] noncomputable def polarDivisor (x : K) : DivisorA k K :=
   by
   classical
   exact if hx : x = 0 then 0

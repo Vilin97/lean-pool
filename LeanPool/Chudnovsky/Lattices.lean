@@ -128,7 +128,7 @@ private lemma sigmaTerm_aux {c : ℂ} (hc : c ≠ 0) (z w : ℂ) :
 
 /-- Klein's absolute invariant of a lattice,
 `J(L) = g₂(L)³ / (g₂(L)³ - 27·g₃(L)²)` (paper Def. `defijdelta`). -/
-def J : ℂ := L.g₂ ^ 3 / L.discr
+@[expose] def J : ℂ := L.g₂ ^ 3 / L.discr
 
 /-! ## Scaling laws (paper `trafog23`, `etatransf`) -/
 

@@ -145,7 +145,7 @@ noncomputable def qkn : ℕ → ℕ → ℝ → ℝ := fun k n r =>
   fun n => if h : n < D then a ⟨n, h⟩ * (qkn k n r : ℂ) else 0
 
 /-- The finite Fourier polynomial on the circle attached to a finite Hermite sum. -/
-def finiteCirclePoly (k : ℕ) (r : ℝ) {D : ℕ} (a : Fin D → ℂ) : Circle → ℂ :=
+@[expose] def finiteCirclePoly (k : ℕ) (r : ℝ) {D : ℕ} (a : Fin D → ℂ) : Circle → ℂ :=
   positiveTrigonometricPolynomial (frequencyBand 0 D) (finiteCircleCoeff k r a)
 
 /-- The finite circle polynomial built from the truncated coefficient vector of `G`. -/

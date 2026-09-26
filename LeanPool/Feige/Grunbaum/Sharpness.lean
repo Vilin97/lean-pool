@@ -42,7 +42,7 @@ theorem coordinateSum_apply (n : ℕ) (x : SimplexE n) :
   simp [coordinateSum]
 
 /-- The full-dimensional standard simplex `xᵢ ≥ 0`, `∑ xᵢ ≤ 1`. -/
-def simplexSet (n : ℕ) : Set (SimplexE n) :=
+@[expose] def simplexSet (n : ℕ) : Set (SimplexE n) :=
   {x | (∀ i, 0 ≤ x i) ∧ coordinateSum n x ≤ 1}
 
 @[simp]

@@ -88,7 +88,7 @@ theorem IsDirection.ne_zero (hu : IsDirection u) : u ≠ 0 := by
 theorem IsDirection.norm (hu : IsDirection u) : ‖u‖ = 1 := hu
 
 /-- The unit vector along a nonzero vector. -/
-noncomputable def dir (u : Plane) : Plane := ‖u‖⁻¹ • u
+@[expose] noncomputable def dir (u : Plane) : Plane := ‖u‖⁻¹ • u
 
 theorem isDirection_dir (hu : u ≠ 0) : IsDirection (dir u) := by
   have hpos : 0 < ‖u‖ := norm_pos_iff.2 hu

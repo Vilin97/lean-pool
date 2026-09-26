@@ -157,7 +157,7 @@ section EmbedProject
 variable {g : ContextFreeGrammar T}
 
 /-- Intuitive embedding of symbols of the original grammar into symbols of the new grammar's type -/
-def embedSymbol (s : Symbol T g.NT) : Symbol T g.NT' :=
+@[expose] def embedSymbol (s : Symbol T g.NT) : Symbol T g.NT' :=
   match s with
   | Symbol.terminal t => Symbol.terminal t
   | Symbol.nonterminal n => Symbol.nonterminal (Sum.inl n)

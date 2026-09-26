@@ -261,7 +261,7 @@ end FormalSum
 * We show this is an equivalence relation and define the quotient
 -/
 /-- Relation by equal coordinates. -/
-def eqlCoords (R X : Type) [Ring R] [DecidableEq X] (s₁ s₂ : FormalSum R X) : Prop :=
+@[expose] def eqlCoords (R X : Type) [Ring R] [DecidableEq X] (s₁ s₂ : FormalSum R X) : Prop :=
   s₁.coords = s₂.coords
 
 namespace eqlCoords
@@ -540,7 +540,7 @@ theorem append_equiv (s₁ s₂ t₁ t₂ : FormalSum R X) :
 end FormalSum
 
 /-- Addition of elements in the free module. -/
-def _root_.LeanPool.Polylean.FreeModule.add : R[X] → R[X] → R[X] := by
+@[expose] def _root_.LeanPool.Polylean.FreeModule.add : R[X] → R[X] → R[X] := by
   let f : FormalSum R X → FormalSum R X → R[X] := fun s₁ s₂ => ⟦s₁ ++ s₂⟧
   apply Quotient.lift₂ f
   intro a₁ b₁ a₂ b₂
@@ -644,7 +644,7 @@ theorem addn_assoc (x₁ x₂ x₃ : R[X]) : (x₁ + x₂) + x₃ = x₁ + (x₂
   apply add_assoc_aux
 
 /-- The zero element of the free module. -/
-def zero : R[X] := ⟦[]⟧
+@[expose] def zero : R[X] := ⟦[]⟧
 
 /-- adding zero -/
 theorem addn_zero (x : R[X]) : x + zero = x := by

@@ -38,7 +38,7 @@ section EmbedProject
 variable {N : Type uN}
 
 /-- Intuitive embedding of symbols of the original grammar into symbols of the new grammar's type -/
-def embedSymbol (s : Symbol T N) : Symbol T (N ⊕ T) :=
+@[expose] def embedSymbol (s : Symbol T N) : Symbol T (N ⊕ T) :=
   match s with
   | Symbol.terminal t => Symbol.terminal t
   | Symbol.nonterminal n => Symbol.nonterminal (Sum.inl n)
@@ -47,7 +47,7 @@ def embedSymbol (s : Symbol T N) : Symbol T (N ⊕ T) :=
 abbrev embedString (u : List (Symbol T N)) : List (Symbol T (N ⊕ T)) := u.map embedSymbol
 
 /-- Embedding of symbols of the original grammar into nonterminals of the new grammar -/
-def rightEmbedSymbol (s : Symbol T N) : Symbol T (N ⊕ T) :=
+@[expose] def rightEmbedSymbol (s : Symbol T N) : Symbol T (N ⊕ T) :=
   match s with
   | Symbol.terminal t => Symbol.nonterminal (Sum.inr t)
   | Symbol.nonterminal n => Symbol.nonterminal (Sum.inl n)

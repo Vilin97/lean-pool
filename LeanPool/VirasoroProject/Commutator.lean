@@ -78,7 +78,7 @@ section commutatorBilin
 variable {𝕜 : Type*} [Field 𝕜] (V : Type*) [AddCommGroup V] [Module 𝕜 V]
 
 /-- Commutator `[⬝,⬝]` as a bilinear map on the space of linear maps. -/
-noncomputable def _root_.LinearMap.commutatorBilin :
+@[expose] noncomputable def _root_.LinearMap.commutatorBilin :
     (V →ₗ[𝕜] V) →ₗ[𝕜] (V →ₗ[𝕜] V) →ₗ[𝕜] (V →ₗ[𝕜] V) where
   toFun A :=
     { toFun := fun B ↦ A.commutator B
@@ -107,7 +107,7 @@ section algebra_commutator
 variable (𝕜 : Type*) {A : Type*} [CommSemiring 𝕜] [Ring A] [Algebra 𝕜 A]
 
 /-- Commutator with a fixed element in a `𝕜`-algebra as a `𝕜`-linear map. -/
-def _root_.LinearMap.algebraCommutator' (a : A) : A →ₗ[𝕜] A where
+@[expose] def _root_.LinearMap.algebraCommutator' (a : A) : A →ₗ[𝕜] A where
   toFun b := a * b - b * a
   map_add' b₁ b₂ := by
     simp only [mul_add, add_mul, sub_eq_add_neg, neg_add_rev]

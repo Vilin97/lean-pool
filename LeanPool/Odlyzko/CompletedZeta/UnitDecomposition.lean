@@ -92,7 +92,7 @@ theorem bijective_unitDecompositionMap :
 
 open scoped Classical in
 /-- An unit decomposition equiv used in the Odlyzko-bound argument. -/
-def unitDecompositionEquiv :
+@[expose] def unitDecompositionEquiv :
     torsion K × ({w : InfinitePlace K // w ≠ w₀} → ℤ) ≃
       (𝓞 K)ˣ :=
   Equiv.ofBijective (unitDecompositionMap K)

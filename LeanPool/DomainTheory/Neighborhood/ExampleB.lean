@@ -201,7 +201,7 @@ The filter laws: `master` uses `X = Δ ∈ x` (`σΔ ⊆ Δ` trivially); `inter`
 the consistency witness `σ(X₁∩X₂)`, which is a *cone* (hence in `B`, by
 `memB_prepend`) contained in
 both `Y₁` and `Y₂`; `up` reuses the same `X`. -/
-def sigmaElt (σ : Str) (x : B.Element) : B.Element where
+@[expose] def sigmaElt (σ : Str) (x : B.Element) : B.Element where
   mem Y := B.mem Y ∧ ∃ X, x.mem X ∧ prepend σ X ⊆ Y
   sub h := h.1
   master_mem := ⟨B.master_mem, B.master, x.master_mem, Set.subset_univ _⟩

@@ -187,7 +187,7 @@ def Form1.ofSectionAnalytic (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] 
 @[simp]
 theorem Form1.coe_ofSectionAnalytic (σ : ∀ x : X, TangentSpace 𝓘(ℂ) x →L[ℂ] Bundle.Trivial X ℂ x)
     (h : ∀ x, AnalyticAt ℂ (coeffInFun (chartAt ℂ x) σ) (chartAt ℂ x x)) :
-    ⇑(Form1.ofSectionAnalytic σ h) = σ := rfl
+    ⇑(Form1.ofSectionAnalytic σ h) = σ := by rfl
 
 /-! ### Analyticity of the coefficients of a holomorphic 1-form -/
 

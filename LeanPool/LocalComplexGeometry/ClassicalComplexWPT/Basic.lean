@@ -60,7 +60,7 @@ not vanish.
 distinguished-variable polynomial whose lower coefficients are analytic and
 vanish at the base origin.
 -/
-def IsWeierstrassPreparation {n : ℕ} (f : Ambient n → ℂ) (d : ℕ)
+@[expose] def IsWeierstrassPreparation {n : ℕ} (f : Ambient n → ℂ) (d : ℕ)
     (a : Fin d → Base n → ℂ) (u : Ambient n → ℂ) : Prop :=
   (∀ i, AnalyticAt ℂ (a i) 0) ∧
     (∀ i, a i 0 = 0) ∧

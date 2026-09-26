@@ -37,7 +37,7 @@ noncomputable def idealPrimeFactors (I : NonzeroIdeal K) :
     prime_of_normalized_factor
 
 /-- An ideal of prime factors used in the Odlyzko-bound argument. -/
-noncomputable def idealOfPrimeFactors
+@[expose] noncomputable def idealOfPrimeFactors
     (m : Multiset (HeightOneSpectrum (𝓞 K))) : NonzeroIdeal K :=
   ⟨(m.map HeightOneSpectrum.asIdeal).prod, by
     exact Multiset.prod_ne_zero fun h ↦

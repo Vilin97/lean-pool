@@ -138,7 +138,7 @@ variable {V₀ : NeighborhoodSystem α} {V₁ : NeighborhoodSystem β}
 theorem prod_mem_prodNbhd {X : Set α} {Y : Set β} (hX : V₀.mem X) (hY : V₁.mem Y) :
     (prod V₀ V₁).mem (prodNbhd X Y) := ⟨X, Y, hX, hY, rfl⟩
 
-@[simp] theorem prod_master : (prod V₀ V₁).master = prodNbhd V₀.master V₁.master := rfl
+@[simp] theorem prod_master : (prod V₀ V₁).master = prodNbhd V₀.master V₁.master := by rfl
 
 /-! ### Projections of an element (Scott's `z₀`, `z₁`). -/
 
@@ -299,10 +299,10 @@ def prodEquiv (V₀ : NeighborhoodSystem α) (V₁ : NeighborhoodSystem β) :
       exact ⟨fun X ⟨hX, hzX⟩ => ⟨hX, h _ hzX⟩, fun Y ⟨hY, hzY⟩ => ⟨hY, h _ hzY⟩⟩
 
 @[simp] theorem prodEquiv_apply (z : (prod V₀ V₁).Element) :
-    prodEquiv V₀ V₁ z = (z.fst, z.snd) := rfl
+    prodEquiv V₀ V₁ z = (z.fst, z.snd) := by rfl
 
 @[simp] theorem prodEquiv_symm_apply (p : V₀.Element × V₁.Element) :
-    (prodEquiv V₀ V₁).symm p = pair p.1 p.2 := rfl
+    (prodEquiv V₀ V₁).symm p = pair p.1 p.2 := by rfl
 
 /-! ### Definition 3.3 / Proposition 3.4 — projections and pairing of maps. -/
 

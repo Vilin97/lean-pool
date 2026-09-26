@@ -53,11 +53,11 @@ noncomputable def isbellLatticePoint (i j : ℤ) : R2 :=
 
 @[simp] lemma isbellLatticePoint_zero (i j : ℤ) :
     (isbellLatticePoint i j) 0
-      = (i : ℝ) * isbellLatticeStep + (j : ℝ) * (isbellLatticeStep / 2) := rfl
+      = (i : ℝ) * isbellLatticeStep + (j : ℝ) * (isbellLatticeStep / 2) := by rfl
 
 @[simp] lemma isbellLatticePoint_one (i j : ℤ) :
     (isbellLatticePoint i j) 1
-      = (j : ℝ) * (isbellLatticeStep * Real.sqrt 3 / 2) := rfl
+      = (j : ℝ) * (isbellLatticeStep * Real.sqrt 3 / 2) := by rfl
 
 /-- `√3 * √3 = 3`, hoisted to file scope for use in the squared-distance
     computation. -/

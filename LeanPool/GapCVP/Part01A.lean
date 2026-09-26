@@ -2017,7 +2017,7 @@ def rightPosition {T : ℕ} (w : Window T) : Position T :=
     Nat.lt_succ_of_le (Nat.min_le_right _ _)⟩
 
 /-- GapCVP reduction support. -/
-def windowAt {T : ℕ} (t : Fin T) (i : Position T) : Window T :=
+@[expose] def windowAt {T : ℕ} (t : Fin T) (i : Position T) : Window T :=
   ⟨(⟨t.val, Nat.lt_trans t.isLt (Nat.lt_succ_self T)⟩, i),
     Nat.add_lt_add_right t.isLt 1⟩
 
@@ -4739,7 +4739,7 @@ theorem packRow_cell
     Nat.lt_of_le_of_lt (Nat.sub_le _ _) index.isLt⟩
 
 /-- GapCVP reduction support. -/
-def rightBlock (width : ℕ)
+@[expose] def rightBlock (width : ℕ)
     (index : Fin (width + 1)) : Fin (width + 1) :=
   ⟨min (index.val + 1) width,
     Nat.lt_succ_of_le (Nat.min_le_right _ _)⟩
@@ -4798,7 +4798,7 @@ abbrev GuessPhaseWindow := PhaseTag × PhaseTag × PhaseTag × PhaseTag
     window.2.2.2 = window.2.1)
   ) (Classical.propDecidable _)
 /-- GapCVP reduction support. -/
-def guessPhaseWindowAt (width : ℕ)
+@[expose] def guessPhaseWindowAt (width : ℕ)
     (first next : List Bool)
     (index : Fin (width + 1)) : GuessPhaseWindow :=
   (certificatePhase first (leftBlock width index).val,
@@ -6324,7 +6324,7 @@ structure PrefixScript {K : Type} (Γ : K → Type) where
   pushed : ∀ stack : K, List (Γ stack)
 
 /-- GapCVP reduction support. -/
-def scriptStacks {K : Type} {Γ : K → Type}
+@[expose] def scriptStacks {K : Type} {Γ : K → Type}
     (original : ∀ stack : K, List (Γ stack))
     (script : PrefixScript Γ) :
     ∀ stack : K, List (Γ stack) :=
@@ -6698,7 +6698,7 @@ private theorem emptyPrefixScript_bounds
   exact ⟨hdrop.trans_lt hstatement, hpush.trans_lt hstatement⟩
 
 /-- GapCVP reduction support. -/
-def finiteHeadScriptRun
+@[expose] def finiteHeadScriptRun
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (label : machine.tm.Λ)
@@ -7214,7 +7214,7 @@ open GapCVP.CLFiniteShiftWindows GapCVP.CLExactVerifierTransition GapCVP.CLLocal
 open GapCVP.CLGlobalTableauSimulation
 
 /-- GapCVP reduction support. -/
-def stackAtomsOfBlock (tm : Turing.FinTM2)
+@[expose] def stackAtomsOfBlock (tm : Turing.FinTM2)
     (block : BlockCell tm)
     (stack : tm.K) : AtomBlock tm :=
   fun offset => (block offset).2.2.1 stack
@@ -7249,7 +7249,7 @@ abbrev ScriptBlockWindow (tm : Turing.FinTM2) :=
     ScriptBlockCell tm × ScriptBlockCell tm
 
 /-- GapCVP reduction support. -/
-def scriptBlockWindowAt (tm : Turing.FinTM2)
+@[expose] def scriptBlockWindowAt (tm : Turing.FinTM2)
     (width : ℕ)
     (first next : ScriptBlockRow tm width)
     (index : Fin (width + 1)) : ScriptBlockWindow tm :=

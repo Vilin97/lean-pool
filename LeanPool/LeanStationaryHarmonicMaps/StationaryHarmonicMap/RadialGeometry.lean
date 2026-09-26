@@ -564,7 +564,7 @@ theorem radialDerivative_zero_eq_sum {n m : ℕ}
 @[simp]
 theorem gradientEnergy_smoothGradient {n m : ℕ}
     (u : Domain n → Target m) (x : Domain n) :
-    gradientEnergy (smoothGradient u x) = energyDensity u x := rfl
+    gradientEnergy (smoothGradient u x) = energyDensity u x := by rfl
 
 theorem gradientRadialDerivative_smoothGradient_zero {n m : ℕ}
     (u : Domain n → Target m) (x : Domain n) :

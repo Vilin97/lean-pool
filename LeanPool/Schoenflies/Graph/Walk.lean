@@ -453,7 +453,7 @@ theorem IsWalk.contains_path (h : G.IsWalk u W v) : ∃ P, G.IsPath u P v ∧ P 
 /-- `G.Reaches u v` : some walk of `G` runs from `u` to `v`. Stated with a walk rather than a
 path because walks are what arguments build — they concatenate and reverse with no side
 condition — and a path is recovered on demand (`Graph.Reaches.exists_isPath`). -/
-def Reaches (G : Graph α β) (u v : α) : Prop := ∃ W, G.IsWalk u W v
+@[expose] def Reaches (G : Graph α β) (u v : α) : Prop := ∃ W, G.IsWalk u W v
 
 theorem Reaches.left_mem (h : G.Reaches u v) : u ∈ V(G) := h.choose_spec.left_mem
 
@@ -487,7 +487,7 @@ theorem Reaches.mono (hHG : H ≤ G) (h : H.Reaches u v) : G.Reaches u v :=
 /-- A graph is connected when it has a vertex and every vertex reaches every other. The
 nonemptiness clause is not bureaucracy: it is what makes the counting statements about trees
 true as stated. -/
-def Connected (G : Graph α β) : Prop :=
+@[expose] def Connected (G : Graph α β) : Prop :=
   V(G).Nonempty ∧ ∀ ⦃u⦄, u ∈ V(G) → ∀ ⦃v⦄, v ∈ V(G) → G.Reaches u v
 
 theorem Connected.nonempty (h : G.Connected) : V(G).Nonempty := h.1

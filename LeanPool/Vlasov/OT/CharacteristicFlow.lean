@@ -3942,7 +3942,7 @@ This is kept separate from the supW1On *contraction-ratio* constraint
 `LocalSmallnessContraction` (below): the two are genuinely independent
 mathematical constraints from distinct sub-arguments, so each predicate
 stays matched to its own sub-argument. -/
-def LocalSmallnessPLBuffer (L : NNReal) (T : ℝ) : Prop :=
+@[expose] def LocalSmallnessPLBuffer (L : NNReal) (T : ℝ) : Prop :=
   (L : ℝ) * T ^ 2 < 1
 
 /-- **Smallness predicate for the supW1On contraction-ratio constraint.**

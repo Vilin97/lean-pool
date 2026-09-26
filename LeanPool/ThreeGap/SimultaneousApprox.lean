@@ -57,7 +57,7 @@ variable {n : ℕ}
 
 /-- The **approximation defect for an arbitrary norm `N`**: `δ^N_q = inf_{p ∈ ℤⁿ} N (q • α − p)`.
 (`delta` is the `N = ‖·‖` sup-norm case.) -/
-noncomputable def deltaN (N : (Fin n → ℝ) → ℝ) (α : Fin n → ℝ) (q : ℤ) : ℝ :=
+@[expose] noncomputable def deltaN (N : (Fin n → ℝ) → ℝ) (α : Fin n → ℝ) (q : ℤ) : ℝ :=
   ⨅ p : Fin n → ℤ, N (rem α q p)
 
 /-- For a nonnegative `N`, the defect `δ^N_q` is a lower bound on every concrete approximation. -/

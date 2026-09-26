@@ -131,7 +131,7 @@ namespace ContinuousMap
 variable {A B Y : Type*} [TopologicalSpace A] [TopologicalSpace B] [TopologicalSpace Y]
 
 /-- `argSwap` -/
-@[simp]
+@[expose, simp]
 def argSwap : C(C(A × B, Y), C(B × A, Y)) where
   toFun f := f.comp ContinuousMap.prodSwap
   continuous_toFun := by fun_prop

@@ -49,7 +49,7 @@ def localizedGradientSourceH (φ : ParabolicPoint → ℝ)
   localizedEquationH φ u
 
 /-- Componentwise vector heat potential of scalar and divergence sources. -/
-def vectorHeatPotential (F : ParabolicPoint → Vec3)
+@[expose] def vectorHeatPotential (F : ParabolicPoint → Vec3)
     (G : Fin 3 → ParabolicPoint → Vec3) : ParabolicPoint → Vec3 :=
   fun z i => heatPotential (fun w => F w i) (fun j w => G j w i) z
 

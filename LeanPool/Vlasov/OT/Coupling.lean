@@ -53,7 +53,7 @@ product space whose marginals are exactly `μ` and `ν`.
 
 We use the convention that `Prod.fst` is the `α`-marginal and `Prod.snd` is
 the `β`-marginal. -/
-def IsCoupling {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
+@[expose] def IsCoupling {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
     (π : Measure (α × β)) (μ : Measure α) (ν : Measure β) : Prop :=
   Measure.map Prod.fst π = μ ∧ Measure.map Prod.snd π = ν
 
@@ -70,7 +70,7 @@ This is the standard OT convention: a coupling π whose cost is non-integrable
 contributes `⊤` to the infimum (rather than the Bochner junk-value 0), so the
 infimum correctly identifies the OT-optimal coupling.  Returns `⊤` if no
 coupling exists. -/
-noncomputable def wasserstein1Coupling
+@[expose] noncomputable def wasserstein1Coupling
     {α : Type*} [MeasurableSpace α] [PseudoMetricSpace α]
     (μ ν : Measure α) : ENNReal :=
   ⨅ (π : Measure (α × α)) (_ : IsCoupling π μ ν),

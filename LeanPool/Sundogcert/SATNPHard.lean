@@ -71,7 +71,7 @@ def formulaSat {n m : ℕ} (a : Assignment n) (f : Formula n m) : Prop :=
   ∀ k : Fin m, clauseSat a (f k)
 
 /-- **3-SAT**: a formula is satisfiable iff some assignment satisfies it. -/
-def Satisfiable {n m : ℕ} (f : Formula n m) : Prop :=
+@[expose] def Satisfiable {n m : ℕ} (f : Formula n m) : Prop :=
   ∃ a : Assignment n, formulaSat a f
 
 /-! ### Decidability.

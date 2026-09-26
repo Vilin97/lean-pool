@@ -29,7 +29,7 @@ namespace CKN.Foundation.Euclidean
 open CKN
 
 /-- Explicit coefficient controlling the second Riesz kernel's size estimates. -/
-def rieszSecondKernelC₂ : ℝ := 72 / (4 * Real.pi)
+@[expose] def rieszSecondKernelC₂ : ℝ := 72 / (4 * Real.pi)
 
 /-- Second spatial derivative of the Newtonian kernel in the chosen coordinates. -/
 @[expose]

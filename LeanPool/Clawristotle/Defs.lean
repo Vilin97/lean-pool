@@ -93,7 +93,7 @@ lemma innerLandauMatrix_apply (z : Fin 3 → ℝ) (i j : Fin 3) :
 
 /-- A Maxwellian distribution: log-quadratic with c₀ < 0 (ensuring integrability).
     Specifically: ∃ a₀ b c₀, c₀ < 0 ∧ f(v) = exp(a₀ + b · v + c₀ |v|²) -/
-def IsMaxwellian (f : (Fin 3 → ℝ) → ℝ) : Prop :=
+@[expose] def IsMaxwellian (f : (Fin 3 → ℝ) → ℝ) : Prop :=
   ∃ (a₀ : ℝ) (b : Fin 3 → ℝ) (c₀ : ℝ),
     c₀ < 0 ∧ ∀ v, f v = Real.exp (a₀ + dotProduct b v + c₀ * normSq v)
 

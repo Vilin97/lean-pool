@@ -24,7 +24,7 @@ variable {K : Type*} [Field K] [NumberField K]
 
 open Classical in
 /-- An unit coordinate shift hom used in the Odlyzko-bound argument. -/
-noncomputable def unitCoordinateShiftHom :
+@[expose] noncomputable def unitCoordinateShiftHom :
     ({w : InfinitePlace K // w ≠ w₀} → ℤ) →+
       mixedEmbedding.realSpace K where
   toFun := unitCoordinateShift

@@ -88,7 +88,7 @@ private lemma ge_three_of_ne_base (x : SymN)
 
 /-- Free columns for a directed type `k`: coordinates not equal to any base symbol. -/
 @[implicit_reducible]
-def FreeCol (k : DirIdx) : Type :=
+@[expose] def FreeCol (k : DirIdx) : Type :=
   { j : Fin 3 // colMatch (maskAt k) j = none }
 
 noncomputable instance (k : DirIdx) : Fintype (FreeCol k) := by
@@ -113,7 +113,7 @@ private lemma colMatch_unique (k : DirIdx) {j₁ j₂ : Fin 3} {i : Fin 3}
   colMatch_unique' (k := k) _ _ _ h₁ h₂
 
 /-- Vertices in the orbit of the base vertex with directed type `k`. -/
-def BaseOrbit (k : DirIdx) : Type :=
+@[expose] def BaseOrbit (k : DirIdx) : Type :=
   { u : V // dirMask baseVertex u = maskAt k }
 
 noncomputable instance (k : DirIdx) : Fintype (BaseOrbit k) := by

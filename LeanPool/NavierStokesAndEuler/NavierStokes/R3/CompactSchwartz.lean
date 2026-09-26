@@ -53,16 +53,16 @@ def ofCompactSupport (f : Space → ℂ) (hf : ContDiff ℝ ∞ f)
 
 @[simp] theorem coe_ofCompactSupport (f : Space → ℂ) (hf : ContDiff ℝ ∞ f)
     (hc : HasCompactSupport f) :
-    (ofCompactSupport f hf hc : Space → ℂ) = f := rfl
+    (ofCompactSupport f hf hc : Space → ℂ) = f := by rfl
 
 @[simp] theorem ofCompactSupport_apply (f : Space → ℂ) (hf : ContDiff ℝ ∞ f)
     (hc : HasCompactSupport f) (x : Space) :
-    ofCompactSupport f hf hc x = f x := rfl
+    ofCompactSupport f hf hc x = f x := by rfl
 
 /-- Passing to the Schwartz wrapper preserves topological support exactly. -/
 @[simp] theorem tsupport_ofCompactSupport (f : Space → ℂ) (hf : ContDiff ℝ ∞ f)
     (hc : HasCompactSupport f) :
-    tsupport (ofCompactSupport f hf hc) = tsupport f := rfl
+    tsupport (ofCompactSupport f hf hc) = tsupport f := by rfl
 
 /-- Each iterated derivative remains supported inside the original support. -/
 theorem tsupport_iteratedFDeriv_subset (f : Space → ℂ) (n : ℕ) :

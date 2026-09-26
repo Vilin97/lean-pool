@@ -192,7 +192,7 @@ theorem ext {G K : Gate n} (h : ∀ i j, G i j = K i j) : G = K := by
       simp_all
 
 /-- Build a gate from a unitary Hilbert operator. -/
-def ofUnitary (U : HilbertOperator n)
+@[expose] def ofUnitary (U : HilbertOperator n)
     (hU : U ∈ Matrix.unitaryGroup (Fin (2 ^ n)) ℂ) : Gate n := ⟨U, hU⟩
 
 @[simp]

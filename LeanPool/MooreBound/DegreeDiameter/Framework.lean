@@ -48,7 +48,7 @@ noncomputable def MaxDegreeLE {V : Type*} (G : SimpleGraph V) (d : ℕ) : Prop :
 /-! ## A coarse breadth-first bound -/
 
 /-- One legal breadth-first move: stay at the current vertex, or cross one edge. -/
-def ClosedNeighbor {V : Type u} (G : SimpleGraph V) (x : V) :=
+@[expose] def ClosedNeighbor {V : Type u} (G : SimpleGraph V) (x : V) :=
   {y : V // x = y ∨ G.Adj x y}
 
 instance finite_closedNeighbor {V : Type u} [Finite V] (G : SimpleGraph V) (x : V) :

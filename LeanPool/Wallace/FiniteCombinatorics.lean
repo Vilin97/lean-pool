@@ -50,7 +50,7 @@ variable {I : Type u} {T : Type v} [LinearOrder I]
 
 /-- The support condition in the triangular enumeration: every coordinate occurring in a term of
 the sequence lies strictly below its assigned index. -/
-def SupportedBelow (s : ℕ → I →₀ ℤ) (i : I) : Prop :=
+@[expose] def SupportedBelow (s : ℕ → I →₀ ℤ) (i : I) : Prop :=
   ∀ n j, j ∈ (s n).support → j < i
 
 end Triangular

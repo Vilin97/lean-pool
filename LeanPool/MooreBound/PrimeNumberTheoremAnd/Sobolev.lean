@@ -190,7 +190,7 @@ lemma iteratedDeriv_sub {f g : ℝ → E} (hf : ContDiff ℝ n f) (hg : ContDiff
     simp_rw [iteratedDeriv_succ', ← ih hf' hg', hfg]
 
 /-- Differentiate a function with integrable derivatives, lowering its index. -/
-noncomputable def deriv (f : W1 (n + 1) E) : W1 n E where
+@[expose] noncomputable def deriv (f : W1 (n + 1) E) : W1 n E where
   toFun := _root_.deriv f
   smooth := contDiff_succ_iff_deriv.mp f.smooth |>.2.2
   integrable k hk := by

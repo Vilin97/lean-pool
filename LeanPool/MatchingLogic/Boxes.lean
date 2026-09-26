@@ -47,7 +47,7 @@ abbrev Coord (S : Signature) : Type := (σ : S.Sym) × Fin (S.arity σ)
 /-- `[p]ψ := [e₁]⋯[eₘ]ψ` for a word `p = e₁⋯eₘ`, with `[ε]ψ := ψ`
 (Definition 3).  Words are lists of coordinates; every word composes because
 there is only one sort. -/
-def boxes : List (Coord S) → Pattern S Var → Pattern S Var
+@[expose] def boxes : List (Coord S) → Pattern S Var → Pattern S Var
   | [], ψ => ψ
   | e :: p, ψ => box e (boxes p ψ)
 

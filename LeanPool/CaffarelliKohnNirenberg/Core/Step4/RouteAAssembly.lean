@@ -70,7 +70,7 @@ Morrey membership, so it carries no Calderón--Zygmund constant: the
 construction that discharges this interface, not to its statement. -/
 
 /-- Pressure-gradient construction interface used in the Morrey bootstrap route. -/
-def routeAGradientProducer : Prop :=
+@[expose] def routeAGradientProducer : Prop :=
   ∀ q : ℝ, 5 / 2 < q →
     ∀ {Ω : Set Vec3} {I : Set ℝ}
       {u : ParabolicPoint → Vec3}

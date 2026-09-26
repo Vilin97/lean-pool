@@ -50,7 +50,7 @@ noncomputable def tA : inftyValuationSubring k :=
     exact WithZero.exp_le_exp.mpr (show (-1 : ℤ) ≤ 0 by omega)⟩
 
 @[simp]
-theorem tRatFunc_coe : (tA k : k⟮X⟯) = tRatFunc k := rfl
+theorem tRatFunc_coe : (tA k : k⟮X⟯) = tRatFunc k := by rfl
 
 omit [Algebra k K] [Algebra k[X] K] [IsScalarTower k k[X] K] [IsScalarTower k[X] k⟮X⟯ K]
   [_root_.FunctionField k K] [Algebra.IsSeparable k⟮X⟯ K] [IsFullConstantField k K] in
@@ -125,7 +125,7 @@ theorem principalDivisorA_nonneg_at_finite_of_mem_ringOfIntegers {a : ringOfInte
       FractionalIdeal.count K w
         (FractionalIdeal.spanSingleton (ringOfIntegers k K)⁰
           (Units.mk0 (a : K) (ringOfIntegers_coe_ne_zero k K ha))) := by
-    rfl
+    rw [FractionalIdeal.principalDivisor_apply]
   have hnonneg :
       0 ≤ FractionalIdeal.count K w
         (FractionalIdeal.spanSingleton (ringOfIntegers k K)⁰

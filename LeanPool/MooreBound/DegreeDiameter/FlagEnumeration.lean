@@ -119,7 +119,7 @@ noncomputable instance flagStepVectorFinite [Finite V]
   infer_instance
 
 /-- One advancing vector at every rank of a complete flag. -/
-def FlagStepChoices (F : CompleteFlag K V n) :=
+@[expose] def FlagStepChoices (F : CompleteFlag K V n) :=
   (i : Fin n) → FlagStepVector F i
 
 noncomputable instance flagStepChoicesFinite [Finite V]

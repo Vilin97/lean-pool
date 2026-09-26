@@ -207,7 +207,7 @@ theorem QFT_mem_unitaryGroup (n : ℕ) :
 def QFT (n : ℕ) : Gate n := Gate.ofUnitary (QFTMatrix n) (QFT_mem_unitaryGroup n)
 
 @[simp]
-theorem QFT_coe (n : ℕ) : ((QFT n : Gate n) : HilbertOperator n) = QFTMatrix n := rfl
+theorem QFT_coe (n : ℕ) : ((QFT n : Gate n) : HilbertOperator n) = QFTMatrix n := by rfl
 
 /-! ### Action on basis kets -/
 

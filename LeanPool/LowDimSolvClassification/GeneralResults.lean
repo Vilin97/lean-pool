@@ -276,7 +276,7 @@ def LinearMap.ofProd {M₁ M₂ : Type*} [AddCommGroup M₁] [AddCommGroup M₂]
 theorem LinearMap.ofProd_apply {M₁ M₂ : Type*} [AddCommGroup M₁] [AddCommGroup M₂] [Module K M₁]
     [Module K M₂]
       (f : M₁ →ₗ[K] L) (g : M₂ →ₗ[K] L) (x : M₁ × M₂) :
-    LinearMap.ofProd f g x = f x.1 + g x.2 := rfl
+    LinearMap.ofProd f g x = f x.1 + g x.2 := by rfl
 
 variable {K L : Type*} [CommRing K] [AddCommGroup L] [Module K L] {p q : Submodule K L}
 
@@ -319,7 +319,7 @@ noncomputable def LinearEquiv.ofComplSubmodules (h : IsCompl p q) :
 
 @[simp]
 theorem LinearEquiv.ofComplSubmodules_apply (h : IsCompl p q) (x : p × q) :
-    (LinearEquiv.ofComplSubmodules h) x = x.1.val + x.2.val := rfl
+    (LinearEquiv.ofComplSubmodules h) x = x.1.val + x.2.val := by rfl
 
 theorem LinearEquiv.ofComplSubmodules_symm_apply (h : IsCompl p q)
       (x y z : L) (hy : y ∈ p) (hz : z ∈ q) (hx : x = y + z) :
@@ -582,9 +582,9 @@ def LieHom.smulRight (f : End K L) : K →ₗ⁅K⁆ End K L := {
 }
 
 @[simp]
-theorem LieHom.coe_smulRight (f : End K L) : ⇑(LieHom.smulRight f) = fun (a : K) => a • f := rfl
+theorem LieHom.coe_smulRight (f : End K L) : ⇑(LieHom.smulRight f) = fun (a : K) => a • f := by rfl
 
-theorem LieHom.smulRight_apply (f : End K L) (a : K) : (LieHom.smulRight f) a = a • f := rfl
+theorem LieHom.smulRight_apply (f : End K L) (a : K) : (LieHom.smulRight f) a = a • f := by rfl
 
 namespace LieAlgebra
 
@@ -888,11 +888,11 @@ def LieEquiv.commutatorEquiv
 theorem LieEquiv.commutator_equiv_apply (e : L ≃ₗ⁅K⁆ L') (x : L)
     (hx : x ∈ LieAlgebra.commutator K L) :
     LieEquiv.commutatorEquiv e ⟨x, hx⟩ = ⟨e x, LieEquiv.commutator_map e ▸ LieIdeal.mem_map hx ⟩ :=
-  rfl
+  by rfl
 
 theorem LieEquiv.commutator_equiv_symm (e : L ≃ₗ⁅K⁆ L') :
     e.commutatorEquiv.symm = e.symm.commutatorEquiv :=
-  rfl
+  by rfl
 
 theorem LieAlgebra.dim_commutator_eq_of_lieEquiv (e : L ≃ₗ⁅K⁆ L') :
     Module.finrank K (LieAlgebra.commutator K L) = Module.finrank K (LieAlgebra.commutator K L') :=

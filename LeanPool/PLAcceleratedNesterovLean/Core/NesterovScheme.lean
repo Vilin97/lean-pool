@@ -68,11 +68,11 @@ structure NesterovState (d : ℕ) where
   | n + 1 => nesterovStep f η ρ (nesterovSeq f η ρ x₁ n)
 
 /-- The gradient computed at the look-ahead point at step n. -/
-def nesterovGrad (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
+@[expose] def nesterovGrad (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
   gradient f ((nesterovSeq f η ρ x₁ n).lookahead η)
 
 /-- Step between consecutive look-ahead points: h_n = x'_{n+1} - x'_n. -/
-def nesterovH (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
+@[expose] def nesterovH (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
   (nesterovSeq f η ρ x₁ (n + 1)).lookahead η - (nesterovSeq f η ρ x₁ n).lookahead η
 
 /-! ## Geometric quantities -/
@@ -94,7 +94,8 @@ def nesterovH (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
 
 /-- Curvature error: ξ_n = e_{n+1} - e_n - P⊥ h_n.
     Measures the deviation from the affine-case recursion. -/
-def curvatureError (P π : E d → E d) (f : E d → ℝ) (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
+@[expose] def curvatureError (P π : E d → E d) (f : E d → ℝ)
+    (η ρ : ℝ) (x₁ : E d) (n : ℕ) : E d :=
   let e_next := normalDisp π f η ρ x₁ (n + 1)
   let e_curr := normalDisp π f η ρ x₁ n
   let h := nesterovH f η ρ x₁ n

@@ -24,7 +24,7 @@ namespace HasseMinkowski
 attribute [local instance] Classical.propDecidable
 
 /-- The Hilbert symbol `(a,b)_k`, valued in `{0, ±1}`. -/
-noncomputable def hilbertSym {k : Type*} [Field k] (a b : k) : ℤ :=
+@[expose] noncomputable def hilbertSym {k : Type*} [Field k] (a b : k) : ℤ :=
   if a = 0 ∨ b = 0 then 0
   else if ∃ z x y : k, (z, x, y) ≠ (0, 0, 0) ∧ z ^ 2 - a * x ^ 2 - b * y ^ 2 = 0
     then 1 else -1

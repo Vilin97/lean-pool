@@ -33,16 +33,16 @@ def IsSetBaseTuple {n : Nat} (x : Fin n → Ω) : Prop :=
   Function.Injective x ∧ IsBaseTuple G Ω x
 
 /-- Base-two adjacency: the displayed ordered pair has trivial stabilizer. -/
-def Adjacent (x y : Ω) : Prop :=
+@[expose] def Adjacent (x y : Ω) : Prop :=
   IsBaseTuple G Ω (Fin.cons x (Fin.cons y Fin.elim0))
 
 /-- Two vertices extend to an injective base of size `tail + 2`. -/
-def GeneralizedAdjacent (tail : Nat) (x y : Ω) : Prop :=
+@[expose] def GeneralizedAdjacent (tail : Nat) (x y : Ω) : Prop :=
   ∃ z : Fin tail → Ω,
     IsSetBaseTuple G Ω (Fin.cons x (Fin.cons y z))
 
 /-- Two vertices have a common neighbour for a relation `R`. -/
-def HasCommonNeighbour (R : Ω → Ω → Prop) (x y : Ω) : Prop :=
+@[expose] def HasCommonNeighbour (R : Ω → Ω → Prop) (x y : Ω) : Prop :=
   ∃ z, R x z ∧ R z y
 
 /-- Exact base size `n`, stated without a global minimum operator. -/

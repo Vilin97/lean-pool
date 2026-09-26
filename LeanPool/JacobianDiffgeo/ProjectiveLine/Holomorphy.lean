@@ -206,6 +206,6 @@ noncomputable def inversionDiffeomorph : Diffeomorph 𝓘(ℂ) 𝓘(ℂ) (OnePoi
   contMDiff_toFun := contMDiff_inversion
   contMDiff_invFun := contMDiff_inversion
 
-@[simp] theorem inversionDiffeomorph_apply : ⇑inversionDiffeomorph = inversion := rfl
+@[simp] theorem inversionDiffeomorph_apply : ⇑inversionDiffeomorph = inversion := by rfl
 
 end RS.P1

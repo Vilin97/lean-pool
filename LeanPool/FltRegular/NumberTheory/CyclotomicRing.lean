@@ -48,7 +48,6 @@ namespace CyclotomicIntegers
 
 /-- The canonical equivalence between `CyclotomicIntegers p` and the ring of integers of the
 `p`-th cyclotomic field. -/
-@[simps! -isSimp]
 def equiv :
     CyclotomicIntegers p ≃+* 𝓞 (CyclotomicField p ℚ) := by
   have H := IsCyclotomicExtension.zeta_spec p ℚ (CyclotomicField p ℚ)
@@ -67,7 +66,7 @@ def zeta : CyclotomicIntegers p := AdjoinRoot.root _
 
 lemma equiv_zeta : equiv p (zeta p) = (IsCyclotomicExtension.zeta_spec
     p ℚ (CyclotomicField p ℚ)).toInteger := by
-  simp [equiv_apply, zeta]
+  simp [equiv, zeta]
 
 lemma prime_one_sub_zeta :
     Prime (1 - zeta p) := by

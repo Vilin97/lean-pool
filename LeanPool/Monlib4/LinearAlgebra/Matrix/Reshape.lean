@@ -31,11 +31,11 @@ def reshape : Matrix I J R ≃ₗ[R] I × J → R :=
   (LinearEquiv.curry R _ _ _).symm
 
 theorem reshape_apply (x : Matrix I J R) (ij : I × J) : reshape x ij = x ij.1 ij.2 :=
-  rfl
+  by rfl
 
 theorem reshape_symm_apply (x : I × J → R) (i : I) (j : J) :
     (reshape : Matrix I J R ≃ₗ[R] I × J → R).symm x i j = x (i, j) :=
-  rfl
+  by rfl
 
 theorem reshape_symm_apply' (x : I × J → R) (ij : I × J) :
     (reshape : Matrix I J R ≃ₗ[R] I × J → R).symm x ij.1 ij.2 = x ij := by

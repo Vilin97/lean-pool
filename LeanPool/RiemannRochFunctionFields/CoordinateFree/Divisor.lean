@@ -164,6 +164,7 @@ end Place
 /-- The chart degree agrees with the intrinsic residue-field degree. -/
 theorem placeDegree_eq (w : PlaceA k K) :
     placeDegree k K w = (chartToPlace k K w).degree := by
+  rw [chartToPlace_apply]
   rcases w with w | w
   · exact (Place.finite_degree_eq k K w).symm
   · exact (Place.infinite_degree_eq k K w).symm
@@ -190,7 +191,7 @@ omit [Algebra k[X] K] [Algebra k⟮X⟯ K] [IsScalarTower k k[X] K]
     [Algebra.IsSeparable k⟮X⟯ K] in
 /-- The degree is the intrinsic residue-degree weighted sum. -/
 theorem deg_formula (D : Divisor k K) :
-    deg k K D = D.sum fun v n => n * (v.degree : ℤ) := rfl
+    deg k K D = D.sum fun v n => n * (v.degree : ℤ) := by rfl
 
 omit [Algebra k[X] K] [Algebra k⟮X⟯ K] [IsScalarTower k k[X] K]
     [IsScalarTower k[X] k⟮X⟯ K] [FunctionField k K]

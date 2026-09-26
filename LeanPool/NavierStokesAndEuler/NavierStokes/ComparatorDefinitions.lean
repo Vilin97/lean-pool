@@ -66,8 +66,8 @@ In coordinates, $\nabla \cdot v = \sum_i \partial v_i / \partial x_i$.
 This is available as the notation `∇⬝ v`. If `v` is not differentiable at `x`, then
 `fderiv` is the zero map, so this definition has the corresponding junk value $0$.
 -/
-noncomputable
-@[expose] def divergence (v : ℝ^n → ℝ^n) (x : ℝ^n) : ℝ := (fderiv ℝ v x).trace ℝ (ℝ^n)
+@[expose] noncomputable def divergence (v : ℝ^n → ℝ^n) (x : ℝ^n) : ℝ :=
+  (fderiv ℝ v x).trace ℝ (ℝ^n)
 
 @[inherit_doc]
 local notation "∇⬝" => divergence

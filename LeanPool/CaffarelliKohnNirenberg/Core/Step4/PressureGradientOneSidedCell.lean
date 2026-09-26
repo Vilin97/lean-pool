@@ -51,7 +51,7 @@ cylinder; the Morrey seminorm is recovered as the supremum of the cells.
 -/
 
 /-- Componentwise Morrey-cell bound for the gradient restricted to the normalized cylinder. -/
-def oneSidedPressureGradientOriginCellOutput
+@[expose] def oneSidedPressureGradientOriginCellOutput
     (R₁ κ : ℝ) (KP : ℝ≥0∞) (Dp : ParabolicPoint → Vec3) : Prop :=
   ∀ i : Fin 3, ∀ z : ParabolicPoint, ∀ r : {r : ℝ // 0 < r},
     morreyCell (6 / 5 : ℝ) κ

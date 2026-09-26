@@ -67,7 +67,7 @@ lemma summable_norm_convolutionFun (f g : L1Coeff A) :
       exact norm_mul_le _ _
 
 /-- Antidiagonal convolution as an `ℓ¹` coefficient family. -/
-def convolution (f g : L1Coeff A) : L1Coeff A :=
+@[expose] def convolution (f g : L1Coeff A) : L1Coeff A :=
   ⟨convolutionFun f g, by
     apply memℓp_gen
     simpa using summable_norm_convolutionFun f g⟩
@@ -121,7 +121,7 @@ def convolutionRightLinear (g : L1Coeff A) : L1Coeff A →ₗ[ℂ] L1Coeff A whe
   map_smul' c f := convolution_smul_left c f g
 
 /-- Right convolution as a continuous linear map. -/
-def convolutionRight (g : L1Coeff A) : L1Coeff A →L[ℂ] L1Coeff A :=
+@[expose] def convolutionRight (g : L1Coeff A) : L1Coeff A →L[ℂ] L1Coeff A :=
   (convolutionRightLinear g).mkContinuous ‖g‖ (fun f ↦ by
     change ‖convolution f g‖ ≤ ‖g‖ * ‖f‖
     simpa [mul_comm] using norm_convolution_le f g)
@@ -150,7 +150,7 @@ lemma highIndex_injective (d : ℕ) : Function.Injective (highIndex (A := A) d) 
   exact ⟨h.1, Nat.add_right_cancel h.2⟩
 
 /-- Delete the first `d` distinguished-variable coefficient layers. -/
-def highShift (d : ℕ) (f : L1Coeff (A × ℕ)) : L1Coeff (A × ℕ) :=
+@[expose] def highShift (d : ℕ) (f : L1Coeff (A × ℕ)) : L1Coeff (A × ℕ) :=
   ⟨fun x ↦ f (highIndex d x), by
     apply memℓp_gen
     simpa [Function.comp_def] using

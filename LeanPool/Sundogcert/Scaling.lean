@@ -106,7 +106,7 @@ theorem hHG_proj (m : ℕ) :
     The divergence WIDENS with m — the non-degenerate bound's reach grows linearly in τ. -/
 
 /-- The parametric scheme `[2m, m]` at radius `τ = m - 1`. -/
-def projScheme (m : ℕ) : Scheme (ZMod 2) where
+@[expose] def projScheme (m : ℕ) : Scheme (ZMod 2) where
   n := 2 * m
   k := m
   m := m

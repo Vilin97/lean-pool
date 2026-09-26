@@ -58,7 +58,7 @@ noncomputable def phiHat (ψ : AddChar K ℂ) (D : ℕ) (z : K) : ℂ := ∑ t :
 /-- The all-character Walsh formula
 `2 S(a) = (Q/N) ∑_χ [G(χ^e)/G(χ^3)] χ(a)` for every `a ∈ Kˣ`, stated as a
 property of `S` rather than assumed. -/
-def WalshCharacterFormula (ψ : AddChar K ℂ) (e : ℕ) (S : K → ℂ) : Prop :=
+@[expose] def WalshCharacterFormula (ψ : AddChar K ℂ) (e : ℕ) (S : K → ℂ) : Prop :=
   ∀ a : Kˣ, 2 * S (a : K) =
     (Fintype.card K : ℂ) / (Fintype.card Kˣ : ℂ) *
       ∑ χ : MulChar K ℂ, gaussSum (χ ^ e) ψ / gaussSum (χ ^ 3) ψ * χ (a : K)

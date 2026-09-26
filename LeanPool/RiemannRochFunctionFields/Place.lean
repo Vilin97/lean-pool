@@ -299,7 +299,7 @@ abbrev residueField (v : Place k K) :=
   IsLocalRing.ResidueField v.toValuationSubring
 
 /-- The intrinsic degree of a place is the dimension of its residue field over `k`. -/
-noncomputable def degree (v : Place k K) : ℕ :=
+@[expose] noncomputable def degree (v : Place k K) : ℕ :=
   Module.finrank k v.residueField
 
 end Place

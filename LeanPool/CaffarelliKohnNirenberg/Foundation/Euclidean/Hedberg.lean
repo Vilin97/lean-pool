@@ -263,7 +263,7 @@ private lemma ennreal_mul_rpow_of_ne_zero_of_ne_top
         exact ENNReal.mul_inv (Or.inl hxr0) (Or.inl hxrtop)
       _ = x ^ e * y ^ e := by rw [hxpow, hypow]
 /-- Geometric-series term controlling the near-field order-one potential. -/
-def nearTerm (n : ℕ) : ℝ≥0∞ :=
+@[expose] def nearTerm (n : ℕ) : ℝ≥0∞ :=
   (ENNReal.ofReal ((2 : ℝ) ^ (Int.negSucc n : ℝ))) ^ (-2 : ℝ) *
     ENNReal.ofReal ((4 * ((2 : ℝ) ^ (Int.negSucc n : ℝ))) ^ 3)
 /-- The geometric constant in the near-field estimate. -/
@@ -547,7 +547,7 @@ private lemma far_shell_integral_le
       gcongr
 
 /-- Geometric-series term controlling the far-field order-one potential. -/
-def farTerm (n : ℕ) : ℝ≥0∞ :=
+@[expose] def farTerm (n : ℕ) : ℝ≥0∞ :=
   ((ENNReal.ofReal ((2 : ℝ) ^ (n : ℝ))) ^ (-(10 / 3 : ℝ)) *
     ENNReal.ofReal ((4 * ((2 : ℝ) ^ (n : ℝ))) ^ 3)) ^ (3 / 5 : ℝ)
 

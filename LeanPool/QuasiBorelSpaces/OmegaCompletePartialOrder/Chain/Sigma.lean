@@ -29,7 +29,7 @@ def inj {i} (c : Chain (P i)) : Chain ((i : I) × P i) where
     apply c.monotone' hn
 
 @[simp]
-lemma inj_coe {i} (c : Chain (P i)) (n : ℕ) : inj c n = ⟨i, c n⟩ := rfl
+lemma inj_coe {i} (c : Chain (P i)) (n : ℕ) : inj c n = ⟨i, c n⟩ := by rfl
 
 /-- Converts a chain of coproducts into a coproduct of chains. -/
 def distrib (c : Chain ((i : I) × P i)) : (i : I) × Chain (P i) where
@@ -51,7 +51,7 @@ def distrib (c : Chain ((i : I) × P i)) : (i : I) × Chain (P i) where
     exact h₁
 
 @[simp]
-lemma distrib_inj {i} (c : Chain (P i)) : distrib (inj c) = ⟨i, c⟩ := rfl
+lemma distrib_inj {i} (c : Chain (P i)) : distrib (inj c) = ⟨i, c⟩ := by rfl
 
 @[simp]
 lemma inj_distrib (c : Chain (Sigma P)) : inj (distrib c).snd = c := by

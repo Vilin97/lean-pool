@@ -98,8 +98,8 @@ def swap : Player → Player
 @[simp_isPosition] lemma apply_ite_swap (P : Prop) [Decidable P] (a b : Player) :
     swap (if P then a else b) = if P then swap a else swap b := by
   simpa using (apply_ite swap P a b)
-@[simp, simp_isPosition] lemma swap_zero : zero.swap = one := rfl
-@[simp, simp_isPosition] lemma swap_one : one.swap = zero := rfl
+@[simp, simp_isPosition] lemma swap_zero : zero.swap = one := by rfl
+@[simp, simp_isPosition] lemma swap_one : one.swap = zero := by rfl
 
 /-- if `p` moves in position `[]`, then `p.residual x` moves in position `x` -/
 @[simp_isPosition] def residual := if x.length % 2 = 0 then p else p.swap

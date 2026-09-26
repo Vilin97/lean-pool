@@ -83,7 +83,7 @@ diagonal-crossing proof. -/
   0 < turn a b p
 
 /-- Executable increasing representatives of unordered pairs of labels. -/
-def unorderedPairList (n : ℕ) : List (Fin n × Fin n) :=
+@[expose] def unorderedPairList (n : ℕ) : List (Fin n × Fin n) :=
   (List.finRange n).flatMap fun i ↦
     ((List.finRange n).filter fun j ↦ decide (i < j)).map fun j ↦ (i, j)
 

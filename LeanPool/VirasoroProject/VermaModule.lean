@@ -124,7 +124,7 @@ def _root_.VirasoroProject.vermaIdeal (η : ι → A × 𝕜) :
 /-- The (generalied) Verma module of an algebra `A`:
 `η : ι → A × 𝕜` is an indexed collection of algebra elements and scalars by which they should act
 on the "highest weight vector". -/
-def _root_.VirasoroProject.VermaModule (η : ι → A × 𝕜) :=
+@[expose] def _root_.VirasoroProject.VermaModule (η : ι → A × 𝕜) :=
   A ⧸ vermaIdeal η
 
 /-- The highest weight vector in a (generalized) Verma module. -/

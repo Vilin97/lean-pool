@@ -55,7 +55,7 @@ namespace Nivat.TwoFactors
 
 /-- A row has a positive integer period in the horizontal basis direction. Lemma 5.8
 (`lem:row-lifting`). -/
-def RowPeriodic {A : Type*} (x : ℤ × ℤ → A) (j : ℤ) : Prop :=
+@[expose] def RowPeriodic {A : Type*} (x : ℤ × ℤ → A) (j : ℤ) : Prop :=
   ∃ p : ℕ, 0 < p ∧ Function.Periodic (fun i : ℤ => x (i, j)) (p : ℤ)
 
 /-- Equal occurring interior patterns and equal first `k` boundary values determine the next

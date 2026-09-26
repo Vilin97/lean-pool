@@ -109,7 +109,8 @@ theorem windowPolynomial_reconstruct (D : Finset Lattice) (f : Laurent)
 
 /-- Auxiliary construction for Lemma 3.2 (`lem:ann-exists`): the supported-polynomial identification
 as a rational linear map. -/
-@[expose] noncomputable def windowPolynomialLinear (D : Finset Lattice) : (D → ℚ) →ₗ[ℚ] Laurent where
+@[expose] noncomputable def windowPolynomialLinear (D : Finset Lattice) :
+    (D → ℚ) →ₗ[ℚ] Laurent where
   toFun := windowPolynomial D
   map_add' a b := by
     classical

@@ -159,7 +159,7 @@ The construction of the group `P` as a Metabelian group from the given action an
 -/
 
 /-- the group `P` constructed via the cocycle construction -/
-@[aesop norm unfold (rule_sets := [P])]
+@[expose, aesop norm unfold (rule_sets := [P])]
 def P := K × Q
 
 namespace P

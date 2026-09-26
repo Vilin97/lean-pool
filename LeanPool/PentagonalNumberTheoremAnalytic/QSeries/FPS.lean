@@ -118,7 +118,7 @@ theorem multipliable_one_sub_mul_pow (a : R⟦X⟧) :
 
 /-- **Infinite q-Pochhammer symbol** `(a; X)_∞ = ∏_{k ≥ 0} (1 - a · X^k)`.
 Well-defined in `R⟦X⟧` with the pi topology. -/
-def qPochhammerInf (a : R⟦X⟧) : R⟦X⟧ :=
+@[expose] def qPochhammerInf (a : R⟦X⟧) : R⟦X⟧ :=
   ∏' k : ℕ, (1 - a * X ^ k)
 
 /-- The `d`-th coefficient of `(a; X)_∞` equals the `d`-th coefficient of `(a; X)_{d+1}`. -/

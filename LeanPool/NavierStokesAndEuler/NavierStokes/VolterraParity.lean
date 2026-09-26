@@ -860,7 +860,7 @@ def pathInverse {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ) : Path R →L[ℂ] 
 theorem pathInverse_apply {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (f : Path R) (ξ : Icc (0 : ℝ) R) (i : Fin 6) :
     pathInverse hR c f ξ i =
-      (ξ : ℝ) • ∫ t in (0 : ℝ)..1, (t ^ c i) • extendPath hR f (t * ξ) i := rfl
+      (ξ : ℝ) • ∫ t in (0 : ℝ)..1, (t ^ c i) • extendPath hR f (t * ξ) i := by rfl
 
 /-- Coefficient action value, given by `⟨fun ξ => A ξ (f ξ), A.continuous.clm_apply
 f.continuous⟩`. -/
@@ -895,7 +895,7 @@ def coefficientAction {R : ℝ} : CoefficientPath R →L[ℂ] Path R →L[ℂ] P
       simpa only [one_mul] using norm_coefficientActionValue_le A f)
 
 theorem coefficientAction_apply {R : ℝ} (A : CoefficientPath R) (f : Path R)
-    (ξ : Icc (0 : ℝ) R) : coefficientAction A f ξ = A ξ (f ξ) := rfl
+    (ξ : Icc (0 : ℝ) R) : coefficientAction A f ξ = A ξ (f ξ) := by rfl
 
 /-- Path letter, defined pointwise by `pathInverse hR c (if b then coefficientAction (A₁ z)
 (deriv F z) else coefficientAction (A₀ z) (F z))`. -/
@@ -939,7 +939,7 @@ def pathEvaluation {R : ℝ} (ξ : Icc (0 : ℝ) R) (i : Fin 6) : Path R →L[�
   (ContinuousLinearMap.proj i).comp (ContinuousMap.evalCLM ℂ ξ)
 
 theorem pathEvaluation_apply {R : ℝ} (ξ : Icc (0 : ℝ) R) (i : Fin 6) (f : Path R) :
-    pathEvaluation ξ i f = f ξ i := rfl
+    pathEvaluation ξ i f = f ξ i := by rfl
 
 /-- Coordinate evaluation commutes with the genuine complex derivative. -/
 theorem pathEvaluation_deriv {R : ℝ} {F : ℂ → Path R} {z : ℂ}
@@ -1742,7 +1742,7 @@ noncomputable def parityVec : Vec →L[ℂ] Vec :=
   ContinuousLinearMap.pi (fun i => paritySign i • ContinuousLinearMap.proj i)
 
 @[simp] theorem parityVec_apply (v : Vec) (i : Fin 6) :
-    parityVec v i = paritySign i * v i := rfl
+    parityVec v i = paritySign i * v i := by rfl
 
 @[simp] theorem paritySign_mul_self (i : Fin 6) : paritySign i * paritySign i = 1 := by
   by_cases hi : i.val < 4 <;> simp [paritySign, hi]
@@ -1793,7 +1793,7 @@ noncomputable def reflectedForcing (f : Field) : Field := fun r z => -f (-r) z
   simp [reflectedForcing]
 
 @[simp] theorem parameterDeriv_reflect (W : Field) :
-    parameterDeriv (reflectField W) = reflectField (parameterDeriv W) := rfl
+    parameterDeriv (reflectField W) = reflectField (parameterDeriv W) := by rfl
 
 theorem equationRHS_reflect (A₀ A₁ : Coeff) (f W : Field) :
     equationRHS (reflectCoeff A₀) (reflectCoeff A₁) (reflectedForcing f) (reflectField W) =
@@ -2221,7 +2221,7 @@ noncomputable def parityPath (R : ℝ) :
   ContinuousLinearMap.compLeftContinuous ℂ (Icc (0 : ℝ) R) parityVec
 
 @[simp] theorem parityPath_apply {R : ℝ} (W : NilpotentVolterra.Path R)
-    (r : Icc (0 : ℝ) R) : parityPath R W r = parityVec (W r) := rfl
+    (r : Icc (0 : ℝ) R) : parityPath R W r = parityVec (W r) := by rfl
 
 @[simp] theorem parityPath_involutive {R : ℝ} (W : NilpotentVolterra.Path R) :
     parityPath R (parityPath R W) = W := by

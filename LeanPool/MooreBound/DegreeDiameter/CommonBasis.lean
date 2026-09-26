@@ -63,7 +63,7 @@ theorem ext {F G : CompleteFlag K V n} (h : ∀ i, F i = G i) : F = G := by
       rfl
 
 /-- The complete flag of prefix spans of an ordered basis. -/
-noncomputable def ofBasis (b : Basis (Fin n) K V) : CompleteFlag K V n where
+@[expose] noncomputable def ofBasis (b : Basis (Fin n) K V) : CompleteFlag K V n where
   space := b.flag
   strictMono_space := b.flag_strictMono
   finrank_space := by

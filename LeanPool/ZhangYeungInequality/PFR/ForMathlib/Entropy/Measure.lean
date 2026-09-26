@@ -557,7 +557,7 @@ def _root_.ProbabilityTheory.measureMutualInfo (μ : Measure (S × T) := by volu
 notation:100 "Im[" μ "]" => measureMutualInfo μ
 
 lemma _root_.ProbabilityTheory.measureMutualInfo_def (μ : Measure (S × T)) :
-    Im[μ] = Hm[μ.map Prod.fst] + Hm[μ.map Prod.snd] - Hm[μ] := rfl
+    Im[μ] = Hm[μ.map Prod.fst] + Hm[μ.map Prod.snd] - Hm[μ] := by rfl
 
 @[simp]
 lemma _root_.ProbabilityTheory.measureMutualInfo_zero_measure : Im[(0 : Measure (S × T))] = 0 := by

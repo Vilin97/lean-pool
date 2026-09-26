@@ -59,7 +59,7 @@ to be type-correct at `implicit` transparency before `rw`/`simp` will act, that 
 identification has to hold there too; otherwise every generic lemma about `graphLanguage`
 formulas needs a specialized copy with the symbol spelled `GraphRelation.base`/`.graph`. This is
 a direct structure literal with no proof content, so reducibility costs nothing. -/
-@[reducible] def graphLanguage (L : Language.{0, 0}) : Language.{0, 0} where
+@[expose, reducible] def graphLanguage (L : Language.{0, 0}) : Language.{0, 0} where
   Functions _ := Empty
   Relations n := GraphRelation L n
 

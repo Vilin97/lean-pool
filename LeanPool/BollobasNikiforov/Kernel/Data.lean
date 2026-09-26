@@ -198,7 +198,7 @@ def U (γ x : ℝ) : Fin 3 → ℝ :=
   bhat t q x + (h t q x / γ) • Vvec t q
 
 /-- The Gram update `𝒜 + VVᵀ/γ` before inversion. -/
-def 𝒦Mat (γ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+@[expose] def 𝒦Mat (γ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   𝒜 t q + (1 / γ) • vecMulVec (Vvec t q) (Vvec t q)
 
 lemma 𝒦Mat_posDef (γ : ℝ) (hq : ∀ i, 0 < q i) (hγ : 0 < γ) :
@@ -212,7 +212,7 @@ lemma 𝒦Mat_isUnit (γ : ℝ) (hq : ∀ i, 0 < q i) (hγ : 0 < γ) :
   (𝒦Mat_posDef t q γ hq hγ).isUnit
 
 /-- `𝒦 = (𝒜 + VVᵀ/γ)⁻¹`. -/
-def 𝒦 (γ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+@[expose] def 𝒦 (γ : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   (𝒦Mat t q γ)⁻¹
 
 /-- `N(x) = Δ e₂ᵀ 𝒜⁻¹ b̂(x)`. -/

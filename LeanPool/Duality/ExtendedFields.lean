@@ -50,7 +50,7 @@ instance : DecidableRel ((· < ·) : Extend F → Extend F → Prop) := WithBot.
 
 
 /-- The canonical inclusion from `F` to `Extend F` is registered as a coercion. -/
-@[coe] def toE : F → Extend F := some ∘ some
+@[expose, coe] def toE : F → Extend F := some ∘ some
 
 instance : Coe F (Extend F) := ⟨toE⟩
 
@@ -91,11 +91,11 @@ lemma coe_neq_coe_iff {x y : F} : (x : Extend F) ≠ (y : Extend F) ↔ x ≠ y 
 
 omit [LinearOrder F] [IsStrictOrderedRing F] in
 @[simp, norm_cast]
-lemma coe_zero : ((0 : F) : Extend F) = 0 := rfl
+lemma coe_zero : ((0 : F) : Extend F) = 0 := by rfl
 
 omit [LinearOrder F] [IsStrictOrderedRing F] in
 @[simp, norm_cast]
-lemma coe_one : ((1 : F) : Extend F) = 1 := rfl
+lemma coe_one : ((1 : F) : Extend F) = 1 := by rfl
 
 omit [Field F] [IsStrictOrderedRing F] in
 @[simp]
@@ -159,8 +159,7 @@ lemma top_neq_zero : (⊤ : Extend F) ≠ 0 :=
 
 omit [LinearOrder F] [IsStrictOrderedRing F] in
 @[simp, norm_cast]
-lemma coe_add (x y : F) : toE (x + y) = toE x + toE y :=
-  rfl
+lemma coe_add (x y : F) : toE (x + y) = toE x + toE y := by rfl
 
 omit [IsStrictOrderedRing F] in
 @[simp, norm_cast]
@@ -225,17 +224,17 @@ lemma top_add_top : (⊤ : Extend F) + ⊤ = ⊤ :=
 omit [IsStrictOrderedRing F] in
 @[simp]
 lemma top_add_coe (x : F) : (⊤ : Extend F) + x = ⊤ :=
-  rfl
+  by rfl
 
 omit [IsStrictOrderedRing F] in
 @[simp]
 lemma coe_add_top (x : F) : (x : Extend F) + ⊤ = ⊤ :=
-  rfl
+  by rfl
 
 /-! ### Negation -/
 
 /-- Negation on `Extend F`. -/
-def neg : Extend F → Extend F
+@[expose] def neg : Extend F → Extend F
 | ⊥ => ⊤
 | ⊤ => ⊥
 | (x : F) => toE (-x)
@@ -249,16 +248,16 @@ instance : SubNegZeroMonoid (Extend F) where
 omit [IsStrictOrderedRing F] in
 @[simp]
 lemma neg_top : -(⊤ : Extend F) = ⊥ :=
-  rfl
+  by rfl
 
 omit [IsStrictOrderedRing F] in
 @[simp]
 lemma neg_bot : -(⊥ : Extend F) = ⊤ :=
-  rfl
+  by rfl
 
 omit [IsStrictOrderedRing F] in
 @[simp, norm_cast]
-lemma coe_neg (x : F) : toE (-x) = -(toE x) := rfl
+lemma coe_neg (x : F) : toE (-x) = -(toE x) := by rfl
 
 instance : InvolutiveNeg (Extend F) where
   neg_neg a :=

@@ -435,7 +435,7 @@ def evaluationCLM (I : Window) {ε R : ℝ} (hε : 0 < ε)
 @[simp] theorem evaluationCLM_apply (I : Window) {ε R : ℝ} (hε : 0 < ε)
     (hR : 1 ≤ R) (hR20 : R < 20) (k m : ℕ) (p : ℝ × ℝ) (hp : |p.1| ≤ R)
     (A : AxisSpace I ε) :
-    evaluationCLM I hε hR hR20 k m p hp A = mixedSeries I ε A k m p := rfl
+    evaluationCLM I hε hR hR20 k m p hp A = mixedSeries I ε A k m p := by rfl
 
 /-- Norm convergence in the coefficient space controls every evaluated jet
 uniformly throughout a smaller radial interval. -/

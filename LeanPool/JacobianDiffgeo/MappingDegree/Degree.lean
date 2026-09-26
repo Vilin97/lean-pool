@@ -57,7 +57,7 @@ noncomputable def degree (F : X → Y) : ℕ := fiberMultSum F (Classical.arbitr
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ) ω X] [T2Space Y]
   [IsManifold 𝓘(ℂ) ω Y] in
-theorem degree_def (F : X → Y) : degree F = fiberMultSum F (Classical.arbitrary Y) := rfl
+theorem degree_def (F : X → Y) : degree F = fiberMultSum F (Classical.arbitrary Y) := by rfl
 
 omit [T2Space X] [CompactSpace X] [ConnectedSpace X] [IsManifold 𝓘(ℂ) ω X] [T2Space Y]
   [IsManifold 𝓘(ℂ) ω Y] in
@@ -164,7 +164,7 @@ noncomputable def homeomorphOfDegreeEqOne (hF : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω
 
 theorem coe_homeomorphOfDegreeEqOne (hF : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω F)
     (hne : ¬ ∃ c, ∀ x, F x = c) (h1 : degree F = 1) :
-    ⇑(homeomorphOfDegreeEqOne hF hne h1) = F := rfl
+    ⇑(homeomorphOfDegreeEqOne hF hne h1) = F := by rfl
 
 theorem isHomeomorph_of_degree_eq_one (hF : ContMDiff 𝓘(ℂ) 𝓘(ℂ) ω F)
     (hne : ¬ ∃ c, ∀ x, F x = c) (h1 : degree F = 1) : IsHomeomorph F :=

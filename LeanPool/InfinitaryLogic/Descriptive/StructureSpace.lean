@@ -46,7 +46,7 @@ variable (L : Language.{u, v})
 
 /-- A carrier-parametric relation query: a choice of relation symbol and a tuple
 of elements from the carrier type α. -/
-def RelQueryOn (α : Type*) := Σ (R : Σ l, L.Relations l), (Fin R.1 → α)
+@[expose] def RelQueryOn (α : Type*) := Σ (R : Σ l, L.Relations l), (Fin R.1 → α)
 
 /-- A relation query for carrier ℕ. -/
 def RelQuery := RelQueryOn L ℕ

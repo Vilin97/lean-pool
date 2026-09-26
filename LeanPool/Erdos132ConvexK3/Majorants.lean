@@ -79,7 +79,7 @@ end ErLVK3MaximalGapSetup
 /-- Maximality gives the exact corrected formula `L = 3 - δ`, not merely
 ErLV's printed loose upper bound. -/
 theorem maximal_gap_L_eq_three_sub_delta (D : ErLVK3MaximalGapSetup) :
-    D.L = 3 - (D.delta : ℤ) := rfl
+    D.L = 3 - (D.delta : ℤ) := by rfl
 
 /-- The corrected maximal-gap formula implies the sharp signed bound `L ≤ 3`. -/
 theorem maximal_gap_L_le_three (D : ErLVK3MaximalGapSetup) : D.L ≤ 3 := by

@@ -419,8 +419,8 @@ def dy : Plane →L[ℝ] ℝ := ContinuousLinearMap.snd ℝ ℝ ℝ
 /-- Lift Y, given by `ContinuousLinearMap.smulRightL ℝ Plane ℂ dy`. -/
 @[expose] def liftY : ℂ →L[ℝ] (Plane →L[ℝ] ℂ) := ContinuousLinearMap.smulRightL ℝ Plane ℂ dy
 
-@[simp] theorem liftX_apply (c : ℂ) (x : Plane) : liftX c x = x.1 • c := rfl
-@[simp] theorem liftY_apply (c : ℂ) (x : Plane) : liftY c x = x.2 • c := rfl
+@[simp] theorem liftX_apply (c : ℂ) (x : Plane) : liftX c x = x.1 • c := by rfl
+@[simp] theorem liftY_apply (c : ℂ) (x : Plane) : liftY c x = x.2 • c := by rfl
 
 /-- Phase, given by `liftX (freqX k) + liftY (freqY k)`. -/
 @[expose] def phase (k : Frequency) : Plane →L[ℝ] ℂ := liftX (freqX k) + liftY (freqY k)
@@ -1516,7 +1516,7 @@ noncomputable def descend (f : Plane → ℂ) (hp : UnitPeriodic f) (z : Torus) 
   (firstLift_periodic f hp z.1).lift z.2
 
 @[simp] theorem descend_coe (f : Plane → ℂ) (hp : UnitPeriodic f) (x y : ℝ) :
-    descend f hp ((x : UnitAddCircle), (y : UnitAddCircle)) = f (x, y) := rfl
+    descend f hp ((x : UnitAddCircle), (y : UnitAddCircle)) = f (x, y) := by rfl
 
 theorem descend_continuous {f : Plane → ℂ} (hf : Continuous f) (hp : UnitPeriodic f) :
     Continuous (descend f hp) := by
@@ -1532,7 +1532,7 @@ noncomputable def descendContinuous (f : Plane → ℂ) (hf : Continuous f)
   continuous_toFun := descend_continuous hf hp
 
 @[simp] theorem torusLift_descendContinuous (f : Plane → ℂ) (hf : Continuous f)
-    (hp : UnitPeriodic f) : torusLift (descendContinuous f hf hp) = f := rfl
+    (hp : UnitPeriodic f) : torusLift (descendContinuous f hf hp) = f := by rfl
 
 /-- Pointwise reconstruction for an arbitrary actual smooth unit-periodic
 function on the plane; neither rapid decay nor reconstruction is a premise. -/

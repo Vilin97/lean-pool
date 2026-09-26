@@ -44,11 +44,11 @@ original `v₁ x + v₂ y + v₃ z = 0` by dividing through by `v₁` and settin
     (fun p => p.1 + ρ * p.2.1 + (1 + ρ) * p.2.2 = 0)).card
 
 /-- The Walsh coefficient `S(a) = ∑_{x ∈ Δ} ψ(a x)`. -/
-noncomputable def walshCoefficient (k : ℕ) (ψ : AddChar K ℂ) (a : K) : ℂ :=
+@[expose] noncomputable def walshCoefficient (k : ℕ) (ψ : AddChar K ℂ) (a : K) : ℂ :=
   ∑ x ∈ derivativeImage k K, ψ (a * x)
 
 /-- The admissible slopes `ρ ≠ 0, 1`. -/
-def AdmissibleSlope (ρ : K) : Prop := ρ ≠ 0 ∧ ρ ≠ 1
+@[expose] def AdmissibleSlope (ρ : K) : Prop := ρ ≠ 0 ∧ ρ ≠ 1
 
 /-- The finset of admissible slopes. -/
 @[expose] def slopes (K : Type*) [Field K] [Fintype K] [DecidableEq K] : Finset K :=

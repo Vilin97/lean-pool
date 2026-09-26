@@ -108,7 +108,7 @@ def N : NeighborhoodSystem ℕ :=
 
 @[simp] theorem N_mem {X : Set ℕ} : N.mem X ↔ memN X := Iff.rfl
 
-@[simp] theorem N_master : N.master = (Set.univ : Set ℕ) := rfl
+@[simp] theorem N_master : N.master = (Set.univ : Set ℕ) := by rfl
 
 /-- `⊥ ∈ N` reads: a neighbourhood lies in `⊥` iff it is the whole space `ℕ`. -/
 theorem N_bot_mem {X : Set ℕ} : N.bot.mem X ↔ X = Set.univ := NeighborhoodSystem.mem_bot N

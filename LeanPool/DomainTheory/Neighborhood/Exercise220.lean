@@ -74,7 +74,7 @@ def powerSet : NeighborhoodSystem ℕ where
   sub_master := fun _ => Set.subset_univ _
 
 @[simp] theorem mem_powerSet {X : Set ℕ} : powerSet.mem X ↔ Xᶜ.Finite := Iff.rfl
-@[simp] theorem powerSet_master : powerSet.master = (Set.univ : Set ℕ) := rfl
+@[simp] theorem powerSet_master : powerSet.master = (Set.univ : Set ℕ) := by rfl
 
 /-- Cofinite sets are closed under intersection (witness-free form). -/
 theorem powerSet_inter_mem {A B : Set ℕ} (hA : powerSet.mem A) (hB : powerSet.mem B) :

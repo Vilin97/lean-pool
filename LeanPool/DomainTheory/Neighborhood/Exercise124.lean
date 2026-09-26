@@ -57,7 +57,7 @@ uses chain
 totality: given `X ∈ x` and `Y ∈ y` with `x, y ∈ C`, one of `x ⊑ y`, `y ⊑ x`
 holds, and the larger
 filter contains both `X` and `Y`, hence `X ∩ Y`. -/
-def chainUnion (C : Set V.Element) (hne : C.Nonempty) (hchain : IsChain (· ≤ ·) C) : V.Element where
+@[expose] def chainUnion (C : Set V.Element) (hne : C.Nonempty) (hchain : IsChain (· ≤ ·) C) : V.Element where
   mem X := ∃ x ∈ C, x.mem X
   sub := by rintro X ⟨x, _, hxX⟩; exact x.sub hxX
   master_mem := by obtain ⟨x, hxC⟩ := hne; exact ⟨x, hxC, x.master_mem⟩

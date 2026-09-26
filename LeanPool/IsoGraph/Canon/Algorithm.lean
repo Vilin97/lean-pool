@@ -147,7 +147,7 @@ They are written as structural recursions on an explicit fuel rather than as `fo
 everything about them is proved.  `n` is always enough fuel: there are at most `n` cells. -/
 
 /-- Fold the cell sizes from cell start `i` into the hash `h`. -/
-def cenHashFrom (cen : Array Nat) (n : Nat) : Nat → Nat → UInt64 → UInt64
+@[expose] def cenHashFrom (cen : Array Nat) (n : Nat) : Nat → Nat → UInt64 → UInt64
   | 0, _, h => h
   | fuel + 1, i, h =>
     if i ≥ n then h else cenHashFrom cen n fuel cen[i]! (mixN h (cen[i]! - i))
@@ -161,11 +161,11 @@ def cenHashFrom (cen : Array Nat) (n : Nat) : Nat → Nat → UInt64 → UInt64
     else cenTargetFrom cen n fuel cen[i]!
 
 /-- Hash of the sequence of cell sizes.  Isomorphism-invariant. -/
-def Part.shapeHash (p : Part) (n : Nat) : UInt64 := cenHashFrom p.cen n n 0 hashSeed
+@[expose] def Part.shapeHash (p : Part) (n : Nat) : UInt64 := cenHashFrom p.cen n n 0 hashSeed
 
 /-- Start position of the first non-singleton cell, if any.  This is the target cell for
 individualisation; picking the *first* one is an isomorphism-invariant rule. -/
-def Part.targetCell (p : Part) (n : Nat) : Option Nat := cenTargetFrom p.cen n n 0
+@[expose] def Part.targetCell (p : Part) (n : Nat) : Option Nat := cenTargetFrom p.cen n n 0
 
 /-! ## Refinement -/
 
@@ -535,13 +535,13 @@ the body — which is exactly what a proof about the loop needs and what a `for`
     else certRow n b fuel (j + 1) acc k out
 
 /-- Pack rows `i, i+1, …` of the matrix, `fuel` of them, into `out`. -/
-def certRowsFrom (n : Nat) (bit : Nat → Nat → Bool) (w : Nat) :
+@[expose] def certRowsFrom (n : Nat) (bit : Nat → Nat → Bool) (w : Nat) :
     Nat → Nat → Array UInt64 → Array UInt64
   | 0, _, out => out
   | fuel + 1, i, out => certRowsFrom n bit w fuel (i + 1) (certRow n (bit i) n 0 0 (i * w) out)
 
 @[inherit_doc certRow]
-def certBits (n : Nat) (bit : Nat → Nat → Bool) : Array UInt64 :=
+@[expose] def certBits (n : Nat) (bit : Nat → Nat → Bool) : Array UInt64 :=
   certRowsFrom n bit (rowWords n) n 0 (Array.replicate (n * rowWords n) 0)
 
 /-- The adjacency matrix of `G` read off in the order `lab`, packed by `certBits`.
@@ -585,7 +585,7 @@ def moves (g : Array Nat) : Bool := Id.run do
 
 /-- One step of orbit closure: mark the images of `v` under all generators.  A `foldl` rather
 than a `for` loop so that `IsoGraph.Canon.Orbits` can induct on the generator list. -/
-def closureStep (gens : Array (Array Nat)) (mark : Array Bool) (stack : Array Nat)
+@[expose] def closureStep (gens : Array (Array Nat)) (mark : Array Bool) (stack : Array Nat)
     (v : Nat) : Array Bool × Array Nat :=
   gens.foldl (init := (mark, stack)) fun ms g =>
     let w := g[v]!
@@ -593,7 +593,7 @@ def closureStep (gens : Array (Array Nat)) (mark : Array Bool) (stack : Array Na
 
 /-- Close `mark` under the generators, using `stack` as the frontier.  `fuel` bounds the number of
 pops, which is at most the number of marked points. -/
-def closureLoop (gens : Array (Array Nat)) : Nat → Array Bool → Array Nat → Array Bool
+@[expose] def closureLoop (gens : Array (Array Nat)) : Nat → Array Bool → Array Nat → Array Bool
   | 0, mark, _ => mark
   | fuel + 1, mark, stack =>
     if stack.isEmpty then mark
@@ -603,7 +603,7 @@ def closureLoop (gens : Array (Array Nat)) : Nat → Array Bool → Array Nat �
       closureLoop gens fuel mark stack
 
 /-- The union of the `gens`-orbits of the vertices in `seed`, as a membership array of size `n`. -/
-def orbitClosure (n : Nat) (gens : Array (Array Nat)) (seed : Array Nat) : Array Bool :=
+@[expose] def orbitClosure (n : Nat) (gens : Array (Array Nat)) (seed : Array Nat) : Array Bool :=
   closureLoop gens (n + 1) (seed.foldl (init := Array.replicate n false)
     fun mark v => mark.set! v true) seed
 /-! ## The search -/
@@ -844,7 +844,7 @@ it really inverts, which gives injectivity for free (if `a[v]! = a[w]!` then
 The search's output is checked to be a permutation of `{0, …, n-1}` before being returned, and
 the identity is substituted if it is not.  The check costs `O(n)` against an `Ω(n²)` search, and
 makes the returned array a permutation whatever the search does (`Spec.labellingIsPerm`). -/
-def canonicalLabellingOfOracle (n : Nat) (f : Nat → Nat → Bool) : Array Nat :=
+@[expose] def canonicalLabellingOfOracle (n : Nat) (f : Nat → Nat → Bool) : Array Nat :=
   let a := (canonical (Graph.ofOracle n f)).lab
   if isPermArray n a then a else Array.range n
 

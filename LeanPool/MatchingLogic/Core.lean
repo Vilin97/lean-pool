@@ -183,12 +183,12 @@ variable {S : Signature} (M : Model S)
 /-- One backward step: `u ⇝ v` when `u ∈ σ_M(a₁,…,aₙ)` for some tuple `a` with
 `v = a i` (paper, Definition 2).  Constants contribute no steps, since
 `Fin 0` is empty. -/
-def Step (u v : M.carrier) : Prop :=
+@[expose] def Step (u v : M.carrier) : Prop :=
   ∃ (σ : S.Sym) (a : Fin (S.arity σ) → M.carrier) (i : Fin (S.arity σ)),
     u ∈ M.interp σ a ∧ v = a i
 
 /-- `C` is backward closed when `⇝[C] ⊆ C` (paper, Definition 2). -/
-def BackwardClosed (C : Set M.carrier) : Prop :=
+@[expose] def BackwardClosed (C : Set M.carrier) : Prop :=
   ∀ ⦃u⦄, u ∈ C → ∀ ⦃v⦄, M.Step u v → v ∈ C
 
 /-- The concrete form used in the proofs: if a point of `C` is produced by a

@@ -87,7 +87,7 @@ inductive EqRel : ℕ → Type
   | equal : EqRel 2
 
 /-- Imported declaration from the Incompleteness formalization. -/
-@[reducible]
+@[expose, reducible]
 def equal : Language where
   Func := fun _ => Empty
   Rel := EqRel
@@ -128,7 +128,7 @@ end ORing
 
 /-- Imported declaration from the Incompleteness formalization. -/
 @[reducible]
-def oRing : Language where
+@[expose] def oRing : Language where
   Func := ORing.Func
   Rel := ORing.Rel
 
@@ -263,7 +263,8 @@ section «lp_section_1»
 variable (C : Type*)
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def _root_.LO.FirstOrder.Language.constLang : Language := ⟨Constant.Func C, fun _ => PEmpty⟩
+@[expose] def _root_.LO.FirstOrder.Language.constLang : Language :=
+  ⟨Constant.Func C, fun _ => PEmpty⟩
 
 --instance : Coe (Type*) Language := ⟨constLang⟩
 
@@ -282,7 +283,7 @@ end «lp_section_1»
 def ofFunc (F : ℕ → Type v) : Language := ⟨F, fun _ => PEmpty⟩
 
 /-- Imported declaration from the Incompleteness formalization. -/
-def add (L₁ : Language.{u₁}) (L₂ : Language.{u₂}) : Language :=
+@[expose] def add (L₁ : Language.{u₁}) (L₂ : Language.{u₂}) : Language :=
   ⟨fun k => L₁.Func k ⊕ L₂.Func k, fun k => L₁.Rel k ⊕ L₂.Rel k⟩
 
 instance : _root_.Add Language := ⟨add⟩

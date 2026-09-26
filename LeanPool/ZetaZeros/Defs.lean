@@ -27,7 +27,7 @@ namespace ZetaZeros
 
 /-- The non-trivial zeros of the Riemann zeta function with imaginary part in `(0, T]`: the
 zeros lying in the critical strip `0 < re s < 1`, as a set, so without multiplicity. -/
-@[zz_tag "def_nontrivial_zeros"]
+@[expose, zz_tag "def_nontrivial_zeros"]
 def nontrivialZeros (T : ℝ) : Set ℂ :=
   {ρ | riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1 ∧ 0 < ρ.im ∧ ρ.im ≤ T}
 

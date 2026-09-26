@@ -195,7 +195,7 @@ theorem hammingNorm_eq_card_vsupp {n : ℕ} (v : Fin n → F) :
   simp only [hammingNorm, vsupp]
 
 /-- Worst-case column weight of `M`: the most nonzero entries in any single column. -/
-def colBound (M : Matrix (Fin a) (Fin b) F) : ℕ :=
+@[expose] def colBound (M : Matrix (Fin a) (Fin b) F) : ℕ :=
   Finset.univ.sup (fun j => (Finset.univ.filter (fun i => M i j ≠ 0)).card)
 
 omit [Fintype F] in

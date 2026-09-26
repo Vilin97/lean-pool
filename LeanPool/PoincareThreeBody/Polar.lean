@@ -38,7 +38,7 @@ noncomputable def polarKeplerHamiltonian (state : PolarState) : ℝ :=
   ((state 2) ^ 2 + (state 3) ^ 2 / (state 0) ^ 2) / 2 - 1 / state 0 - state 3
 
 /-- The inertial Kepler energy in canonical polar coordinates. -/
-noncomputable def polarKeplerEnergy (state : PolarState) : ℝ :=
+@[expose] noncomputable def polarKeplerEnergy (state : PolarState) : ℝ :=
   ((state 2) ^ 2 + (state 3) ^ 2 / (state 0) ^ 2) / 2 - 1 / state 0
 
 /-- The squared radial momentum prescribed by a Kepler energy

@@ -79,7 +79,7 @@ avoids carrying proof terms through every definition and theorem.
 -/
 
 /-- A permutation is a pairing if it is an involution with no fixed points. -/
-def IsPairing {n : ℕ} (π : Perm (Fin (2 * n))) : Prop :=
+@[expose] def IsPairing {n : ℕ} (π : Perm (Fin (2 * n))) : Prop :=
   π ^ 2 = 1 ∧ ∀ x, π x ≠ x
 
 /-- The type of pairings of Fin (2n). -/

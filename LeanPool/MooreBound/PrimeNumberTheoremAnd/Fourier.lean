@@ -45,7 +45,7 @@ noncomputable def e (u : ℝ) : ℝ →ᵇ ℂ where
   map_bounded' :=
     ⟨2, fun x y => (dist_le_norm_add_norm _ _).trans (by simp only [Circle.norm_coe]; norm_num)⟩
 
-@[simp] lemma e_apply (u : ℝ) (v : ℝ) : e u v = 𝐞 (-v * u) := rfl
+@[simp] lemma e_apply (u : ℝ) (v : ℝ) : e u v = 𝐞 (-v * u) := by rfl
 
 theorem hasDerivAt_e {u x : ℝ} : HasDerivAt (e u) (-2 * π * u * I * e u x) x := by
   have l2 : HasDerivAt (fun v => -v * u) (-u) x := by

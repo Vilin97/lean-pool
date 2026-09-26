@@ -33,7 +33,7 @@ namespace RS.P1
 
 /-- The identity chart on the finite part of `ℙ¹`: source `{∞}ᶜ`, target `univ`,
 `↑z ↦ z`, junk value `coeChart ∞ = 0`. -/
-noncomputable def coeChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ where
+@[expose] noncomputable def coeChart : OpenPartialHomeomorph (OnePoint ℂ) ℂ where
   toFun p := p.elim 0 id
   invFun := ((↑) : ℂ → OnePoint ℂ)
   source := {(∞ : OnePoint ℂ)}ᶜ

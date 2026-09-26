@@ -47,7 +47,7 @@ variable {Obj : Type u} [Category Obj] {T : Endofunctor Obj}
 `T`-algebra
 `(T(D), T(i))`. -/
 @[instance_reducible]
-def tStr (A : TAlgebra T) : TAlgebra T where
+@[expose] def tStr (A : TAlgebra T) : TAlgebra T where
   carrier := T.obj A.carrier
   str := T.map A.str
 

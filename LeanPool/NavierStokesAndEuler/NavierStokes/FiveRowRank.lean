@@ -374,10 +374,10 @@ def gammaLinearMap (lam C a b : ℝ) : Debt →ₗ[ℝ] (ℝ → ℝ) :=
     (axialDebtLinearMap C)
 
 @[simp] theorem deltaVLinearMap_apply (lam C a b : ℝ) (d : Debt) :
-    deltaVLinearMap lam C a b d = deltaV lam C a b d := rfl
+    deltaVLinearMap lam C a b d = deltaV lam C a b d := by rfl
 
 @[simp] theorem gammaLinearMap_apply (lam C a b : ℝ) (d : Debt) :
-    gammaLinearMap lam C a b d = gamma lam C a b d := rfl
+    gammaLinearMap lam C a b d = gamma lam C a b d := by rfl
 
 theorem deltaV_add (lam C a b : ℝ) (d e : Debt) :
     deltaV lam C a b (d + e) = deltaV lam C a b d + deltaV lam C a b e :=

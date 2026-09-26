@@ -30,7 +30,6 @@ noncomputable abbrev bra (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [NormedAddComm
     E →L⋆[𝕜] (E →L[𝕜] 𝕜) :=
 innerSL 𝕜
 /-- The ket map sending a vector to scalar multiplication by that vector. -/
-@[simps!]
 noncomputable def ket (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
     [InnerProductSpace 𝕜 E] :
     E →L[𝕜] (𝕜 →L[𝕜] E) where
@@ -45,6 +44,11 @@ noncomputable def ket (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [NormedAddCommGro
     intro
     simp only [ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk]
     exact continuous_const_smul _
+
+@[simp]
+theorem ket_apply_apply (𝕜 : Type*) {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] (x : E) (a : 𝕜) : ket 𝕜 x a = a • x := by rfl
+
 @[simp high]
 lemma ket_one_apply
   {𝕜 E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
@@ -123,7 +127,6 @@ lemma bra_comp_continuousLinearMap {𝕜 E₁ E₂ : Type*} [RCLike 𝕜] [Norme
 
 /-- we define the rank one operator $| x \rangle\langle y |$ by
   $x \mapsto \langle y,z\rangle x$ -/
-@[simps]
 def rankOne (𝕜 : Type*) {E₁ E₂ : Type*} [RCLike 𝕜] [NormedAddCommGroup E₁]
   [InnerProductSpace 𝕜 E₁]
   [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂] :
@@ -145,12 +148,16 @@ variable {𝕜 E₁ E₂ : Type*} [RCLike 𝕜] [NormedAddCommGroup E₁] [Inner
   [NormedAddCommGroup E₂] [InnerProductSpace 𝕜 E₂]
 
 @[simp]
+theorem rankOne_apply_apply_apply (x : E₁) (y z : E₂) :
+    rankOne 𝕜 x y z = ⟪y,z⟫_𝕜 • x := by rfl
+
+@[simp]
 theorem rankOne_apply {x : E₁} {y : E₂} (z : E₂) : rankOne 𝕜 x y z = ⟪y,z⟫_𝕜 • x :=
-rfl
+by rfl
 
 theorem ket_bra_eq_rankOne {x : E₁} {y : E₂} :
   ket 𝕜 x ∘L bra 𝕜 y = rankOne 𝕜 x y :=
-rfl
+by rfl
 
 theorem ket_eq_rankOne_one (x : E₁) :
   ket 𝕜 x = rankOne 𝕜 x 1 := by

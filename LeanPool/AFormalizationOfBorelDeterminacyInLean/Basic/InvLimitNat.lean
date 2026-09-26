@@ -111,7 +111,7 @@ def recCompOfLE {m n} (h : m ≤ n) {F : ℕ → C} (f : ∀ n, F (n + 1) ⟶ F 
     rw [ih, ← F.map_comp]
     congr 1
 /-- Auxiliary declaration for the Borel determinacy formalization. -/
-noncomputable def natFreeCat : (ℕᵒᵖ ⥤ C) ≃ ((O : ℕ → C) × (∀ n, O (n + 1) ⟶ O n)) where
+@[expose] noncomputable def natFreeCat : (ℕᵒᵖ ⥤ C) ≃ ((O : ℕ → C) × (∀ n, O (n + 1) ⟶ O n)) where
   toFun F := ⟨F.obj ∘ Opposite.op, fun n ↦ F.map (homOfLE (Nat.le_succ n)).op⟩
   invFun := fun ⟨O, F⟩ ↦ {
     obj := O ∘ Opposite.unop

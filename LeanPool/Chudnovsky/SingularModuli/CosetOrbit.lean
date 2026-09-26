@@ -283,7 +283,7 @@ and composing `JFunction`'s integer expansion `hasSum_j_mul_q` yields the coeffi
 @[expose] def wParam (m : ℕ) (τ : ℍ) : ℂ := Complex.exp (2 * π * Complex.I * (τ : ℂ) / m)
 
 /-- The `m`-th root of unity `ζ = exp(2πi/m)`. -/
-def zetaM (m : ℕ) : ℂ := Complex.exp (2 * π * Complex.I / m)
+@[expose] def zetaM (m : ℕ) : ℂ := Complex.exp (2 * π * Complex.I / m)
 
 lemma wParam_ne_zero (τ : ℍ) : wParam m τ ≠ 0 := Complex.exp_ne_zero _
 

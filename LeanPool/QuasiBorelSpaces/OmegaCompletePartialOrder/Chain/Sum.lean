@@ -65,7 +65,7 @@ def swapOrderHom : A ⊕ B →o B ⊕ A where
     simp_all
 
 @[simp]
-lemma swapOrderHom_apply (x : A ⊕ B) : swapOrderHom x = Sum.swap x := rfl
+lemma swapOrderHom_apply (x : A ⊕ B) : swapOrderHom x = Sum.swap x := by rfl
 
 /-- Projects right values out of a chain. -/
 def projr [hB : Inhabited B] (c : Chain (A ⊕ B)) : Chain B :=

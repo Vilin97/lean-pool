@@ -31,7 +31,7 @@ namespace LeanPool.Erdos132ConvexK3
 
 /-- The intersection of the two closed radius-`d₁` disks centered at
 `(0,0)` and `(2c,0)`, where `d₁² = c² + H²`. -/
-def InSharedDiameterLens (c H : ℝ) (v : Point ℝ) : Prop :=
+@[expose] def InSharedDiameterLens (c H : ℝ) (v : Point ℝ) : Prop :=
   sqDist (0, 0) v ≤ c ^ 2 + H ^ 2 ∧
     sqDist (2 * c, 0) v ≤ c ^ 2 + H ^ 2
 

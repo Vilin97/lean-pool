@@ -38,7 +38,7 @@ variable {R : Type*} [CommRing R] [IsDomain R]
 variable {K : Type*} [Field K] [Algebra R K] [IsFractionRing R K]
 
 /-- The Möbius factor of `c` in the fraction field. -/
-noncomputable def moebiusFactorK (c : ℕ → R) (n : ℕ) : K :=
+@[expose] noncomputable def moebiusFactorK (c : ℕ → R) (n : ℕ) : K :=
   ∏ x ∈ n.divisorsAntidiagonal, (algebraMap R K (c x.2)) ^ (μ x.1)
 
 /-- numerator product (μ = 1 part) and denominator product (μ = -1 part), in `R`. -/

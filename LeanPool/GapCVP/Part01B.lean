@@ -70,7 +70,7 @@ abbrev PhaseMaskBlock (tm : Turing.FinTM2) :=
         x.length + bound.eval x.length)
 
 /-- GapCVP reduction support. -/
-def initialPairedAtom
+@[expose] def initialPairedAtom
     {verifier : List Bool × List Bool → Bool}
     (machine : VerifierTM verifier)
     (stack : machine.tm.K)
@@ -428,7 +428,7 @@ theorem completePhaseSymbolCount_card
   omega
 
 /-- GapCVP reduction support. -/
-def completePhaseSymbolEquiv
+@[expose] def completePhaseSymbolEquiv
     (tm : Turing.FinTM2) :
     CompletePhaseCell tm ≃ Symbol (completePhaseSymbolCount tm) :=
   (Fintype.equivFin (CompletePhaseCell tm)).trans

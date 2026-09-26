@@ -66,7 +66,7 @@ abbrev PhaseSpace := Fin 4 → ℝ
       dF (coordinateVector 3) * dG (coordinateVector 1))
 
 /-- Joint real analyticity in the mass parameter and phase variables. -/
-def IsJointlyAnalytic (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
+@[expose] def IsJointlyAnalytic (δ : ℝ) (F : ℝ → PhaseSpace → ℝ) : Prop :=
   AnalyticOnNhd ℝ (Function.uncurry F) (parameterDomain δ)
 
 /-- A first-integral family Poisson-commutes with the Hamiltonian throughout the domain. -/

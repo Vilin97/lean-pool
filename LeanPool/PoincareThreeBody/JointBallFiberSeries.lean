@@ -25,7 +25,7 @@ namespace LeanPool.PoincareThreeBody
 open Filter Set Topology
 
 /-- The isometric inclusion of the analytic parameter as the first product coordinate. -/
-def parameterInclusion : ℝ →L[ℝ] ℝ × ℝ :=
+@[expose] def parameterInclusion : ℝ →L[ℝ] ℝ × ℝ :=
   ContinuousLinearMap.inl ℝ ℝ ℝ
 
 @[simp]

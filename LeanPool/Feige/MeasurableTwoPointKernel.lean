@@ -53,7 +53,7 @@ noncomputable def twoPointKernel : Kernel TwoPointParams ℝ where
 
 @[simp] theorem twoPointKernel_apply (p : TwoPointParams) :
     twoPointKernel p = twoPointMeasure p.1.1 p.1.2 :=
-  rfl
+  by rfl
 
 instance : IsMarkovKernel twoPointKernel where
   isProbabilityMeasure p :=

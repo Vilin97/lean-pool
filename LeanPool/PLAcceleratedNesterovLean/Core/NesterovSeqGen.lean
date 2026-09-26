@@ -78,7 +78,7 @@ theorem nesterovSeqGen_succ (f : E d → ℝ) (η ρ : ℝ) (s₀ : NesterovStat
   s'.lookahead η - s.lookahead η
 
 /-- Gradient at the lookahead point for a given state. -/
-def gradOfState (f : E d → ℝ) (η : ℝ) (s : NesterovState d) : E d :=
+@[expose] def gradOfState (f : E d → ℝ) (η : ℝ) (s : NesterovState d) : E d :=
   gradient f (s.lookahead η)
 
 /-- State-based Lyapunov function:

@@ -44,7 +44,7 @@ open MarkovMorphism TangentFin
 
 /-- The scalar relating a monotone metric family to Fisher at the uniform simplex
 of dimension `n`. -/
-noncomputable def uniformScalar (G : MonotoneMetricFamily) (n : ℕ) (hn : 2 ≤ n) : ℝ := by
+@[expose] noncomputable def uniformScalar (G : MonotoneMetricFamily) (n : ℕ) (hn : 2 ≤ n) : ℝ := by
   classical
   let i0 : Fin n := ⟨0, lt_of_lt_of_le Nat.zero_lt_two hn⟩
   let i1 : Fin n := ⟨1, lt_of_lt_of_le Nat.one_lt_two hn⟩
