@@ -204,7 +204,10 @@ def treePart0 : CompactCellTree :=
                         (.absurd 115))))))
 
 theorem treePart0_check :
-    treePart0.check splitForms farkasReceipts cells ((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart0.check splitForms farkasReceipts cells
+      ((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + length[7]` in the row-06 symmetry chamber, with
@@ -232,7 +235,11 @@ def treePart1 : CompactCellTree :=
                             (.absurd 166)))))))
 
 theorem treePart1_check :
-    treePart1.check splitForms farkasReceipts cells (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart1.check splitForms farkasReceipts cells
+      (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 167 to exclude the accumulated affine constraints in
@@ -241,7 +248,11 @@ def treePart2 : CompactCellTree :=
   .absurd 167
 
 theorem treePart2_check :
-    treePart2.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart2.check splitForms farkasReceipts cells
+      ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -264,7 +275,13 @@ def treePart3 : CompactCellTree :=
                     (.absurd 179)))))
 
 theorem treePart3_check :
-    treePart3.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart3.check splitForms farkasReceipts cells
+      (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 180 to exclude the accumulated affine constraints in
@@ -273,7 +290,14 @@ def treePart4 : CompactCellTree :=
   .absurd 180
 
 theorem treePart4_check :
-    treePart4.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart4.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -298,7 +322,15 @@ def treePart5 : CompactCellTree :=
                     (.absurd 234)))))
 
 theorem treePart5_check :
-    treePart5.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart5.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[5] - 2 * length[7]` in the row-06 symmetry
@@ -342,7 +374,15 @@ def treePart6 : CompactCellTree :=
         (.absurd 300))
 
 theorem treePart6_check :
-    treePart6.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
+    treePart6.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[8] + length[9]` in the row-06 symmetry chamber, with
@@ -370,7 +410,11 @@ def treePart7 : CompactCellTree :=
                             (.absurd 311)))))))
 
 theorem treePart7_check :
-    treePart7.check splitForms farkasReceipts cells (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart7.check splitForms farkasReceipts cells
+      (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 312 to exclude the accumulated affine constraints in
@@ -379,7 +423,11 @@ def treePart8 : CompactCellTree :=
   .absurd 312
 
 theorem treePart8_check :
-    treePart8.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
+    treePart8.check splitForms farkasReceipts cells
+      ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1,
+      0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -402,7 +450,12 @@ def treePart9 : CompactCellTree :=
                     (.absurd 179)))))
 
 theorem treePart9_check :
-    treePart9.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) = true := by
+    treePart9.check splitForms farkasReceipts cells
+      (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2,
+      1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 313 to exclude the accumulated affine constraints in
@@ -411,7 +464,13 @@ def treePart10 : CompactCellTree :=
   .absurd 313
 
 theorem treePart10_check :
-    treePart10.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
+    treePart10.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2,
+      1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -436,7 +495,14 @@ def treePart11 : CompactCellTree :=
                     (.absurd 234)))))
 
 theorem treePart11_check :
-    treePart11.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) = true := by
+    treePart11.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2,
+      1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[8] - 2 * length[9] - length[10]` in the row-06 symmetry
@@ -485,7 +551,14 @@ def treePart12 : CompactCellTree :=
                         (.absurd 264))))))
 
 theorem treePart12_check :
-    treePart12.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) = true := by
+    treePart12.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2,
+      1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 339 to exclude the accumulated affine constraints in
@@ -494,7 +567,11 @@ def treePart13 : CompactCellTree :=
   .absurd 339
 
 theorem treePart13_check :
-    treePart13.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
+    treePart13.check splitForms farkasReceipts cells
+      ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + length[7]` in the row-06 symmetry chamber, with
@@ -523,7 +600,12 @@ def treePart14 : CompactCellTree :=
                             (.absurd 346)))))))
 
 theorem treePart14_check :
-    treePart14.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) = true := by
+    treePart14.check splitForms farkasReceipts cells
+      (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1,
+      0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 347 to exclude the accumulated affine constraints in
@@ -532,7 +614,13 @@ def treePart15 : CompactCellTree :=
   .absurd 347
 
 theorem treePart15_check :
-    treePart15.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
+    treePart15.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + length[7]` in the row-06 symmetry chamber, with
@@ -563,7 +651,14 @@ def treePart16 : CompactCellTree :=
                             (.absurd 358)))))))
 
 theorem treePart16_check :
-    treePart16.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) = true := by
+    treePart16.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 359 to exclude the accumulated affine constraints in
@@ -572,7 +667,15 @@ def treePart17 : CompactCellTree :=
   .absurd 359
 
 theorem treePart17_check :
-    treePart17.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart17.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0,
+      0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[8] - 2 * length[9] - length[10]` in the row-06 symmetry
@@ -591,7 +694,16 @@ def treePart18 : CompactCellTree :=
             (.absurd 362)))
 
 theorem treePart18_check :
-    treePart18.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart18.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0,
+      0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + 2 * length[7]` in the row-06 symmetry chamber, with
@@ -633,7 +745,16 @@ def treePart19 : CompactCellTree :=
                 (.absurd 443))))
 
 theorem treePart19_check :
-    treePart19.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) = true := by
+    treePart19.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0,
+      0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 339 to exclude the accumulated affine constraints in
@@ -642,7 +763,12 @@ def treePart20 : CompactCellTree :=
   .absurd 339
 
 theorem treePart20_check :
-    treePart20.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
+    treePart20.check splitForms farkasReceipts cells
+      ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0,
+      0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 444 to exclude the accumulated affine constraints in
@@ -651,7 +777,13 @@ def treePart21 : CompactCellTree :=
   .absurd 444
 
 theorem treePart21_check :
-    treePart21.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart21.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -676,7 +808,14 @@ def treePart22 : CompactCellTree :=
                     (.absurd 234)))))
 
 theorem treePart22_check :
-    treePart22.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart22.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0,
+      0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 445 to exclude the accumulated affine constraints in
@@ -685,7 +824,15 @@ def treePart23 : CompactCellTree :=
   .absurd 445
 
 theorem treePart23_check :
-    treePart23.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart23.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0,
+      0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -710,7 +857,16 @@ def treePart24 : CompactCellTree :=
                     (.absurd 299)))))
 
 theorem treePart24_check :
-    treePart24.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart24.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[5] - 2 * length[7]` in the row-06 symmetry
@@ -754,7 +910,16 @@ def treePart25 : CompactCellTree :=
         (.absurd 469))
 
 theorem treePart25_check :
-    treePart25.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
+    treePart25.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 347 to exclude the accumulated affine constraints in
@@ -763,7 +928,14 @@ def treePart26 : CompactCellTree :=
   .absurd 347
 
 theorem treePart26_check :
-    treePart26.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
+    treePart26.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 359 to exclude the accumulated affine constraints in
@@ -772,7 +944,15 @@ def treePart27 : CompactCellTree :=
   .absurd 359
 
 theorem treePart27_check :
-    treePart27.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart27.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -797,7 +977,16 @@ def treePart28 : CompactCellTree :=
                     (.absurd 299)))))
 
 theorem treePart28_check :
-    treePart28.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart28.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 363 to exclude the accumulated affine constraints in
@@ -806,7 +995,17 @@ def treePart29 : CompactCellTree :=
   .absurd 363
 
 theorem treePart29_check :
-    treePart29.check splitForms farkasReceipts cells ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart29.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -831,7 +1030,18 @@ def treePart30 : CompactCellTree :=
                     (.absurd 468)))))
 
 theorem treePart30_check :
-    treePart30.check splitForms farkasReceipts cells (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart30.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[5] - 2 * length[7]` in the row-06 symmetry
@@ -875,7 +1085,18 @@ def treePart31 : CompactCellTree :=
         (.absurd 520))
 
 theorem treePart31_check :
-    treePart31.check splitForms farkasReceipts cells (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
+    treePart31.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 521 to exclude the accumulated affine constraints in
@@ -884,7 +1105,16 @@ def treePart32 : CompactCellTree :=
   .absurd 521
 
 theorem treePart32_check :
-    treePart32.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart32.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -909,7 +1139,17 @@ def treePart33 : CompactCellTree :=
                     (.absurd 455)))))
 
 theorem treePart33_check :
-    treePart33.check splitForms farkasReceipts cells ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart33.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 524 to exclude the accumulated affine constraints in
@@ -918,7 +1158,18 @@ def treePart34 : CompactCellTree :=
   .absurd 524
 
 theorem treePart34_check :
-    treePart34.check splitForms farkasReceipts cells (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart34.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 525 to exclude the accumulated affine constraints in
@@ -927,7 +1178,19 @@ def treePart35 : CompactCellTree :=
   .absurd 525
 
 theorem treePart35_check :
-    treePart35.check splitForms farkasReceipts cells ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart35.check splitForms farkasReceipts cells
+      ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2,
+      -2, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - length[5] - 2 * length[7]` in the row-06 symmetry chamber,
@@ -946,7 +1209,20 @@ def treePart36 : CompactCellTree :=
             (.absurd 529)))
 
 theorem treePart36_check :
-    treePart36.check splitForms farkasReceipts cells (((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart36.check splitForms farkasReceipts cells
+      (((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- length[0] - 2 * length[2] + length[3]` in the row-06 symmetry
@@ -989,7 +1265,20 @@ def treePart37 : CompactCellTree :=
             (.absurd 468)))
 
 theorem treePart37_check :
-    treePart37.check splitForms farkasReceipts cells (((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
+    treePart37.check splitForms farkasReceipts cells
+      (((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 521 to exclude the accumulated affine constraints in
@@ -998,7 +1287,17 @@ def treePart38 : CompactCellTree :=
   .absurd 521
 
 theorem treePart38_check :
-    treePart38.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart38.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1023,7 +1322,18 @@ def treePart39 : CompactCellTree :=
                     (.absurd 468)))))
 
 theorem treePart39_check :
-    treePart39.check splitForms farkasReceipts cells (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1]]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart39.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 1]]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 574 to exclude the accumulated affine constraints in
@@ -1032,7 +1342,19 @@ def treePart40 : CompactCellTree :=
   .absurd 574
 
 theorem treePart40_check :
-    treePart40.check splitForms farkasReceipts cells ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart40.check splitForms farkasReceipts cells
+      ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0,
+      0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 575 to exclude the accumulated affine constraints in
@@ -1041,7 +1363,20 @@ def treePart41 : CompactCellTree :=
   .absurd 575
 
 theorem treePart41_check :
-    treePart41.check splitForms farkasReceipts cells (((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart41.check splitForms farkasReceipts cells
+      (((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0,
+      0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - length[5] - 2 * length[7]` in the row-06 symmetry chamber,
@@ -1060,7 +1395,21 @@ def treePart42 : CompactCellTree :=
             (.absurd 535)))
 
 theorem treePart42_check :
-    treePart42.check splitForms farkasReceipts cells ((((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart42.check splitForms farkasReceipts cells
+      ((((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- length[0] - 2 * length[2] + length[3]` in the row-06 symmetry
@@ -1103,7 +1452,21 @@ def treePart43 : CompactCellTree :=
             (.absurd 487)))
 
 theorem treePart43_check :
-    treePart43.check splitForms farkasReceipts cells ((((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
+    treePart43.check splitForms farkasReceipts cells
+      ((((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 614 to exclude the accumulated affine constraints in
@@ -1112,7 +1475,18 @@ def treePart44 : CompactCellTree :=
   .absurd 614
 
 theorem treePart44_check :
-    treePart44.check splitForms farkasReceipts cells ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1])]) = true := by
+    treePart44.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1])]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[8] - 2 * length[9]` in the row-06 symmetry chamber, with leaves
@@ -1140,7 +1514,10 @@ def treePart45 : CompactCellTree :=
                             (.absurd 628)))))))
 
 theorem treePart45_check :
-    treePart45.check splitForms farkasReceipts cells ((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart45.check splitForms farkasReceipts cells
+      ((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++
+      [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 629 to exclude the accumulated affine constraints in
@@ -1149,7 +1526,11 @@ def treePart46 : CompactCellTree :=
   .absurd 629
 
 theorem treePart46_check :
-    treePart46.check splitForms farkasReceipts cells (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
+    treePart46.check splitForms farkasReceipts cells
+      (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1172,7 +1553,12 @@ def treePart47 : CompactCellTree :=
                     (.absurd 636)))))
 
 theorem treePart47_check :
-    treePart47.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) = true := by
+    treePart47.check splitForms farkasReceipts cells
+      ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 637 to exclude the accumulated affine constraints in
@@ -1181,7 +1567,13 @@ def treePart48 : CompactCellTree :=
   .absurd 637
 
 theorem treePart48_check :
-    treePart48.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
+    treePart48.check splitForms farkasReceipts cells
+      (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1206,7 +1598,14 @@ def treePart49 : CompactCellTree :=
                     (.absurd 654)))))
 
 theorem treePart49_check :
-    treePart49.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) = true := by
+    treePart49.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[8] + 2 * length[9] - length[10]` in the row-06 symmetry
@@ -1250,7 +1649,14 @@ def treePart50 : CompactCellTree :=
         (.absurd 673))
 
 theorem treePart50_check :
-    treePart50.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) = true := by
+    treePart50.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 629 to exclude the accumulated affine constraints in
@@ -1259,7 +1665,11 @@ def treePart51 : CompactCellTree :=
   .absurd 629
 
 theorem treePart51_check :
-    treePart51.check splitForms farkasReceipts cells (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
+    treePart51.check splitForms farkasReceipts cells
+      (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0,
+      0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + length[7]` in the row-06 symmetry chamber, with
@@ -1287,7 +1697,12 @@ def treePart52 : CompactCellTree :=
                             (.absurd 678)))))))
 
 theorem treePart52_check :
-    treePart52.check splitForms farkasReceipts cells ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) = true := by
+    treePart52.check splitForms farkasReceipts cells
+      ((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 637 to exclude the accumulated affine constraints in
@@ -1296,7 +1711,13 @@ def treePart53 : CompactCellTree :=
   .absurd 637
 
 theorem treePart53_check :
-    treePart53.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
+    treePart53.check splitForms farkasReceipts cells
+      (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + length[7]` in the row-06 symmetry chamber, with
@@ -1327,7 +1748,14 @@ def treePart54 : CompactCellTree :=
                             (.absurd 688)))))))
 
 theorem treePart54_check :
-    treePart54.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) = true := by
+    treePart54.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + length[7]` in the row-06 symmetry chamber, with
@@ -1358,7 +1786,15 @@ def treePart55 : CompactCellTree :=
                             (.absurd 692)))))))
 
 theorem treePart55_check :
-    treePart55.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) = true := by
+    treePart55.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] + length[7]` in the row-06 symmetry chamber, with
@@ -1392,7 +1828,15 @@ def treePart56 : CompactCellTree :=
             (.absurd 710)))
 
 theorem treePart56_check :
-    treePart56.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) = true := by
+    treePart56.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 629 to exclude the accumulated affine constraints in
@@ -1401,7 +1845,11 @@ def treePart57 : CompactCellTree :=
   .absurd 629
 
 theorem treePart57_check :
-    treePart57.check splitForms farkasReceipts cells (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
+    treePart57.check splitForms farkasReceipts cells
+      (((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0,
+      0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 711 to exclude the accumulated affine constraints in
@@ -1410,7 +1858,13 @@ def treePart58 : CompactCellTree :=
   .absurd 711
 
 theorem treePart58_check :
-    treePart58.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart58.check splitForms farkasReceipts cells
+      (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true
+      := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1434,7 +1888,13 @@ def treePart59 : CompactCellTree :=
                     (.absurd 654)))))
 
 theorem treePart59_check :
-    treePart59.check splitForms farkasReceipts cells ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart59.check splitForms farkasReceipts cells
+      ((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1,
+      0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 712 to exclude the accumulated affine constraints in
@@ -1443,7 +1903,14 @@ def treePart60 : CompactCellTree :=
   .absurd 712
 
 theorem treePart60_check :
-    treePart60.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart60.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1,
+      0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1468,7 +1935,15 @@ def treePart61 : CompactCellTree :=
                     (.absurd 264)))))
 
 theorem treePart61_check :
-    treePart61.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart61.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0,
+      1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[5] - 2 * length[7]` in the row-06 symmetry
@@ -1512,7 +1987,15 @@ def treePart62 : CompactCellTree :=
         (.absurd 719))
 
 theorem treePart62_check :
-    treePart62.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
+    treePart62.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0,
+      1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 637 to exclude the accumulated affine constraints in
@@ -1521,7 +2004,13 @@ def treePart63 : CompactCellTree :=
   .absurd 637
 
 theorem treePart63_check :
-    treePart63.check splitForms farkasReceipts cells (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
+    treePart63.check splitForms farkasReceipts cells
+      (((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 720 to exclude the accumulated affine constraints in
@@ -1530,7 +2019,14 @@ def treePart64 : CompactCellTree :=
   .absurd 720
 
 theorem treePart64_check :
-    treePart64.check splitForms farkasReceipts cells (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart64.check splitForms farkasReceipts cells
+      (((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1,
+      0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1555,7 +2051,15 @@ def treePart65 : CompactCellTree :=
                     (.absurd 264)))))
 
 theorem treePart65_check :
-    treePart65.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart65.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 721 to exclude the accumulated affine constraints in
@@ -1564,7 +2068,16 @@ def treePart66 : CompactCellTree :=
   .absurd 721
 
 theorem treePart66_check :
-    treePart66.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart66.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1589,7 +2102,17 @@ def treePart67 : CompactCellTree :=
                     (.absurd 455)))))
 
 theorem treePart67_check :
-    treePart67.check splitForms farkasReceipts cells ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart67.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[5] - 2 * length[7]` in the row-06 symmetry
@@ -1633,7 +2156,17 @@ def treePart68 : CompactCellTree :=
         (.absurd 735))
 
 theorem treePart68_check :
-    treePart68.check splitForms farkasReceipts cells ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
+    treePart68.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 693 to exclude the accumulated affine constraints in
@@ -1642,7 +2175,15 @@ def treePart69 : CompactCellTree :=
   .absurd 693
 
 theorem treePart69_check :
-    treePart69.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart69.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1667,7 +2208,16 @@ def treePart70 : CompactCellTree :=
                     (.absurd 299)))))
 
 theorem treePart70_check :
-    treePart70.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart70.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 736 to exclude the accumulated affine constraints in
@@ -1676,7 +2226,17 @@ def treePart71 : CompactCellTree :=
   .absurd 736
 
 theorem treePart71_check :
-    treePart71.check splitForms farkasReceipts cells ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart71.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1701,7 +2261,18 @@ def treePart72 : CompactCellTree :=
                     (.absurd 468)))))
 
 theorem treePart72_check :
-    treePart72.check splitForms farkasReceipts cells (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart72.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[5] - 2 * length[7]` in the row-06 symmetry
@@ -1750,7 +2321,18 @@ def treePart73 : CompactCellTree :=
                         (.absurd 487))))))
 
 theorem treePart73_check :
-    treePart73.check splitForms farkasReceipts cells (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
+    treePart73.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 693 to exclude the accumulated affine constraints in
@@ -1759,7 +2341,16 @@ def treePart74 : CompactCellTree :=
   .absurd 693
 
 theorem treePart74_check :
-    treePart74.check splitForms farkasReceipts cells ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart74.check splitForms farkasReceipts cells
+      ((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, -2, 0, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[8] - length[9] + length[11]` in the row-06 symmetry
@@ -1786,7 +2377,17 @@ def treePart75 : CompactCellTree :=
     (.absurd 747)
 
 theorem treePart75_check :
-    treePart75.check splitForms farkasReceipts cells (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart75.check splitForms farkasReceipts cells
+      (((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 736 to exclude the accumulated affine constraints in
@@ -1795,7 +2396,18 @@ def treePart76 : CompactCellTree :=
   .absurd 736
 
 theorem treePart76_check :
-    treePart76.check splitForms farkasReceipts cells ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
+    treePart76.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, 0, 0, 2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1820,7 +2432,19 @@ def treePart77 : CompactCellTree :=
                     (.absurd 487)))))
 
 theorem treePart77_check :
-    treePart77.check splitForms farkasReceipts cells ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1]]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart77.check splitForms farkasReceipts cells
+      ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 1]]) ++ [aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1864,7 +2488,20 @@ def treePart78 : CompactCellTree :=
                     (.absurd 487)))))
 
 theorem treePart78_check :
-    treePart78.check splitForms farkasReceipts cells ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0, 0, 0])]) = true := by
+    treePart78.check splitForms farkasReceipts cells
+      ((((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, -1, 0, -2, 0, 0,
+      0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 762 to exclude the accumulated affine constraints in
@@ -1873,7 +2510,19 @@ def treePart79 : CompactCellTree :=
   .absurd 762
 
 theorem treePart79_check :
-    treePart79.check splitForms farkasReceipts cells (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1])]) = true := by
+    treePart79.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0]]) ++ [AffineForm.violation
+      (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      -1, 0, 0, 1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -1, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, 0, 0, 2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1])]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - 2 * length[7]` in the row-06 symmetry chamber, with leaves
@@ -1897,7 +2546,10 @@ def treePart80 : CompactCellTree :=
                         (.absurd 773))))))
 
 theorem treePart80_check :
-    treePart80.check splitForms farkasReceipts cells ((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart80.check splitForms farkasReceipts cells
+      ((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++
+      [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 774 to exclude the accumulated affine constraints in
@@ -1906,7 +2558,11 @@ def treePart81 : CompactCellTree :=
   .absurd 774
 
 theorem treePart81_check :
-    treePart81.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart81.check splitForms farkasReceipts cells
+      (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1929,7 +2585,12 @@ def treePart82 : CompactCellTree :=
                     (.absurd 636)))))
 
 theorem treePart82_check :
-    treePart82.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart82.check splitForms farkasReceipts cells
+      ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 775 to exclude the accumulated affine constraints in
@@ -1938,7 +2599,13 @@ def treePart83 : CompactCellTree :=
   .absurd 775
 
 theorem treePart83_check :
-    treePart83.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart83.check splitForms farkasReceipts cells
+      (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -1963,7 +2630,14 @@ def treePart84 : CompactCellTree :=
                     (.absurd 654)))))
 
 theorem treePart84_check :
-    treePart84.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart84.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] - length[5] + 2 * length[7]` in the row-06 symmetry
@@ -2007,7 +2681,14 @@ def treePart85 : CompactCellTree :=
         (.absurd 773))
 
 theorem treePart85_check :
-    treePart85.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart85.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0]])
+      ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 801 to exclude the accumulated affine constraints in
@@ -2016,7 +2697,11 @@ def treePart86 : CompactCellTree :=
   .absurd 801
 
 theorem treePart86_check :
-    treePart86.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
+    treePart86.check splitForms farkasReceipts cells
+      (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - 2 * length[7]` in the row-06 symmetry chamber, with leaves
@@ -2040,7 +2725,12 @@ def treePart87 : CompactCellTree :=
                         (.absurd 809))))))
 
 theorem treePart87_check :
-    treePart87.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) = true := by
+    treePart87.check splitForms farkasReceipts cells
+      ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 810 to exclude the accumulated affine constraints in
@@ -2049,7 +2739,13 @@ def treePart88 : CompactCellTree :=
   .absurd 810
 
 theorem treePart88_check :
-    treePart88.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
+    treePart88.check splitForms farkasReceipts cells
+      (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - 2 * length[7]` in the row-06 symmetry chamber, with leaves
@@ -2075,7 +2771,14 @@ def treePart89 : CompactCellTree :=
                         (.absurd 818))))))
 
 theorem treePart89_check :
-    treePart89.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) = true := by
+    treePart89.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - 2 * length[7]` in the row-06 symmetry chamber, with leaves
@@ -2123,7 +2826,14 @@ def treePart90 : CompactCellTree :=
                 (.absurd 311))))
 
 theorem treePart90_check :
-    treePart90.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) = true := by
+    treePart90.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 801 to exclude the accumulated affine constraints in
@@ -2132,7 +2842,11 @@ def treePart91 : CompactCellTree :=
   .absurd 801
 
 theorem treePart91_check :
-    treePart91.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
+    treePart91.check splitForms farkasReceipts cells
+      (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 837 to exclude the accumulated affine constraints in
@@ -2141,7 +2855,13 @@ def treePart92 : CompactCellTree :=
   .absurd 837
 
 theorem treePart92_check :
-    treePart92.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart92.check splitForms farkasReceipts cells
+      (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0,
+      0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true
+      := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2165,7 +2885,13 @@ def treePart93 : CompactCellTree :=
                     (.absurd 654)))))
 
 theorem treePart93_check :
-    treePart93.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart93.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0,
+      0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2,
+      0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 838 to exclude the accumulated affine constraints in
@@ -2174,7 +2900,14 @@ def treePart94 : CompactCellTree :=
   .absurd 838
 
 theorem treePart94_check :
-    treePart94.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart94.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0,
+      -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2199,7 +2932,15 @@ def treePart95 : CompactCellTree :=
                     (.absurd 264)))))
 
 theorem treePart95_check :
-    treePart95.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart95.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0,
+      -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0,
+      0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] - length[5] + 2 * length[7]` in the row-06 symmetry
@@ -2243,7 +2984,15 @@ def treePart96 : CompactCellTree :=
         (.absurd 809))
 
 theorem treePart96_check :
-    treePart96.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart96.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0,
+      -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])])
+      ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 810 to exclude the accumulated affine constraints in
@@ -2252,7 +3001,13 @@ def treePart97 : CompactCellTree :=
   .absurd 810
 
 theorem treePart97_check :
-    treePart97.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
+    treePart97.check splitForms farkasReceipts cells
+      (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0,
+      0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 819 to exclude the accumulated affine constraints in
@@ -2261,7 +3016,14 @@ def treePart98 : CompactCellTree :=
   .absurd 819
 
 theorem treePart98_check :
-    treePart98.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart98.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2286,7 +3048,15 @@ def treePart99 : CompactCellTree :=
                     (.absurd 264)))))
 
 theorem treePart99_check :
-    treePart99.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart99.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 859 to exclude the accumulated affine constraints in
@@ -2295,7 +3065,16 @@ def treePart100 : CompactCellTree :=
   .absurd 859
 
 theorem treePart100_check :
-    treePart100.check splitForms farkasReceipts cells (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart100.check splitForms farkasReceipts cells
+      (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2320,7 +3099,17 @@ def treePart101 : CompactCellTree :=
                     (.absurd 455)))))
 
 theorem treePart101_check :
-    treePart101.check splitForms farkasReceipts cells ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart101.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] - length[5] + 2 * length[7]` in the row-06 symmetry
@@ -2369,7 +3158,17 @@ def treePart102 : CompactCellTree :=
                         (.absurd 468))))))
 
 theorem treePart102_check :
-    treePart102.check splitForms farkasReceipts cells ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart102.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 884 to exclude the accumulated affine constraints in
@@ -2378,7 +3177,15 @@ def treePart103 : CompactCellTree :=
   .absurd 884
 
 theorem treePart103_check :
-    treePart103.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart103.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2403,7 +3210,16 @@ def treePart104 : CompactCellTree :=
                     (.absurd 299)))))
 
 theorem treePart104_check :
-    treePart104.check splitForms farkasReceipts cells (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart104.check splitForms farkasReceipts cells
+      (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 885 to exclude the accumulated affine constraints in
@@ -2412,7 +3228,17 @@ def treePart105 : CompactCellTree :=
   .absurd 885
 
 theorem treePart105_check :
-    treePart105.check splitForms farkasReceipts cells ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart105.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2437,7 +3263,18 @@ def treePart106 : CompactCellTree :=
                     (.absurd 468)))))
 
 theorem treePart106_check :
-    treePart106.check splitForms farkasReceipts cells (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart106.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] - length[5] + 2 * length[7]` in the row-06 symmetry
@@ -2481,7 +3318,18 @@ def treePart107 : CompactCellTree :=
         (.absurd 826))
 
 theorem treePart107_check :
-    treePart107.check splitForms farkasReceipts cells (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart107.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 2, -2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 884 to exclude the accumulated affine constraints in
@@ -2490,7 +3338,16 @@ def treePart108 : CompactCellTree :=
   .absurd 884
 
 theorem treePart108_check :
-    treePart108.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart108.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- length[8] + 2 * length[9] + length[11]` in the row-06 symmetry
@@ -2517,7 +3374,17 @@ def treePart109 : CompactCellTree :=
     (.absurd 912)
 
 theorem treePart109_check :
-    treePart109.check splitForms farkasReceipts cells (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart109.check splitForms farkasReceipts cells
+      (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 885 to exclude the accumulated affine constraints in
@@ -2526,7 +3393,18 @@ def treePart110 : CompactCellTree :=
   .absurd 885
 
 theorem treePart110_check :
-    treePart110.check splitForms farkasReceipts cells ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart110.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2551,7 +3429,19 @@ def treePart111 : CompactCellTree :=
                     (.absurd 487)))))
 
 theorem treePart111_check :
-    treePart111.check splitForms farkasReceipts cells ((((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1]]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart111.check splitForms farkasReceipts cells
+      ((((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 1]]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2595,7 +3485,20 @@ def treePart112 : CompactCellTree :=
                     (.absurd 487)))))
 
 theorem treePart112_check :
-    treePart112.check splitForms farkasReceipts cells ((((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart112.check splitForms farkasReceipts cells
+      ((((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])])
+      ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 2, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0,
+      0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 936 to exclude the accumulated affine constraints in
@@ -2604,7 +3507,19 @@ def treePart113 : CompactCellTree :=
   .absurd 936
 
 theorem treePart113_check :
-    treePart113.check splitForms farkasReceipts cells (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1])]) = true := by
+    treePart113.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -1, 1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 2, 0, 1])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 937 to exclude the accumulated affine constraints in
@@ -2613,7 +3528,10 @@ def treePart114 : CompactCellTree :=
   .absurd 937
 
 theorem treePart114_check :
-    treePart114.check splitForms farkasReceipts cells ((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
+    treePart114.check splitForms farkasReceipts cells
+      ((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - 2 * length[7]` in the row-06 symmetry chamber, with leaves
@@ -2638,7 +3556,11 @@ def treePart115 : CompactCellTree :=
                         (.absurd 945))))))
 
 theorem treePart115_check :
-    treePart115.check splitForms farkasReceipts cells (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) = true := by
+    treePart115.check splitForms farkasReceipts cells
+      (((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2,
+      0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 946 to exclude the accumulated affine constraints in
@@ -2647,7 +3569,12 @@ def treePart116 : CompactCellTree :=
   .absurd 946
 
 theorem treePart116_check :
-    treePart116.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
+    treePart116.check splitForms farkasReceipts cells
+      ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `length[4] - 2 * length[7]` in the row-06 symmetry chamber, with leaves
@@ -2675,7 +3602,13 @@ def treePart117 : CompactCellTree :=
                         (.absurd 960))))))
 
 theorem treePart117_check :
-    treePart117.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) = true := by
+    treePart117.check splitForms farkasReceipts cells
+      (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 961 to exclude the accumulated affine constraints in
@@ -2684,7 +3617,14 @@ def treePart118 : CompactCellTree :=
   .absurd 961
 
 theorem treePart118_check :
-    treePart118.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart118.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[8] + 2 * length[9] - length[10]` in the row-06 symmetry
@@ -2703,7 +3643,15 @@ def treePart119 : CompactCellTree :=
             (.absurd 967)))
 
 theorem treePart119_check :
-    treePart119.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart119.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - 2 * length[7]` in the row-06 symmetry chamber, with
@@ -2749,7 +3697,15 @@ def treePart120 : CompactCellTree :=
                         (.absurd 985))))))
 
 theorem treePart120_check :
-    treePart120.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) = true := by
+    treePart120.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [aff [0, 0, 0, 1,
+      -1, 0, 0, 0, 0, 0, 0, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 937 to exclude the accumulated affine constraints in
@@ -2758,7 +3714,11 @@ def treePart121 : CompactCellTree :=
   .absurd 937
 
 theorem treePart121_check :
-    treePart121.check splitForms farkasReceipts cells ((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
+    treePart121.check splitForms farkasReceipts cells
+      ((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 996 to exclude the accumulated affine constraints in
@@ -2767,7 +3727,12 @@ def treePart122 : CompactCellTree :=
   .absurd 996
 
 theorem treePart122_check :
-    treePart122.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart122.check splitForms farkasReceipts cells
+      ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2790,7 +3755,13 @@ def treePart123 : CompactCellTree :=
                     (.absurd 179)))))
 
 theorem treePart123_check :
-    treePart123.check splitForms farkasReceipts cells (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart123.check splitForms farkasReceipts cells
+      (((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0,
+      0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 997 to exclude the accumulated affine constraints in
@@ -2799,7 +3770,14 @@ def treePart124 : CompactCellTree :=
   .absurd 997
 
 theorem treePart124_check :
-    treePart124.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart124.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0,
+      0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2824,7 +3802,15 @@ def treePart125 : CompactCellTree :=
                     (.absurd 234)))))
 
 theorem treePart125_check :
-    treePart125.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart125.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] - length[5] + 2 * length[7]` in the row-06 symmetry
@@ -2868,7 +3854,15 @@ def treePart126 : CompactCellTree :=
         (.absurd 945))
 
 theorem treePart126_check :
-    treePart126.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart126.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 946 to exclude the accumulated affine constraints in
@@ -2877,7 +3871,13 @@ def treePart127 : CompactCellTree :=
   .absurd 946
 
 theorem treePart127_check :
-    treePart127.check splitForms farkasReceipts cells ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
+    treePart127.check splitForms farkasReceipts cells
+      ((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -2, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 961 to exclude the accumulated affine constraints in
@@ -2886,7 +3886,14 @@ def treePart128 : CompactCellTree :=
   .absurd 961
 
 theorem treePart128_check :
-    treePart128.check splitForms farkasReceipts cells ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart128.check splitForms farkasReceipts cells
+      ((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2911,7 +3918,15 @@ def treePart129 : CompactCellTree :=
                     (.absurd 234)))))
 
 theorem treePart129_check :
-    treePart129.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart129.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 968 to exclude the accumulated affine constraints in
@@ -2920,7 +3935,16 @@ def treePart130 : CompactCellTree :=
   .absurd 968
 
 theorem treePart130_check :
-    treePart130.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart130.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0,
+      0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -2945,7 +3969,17 @@ def treePart131 : CompactCellTree :=
                     (.absurd 299)))))
 
 theorem treePart131_check :
-    treePart131.check splitForms farkasReceipts cells (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart131.check splitForms farkasReceipts cells
+      (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] - length[5] + 2 * length[7]` in the row-06 symmetry
@@ -2989,7 +4023,17 @@ def treePart132 : CompactCellTree :=
         (.absurd 960))
 
 theorem treePart132_check :
-    treePart132.check splitForms farkasReceipts cells (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart132.check splitForms farkasReceipts cells
+      (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, -2, 1, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0,
+      0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 819 to exclude the accumulated affine constraints in
@@ -2998,7 +4042,15 @@ def treePart133 : CompactCellTree :=
   .absurd 819
 
 theorem treePart133_check :
-    treePart133.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart133.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -3023,7 +4075,16 @@ def treePart134 : CompactCellTree :=
                     (.absurd 264)))))
 
 theorem treePart134_check :
-    treePart134.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
+    treePart134.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 859 to exclude the accumulated affine constraints in
@@ -3032,7 +4093,17 @@ def treePart135 : CompactCellTree :=
   .absurd 859
 
 theorem treePart135_check :
-    treePart135.check splitForms farkasReceipts cells (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart135.check splitForms farkasReceipts cells
+      (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [aff
+      [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[2] - 2 * length[3]` in the row-06 symmetry chamber, with
@@ -3057,7 +4128,18 @@ def treePart136 : CompactCellTree :=
                     (.absurd 455)))))
 
 theorem treePart136_check :
-    treePart136.check splitForms farkasReceipts cells ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
+    treePart136.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      -2, -1, 0, 1, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- 2 * length[4] - length[5] + 2 * length[7]` in the row-06 symmetry
@@ -3106,7 +4188,18 @@ def treePart137 : CompactCellTree :=
                         (.absurd 468))))))
 
 theorem treePart137_check :
-    treePart137.check splitForms farkasReceipts cells ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
+    treePart137.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 0, 0, 0, 0, -2, 2, -1, 0]]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0,
+      0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 2, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, -2, -1, 0, 1, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 819 to exclude the accumulated affine constraints in
@@ -3115,7 +4208,16 @@ def treePart138 : CompactCellTree :=
   .absurd 819
 
 theorem treePart138_check :
-    treePart138.check splitForms farkasReceipts cells (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
+    treePart138.check splitForms farkasReceipts cells
+      (((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [aff [0, 0, 0, 0,
+      0, 1, 0, 0, -2, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 721 to exclude the accumulated affine constraints in
@@ -3124,7 +4226,17 @@ def treePart139 : CompactCellTree :=
   .absurd 721
 
 theorem treePart139_check :
-    treePart139.check splitForms farkasReceipts cells (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1]]) ++ [aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart139.check splitForms farkasReceipts cells
+      (((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 1]]) ++ [aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[7]` in the row-06 symmetry chamber, with leaves
@@ -3148,7 +4260,18 @@ def treePart140 : CompactCellTree :=
                     (.absurd 1050)))))
 
 theorem treePart140_check :
-    treePart140.check splitForms farkasReceipts cells ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart140.check splitForms farkasReceipts cells
+      ((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `2 * length[4] - length[7]` in the row-06 symmetry chamber, with leaves
@@ -3172,7 +4295,19 @@ def treePart141 : CompactCellTree :=
                     (.absurd 1057)))))
 
 theorem treePart141_check :
-    treePart141.check splitForms farkasReceipts cells (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0, -1, 0, -2, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
+    treePart141.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [aff [0,
+      -1, 0, -2, 1, 0, 0, 0, 0, 0, 0, 0, 0]]) = true := by
   decide +kernel
 
 /-- Subtree splitting on `- length[0] - 2 * length[2] + 2 * length[3]` in the row-06 symmetry
@@ -3216,7 +4351,19 @@ def treePart142 : CompactCellTree :=
         (.absurd 264))
 
 theorem treePart142_check :
-    treePart142.check splitForms farkasReceipts cells (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, -1, 0, -2, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
+    treePart142.check splitForms farkasReceipts cells
+      (((((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [aff [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 2, -1, 0, 1]]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -2, 0, 0, 0, 0, 0, 0, 0,
+      0])]) ++ [AffineForm.violation (aff [0, 0, 0, 2, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, -1, 0, -2, 1, 0, 0, 0, 0, 0, 0, 0, 0])]) = true := by
   decide +kernel
 
 /-- Contradiction leaf using Farkas receipt 1073 to exclude the accumulated affine constraints
@@ -3225,7 +4372,17 @@ def treePart143 : CompactCellTree :=
   .absurd 1073
 
 theorem treePart143_check :
-    treePart143.check splitForms farkasReceipts cells ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1])]) = true := by
+    treePart143.check splitForms farkasReceipts cells
+      ((((((((((base ++ [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -2, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 1, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 2, -1, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 1, 0, 0, -2, 0, 0, 0, 0])]) ++
+      [AffineForm.violation (aff [0, 0, 0, 0, 0, 0, 0, 0, 0, 2, -1, 0, 1])]) = true := by
   decide +kernel
 
 /-- A branch of the final row-06 cover assembly, starting at split form 2
