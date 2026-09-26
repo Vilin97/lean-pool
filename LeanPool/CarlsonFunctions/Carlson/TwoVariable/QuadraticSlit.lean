@@ -16,8 +16,9 @@ public import LeanPool.CarlsonFunctions.Carlson.R.SlitJointAnalytic
 Both regularized transformations hold for all complex parameters whenever the
 unsquared variables `x,y` have positive real parts. Their squares, product, and
 squared arithmetic mean need only lie in the slit plane; they need not have
-positive real parts. Thus this extends the node domains of the earlier native
-and parameter-continued formulas in Carlson 1977, §§6.9–6.10.
+positive real parts. This extends the earlier Lean formulations that required
+right-half-plane transformed nodes. The node domain agrees with Carlson 1977,
+§§6.9–6.10; it is not an enlargement of the published domain.
 
 The proof uses joint node holomorphy and agreement near `(1,1)`. It does not
 claim every component of the algebraic preimage of the slit plane: branches
