@@ -597,6 +597,9 @@ noncomputable def
   HeightOneSpectrum.equivOfRingEquiv
     (exactConstantExtensionPresentedToCReciprocalNormalizationRingEquiv C S N)
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N]
+  [FiniteDimensional C S] in
 /-- The reciprocal normalization equivalence preserves contraction to `C[X]`. -/
 theorem
     exactConstantExtensionPresentedToCReciprocalNormalizationHeightOneEquiv_under

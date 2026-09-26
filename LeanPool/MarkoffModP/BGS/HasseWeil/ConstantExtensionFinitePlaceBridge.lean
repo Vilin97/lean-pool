@@ -209,6 +209,7 @@ noncomputable def exactConstantExtensionDownstairsFinitePlace
 
 omit [DecidableEq C] [DecidableEq (RatFunc C)]
     [DecidableEq (RatFunc S)] in
+omit [DecidableEq S] in
 @[simp]
 theorem exactConstantExtensionDownstairsFinitePlace_asIdeal
     (q : IsDedekindDomain.HeightOneSpectrum

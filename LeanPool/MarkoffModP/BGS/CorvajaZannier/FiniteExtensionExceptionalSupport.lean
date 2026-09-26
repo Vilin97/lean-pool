@@ -848,6 +848,7 @@ theorem finiteExtensionFamilyOrder_v_positive_mem_exceptionalSet
   rw [Finsupp.mem_support_iff]
   exact ne_of_gt hw
 
+omit [DecidableEq K] in
 /-- Every individual grid monomial has order zero away from the exceptional
 set. -/
 theorem finiteExtensionPrincipalDivisor_gridMonomial_eq_zero_outside
@@ -868,6 +869,7 @@ theorem finiteExtensionPrincipalDivisor_gridMonomial_eq_zero_outside
   change finiteExtensionPrincipalDivisor K L (f iV) w.1 = 0 at hv0
   simp [hu0, hv0]
 
+omit [DecidableEq K] in
 /-- The auxiliary grid product has order zero away from the zero and pole
 places of `u` and `v`. -/
 theorem finiteExtensionPrincipalDivisor_auxiliaryGridProduct_eq_zero_outside

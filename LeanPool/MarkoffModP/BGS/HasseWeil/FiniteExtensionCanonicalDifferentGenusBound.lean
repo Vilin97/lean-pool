@@ -60,6 +60,7 @@ local instance canonicalGenusConstantPolynomialTower :
     IsScalarTower K K[X] L :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [Fintype K] in
 /-- Identifying the explicit different divisor with a canonical divisor
 turns any upper bound for its degree into a genus bound. -/
 theorem finiteExtension_genus_le_budget_of_canonicalDifferent_isCanonical

@@ -153,14 +153,6 @@ theorem maximalCoordinateRotationOrder_le_rpow_of_not_same_splitCageComponent
   exact hnot (sameNormalizedComponent_trans (hconnected y hyCage)
     (sameNormalizedComponent_symm hxy))
 
-private theorem three_ne_zero_zmod_of_prime_ne_three
-    (p : ℕ) [Fact p.Prime] (hpThree : p ≠ 3) : (3 : ZMod p) ≠ 0 := by
-  intro hzero
-  have hpDvd : p ∣ 3 := (ZMod.natCast_eq_zero_iff 3 p).mp hzero
-  rcases (Nat.dvd_prime (by norm_num : Nat.Prime 3)).mp hpDvd with hpOne | hpEq
-  · exact (Fact.out : p.Prime).ne_one hpOne
-  · exact hpThree hpEq
-
 /-- Intermediate assembly relative to a neutral weighted-trace
 torsion-intersection bound and three specialized point-count estimates.
 
@@ -209,7 +201,7 @@ theorem eventually_hasGiantOrbit_of_specializedEstimates
   have hpTwo : p ≠ 2 := by omega
   have hpThree : p ≠ 3 := by omega
   let : Invertible (3 : ZMod p) :=
-    invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+    invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
   let : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
   obtain ⟨cNormalized, hcNormalizedCage⟩ :=
     exists_normalizedPunctured_splitCagePoint p hpSeven

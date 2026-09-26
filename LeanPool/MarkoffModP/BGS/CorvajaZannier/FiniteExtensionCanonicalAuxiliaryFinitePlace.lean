@@ -114,6 +114,7 @@ private theorem finitePlaceOrder_gridMonomial_eq_zero
   rw [hmul, hupow, hvpow, huOrder, hvOrder]
   simp
 
+omit [DecidableEq K] in
 /-- Finite-place source case (i), specialized to the consecutive derivative
 orders on the source auxiliary family. -/
 theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseI
@@ -257,6 +258,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseII
     exact_mod_cast hbound
   simpa only [finiteExtensionPrincipalDivisor_inl_eq_finitePlaceOrder] using hboundInt
 
+omit [DecidableEq K] in
 /-- Finite-place source case (iii), expressed directly with the global
 principal divisor and the consecutive-order Wronskian. -/
 theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIII
@@ -320,6 +322,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIII
     finiteExtensionFinitePlace_gridOrder_sum_eq K L q u v hu hv h k] at hboundInt
   simpa only [finiteExtensionPrincipalDivisor_inl_eq_finitePlaceOrder] using hboundInt
 
+omit [DecidableEq K] in
 /-- Finite-place source case (iv), in the same global-divisor form. -/
 theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIV
     (q : FiniteExtensionFinitePlace K L)

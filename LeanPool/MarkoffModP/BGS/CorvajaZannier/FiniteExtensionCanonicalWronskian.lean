@@ -118,6 +118,7 @@ private theorem finiteExtensionFinitePrincipalDivisor_algebraMap_eq_mapRange
   rw [finiteExtensionFinitePrincipalDivisor_algebraMap_apply K L d hd,
     Finsupp.mapRange_apply, idealMultiplicityDivisor_apply]
 
+omit [DecidableEq (RatFunc K)] in
 /-- The weighted degree of the principal ideal of an integral element is the
 finite-place degree sum of that element in the exhaustive `K(X)` model. -/
 theorem idealMultiplicityWeightedDegree_eq_finiteExtensionFiniteDirectDegreeSum

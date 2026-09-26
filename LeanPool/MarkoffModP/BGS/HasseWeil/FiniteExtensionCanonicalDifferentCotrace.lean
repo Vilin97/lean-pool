@@ -469,6 +469,7 @@ theorem finiteExtensionUnderPlaceChart_surjective :
   simp only [finiteExtensionUnderPlaceChart, Equiv.symm_apply_apply, hq, p']
   exact (ratFuncExhaustivePlaceEquivChart K).apply_symm_apply p
 
+omit [Fintype K] [DecidableEq K] in
 /-- Pullback along the chart place map preserves cofinite eventual
 properties. -/
 theorem finiteExtensionUnderPlaceChart_tendstoCofinite :
@@ -481,6 +482,7 @@ theorem finiteExtensionUnderPlaceChart_tendstoCofinite :
         (finiteExtensionPlaceEquivChart K L).symm)
   infer_instance
 
+omit [Fintype K] [DecidableEq K] in
 /-- A base element integral at a chart place remains integral at every
 upstairs chart place above it. -/
 theorem finiteExtension_placeValuation_algebraMap_le_one
@@ -552,6 +554,7 @@ def finiteExtensionPlaceSectionChart
     FunctionField.Chart.PlaceA K L :=
   Classical.choose (finiteExtensionUnderPlaceChart_surjective K L p)
 
+omit [Fintype K] [DecidableEq K] in
 @[simp]
 theorem finiteExtensionUnderPlaceChart_section
     (p : FunctionField.Chart.PlaceA K (RatFunc K)) :
@@ -676,6 +679,7 @@ def finiteExtensionCotraceBadBaseSet
         finiteExtensionDifferentExceptionalSet K L) ∪
     {ratFuncInfinityPlaceChart K}
 
+omit [Fintype K] [DecidableEq K] in
 theorem finiteExtensionCotraceBadBaseSet_finite
     (a : FunctionField.Chart.AdeleSpace K L) :
     (finiteExtensionCotraceBadBaseSet K L a).Finite := by

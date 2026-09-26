@@ -436,6 +436,7 @@ noncomputable def probeAmbientReciprocalDerivation
   (-(algebraMap (RatFunc K) L RatFunc.X) ^ 2) •
     D.restrictScalars K
 
+omit [FiniteDimensional (RatFunc K) L] [Algebra.IsSeparable (RatFunc K) L] in
 theorem probeAmbientReciprocalDerivation_extends
     (D : Derivation (frobeniusSubfield L p) L L)
     (hDX : D (algebraMap (RatFunc K) L RatFunc.X) = 1)

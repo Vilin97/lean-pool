@@ -151,11 +151,13 @@ def functionFieldNormalClosureStepanovThreshold : ℕ :=
   (functionFieldNormalClosureGenus K F + 1) *
     (functionFieldNormalClosureGenus K F + 2)
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 theorem functionFieldNormalClosureRatFuncDegree_pos :
     0 < functionFieldNormalClosureRatFuncDegree K F := by
   unfold functionFieldNormalClosureRatFuncDegree
   exact Module.finrank_pos
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 theorem functionFieldNormalClosureStepanovThreshold_pos :
     0 < functionFieldNormalClosureStepanovThreshold K F := by
   unfold functionFieldNormalClosureStepanovThreshold

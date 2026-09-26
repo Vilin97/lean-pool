@@ -234,6 +234,7 @@ theorem onePointStepanovFirstRestrictionMap_injective_of_linearIndependent
   change onePointStepanovFirstRestrictionMap K L f g s (c - d) = 0
   rw [map_sub, hcd, sub_self]
 
+omit [DecidableEq K] in
 /-- The mixed-order Stepanov-grid criterion proves injectivity of the first
 restriction. -/
 theorem onePointStepanovFirstRestrictionMap_injective_of_grid

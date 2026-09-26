@@ -259,6 +259,10 @@ theorem intermediateFrobeniusTwistField_ratFunc_tower
       IsScalarTower.algebraMap_apply L F T _
     _ = algebraMap F T (algebraMap (RatFunc C) F x) := rfl
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [Algebra.IsSeparable (RatFunc C) N]
+  [FiniteDimensional (RatFunc C) L] [Algebra.IsSeparable (RatFunc C) L]
+  [FiniteDimensional L N] [IsGalois L N] in
 /-- Every intermediate-base Frobenius-twist field is a finite function field
 over `C(X)`. -/
 theorem finiteDimensional_intermediateFrobeniusTwistField_over_ratFunc
@@ -306,6 +310,10 @@ theorem finiteDimensional_intermediateFrobeniusTwistField_over_ratFunc
     exact (algebraMap F T).injective
   exact Module.Finite.left (RatFunc C) F T
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [FiniteDimensional (RatFunc C) L] [Algebra.IsSeparable (RatFunc C) L]
+  [FiniteDimensional L N] [IsGalois L N] in
 /-- Separability of the exact constant extension descends to every
 intermediate-base Frobenius-twist field. -/
 theorem isSeparable_intermediateFrobeniusTwistField_over_ratFunc
@@ -734,6 +742,8 @@ private theorem finitePlaceUnder_intermediate_original
   apply IsDedekindDomain.HeightOneSpectrum.ext
   exact Ideal.under_under Q.asIdeal
 
+omit [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [FiniteDimensional L N] [IsGalois L N] in
 /-- Choose an `S[X]`-presentation of a top finite place while transporting
 rationality of its restriction to the intermediate field `L`. -/
 private theorem exists_presentedFinitePlace_of_under_intermediate_rational :

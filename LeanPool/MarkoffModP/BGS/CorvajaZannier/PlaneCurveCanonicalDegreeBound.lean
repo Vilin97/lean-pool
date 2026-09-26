@@ -56,6 +56,7 @@ theorem planeCurvePolynomialInSecondCoordinate_discr_natDegree_le_degreeOf
 
 variable [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)]
 
+omit [DecidableEq (RatFunc K)] in
 /-- The sharp finite-different estimate implies the usual bidegree-only
 finite discriminant budget.  The canonical theorem below retains the sharper
 intermediate discriminant so that it cancels against the infinity

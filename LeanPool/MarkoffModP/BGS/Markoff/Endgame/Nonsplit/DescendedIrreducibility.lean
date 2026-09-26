@@ -142,8 +142,8 @@ section DescendedFormula
 
 variable (p : ℕ) [Fact p.Prime]
 
-private abbrev F := ZMod p
-private abbrev E := quadraticFiniteField p
+local notation "F" => ZMod
+local notation "E" => quadraticFiniteField
 
 def extendedCayleyNumeratorFactor : Polynomial (E p) :=
   X - C (quadraticNonbaseElement p ^ p)

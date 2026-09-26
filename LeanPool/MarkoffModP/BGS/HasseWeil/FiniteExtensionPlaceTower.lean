@@ -823,6 +823,7 @@ noncomputable def finitePlaceUnderFiberFixedBy
   letI := finitePlaceUnderFiberGalAction K M L P
   MulAction.fixedBy (FinitePlaceUnderFiber K M L P) g
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The exact local fixed-point trace identity for a finite-place restriction
 fiber. -/
 theorem sum_card_finitePlaceUnderFiberFixedBy_eq_card_galoisGroup
@@ -1028,6 +1029,7 @@ noncomputable def infinityPlaceUnderFiberFixedBy
   letI := infinityPlaceUnderFiberGalAction K M L P
   MulAction.fixedBy (InfinityPlaceUnderFiber K M L P) g
 
+omit [DecidableEq K] in
 /-- The exact local fixed-point trace identity for an infinity-place
 restriction fiber. -/
 theorem sum_card_infinityPlaceUnderFiberFixedBy_eq_card_galoisGroup

@@ -608,6 +608,7 @@ theorem frobeniusTwistField_finitePlace_ramificationIdx_eq_one
   rw [hInertia]
   exact Nat.card_unique
 
+omit [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- A top finite place of degree `[S : C]` fixed by the canonical twist
 descends to a rational finite place of the Frobenius-twist fixed field. -/
 theorem frobeniusTwistField_fixed_finitePlace_under_degree_eq_one
@@ -706,6 +707,7 @@ theorem frobeniusTwistField_fixed_finitePlace_under_degree_eq_one
         (finrank_exactConstantExtension_over_frobeniusTwistField
           C (RatFunc C) N S hExact g hdiv).symm
 
+omit [Finite S] [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- The canonical twist over its fixed field and the ambient twist over
 `C(X)` induce exactly the same action on finite places. -/
 theorem exactConstantExtensionFrobeniusTwist_finitePlaceGalSmul_eq_overFixedField

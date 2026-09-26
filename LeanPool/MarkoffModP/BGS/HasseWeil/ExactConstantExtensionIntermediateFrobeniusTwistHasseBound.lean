@@ -65,6 +65,10 @@ local instance intermediateHasseConstantTower : IsScalarTower C L N := by
     algebraMap L N (algebraMap (RatFunc C) L (algebraMap C (RatFunc C) c))
   exact IsScalarTower.algebraMap_apply (RatFunc C) L N _
 
+omit [Fintype C] [DecidableEq C] [Finite S] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N] [IsGalois (RatFunc C) N]
+  [FiniteDimensional C S] [IsGalois C S] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [FiniteDimensional L N] [IsGalois L N] in
 private theorem intermediateHasseRatFuncBaseTower :
     letI : Algebra (RatFunc C) (ExactConstantExtension C N S) :=
       exactConstantExtensionBaseAlgebra C (RatFunc C) N S

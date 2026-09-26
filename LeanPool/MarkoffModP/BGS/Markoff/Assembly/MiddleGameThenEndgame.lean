@@ -22,14 +22,6 @@ open Filter
 
 noncomputable section
 
-private theorem three_ne_zero_zmod_of_prime_ne_three
-    (p : ℕ) [Fact p.Prime] (hpThree : p ≠ 3) : (3 : ZMod p) ≠ 0 := by
-  intro hzero
-  have hpDvd : p ∣ 3 := (ZMod.natCast_eq_zero_iff 3 p).mp hzero
-  rcases (Nat.dvd_prime (by norm_num : Nat.Prime 3)).mp hpDvd with hpOne | hpEq
-  · exact (Fact.out : p.Prime).ne_one hpOne
-  · exact hpThree hpEq
-
 /-- Maximum of the three coordinate rotation orders. -/
 def maximalCoordinateRotationOrder {R : Type*} [CommRing R]
     (x : NormalizedPoint R) : ℕ :=
@@ -268,7 +260,7 @@ theorem exists_threshold_middleGame_reaches_endgame
     {δ : ℝ} (hδ : 0 < δ) (hδQuarter : δ ≤ (1 : ℝ) / 4) :
     ∃ threshold : ℕ, ∀ p : ℕ, threshold ≤ p → [Fact p.Prime] → ∀ hpThree : p ≠ 3,
       letI : Invertible (3 : ZMod p) :=
-        invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+        invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
       ∀ x : NormalizedMarkoffSurface (ZMod p),
         (p : ℝ) ^ δ < maximalCoordinateRotationOrder x.1 →
         ∃ y : NormalizedMarkoffSurface (ZMod p),
@@ -287,7 +279,7 @@ theorem exists_threshold_middleGame_reaches_endgame
   intro p hp _ hpThree
   let : Invertible (3 : ZMod p) :=
     invertibleOfNonzero
-      (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+      (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
   let : Fintype (quadraticFiniteField p) := Fintype.ofFinite _
   intro x hxLower
   have hpSize : sizeThreshold ≤ p :=
@@ -342,7 +334,7 @@ theorem exists_threshold_middleGame_to_splitCage
     {δ : ℝ} (hδ : 0 < δ) (hδQuarter : δ ≤ (1 : ℝ) / 4) :
     ∃ threshold : ℕ, ∀ p : ℕ, threshold ≤ p → [Fact p.Prime] → ∀ hpThree : p ≠ 3,
       letI : Invertible (3 : ZMod p) :=
-        invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+        invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
       ∀ x : NormalizedMarkoffSurface (ZMod p),
         (p : ℝ) ^ δ < maximalCoordinateRotationOrder x.1 →
         ∃ y : NormalizedMarkoffSurface (ZMod p),
@@ -355,7 +347,7 @@ theorem exists_threshold_middleGame_to_splitCage
   refine ⟨max middleThreshold endgameThreshold, ?_⟩
   intro p hp _ hpThree
   let : Invertible (3 : ZMod p) :=
-    invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+    invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x hxLarge
   have hpMiddle : middleThreshold ≤ p := (le_max_left _ _).trans hp
   have hpEndgame : endgameThreshold ≤ p := (le_max_right _ _).trans hp

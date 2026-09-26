@@ -320,6 +320,7 @@ local instance canonicalOriginalConstantTower :
     IsScalarTower K (RatFunc K) F :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- In the canonical `C(X)` presentation, `C` is also the exact constant
 field of the original compositum `CF`. -/
 theorem
@@ -363,6 +364,7 @@ theorem
   let : Algebra C M := fresh
   exact hFresh
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The original compositum remains separable over the canonical rational
 function field of the full constant field.  This is transported from the
 original function field after exact extension of constants. -/

@@ -70,6 +70,10 @@ local instance intermediateRationalAverageConstantTower : IsScalarTower C L N :=
     algebraMap L N (algebraMap (RatFunc C) L (algebraMap C (RatFunc C) c))
   exact IsScalarTower.algebraMap_apply (RatFunc C) L N _
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N] [IsGalois (RatFunc C) N]
+  [FiniteDimensional C S] [IsGalois C S] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [FiniteDimensional L N] [IsGalois L N] in
 /-- Compatibility of the rational-function and intermediate-base algebra maps
 on the exact constant extension. -/
 private theorem intermediateRationalAverageRatFuncBaseTower :
@@ -221,6 +225,7 @@ theorem intermediateFrobeniusTwistFieldRationalInfinityPlaceCount_le_original_fi
     _ = Module.finrank (RatFunc C) N :=
       finrank_mul_finrank_of_fields (RatFunc C) L N
 
+omit [Fintype C] [FiniteDimensional L N] [IsGalois L N] in
 /-- Rational infinity places of the intermediate field itself are bounded by
 the original degree. -/
 theorem intermediateBaseRationalInfinityPlaceCount_le_original_finrank :

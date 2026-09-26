@@ -203,6 +203,7 @@ theorem frobeniusTwistFieldRationalInfinityPlaceCount_le_original_finrank
       finrank_frobeniusTwistField_over_ratFunc_eq_original
         C N S hExact g hdiv
 
+omit [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- The total infinity contribution of all twists is uniformly bounded by
 the Galois-group order times the original function-field degree. -/
 theorem sum_frobeniusTwistFieldRationalInfinityPlaceCount_le

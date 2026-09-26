@@ -148,6 +148,7 @@ private theorem finrank_mul_finrank_of_fields
     Module.finrank K F * Module.finrank F E = Module.finrank K E :=
   Module.finrank_mul_finrank K F E
 
+omit [Fintype C] in
 /-- A finite-place degree is the dimension of its residue field over the
 constant field. -/
 private theorem finiteExtensionPlaceDegree_inl_eq_finrank_residueField_ratFunc
@@ -194,6 +195,7 @@ noncomputable def ratFuncRationalFinitePlaceEquivFiniteExtension :
 variable (hExact : algebraicClosure C N =
   (⊥ : IntermediateField C N))
 
+omit [DecidableEq (RatFunc S)] in
 /-- Choose the explicit `S[X]` presentation of an actual top finite place,
 while transporting rationality of its restriction to the downstairs place.
 This is the only point where the nested integral-closure contraction tower is
