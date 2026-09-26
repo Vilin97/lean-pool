@@ -897,56 +897,7 @@ ancestral-independence prescriptions. -/
 theorem gAncestralProducts_of_exp {Δ : GAssign Γ t → ℝ} {P : GTarget Γ} (hlaw : IsLaw Δ)
     (hexp : ∀ (S : Finset (GObs Γ t)) (μ : (S → Bool) → ℝ), Expressible t P S μ →
       pushforward Δ (gRestrict S) = μ) : GAncestralProducts t Δ P := by
-  classical
-  have hinjm : ∀ S : Finset (GObs Γ t), GInjectable S →
-      pushforward Δ (gRestrict S) = pushforward P (gPartyRead S) :=
-    fun S hS => hexp S _ (Expressible.inj hS)
-  intro n S hinj hai
-  funext ψ
-  rcases Nat.eq_zero_or_pos n with rfl | hn
-  · have hsub : ∀ a b : (∀ m : Fin 0, (S m) → Bool), a = b := by
-      intro a b; funext m; exact m.elim0
-    simp only [pushforward]
-    rw [Finset.sum_congr rfl (fun ω _ => ite_eq_left (hsub _ _))]
-    rw [hlaw.2]
-    simp
-  · have hempty : GInjectable (∅ : Finset (GObs Γ t)) := by
-      obtain ⟨ι, -⟩ := hinj ⟨0, hn⟩
-      exact ⟨ι, Finset.empty_subset _⟩
-    set U : Finset (GObs Γ t) := (Finset.univ : Finset (Fin n)).biUnion S with hUdef
-    have hmain := marginal_biUnion_prod hlaw hexp S hinj hai hempty Finset.univ U hUdef
-    set Φ : (U → Bool) → (∀ m : Fin n, (S m) → Bool) :=
-      fun φ m => readOnBlock (S m) U φ with hΦ
-    have hmem : ∀ (m : Fin n) (p : GObs Γ t), p ∈ S m → p ∈ U := by
-      intro m p hp
-      exact Finset.mem_biUnion.2 ⟨m, Finset.mem_univ _, hp⟩
-    have hfac : (fun ω (m : Fin n) => gRestrict (S m) ω) = fun ω => Φ (gRestrict U ω) := by
-      funext ω m o
-      simp only [hΦ, readOnBlock, dite_eq_left (hmem m o.1 o.2), gRestrict]
-    have hinjΦ : Function.Injective Φ := by
-      intro φ φ' h
-      funext o
-      obtain ⟨m, -, hm⟩ := Finset.mem_biUnion.1 o.2
-      have := congrFun (congrFun h m) ⟨o.1, hm⟩
-      simpa only [hΦ, readOnBlock, dite_eq_left o.2] using this
-    -- every tuple comes from a function on the union
-    obtain ⟨φ, hφ⟩ : ∃ φ : U → Bool, Φ φ = ψ := by
-      refine ⟨fun o => ψ (Finset.mem_biUnion.1 o.2).choose
-        ⟨o.1, (Finset.mem_biUnion.1 o.2).choose_spec.2⟩, ?_⟩
-      have key : ∀ (q : GObs Γ t) (m₁ m₂ : Fin n) (h₁ : q ∈ S m₁) (h₂ : q ∈ S m₂),
-          ψ m₁ ⟨q, h₁⟩ = ψ m₂ ⟨q, h₂⟩ := by
-        intro q m₁ m₂ h₁ h₂
-        by_cases hmm : m₁ = m₂
-        · subst hmm; rfl
-        · exact absurd h₂ (Finset.disjoint_left.1 (disjoint_of_ai (hai m₁ m₂ hmm)) h₁)
-      funext m p
-      have hpU : p.1 ∈ U := hmem m p.1 p.2
-      simp only [hΦ, readOnBlock, dite_eq_left hpU]
-      exact key p.1 _ m (Finset.mem_biUnion.1 (⟨p.1, hpU⟩ : U).2).choose_spec.2 p.2
-    rw [hfac, ← pushforward_comp' Δ (gRestrict U) Φ, ← hφ,
-      pushforward_injective _ hinjΦ φ, hmain.2 φ]
-    refine Finset.prod_congr rfl (fun m _ => ?_)
-    rw [hinjm (S m) (hinj m)]
+  exact Sound.gAncestralProducts_of_exp hlaw hexp
 
 end RootSinkAux
 
@@ -958,9 +909,7 @@ ancestral-independence hierarchy at every order. -/
 theorem gExpFeasible_iff_gAIFeasible (Γ : PairGraph) (t : ℕ) (P : GTarget Γ) :
     GExpFeasible Γ t P ↔ GAIFeasible Γ t P := by
   constructor
-  · rintro ⟨Δ, hlaw, hsym, hdiag, hexp⟩
-    exact ⟨Δ, hlaw, hsym, hdiag, fun S hS => hexp S _ (Expressible.inj hS),
-      gAncestralProducts_of_exp hlaw hexp⟩
+  · exact gAIFeasible_of_gExpFeasible Γ t P
   · rintro ⟨Δ, hlaw, hsym, hdiag, hinjm, hprod⟩
     exact ⟨Δ, hlaw, hsym, hdiag, expPrescriptions_of_ai hlaw hinjm hprod⟩
 

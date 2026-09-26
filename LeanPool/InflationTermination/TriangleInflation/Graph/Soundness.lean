@@ -162,27 +162,7 @@ end DProd
 theorem sum_sel_coord {B : Type*} [Fintype B] [DecidableEq B] {n : Type*} [Fintype n]
     [DecidableEq n] (ρ : B → ℝ) (hρ : ∑ b, ρ b = 1) (r₀ : n) (b₀ : B) :
     ∑ v : n → B, (if v r₀ = b₀ then (1 : ℝ) else 0) * ∏ r, ρ (v r) = ρ b₀ := by
-  have hstep : ∀ v : n → B, (if v r₀ = b₀ then (1 : ℝ) else 0) * ∏ r, ρ (v r)
-      = ∏ r, (ρ (v r) * if r = r₀ then (if v r = b₀ then (1 : ℝ) else 0) else 1) := by
-    intro v
-    rw [Finset.prod_mul_distrib, Finset.prod_ite_eq' univ r₀
-      (fun r => if v r = b₀ then (1 : ℝ) else 0)]
-    simp [mul_comm]
-  rw [Finset.sum_congr rfl (fun v _ => hstep v),
-    sum_pi_prod (fun (r : n) (b : B) =>
-      ρ b * if r = r₀ then (if b = b₀ then (1 : ℝ) else 0) else 1)]
-  have hcol : ∀ r : n, (∑ b, ρ b * if r = r₀ then (if b = b₀ then (1 : ℝ) else 0) else 1)
-      = if r = r₀ then ρ b₀ else 1 := by
-    intro r
-    by_cases hr : r = r₀
-    · simp only [hr, ite_true]
-      rw [Finset.sum_eq_single b₀]
-      · simp
-      · exact fun b _ hb => by rw [ite_eq_right hb, mul_zero]
-      · intro h; exact absurd (mem_univ _) h
-    · simp only [hr, ite_false, mul_one]; exact hρ
-  rw [Finset.prod_congr rfl (fun r _ => hcol r), Finset.prod_ite_eq' univ r₀ (fun _ => ρ b₀)]
-  simp
+  exact FiniteWeights.sum_sel_coord ρ hρ r₀ b₀
 
 /-! ## Graph helpers -/
 
@@ -840,6 +820,24 @@ theorem exp_induct (hlaw : IsLaw Δ) (hPsum : ∑ w, P w = 1)
 
 end Induction
 
+/-- Expressible prescriptions imply the ancestral products for the same witness law. -/
+theorem gAncestralProducts_of_exp {Δ : GAssign Γ t → ℝ} {P : GTarget Γ}
+    (hlaw : IsLaw Δ)
+    (hexp : ∀ (S : Finset (GObs Γ t)) (μ : (↥S → Bool) → ℝ), Expressible t P S μ →
+      pushforward Δ (gRestrict S) = μ) : GAncestralProducts t Δ P := by
+  have hinjm : GInjectableMarginals t Δ P := fun S hS => hexp S _ (Expressible.inj hS)
+  intro n
+  cases n with
+  | zero => exact fun S _ _ => ancestral_zero hlaw S
+  | succ n =>
+      intro S hinj hai
+      obtain ⟨ι, -⟩ := hinj 0
+      have hmass : ∑ ψ : ↥(copySet ι) → Bool, pushforward Δ (gRestrict (copySet ι)) ψ
+          = ∑ ψ : ↥(copySet ι) → Bool, pushforward P (gPartyRead (copySet ι)) ψ := by
+        rw [hinjm (copySet ι) ⟨ι, Finset.Subset.refl _⟩]
+      rw [sum_pushforward, sum_pushforward, hlaw.2] at hmass
+      exact (exp_induct hlaw hmass.symm hexp ι (n + 1) S hinj hai).2
+
 end Sound
 variable {Γ : PairGraph} {t : ℕ}
 
@@ -851,19 +849,8 @@ are the injectable and ancestrally independent instances of the expressible clos
 theorem gAIFeasible_of_gExpFeasible (Γ : PairGraph) (t : ℕ) (P : GTarget Γ) :
     GExpFeasible Γ t P → GAIFeasible Γ t P := by
   rintro ⟨Δ, hlaw, hsym, hdiag, hexp⟩
-  have hinjm : GInjectableMarginals t Δ P := fun S hS => hexp S _ (Expressible.inj hS)
-  refine ⟨Δ, hlaw, hsym, hdiag, hinjm, ?_⟩
-  intro n
-  cases n with
-  | zero => exact fun S _ _ => Sound.ancestral_zero hlaw S
-  | succ n =>
-      intro S hinj hai
-      obtain ⟨ι, -⟩ := hinj 0
-      have hmass : ∑ ψ : ↥(copySet ι) → Bool, pushforward Δ (gRestrict (copySet ι)) ψ
-          = ∑ ψ : ↥(copySet ι) → Bool, pushforward P (gPartyRead (copySet ι)) ψ := by
-        rw [hinjm (copySet ι) ⟨ι, Finset.Subset.refl _⟩]
-      rw [Sound.sum_pushforward, Sound.sum_pushforward, hlaw.2] at hmass
-      exact (Sound.exp_induct hlaw hmass.symm hexp ι (n + 1) S hinj hai).2
+  exact ⟨Δ, hlaw, hsym, hdiag, fun S hS => hexp S _ (Expressible.inj hS),
+    Sound.gAncestralProducts_of_exp hlaw hexp⟩
 
 /-- The AI feasible set is contained in the Navascués–Wolfe feasible set. -/
 theorem gNWFeasible_of_gAIFeasible (Γ : PairGraph) (t : ℕ) (P : GTarget Γ) :

@@ -66,6 +66,32 @@ theorem sum_dprod_sel {A B : κ → Type*} [∀ k, Fintype (A k)] [∀ k, Decida
 
 end Generic
 
+/-- A normalized independent family has its original weight at each selected coordinate. -/
+theorem sum_sel_coord {B : Type*} [Fintype B] [DecidableEq B] {n : Type*} [Fintype n]
+    [DecidableEq n] (ρ : B → R) (hρ : ∑ b, ρ b = 1) (r₀ : n) (b₀ : B) :
+    ∑ v : n → B, (if v r₀ = b₀ then (1 : R) else 0) * ∏ r, ρ (v r) = ρ b₀ := by
+  have hstep : ∀ v : n → B, (if v r₀ = b₀ then (1 : R) else 0) * ∏ r, ρ (v r)
+      = ∏ r, (ρ (v r) * if r = r₀ then (if v r = b₀ then (1 : R) else 0) else 1) := by
+    intro v
+    rw [Finset.prod_mul_distrib, Finset.prod_ite_eq' univ r₀
+      (fun r => if v r = b₀ then (1 : R) else 0)]
+    simp [mul_comm]
+  rw [Finset.sum_congr rfl (fun v _ => hstep v),
+    sum_pi_prod (fun (r : n) (b : B) =>
+      ρ b * if r = r₀ then (if b = b₀ then (1 : R) else 0) else 1)]
+  have hcol : ∀ r : n, (∑ b, ρ b * if r = r₀ then (if b = b₀ then (1 : R) else 0) else 1)
+      = if r = r₀ then ρ b₀ else 1 := by
+    intro r
+    by_cases hr : r = r₀
+    · simp only [hr, ite_true]
+      rw [Finset.sum_eq_single b₀]
+      · simp
+      · exact fun b _ hb => by rw [ite_eq_right hb, mul_zero]
+      · intro h; exact absurd (mem_univ _) h
+    · simp only [hr, ite_false, mul_one]; exact hρ
+  rw [Finset.prod_congr rfl (fun r _ => hcol r), Finset.prod_ite_eq' univ r₀ (fun _ => ρ b₀)]
+  simp
+
 section Push
 
 variable {α β γ : Type*} [Fintype α] [Fintype β] [DecidableEq β] [DecidableEq γ]
