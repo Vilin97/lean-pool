@@ -1,0 +1,31 @@
+/-
+Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong, Tuomo Kuusi
+-/
+module
+
+
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoli
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliCutoffProduct
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliEnergyBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliLocalGradientBridge
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseCaccioppoliSingleCubeToRaw
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarseFluxResponse
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincare
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHS
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.CoarsePoincareRHSLocalRecurrence
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.ConstantCoefficientDirichletBesov
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.HomogenizationBlackBoxes
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantities
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.MultiscaleQuantitiesBasic
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakFluxRHS
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfaces
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesComponentwise
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesPositiveQTwo
+public import LeanPool.CoarseGraining.Homogenization.Deterministic.WeakNormInterfacesQTwo
+
+/-! Supporting modules for Coarse-graining theory for elliptic equations. -/
+
+@[expose] public section

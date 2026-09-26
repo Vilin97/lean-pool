@@ -1,0 +1,31 @@
+/-
+Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong, Tuomo Kuusi
+-/
+module
+
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.AllDimensionalComposition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuousDiscreteKSeriesBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ContinuumSampleClosure
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.DiscreteKOverlapEnergy
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanGagliardoCoordinateBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.EuclideanHsMeasurability
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.FullNormEquivalence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.KInfimum
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.MeasurableRepresentative
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.OverlapCoordinateBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.OverlapGagliardoBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.PositiveDimensionalComposition
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.RootScaleControl
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.SeminormComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicScale
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.TriadicSeries
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.UnitCubeGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation.ZeroDimensionalClosure
+
+/-! Supporting modules for Coarse-graining theory for elliptic equations. -/
+
+@[expose] public section
