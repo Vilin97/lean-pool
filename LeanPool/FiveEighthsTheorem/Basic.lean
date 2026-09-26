@@ -55,6 +55,7 @@ variable {G : Type*} [Group G]
 
 private theorem card_div_card_eq_one_div_index [Finite G] (H : Subgroup G) :
     (Nat.card H : ℚ) / (Nat.card G : ℚ) = 1 / (H.index : ℚ) := by
+  have : Nonempty G := ⟨1⟩
   have hG : Nat.card G ≠ 0 := Nat.card_pos.ne'
   have hindex : H.index ≠ 0 := Subgroup.index_ne_zero_of_finite
   rw [div_eq_div_iff (by exact_mod_cast hG) (by exact_mod_cast hindex), one_mul]
@@ -91,8 +92,9 @@ theorem centralFraction_le_quarter [Finite G] (h : ¬IsMulCommutative G) :
     centralFraction G ≤ 1 / 4 := by
   have h4 := four_le_center_index h
   rw [centralFraction_eq_one_div_index,
-    div_le_div_iff₀ (by exact_mod_cast by omega : (0 : ℚ) < (Subgroup.center G).index)
-      (by norm_num : (0 : ℚ) < 4), one_mul, one_mul]
+    div_le_div_iff_of_pos_left zero_lt_one
+      (by exact_mod_cast by omega : (0 : ℚ) < (Subgroup.center G).index)
+      (by norm_num : (0 : ℚ) < 4)]
   exact_mod_cast h4
 
 /-- The centralizer of a noncentral element is a proper subgroup, so its index is at
@@ -101,7 +103,8 @@ theorem two_le_centralizer_index [Finite G] {g : G} (hg : g ∉ Subgroup.center 
     2 ≤ (Subgroup.centralizer {g} : Subgroup G).index := by
   have h0 : (Subgroup.centralizer {g} : Subgroup G).index ≠ 0 := Subgroup.index_ne_zero_of_finite
   have hne_top : (Subgroup.centralizer {g} : Subgroup G) ≠ ⊤ := by
-    simp_all
+    intro htop
+    exact hg (Subgroup.centralizer_eq_top_iff_subset.mp htop (Set.mem_singleton g))
   have h1 : (Subgroup.centralizer {g} : Subgroup G).index ≠ 1 := fun h1 =>
     hne_top (Subgroup.index_eq_one.mp h1)
   omega
@@ -111,9 +114,9 @@ theorem centralizerFraction_le_half [Finite G] {g : G} (hg : g ∉ Subgroup.cent
     centralizerFraction g ≤ 1 / 2 := by
   have h2 := two_le_centralizer_index hg
   rw [centralizerFraction, card_div_card_eq_one_div_index,
-    div_le_div_iff₀
+    div_le_div_iff_of_pos_left zero_lt_one
       (by exact_mod_cast by omega : (0 : ℚ) < ((Subgroup.centralizer {g} : Subgroup G).index))
-      (by norm_num : (0 : ℚ) < 2), one_mul, one_mul]
+      (by norm_num : (0 : ℚ) < 2)]
   exact_mod_cast h2
 
 private theorem ncard_setOf_pair_eq_sum {α : Type*} [Fintype α] (p : α → α → Prop) :
@@ -148,7 +151,10 @@ local notation "Z(" G ")" => Subgroup.center G
 private theorem commProb_le_five_eighths_of_finite (G : Type*) [Group G] [Finite G]
     (h : ¬IsMulCommutative G) : commProb G ≤ 5 / 8 := by
   classical
+  have : Nonempty G := ⟨1⟩
+  have : Nonempty (Subgroup.center G) := ⟨1⟩
   have : Fintype G := Fintype.ofFinite G
+  have cardinality_ne_zero : #ₜG ≠ 0 := Nat.cast_ne_zero.mpr Nat.card_pos.ne'
   calc
     commProb G
     _ = #ₛ{ (g, h) : G × G | g * h = h * g } / #ₜG ^ 2 := by
@@ -177,7 +183,7 @@ private theorem commProb_le_five_eighths_of_finite (G : Type*) [Group G] [Finite
     _ = #ₜZ(G) / #ₜG
         + (∑ g with g ∉ Z(G), #ₛ{ h : G | g * h = h * g }) / #ₜG ^ 2 := by
         unfold typeQCard
-        field_simp
+        field_simp [cardinality_ne_zero]
     _ = centralFraction G
         + (∑ g with g ∉ Z(G), (#ₛ{ h : G | g * h = h * g }) / #ₜG) / #ₜG := by
         congr 1
@@ -186,21 +192,22 @@ private theorem commProb_le_five_eighths_of_finite (G : Type*) [Group G] [Finite
         congr
         unfold centralizerFraction
         ext g
-        field_simp
+        field_simp [cardinality_ne_zero]
         congr 1
         ext h
-        simp [Subgroup.mem_centralizer_singleton_iff]
-        grind
+        change g * h = h * g ↔ h ∈ Subgroup.centralizer {g}
+        simp only [Subgroup.mem_centralizer_singleton_iff]
+        as_aux_lemma => exact eq_comm
     _ ≤ centralFraction G + (∑ g with g ∉ Z(G), 1 / 2) / #ₜG := by
         gcongr with g hg
         simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hg
         exact centralizerFraction_le_half hg
     _ = centralFraction G + (1 / 2) * (∑ g with g ∉ Z(G), 1) / #ₜG := by
         congr 1
-        field_simp
+        field_simp [cardinality_ne_zero]
         rw [Finset.sum_const]
         simp
-        field_simp
+        ring
     _ = centralFraction G + (1 / 2) * (#ₛ{ g : G | g ∉ Z(G) }) / #ₜG := by
         congr
         simp only [Finset.sum_const, nsmul_eq_mul, mul_one, setQCard, Nat.cast_inj]
@@ -218,17 +225,15 @@ private theorem commProb_le_five_eighths_of_finite (G : Type*) [Group G] [Finite
           exact Set.ncard_le_ncard (Set.subset_univ _) Set.finite_univ
         exact Nat.cast_sub hle
     _ = centralFraction G + (1 / 2) * (#ₜG - #ₛ{ g : G | g ∈ Z(G) }) / #ₜG := by
-        congr
+        congr 4
         simp [typeQCard, setQCard]
     _ = centralFraction G + (1 / 2) * (1 - #ₛ{ g : G | g ∈ Z(G) } / #ₜG) := by
-        field_simp
+        rw [mul_div_assoc, sub_div, div_self cardinality_ne_zero]
     _ = centralFraction G + (1 / 2) * (1 - centralFraction G) := by
         congr
-    _ = 1 / 2 + centralFraction G / 2 := by
-        field_simp
-        ring
+    _ = 1 / 2 + centralFraction G / 2 := by ring
     _ ≤ 1 / 2 + 1 / 8 := by
-        linarith [centralFraction_le_quarter h]
+        linarith only [centralFraction_le_quarter h]
     _ = 5 / 8 := by norm_num
 
 /-- **The 5/8 theorem**: the commuting probability of a nonabelian group is at most `5/8`. For
