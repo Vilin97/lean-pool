@@ -1,0 +1,80 @@
+/-
+Copyright (c) 2026 William Whistler. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: William Whistler
+-/
+
+module
+
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.JTGuard
+public import LeanPool.RegtsSevenster.RS.Classical.SymFun.HProdCoeff
+
+/-!
+# The counting form of the double-sum identity
+
+Substituting the tuple-count coefficients and the guard/margin
+bridges into the signed double-sum identity: the signed count of
+margin-constrained Sym-tuples over shifted compositions is `1`.
+-/
+
+@[expose] public section
+
+namespace RS
+
+open Finset Equiv
+
+variable {k : ℕ}
+
+open scoped Classical in
+/-- **The counting form of the double-sum identity.** -/
+theorem t_count (v : Fin k → ℕ)
+    (hsort : ∀ i j : Fin k, i ≤ j → v j ≤ v i) :
+    (∑ τ : Equiv.Perm (Fin k), ∑ σ : Equiv.Perm (Fin k),
+      ((Equiv.Perm.sign τ : ℤ) : ℂ) *
+        ((Equiv.Perm.sign σ : ℤ) : ℂ) *
+        (if (∀ i : Fin k,
+              0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)) ∧
+            (∀ i : Fin k,
+              0 ≤ (v i : ℤ) + ((τ i : Fin k) : ℕ) - (i : ℕ))
+          then (Fintype.card {W : ∀ i : Fin k,
+              Sym (Fin k)
+                (((v i : ℤ) + ((σ i : Fin k) : ℕ) -
+                  (i : ℕ)).toNat) //
+              ∀ j : Fin k, (∑ i, (W i).1.count j) =
+                ((v j : ℤ) + ((τ j : Fin k) : ℕ) -
+                  (j : ℕ)).toNat} : ℂ)
+          else 0)) = 1 := by
+  rw [← t_identity v (staircase_injective v hsort)]
+  refine Finset.sum_congr rfl fun τ _ => ?_
+  by_cases hτ : stairShift τ ≤ diagExp v
+  · have hτ' := (stair_guard_iff v τ).mp hτ
+    rw [ite_eq_left hτ, Finset.mul_sum]
+    refine Finset.sum_congr rfl fun σ _ => ?_
+    by_cases hσ : ∀ i : Fin k,
+        0 ≤ (v i : ℤ) + ((σ i : Fin k) : ℕ) - (i : ℕ)
+    · rw [ite_eq_left ⟨hσ, hτ'⟩, ite_eq_left hσ, coeff_hSub_prod]
+      rw [show (Fintype.card {W : ∀ i : Fin k,
+          Sym (Fin k)
+            (((v i : ℤ) + ((σ i : Fin k) : ℕ) -
+              (i : ℕ)).toNat) //
+          ∀ j : Fin k, (∑ i, (W i).1.count j) =
+            (diagExp v - stairShift τ) j}) =
+        Fintype.card {W : ∀ i : Fin k,
+          Sym (Fin k)
+            (((v i : ℤ) + ((σ i : Fin k) : ℕ) -
+              (i : ℕ)).toNat) //
+          ∀ j : Fin k, (∑ i, (W i).1.count j) =
+            ((v j : ℤ) + ((τ j : Fin k) : ℕ) -
+              (j : ℕ)).toNat} from
+        Fintype.card_congr (Equiv.subtypeEquivRight fun W =>
+          forall_congr' fun j => by
+            rw [stair_margin_eq v τ hτ j])]
+      ring
+    · rw [ite_eq_right (fun hc => hσ hc.1), ite_eq_right hσ]
+      ring
+  · rw [ite_eq_right hτ, mul_zero]
+    rw [Finset.sum_eq_zero fun σ _ => by
+      rw [ite_eq_right (fun hc =>
+        hτ ((stair_guard_iff v τ).mpr hc.2)), mul_zero]]
+
+end RS
