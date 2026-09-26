@@ -43,9 +43,11 @@ section
 construction. -/
 local instance : DecidableEq RealInterval := Classical.decEq _
 
-private def sparseAtom (p : ℝ) (f g : ℝ → ℂ) (I : RealInterval) : ℝ≥0∞ :=
+/-- The nonnegative extended-real contribution of one interval to the sparse form. -/
+def sparseAtom (p : ℝ) (f g : ℝ → ℂ) (I : RealInterval) : ℝ≥0∞ :=
   ENNReal.ofReal (I.length * localAverage 1 f I * localAverage p g I)
 
+/-- The sparse form of a finite interval family is the sum of its interval contributions. -/
 theorem sparseForm_finset (p : ℝ) (f g : ℝ → ℂ)
     (S : Finset RealInterval) :
     sparseForm p f g (↑S : Set RealInterval) = ∑ I ∈ S, sparseAtom p f g I := by
@@ -343,7 +345,7 @@ private theorem exists_recursive_sparse_bound_of_root_mem
               rw [sparseForm_insert_biUnion p f g I C R' hRdisj hIB]
               rw [mul_add, Finset.mul_sum]
 
-/- One external root step reduces immediately to the root-member recursion
+/-- One external root step reduces immediately to the root-member recursion
 on each selected child. This is the form used for the depth-zero roots of a
 three-shift forest, which need not themselves occur in the localized input
 family. -/
@@ -461,6 +463,8 @@ noncomputable def localizedTailMaximalTestOperator
     (ell₀ : ℤ) (scale : RealInterval → ℤ) (S : Finset RealInterval) : TestOperator :=
   fun f x ↦ ((localizedTailMaximal ell₀ scale S f x).toReal : ℂ)
 
+/-- The treewise good-part estimate implies a sparse one-p bound for the localized tail
+maximal operator. -/
 theorem hasSparseOnePBound_localizedTailMaximalTestOperator_of_tree
     {A p : ℝ} (hlocal : HasOneNodeGoodPartPairingBound A)
     (hp : 1 < p) (hp2 : p < 2)
