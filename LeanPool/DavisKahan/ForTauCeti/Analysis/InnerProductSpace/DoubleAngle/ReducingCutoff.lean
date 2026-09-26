@@ -83,7 +83,7 @@ private theorem adjoint_subtypeL_apply_of_mem
 /-- The lift of an operator on a subspace to the ambient space, by the inclusion
 and its adjoint.  Named so that the structure fields below can be rewritten with
 `liftProj_apply` rather than fighting the composition's dependent proofs. -/
-private noncomputable def liftProj (U : Submodule 𝕜 G) [U.HasOrthogonalProjection]
+noncomputable def liftProj (U : Submodule 𝕜 G) [U.HasOrthogonalProjection]
     (P : U →L[𝕜] U) : G →L[𝕜] G :=
   U.subtypeL ∘L P ∘L U.subtypeL.adjoint
 
@@ -184,8 +184,8 @@ noncomputable def spectralBandCutoff (hA : IsSelfAdjoint A) {T : ℝ} (hT : 0 �
   isIdempotentElem :=
     LinearPMap.isIdempotentElem_specProjection hA _ measurableSet_Icc
   mem_subspace := fun _ => Submodule.mem_top
-  mem_domain := fun v =>
-    LinearPMap.mem_domain_of_mem_specRange_of_bounded hA _ measurableSet_Icc
+  mem_domain := fun v => by
+    exact LinearPMap.mem_domain_of_mem_specRange_of_bounded hA _ measurableSet_Icc
       (fun _ hs => abs_le_of_mem_Icc_symm hs)
       (LinearPMap.specProjection_mem_specRange hA _ measurableSet_Icc v)
   norm_apply_le := fun v => by

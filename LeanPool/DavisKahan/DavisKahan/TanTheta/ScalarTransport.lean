@@ -395,7 +395,7 @@ namespace UnboundedCompressionTrialData
 
 /-- The original subspace coordinate represented by a vector of the transported
 subspace. -/
-private def subspaceOut (Z : Submodule 𝕜 H)
+def subspaceOut (Z : Submodule 𝕜 H)
     (z : ScalarTransport.submodule (e := e) Z) : Z :=
   ⟨ScalarTransport.out (e := e) (z : ScalarTransport e H), z.2⟩
 
@@ -487,7 +487,7 @@ theorem semiboundedAbove_scalarTransport_iff
 
 /-- A vector in the transported compression domain, read in the original
 subspace coordinates. -/
-private def compressionDomainOut (D : UnboundedCompressionTrialData Z)
+def compressionDomainOut (D : UnboundedCompressionTrialData Z)
     (z : (D.scalarTransport (e := e)).compression.domain) : D.compression.domain := by
   let W := ScalarTransport.submoduleSubtypeEquiv (e := e) Z
   refine ⟨subspaceOut (e := e) Z (z : ScalarTransport.submodule (e := e) Z), ?_⟩

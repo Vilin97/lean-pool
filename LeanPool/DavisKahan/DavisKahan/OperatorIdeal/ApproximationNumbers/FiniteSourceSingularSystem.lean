@@ -176,7 +176,7 @@ theorem orthonormal_finiteSourceLeftSingularVector_subtype (A : E →L[ℂ] F) :
     rw [ite_eq_right heq]
     simpa [finiteSourceLeftSingularVector, i', j'] using hij
 
-local instance : CompleteSpace E := FiniteDimensional.complete ℂ E
+local instance instCompleteSpaceFiniteSource : CompleteSpace E := FiniteDimensional.complete ℂ E
 
 /-- The ambient adjoint singular relation. -/
 theorem adjoint_apply_finiteSourceLeftSingularVector
