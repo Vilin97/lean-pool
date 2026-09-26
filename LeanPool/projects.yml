@@ -10316,7 +10316,7 @@ projects:
       estimates. For Lebesgue measure on the real line and finite-dimensional
       real fibers, characterizes when every Lp input has an Lq output by the
       standard integrable-envelope growth condition, for 1 <= p,q < infinity.
-      Differentiability estimates on arbitrary measure spaces assume a
+      First-order remainder estimates on arbitrary measure spaces assume a
       Caratheodory derivative with the stated Holder-compatible growth.
       The integral-functional result bounds the integrated remainder and
       proves integrability of the linearized integrand; it does not assert
@@ -10376,8 +10376,9 @@ projects:
           are Caratheodory, f' is the Frechet derivative at every fiber point
           almost everywhere, p,r >= 1 satisfy 1/q = 1/r + 1/p, and f' is
           bounded by b + C * norm(xi)^(p/r) with nonnegative b in Lr and C > 0.
-          At each Lp function u, the Lq seminorm of the first-order remainder
-          is at most epsilon times the Lp norm of l whenever l is in Lp and
+          At each Lp function u, the Lq integral quantity (a quasi-norm when
+          q < 1) of the first-order remainder is at most epsilon times the
+          Lp norm of l whenever l is in Lp and
           its Lp norm is sufficiently small.
         source_ref: >-
           Upstream NemytskiiLebesgue/Frechet.lean; generalized in this port
