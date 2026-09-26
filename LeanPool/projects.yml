@@ -10563,3 +10563,40 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - slug: egz-formal-proof
+    title: Convex geometry and the Erdős–Ginzburg–Ziv problem
+    summary: For every fixed positive dimension d, the Erdős–Ginzburg–Ziv constant of
+      (ZMod p)^d equals p times its hollow-family constant plus o(p) as p tends to infinity
+      through primes. Includes the convex-flag Helly and centerpoint theorems, flag
+      decomposition, balanced combinations, relative expansion, and the polynomial hollow-family
+      bound.
+    branch: additive combinatorics
+    entry_module: LeanPool.ErdosGinzburgZiv
+    authors:
+    - Dmitrii Zakharov
+    source:
+      doi: 10.19086/da.165216
+      arxiv: '2002.09892'
+      url: https://github.com/zakharov2k/egz-formal-proof
+      github_repo: zakharov2k/egz-formal-proof
+      commit: 7c82267c43a51dd5cb3e440412780ff82aff7500
+    license: MIT
+    status: verified
+    provenance: AI
+    main_declarations:
+    - EGZ.theorem_1_2
+    - EGZ.main_upper_bound
+    main_results:
+    - declaration: EGZ.theorem_1_2
+      informal: For each positive dimension d, s((F_p)^d) = p w((F_p)^d) + o(p) as p
+        tends to infinity through primes.
+    - declaration: EGZ.main_upper_bound
+      informal: For each positive d and ε > 0, sufficiently large primes satisfy s((F_p)^d)
+        ≤ (w((F_p)^d) + ε) p.
+    tags:
+    - additive-combinatorics
+    - zero-sum
+    - convex-geometry
+    msc:
+    - 11B30
+    - 11H06
