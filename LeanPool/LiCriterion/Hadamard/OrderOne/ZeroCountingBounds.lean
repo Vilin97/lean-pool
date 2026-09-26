@@ -460,71 +460,6 @@ private theorem sum_multiplicity_zeros_le_log_maxModulus
     simpa [U] using hdiv_bound
   exact le_trans hcompare hdiv_bound'
 
-/-- Multiplicity-weighted zero counting for a `ZeroSet` enumeration, in the order-`≤ 1` regime.
-
-This bounds `∑ ord_ρ(f)` over zeros `ρ` with `‖Z.z ρ‖ ≤ r`, where `ord_ρ(f)` is the vanishing order
-(`analyticOrderNatAt f (Z.z ρ)`). -/
-theorem sum_multiplicity_zeros_le_of_order_le_one
-    {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
-    (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
-    (Z : ZeroSet f)
-    (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
-    (h_inj : Function.Injective Z.z)
-    (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
-    ∀ ε : ℝ, 0 < ε →
-      ∃ R₀ : ℝ, ∀ r : ℝ, R₀ ≤ r →
-        (∑ᶠ ρ : Z.Zero, if ‖Z.z ρ‖ ≤ r then (analyticOrderNatAt f (Z.z ρ) : ℝ) else 0) ≤
-          ((2 * r) ^ ((1 : ℝ) + ε) - Real.log ‖f 0‖) / Real.log 2 := by
-  classical
-  intro ε hε
-  -- `f 0 ≠ 0` since all zeros are nonzero and `Z` enumerates all zeros.
-  have hf0 : f 0 ≠ 0 := by
-    intro hf0
-    rcases (h_zeros_only 0).1 hf0 with ⟨ρ, hρ⟩
-    exact (h_z_ne_zero ρ) (by simp [hρ])
-  -- Growth bound on `maxModulus f R` from `order f ≤ 1`.
-  obtain ⟨R₁, hmax⟩ :=
-    Hadamard.ZeroCounting.maxModulus_le_exp_rpow_of_order_le_one f hf_finite hf_order_le ε hε
-  refine ⟨max R₁ 1, ?_⟩
-  intro r hr
-  have hr_ge_R1 : R₁ ≤ 2 * r := by
-    have hR1_le : R₁ ≤ r := le_trans (le_max_left _ _) hr
-    have hr_pos : 0 < r :=
-      lt_of_lt_of_le (by norm_num : (0 : ℝ) < 1) (le_trans (le_max_right R₁ 1) hr)
-    calc
-      R₁ ≤ r := hR1_le
-      _ ≤ 2 * r := by nlinarith
-  have hRpos : 0 < 2 * r := by
-    have : (0 : ℝ) < r := lt_of_lt_of_le (by norm_num) (le_trans (le_max_right R₁ 1) hr)
-    linarith
-  -- Jensen bound on the sum of divisor weights in `‖u‖ ≤ r` for the divisor on `‖u‖ ≤ 2r`.
-  have hbound1 := sum_multiplicity_zeros_le_log_maxModulus hf_entire hf0 Z h_inj hRpos
-  -- Replace `log (max 1 (maxModulus f (2r)))` using the max-modulus growth bound.
-  have hM_le : maxModulus f (2 * r) ≤ Real.exp ((2 * r) ^ ((1 : ℝ) + ε)) :=
-    hmax (2 * r) hr_ge_R1
-  have hexp_ge1 : (1 : ℝ) ≤ Real.exp ((2 * r) ^ ((1 : ℝ) + ε)) := by
-    have : 0 ≤ (2 * r) ^ ((1 : ℝ) + ε) := Real.rpow_nonneg (le_of_lt hRpos) _
-    simpa using Real.one_le_exp this
-  have hmax1_le : max 1 (maxModulus f (2 * r)) ≤ Real.exp ((2 * r) ^ ((1 : ℝ) + ε)) :=
-    max_le hexp_ge1 hM_le
-  have hlog_le : Real.log (max 1 (maxModulus f (2 * r))) ≤ (2 * r) ^ ((1 : ℝ) + ε) := by
-    have hpos : 0 < max 1 (maxModulus f (2 * r)) := by
-      have : (0 : ℝ) < (1 : ℝ) := by norm_num
-      exact lt_of_lt_of_le this (le_max_left _ _)
-    have := Real.log_le_log hpos hmax1_le
-    simpa [Real.log_exp] using this
-  have hnum :
-      Real.log (max 1 (maxModulus f (2 * r))) - Real.log ‖f 0‖
-        ≤ (2 * r) ^ ((1 : ℝ) + ε) - Real.log ‖f 0‖ :=
-    sub_le_sub_right hlog_le _
-  have hden : 0 ≤ Real.log 2 := by
-    exact le_of_lt (by simpa using Real.log_pos (by norm_num : (1 : ℝ) < 2))
-  have hfrac :
-      (Real.log (max 1 (maxModulus f (2 * r))) - Real.log ‖f 0‖) / Real.log 2
-        ≤ ((2 * r) ^ ((1 : ℝ) + ε) - Real.log ‖f 0‖) / Real.log 2 :=
-    div_le_div_of_nonneg_right hnum hden
-  exact le_trans hbound1 hfrac
-
 /-- **General-order multiplicity-weighted zero counting.**
 
 This is the `order f ≤ lam` analogue of `sum_multiplicity_zeros_le_of_order_le_one`.
@@ -588,6 +523,24 @@ theorem sum_multiplicity_zeros_le_of_order_le
         ≤ ((2 * r) ^ (lam + ε) - Real.log ‖f 0‖) / Real.log 2 :=
     div_le_div_of_nonneg_right hnum hden
   exact le_trans hbound1 hfrac
+
+/-- Multiplicity-weighted zero counting for a `ZeroSet` enumeration, in the order-`≤ 1` regime.
+
+This bounds `∑ ord_ρ(f)` over zeros `ρ` with `‖Z.z ρ‖ ≤ r`, where `ord_ρ(f)` is the vanishing order
+(`analyticOrderNatAt f (Z.z ρ)`). -/
+theorem sum_multiplicity_zeros_le_of_order_le_one
+    {f : ℂ → ℂ} (hf_entire : Differentiable ℂ f)
+    (hf_finite : hasFiniteOrder f) (hf_order_le : order f ≤ 1)
+    (Z : ZeroSet f)
+    (h_zeros_only : ∀ s : ℂ, f s = 0 ↔ ∃ ρ : Z.Zero, s = Z.z ρ)
+    (h_inj : Function.Injective Z.z)
+    (h_z_ne_zero : ∀ ρ : Z.Zero, Z.z ρ ≠ 0) :
+    ∀ ε : ℝ, 0 < ε →
+      ∃ R₀ : ℝ, ∀ r : ℝ, R₀ ≤ r →
+        (∑ᶠ ρ : Z.Zero, if ‖Z.z ρ‖ ≤ r then (analyticOrderNatAt f (Z.z ρ) : ℝ) else 0) ≤
+          ((2 * r) ^ ((1 : ℝ) + ε) - Real.log ‖f 0‖) / Real.log 2 := by
+  exact sum_multiplicity_zeros_le_of_order_le hf_entire hf_finite hf_order_le Z
+    h_zeros_only h_inj h_z_ne_zero
 
 end OrderOne
 

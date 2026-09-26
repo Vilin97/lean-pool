@@ -125,7 +125,6 @@ noncomputable def canonicalProductZeroSetMultiplicityRank
     canonicalProductZeroSetMultiplicityRank Z 1 s =
       Z.canonicalProductZeroSetMultiplicity s := rfl
 
--- This proof expands several finite-sum estimates and exceeds the default heartbeat limit.
 /-- Explicit version of `Hadamard.weierstrass_E_away_from_one_lower_bound`,
 with the concrete witness `2^h * (h + |log δ|)`. -/
 private lemma weierstrass_E_away_from_one_lower_bound_explicit
@@ -133,126 +132,7 @@ private lemma weierstrass_E_away_from_one_lower_bound_explicit
     ∀ z : ℂ, (1 / 2 : ℝ) ≤ ‖z‖ → δ ≤ ‖z - 1‖ →
       Real.log ‖weierstrassE h z‖
         ≥ -(((2 : ℝ) ^ h * ((h : ℝ) + |Real.log δ|)) * ‖z‖ ^ h) := by
-  intro z hz_ge hz_delta
-  set r : ℝ := ‖z‖ with hrdef
-  have hr_ge : (1 / 2 : ℝ) ≤ r := by simpa [hrdef] using hz_ge
-  have hδ_le_norm : δ ≤ ‖1 - z‖ := by
-    simpa [norm_sub_rev] using hz_delta
-  have hnorm_ne : ‖1 - z‖ ≠ 0 := ne_of_gt (lt_of_lt_of_le hδ hδ_le_norm)
-  set S : ℂ := ∑ k ∈ Finset.range h, z ^ (k + 1) / (k + 1) with hS
-  have logE : Real.log ‖weierstrassE h z‖ = Real.log ‖1 - z‖ + S.re := by
-    have : weierstrassE h z = (1 - z) * Complex.exp S := by
-      simp [weierstrassE, S]
-    simp [this, Complex.norm_exp, Real.log_mul, hnorm_ne, Real.exp_ne_zero,
-      Real.log_exp]
-  have hlog1 : Real.log ‖1 - z‖ ≥ Real.log δ := Real.log_le_log hδ hδ_le_norm
-  have hSre : S.re ≥ -‖S‖ := by
-    have h1 : -|S.re| ≤ S.re := neg_abs_le S.re
-    have h2 : |S.re| ≤ ‖S‖ := abs_re_le_norm S
-    have h3 : -‖S‖ ≤ -|S.re| := by linarith
-    exact le_trans h3 h1
-  have base_lower : Real.log ‖weierstrassE h z‖ ≥ Real.log δ - ‖S‖ := by
-    have : Real.log ‖weierstrassE h z‖ ≥ Real.log δ + (-‖S‖) := by
-      have := add_le_add hlog1 hSre
-      simpa [logE, sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using this
-    simpa [sub_eq_add_neg, add_assoc] using this
-  have hS_bound : ‖S‖ ≤ (2 : ℝ) ^ h * h * r ^ h := by
-    by_cases hr1 : r ≤ 1
-    · have hS0 : ‖S‖ ≤ (h : ℝ) * r := by
-        simpa [S, hrdef] using finite_sum_pow_bound z h (by simpa [hrdef] using hr1)
-      have hr_le : r ≤ (2 : ℝ) ^ h * r ^ h := by
-        have hone : (1 : ℝ) ≤ (2 * r) ^ h := by
-          have : (1 : ℝ) ≤ 2 * r := by linarith [hr_ge]
-          simpa using (one_le_pow₀ this (n := h))
-        have hone' : (1 : ℝ) ≤ (2 : ℝ) ^ h * r ^ h := by
-          simpa [mul_pow, mul_assoc, mul_left_comm, mul_comm] using hone
-        exact le_trans hr1 hone'
-      have : (h : ℝ) * r ≤ (h : ℝ) * ((2 : ℝ) ^ h * r ^ h) :=
-        mul_le_mul_of_nonneg_left hr_le (by positivity : 0 ≤ (h : ℝ))
-      have : (h : ℝ) * r ≤ (2 : ℝ) ^ h * (h : ℝ) * r ^ h := by
-        simpa [mul_assoc, mul_left_comm, mul_comm] using this
-      exact le_trans hS0 this
-    · have hr1' : 1 ≤ r := le_of_not_ge hr1
-      have hterm : ∀ k ∈ Finset.range h, ‖z ^ (k + 1) / (k + 1 : ℂ)‖ ≤ r ^ h := by
-        intro k hk
-        have hk1 : k.succ ≤ h := Nat.succ_le_of_lt (Finset.mem_range.1 hk)
-        have hden_ge : (1 : ℝ) ≤ ‖(k + 1 : ℂ)‖ := by
-          have : (1 : ℝ) ≤ (k + 1 : ℝ) := by
-            have : (1 : ℕ) ≤ k + 1 := Nat.succ_le_succ (Nat.zero_le k)
-            exact_mod_cast this
-          have hnorm_den : ‖(k + 1 : ℂ)‖ = (k + 1 : ℝ) := by
-            have hden : (k + 1 : ℂ) = ((k + 1 : ℕ) : ℂ) := by
-              norm_cast
-            have hnorm : ‖(k + 1 : ℂ)‖ = ‖((k + 1 : ℕ) : ℂ)‖ := congrArg norm hden
-            have hn : ‖((k + 1 : ℕ) : ℂ)‖ = ((k + 1 : ℕ) : ℝ) :=
-              Complex.norm_natCast (k + 1)
-            have hn_cast : ((k + 1 : ℕ) : ℝ) = (k + 1 : ℝ) := by
-              norm_cast
-            exact hnorm.trans (hn.trans hn_cast)
-          simp [hnorm_den]
-        have hpow : r ^ (k + 1) ≤ r ^ h := by
-          simpa using (pow_le_pow_right₀ hr1' hk1)
-        calc
-          ‖z ^ (k + 1) / (k + 1 : ℂ)‖ = ‖z‖ ^ (k + 1) / ‖(k + 1 : ℂ)‖ := by
-              simp [norm_pow]
-          _ ≤ ‖z‖ ^ (k + 1) := by
-              exact div_le_self (pow_nonneg (norm_nonneg z) _) hden_ge
-          _ = r ^ (k + 1) := by simp [hrdef]
-          _ ≤ r ^ h := hpow
-      have hsum : ‖S‖ ≤ (h : ℝ) * r ^ h := by
-        have hsum0 : ‖S‖ ≤ ∑ k ∈ Finset.range h, ‖z ^ (k + 1) / (k + 1 : ℂ)‖ := by
-          simpa [S] using (norm_sum_le (Finset.range h) (fun k => z ^ (k + 1) / (k + 1)))
-        have hsum1 :
-            (∑ k ∈ Finset.range h, ‖z ^ (k + 1) / (k + 1 : ℂ)‖)
-              ≤ ∑ _k ∈ Finset.range h, r ^ h := by
-          refine Finset.sum_le_sum ?_
-          intro k hk
-          exact hterm k hk
-        have hsum2 : (∑ _k ∈ Finset.range h, r ^ h) = (h : ℝ) * r ^ h := by
-          simp [Finset.sum_const]
-        exact le_trans hsum0 (le_trans hsum1 (by simp [hsum2]))
-      have h2pos : (1 : ℝ) ≤ (2 : ℝ) ^ h := by
-        have : (1 : ℝ) ≤ 2 := by norm_num
-        simpa using (one_le_pow₀ this (n := h))
-      have : (h : ℝ) * r ^ h ≤ (2 : ℝ) ^ h * (h : ℝ) * r ^ h := by
-        have := mul_le_mul_of_nonneg_right h2pos (by positivity : 0 ≤ (h : ℝ) * r ^ h)
-        simpa [mul_assoc, mul_left_comm, mul_comm] using this
-      exact le_trans hsum this
-  have hone : (1 : ℝ) ≤ (2 : ℝ) ^ h * r ^ h := by
-    have : (1 : ℝ) ≤ 2 * r := by linarith [hr_ge]
-    have : (1 : ℝ) ≤ (2 * r) ^ h := by
-      simpa using (one_le_pow₀ this (n := h))
-    simpa [mul_pow, mul_assoc, mul_left_comm, mul_comm] using this
-  have hlogδ : Real.log δ ≥ -((2 : ℝ) ^ h * |Real.log δ| * r ^ h) := by
-    have h0 : -|Real.log δ| ≤ Real.log δ := by
-      simpa using (neg_abs_le (Real.log δ))
-    have habs : |Real.log δ| ≤ (2 : ℝ) ^ h * |Real.log δ| * r ^ h := by
-      have := mul_le_mul_of_nonneg_left hone (abs_nonneg (Real.log δ))
-      simpa [mul_assoc, mul_left_comm, mul_comm] using this
-    have h1 : -((2 : ℝ) ^ h * |Real.log δ| * r ^ h) ≤ -|Real.log δ| := by
-      exact neg_le_neg habs
-    exact le_trans h1 h0
-  have hmain :
-      Real.log ‖weierstrassE h z‖
-        ≥ -((2 : ℝ) ^ h * ((h : ℝ) + |Real.log δ|) * r ^ h) := by
-    have hS' :
-        Real.log ‖weierstrassE h z‖ ≥ Real.log δ - ((2 : ℝ) ^ h * h * r ^ h) := by
-      have : Real.log δ - ‖S‖ ≥ Real.log δ - ((2 : ℝ) ^ h * h * r ^ h) := by
-        linarith [hS_bound]
-      exact ge_trans base_lower this
-    have : Real.log δ - ((2 : ℝ) ^ h * h * r ^ h) ≥
-        -((2 : ℝ) ^ h * |Real.log δ| * r ^ h) - ((2 : ℝ) ^ h * h * r ^ h) := by
-      linarith [hlogδ]
-    have htmp :
-        Real.log ‖weierstrassE h z‖ ≥
-          -((2 : ℝ) ^ h * |Real.log δ| * r ^ h) - ((2 : ℝ) ^ h * h * r ^ h) :=
-      ge_trans hS' this
-    have hEq :
-        -((2 : ℝ) ^ h * |Real.log δ| * r ^ h) - ((2 : ℝ) ^ h * h * r ^ h) =
-          -((2 : ℝ) ^ h * ((h : ℝ) + |Real.log δ|) * r ^ h) := by
-      ring
-    exact hEq ▸ htmp
-  simpa [hrdef] using hmain
+  exact Hadamard.weierstrass_E_away_from_one_lower_bound_explicit h δ hδ
 
 private lemma exists_pow_two_lt_and_le_two_mul (r : ℝ) (hr : (2 : ℝ) ≤ r) :
     ∃ n : ℕ, r < (2 : ℝ) ^ n ∧ (2 : ℝ) ^ n ≤ 2 * r := by

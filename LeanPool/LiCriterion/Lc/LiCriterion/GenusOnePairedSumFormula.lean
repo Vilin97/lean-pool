@@ -591,52 +591,7 @@ theorem paired_sum_formula_of_mtest_and_cauchy
       intro k
       exact (h_partial_eq k).symm
     exact hunif'.congr_right h_limit_eq.symm
-  -- Analyticity of the partial and limiting log-derivatives on the ball.
-  have han_limit :
-      AnalyticOnNhd ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) K := by
-    intro z hz
-    have hz' : ‖z‖ < 1 := by
-      have : ‖z‖ < r := by
-        -- unfold `K = ball 0 r`
-        simpa [K, Metric.mem_ball, dist_eq_norm] using hz
-      exact lt_of_lt_of_le this hr_lt_one.le
-    have hf_entire : Differentiable ℂ (fun s : ℂ => (riemannXi s) ^ 2) := xi_entire.pow 2
-    have hphi_an : AnalyticAt ℂ (phi (fun s : ℂ => (riemannXi s) ^ 2)) z :=
-      phi_analytic hf_entire hz'
-    have hphi_ne : phi (fun s : ℂ => (riemannXi s) ^ 2) z ≠ 0 := by
-      -- If `riemannXi (1/(1-z)) = 0` then `1/(1-z)` equals a nontrivial zero, hence
-      -- `z = 1 - 1/ρ`, contradicting separation.
-      have hneq : ∀ ρ : NontrivialZero, (1 / (1 - z) : ℂ) ≠ ρ.val := by
-        intro ρ hEq
-        have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
-        have hzsub : (1 : ℂ) - z ≠ 0 := sub_ne_zero.mpr hz1.symm
-        have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
-        have : z = 1 - 1 / (ρ.val : ℂ) := by
-          -- Solve `1/(1-z) = ρ` for `z`.
-          have h1 : (ρ.val : ℂ) * ((1 : ℂ) - z) = 1 := by
-            calc
-              (ρ.val : ℂ) * ((1 : ℂ) - z) = (1 / (1 - z) : ℂ) * ((1 : ℂ) - z) := by
-                    simp [hEq]
-              _ = 1 := by field_simp [hzsub]
-          have h2 : (1 : ℂ) - z = (1 : ℂ) / ρ.val := by
-            apply (eq_div_iff hρ0).2
-            simpa [mul_comm] using h1
-          calc
-            z = 1 - ((1 : ℂ) - z) := by ring
-            _ = 1 - 1 / (ρ.val : ℂ) := by simp [h2]
-        exact (havoid z hz).2 ρ this
-      have hxi_ne : riemannXi (1 / (1 - z) : ℂ) ≠ 0 :=
-        xi_nonzero_away_from_nontrivial_zeros (w := (1 / (1 - z) : ℂ)) hneq
-      -- `phi f z = (riemannXi (1/(1-z)))^2`.
-      simpa [phi] using pow_ne_zero 2 hxi_ne
-    -- `logDeriv` is analytic as a quotient of analytic functions, away from zeros.
-    have : AnalyticAt ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) z := by
-      unfold logDeriv
-      apply AnalyticAt.fun_div
-      · exact hphi_an.deriv
-      · exact hphi_an
-      · exact hphi_ne
-    exact this
+  -- Analyticity of the partial log-derivatives on the ball.
   have han_partial :
       ∀ k, AnalyticOnNhd ℂ (fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z) K := by
     intro k z hz
@@ -666,11 +621,11 @@ theorem paired_sum_formula_of_mtest_and_cauchy
           (fun k => (deriv^[n] (fun z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z)) 0 / n.factorial)
           atTop
           (𝓝 ((deriv^[n] (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))) 0 / n.factorial)) :=
-    deriv_iterate_tendsto_of_uniform
+    deriv_iterate_tendsto_of_uniform_of_analytic_partials
       (f := fun k z => logDeriv (fun w => ∏ ρ ∈ T k, fac ρ w) z)
       (g := logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
       (z₀ := (0 : ℂ)) (r := r) (n := n)
-      hrpos han_partial han_limit hunif
+      hrpos han_partial hunif
   -- Identify the coefficient limits with `taylorCoeff` and rewrite the partial coefficients.
   have h_partial_coeff :
       ∀ k,
@@ -1085,51 +1040,6 @@ private theorem weighted_paired_log_deriv_limit_eq
     _ = ∑' i : XiZeroWithMultiplicity, term i z := by
           simpa [term] using h_log
 
-private theorem xi_sq_log_deriv_analytic_on_separated_ball
-    (r : ℝ) (hr_lt_one : r < 1)
-    (havoid : ∀ z ∈ Metric.ball (0 : ℂ) r,
-      (z ≠ 1) ∧ (∀ ρ : NontrivialZero, z ≠ 1 - 1 / ρ.val))
-    : AnalyticOnNhd ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
-      (Metric.ball (0 : ℂ) r) := by
-  let K : Set ℂ := Metric.ball (0 : ℂ) r
-  intro z hz
-  have hz' : ‖z‖ < 1 := by
-    have : ‖z‖ < r := by
-      simpa [K, Metric.mem_ball, dist_eq_norm] using hz
-    exact lt_of_lt_of_le this hr_lt_one.le
-  have hf_entire : Differentiable ℂ (fun s : ℂ => (riemannXi s) ^ 2) := xi_entire.pow 2
-  have hphi_an : AnalyticAt ℂ (phi (fun s : ℂ => (riemannXi s) ^ 2)) z :=
-    phi_analytic hf_entire hz'
-  have hphi_ne : phi (fun s : ℂ => (riemannXi s) ^ 2) z ≠ 0 := by
-    have hneq : ∀ ρ : NontrivialZero, (1 / (1 - z) : ℂ) ≠ ρ.val := by
-      intro ρ hEq
-      have hz1 : z ≠ (1 : ℂ) := (havoid z hz).1
-      have hzsub : (1 : ℂ) - z ≠ 0 := sub_ne_zero.mpr hz1.symm
-      have hρ0 : (ρ.val : ℂ) ≠ 0 := NontrivialZero.ne_zero ρ
-      have : z = 1 - 1 / (ρ.val : ℂ) := by
-        have h1 : (ρ.val : ℂ) * ((1 : ℂ) - z) = 1 := by
-          calc
-            (ρ.val : ℂ) * ((1 : ℂ) - z) = (1 / (1 - z) : ℂ) * ((1 : ℂ) - z) := by
-                  simp [hEq]
-            _ = 1 := by field_simp [hzsub]
-        have h2 : (1 : ℂ) - z = (1 : ℂ) / ρ.val := by
-          apply (eq_div_iff hρ0).2
-          simpa [mul_comm] using h1
-        calc
-          z = 1 - ((1 : ℂ) - z) := by ring
-          _ = 1 - 1 / (ρ.val : ℂ) := by simp [h2]
-      exact (havoid z hz).2 ρ this
-    have hxi_ne : riemannXi (1 / (1 - z) : ℂ) ≠ 0 :=
-      xi_nonzero_away_from_nontrivial_zeros (w := (1 / (1 - z) : ℂ)) hneq
-    simpa [phi] using pow_ne_zero 2 hxi_ne
-  have : AnalyticAt ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) z := by
-    unfold logDeriv
-    apply AnalyticAt.fun_div
-    · exact hphi_an.deriv
-    · exact hphi_an
-    · exact hphi_ne
-  exact this
-
 private theorem weighted_paired_finite_coefficient
     (S : Finset XiZeroWithMultiplicity) (n : ℕ) (r : ℝ) (hrpos : 0 < r) (hr_lt_one : r < 1)
     (hpartial : Set.EqOn
@@ -1310,9 +1220,6 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
       intro k
       exact (h_partial_eq k).symm
     exact hunif'.congr_right h_limit_eq.symm
-  have han_limit :
-      AnalyticOnNhd ℂ (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2))) K :=
-    xi_sq_log_deriv_analytic_on_separated_ball r hr_lt_one havoid
   have han_partial :
       ∀ k, AnalyticOnNhd ℂ (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z) K := by
     intro k z hz
@@ -1339,11 +1246,11 @@ theorem weighted_paired_sum_formula_of_mtest_and_cauchy
           (fun k => (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)) 0 / n.factorial)
           atTop
           (𝓝 ((deriv^[n] (logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))) 0 / n.factorial)) :=
-    deriv_iterate_tendsto_of_uniform
+    deriv_iterate_tendsto_of_uniform_of_analytic_partials
       (f := fun k z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)
       (g := logDeriv (phi (fun s : ℂ => (riemannXi s) ^ 2)))
       (z₀ := (0 : ℂ)) (r := r) (n := n)
-      hrpos han_partial han_limit hunif
+      hrpos han_partial hunif
   have h_partial_coeff :
       ∀ k,
         (deriv^[n] (fun z => logDeriv (fun w => ∏ i ∈ T k, fac i w) z)) 0 / n.factorial
