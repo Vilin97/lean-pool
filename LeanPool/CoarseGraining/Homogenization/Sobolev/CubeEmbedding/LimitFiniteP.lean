@@ -172,6 +172,166 @@ theorem gns_coord_finiteLp {d : ℕ} (hd : 0 < d) (p q : FiniteLpExponent)
     _ = ∑ i, eLpNorm (fun x => fderiv ℝ ψ x (basisVec i)) p.exponent volume :=
         Finset.sum_congr rfl fun i _ => eLpNorm_norm _
 
+/-- The weak gradient of a bounded smooth cutoff product has the expected norm bound. -/
+private theorem cutoff_gradient_eLpNorm_le {d : ℕ} {U : Set (Vec d)}
+    (p : FiniteLpExponent) (u : W1pFunction U p.exponent)
+    (χ : Vec d → ℝ) (hχ_smooth : ContDiff ℝ (⊤ : ℕ∞) χ)
+    (C : ℝ) (hC : 0 ≤ C) (hχ_le1 : ∀ x, ‖χ x‖ ≤ 1)
+    (hχ_deriv : ∀ x i, |fderiv ℝ χ x (basisVec i)| ≤ C) (i : Fin d) :
+    eLpNorm (fun x => χ x * u.grad x i + u.toFun x * fderiv ℝ χ x (basisVec i))
+        p.exponent (volumeMeasureOn U) ≤
+      eLpNorm (fun x => u.grad x i) p.exponent (volumeMeasureOn U) +
+        ENNReal.ofReal C * eLpNorm u.toFun p.exponent (volumeMeasureOn U) := by
+  have hfirst : eLpNorm (fun x => χ x * u.grad x i) p.exponent (volumeMeasureOn U) ≤
+      eLpNorm (fun x => u.grad x i) p.exponent (volumeMeasureOn U) := by
+    refine eLpNorm_mono_ae (Filter.Eventually.of_forall fun x => ?_)
+    rw [norm_mul]
+    exact mul_le_of_le_one_left (norm_nonneg _) (hχ_le1 x)
+  have hsecond : eLpNorm (fun x => u.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent
+      (volumeMeasureOn U) ≤ ENNReal.ofReal C * eLpNorm u.toFun p.exponent
+        (volumeMeasureOn U) := by
+    have hmono : eLpNorm (fun x => u.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent
+        (volumeMeasureOn U) ≤ eLpNorm (C • u.toFun) p.exponent (volumeMeasureOn U) := by
+      refine eLpNorm_mono_ae (Filter.Eventually.of_forall fun x => ?_)
+      rw [Pi.smul_apply, smul_eq_mul, norm_mul, norm_mul, Real.norm_of_nonneg hC]
+      calc ‖u.toFun x‖ * ‖fderiv ℝ χ x (basisVec i)‖
+          ≤ ‖u.toFun x‖ * C :=
+            mul_le_mul_of_nonneg_left
+              (by rw [Real.norm_eq_abs]; exact hχ_deriv x i) (norm_nonneg _)
+        _ = C * ‖u.toFun x‖ := by ring
+    exact hmono.trans ((eLpNorm_const_smul_le (c := C) (f := u.toFun)).trans
+      (le_of_eq (by congr 1; rw [Real.enorm_eq_ofReal hC])))
+  exact (eLpNorm_add_le
+    (hχ_smooth.continuous.aestronglyMeasurable.mul (u.grad_memLp i).aestronglyMeasurable)
+    (u.memLp.aestronglyMeasurable.mul
+      (((hχ_smooth.continuous_fderiv (by simp)).clm_apply
+        continuous_const).aestronglyMeasurable)) p.one_lt.le).trans (add_le_add hfirst hsecond)
+
+/-- Strong Sobolev convergence persists in each derivative of a bounded smooth cutoff product. -/
+private theorem cutoff_gradient_tendsto {d : ℕ} {U : Set (Vec d)}
+    (p : FiniteLpExponent) (Eu : W1pFunction U p.exponent)
+    (A : ℕ → W1pFunction U p.exponent) (χ : Vec d → ℝ)
+    (hχ_smooth : ContDiff ℝ (⊤ : ℕ∞) χ)
+    (hA_smooth : ∀ n, ContDiff ℝ (⊤ : ℕ∞) (A n).toFun)
+    (hA_grad : ∀ n x i, (A n).grad x i = fderiv ℝ ((A n).toFun) x (basisVec i))
+    (C : ℝ) (hC : 0 ≤ C) (hχ_le1 : ∀ x, ‖χ x‖ ≤ 1)
+    (hχ_deriv : ∀ x i, |fderiv ℝ χ x (basisVec i)| ≤ C)
+    (hA_tend : Filter.Tendsto (fun n => eLpNorm (fun x => (A n).toFun x - Eu.toFun x)
+      p.exponent (volumeMeasureOn U)) Filter.atTop (nhds 0))
+    (hAgrad_tend : ∀ i, Filter.Tendsto (fun n =>
+      eLpNorm (fun x => (A n).grad x i - Eu.grad x i) p.exponent (volumeMeasureOn U))
+      Filter.atTop (nhds 0)) (i : Fin d) :
+    Filter.Tendsto (fun n => eLpNorm
+      (fun x => fderiv ℝ (fun y => χ y * (A n).toFun y) x (basisVec i) -
+        (χ x * Eu.grad x i + Eu.toFun x * fderiv ℝ χ x (basisVec i)))
+      p.exponent (volumeMeasureOn U)) Filter.atTop (nhds 0) := by
+  let ψ : ℕ → Vec d → ℝ := fun n x => χ x * (A n).toFun x
+  let G : Fin d → Vec d → ℝ := fun i x =>
+    χ x * Eu.grad x i + Eu.toFun x * fderiv ℝ χ x (basisVec i)
+  change Filter.Tendsto (fun n => eLpNorm
+    (fun x => fderiv ℝ (ψ n) x (basisVec i) - G i x) p.exponent
+    (volumeMeasureOn U)) Filter.atTop (nhds 0)
+  have hDform : ∀ n x i, fderiv ℝ (ψ n) x (basisVec i) =
+      χ x * (A n).grad x i + (A n).toFun x * fderiv ℝ χ x (basisVec i) := by
+    intro n x i
+    rw [show ψ n = χ * (A n).toFun by rfl,
+      fderiv_mul ((hχ_smooth.differentiable (by simp)) x)
+        (((hA_smooth n).differentiable (by simp)) x)]
+    simp only [add_apply, smul_apply, smul_eq_mul, hA_grad]
+  have hAgrad := hAgrad_tend i
+  have h1 : Filter.Tendsto (fun n => eLpNorm
+      (fun x => χ x * ((A n).grad x i - Eu.grad x i)) p.exponent
+        (volumeMeasureOn U)) Filter.atTop (nhds 0) := by
+    have hraw := tendsto_eLpNorm_mul_of_norm_le_one hχ_le1 hAgrad
+    refine hraw.congr' ?_
+    filter_upwards with n
+    apply eLpNorm_congr_ae
+    filter_upwards with x
+    ring
+  have h2 : Filter.Tendsto (fun n => eLpNorm
+      (fun x => ((A n).toFun x - Eu.toFun x) * fderiv ℝ χ x (basisVec i))
+        p.exponent (volumeMeasureOn U)) Filter.atTop (nhds 0) := by
+    have h := tendsto_eLpNorm_mul_of_norm_le
+      (C := C) hC (fun x => by
+        rw [Real.norm_eq_abs]
+        exact hχ_deriv x i) hA_tend
+    refine h.congr' ?_
+    filter_upwards with n
+    apply eLpNorm_congr_ae
+    filter_upwards with x
+    ring
+  have hsum : Filter.Tendsto (fun n =>
+      eLpNorm (fun x => χ x * ((A n).grad x i - Eu.grad x i) +
+        ((A n).toFun x - Eu.toFun x) * fderiv ℝ χ x (basisVec i)) p.exponent
+        (volumeMeasureOn U)) Filter.atTop (nhds 0) := by
+    have hbound : ∀ n, eLpNorm
+        (fun x => χ x * ((A n).grad x i - Eu.grad x i) +
+          ((A n).toFun x - Eu.toFun x) * fderiv ℝ χ x (basisVec i)) p.exponent
+          (volumeMeasureOn U) ≤
+        eLpNorm (fun x => χ x * ((A n).grad x i - Eu.grad x i)) p.exponent
+            (volumeMeasureOn U) +
+          eLpNorm (fun x => ((A n).toFun x - Eu.toFun x) *
+            fderiv ℝ χ x (basisVec i)) p.exponent (volumeMeasureOn U) := by
+      intro n
+      exact eLpNorm_add_le
+        (hχ_smooth.continuous.aestronglyMeasurable.mul
+          (((A n).grad_memLp i).aestronglyMeasurable.sub
+            (Eu.grad_memLp i).aestronglyMeasurable))
+        (((A n).memLp.aestronglyMeasurable.sub Eu.memLp.aestronglyMeasurable).mul
+          (((hχ_smooth.continuous_fderiv (by simp)).clm_apply
+            continuous_const).aestronglyMeasurable)) p.one_lt.le
+    exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
+      (by simpa using h1.add h2) (fun n => zero_le) hbound
+  refine hsum.congr' ?_
+  filter_upwards with n
+  congr 1
+  funext x
+  rw [hDform n x i]
+  simp only [G]
+  ring
+
+/-- A convergent sequence of upper bounds controls the norm of a limit in measure. -/
+private theorem eLpNorm_le_of_tendstoInMeasure_bound
+    {α : Type*} [MeasurableSpace α] {μ : Measure α}
+    {F : ℕ → α → ℝ} {f : α → ℝ} {q : ℝ≥0∞} {b : ℕ → ℝ≥0∞} {B : ℝ≥0∞}
+    (hF : ∀ n, AEStronglyMeasurable (F n) μ)
+    (htim : TendstoInMeasure μ F Filter.atTop f)
+    (hab : ∀ n, eLpNorm (F n) q μ ≤ b n)
+    (hb : Filter.Tendsto b Filter.atTop (nhds B)) : eLpNorm f q μ ≤ B := by
+  obtain ⟨σ, hσ_mono, hσ_ae⟩ := htim.exists_seq_tendsto_ae
+  have hlim : eLpNorm f q μ ≤
+      Filter.liminf (fun j => eLpNorm (F (σ j)) q μ) Filter.atTop :=
+    Lp.eLpNorm_lim_le_liminf_eLpNorm (fun j => hF (σ j)) _ hσ_ae
+  have hbσ : Filter.Tendsto (fun j => b (σ j)) Filter.atTop (nhds B) :=
+    hb.comp hσ_mono.tendsto_atTop
+  exact hlim.trans ((Filter.liminf_le_liminf
+    (Filter.Eventually.of_forall fun j => hab (σ j))).trans_eq hbσ.liminf_eq)
+
+/-- The dimension factor absorbs the sum of cutoff-gradient estimates with constant 32. -/
+private theorem cutoff_gradient_sum_bound (m : ℕ) (Cgns Cd : ℝ≥0∞) (L : ℝ)
+    (g a : Fin (m + 1) → ℝ≥0∞) (v : ℝ≥0∞)
+    (hg : ∀ i, g i ≤ Cd * a i + ENNReal.ofReal (32 / L) * (Cd * v)) :
+    Cgns * ∑ i, g i ≤ (Cgns * Cd * ((((m + 1) * 32 : ℕ)) : ℝ≥0∞)) *
+      ((∑ i, a i) + ENNReal.ofReal L⁻¹ * v) := by
+  have hsum : ∑ i, g i ≤ Cd * (∑ i, a i) +
+      ((m + 1 : ℕ) : ℝ≥0∞) * (ENNReal.ofReal (32 / L) * (Cd * v)) := by
+    refine (Finset.sum_le_sum fun i _ => hg i).trans (le_of_eq ?_)
+    rw [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_const, Finset.card_univ,
+      Fintype.card_fin, nsmul_eq_mul]
+  have hofReal : ENNReal.ofReal (32 / L) = ((32 : ℕ) : ℝ≥0∞) * ENNReal.ofReal L⁻¹ := by
+    rw [show (32 : ℝ) / L = 32 * L⁻¹ by ring, ENNReal.ofReal_mul (by norm_num)]
+    norm_num
+  have hN1 : (1 : ℝ≥0∞) ≤ ((((m + 1) * 32 : ℕ)) : ℝ≥0∞) := by
+    exact_mod_cast Nat.one_le_iff_ne_zero.2 (by positivity)
+  refine (mul_le_mul_right hsum Cgns).trans ?_
+  rw [hofReal]
+  simp only [mul_add]
+  refine add_le_add ?_ (le_of_eq ?_)
+  · rw [show Cgns * (Cd * ∑ i, a i) = (Cgns * Cd) * ∑ i, a i by ring]
+    exact mul_le_mul_left (le_mul_of_one_le_right' hN1) _
+  · push_cast
+    ring
+
 /-! ## The finite-exponent cube embedding -/
 
 /-- The finite-exponent axis-cube Sobolev inequality.  The constant is chosen
@@ -225,10 +385,9 @@ theorem cubeSobolevEmbedding_finiteLp {d : ℕ} (hd : 0 < d)
   let : IsLocallyFiniteMeasure (volume.restrict (Box3 z hi)) := inferInstance
   set Ext := foldExtensionFiniteP z hi hlt p u
   set Eu : W1pFunction (Box3 z hi) p.exponent := Ext.Eu with hEu
-  have hℓ : (0 : ℝ) < L / 2 := by linarith
-  set χ : Vec (m + 1) → ℝ := boxCutoff z hi (L / 2) with hχ
+  set χ : Vec (m + 1) → ℝ := boxCutoff z hi (L / 2)
   have hχ_smooth : ContDiff ℝ (⊤ : ℕ∞) χ := boxCutoff_contDiff
-  obtain ⟨_hχ_cptsupp, hχ_one, hχ_sub, hχ_deriv⟩ :=
+  obtain ⟨hχ_cptsupp, hχ_one, hχ_sub, hχ_deriv⟩ :=
     boxCutoff_halfSide_properties z hi L hL hval
   have hχ_le1 : ∀ x, ‖χ x‖ ≤ 1 := fun x => by
     rw [Real.norm_of_nonneg (boxCutoff_nonneg x)]
@@ -266,34 +425,15 @@ theorem cubeSobolevEmbedding_finiteLp {d : ℕ} (hd : 0 < d)
   have hψ_smooth : ∀ n, ContDiff ℝ (⊤ : ℕ∞) (ψ n) :=
     fun n => hχ_smooth.mul (hA_smooth n)
   have hψ_cptsupp : ∀ n, HasCompactSupport (ψ n) :=
-    fun n => by
-      apply HasCompactSupport.intro
-        (K := Set.Icc (fun k => z k - L / 2) (fun k => hi k + L / 2)) isCompact_Icc
-      intro x hx
-      dsimp [ψ]
-      rw [hχ, boxCutoff_eq_zero hℓ hx, zero_mul]
+    fun n => hχ_cptsupp.mul_right
   have hψ_supp : ∀ n, tsupport (ψ n) ⊆ Box3 z hi := by
-    intro n x hx
-    change x ∈ closure (Function.support (ψ n)) at hx
-    apply hχ_sub
-    refine closure_minimal ?_ (isClosed_tsupport χ) hx
-    intro y hy
-    apply subset_tsupport χ
-    rw [Function.mem_support] at hy ⊢
-    intro hzero
-    apply hy
-    simp only [ψ, hzero, zero_mul]
+    intro n
+    exact (tsupport_mul_subset_left (f := χ) (g := (A n).toFun)).trans hχ_sub
   have hψ_dsupp : ∀ n i,
       Function.support (fun x => fderiv ℝ (ψ n) x (basisVec i)) ⊆ Box3 z hi := by
-    intro n i x hx
-    by_contra hxb
-    have hx_nots : x ∉ tsupport (ψ n) := fun hc => hxb (hψ_supp n hc)
-    have hzero : ψ n =ᶠ[nhds x] 0 :=
-      (isClosed_tsupport (ψ n)).isOpen_compl.eventually_mem hx_nots |>.mono
-        (fun y hy => image_eq_zero_of_notMem_tsupport hy)
-    exact (Function.mem_support.1 hx) (by
-      rw [Filter.EventuallyEq.fderiv_eq hzero]
-      simp)
+    intro n i
+    exact (subset_tsupport _).trans
+      ((tsupport_fderiv_apply_subset (f := ψ n) ℝ (basisVec i)).trans (hψ_supp n))
   have hrestr : ∀ (f : Vec (m + 1) → ℝ) (a : ℝ≥0∞),
       Function.support f ⊆ Box3 z hi →
       eLpNorm f a (volume.restrict (Box3 z hi)) = eLpNorm f a volume :=
@@ -320,13 +460,6 @@ theorem cubeSobolevEmbedding_finiteLp {d : ℕ} (hd : 0 < d)
         (volume.restrict (Box3 z hi))) Filter.atTop (nhds 0) := by
     simpa [ψ, volumeMeasureOn] using
       tendsto_eLpNorm_mul_of_norm_le_one hχ_le1 hA_tend
-  have hDform : ∀ n x i, fderiv ℝ (ψ n) x (basisVec i) =
-      χ x * (A n).grad x i + (A n).toFun x * fderiv ℝ χ x (basisVec i) := by
-    intro n x i
-    rw [show ψ n = χ * (A n).toFun by rfl,
-      fderiv_mul ((hχ_smooth.differentiable (by simp)) x)
-        (((hA_smooth n).differentiable (by simp)) x)]
-    simp only [add_apply, smul_apply, smul_eq_mul, hA_grad]
   set G : Fin (m + 1) → Vec (m + 1) → ℝ := fun i x =>
     χ x * Eu.grad x i + Eu.toFun x * fderiv ℝ χ x (basisVec i)
   have hG_meas : ∀ i, AEStronglyMeasurable (G i) (volume.restrict (Box3 z hi)) := by
@@ -340,103 +473,24 @@ theorem cubeSobolevEmbedding_finiteLp {d : ℕ} (hd : 0 < d)
       eLpNorm (fun x => fderiv ℝ (ψ n) x (basisVec i) - G i x) p.exponent
         (volume.restrict (Box3 z hi))) Filter.atTop (nhds 0) := by
     intro i
-    have hAgrad := W1pFunction.tendsto_convexApproxSmoothW1p_grad_eLpNorm_sub
-      hV p.one_lt.le p.lt_top.ne Eu hball hr i
-    have h1 : Filter.Tendsto (fun n => eLpNorm
-        (fun x => χ x * ((A n).grad x i - Eu.grad x i)) p.exponent
-          (volume.restrict (Box3 z hi))) Filter.atTop (nhds 0) := by
-      have hraw := tendsto_eLpNorm_mul_of_norm_le_one hχ_le1 hAgrad
-      refine hraw.congr' ?_
-      filter_upwards with n
-      apply eLpNorm_congr_ae
-      filter_upwards with x
-      simp only [A]
-      ring
-    have h2 : Filter.Tendsto (fun n => eLpNorm
-        (fun x => ((A n).toFun x - Eu.toFun x) * fderiv ℝ χ x (basisVec i))
-          p.exponent (volume.restrict (Box3 z hi))) Filter.atTop (nhds 0) := by
-      have h := tendsto_eLpNorm_mul_of_norm_le
-        (C := 32 / L) (by positivity) (fun x => by
-          rw [Real.norm_eq_abs]
-          exact hχ_deriv x i) hA_tend
-      refine h.congr' ?_
-      filter_upwards with n
-      apply eLpNorm_congr_ae
-      filter_upwards with x
-      simp only [A]
-      ring
-    have hsum : Filter.Tendsto (fun n =>
-        eLpNorm (fun x => χ x * ((A n).grad x i - Eu.grad x i) +
-          ((A n).toFun x - Eu.toFun x) * fderiv ℝ χ x (basisVec i)) p.exponent
-          (volume.restrict (Box3 z hi))) Filter.atTop (nhds 0) := by
-      have hbound : ∀ n, eLpNorm
-          (fun x => χ x * ((A n).grad x i - Eu.grad x i) +
-            ((A n).toFun x - Eu.toFun x) * fderiv ℝ χ x (basisVec i)) p.exponent
-            (volume.restrict (Box3 z hi)) ≤
-          eLpNorm (fun x => χ x * ((A n).grad x i - Eu.grad x i)) p.exponent
-              (volume.restrict (Box3 z hi)) +
-            eLpNorm (fun x => ((A n).toFun x - Eu.toFun x) *
-              fderiv ℝ χ x (basisVec i)) p.exponent (volume.restrict (Box3 z hi)) := by
-        intro n
-        exact eLpNorm_add_le
-          (hχ_smooth.continuous.aestronglyMeasurable.mul
-            (((A n).grad_memLp i).aestronglyMeasurable.sub
-              (Eu.grad_memLp i).aestronglyMeasurable))
-          (((A n).memLp.aestronglyMeasurable.sub Eu.memLp.aestronglyMeasurable).mul
-            (((hχ_smooth.continuous_fderiv (by simp)).clm_apply
-              continuous_const).aestronglyMeasurable)) p.one_lt.le
-      exact tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
-        (by simpa using h1.add h2) (fun n => zero_le) hbound
-    refine hsum.congr' ?_
-    filter_upwards with n
-    congr 1
-    funext x
-    rw [hDform n x i]
-    simp only [G]
-    ring
+    exact cutoff_gradient_tendsto p Eu A χ hχ_smooth hA_smooth hA_grad
+      (32 / L) (by positivity) hχ_le1 hχ_deriv hA_tend
+      (fun i => W1pFunction.tendsto_convexApproxSmoothW1p_grad_eLpNorm_sub
+        hV p.one_lt.le p.lt_top.ne Eu hball hr i) i
+  have hG_bound : ∀ i, eLpNorm (G i) p.exponent (volume.restrict (Box3 z hi)) ≤
+      Cd * eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi)) +
+        ENNReal.ofReal (32 / L) *
+          (Cd * eLpNorm u.toFun p.exponent (volume.restrict (Box z hi))) := by
+    intro i
+    exact (cutoff_gradient_eLpNorm_le p Eu χ hχ_smooth (32 / L)
+      (by positivity) hχ_le1 hχ_deriv i).trans
+      (add_le_add (Ext.grad_eLpNorm_le i) (mul_le_mul_right Ext.eLpNorm_le _))
   have hG_fin : ∀ i, eLpNorm (G i) p.exponent (volume.restrict (Box3 z hi)) < ⊤ := by
     intro i
-    have hfirst : eLpNorm (fun x => χ x * Eu.grad x i) p.exponent
-        (volume.restrict (Box3 z hi)) ≤
-        Cd * eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi)) := by
-      change eLpNorm (fun x => χ x * Ext.Eu.grad x i) p.exponent _ ≤ _
-      refine (eLpNorm_mono_ae (Filter.Eventually.of_forall fun x => ?_)).trans
-        (Ext.grad_eLpNorm_le i)
-      rw [norm_mul]
-      exact mul_le_of_le_one_left (norm_nonneg _) (hχ_le1 x)
-    have hsecond : eLpNorm (fun x => Eu.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent
-        (volume.restrict (Box3 z hi)) ≤
-        ENNReal.ofReal (32 / L) * eLpNorm Eu.toFun p.exponent
-          (volume.restrict (Box3 z hi)) := by
-      have hmono : eLpNorm (fun x => Eu.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent
-          (volume.restrict (Box3 z hi)) ≤
-          eLpNorm ((32 / L : ℝ) • Eu.toFun) p.exponent (volume.restrict (Box3 z hi)) := by
-        refine eLpNorm_mono_ae (Filter.Eventually.of_forall fun x => ?_)
-        rw [Pi.smul_apply, smul_eq_mul, norm_mul, norm_mul,
-          Real.norm_of_nonneg (by positivity : (0 : ℝ) ≤ 32 / L)]
-        calc ‖Eu.toFun x‖ * ‖fderiv ℝ χ x (basisVec i)‖
-            ≤ ‖Eu.toFun x‖ * (32 / L) :=
-              mul_le_mul_of_nonneg_left
-                (by rw [Real.norm_eq_abs]; exact hχ_deriv x i) (norm_nonneg _)
-          _ = (32 / L) * ‖Eu.toFun x‖ := by ring
-      exact hmono.trans ((eLpNorm_const_smul_le (c := (32 / L : ℝ)) (f := Eu.toFun)).trans
-        (le_of_eq (by congr 1; rw [Real.enorm_eq_ofReal (by positivity)])))
-    change eLpNorm ((fun x => χ x * Eu.grad x i) +
-      fun x => Eu.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent _ < ⊤
-    refine lt_of_le_of_lt (eLpNorm_add_le
-      (hχ_smooth.continuous.aestronglyMeasurable.mul (Eu.grad_memLp i).aestronglyMeasurable)
-      ?_ p.one_lt.le) ?_
-    · exact Eu.memLp.aestronglyMeasurable.mul
-        (((hχ_smooth.continuous_fderiv (by simp)).clm_apply
-          continuous_const).aestronglyMeasurable)
-    · have hEu_fin : eLpNorm Eu.toFun p.exponent (volume.restrict (Box3 z hi)) < ⊤ := by
-        change eLpNorm Ext.Eu.toFun p.exponent _ < ⊤
-        exact lt_of_le_of_lt Ext.eLpNorm_le
-          (ENNReal.mul_lt_top hCd_lt u.memLp.eLpNorm_lt_top)
-      exact lt_of_le_of_lt (add_le_add hfirst hsecond)
-        (ENNReal.add_lt_top.2 ⟨ENNReal.mul_lt_top hCd_lt (u.grad_memLp i).eLpNorm_lt_top,
-          ENNReal.mul_lt_top ENNReal.ofReal_lt_top
-            hEu_fin⟩)
+    exact (hG_bound i).trans_lt (ENNReal.add_lt_top.2
+      ⟨ENNReal.mul_lt_top hCd_lt (u.grad_memLp i).eLpNorm_lt_top,
+        ENNReal.mul_lt_top ENNReal.ofReal_lt_top
+          (ENNReal.mul_lt_top hCd_lt u.memLp.eLpNorm_lt_top)⟩)
   set binf : ℝ≥0∞ := Cgns * ∑ i,
     eLpNorm (G i) p.exponent (volume.restrict (Box3 z hi))
   have hb_tend : Filter.Tendsto b Filter.atTop (nhds binf) := by
@@ -471,88 +525,21 @@ theorem cubeSobolevEmbedding_finiteLp {d : ℕ} (hd : 0 < d)
       (ne_of_gt (zero_lt_one.trans p.one_lt))
       (fun n => (hψ_smooth n).continuous.aestronglyMeasurable)
       (hχ_smooth.continuous.aestronglyMeasurable.mul Eu.memLp.aestronglyMeasurable) hψ_tend
-  obtain ⟨σ, hσ_mono, hσ_ae⟩ := htim.exists_seq_tendsto_ae
-  have hL2 : eLpNorm (fun x => χ x * Eu.toFun x) q.exponent
-      (volume.restrict (Box3 z hi)) ≤ Filter.liminf (fun j => a (σ j)) Filter.atTop :=
-    Lp.eLpNorm_lim_le_liminf_eLpNorm
-      (fun j => (hψ_smooth (σ j)).continuous.aestronglyMeasurable)
-      _ hσ_ae
-  have hbσ : Filter.Tendsto (fun j => b (σ j)) Filter.atTop (nhds binf) :=
-    hb_tend.comp hσ_mono.tendsto_atTop
-  have hL3 : Filter.liminf (fun j => a (σ j)) Filter.atTop ≤ binf := by
-    calc Filter.liminf (fun j => a (σ j)) Filter.atTop
-        ≤ Filter.liminf (fun j => b (σ j)) Filter.atTop :=
-          Filter.liminf_le_liminf (Filter.Eventually.of_forall fun j => hab (σ j))
-      _ = binf := hbσ.liminf_eq
-  have hG_bound : ∀ i, eLpNorm (G i) p.exponent (volume.restrict (Box3 z hi)) ≤
-      Cd * eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi)) +
-        ENNReal.ofReal (32 / L) *
-          (Cd * eLpNorm u.toFun p.exponent (volume.restrict (Box z hi))) := by
-    intro i
-    have hfirst : eLpNorm (fun x => χ x * Eu.grad x i) p.exponent
-        (volume.restrict (Box3 z hi)) ≤
-        Cd * eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi)) := by
-      change eLpNorm (fun x => χ x * Ext.Eu.grad x i) p.exponent _ ≤ _
-      refine (eLpNorm_mono_ae (Filter.Eventually.of_forall fun x => ?_)).trans
-        (Ext.grad_eLpNorm_le i)
-      rw [norm_mul]
-      exact mul_le_of_le_one_left (norm_nonneg _) (hχ_le1 x)
-    have hsecond : eLpNorm (fun x => Eu.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent
-        (volume.restrict (Box3 z hi)) ≤
-        ENNReal.ofReal (32 / L) * eLpNorm Eu.toFun p.exponent
-          (volume.restrict (Box3 z hi)) := by
-      have hmono : eLpNorm (fun x => Eu.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent
-          (volume.restrict (Box3 z hi)) ≤
-          eLpNorm ((32 / L : ℝ) • Eu.toFun) p.exponent (volume.restrict (Box3 z hi)) := by
-        refine eLpNorm_mono_ae (Filter.Eventually.of_forall fun x => ?_)
-        rw [Pi.smul_apply, smul_eq_mul, norm_mul, norm_mul,
-          Real.norm_of_nonneg (by positivity : (0 : ℝ) ≤ 32 / L)]
-        calc ‖Eu.toFun x‖ * ‖fderiv ℝ χ x (basisVec i)‖
-            ≤ ‖Eu.toFun x‖ * (32 / L) :=
-              mul_le_mul_of_nonneg_left
-                (by rw [Real.norm_eq_abs]; exact hχ_deriv x i) (norm_nonneg _)
-          _ = (32 / L) * ‖Eu.toFun x‖ := by ring
-      exact hmono.trans ((eLpNorm_const_smul_le (c := (32 / L : ℝ)) (f := Eu.toFun)).trans
-        (le_of_eq (by congr 1; rw [Real.enorm_eq_ofReal (by positivity)])))
-    change eLpNorm ((fun x => χ x * Eu.grad x i) +
-      fun x => Eu.toFun x * fderiv ℝ χ x (basisVec i)) p.exponent _ ≤ _
-    refine (eLpNorm_add_le
-      (hχ_smooth.continuous.aestronglyMeasurable.mul (Eu.grad_memLp i).aestronglyMeasurable)
-      (Eu.memLp.aestronglyMeasurable.mul
-        (((hχ_smooth.continuous_fderiv (by simp)).clm_apply
-          continuous_const).aestronglyMeasurable)) p.one_lt.le).trans (add_le_add hfirst ?_)
-    exact hsecond.trans (mul_le_mul_right Ext.eLpNorm_le _)
+  have hL23 : eLpNorm (fun x => χ x * Eu.toFun x) q.exponent
+      (volume.restrict (Box3 z hi)) ≤ binf :=
+    eLpNorm_le_of_tendstoInMeasure_bound
+      (fun n => (hψ_smooth n).continuous.aestronglyMeasurable) htim hab hb_tend
   have hL4 : binf ≤ C0 *
       ((∑ i, eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi))) +
         ENNReal.ofReal L⁻¹ * eLpNorm u.toFun p.exponent (volume.restrict (Box z hi))) := by
-    have hsum : ∑ i, eLpNorm (G i) p.exponent (volume.restrict (Box3 z hi)) ≤
-        Cd * (∑ i, eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi))) +
-          ((m + 1 : ℕ) : ℝ≥0∞) *
-            (ENNReal.ofReal (32 / L) *
-              (Cd * eLpNorm u.toFun p.exponent (volume.restrict (Box z hi)))) := by
-      refine (Finset.sum_le_sum fun i _ => hG_bound i).trans (le_of_eq ?_)
-      rw [Finset.sum_add_distrib, ← Finset.mul_sum, Finset.sum_const, Finset.card_univ,
-        Fintype.card_fin, nsmul_eq_mul]
-    have hofReal : ENNReal.ofReal (32 / L) = ((32 : ℕ) : ℝ≥0∞) * ENNReal.ofReal L⁻¹ := by
-      rw [show (32 : ℝ) / L = 32 * L⁻¹ by ring, ENNReal.ofReal_mul (by norm_num)]
-      norm_num
-    have hN1 : (1 : ℝ≥0∞) ≤ ((((m + 1) * 32 : ℕ)) : ℝ≥0∞) := by
-      exact_mod_cast Nat.one_le_iff_ne_zero.2 (by positivity)
-    change Cgns * ∑ i, eLpNorm (G i) p.exponent (volume.restrict (Box3 z hi)) ≤ _
-    refine (mul_le_mul_right hsum Cgns).trans ?_
-    rw [hofReal, hC0]
-    simp only [mul_add]
-    refine add_le_add ?_ (le_of_eq ?_)
-    · rw [show Cgns * (Cd * ∑ i, eLpNorm (fun x => u.grad x i) p.exponent
-          (volume.restrict (Box z hi))) = (Cgns * Cd) * ∑ i,
-          eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi)) by ring]
-      exact mul_le_mul_left (le_mul_of_one_le_right' hN1) _
-    · push_cast
-      ring
+    exact cutoff_gradient_sum_bound m Cgns Cd L
+      (fun i => eLpNorm (G i) p.exponent (volume.restrict (Box3 z hi)))
+      (fun i => eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi)))
+      (eLpNorm u.toFun p.exponent (volume.restrict (Box z hi))) hG_bound
   have hmain : eLpNorm u.toFun q.exponent (volume.restrict (Box z hi)) ≤ C0 *
       ((∑ i, eLpNorm (fun x => u.grad x i) p.exponent (volume.restrict (Box z hi))) +
         ENNReal.ofReal L⁻¹ * eLpNorm u.toFun p.exponent (volume.restrict (Box z hi))) :=
-    hL1.trans (hL2.trans (hL3.trans hL4))
+    hL1.trans (hL23.trans hL4)
   have hC0le : C0 ≤ (↑(C0.toNNReal + 1) : ℝ≥0∞) := by
     rw [ENNReal.coe_add, ENNReal.coe_toNNReal hC0_lt.ne, ENNReal.coe_one]
     exact le_self_add
