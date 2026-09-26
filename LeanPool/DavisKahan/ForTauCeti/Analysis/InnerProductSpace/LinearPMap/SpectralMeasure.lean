@@ -715,6 +715,63 @@ private theorem gapSymbol_left_inverse_pointwise
   · rw [cayleyIndicator_of_notMem hA B hwS, gapSymbol_of_notMem hA B hwS]
     ring
 
+/-- A bounded inverse with both ambient algebraic identities restricts to the
+spectral range. Keeping the bounded maps as parameters isolates the domain
+and range transports from the concrete Borel-calculus construction. -/
+private theorem mem_resolventSet_specRestrict_of_bounded_inverse
+    (lam : ℝ) (Rop G P0 : H →L[ℂ] H)
+    (hni : -Complex.I ∈ resolventSet A)
+    (hP : specProjection hA B hB = P0)
+    (hRg : G = -(resolvent A (-Complex.I)))
+    (hmemdom : ∀ φ : H, Rop φ ∈ A.domain)
+    (hKmap : ∀ φ : H, Rop φ ∈ specRange hA B hB)
+    (hright : ∀ φ : H, A ⟨Rop φ, hmemdom φ⟩ - (lam : ℂ) • Rop φ = P0 φ)
+    (hlefts' : Rop + (-(Complex.I + (lam : ℂ))) • (Rop * G) = P0 * G) :
+    (lam : ℂ) ∈ resolventSet (specRestrict hA B hB) := by
+  classical
+  -- The canonical resolvent inverts `lam • I - A`; `Rop` inverts `A - lam`, so the
+  -- witness is `-Rop`.
+  refine mem_resolventSet_iff.mpr
+    ⟨-(Rop.restrict (fun x _ => hKmap x)),
+      fun φ => neg_mem (hmemdom ((φ : specRange hA B hB) : H)), fun φ => ?_, fun ψ => ?_⟩
+  · -- right inverse: `(lam • I - A) (-Rop φ) = φ`
+    apply Subtype.ext
+    set y : H := ((φ : specRange hA B hB) : H) with hy
+    have hmy : -(Rop y) ∈ A.domain := neg_mem (hmemdom y)
+    -- states the goal with the definition unfolded, in the shape the next step needs.
+    change (lam : ℂ) • (-(Rop y)) - A ⟨-(Rop y), hmy⟩ = y
+    have hstep : A (⟨-(Rop y), hmy⟩ : A.domain) = -(A ⟨Rop y, hmemdom y⟩) :=
+      _root_.LinearPMap.map_neg A ⟨Rop y, hmemdom y⟩
+    have hr := hright y
+    have hPy : P0 y = y := by
+      rw [← hP]; exact (mem_specRange_iff hA B hB y).mp (φ : specRange hA B hB).2
+    rw [hPy] at hr
+    rw [hstep]
+    linear_combination (norm := module) hr
+  · -- left inverse on the domain: `-Rop ((lam • I - A) ψ) = ψ`
+    apply Subtype.ext
+    have hydom : ((ψ : specRange hA B hB) : H) ∈ A.domain := ψ.2
+    have hyK : ((ψ : specRange hA B hB) : H) ∈ specRange hA B hB :=
+      (ψ : specRange hA B hB).2
+    -- states the goal with the definition unfolded, in the shape the next step needs.
+    change -(Rop ((lam : ℂ) • ((ψ : specRange hA B hB) : H)
+        - A ⟨((ψ : specRange hA B hB) : H), hydom⟩)) = ((ψ : specRange hA B hB) : H)
+    set y : H := ((ψ : specRange hA B hB) : H) with hy
+    set φ₀ : H := (-Complex.I) • y - A ⟨y, hydom⟩ with hφ₀
+    have hy0 : resolvent A (-Complex.I) φ₀ = y := resolvent_smul_sub_apply hni ⟨y, hydom⟩
+    have hsplit : (lam : ℂ) • y - A ⟨y, hydom⟩ = φ₀ + (Complex.I + (lam : ℂ)) • y := by
+      rw [hφ₀]; module
+    have hPy : P0 y = y := by
+      rw [← hP]; exact (mem_specRange_iff hA B hB y).mp hyK
+    have hfin := congrArg (fun L : H →L[ℂ] H => L φ₀) hlefts'
+    simp only [_root_.add_apply, _root_.smul_apply, _root_.mul_apply_eq_comp] at hfin
+    -- `borelCalculus hU hgb = -resolvent A (-i)`, and `R(-i) φ₀ = y`
+    rw [hRg] at hfin
+    simp only [_root_.neg_apply, hy0, map_neg] at hfin
+    rw [hPy] at hfin
+    rw [hsplit, map_add, map_smul]
+    linear_combination (norm := module) -hfin
+
 /-- **A spectral gap gives a resolvent point of the restriction.**  If `B` keeps
 its distance `ε` from `lam`, then `lam` is in the resolvent set of the
 restriction of `A` to the spectral range of `B`; the inverse is the Borel
@@ -855,48 +912,9 @@ theorem mem_resolventSet_specRestrict_of_gap {lam ε : ℝ} (hε : 0 < ε)
       hRop, ← BorelCalculus.borelCalculus_add hU hfb ((hfb.mul hgb).const_smul _),
       ← BorelCalculus.borelCalculus_mul hU hindb hgb]
     exact hlefts
-  -- The canonical resolvent inverts `lam • I - A`; `Rop` inverts `A - lam`, so the
-  -- witness is `-Rop`.
-  refine mem_resolventSet_iff.mpr
-    ⟨-(Rop.restrict (fun x _ => hKmap x)),
-      fun φ => neg_mem (hmemdom ((φ : specRange hA B hB) : H)), fun φ => ?_, fun ψ => ?_⟩
-  · -- right inverse: `(lam • I - A) (-Rop φ) = φ`
-    apply Subtype.ext
-    set y : H := ((φ : specRange hA B hB) : H) with hy
-    have hmy : -(Rop y) ∈ A.domain := neg_mem (hmemdom y)
-    -- states the goal with the definition unfolded, in the shape the next step needs.
-    change (lam : ℂ) • (-(Rop y)) - A ⟨-(Rop y), hmy⟩ = y
-    have hstep : A (⟨-(Rop y), hmy⟩ : A.domain) = -(A ⟨Rop y, hmemdom y⟩) :=
-      _root_.LinearPMap.map_neg A ⟨Rop y, hmemdom y⟩
-    have hr := hright y
-    have hPy : BorelCalculus.borelCalculus hU hindb y = y := by
-      rw [← hP]; exact (mem_specRange_iff hA B hB y).mp (φ : specRange hA B hB).2
-    rw [hPy] at hr
-    rw [hstep]
-    linear_combination (norm := module) hr
-  · -- left inverse on the domain: `-Rop ((lam • I - A) ψ) = ψ`
-    apply Subtype.ext
-    have hydom : ((ψ : specRange hA B hB) : H) ∈ A.domain := ψ.2
-    have hyK : ((ψ : specRange hA B hB) : H) ∈ specRange hA B hB :=
-      (ψ : specRange hA B hB).2
-    -- states the goal with the definition unfolded, in the shape the next step needs.
-    change -(Rop ((lam : ℂ) • ((ψ : specRange hA B hB) : H)
-        - A ⟨((ψ : specRange hA B hB) : H), hydom⟩)) = ((ψ : specRange hA B hB) : H)
-    set y : H := ((ψ : specRange hA B hB) : H) with hy
-    set φ₀ : H := (-Complex.I) • y - A ⟨y, hydom⟩ with hφ₀
-    have hy0 : resolvent A (-Complex.I) φ₀ = y := resolvent_smul_sub_apply hni ⟨y, hydom⟩
-    have hsplit : (lam : ℂ) • y - A ⟨y, hydom⟩ = φ₀ + (Complex.I + (lam : ℂ)) • y := by
-      rw [hφ₀]; module
-    have hPy : BorelCalculus.borelCalculus hU hindb y = y := by
-      rw [← hP]; exact (mem_specRange_iff hA B hB y).mp hyK
-    have hfin := congrArg (fun L : H →L[ℂ] H => L φ₀) hlefts'
-    simp only [_root_.add_apply, _root_.smul_apply, _root_.mul_apply_eq_comp] at hfin
-    -- `borelCalculus hU hgb = -resolvent A (-i)`, and `R(-i) φ₀ = y`
-    rw [hRg] at hfin
-    simp only [_root_.neg_apply, hy0, map_neg] at hfin
-    rw [hPy] at hfin
-    rw [hsplit, map_add, map_smul]
-    linear_combination (norm := module) -hfin
+  exact mem_resolventSet_specRestrict_of_bounded_inverse hA B hB lam Rop
+    (BorelCalculus.borelCalculus hU hgb) (BorelCalculus.borelCalculus hU hindb)
+    hni hP hRg hmemdom hKmap hright hlefts'
 
 end ResolventGap
 
