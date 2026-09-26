@@ -27,6 +27,7 @@ from typing import Any
 import yaml
 
 from lean_pool import challenge
+from lean_pool.validation_cache import ValidationCache, pool_units
 
 # Derived from the challenge module so the pool gate and the axiom list
 # handed to the external comparator judge cannot drift apart.
@@ -677,17 +678,19 @@ def gatedLiteral? (e : Expr) : Option String :=
   | some (.lit (.strVal s)) => some s
   | _ => none
 
-def auditEnv (env : Environment) (roots : List Name) : IO Unit := do
+def auditEnv (env : Environment) (roots : List Name)
+    (onlyModules : List Name) : IO Unit := do
   let manipulators := manipulatorCandidates.filter env.contains
   let injectors := axiomInjectorCandidates.filter env.contains
   let mut visited : NameSet := NameSet.empty
   for (moduleName, data) in env.header.moduleNames.zip env.header.moduleData do
     unless roots.contains moduleName.getRoot do continue
+    unless onlyModules.isEmpty || onlyModules.contains moduleName do continue
     for declName in data.constNames do
       unless visited.contains declName do
         visited := visited.insert declName
         if let some info := env.find? declName then
-          let exprs := info.type :: info.value?.toList
+          let exprs := info.type :: (info.value? (allowOpaque := true)).toList
           let used := exprs.foldl (fun acc e => acc ++ e.getUsedConstants) #[]
           let mut details : List String := []
           let hits := manipulators.filter used.contains
@@ -713,11 +716,16 @@ def auditEnv (env : Environment) (roots : List Name) : IO Unit := do
 end LeanPoolQuality.OptionAudit
 
 def main (args : List String) : IO UInt32 := do
-  let modules := if args.isEmpty then [`LeanPool] else args.map (·.toName)
+  let imports := args.takeWhile (· != "--only")
+  let onlyModules := (args.dropWhile (· != "--only")).drop 1 |>.map (·.toName)
+  let modules := if imports.isEmpty then [`LeanPool] else imports.map (·.toName)
   Lean.initSearchPath (<- Lean.findSysroot)
   let imports := modules.toArray.map fun module => ({ module } : Lean.Import)
   let env <- Lean.importModules imports {} (trustLevel := 1024)
-  LeanPoolQuality.OptionAudit.auditEnv env (modules.map (·.getRoot))
+  for moduleName in onlyModules do
+    unless env.header.moduleNames.contains moduleName do
+      throw <| IO.userError s!"missing module in audit environment: {moduleName}"
+  LeanPoolQuality.OptionAudit.auditEnv env (modules.map (·.getRoot)) onlyModules
   return 0
 """
 # Detail emitted by the audit when a declaration is a `sorry`. Tolerated
@@ -743,18 +751,21 @@ def _check_option_backdoors(root: Path) -> list[_QualityError]:
     return errors
 
 
-def _run_option_audit(root: Path, modules: list[str]) -> list[_QualityError]:
+def _run_option_audit(
+    root: Path, modules: list[str], *, only_modules: list[str] | None = None
+) -> list[_QualityError]:
     """Run the environment audit over one set of importable modules."""
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as temp_file:
         temp_path = Path(temp_file.name)
         temp_file.write(_OPTION_AUDIT_LEAN)
         temp_file.flush()
 
-    index_path = root / f"{modules[0]}.lean"
+    index_path = _module_to_path(root, modules[0])
     try:
         try:
             process = subprocess.run(
-                ["lake", "env", "lean", "--run", str(temp_path), *modules],
+                ["lake", "env", "lean", "--run", str(temp_path), *modules]
+                + (["--only", *only_modules] if only_modules is not None else []),
                 cwd=root,
                 check=False,
                 capture_output=True,
@@ -898,15 +909,16 @@ def _check_solution_axioms(root: Path) -> list[_QualityError]:
 def _audit_axioms(
     root: Path,
     declarations: list[_Declaration],
-    import_module: str,
+    import_module: str | list[str],
     open_declarations: set[str],
 ) -> list[_QualityError]:
     """Run `#print axioms` over ``declarations`` and grade the results."""
     if not declarations:
         return []
 
-    index_path = root / f"{import_module}.lean"
-    commands = f"import {import_module}\n" + "\n".join(
+    modules = [import_module] if isinstance(import_module, str) else import_module
+    index_path = _module_to_path(root, modules[0])
+    commands = "".join(f"import {module}\n" for module in modules) + "\n".join(
         f"#print axioms _root_.{declaration.name}" for declaration in declarations
     )
     with tempfile.NamedTemporaryFile("w", suffix=".lean", delete=False) as temp_file:
@@ -1110,7 +1122,9 @@ def _load_projects_yaml(
     return data, []
 
 
-def _check_projects(root: Path) -> list[_QualityError]:
+def _check_projects(
+    root: Path, validation_cache: ValidationCache | None = None
+) -> list[_QualityError]:
     data, errors = _load_projects_yaml(root)
     if data is None:
         return errors
@@ -1132,7 +1146,7 @@ def _check_projects(root: Path) -> list[_QualityError]:
         return errors
 
     for index, project in enumerate(projects, start=1):
-        errors.extend(_check_project(root, path, index, project))
+        errors.extend(_check_project(root, path, index, project, validation_cache))
     return errors
 
 
@@ -1228,6 +1242,7 @@ def _check_project(
     path: Path,
     index: int,
     project: Any,
+    validation_cache: ValidationCache | None = None,
 ) -> list[_QualityError]:
     if not isinstance(project, dict):
         return [_QualityError(path, 1, f"project #{index} must be a mapping")]
@@ -1238,7 +1253,17 @@ def _check_project(
         return errors
 
     entry_path = _module_to_path(root, project["entry_module"])
-    errors.extend(_check_project_declarations(root, path, project))
+    if validation_cache is None:
+        errors.extend(_check_project_declarations(root, path, project))
+    else:
+        errors.extend(
+            validation_cache.check(
+                "declarations",
+                [project["entry_module"]],
+                lambda: _check_project_declarations(root, path, project),
+                metadata=project,
+            )
+        )
     errors.extend(_check_project_card(entry_path, path, project))
     return errors
 
@@ -1830,7 +1855,12 @@ def _write_project_card(path: Path, card: str) -> None:
     path.write_text(new_text)
 
 
-def run_checks(root: Path, *, skip_lean_axioms: bool = False) -> list[_QualityError]:
+def run_checks(
+    root: Path,
+    *,
+    skip_lean_axioms: bool = False,
+    validation_cache: ValidationCache | None = None,
+) -> list[_QualityError]:
     """Run all deterministic quality checks."""
     checks = [
         _check_reachability,
@@ -1840,18 +1870,46 @@ def run_checks(root: Path, *, skip_lean_axioms: bool = False) -> list[_QualityEr
         _check_style_nolints,
         _check_file_sizes,
         _check_proof_sizes,
-        _check_projects,
         _check_challenges,
     ]
     errors = [error for check in checks for error in check(root)]
+    errors.extend(_check_projects(root, validation_cache))
     if not skip_lean_axioms:
-        errors.extend(_check_axioms(root))
+        if validation_cache is None:
+            errors.extend(_check_axioms(root))
+            errors.extend(_check_option_backdoors(root))
+        else:
+            errors.extend(_cached_pool_audits(root, validation_cache))
+            for library in (challenge.LIBRARY_NAME, challenge.SOLUTION_LIBRARY_NAME):
+                if (root / f"{library}.lean").exists():
+                    errors.extend(_run_option_audit(root, [library]))
         errors.extend(_check_challenge_axioms(root))
         errors.extend(_check_solution_axioms(root))
-        errors.extend(_check_option_backdoors(root))
     return sorted(
         errors, key=lambda error: (str(error.path), error.line, error.message)
     )
+
+
+def _cached_pool_audits(root: Path, cache: ValidationCache) -> list[_QualityError]:
+    """Cover all pool declarations, with current static reachability checked above."""
+    errors: list[_QualityError] = []
+    for modules in pool_units(root):
+        paths = [_module_to_path(root, module) for module in modules]
+        errors.extend(
+            cache.check(
+                "axioms",
+                modules,
+                lambda: _audit_axioms(root, _declarations_in(paths), modules, set()),
+            )
+        )
+        errors.extend(
+            cache.check(
+                "backdoors",
+                modules,
+                lambda: _run_option_audit(root, modules, only_modules=modules),
+            )
+        )
+    return errors
 
 
 def _parse_args(argv: list[str]) -> argparse.Namespace:
