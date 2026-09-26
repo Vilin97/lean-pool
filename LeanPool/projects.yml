@@ -10307,42 +10307,41 @@ projects:
     msc:
       - '12F05'
       - '13F25'
-  - slug: densityhalesjewett
-    title: The density Hales–Jewett theorem and Szemerédi's theorem
-    summary: 'A Lean 4 formalization of the density Hales–Jewett theorem: for every finite alphabet
-      α and every density δ > 0, all sufficiently large n have the property that any set of
-      at least δ·|α|^n words of length n over α contains a combinatorial line. The basis for
-      the formalization is the combinatorial proof of Dodos, Kanellopoulos, and Tyros. As a
-      consequence, we also formalize Szemerédi''s theorem on the integers: for every k ≥ 3 and
-      δ > 0, the following holds for all sufficiently large n. Any subset of {0, …, n−1} of
-      size at least δ·n contains a nonconstant arithmetic progression of length k.'
-    branch: combinatorics
-    entry_module: LeanPool.DensityHalesJewett
+
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Gabriel Dahia
+    - Ezzeri Esa
     source:
-      url: https://github.com/gdahia/densityhalesjewett
-      github_repo: gdahia/densityhalesjewett
-      commit: 1c2f5aa1b99caa8e2a87beacf80f07f066c309d3
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
     main_declarations:
-    - Combinatorics.Line.exists_of_density_atTop
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: Combinatorics.Line.exists_of_density_atTop
-      informal: Every positive-density subset of sufficiently long words over a finite nontrivial
-        alphabet contains a combinatorial line.
-    - declaration: Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop
-      informal: Every positive-density subset of a sufficiently long initial interval of the
-        natural numbers contains an arithmetic progression of any prescribed length at least
-        three with nonzero common difference.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - combinatorics
+    - functional-analysis
     msc:
-    - 05D10
-    - 05A05
-    - 11B75
-    - 68R15
+    - 47A10
+    - 47B15
     provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
@@ -10441,3 +10440,41 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: densityhalesjewett
+    title: The density Hales–Jewett theorem and Szemerédi's theorem
+    summary: 'A Lean 4 formalization of the density Hales–Jewett theorem: for every finite alphabet
+      α and every density δ > 0, all sufficiently large n have the property that any set of
+      at least δ·|α|^n words of length n over α contains a combinatorial line. The basis for
+      the formalization is the combinatorial proof of Dodos, Kanellopoulos, and Tyros. As a
+      consequence, we also formalize Szemerédi''s theorem on the integers: for every k ≥ 3 and
+      δ > 0, the following holds for all sufficiently large n. Any subset of {0, …, n−1} of
+      size at least δ·n contains a nonconstant arithmetic progression of length k.'
+    branch: combinatorics
+    entry_module: LeanPool.DensityHalesJewett
+    authors:
+    - Gabriel Dahia
+    source:
+      url: https://github.com/gdahia/densityhalesjewett
+      github_repo: gdahia/densityhalesjewett
+      commit: 1c2f5aa1b99caa8e2a87beacf80f07f066c309d3
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - Combinatorics.Line.exists_of_density_atTop
+    main_results:
+    - declaration: Combinatorics.Line.exists_of_density_atTop
+      informal: Every positive-density subset of sufficiently long words over a finite nontrivial
+        alphabet contains a combinatorial line.
+    - declaration: Combinatorics.ArithmeticProgression.exists_of_density_nat_atTop
+      informal: Every positive-density subset of a sufficiently long initial interval of the
+        natural numbers contains an arithmetic progression of any prescribed length at least
+        three with nonzero common difference.
+    tags:
+    - combinatorics
+    msc:
+    - 05D10
+    - 05A05
+    - 11B75
+    - 68R15
+    provenance: AI
