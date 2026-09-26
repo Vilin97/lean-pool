@@ -29,13 +29,14 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 from lean_pool.exposition.source_text import code_view
 
 logger = logging.getLogger(__name__)
 
 REGISTRY = "LeanPool/projects.yml"
 INDEX = "LeanPool.lean"
-CARD_PREFIX = "  - slug: "
 # The only conflicts this module claims to resolve.
 RESOLVABLE = frozenset({INDEX, REGISTRY})
 
@@ -78,22 +79,61 @@ def render_index(root: Path) -> str:
     )
 
 
+def _project_nodes(text: str) -> yaml.SequenceNode:
+    """Read card boundaries from YAML rather than assuming a first key."""
+    root = yaml.compose(text, Loader=yaml.SafeLoader)
+    if not isinstance(root, yaml.MappingNode) or len(root.value) != 1:
+        raise ValueError("Expected a registry containing only projects")
+    key, projects = root.value[0]
+    if key.value != "projects" or not isinstance(projects, yaml.SequenceNode):
+        raise ValueError("Expected projects to be a sequence")
+    if projects.flow_style and projects.value:
+        raise ValueError("Project cards must use a block sequence")
+    if any(not isinstance(card, yaml.MappingNode) for card in projects.value):
+        raise ValueError("Each project card must be a mapping")
+    return projects
+
+
+def _card_slug(card: yaml.MappingNode) -> str:
+    """Require one unambiguous string slug, in any mapping position."""
+    slugs = [value for key, value in card.value if key.value == "slug"]
+    if (
+        len(slugs) != 1
+        or not isinstance(slugs[0], yaml.ScalarNode)
+        or slugs[0].tag != "tag:yaml.org,2002:str"
+        or not slugs[0].value.strip()
+    ):
+        raise ValueError("Each project card must have exactly one nonempty string slug")
+    return slugs[0].value
+
+
 def split_cards(text: str) -> tuple[str, list[tuple[str, str]]]:
     """Split a registry into its header and its cards, as verbatim text.
 
     Returns ``(header, [(slug, block)])`` where concatenating the header and
     every block reproduces ``text`` exactly.
     """
-    lines = text.splitlines(keepends=True)
-    starts = [i for i, line in enumerate(lines) if line.startswith(CARD_PREFIX)]
+    projects = _project_nodes(text)
+    nodes = projects.value
+    entries = [
+        token
+        for token in yaml.scan(text, Loader=yaml.SafeLoader)
+        if isinstance(token, yaml.tokens.BlockEntryToken)
+        and token.start_mark.column == projects.start_mark.column
+    ]
+    starts = [text.rfind("\n", 0, token.start_mark.index) + 1 for token in entries]
+    if len(starts) != len(nodes):
+        raise ValueError("Expected one sequence item per project card")
     if not starts:
         return text, []
-    header = "".join(lines[: starts[0]])
+    header = text[: starts[0]]
     cards: list[tuple[str, str]] = []
-    for index, start in enumerate(starts):
-        end = starts[index + 1] if index + 1 < len(starts) else len(lines)
-        slug = lines[start][len(CARD_PREFIX) :].strip()
-        cards.append((slug, "".join(lines[start:end])))
+    for index, (start, node) in enumerate(zip(starts, nodes, strict=True)):
+        end = starts[index + 1] if index + 1 < len(starts) else len(text)
+        slug = _card_slug(node)
+        if any(existing == slug for existing, _ in cards):
+            raise ValueError(f"Duplicate project slug: {slug}")
+        cards.append((slug, text[start:end]))
     return header, cards
 
 
@@ -122,7 +162,10 @@ def merge_registry(base: str, ours: str, theirs: str) -> str:
     # run into the first appended card.
     if merged and not merged.endswith("\n"):
         merged += "\n"
-    return merged + "".join(block for _, block in added)
+    result = merged + "".join(block for _, block in added)
+    # Reject incompatible layouts instead of pushing a malformed registry.
+    split_cards(result)
+    return result
 
 
 def resolvable(conflicts: list[str]) -> bool:
