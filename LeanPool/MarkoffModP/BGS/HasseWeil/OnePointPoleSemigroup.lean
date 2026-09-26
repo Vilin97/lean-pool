@@ -205,6 +205,7 @@ def onePointPoleOrderSemigroup
       exact add_nonneg (hxAway v hv) (hyAway v hv)
 
 omit [Fintype K] in
+omit [DecidableEq K] in
 @[simp]
 theorem mem_onePointPoleOrderSemigroup_iff
     (P : FiniteExtensionPlace K L) (n : ℕ) :

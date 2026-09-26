@@ -171,6 +171,7 @@ noncomputable instance
     (FunctionFieldNormalClosure K F)
 
 omit [Algebra K F] [IsScalarTower K (RatFunc K) F] in
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The normal closure remains Galois after replacing the constant-base fixed
 field by its canonical rational-function presentation `C(X)`. -/
 theorem functionFieldNormalClosure_isGalois_over_constantRatFunc :
@@ -191,6 +192,8 @@ theorem functionFieldNormalClosure_isGalois_over_constantRatFunc :
   rw [← e.commutes]
   simp
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] [Algebra K F]
+  [IsScalarTower K (RatFunc K) F] in
 /-- Exactness of the full normal-closure constant field, stated for the
 constant algebra obtained by restricting the canonical `C(X)` presentation.
 This is the exact instance expected by the generic tower API. -/

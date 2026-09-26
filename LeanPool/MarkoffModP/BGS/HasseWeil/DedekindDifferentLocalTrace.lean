@@ -217,7 +217,7 @@ theorem finite_badDifferentCount_set (hdiff : differentIdeal A B ≠ ⊥) (y : L
   simp
 
 omit [IsIntegralClosure B A L] in
-omit [IsIntegrallyClosed A] [IsDomain A] in
+omit [IsIntegrallyClosed A] in
 theorem exists_base_multiplier_clearing_different_counts
     [IsDedekindDomain A]
     (hdiff : differentIdeal A B ≠ ⊥)
@@ -337,7 +337,7 @@ theorem exists_base_multiplier_clearing_different_counts
         (A := A) (B := B) (L := L) q c 0 hc0 (by simp)
     omega
 
-omit [IsDomain A] [IsIntegrallyClosed A] in
+omit [IsIntegrallyClosed A] in
 theorem valuation_trace_le_one_of_different_count_bounds_over
     [IsDedekindDomain A]
     (p : HeightOneSpectrum A) {y : L} (hy : y ≠ 0)

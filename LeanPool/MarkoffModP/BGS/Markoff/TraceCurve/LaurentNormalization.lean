@@ -39,7 +39,8 @@ variable [Algebra K A] [Algebra K B] [Algebra K C]
 variable [IsDomain A] [IsDomain B] [IsDomain C]
 
 omit [IsDomain A] [IsDomain B] in
-private theorem fractionRingEquiv_maps_integral
+/-- The induced fraction-field equivalence preserves elements integral over the base ring. -/
+theorem fractionRingEquiv_maps_integral
     (e : A ≃ₐ[K] B) (x : integralClosure A (FractionRing A)) :
     IsIntegral B
       ((IsFractionRing.algEquivOfAlgEquiv

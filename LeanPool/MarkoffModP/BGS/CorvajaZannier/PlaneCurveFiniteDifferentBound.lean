@@ -772,6 +772,7 @@ theorem planeCurve_finiteDifferentDivisorBelow_apply_le_discrOrder
     exact_mod_cast htop
   exact hbound.trans_eq horderEq
 
+omit [DecidableEq (RatFunc K)] in
 /-- The sharp finite different contribution for the plane function field is
 bounded by the discriminant degree of the original second-coordinate
 equation. -/

@@ -29,8 +29,8 @@ noncomputable section
 
 variable (p : ℕ) [Fact p.Prime]
 
-private abbrev F := ZMod p
-private abbrev E := quadraticFiniteField p
+local notation "F" => ZMod
+local notation "E" => quadraticFiniteField
 
 noncomputable local instance : Fintype (E p) := Fintype.ofFinite (E p)
 noncomputable local instance : DecidableEq (quadraticNormOneTorus p) := Classical.decEq _

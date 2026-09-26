@@ -274,6 +274,8 @@ private theorem exactConstantExtensionSReciprocalPolynomialAlgebra_eq :
           (1 / RatFunc.X)) p
   rw [ratFuncToExactConstantExtension_reciprocal_X C S N hExact]
 
+omit [Fintype C] [Finite S] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] in
 /-- The transported reciprocal `C[X]`-action is the actual action induced by
 the canonical embedding of `C(X)` into the exact constant extension. -/
 theorem exactConstantExtensionCReciprocalPolynomialAlgebra_eq :
@@ -492,6 +494,9 @@ private noncomputable def exactConstantExtensionOldToCReciprocalNormalizationMap
   exact (IsScalarTower.toAlgHom C[X] N
     (ExactConstantExtension C N S)).mapIntegralClosure
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N]
+  [FiniteDimensional C S] in
 /-- The normalization equivalence carries the old normalization embedded in
 the right tensor factor to its canonical map into the exact extension. -/
 private theorem
@@ -553,6 +558,9 @@ theorem primeUnderReciprocalOrigin_eq_origin
   exact ((hoPrime.isMaximal hoNeBot).eq_of_le
     (inferInstance : p.IsPrime).ne_top hle).symm
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N]
+  [FiniteDimensional C S] in
 private theorem
     exactConstantExtensionPresentedToCReciprocalNormalizationRingEquiv_commutes
     (p : C[X]) :
@@ -1256,6 +1264,7 @@ theorem exactConstantExtensionConstantQuotient_action_on_infinityNormalization :
           (ExactConstantExtension C N S)) :
         ExactConstantExtension C N S) := rfl
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- Every infinity place is unramified in an exact extension of constants. -/
 theorem exactConstantExtensionInfinityPlace_ramificationIdx_eq_one
     (Q : letI : Field (ExactConstantExtension C N S) :=

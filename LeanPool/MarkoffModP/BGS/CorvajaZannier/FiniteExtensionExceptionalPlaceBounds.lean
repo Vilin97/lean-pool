@@ -71,6 +71,7 @@ theorem mem_propositionTwoExceptionalPlaces_of_v_order_pos
   rw [propositionTwoExceptionalPlaces]
   exact Finset.mem_union_right _ (Finsupp.mem_support_iff.mpr (ne_of_gt hP))
 
+omit [DecidableEq K] in
 /-- Every auxiliary grid product has order zero away from the direct
 Proposition 2 exceptional set. -/
 theorem finiteExtensionPrincipalDivisor_auxiliaryGridProduct_eq_zero_outside_propositionTwoExceptionalPlaces

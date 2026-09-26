@@ -268,6 +268,7 @@ variable (L : Type*) [Field L] [Algebra (RatFunc S) L]
   [FiniteDimensional (RatFunc S) L]
   [Algebra.IsSeparable (RatFunc S) L]
 
+omit [DecidableEq S] in
 /-- Finite-place form of semilinear square-field vanishing.  The function
 field and its places are over the full constant field `S`; `K` supplies the
 half-Frobenius exponent. -/

@@ -211,6 +211,8 @@ noncomputable def exactConstantExtensionCompatibleBaseFinitePlace
           C S N hExact))).symm
       (exactConstantExtensionUpstairsFinitePlace C S N hExact q)
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 @[simp]
 theorem exactConstantExtensionCompatibleBaseFinitePlace_baseChange
     (q : IsDedekindDomain.HeightOneSpectrum
@@ -298,6 +300,8 @@ noncomputable def exactConstantExtensionFiniteClosureBaseChangeAlgEquiv :
           (algebraMap S (RatFunc S) s)
       exact (ratFuncToExactConstantExtension C S N hExact).commutes s |>.symm }
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 /-- The actual upstairs finite place is exactly the transport of the
 presented prime along the equality bridge from the compatible polynomial
 normalization to the canonical rational-function normalization. -/
@@ -423,6 +427,8 @@ noncomputable def exactConstantExtensionCompatibleResidueFieldAlgEquiv
     (exactConstantExtensionUpstairsFinitePlace C S N hExact q).asIdeal.comap e
   rfl
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 /-- The two representations of the upstairs place have the same residue
 degree over the enlarged constants. -/
 theorem exactConstantExtensionCompatibleResidueField_finrank_eq
@@ -541,6 +547,7 @@ theorem exactConstantExtensionCompatibleBaseFinitePlace_degree_eq
   rw [exactConstantExtensionCompatibleBaseFinitePlace_baseChange,
     hRational, Nat.mul_one]
 
+omit [DecidableEq C] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- Restricting the compatible `C[X]`-place to the original function field
 recovers the downstairs place obtained by contracting the explicit constant
 extension ideal. -/

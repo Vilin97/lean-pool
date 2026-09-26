@@ -77,11 +77,12 @@ local instance basisGridConstantTower :
     IsScalarTower K (RatFunc K) L :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [DecidableEq K] in
 /-- A bounded distinct first pole-order digit and an arbitrary linearly
 independent second family produce a linearly independent Frobenius product
 grid. -/
 theorem onePointStepanovBasisGrid_linearIndependent
-    {α β : Type*} [Fintype α] [Fintype β]
+    {α β : Type*} [Finite α] [Finite β]
     (P : FiniteExtensionPlace K L)
     (u : α → L) (d : α → ℕ) (v : β → L)
     (hu : ∀ i, u i ≠ 0)
@@ -93,6 +94,8 @@ theorem onePointStepanovBasisGrid_linearIndependent
     LinearIndependent K
       (fun ij : α × β => u ij.1 * (v ij.2) ^ Fintype.card K) := by
   classical
+  let : Fintype α := Fintype.ofFinite α
+  let : Fintype β := Fintype.ofFinite β
   rw [Fintype.linearIndependent_iff]
   intro c hrelation ij
   by_contra hcZero

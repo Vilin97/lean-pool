@@ -121,13 +121,14 @@ noncomputable def exactConstantExtensionUpstairsFinitePlace
 
 include hExact
 
-omit [DecidableEq C] [DecidableEq (RatFunc C)]
-    [DecidableEq (RatFunc S)] in
+omit [Fintype C] [DecidableEq C] [DecidableEq S]
+    [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- The residue field of an upstairs height-one ideal is finite. -/
-theorem exactConstantExtensionUpstairsResidueField_finite
+theorem exactConstantExtensionUpstairsResidueField_finite [Finite C]
     (q : IsDedekindDomain.HeightOneSpectrum
       (integralClosure S[X] (ExactConstantExtension C N S))) :
     Finite q.asIdeal.ResidueField := by
+  let : Fintype C := Fintype.ofFinite C
   let : Field (ExactConstantExtension C N S) :=
     exactConstantExtensionField C N S hExact
   let : Algebra (RatFunc S) (ExactConstantExtension C N S) :=
@@ -156,10 +157,10 @@ theorem exactConstantExtensionUpstairsResidueField_finite
   let r₂ := heightOneResidueFieldRingEquiv e₂.toRingEquiv qTensor
   exact Finite.of_injective (r₂ ∘ r₁) (r₂.injective.comp r₁.injective)
 
-omit [DecidableEq C] [DecidableEq (RatFunc C)]
-    [DecidableEq (RatFunc S)] in
+omit [Fintype C] [DecidableEq C] [DecidableEq S]
+    [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)] in
 /-- Every upstairs height-one ideal is maximal. -/
-theorem exactConstantExtensionUpstairsIdeal_isMaximal
+theorem exactConstantExtensionUpstairsIdeal_isMaximal [Finite C]
     (q : IsDedekindDomain.HeightOneSpectrum
       (integralClosure S[X] (ExactConstantExtension C N S))) :
     q.asIdeal.IsMaximal := by

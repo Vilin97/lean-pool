@@ -146,6 +146,8 @@ local instance splittingTargetPolynomialAlgebra :
 variable (hExact : algebraicClosure C N =
   (⊥ : IntermediateField C N))
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] in
 /-- Every finite place is unramified in an exact extension of constants. -/
 theorem exactConstantExtensionFinitePlace_ramificationIdx_eq_one
     (Q : letI : Field (ExactConstantExtension C N S) :=
@@ -426,6 +428,8 @@ noncomputable def exactConstantExtensionPresentedFinitePlaceEquiv :
         C S N hExact))).symm
   exact first.trans (second.trans third)
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)] [DecidableEq (RatFunc S)]
+  [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 @[simp]
 theorem exactConstantExtensionPresentedFinitePlaceEquiv_apply
     (q : IsDedekindDomain.HeightOneSpectrum

@@ -360,6 +360,7 @@ noncomputable instance functionFieldNormalClosure_isGalois_over_originalComposit
     (FunctionFieldNormalClosureOriginalCompositum K F hExact)
     (FunctionFieldNormalClosure K F)
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- Enlarging the original function field to `CF` introduces exactly the
 constants `C` and no others. -/
 theorem functionFieldNormalClosureOriginalCompositumConstantField_isExact
@@ -410,6 +411,7 @@ whose constant algebra is definitionally this restriction. -/
   RingHom.toAlgebra
     ((algebraMap (RatFunc K) F).comp (algebraMap K (RatFunc K)))
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 private theorem originalMultiplicationCanonicalRatFunc_X :
     let : Algebra K F := functionFieldCanonicalConstantAlgebra K F
     let : IsScalarTower K (RatFunc K) F := IsScalarTower.of_algebraMap_eq' rfl

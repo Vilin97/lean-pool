@@ -445,6 +445,7 @@ def finiteExtensionPlaceValuation :
   | .inr P =>
       (primeOverHeightOne (ratFuncInfinityPlace K) P).valuation L
 
+omit [Fintype K] [DecidableEq K] in
 /-- Every exhaustive BGS place carries exactly the normalized valuation of
 its corresponding Riemann--Roch chart place. -/
 theorem finiteExtensionPlaceValuation_eq_chart
@@ -462,6 +463,7 @@ def finiteExtensionDivisorEquivChart :
       FunctionField.Chart.DivisorA K L :=
   Finsupp.domCongr (finiteExtensionPlaceEquivChart K L)
 
+omit [Fintype K] in
 /-- Divisor degree is preserved by the exhaustive-place/chart equivalence. -/
 theorem finiteExtensionDivisorDegree_eq_chart
     (D : FiniteExtensionDivisor K L) :

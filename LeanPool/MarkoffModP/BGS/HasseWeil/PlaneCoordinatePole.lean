@@ -79,6 +79,7 @@ theorem finiteExtensionHeight_planeCurveFirstCoordinate
           hf hpartialSecond 1 (by omega)
       simpa only [x, pow_one, one_mul] using hpositive
 
+omit [Fintype K] in
 /-- Equivalently, the effective pole divisor of the first coordinate has
 degree equal to the degree of the plane equation in the second variable. -/
 theorem finiteExtensionDivisorDegree_planeCurveFirstCoordinate_poleDivisor
@@ -141,6 +142,7 @@ theorem finiteExtensionPlaceDegree_le_divisorDegree_of_effective_of_pos
       exact Finset.single_le_sum
         (fun v _hv => mul_nonneg (hD v) (by positivity)) hPmem
 
+omit [Fintype K] [DecidableEq K] in
 /-- The first-coordinate pole divisor has nonempty support. -/
 theorem planeCurveFirstCoordinate_poleDivisor_support_nonempty
     {f : MvPolynomial (Fin 2) K} (hf : Irreducible f)
@@ -154,6 +156,7 @@ theorem planeCurveFirstCoordinate_poleDivisor_support_nonempty
     letI := separable_planeCurveFunctionField_over_ratFunc hf hpartialSecond
     (finiteExtensionPoleDivisor K (PlaneCurveFunctionField f)
       (planeCurveFunction f 0)).support.Nonempty := by
+  classical
   let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
@@ -181,6 +184,7 @@ theorem planeCurveFirstCoordinate_poleDivisor_support_nonempty
     degreeOf_second_pos_of_pderiv_ne_zero hpartialSecond
   omega
 
+omit [Fintype K] in
 /-- There is a pole place for the first coordinate.  Its coefficient in the
 pole divisor is positive, and its (not necessarily one) place degree lies
 between one and the degree of the plane equation in the second variable. -/

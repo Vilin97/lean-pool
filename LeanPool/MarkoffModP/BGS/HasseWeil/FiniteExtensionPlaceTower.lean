@@ -795,6 +795,8 @@ theorem exists_gal_smul_finitePlace_asIdeal_of_same_under
   simpa only [finitePlaceUnder_asIdeal] using
     congrArg HeightOneSpectrum.asIdeal hPQ
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] [Algebra.IsSeparable (RatFunc K) M]
+  [Algebra.IsSeparable (RatFunc K) L] in
 /-- Each finite-place restriction fiber is a transitive relative Galois
 set. -/
 theorem finitePlaceUnderFiberGalAction_isPretransitive
@@ -999,6 +1001,7 @@ theorem exists_gal_smul_infinityPlace_asIdeal_of_same_under
   simpa only [infinityPlaceUnder_asIdeal] using
     congrArg Subtype.val hPQ
 
+omit [DecidableEq K] [Algebra.IsSeparable (RatFunc K) L] in
 /-- Each infinity-place restriction fiber is a transitive relative Galois
 set. -/
 theorem infinityPlaceUnderFiberGalAction_isPretransitive
@@ -1092,6 +1095,7 @@ theorem infinityPlaceRelative_ramificationIdx_inertiaDeg_eq_of_same_under
   · unfold infinityPlaceRelativeInertiaDeg
     rw [hg, Ideal.inertiaDeg_smul]
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- In a Galois tower, the number of finite places in a restriction fiber
 times their common ramification index and inertia degree is the relative field
 degree. -/
@@ -1119,6 +1123,7 @@ theorem finitePlaceUnderFiber_card_mul_ramificationIdx_mul_inertiaDeg_eq_field_f
           K M L Q.1 Q₀.1 (Q.2.trans Q₀.2.symm)
       rw [he, hf]
 
+omit [DecidableEq K] in
 /-- The analogous Galois decomposition formula for a restriction fiber above
 infinity. -/
 theorem infinityPlaceUnderFiber_card_mul_ramificationIdx_mul_inertiaDeg_eq_field_finrank

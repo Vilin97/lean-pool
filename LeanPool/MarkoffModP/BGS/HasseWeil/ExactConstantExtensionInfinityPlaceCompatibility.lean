@@ -167,6 +167,7 @@ private theorem
         hTransport
   exact hExactTransport.trans hFinite
 
+omit [FiniteDimensional (RatFunc C) N] [Algebra.IsSeparable (RatFunc C) N] in
 /-- The affine-to-infinity localization square commutes on elements of the
 old reciprocal normalization. -/
 private theorem exactConstantExtensionInfinityAffineLocalizationSquare_coe

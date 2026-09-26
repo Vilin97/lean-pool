@@ -70,7 +70,8 @@ private theorem second_incidence_discriminant_equation
   simp only [normalizedPolynomial] at hSurface ⊢
   linear_combination -4 * hSurface
 
-private theorem normalized_first_third_point_of_discriminant_equation
+/-- A first-coordinate discriminant equation reconstructs a normalized Markoff point. -/
+theorem normalized_first_third_point_of_discriminant_equation
     {K : Type*} [Field K] (hTwo : (2 : K) ≠ 0)
     (xi middle root : K)
     (hEquation :
@@ -81,7 +82,8 @@ private theorem normalized_first_third_point_of_discriminant_equation
   field_simp [hTwo]
   linear_combination -hEquation
 
-private theorem normalized_second_third_point_of_discriminant_equation
+/-- A second-coordinate discriminant equation reconstructs a normalized Markoff point. -/
+theorem normalized_second_third_point_of_discriminant_equation
     {K : Type*} [Field K] (hTwo : (2 : K) ≠ 0)
     (eta middle root : K)
     (hEquation :

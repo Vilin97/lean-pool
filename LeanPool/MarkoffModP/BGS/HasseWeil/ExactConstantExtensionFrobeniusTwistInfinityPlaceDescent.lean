@@ -568,6 +568,7 @@ private theorem exactConstantExtensionFrobeniusTwist_zpow_includeLeft_infinity
     exactConstantExtensionConstantAlgEquivOverBase,
     exactConstantExtensionFunctionAlgEquivOverBase]
 
+omit [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc S)] in
 /-- Every infinity place of the exact constant extension is unramified over a
 Frobenius-twist fixed field, provided the twist has the full
 constant-extension order. -/

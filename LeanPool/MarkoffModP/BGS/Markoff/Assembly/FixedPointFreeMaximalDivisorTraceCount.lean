@@ -100,6 +100,7 @@ def nonTwoTorsionMaximalDivisorTraceCover
   (maximalDivisorsBelow (Fintype.card G) bound).biUnion fun m =>
     (nonTwoTorsionElementsWithPowOne (G := G) m).image trace
 
+omit [IsCyclic G] in
 /-- Every bounded-order non-two-torsion trace lies in the fixed-point-free
 maximal-divisor cover. -/
 theorem nonTwoTorsionBoundedOrderTraceSet_subset_maximalDivisorTraceCover

@@ -59,7 +59,8 @@ local instance normalizedCasesFiniteIntegralClosureIsTorsionFree :
     Module.IsTorsionFree K[X] (RatFuncFiniteIntegralClosure K L) :=
   IsIntegralClosure.isTorsionFree K[X] L
 
-private abbrev canonicalDifferent : FiniteExtensionPlace K L →₀ ℤ :=
+/-- The canonical different divisor used by the normalized finite-place estimates. -/
+abbrev normalizedFinitePlaceCanonicalDifferent : FiniteExtensionPlace K L →₀ ℤ :=
   finiteExtensionCanonicalDifferentDivisor K L
     (finiteExtensionFiniteDifferentIdeal_ne_bot K L)
 
@@ -80,7 +81,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseI_of_normalized
       (auxiliaryFamily u v h k)).det ≠ 0) :
     ((h * k + h + k : ℕ) : ℤ) *
         finiteExtensionPrincipalDivisor K L ((1 - u) / (1 - v)) (.inl q) ≤
-      ((h * k + h + k).choose 2 : ℤ) * canonicalDifferent K L (.inl q) +
+      ((h * k + h + k).choose 2 : ℤ) * normalizedFinitePlaceCanonicalDifferent K L (.inl q) +
         finiteExtensionPrincipalDivisor K L
           (indexedDedekindLocalWronskian D
             (auxiliaryFamilyDerivativeOrder h k)
@@ -91,7 +92,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseI_of_normalized
   have hcase := finiteExtensionFinitePlace_canonicalAuxiliary_caseI
     K L q D c hc hIntegral h k hn u v hu hv hu1 hv1
       huOrder hvOrder hrhoOrder hW
-  simpa only [canonicalDifferent, hcOrder] using hcase
+  simpa only [normalizedFinitePlaceCanonicalDifferent, hcOrder] using hcase
 
 /-- Canonical finite-place case (ii), outside the exceptional set without a
 pole of `(1-u)/(1-v)`. -/
@@ -107,7 +108,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseII_of_normalized
     (hW : (indexedDedekindLocalWronskian D
       (auxiliaryFamilyDerivativeOrder h k)
       (auxiliaryFamily u v h k)).det ≠ 0) :
-    0 ≤ ((h * k + h + k).choose 2 : ℤ) * canonicalDifferent K L (.inl q) +
+    0 ≤ ((h * k + h + k).choose 2 : ℤ) * normalizedFinitePlaceCanonicalDifferent K L (.inl q) +
       finiteExtensionPrincipalDivisor K L
         (indexedDedekindLocalWronskian D
           (auxiliaryFamilyDerivativeOrder h k)
@@ -118,7 +119,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseII_of_normalized
   have hcase := finiteExtensionFinitePlace_canonicalAuxiliary_caseII
     K L q D c hc hIntegral h k u v hu hv hu1 hv1
       huOrder hvOrder hrhoOrder hW
-  simpa only [canonicalDifferent, hcOrder] using hcase
+  simpa only [normalizedFinitePlaceCanonicalDifferent, hcOrder] using hcase
 
 /-- Canonical finite-place case (iii), at a positive-order place of `v`. -/
 theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIII_of_normalized
@@ -137,7 +138,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIII_of_normalized
       finiteExtensionPrincipalDivisor K L
           (finiteExtensionAuxiliaryGridProduct L u v h k) (.inl q) -
         ((h * k + h + k).choose 2 : ℤ) ≤
-      ((h * k + h + k).choose 2 : ℤ) * canonicalDifferent K L (.inl q) +
+      ((h * k + h + k).choose 2 : ℤ) * normalizedFinitePlaceCanonicalDifferent K L (.inl q) +
         finiteExtensionPrincipalDivisor K L
           (indexedDedekindLocalWronskian D
             (auxiliaryFamilyDerivativeOrder h k)
@@ -147,7 +148,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIII_of_normalized
       K L D hDX q
   have hcase := finiteExtensionFinitePlace_canonicalAuxiliary_caseIII
     K L q D c hc hIntegral h k u v hu hv hu1 hv1 hW
-  simpa only [canonicalDifferent, hcOrder] using hcase
+  simpa only [normalizedFinitePlaceCanonicalDifferent, hcOrder] using hcase
 
 /-- Canonical finite-place case (iv), at a nonpositive-order place of `v`. -/
 theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIV_of_normalized
@@ -165,7 +166,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIV_of_normalized
       finiteExtensionPrincipalDivisor K L
           (finiteExtensionAuxiliaryGridProduct L u v h k) (.inl q) -
         ((h * k + h + k).choose 2 : ℤ) ≤
-      ((h * k + h + k).choose 2 : ℤ) * canonicalDifferent K L (.inl q) +
+      ((h * k + h + k).choose 2 : ℤ) * normalizedFinitePlaceCanonicalDifferent K L (.inl q) +
         finiteExtensionPrincipalDivisor K L
           (indexedDedekindLocalWronskian D
             (auxiliaryFamilyDerivativeOrder h k)
@@ -175,7 +176,7 @@ theorem finiteExtensionFinitePlace_canonicalAuxiliary_caseIV_of_normalized
       K L D hDX q
   have hcase := finiteExtensionFinitePlace_canonicalAuxiliary_caseIV
     K L q D c hc hIntegral h k u v hu hv hu1 hv1 hW
-  simpa only [canonicalDifferent, hcOrder] using hcase
+  simpa only [normalizedFinitePlaceCanonicalDifferent, hcOrder] using hcase
 
 end
 

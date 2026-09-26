@@ -106,6 +106,7 @@ private theorem finiteExtensionFinitePrincipalDivisor_algebraMap_apply
   rw [finiteExtensionFinitePrincipalDivisor_apply, hrepr,
     finitePlaceOrder_algebraMap_eq_multiplicity q d hd]
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)] in
 private theorem finiteExtensionFinitePrincipalDivisor_algebraMap_eq_mapRange
     (d : RatFuncFiniteIntegralClosure K L) (hd : d ≠ 0) :
     finiteExtensionFinitePrincipalDivisor K L

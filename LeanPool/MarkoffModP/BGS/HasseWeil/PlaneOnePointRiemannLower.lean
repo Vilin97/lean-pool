@@ -61,6 +61,7 @@ def planeMonomialPoleLevel (x y : L) (n b : ℕ)
     (P : FiniteExtensionPlace K L) : ℕ :=
   (planeMonomialPoleBudget K L x y n b P).toNat
 
+omit [Fintype K] [DecidableEq K] in
 /-- The selected pole level is an explicit arithmetic progression in `n`. -/
 theorem planeMonomialPoleLevel_eq (x y : L) (n b : ℕ)
     (P : FiniteExtensionPlace K L) :

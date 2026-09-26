@@ -200,6 +200,10 @@ noncomputable def intermediateFrobeniusTwistFieldRatFuncAlgebra
     ((show L →+* F from algebraMap L F).comp
       (show RatFunc C →+* L from algebraMap (RatFunc C) L))
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [FiniteDimensional L N] [IsGalois L N] in
 /-- The induced rational-function algebra is compatible with the inclusion
 of the twist field into the exact constant extension. -/
 theorem intermediateFrobeniusTwistField_ratFunc_tower
@@ -364,6 +368,10 @@ noncomputable def intermediateFrobeniusTwistOverFixedField
   exact IntermediateField.subgroupEquivAlgEquiv H
     ⟨sigma, Subgroup.mem_zpowers sigma⟩
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [IsGalois L N] in
 @[simp]
 theorem intermediateFrobeniusTwistOverFixedField_apply
     (g : N ≃ₐ[L] N) (x : ExactConstantExtension C N S) :
@@ -380,6 +388,10 @@ theorem intermediateFrobeniusTwistOverFixedField_apply
     C L N S hExact g).toEquiv x = _
   rfl
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [IsGalois L N] in
 /-- The twist over its fixed field generates the full relative Galois
 group. -/
 theorem intermediateFrobeniusTwistOverFixedField_zpowers_eq_top
@@ -639,6 +651,9 @@ theorem intermediateFrobeniusTwistField_finitePlace_ramificationIdx_eq_one
   rw [hInertia]
   exact Nat.card_unique
 
+omit [Fintype C] [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [FiniteDimensional L N] [IsGalois L N] in
 /-- Restriction of an exact-constant-extension finite place through `N`
 agrees with direct restriction to the intermediate field `L`. -/
 private theorem finitePlaceUnder_intermediate_original
@@ -1575,6 +1590,10 @@ theorem exactConstantExtensionFrobeniusTwist_restrictScalars_apply
         exactConstantExtensionFunctionAlgEquivOverBase]
   | add x y hx hy => simp [hx, hy]
 
+omit [Finite S] [DecidableEq C] [DecidableEq S] [DecidableEq (RatFunc C)]
+  [DecidableEq (RatFunc S)] [FiniteDimensional (RatFunc C) N]
+  [Algebra.IsSeparable (RatFunc C) N] [FiniteDimensional (RatFunc C) L]
+  [Algebra.IsSeparable (RatFunc C) L] [FiniteDimensional L N] [IsGalois L N] in
 /-- Equality of the two twists as `C(X)`-automorphisms. -/
 theorem exactConstantExtensionFrobeniusTwist_restrictScalars
     (g : N ≃ₐ[L] N) :

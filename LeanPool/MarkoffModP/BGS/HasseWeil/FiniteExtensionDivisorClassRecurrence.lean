@@ -75,6 +75,7 @@ def finiteExtensionDivisorClassMap :
   QuotientAddGroup.mk' (finiteExtensionPrincipalDivisorSubgroup K L)
 
 omit [Fintype K] in
+omit [DecidableEq K] in
 @[simp]
 theorem finiteExtensionDivisorClassMap_principal
     (x : L) (hx : x ≠ 0) :
@@ -122,6 +123,7 @@ def finiteExtensionDivisorClassRepresentative
   Quotient.out c
 
 omit [Fintype K] in
+omit [DecidableEq K] in
 @[simp]
 theorem finiteExtensionDivisorClassMap_representative
     (c : FiniteExtensionDivisorClass K L) :

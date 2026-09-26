@@ -185,6 +185,9 @@ noncomputable def infinityPlaceOfDegreeGalAction (d : ℕ) :
         apply Subtype.ext
         exact mul_smul g h P.1 }
 
+omit [DecidableEq K] [DecidableEq (RatFunc K)]
+    [Algebra.IsSeparable (RatFunc K) M] [FiniteDimensional (RatFunc K) L]
+    [Algebra.IsSeparable (RatFunc K) L] in
 /-- On a finite-place restriction fiber, the point stabilizer is the usual
 decomposition group of the underlying place. -/
 theorem finitePlaceUnderFiber_stabilizer_eq_decompositionGroup

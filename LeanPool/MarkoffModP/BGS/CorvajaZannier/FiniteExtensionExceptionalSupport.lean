@@ -818,6 +818,7 @@ theorem finiteExtensionExceptionalSet_oneSubU_div_oneSubV_weightedOrder_lower_bo
     finiteExtensionExceptionalSet_oneSubV_div_oneSubU_weightedOrder_lower_bound
       K L f iV iU iRho hv hu hvone huone hRho
 
+omit [DecidableEq K] in
 /-- Away from the exceptional set, `u` has order zero. -/
 theorem finiteExtensionFamilyOrder_u_eq_zero_outsideExceptionalSet
     (f : A → L) (iU iV : A) (w : FiniteExtensionFamilyPlace K L f)
@@ -826,6 +827,7 @@ theorem finiteExtensionFamilyOrder_u_eq_zero_outsideExceptionalSet
   apply finiteExtensionFamilyOrder_eq_zero_of_not_mem_support K L f iU w
   exact (not_or.mp ((mem_finiteExtensionExceptionalSet_iff K L f iU iV w).not.mp hw)).1
 
+omit [DecidableEq K] in
 /-- Away from the exceptional set, `v` has order zero. -/
 theorem finiteExtensionFamilyOrder_v_eq_zero_outsideExceptionalSet
     (f : A → L) (iU iV : A) (w : FiniteExtensionFamilyPlace K L f)

@@ -43,13 +43,15 @@ local instance onePointStepanovGridConstantTower :
     IsScalarTower K (RatFunc K) L :=
   IsScalarTower.of_algebraMap_eq' rfl
 
+omit [Fintype K] [DecidableEq K] in
 /-- Multiplication by a nonzero constant does not change the order at an
 exhaustive place. -/
-theorem finiteExtensionPrincipalDivisor_smul_apply
+theorem finiteExtensionPrincipalDivisor_smul_apply [Finite K]
     (P : FiniteExtensionPlace K L) (c : K) (x : L)
     (hc : c ≠ 0) (hx : x ≠ 0) :
     finiteExtensionPrincipalDivisor K L (c • x) P =
       finiteExtensionPrincipalDivisor K L x P := by
+  classical
   have hcL : algebraMap K L c ≠ 0 :=
     by simpa only [map_zero] using (algebraMap K L).injective.ne hc
   rw [Algebra.smul_def,
@@ -161,16 +163,18 @@ theorem finiteExtensionPrincipalDivisor_sum_eq_of_unique_min
     exact finiteExtensionPrincipalDivisor_add_eq_left_of_lt
       K L P (f i) r (hf i hi) hrest0 hrestOrder
 
+omit [Fintype K] [DecidableEq K] in
 /-- A finite family of nonzero functions with pairwise distinct orders at one
 exhaustive place is linearly independent over the constant field. -/
-theorem linearIndependent_of_injective_finiteExtensionPrincipalDivisor_order
-    {ι : Type*} [Fintype ι]
+theorem linearIndependent_of_injective_finiteExtensionPrincipalDivisor_order [Finite K]
+    {ι : Type*} [Finite ι]
     (P : FiniteExtensionPlace K L) (f : ι → L)
     (hf : ∀ i, f i ≠ 0)
     (horder : Function.Injective
       (fun i => finiteExtensionPrincipalDivisor K L (f i) P)) :
     LinearIndependent K f := by
   classical
+  let : Fintype ι := Fintype.ofFinite ι
   rw [Fintype.linearIndependent_iff]
   intro c hrelation
   by_contra hnotZero
@@ -243,7 +247,7 @@ theorem onePointStepanovMixedOrder_injective
     exact Nat.eq_of_mul_eq_mul_left hs hmul
   exact Prod.ext rfl (he heEq)
 
-omit [Fintype K] in
+omit [Fintype K] [DecidableEq K] in
 /-- Exact order of a product in the one-point Stepanov grid. -/
 theorem onePointStepanovGrid_order
     {ι κ : Type*} (P : FiniteExtensionPlace K L)
@@ -265,10 +269,11 @@ theorem onePointStepanovGrid_order
   push_cast
   ring
 
+omit [Fintype K] [DecidableEq K] in
 /-- Two strict-level families whose first pole-order digit is below `s`
 produce a linearly independent Stepanov product grid. -/
-theorem onePointStepanovGrid_linearIndependent
-    {ι κ : Type*} [Fintype ι] [Fintype κ]
+theorem onePointStepanovGrid_linearIndependent [Finite K]
+    {ι κ : Type*} [Finite ι] [Finite κ]
     (P : FiniteExtensionPlace K L)
     (f : ι → L) (g : κ → L) (d : ι → ℕ) (e : κ → ℕ) (s : ℕ)
     (hf : ∀ i, f i ≠ 0) (hg : ∀ j, g j ≠ 0)
@@ -279,6 +284,7 @@ theorem onePointStepanovGrid_linearIndependent
     (hd : Function.Injective d) (he : Function.Injective e)
     (hdigit : ∀ i, d i < s) :
     LinearIndependent K (fun ij : ι × κ => f ij.1 * (g ij.2) ^ s) := by
+  classical
   apply linearIndependent_of_injective_finiteExtensionPrincipalDivisor_order
     K L P
   · intro ij

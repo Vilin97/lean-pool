@@ -134,6 +134,7 @@ theorem finitePlaceGalSmul_eq_self_over_rationalFinitePlace_of_finrank_dvd_degre
 
 end GenericUniqueFiber
 
+omit [Fintype C] [Finite S] in
 /-- Every finite place of the exact constant extension, viewed over the
 original constants `C`, has degree divisible by `[S : C]`.  This is the
 degree-theoretic expression of the inclusion of `S` in every top residue
@@ -206,6 +207,8 @@ noncomputable def exactConstantExtensionFrobeniusTwistOverFixedField
   exact IntermediateField.subgroupEquivAlgEquiv H
     ⟨sigma, Subgroup.mem_zpowers sigma⟩
 
+omit [DecidableEq C] [DecidableEq (RatFunc C)] [Algebra.IsSeparable (RatFunc C) N] [Finite S]
+  [DecidableEq S] [DecidableEq (RatFunc S)] in
 @[simp]
 theorem exactConstantExtensionFrobeniusTwistOverFixedField_apply
     (hExact : algebraicClosure C N =

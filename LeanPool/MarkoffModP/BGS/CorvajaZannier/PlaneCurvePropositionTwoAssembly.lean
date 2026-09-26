@@ -162,6 +162,7 @@ theorem planeCurvePropositionTwo_natural_of_auxiliaryBounds
         (by simpa only [A, B] using hadmissible)
         (by simpa only [a, b] using hdegree)
 
+omit [Fintype K] in
 /-- Proposition 2 in the swapped orientation `(u,v)=(y^n,x^m)`. -/
 theorem planeCurvePropositionTwo_swapped_of_auxiliaryBounds
     {f : MvPolynomial (Fin 2) K} (hf : Irreducible f)

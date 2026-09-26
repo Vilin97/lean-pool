@@ -98,7 +98,7 @@ local instance coordinatePoleInfinityIntegralClosureIsFractionRing :
     (RatFuncInfinityIntegers K) (RatFunc K) L
       (RatFuncInfinityIntegralClosure K L)
 
-omit [Fintype K] in
+omit [Fintype K] [DecidableEq K] in
 private theorem principalDivisor_algebraMap_X_inl_nonnegative
     (q : FiniteExtensionFinitePlace K L) :
     0 ≤ finiteExtensionPrincipalDivisor K L
@@ -120,7 +120,7 @@ private theorem principalDivisor_algebraMap_X_inl_nonnegative
   rw [finiteExtensionPrincipalDivisor_inl, hrepr]
   exact finitePlaceOrder_algebraMap_nonnegative q s hs
 
-omit [Fintype K] in
+omit [Fintype K] [DecidableEq K] in
 /-- At every place above the rational-function place at infinity, the image
 of `RatFunc.X` has strictly negative order.  This is stronger than merely
 knowing that some infinity place is a pole: it makes the pole divisor of the
@@ -185,7 +185,7 @@ theorem finiteExtensionPrincipalDivisor_algebraMap_X_inr_negative
 
 variable {K}
 
-omit [Fintype K] in
+omit [Fintype K] [DecidableEq K] in
 /-- The first plane coordinate has nonnegative principal-divisor order at
 every finite place in its rational-function model. -/
 theorem finiteExtensionPrincipalDivisor_planeCurveFirstCoordinate_inl_nonnegative
@@ -201,6 +201,7 @@ theorem finiteExtensionPrincipalDivisor_planeCurveFirstCoordinate_inl_nonnegativ
     ∀ q : FiniteExtensionFinitePlace K (PlaneCurveFunctionField f),
       0 ≤ finiteExtensionPrincipalDivisor K (PlaneCurveFunctionField f)
         (planeCurveFunction f 0) (.inl q) := by
+  classical
   let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
@@ -220,7 +221,7 @@ theorem finiteExtensionPrincipalDivisor_planeCurveFirstCoordinate_inl_nonnegativ
   rw [← planeCurveFirstCoordinateRatFuncAlgebra_X f hx]
   exact principalDivisor_algebraMap_X_inl_nonnegative K L q
 
-omit [Fintype K] in
+omit [Fintype K] [DecidableEq K] in
 /-- Consequently, the pole divisor of the first plane coordinate vanishes at
 every finite place. -/
 theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inl_eq_zero
@@ -236,6 +237,7 @@ theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inl_eq_zero
     ∀ q : FiniteExtensionFinitePlace K (PlaneCurveFunctionField f),
       finiteExtensionPoleDivisor K (PlaneCurveFunctionField f)
         (planeCurveFunction f 0) (.inl q) = 0 := by
+  classical
   let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
@@ -256,7 +258,7 @@ theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inl_eq_zero
     (finiteExtensionPrincipalDivisor_planeCurveFirstCoordinate_inl_nonnegative
       hf hpartialSecond q))]
 
-omit [Fintype K] in
+omit [Fintype K] [DecidableEq K] in
 /-- Every place above infinity occurs with positive coefficient in the pole
 divisor of the first plane coordinate. -/
 theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inr_positive
@@ -272,6 +274,7 @@ theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inr_positive
     ∀ P : FiniteExtensionInfinityPlace K (PlaneCurveFunctionField f),
       0 < finiteExtensionPoleDivisor K (PlaneCurveFunctionField f)
         (planeCurveFunction f 0) (.inr P) := by
+  classical
   let : IsDomain (PlaneCurveCoordinateRing f) :=
     planeCurveCoordinateRing_isDomain hf
   let hx := firstCoordinate_transcendental hf
@@ -296,6 +299,7 @@ theorem finiteExtensionPoleDivisor_planeCurveFirstCoordinate_inr_positive
   rw [finiteExtensionPoleDivisor_apply, ite_eq_left hnegative]
   omega
 
+omit [Fintype K] in
 /-- The controlled pole place for the first plane coordinate lies above the
 rational-function place at infinity.  Its positive pole coefficient and
 place-degree bound are the same as in `exists_planeCurveFirstCoordinate_polePlace`. -/

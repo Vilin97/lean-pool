@@ -75,6 +75,7 @@ noncomputable def functionFieldNormalClosureConstantBaseRatFuncAlgHom :
       FunctionFieldNormalClosureConstantBase K L :=
   (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv K L).toAlgHom
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 /-- The rational-function specialization onto the kernel fixed field is
 surjective because the parameter generates that field over its constants. -/
 theorem functionFieldNormalClosureConstantBaseRatFuncAlgHom_surjective :
@@ -82,6 +83,7 @@ theorem functionFieldNormalClosureConstantBaseRatFuncAlgHom_surjective :
       (functionFieldNormalClosureConstantBaseRatFuncAlgHom K L) :=
   (functionFieldNormalClosureConstantBaseRatFuncAlgEquiv K L).surjective
 
+omit [Fintype K] [DecidableEq K] [DecidableEq (RatFunc K)] in
 @[simp]
 theorem functionFieldNormalClosureConstantBaseRatFuncAlgEquiv_X :
     functionFieldNormalClosureConstantBaseRatFuncAlgEquiv K L RatFunc.X =

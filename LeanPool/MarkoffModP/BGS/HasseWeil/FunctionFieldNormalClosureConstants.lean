@@ -155,6 +155,7 @@ local instance normalClosureConstantModule :
     Module K (FunctionFieldNormalClosureConstantField K L) := Algebra.toModule
 
 omit [DecidableEq (RatFunc K)] in
+omit [DecidableEq K] in
 /-- Frobenius on the finite algebraic constant field has order equal to its
 degree over `K`. -/
 theorem orderOf_functionFieldNormalClosureConstantFrobenius :

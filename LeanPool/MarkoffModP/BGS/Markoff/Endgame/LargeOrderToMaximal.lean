@@ -22,7 +22,8 @@ namespace BGS.Markoff
 
 noncomputable section
 
-private theorem three_ne_zero_zmod_of_prime_ne_three
+/-- Three is nonzero in a prime residue field of characteristic different from three. -/
+theorem endgame_three_ne_zero_zmod_of_prime_ne_three
     (p : ℕ) [Fact p.Prime] (hpThree : p ≠ 3) : (3 : ZMod p) ≠ 0 := by
   intro hzero
   have hpDvd : p ∣ 3 := (ZMod.natCast_eq_zero_iff 3 p).mp hzero
@@ -40,7 +41,7 @@ theorem exists_threshold_sameComponent_maximalRotation_of_large_firstCoordinate
     {δ : ℝ} (hδ : 0 < δ) :
     ∃ threshold : ℕ, ∀ p : ℕ, threshold ≤ p → [Fact p.Prime] → ∀ hpThree : p ≠ 3,
       letI : Invertible (3 : ZMod p) :=
-        invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+        invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
       ∀ x : NormalizedMarkoffSurface (ZMod p),
         (p : ℝ) ^ ((1 : ℝ) / 2 + δ) ≤ rotationOrder x.1.u1 →
         ∃ y : NormalizedMarkoffSurface (ZMod p),
@@ -51,7 +52,7 @@ theorem exists_threshold_sameComponent_maximalRotation_of_large_firstCoordinate
   refine ⟨max threshold 5, ?_⟩
   intro p hp _ hpThree
   let : Invertible (3 : ZMod p) :=
-    invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+    invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x hlarge
   have hpThreshold : threshold ≤ p := (le_max_left threshold 5).trans hp
   let xf : ↥(normalizedFiber1 x.1.u1) := ⟨x.1, x.property, rfl⟩
@@ -72,7 +73,7 @@ theorem exists_threshold_sameComponent_maximalRotation_of_some_largeCoordinate
     {δ : ℝ} (hδ : 0 < δ) :
     ∃ threshold : ℕ, ∀ p : ℕ, threshold ≤ p → [Fact p.Prime] → ∀ hpThree : p ≠ 3,
       letI : Invertible (3 : ZMod p) :=
-        invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+        invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
       ∀ x : NormalizedMarkoffSurface (ZMod p),
         ((p : ℝ) ^ ((1 : ℝ) / 2 + δ) ≤ rotationOrder x.1.u1 ∨
           (p : ℝ) ^ ((1 : ℝ) / 2 + δ) ≤ rotationOrder x.1.u2 ∨
@@ -85,7 +86,7 @@ theorem exists_threshold_sameComponent_maximalRotation_of_some_largeCoordinate
   refine ⟨threshold, ?_⟩
   intro p hp _ hpThree
   let : Invertible (3 : ZMod p) :=
-    invertibleOfNonzero (three_ne_zero_zmod_of_prime_ne_three p hpThree)
+    invertibleOfNonzero (endgame_three_ne_zero_zmod_of_prime_ne_three p hpThree)
   intro x hlarge
   rcases hlarge with hfirstLarge | hsecondLarge | hthirdLarge
   · exact hfirst p hp hpThree x hfirstLarge
