@@ -992,82 +992,6 @@ theorem PVM.integral_mem_domain_unboundedIntegral
   rw [← hL2']
   exact ENNReal.ofReal_lt_top
 
-private noncomputable def boundedTruncation
-    (g : ℝ → ℂ) (n : ℕ) (r : ℝ) : ℂ :=
-  if ‖g r‖ ≤ n then g r else 0
-
-private theorem boundedTruncation_measurable
-    (g : ℝ → ℂ) (hg : Measurable g) (n : ℕ) :
-    Measurable (boundedTruncation g n) := by
-  unfold boundedTruncation
-  exact Measurable.ite (measurableSet_le hg.norm measurable_const) hg measurable_const
-
-private theorem norm_boundedTruncation_le
-    (g : ℝ → ℂ) (n : ℕ) (r : ℝ) :
-    ‖boundedTruncation g n r‖ ≤ n := by
-  by_cases hr : ‖g r‖ ≤ n
-  · rw [boundedTruncation, ite_eq_left hr]
-    exact hr
-  · rw [boundedTruncation, ite_eq_right hr, norm_zero]
-    exact Nat.cast_nonneg n
-
-private theorem boundedTruncation_tendsto
-    (g : ℝ → ℂ) (r : ℝ) :
-    Filter.Tendsto (fun n => boundedTruncation g n r)
-      Filter.atTop (nhds (g r)) := by
-  obtain ⟨N, hN⟩ := exists_nat_ge ‖g r‖
-  refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [boundedTruncation, ite_eq_left]
-  exact hN.trans (Nat.cast_le.2 hn)
-
-private theorem boundedTruncation_sub_error_measurable
-    (g : ℝ → ℂ) (hg : Measurable g) (n : ℕ) :
-    Measurable (fun r =>
-      (↑(‖boundedTruncation g n r - g r‖₊ ^ 2) : ENNReal)) := by
-  have hnorm := ((boundedTruncation_measurable g hg n).sub hg).nnnorm.pow_const 2
-  exact hnorm.coe_nnreal_ennreal
-
-private theorem boundedTruncation_sub_error_le
-    (g : ℝ → ℂ) (n : ℕ) (r : ℝ) :
-    (↑(‖boundedTruncation g n r - g r‖₊ ^ 2) : ENNReal) ≤
-      (↑(‖g r‖₊ ^ 2) : ENNReal) := by
-  by_cases hr : ‖g r‖ ≤ n
-  · rw [boundedTruncation, ite_eq_left hr, sub_self, nnnorm_zero,
-      zero_pow (by omega)]
-    exact bot_le
-  · rw [boundedTruncation, ite_eq_right hr, zero_sub, nnnorm_neg]
-
-private theorem boundedTruncation_sub_error_tendsto_zero
-    (g : ℝ → ℂ) (r : ℝ) :
-    Filter.Tendsto
-      (fun n => (↑(‖boundedTruncation g n r - g r‖₊ ^ 2) : ENNReal))
-      Filter.atTop (nhds 0) := by
-  obtain ⟨N, hN⟩ := exists_nat_ge ‖g r‖
-  refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [boundedTruncation, ite_eq_left, sub_self, nnnorm_zero,
-    zero_pow (by omega), ENNReal.coe_zero]
-  exact hN.trans (Nat.cast_le.2 hn)
-
-private theorem PVM.lintegral_boundedTruncation_sub_error_tendsto_zero
-    (E_pvm : PVM E) (g : ℝ → ℂ) (hg : Measurable g)
-    (x : (E_pvm.unboundedIntegral g hg).domain) :
-    Filter.Tendsto
-      (fun n => ∫⁻ r,
-        (↑(‖boundedTruncation g n r - g r‖₊ ^ 2) : ENNReal)
-          ∂E_pvm.scalarMeasure (x : E))
-      Filter.atTop (nhds 0) := by
-  have h := tendsto_lintegral_of_dominated_convergence
-    (μ := E_pvm.scalarMeasure (x : E))
-    (F := fun n r =>
-      (↑(‖boundedTruncation g n r - g r‖₊ ^ 2) : ENNReal))
-    (f := fun _ => 0)
-    (fun r => (↑(‖g r‖₊ ^ 2) : ENNReal))
-    (fun n => boundedTruncation_sub_error_measurable g hg n)
-    (fun n => ae_of_all _ fun r => boundedTruncation_sub_error_le g n r)
-    x.property.ne
-    (ae_of_all _ fun r => boundedTruncation_sub_error_tendsto_zero g r)
-  simpa only [lintegral_zero] using h
-
 omit [InnerProductSpace ℂ E] [CompleteSpace E] in
 private theorem tendsto_of_ofReal_norm_sq_sub_tendsto_zero
     {u : ℕ → E} {y : E}
@@ -1088,28 +1012,20 @@ private theorem PVM.tendsto_integral_boundedTruncation
     (E_pvm : PVM E) (g : ℝ → ℂ) (hg : Measurable g)
     (x : (E_pvm.unboundedIntegral g hg).domain) :
     Filter.Tendsto
-      (fun n => E_pvm.integral (boundedTruncation g n)
-        (boundedTruncation_measurable g hg n)
-        ⟨n, norm_boundedTruncation_le g n⟩ (x : E))
+      (fun n => E_pvm.integral (PVM.spectralTruncation g n)
+        (PVM.spectralTruncation_measurable g hg n)
+        ⟨n, PVM.norm_spectralTruncation_le g n⟩ (x : E))
       Filter.atTop (nhds (E_pvm.unboundedIntegral g hg x)) := by
-  apply tendsto_of_ofReal_norm_sq_sub_tendsto_zero
-  have herr := E_pvm.lintegral_boundedTruncation_sub_error_tendsto_zero g hg x
-  apply herr.congr'
-  apply Filter.Eventually.of_forall
-  intro n
-  simpa only [ENNReal.coe_pow] using
-    (E_pvm.ofReal_norm_sq_integral_sub_unboundedIntegral
-      (boundedTruncation g n) (boundedTruncation_measurable g hg n)
-      ⟨n, norm_boundedTruncation_le g n⟩ g hg x).symm
+  exact (E_pvm.cauchySeq_truncatedIntegral g hg x).tendsto_limUnder
 
 private theorem boundedTruncation_mul_bounded
     (g f : ℝ → ℂ) (n : ℕ) (hf : ∃ C, ∀ r, ‖f r‖ ≤ C) :
-    ∃ C, ∀ r, ‖(boundedTruncation g n * f) r‖ ≤ C := by
+    ∃ C, ∀ r, ‖(PVM.spectralTruncation g n * f) r‖ ≤ C := by
   obtain ⟨C, hC⟩ := hf
   refine ⟨n * C, fun r => ?_⟩
-  change ‖boundedTruncation g n r * f r‖ ≤ (n : ℝ) * C
+  change ‖PVM.spectralTruncation g n r * f r‖ ≤ (n : ℝ) * C
   rw [norm_mul]
-  exact mul_le_mul (norm_boundedTruncation_le g n r) (hC r)
+  exact mul_le_mul (PVM.norm_spectralTruncation_le g n r) (hC r)
     (norm_nonneg (f r)) (Nat.cast_nonneg n)
 
 private theorem sub_bounded
@@ -1124,30 +1040,30 @@ private theorem sub_bounded
 private theorem boundedTruncation_mul_sub_error_measurable
     (g f : ℝ → ℂ) (hg : Measurable g) (hf : Measurable f) (n : ℕ) :
     Measurable (fun r =>
-      (↑(‖boundedTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal)) := by
-  have hnorm := ((((boundedTruncation_measurable g hg n).mul hf).sub
+      (↑(‖PVM.spectralTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal)) := by
+  have hnorm := ((((PVM.spectralTruncation_measurable g hg n).mul hf).sub
     (hg.mul hf)).nnnorm.pow_const 2)
   exact hnorm.coe_nnreal_ennreal
 
 private theorem boundedTruncation_mul_sub_error_le
     (g f : ℝ → ℂ) (n : ℕ) (r : ℝ) :
-    (↑(‖boundedTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal) ≤
+    (↑(‖PVM.spectralTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal) ≤
       (↑(‖g r * f r‖₊ ^ 2) : ENNReal) := by
   by_cases hr : ‖g r‖ ≤ n
-  · rw [boundedTruncation, ite_eq_left hr, sub_self, nnnorm_zero,
+  · rw [PVM.spectralTruncation, ite_eq_left hr, sub_self, nnnorm_zero,
       zero_pow (by omega)]
     exact bot_le
-  · rw [boundedTruncation, ite_eq_right hr, zero_mul, zero_sub, nnnorm_neg]
+  · rw [PVM.spectralTruncation, ite_eq_right hr, zero_mul, zero_sub, nnnorm_neg]
 
 private theorem boundedTruncation_mul_sub_error_tendsto_zero
     (g f : ℝ → ℂ) (r : ℝ) :
     Filter.Tendsto
       (fun n =>
-        (↑(‖boundedTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal))
+        (↑(‖PVM.spectralTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal))
       Filter.atTop (nhds 0) := by
   obtain ⟨N, hN⟩ := exists_nat_ge ‖g r‖
   refine tendsto_atTop_of_eventually_const (i₀ := N) fun n hn => ?_
-  rw [boundedTruncation, ite_eq_left, sub_self, nnnorm_zero,
+  rw [PVM.spectralTruncation, ite_eq_left, sub_self, nnnorm_zero,
     zero_pow (by omega), ENNReal.coe_zero]
   exact hN.trans (Nat.cast_le.2 hn)
 
@@ -1156,8 +1072,8 @@ private theorem PVM.tendsto_integral_boundedTruncation_mul
     (hfBdd : ∃ C, ∀ r, ‖f r‖ ≤ C)
     (hprodBdd : ∃ C, ∀ r, ‖(g * f) r‖ ≤ C) (x : E) :
     Filter.Tendsto
-      (fun n => E_pvm.integral (boundedTruncation g n * f)
-        ((boundedTruncation_measurable g hg n).mul hf)
+      (fun n => E_pvm.integral (PVM.spectralTruncation g n * f)
+        ((PVM.spectralTruncation_measurable g hg n).mul hf)
         (boundedTruncation_mul_bounded g f n hfBdd) x)
       Filter.atTop
       (nhds (E_pvm.integral (g * f) (hg.mul hf) hprodBdd x)) := by
@@ -1176,13 +1092,13 @@ private theorem PVM.tendsto_integral_boundedTruncation_mul
     exact ENNReal.ofReal_ne_top
   have herr : Filter.Tendsto
       (fun n => ∫⁻ r,
-        (↑(‖boundedTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal)
+        (↑(‖PVM.spectralTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal)
           ∂E_pvm.scalarMeasure x)
       Filter.atTop (nhds 0) := by
     have h := tendsto_lintegral_of_dominated_convergence
       (μ := E_pvm.scalarMeasure x)
       (F := fun n r =>
-        (↑(‖boundedTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal))
+        (↑(‖PVM.spectralTruncation g n r * f r - g r * f r‖₊ ^ 2) : ENNReal))
       (f := fun _ => 0)
       (fun r => (↑(‖g r * f r‖₊ ^ 2) : ENNReal))
       (fun n => boundedTruncation_mul_sub_error_measurable g f hg hf n)
@@ -1193,9 +1109,9 @@ private theorem PVM.tendsto_integral_boundedTruncation_mul
   apply herr.congr'
   apply Filter.Eventually.of_forall
   intro n
-  let fn : ℝ → ℂ := boundedTruncation g n * f
+  let fn : ℝ → ℂ := PVM.spectralTruncation g n * f
   let p : ℝ → ℂ := g * f
-  have hfn : Measurable fn := (boundedTruncation_measurable g hg n).mul hf
+  have hfn : Measurable fn := (PVM.spectralTruncation_measurable g hg n).mul hf
   have hp : Measurable p := hg.mul hf
   have hfnBdd : ∃ C, ∀ r, ‖fn r‖ ≤ C :=
     boundedTruncation_mul_bounded g f n hfBdd
@@ -1227,21 +1143,21 @@ theorem PVM.unboundedIntegral_integral
   have hright := E_pvm.tendsto_integral_boundedTruncation_mul
     g f hg hf hfBdd hprodBdd x
   have hseq (n : ℕ) :
-      E_pvm.integral (boundedTruncation g n)
-          (boundedTruncation_measurable g hg n)
-          ⟨n, norm_boundedTruncation_le g n⟩ (z : E) =
-        E_pvm.integral (boundedTruncation g n * f)
-          ((boundedTruncation_measurable g hg n).mul hf)
+      E_pvm.integral (PVM.spectralTruncation g n)
+          (PVM.spectralTruncation_measurable g hg n)
+          ⟨n, PVM.norm_spectralTruncation_le g n⟩ (z : E) =
+        E_pvm.integral (PVM.spectralTruncation g n * f)
+          ((PVM.spectralTruncation_measurable g hg n).mul hf)
           (boundedTruncation_mul_bounded g f n hfBdd) x := by
-    have hop := E_pvm.integral_mul (boundedTruncation g n) f
-      (boundedTruncation_measurable g hg n) hf
-      ⟨n, norm_boundedTruncation_le g n⟩ hfBdd
+    have hop := E_pvm.integral_mul (PVM.spectralTruncation g n) f
+      (PVM.spectralTruncation_measurable g hg n) hf
+      ⟨n, PVM.norm_spectralTruncation_le g n⟩ hfBdd
       (boundedTruncation_mul_bounded g f n hfBdd)
     have happ := congrArg (fun T : E →L[ℂ] E => T x) hop
     simpa only [mul_apply_eq_comp, z] using happ.symm
   have hleft' : Filter.Tendsto
-      (fun n => E_pvm.integral (boundedTruncation g n * f)
-        ((boundedTruncation_measurable g hg n).mul hf)
+      (fun n => E_pvm.integral (PVM.spectralTruncation g n * f)
+        ((PVM.spectralTruncation_measurable g hg n).mul hf)
         (boundedTruncation_mul_bounded g f n hfBdd) x)
       Filter.atTop (nhds (E_pvm.unboundedIntegral g hg z)) := by
     apply hleft.congr'

@@ -32,48 +32,6 @@ private theorem phaseGroup_norm (U : StrongContUnitary E) (t : ℝ) (x : E) :
     ‖U.toFun t x‖ = ‖x‖ :=
   ContinuousLinearMap.norm_map_of_mem_unitary (U.isUnitary t) x
 
-private theorem generator_domain_invariant (U : StrongContUnitary E)
-    (s : ℝ) (x : U.generator.domain) :
-    U.toFun s (x : E) ∈ U.generator.domain := by
-  rw [U.mem_generator_domain_iff]
-  refine ⟨U.toFun s (U.generator x), ?_⟩
-  convert Tendsto.comp (U.toFun s).continuous.continuousAt
-    (U.tendsto_generator x) using 1
-  funext t
-  change (Complex.I * (t : ℂ))⁻¹ •
-      (U.toFun t (U.toFun s (x : E)) - U.toFun s (x : E)) =
-    U.toFun s ((Complex.I * (t : ℂ))⁻¹ • (U.toFun t (x : E) - x))
-  rw [map_smul, map_sub]
-  congr 1
-  rw [← mul_apply_eq_comp, ← U.add]
-  rw [add_comm, U.add, mul_apply_eq_comp]
-
-private theorem orbit_hasDerivAt (U : StrongContUnitary E)
-    (x : U.generator.domain) (s : ℝ) :
-    HasDerivAt (fun t : ℝ ↦ U.toFun t (x : E))
-      (Complex.I • U.toFun s (U.generator x)) s := by
-  rw [hasDerivAt_iff_tendsto_slope_zero]
-  have hscaled := (U.tendsto_generator x).const_smul Complex.I
-  have hmapped := Tendsto.comp (U.toFun s).continuous.continuousAt hscaled
-  convert hmapped using 1
-  · funext t
-    change (t⁻¹ : ℝ) • (U.toFun (s + t) (x : E) - U.toFun s (x : E)) =
-      U.toFun s (Complex.I • ((Complex.I * (t : ℂ))⁻¹ •
-        (U.toFun t (x : E) - (x : E))))
-    rw [U.add, mul_apply_eq_comp]
-    rw [RCLike.real_smul_eq_coe_smul (K := ℂ)]
-    rw [← map_sub, ← map_smul]
-    congr 1
-    rw [smul_smul]
-    congr 1
-    rw [mul_inv_rev, Complex.inv_I]
-    ring_nf
-    rw [Complex.I_sq]
-    rw [neg_mul, one_mul, neg_neg]
-    change ((t⁻¹ : ℝ) : ℂ) = ((t : ℝ) : ℂ)⁻¹
-    exact Complex.ofReal_inv t
-  · rw [map_smul]
-
 private theorem tendsto_phaseGroup_apply
     (U : StrongContUnitary E) {α : Type*} {l : Filter α}
     {t : α → ℝ} {t₀ : ℝ} {y : α → E} {y₀ : E}
@@ -103,8 +61,8 @@ private theorem relativeOrbit_hasDerivAt_zero
       (fun h : ℝ => h⁻¹ • (V.toFun h y - y))
       (nhdsWithin 0 {0}ᶜ) (nhds (Complex.I • V.generator yv)) := by
     simpa only [zero_add, V.zero, one_apply_eq_self] using
-      (orbit_hasDerivAt V yv 0).tendsto_slope_zero
-  have hUneg := (orbit_hasDerivAt U yu 0).scomp_of_eq
+      (StrongContUnitary.orbit_hasDerivAt V yv 0).tendsto_slope_zero
+  have hUneg := (StrongContUnitary.orbit_hasDerivAt U yu 0).scomp_of_eq
     (0 : ℝ) (hasDerivAt_neg (0 : ℝ)) (by simp only [neg_zero])
   have hUslope : Tendsto
       (fun h : ℝ => h⁻¹ • (U.toFun (-h) y - y))
@@ -150,7 +108,7 @@ private theorem relativeOrbit_hasDerivAt
   let xv : V.generator.domain := ⟨(x : E), hxV⟩
   let y : E := V.toFun s (x : E)
   have hyV : y ∈ V.generator.domain :=
-    generator_domain_invariant V s xv
+    StrongContUnitary.generator_domain_invariant V s xv
   have hyU : y ∈ U.generator.domain := by
     rw [hdomain]
     exact hyV
@@ -278,33 +236,19 @@ private theorem proj_eq_of_scalarMeasure_eq (E₁ E₂ : PVM E)
   intro x
   exact DFunLike.congr_fun hlinear x
 
-private noncomputable def characteristicPhase (t r : ℝ) : ℂ :=
-  Complex.exp (Complex.I * (t : ℂ) * (r : ℂ))
-
-private theorem characteristicPhase_measurable (t : ℝ) :
-    Measurable (characteristicPhase t) := by
-  unfold characteristicPhase
-  fun_prop
-
-private theorem characteristicPhase_bounded (t : ℝ) :
-    ∀ r, ‖characteristicPhase t r‖ ≤ 1 := by
-  intro r
-  rw [characteristicPhase, mul_assoc, ← Complex.ofReal_mul,
-    Complex.norm_exp_I_mul_ofReal]
-
 private theorem inner_phaseUnitaryGroup (E_pvm : PVM E) (x : E) (t : ℝ) :
     @inner ℂ E _ x (E_pvm.phaseUnitaryGroup.toFun t x) =
       charFun (E_pvm.scalarMeasure x) t := by
   rw [charFun_apply_real]
   change @inner ℂ E _ x
-    (E_pvm.integral (characteristicPhase t) (characteristicPhase_measurable t)
-      ⟨1, characteristicPhase_bounded t⟩ x) = _
-  have hinner := PVM.inner_integral_self E_pvm (characteristicPhase t)
-    (characteristicPhase_measurable t) ⟨1, characteristicPhase_bounded t⟩ x
+    (E_pvm.integral (stonePhase t) (stonePhase_measurable t)
+      ⟨1, stonePhase_bounded t⟩ x) = _
+  have hinner := PVM.inner_integral_self E_pvm (stonePhase t)
+    (stonePhase_measurable t) ⟨1, stonePhase_bounded t⟩ x
   rw [hinner]
   congr 1
   funext r
-  unfold characteristicPhase
+  unfold stonePhase
   congr 1
   ring
 

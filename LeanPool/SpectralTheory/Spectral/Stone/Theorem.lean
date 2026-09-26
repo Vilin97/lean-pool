@@ -30,11 +30,11 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 noncomputable def stonePhase (t r : ℝ) : ℂ :=
   Complex.exp (Complex.I * (t : ℂ) * (r : ℂ))
 
-private theorem stonePhase_measurable (t : ℝ) : Measurable (stonePhase t) := by
+theorem stonePhase_measurable (t : ℝ) : Measurable (stonePhase t) := by
   unfold stonePhase
   fun_prop
 
-private theorem stonePhase_norm (t r : ℝ) : ‖stonePhase t r‖ = 1 := by
+theorem stonePhase_norm (t r : ℝ) : ‖stonePhase t r‖ = 1 := by
   rw [stonePhase, mul_assoc, ← Complex.ofReal_mul]
   exact Complex.norm_exp_I_mul_ofReal (t * r)
 
@@ -48,7 +48,7 @@ private theorem stonePhase_add (s t r : ℝ) :
   push_cast
   ring
 
-private theorem stonePhase_bounded (t : ℝ) : ∀ r, ‖stonePhase t r‖ ≤ 1 :=
+theorem stonePhase_bounded (t : ℝ) : ∀ r, ‖stonePhase t r‖ ≤ 1 :=
   fun r => (stonePhase_norm t r).le
 
 private theorem PVM.integral_const_mul_local (E_pvm : PVM E)

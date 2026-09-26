@@ -58,7 +58,8 @@ private theorem tendsto_neg_punctured : Filter.Tendsto (fun t : ℝ ↦ -t)
   change nhdsWithin (-(0 : ℝ)) {-(0 : ℝ)}ᶜ ≤ nhdsWithin 0 {0}ᶜ
   rw [neg_zero]
 
-private theorem generator_domain_invariant (U : StrongContUnitary E)
+/-- The generator domain is invariant under its unitary group. -/
+theorem generator_domain_invariant (U : StrongContUnitary E)
     (s : ℝ) (x : U.generator.domain) :
     U.toFun s (x : E) ∈ U.generator.domain := by
   rw [U.mem_generator_domain_iff]
@@ -235,7 +236,8 @@ private theorem weightedOrbit_integrableOn_Ioi
     rw [norm_smul, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _), norm_toFun]
     exact (mul_comm _ _).le
 
-private theorem orbit_hasDerivAt (U : StrongContUnitary E)
+/-- The derivative of a unitary orbit is given by its generator. -/
+theorem orbit_hasDerivAt (U : StrongContUnitary E)
     (x : U.generator.domain) (s : ℝ) :
     HasDerivAt (fun t : ℝ ↦ U.toFun t (x : E))
       (Complex.I • U.toFun s (U.generator x)) s := by
