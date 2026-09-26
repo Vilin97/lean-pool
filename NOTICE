@@ -197,6 +197,7 @@ Apache License, Version 2.0, and are redistributed here under the same license.
   LeanPool/SetTheory                 https://github.com/znssong/SetTheory
   LeanPool/SingularModuli            https://github.com/ElodinLaarz/lean-thesis
   LeanPool/SpectralPositivity        https://github.com/mrdouglasny/spectral-positivity
+  LeanPool/SpectralTheory            https://github.com/savarin/lean-spectral-theory
   LeanPool/SpherePacking             https://github.com/openai/ten-proofs
   LeanPool/SumDifferenceExponent     https://github.com/linhaowei1/sum-diff-proof
   LeanPool/SumsThreeSquares          https://github.com/pitmonticone/SumsThreeSquares
