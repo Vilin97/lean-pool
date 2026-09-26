@@ -10471,6 +10471,12 @@ projects:
       scope: All four Stallings library modules and the proved finite-recognizer endpoint from
         Solution.lean. The standalone challenge placeholder, statement-audit tooling, and CI
         files are omitted. Mathlib is the only dependency.
+      port_extensions: >-
+        Flower vertices now contain exactly the internal positions of each word,
+        instead of padding all words to a common maximum length. The new Restriction
+        module proves preservation when folding an edge-closed finite vertex set
+        containing the basepoint; its potential is required only on the selected set.
+        These AI-assisted port extensions are not attributed to the upstream release.
       provenance_note: Upstream formalization.yaml records human-directed GPT-6 Codex proof
         development. Lean Pool porting, cleanup, and optimization were also performed by OpenAI
         Codex. Author attribution follows upstream.

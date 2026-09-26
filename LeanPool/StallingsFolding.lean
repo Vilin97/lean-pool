@@ -7,6 +7,7 @@ module
 
 public import LeanPool.StallingsFolding.BasisRose
 public import LeanPool.StallingsFolding.Recognizer
+public import LeanPool.StallingsFolding.Restriction
 
 /-!
 # Verified Stallings folding for finitely generated subgroups of F2

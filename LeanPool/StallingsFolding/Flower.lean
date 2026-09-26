@@ -8,7 +8,8 @@ module
 public import LeanPool.StallingsFolding.Folding
 public import Mathlib.Data.List.TakeDrop
 public import Mathlib.Data.Fintype.Option
-public import Mathlib.Data.Prod.Lex
+public import Mathlib.Data.Fintype.Sigma
+public import Mathlib.Data.Sigma.Order
 public import Mathlib.Data.Sum.Order
 
 /-!
@@ -39,12 +40,13 @@ theorem length_le_maxWordLength_of_mem {S : List Word} {w : Word} (h : w ∈ S) 
       · exact (ih h).trans (Nat.le_max_right _ _)
 
 /-- A finite vertex type for the flower of `S`. `none` is the common basepoint;
-`some (i,k)` is the vertex after `k` letters of the `i`th generator. -/
-abbrev FlowerVertex (S : List Word) := Option (Fin S.length × Fin (maxWordLength S + 1))
+`some ⟨i,k⟩` is the vertex after `k + 1` letters of the `i`th generator.
+Only internal positions are retained; empty and singleton words add no vertices. -/
+abbrev FlowerVertex (S : List Word) := Option (Σ i : Fin S.length, Fin ((S.get i).length - 1))
 
 /-- Encode flower vertices in a finite lexicographic order. -/
 def flowerVertexOrderCode {S : List Word} :
-    FlowerVertex S → Unit ⊕ₗ (Fin S.length ×ₗ Fin (maxWordLength S + 1))
+    FlowerVertex S → Unit ⊕ₗ (Σₗ i : Fin S.length, Fin ((S.get i).length - 1))
   | none => toLex (Sum.inl ())
   | some p => toLex (Sum.inr (toLex p))
 
@@ -79,10 +81,7 @@ def flowerPos (S : List Word) (i : Fin S.length) (k : Nat)
   if hk0 : k = 0 then none
   else if hkend : k = (S.get i).length then none
   else
-    some (i, ⟨k, by
-      have hkl : k < (S.get i).length := lt_of_le_of_ne hk hkend
-      have hmax := length_le_maxWordLength_of_mem (List.get_mem S i)
-      omega⟩)
+    some ⟨i, ⟨k - 1, by omega⟩⟩
 
 /-- The source vertex of the edge in position `j` of a generator. -/
 def flowerSource (S : List Word) (i : Fin S.length) (j : Fin (S.get i).length) :
@@ -144,18 +143,14 @@ def flowerGraph (S : List Word) : InverseMultigraph (FlowerVertex S) where
 def generatorSubgroup (S : List Word) : Subgroup Free :=
   Subgroup.closure (Set.range fun i : Fin S.length => wordEval (S.get i))
 
-/-- The canonical word potential of a flower vertex. Vertices beyond the end
-of an input loop are isolated padding states and receive value `1`. -/
+/-- The word prefix reaching an internal flower vertex, with `1` at the basepoint. -/
 def flowerPotential (S : List Word) : FlowerVertex S → Free
   | none => 1
-  | some (i, k) =>
-      if k.val < (S.get i).length then wordEval ((S.get i).take k.val) else 1
+  | some ⟨i, k⟩ => wordEval ((S.get i).take (k.val + 1))
 
 private theorem flowerPos_internal (S : List Word) (i : Fin S.length) {k : Nat}
     (hk0 : 0 < k) (hk : k < (S.get i).length) :
-    flowerPos S i k (Nat.le_of_lt hk) = some (i, ⟨k, by
-      have hmax := length_le_maxWordLength_of_mem (List.get_mem S i)
-      omega⟩) := by
+    flowerPos S i k (Nat.le_of_lt hk) = some ⟨i, ⟨k - 1, by omega⟩⟩ := by
   unfold flowerPos
   rw [dite_eq_right (by omega : ¬ k = 0), dite_eq_right (by omega : ¬ k = (S.get i).length)]
 
@@ -168,8 +163,8 @@ private theorem flowerPotential_pos (S : List Word) (i : Fin S.length) {k : Nat}
     simp [flowerPos, flowerPotential, wordEval_nil]
   · have hpos := flowerPos_internal S i (Nat.pos_of_ne_zero hk0) hk
     rw [hpos]
-    change (if k < (S.get i).length then wordEval ((S.get i).take k) else 1) = _
-    rw [ite_eq_left hk]
+    change wordEval ((S.get i).take (k - 1 + 1)) = _
+    rw [Nat.sub_add_cancel (by omega)]
 
 private theorem wordEval_take_succ (w : Word) (k : Nat) (hk : k < w.length) :
     wordEval (w.take (k + 1)) = wordEval (w.take k) * letterEval (w.get ⟨k, hk⟩) := by
