@@ -70,6 +70,114 @@ lemma mobiusFun_mem (c : NNReal) (hc : 0 < c) {t : NNReal} (ht : t ∈ Ioo (0 : 
   rw [mobiusFun, div_lt_one hden]
   exact lt_add_of_pos_right t (mul_pos hc (tsub_pos_of_lt ht.2))
 
+private lemma mobiusInverse_mem (c : NNReal) (hc : 0 < c) :
+    ∀ y ∈ Ioo (0 : NNReal) 1,
+      c * y / ((1 - y) + c * y) ∈ Ioo (0 : NNReal) 1 := by
+  intro y hy
+  have hden : 0 < (1 - y) + c * y :=
+    lt_of_lt_of_le (tsub_pos_of_lt hy.2) le_self_add
+  exact ⟨div_pos (mul_pos hc hy.1) hden,
+    (div_lt_one hden).mpr (lt_add_of_pos_left _ (tsub_pos_of_lt hy.2))⟩
+
+private lemma coe_mobiusFun (c : NNReal) : ∀ x : NNReal, x ≤ 1 →
+    ((mobiusFun c x : NNReal) : ℝ) = (x : ℝ) / ((x : ℝ) + c * (1 - (x : ℝ))) := by
+  intro x hx1
+  rw [mobiusFun]
+  push_cast [NNReal.coe_sub hx1]
+  ring
+
+private lemma mobiusInverse_left (c : NNReal) (hc : 0 < c) :
+    ∀ x ∈ Ioo (0 : NNReal) 1,
+      c * mobiusFun c x / ((1 - mobiusFun c x) + c * mobiusFun c x) = x := by
+  have hc' : (0 : ℝ) < c := hc
+  intro x hx
+  have hfx := mobiusFun_mem c hc hx
+  have hX0 : (0:ℝ) < x := hx.1
+  have hX1 : (x:ℝ) < 1 := hx.2
+  have hD : (0:ℝ) < (x:ℝ) + c * (1 - (x:ℝ)) := by nlinarith
+  apply NNReal.coe_injective
+  push_cast [NNReal.coe_sub hfx.2.le, coe_mobiusFun c x hx.2.le]
+  have hkey : (1 - (x:ℝ) / ((x:ℝ) + c * (1 - (x:ℝ))))
+      + c * ((x:ℝ) / ((x:ℝ) + c * (1 - (x:ℝ)))) = c / ((x:ℝ) + c * (1 - (x:ℝ))) := by
+    field_simp
+    ring
+  rw [hkey]
+  field_simp
+
+private lemma mobiusInverse_right (c : NNReal) (hc : 0 < c) :
+    ∀ y ∈ Ioo (0 : NNReal) 1, mobiusFun c (c * y / ((1 - y) + c * y)) = y := by
+  have hc' : (0 : ℝ) < c := hc
+  intro y hy
+  have hgy := mobiusInverse_mem c hc y hy
+  have hY0 : (0:ℝ) < y := hy.1
+  have hY1 : (y:ℝ) < 1 := hy.2
+  have hE : (0:ℝ) < (1 - (y:ℝ)) + c * (y:ℝ) := by nlinarith
+  have hgy_coe : ((c * y / ((1 - y) + c * y) : NNReal) : ℝ)
+      = c * (y:ℝ) / ((1 - (y:ℝ)) + c * (y:ℝ)) := by
+    push_cast [NNReal.coe_sub hy.2.le]
+    ring
+  apply NNReal.coe_injective
+  rw [coe_mobiusFun c _ hgy.2.le, hgy_coe]
+  have hkey : c * (y:ℝ) / ((1 - (y:ℝ)) + c * (y:ℝ))
+      + c * (1 - c * (y:ℝ) / ((1 - (y:ℝ)) + c * (y:ℝ)))
+      = c / ((1 - (y:ℝ)) + c * (y:ℝ)) := by
+    field_simp
+    ring
+  rw [hkey]
+  field_simp
+
+private lemma continuousOn_mobiusFun (c : NNReal) :
+    ContinuousOn (mobiusFun c) (Ioo 0 1) := by
+  change ContinuousOn (fun x : NNReal => x / (x + c * (1 - x))) (Ioo 0 1)
+  exact ContinuousOn.div continuousOn_id
+    ((continuous_id.add (continuous_const.mul (continuous_const.sub continuous_id))).continuousOn)
+    (fun x hx => (lt_of_lt_of_le hx.1 le_self_add).ne')
+
+private lemma continuousOn_mobiusInverse (c : NNReal) :
+    ContinuousOn (fun y : NNReal => c * y / ((1 - y) + c * y)) (Ioo 0 1) := by
+  exact ContinuousOn.div (continuous_const.mul continuous_id).continuousOn
+    (((continuous_const.sub continuous_id).add
+      (continuous_const.mul continuous_id)).continuousOn)
+    (fun y hy => (lt_of_lt_of_le (tsub_pos_of_lt hy.2) le_self_add).ne')
+
+private lemma mobiusFun_image_lower (c : NNReal) (hc : 0 < c) :
+    ∀ t ∈ Ioo (0 : NNReal) 1,
+      mobiusFun c '' (Ioo 0 t) = Ioo 0 (mobiusFun c t) := by
+  intro t ht
+  ext z
+  constructor
+  · rintro ⟨x, hx, rfl⟩
+    have hx1 : x ∈ Ioo (0:NNReal) 1 := ⟨hx.1, hx.2.trans ht.2⟩
+    exact ⟨(mobiusFun_mem c hc hx1).1, mobiusFun_strictMonoOn c hc hx1 ht hx.2⟩
+  · intro hz
+    have hz1 : z ∈ Ioo (0:NNReal) 1 := ⟨hz.1, hz.2.trans (mobiusFun_mem c hc ht).2⟩
+    have hmem := mobiusInverse_mem c hc z hz1
+    refine ⟨c * z / ((1 - z) + c * z), ⟨hmem.1, ?_⟩, mobiusInverse_right c hc z hz1⟩
+    by_contra hcon
+    rw [not_lt] at hcon
+    have := (mobiusFun_strictMonoOn c hc).monotoneOn ht hmem hcon
+    rw [mobiusInverse_right c hc z hz1] at this
+    exact absurd hz.2 (not_lt.mpr this)
+
+private lemma mobiusFun_image_upper (c : NNReal) (hc : 0 < c) :
+    ∀ t ∈ Ioo (0 : NNReal) 1,
+      mobiusFun c '' (Ioo t 1) = Ioo (mobiusFun c t) 1 := by
+  intro t ht
+  ext z
+  constructor
+  · rintro ⟨x, hx, rfl⟩
+    have hx1 : x ∈ Ioo (0:NNReal) 1 := ⟨ht.1.trans hx.1, hx.2⟩
+    exact ⟨mobiusFun_strictMonoOn c hc ht hx1 hx.1, (mobiusFun_mem c hc hx1).2⟩
+  · intro hz
+    have hz1 : z ∈ Ioo (0:NNReal) 1 := ⟨lt_trans (mobiusFun_mem c hc ht).1 hz.1, hz.2⟩
+    have hmem := mobiusInverse_mem c hc z hz1
+    refine ⟨c * z / ((1 - z) + c * z), ⟨?_, hmem.2⟩, mobiusInverse_right c hc z hz1⟩
+    by_contra hcon
+    rw [not_lt] at hcon
+    have := (mobiusFun_strictMonoOn c hc).monotoneOn hmem ht hcon
+    rw [mobiusInverse_right c hc z hz1] at this
+    exact absurd hz.1 (not_lt.mpr this)
+
 /-- The Möbius reparametrization as a partial homeomorphism of `Ioo 0 1 ⊆ ℝ≥0`, with
 its action on lower and upper end-segments. -/
 def mobiusOPH' (c : NNReal) (hc : 0 < c) :
@@ -78,108 +186,19 @@ def mobiusOPH' (c : NNReal) (hc : 0 < c) :
       (∀ x : NNReal, e.toFun x = mobiusFun c x) ∧
       (∀ t ∈ Ioo (0:NNReal) 1, e.toFun '' (Ioo 0 t) = Ioo 0 (mobiusFun c t)) ∧
       (∀ t ∈ Ioo (0:NNReal) 1, e.toFun '' (Ioo t 1) = Ioo (mobiusFun c t) 1) } := by
-  have hc' : (0:ℝ) < c := hc
-  -- the inverse function
-  have hgmem : ∀ y ∈ Ioo (0:NNReal) 1, c * y / ((1 - y) + c * y) ∈ Ioo (0:NNReal) 1 := by
-    intro y hy
-    have hden : 0 < (1 - y) + c * y :=
-      lt_of_lt_of_le (tsub_pos_of_lt hy.2) le_self_add
-    exact ⟨div_pos (mul_pos hc hy.1) hden,
-      (div_lt_one hden).mpr (lt_add_of_pos_left _ (tsub_pos_of_lt hy.2))⟩
-  have hcoe_mobius : ∀ x : NNReal, x ≤ 1 →
-      ((mobiusFun c x : NNReal) : ℝ) = (x:ℝ) / ((x:ℝ) + c * (1 - (x:ℝ))) := by
-    intro x hx1
-    rw [mobiusFun]
-    push_cast [NNReal.coe_sub hx1]
-    ring
-  have hleft : ∀ x ∈ Ioo (0:NNReal) 1,
-      c * mobiusFun c x / ((1 - mobiusFun c x) + c * mobiusFun c x) = x := by
-    intro x hx
-    have hfx := mobiusFun_mem c hc hx
-    have hX0 : (0:ℝ) < x := hx.1
-    have hX1 : (x:ℝ) < 1 := hx.2
-    have hD : (0:ℝ) < (x:ℝ) + c * (1 - (x:ℝ)) := by nlinarith
-    apply NNReal.coe_injective
-    push_cast [NNReal.coe_sub hfx.2.le, hcoe_mobius x hx.2.le]
-    have hkey : (1 - (x:ℝ) / ((x:ℝ) + c * (1 - (x:ℝ))))
-        + c * ((x:ℝ) / ((x:ℝ) + c * (1 - (x:ℝ)))) = c / ((x:ℝ) + c * (1 - (x:ℝ))) := by
-      field_simp
-      ring
-    rw [hkey]
-    field_simp
-  have hright : ∀ y ∈ Ioo (0:NNReal) 1,
-      mobiusFun c (c * y / ((1 - y) + c * y)) = y := by
-    intro y hy
-    have hgy := hgmem y hy
-    have hY0 : (0:ℝ) < y := hy.1
-    have hY1 : (y:ℝ) < 1 := hy.2
-    have hE : (0:ℝ) < (1 - (y:ℝ)) + c * (y:ℝ) := by nlinarith
-    have hgy_coe : ((c * y / ((1 - y) + c * y) : NNReal) : ℝ)
-        = c * (y:ℝ) / ((1 - (y:ℝ)) + c * (y:ℝ)) := by
-      push_cast [NNReal.coe_sub hy.2.le]
-      ring
-    apply NNReal.coe_injective
-    rw [hcoe_mobius _ hgy.2.le, hgy_coe]
-    have hkey : c * (y:ℝ) / ((1 - (y:ℝ)) + c * (y:ℝ))
-        + c * (1 - c * (y:ℝ) / ((1 - (y:ℝ)) + c * (y:ℝ)))
-        = c / ((1 - (y:ℝ)) + c * (y:ℝ)) := by
-      field_simp
-      ring
-    rw [hkey]
-    field_simp
   refine ⟨{ toFun := mobiusFun c
             invFun := fun y => c * y / ((1 - y) + c * y)
             source := Ioo 0 1
             target := Ioo 0 1
             map_source' := fun x hx => mobiusFun_mem c hc hx
-            map_target' := hgmem
-            left_inv' := fun x hx => hleft x hx
-            right_inv' := fun y hy => hright y hy
+            map_target' := by exact mobiusInverse_mem c hc
+            left_inv' := by exact fun x hx => mobiusInverse_left c hc x hx
+            right_inv' := by exact fun y hy => mobiusInverse_right c hc y hy
             open_source := isOpen_Ioo
             open_target := isOpen_Ioo
-            continuousOn_toFun := ?_
-            continuousOn_invFun := ?_ },
-    rfl, rfl, fun x => rfl, ?_, ?_⟩
-  · change ContinuousOn (fun x : NNReal => x / (x + c * (1 - x))) (Ioo 0 1)
-    exact ContinuousOn.div continuousOn_id
-      ((continuous_id.add (continuous_const.mul (continuous_const.sub continuous_id))).continuousOn)
-      (fun x hx => (lt_of_lt_of_le hx.1 le_self_add).ne')
-  · exact ContinuousOn.div (continuous_const.mul continuous_id).continuousOn
-      (((continuous_const.sub continuous_id).add
-        (continuous_const.mul continuous_id)).continuousOn)
-      (fun y hy => (lt_of_lt_of_le (tsub_pos_of_lt hy.2) le_self_add).ne')
-  · -- lower end-segment
-    intro t ht
-    ext z
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      have hx1 : x ∈ Ioo (0:NNReal) 1 := ⟨hx.1, hx.2.trans ht.2⟩
-      exact ⟨(mobiusFun_mem c hc hx1).1, mobiusFun_strictMonoOn c hc hx1 ht hx.2⟩
-    · intro hz
-      have hz1 : z ∈ Ioo (0:NNReal) 1 := ⟨hz.1, hz.2.trans (mobiusFun_mem c hc ht).2⟩
-      have hmem := hgmem z hz1
-      refine ⟨c * z / ((1 - z) + c * z), ⟨hmem.1, ?_⟩, hright z hz1⟩
-      by_contra hcon
-      rw [not_lt] at hcon
-      have := (mobiusFun_strictMonoOn c hc).monotoneOn ht hmem hcon
-      rw [hright z hz1] at this
-      exact absurd hz.2 (not_lt.mpr this)
-  · -- upper end-segment
-    intro t ht
-    ext z
-    constructor
-    · rintro ⟨x, hx, rfl⟩
-      have hx1 : x ∈ Ioo (0:NNReal) 1 := ⟨ht.1.trans hx.1, hx.2⟩
-      exact ⟨mobiusFun_strictMonoOn c hc ht hx1 hx.1, (mobiusFun_mem c hc hx1).2⟩
-    · intro hz
-      have hz1 : z ∈ Ioo (0:NNReal) 1 := ⟨lt_trans (mobiusFun_mem c hc ht).1 hz.1, hz.2⟩
-      have hmem := hgmem z hz1
-      refine ⟨c * z / ((1 - z) + c * z), ⟨?_, hmem.2⟩, hright z hz1⟩
-      by_contra hcon
-      rw [not_lt] at hcon
-      have := (mobiusFun_strictMonoOn c hc).monotoneOn hmem ht hcon
-      rw [hright z hz1] at this
-      exact absurd hz.1 (not_lt.mpr this)
+            continuousOn_toFun := by exact continuousOn_mobiusFun c
+            continuousOn_invFun := by exact continuousOn_mobiusInverse c }, by
+    exact ⟨rfl, rfl, fun x => rfl, mobiusFun_image_lower c hc, mobiusFun_image_upper c hc⟩⟩
 
 /-- The affine map `x ↦ k·x + d` as a chart from `Ioo 0 1 ⊆ ℝ≥0` onto
 `Ioo d (d + k) ⊆ ℝ`. -/

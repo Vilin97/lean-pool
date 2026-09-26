@@ -193,10 +193,38 @@ private lemma affine_circle_target {M : Type*} [TopologicalSpace M]
     field_simp
     ring
 
-/-- Normalize both charts to target `Ioo 0 1`, split the overlap into its two
-components, orient the second chart so the component lower in `a` is upper in `b`, and
-Möbius-shrink both charts so the lower end-segments sit below `1 / 4`. -/
-private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space M]
+/-- Choose the orientation whose first component is the upper end-segment. -/
+private lemma exists_oriented_overlap_chart {M : Type*} [TopologicalSpace M]
+    (b : OChart M) (hbt : b.target = Ioo 0 1) (W₀ W₁ : Set M)
+    (hW₀ : W₀ ⊆ b.source) (hW₁ : W₁ ⊆ b.source)
+    (s q : NNReal) (hs0 : 0 < s) (hsq : s ≤ q) (hq1 : q < 1)
+    (harr : (b.toOpenPartialHomeomorph '' W₀ = Ioo q 1 ∧
+        b.toOpenPartialHomeomorph '' W₁ = Ioo 0 s) ∨
+      (b.toOpenPartialHomeomorph '' W₀ = Ioo 0 s ∧
+        b.toOpenPartialHomeomorph '' W₁ = Ioo q 1)) :
+    ∃ B : OpenPartialHomeomorph M NNReal,
+      B.source = b.source ∧ B.target = Ioo 0 1 ∧
+      ∃ s' q' : NNReal, 0 < s' ∧ s' ≤ q' ∧ q' < 1 ∧
+        B '' W₀ = Ioo q' 1 ∧ B '' W₁ = Ioo 0 s' := by
+  rcases harr with ⟨h₀, h₁⟩ | ⟨h₀, h₁⟩
+  · exact ⟨b.toOpenPartialHomeomorph, rfl, hbt, s, q, hs0, hsq, hq1, h₀, h₁⟩
+  · obtain ⟨b₁, hb₁s, hb₁t, hb₁f⟩ := b.flip hbt
+    have himg₀ : b₁.toOpenPartialHomeomorph '' W₀
+        = (fun y => 1 - y) '' (b.toOpenPartialHomeomorph '' W₀) := by
+      rw [← image_comp]
+      exact image_congr (fun x hx => hb₁f x (hW₀ hx))
+    have himg₁ : b₁.toOpenPartialHomeomorph '' W₁
+        = (fun y => 1 - y) '' (b.toOpenPartialHomeomorph '' W₁) := by
+      rw [← image_comp]
+      exact image_congr (fun x hx => hb₁f x (hW₁ hx))
+    rw [h₀, reflect_image_Ioo_lower hs0 (hsq.trans hq1.le)] at himg₀
+    rw [h₁, reflect_image_Ioo_upper hq1] at himg₁
+    exact ⟨b₁.toOpenPartialHomeomorph, hb₁s, hb₁t, 1 - q, 1 - s,
+      tsub_pos_of_lt hq1, tsub_le_tsub_left hsq 1, tsub_lt_self one_pos hs0,
+      himg₀, himg₁⟩
+
+/-- Normalize the two charts and orient their two overlap components oppositely. -/
+private lemma exists_oriented_charts {M : Type*} [TopologicalSpace M] [T2Space M]
     (a b : OChart M) (h : Overlap a.source b.source)
     (hdisc : ¬ IsConnected (a.source ∩ b.source)) :
     ∃ (A B : OpenPartialHomeomorph M NNReal) (W₀ W₁ : Set M) (r p s q : NNReal),
@@ -205,8 +233,7 @@ private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space
       A.source ∩ B.source = W₀ ∪ W₁ ∧
       A '' W₀ = Ioo 0 r ∧ A '' W₁ = Ioo p 1 ∧
       B '' W₀ = Ioo q 1 ∧ B '' W₁ = Ioo 0 s ∧
-      0 < r ∧ r ≤ p ∧ p < 1 ∧ r < 1 / 4 ∧
-      0 < s ∧ s ≤ q ∧ q < 1 ∧ s < 1 / 4 := by
+      0 < r ∧ r ≤ p ∧ p < 1 ∧ 0 < s ∧ s ≤ q ∧ q < 1 := by
   have hane : a.source.Nonempty := h.1.mono inter_subset_left
   have hbne : b.source.Nonempty := h.1.mono inter_subset_right
   obtain ⟨a₀, ha₀s, ha₀t, -⟩ := a.rescale hane
@@ -233,95 +260,91 @@ private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space
   obtain ⟨s₁, q₀, hs₁0, hs₁q₀, hq₀1, harr⟩ :=
     two_components_other_chart a₀.toOpenPartialHomeomorph b₀.toOpenPartialHomeomorph
       hb₀t haconn hab hcomp₀ hcomp₁ hne₀ hne₁ hdisj
-  -- Orient the `b`-side chart so that `W₀` is upper and `W₁` is lower.
-  have hBpick : ∃ B₁ : OpenPartialHomeomorph M NNReal,
-      B₁.source = b.source ∧ B₁.target = Ioo 0 1 ∧
-      ∃ s₂ q₂ : NNReal, 0 < s₂ ∧ s₂ ≤ q₂ ∧ q₂ < 1 ∧
-        B₁ '' W₀ = Ioo q₂ 1 ∧ B₁ '' W₁ = Ioo 0 s₂ := by
-    rcases harr with ⟨h₀, h₁⟩ | ⟨h₀, h₁⟩
-    · exact ⟨b₀.toOpenPartialHomeomorph, hb₀s, hb₀t, s₁, q₀, hs₁0, hs₁q₀, hq₀1, h₀, h₁⟩
-    · obtain ⟨b₁, hb₁s, hb₁t, hb₁f⟩ := b₀.flip hb₀t
-      have himg₀ : b₁.toOpenPartialHomeomorph '' W₀
-          = (fun y => 1 - y) '' (b₀.toOpenPartialHomeomorph '' W₀) := by
-        rw [← image_comp]
-        exact image_congr (fun x hx => hb₁f x (hW₀S hx).2)
-      have himg₁ : b₁.toOpenPartialHomeomorph '' W₁
-          = (fun y => 1 - y) '' (b₀.toOpenPartialHomeomorph '' W₁) := by
-        rw [← image_comp]
-        exact image_congr (fun x hx => hb₁f x (hW₁S hx).2)
-      rw [h₀, reflect_image_Ioo_lower hs₁0 (hs₁q₀.trans hq₀1.le)] at himg₀
-      rw [h₁, reflect_image_Ioo_upper hq₀1] at himg₁
-      exact ⟨b₁.toOpenPartialHomeomorph, hb₁s.trans hb₀s, hb₁t, 1 - q₀, 1 - s₁,
-        tsub_pos_of_lt hq₀1, tsub_le_tsub_left hs₁q₀ 1, tsub_lt_self one_pos hs₁0,
-        himg₀, himg₁⟩
-  obtain ⟨B₁, hB₁s, hB₁t, s₂, q₂, hs₂0, hs₂q, hq₂1, himgB₀, himgB₁⟩ := hBpick
-  -- Möbius-shrink the `a`-side chart.
-  have hr₀1 : r₀ < 1 := lt_of_le_of_lt hr₀p hp₁1
-  have hquarter : (0:NNReal) < 1 / 4 := by norm_num
-  obtain ⟨cA, hcA0, hcA⟩ := exists_mobiusFun_lt hr₀0 hr₀1 hquarter
-  obtain ⟨mA, hmAs, hmAt, hmAf, hmAlo, hmAhi⟩ := mobiusOPH' cA hcA0
-  set A := a₀.toOpenPartialHomeomorph.trans mA with hAdef
-  have hAs : A.source = a.source := by
-    rw [hAdef, OpenPartialHomeomorph.trans_source, hmAs, ← ha₀s]
+  obtain ⟨B₁, hB₁s, hB₁t, s₂, q₂, hs₂0, hs₂q, hq₂1, himgB₀, himgB₁⟩ :=
+    exists_oriented_overlap_chart b₀ hb₀t W₀ W₁
+      (fun x hx => (hW₀S hx).2) (fun x hx => (hW₁S hx).2)
+      s₁ q₀ hs₁0 hs₁q₀ hq₀1 harr
+  have hunion' : a₀.source ∩ B₁.source = W₀ ∪ W₁ := by rw [hB₁s]; exact hunion
+  exact ⟨a₀.toOpenPartialHomeomorph, B₁, W₀, W₁, r₀, p₁, s₂, q₂,
+    ha₀s, hB₁s.trans hb₀s, ha₀t, hB₁t, hunion', himgA₀, himgA₁, himgB₀, himgB₁,
+    hr₀0, hr₀p, hp₁1, hs₂0, hs₂q, hq₂1⟩
+
+/-- Composing charts with the same unit-interval interface preserves both chart sets. -/
+private lemma unitInterval_trans_source_target {M : Type*} [TopologicalSpace M]
+    (X : OpenPartialHomeomorph M NNReal) (m : OpenPartialHomeomorph NNReal NNReal)
+    (hXt : X.target = Ioo 0 1) (hms : m.source = Ioo 0 1) (hmt : m.target = Ioo 0 1) :
+    (X.trans m).source = X.source ∧ (X.trans m).target = Ioo 0 1 := by
+  constructor
+  · rw [OpenPartialHomeomorph.trans_source, hms]
     refine inter_eq_left.mpr fun x hx => ?_
-    rw [mem_preimage, ← ha₀t]
-    exact a₀.toOpenPartialHomeomorph.map_source hx
-  have hAt : A.target = Ioo 0 1 := by
-    rw [hAdef, OpenPartialHomeomorph.trans_target, hmAt]
+    rw [mem_preimage, ← hXt]
+    exact X.map_source hx
+  · rw [OpenPartialHomeomorph.trans_target, hmt]
     refine inter_eq_left.mpr fun y hy => ?_
-    rw [mem_preimage, ha₀t, ← hmAs]
-    exact mA.map_target (by rw [hmAt]; exact hy)
-  have hr₀mem : r₀ ∈ Ioo (0:NNReal) 1 := ⟨hr₀0, hr₀1⟩
-  have hp₁mem : p₁ ∈ Ioo (0:NNReal) 1 := ⟨lt_of_lt_of_le hr₀0 hr₀p, hp₁1⟩
-  have himA₀ : A '' W₀ = Ioo 0 (mobiusFun cA r₀) := by
-    rw [hAdef, OpenPartialHomeomorph.coe_trans, image_comp, himgA₀]
-    exact hmAlo r₀ hr₀mem
-  have himA₁ : A '' W₁ = Ioo (mobiusFun cA p₁) 1 := by
-    rw [hAdef, OpenPartialHomeomorph.coe_trans, image_comp, himgA₁]
-    exact hmAhi p₁ hp₁mem
-  have hmonoA := mobiusFun_strictMonoOn cA hcA0
-  have hrp' : mobiusFun cA r₀ ≤ mobiusFun cA p₁ := by
-    rcases eq_or_lt_of_le hr₀p with heq | hlt
+    rw [mem_preimage, hXt, ← hms]
+    exact m.map_target (by rw [hmt]; exact hy)
+
+/-- Möbius-shrink a chart's lower overlap below one quarter, retaining both end-segments. -/
+private lemma exists_shrunk_interval_chart {M : Type*} [TopologicalSpace M]
+    (X : OpenPartialHomeomorph M NNReal) (hXt : X.target = Ioo 0 1)
+    (W₀ W₁ : Set M) (r p : NNReal)
+    (himg₀ : X '' W₀ = Ioo 0 r) (himg₁ : X '' W₁ = Ioo p 1)
+    (hr0 : 0 < r) (hrp : r ≤ p) (hp1 : p < 1) :
+    ∃ (A : OpenPartialHomeomorph M NNReal) (r' p' : NNReal),
+      A.source = X.source ∧ A.target = Ioo 0 1 ∧
+      A '' W₀ = Ioo 0 r' ∧ A '' W₁ = Ioo p' 1 ∧
+      0 < r' ∧ r' ≤ p' ∧ p' < 1 ∧ r' < 1 / 4 := by
+  have hr1 : r < 1 := lt_of_le_of_lt hrp hp1
+  have hquarter : (0 : NNReal) < 1 / 4 := by norm_num
+  obtain ⟨c, hc0, hc⟩ := exists_mobiusFun_lt hr0 hr1 hquarter
+  obtain ⟨m, hms, hmt, hmf, hmlo, hmhi⟩ := mobiusOPH' c hc0
+  set A := X.trans m with hAdef
+  obtain ⟨hAs, hAt⟩ := unitInterval_trans_source_target X m hXt hms hmt
+  have hrmem : r ∈ Ioo (0 : NNReal) 1 := ⟨hr0, hr1⟩
+  have hpmem : p ∈ Ioo (0 : NNReal) 1 := ⟨lt_of_lt_of_le hr0 hrp, hp1⟩
+  have himA₀ : A '' W₀ = Ioo 0 (mobiusFun c r) := by
+    rw [hAdef, OpenPartialHomeomorph.coe_trans, image_comp, himg₀]
+    exact hmlo r hrmem
+  have himA₁ : A '' W₁ = Ioo (mobiusFun c p) 1 := by
+    rw [hAdef, OpenPartialHomeomorph.coe_trans, image_comp, himg₁]
+    exact hmhi p hpmem
+  have hmono := mobiusFun_strictMonoOn c hc0
+  have hrp' : mobiusFun c r ≤ mobiusFun c p := by
+    rcases eq_or_lt_of_le hrp with heq | hlt
     · rw [heq]
-    · exact (hmonoA hr₀mem hp₁mem hlt).le
-  have hr'mem := mobiusFun_mem cA hcA0 hr₀mem
-  have hp'mem := mobiusFun_mem cA hcA0 hp₁mem
-  -- Möbius-shrink the `b`-side chart.
-  have hs₂1 : s₂ < 1 := lt_of_le_of_lt hs₂q hq₂1
-  obtain ⟨cB, hcB0, hcB⟩ := exists_mobiusFun_lt hs₂0 hs₂1 hquarter
-  obtain ⟨mB, hmBs, hmBt, hmBf, hmBlo, hmBhi⟩ := mobiusOPH' cB hcB0
-  set B := B₁.trans mB with hBdef
-  have hBs : B.source = b.source := by
-    rw [hBdef, OpenPartialHomeomorph.trans_source, hmBs, ← hB₁s]
-    refine inter_eq_left.mpr fun x hx => ?_
-    rw [mem_preimage, ← hB₁t]
-    exact B₁.map_source hx
-  have hBt : B.target = Ioo 0 1 := by
-    rw [hBdef, OpenPartialHomeomorph.trans_target, hmBt]
-    refine inter_eq_left.mpr fun y hy => ?_
-    rw [mem_preimage, hB₁t, ← hmBs]
-    exact mB.map_target (by rw [hmBt]; exact hy)
-  have hs₂mem : s₂ ∈ Ioo (0:NNReal) 1 := ⟨hs₂0, hs₂1⟩
-  have hq₂mem : q₂ ∈ Ioo (0:NNReal) 1 := ⟨lt_of_lt_of_le hs₂0 hs₂q, hq₂1⟩
-  have himB₀ : B '' W₀ = Ioo (mobiusFun cB q₂) 1 := by
-    rw [hBdef, OpenPartialHomeomorph.coe_trans, image_comp, himgB₀]
-    exact hmBhi q₂ hq₂mem
-  have himB₁ : B '' W₁ = Ioo 0 (mobiusFun cB s₂) := by
-    rw [hBdef, OpenPartialHomeomorph.coe_trans, image_comp, himgB₁]
-    exact hmBlo s₂ hs₂mem
-  have hmonoB := mobiusFun_strictMonoOn cB hcB0
-  have hsq' : mobiusFun cB s₂ ≤ mobiusFun cB q₂ := by
-    rcases eq_or_lt_of_le hs₂q with heq | hlt
-    · rw [heq]
-    · exact (hmonoB hs₂mem hq₂mem hlt).le
-  have hs'mem := mobiusFun_mem cB hcB0 hs₂mem
-  have hq'mem := mobiusFun_mem cB hcB0 hq₂mem
+    · exact (hmono hrmem hpmem hlt).le
+  have hr'mem := mobiusFun_mem c hc0 hrmem
+  have hp'mem := mobiusFun_mem c hc0 hpmem
+  exact ⟨A, mobiusFun c r, mobiusFun c p, hAs, hAt, himA₀, himA₁,
+    hr'mem.1, hrp', hp'mem.2, hc⟩
+
+/-- Normalize both charts to target `Ioo 0 1`, split the overlap into its two
+components, orient the second chart so the component lower in `a` is upper in `b`, and
+Möbius-shrink both charts so the lower end-segments sit below `1 / 4`. -/
+private lemma exists_normalized_charts {M : Type*} [TopologicalSpace M] [T2Space M]
+    (a b : OChart M) (h : Overlap a.source b.source)
+    (hdisc : ¬ IsConnected (a.source ∩ b.source)) :
+    ∃ (A B : OpenPartialHomeomorph M NNReal) (W₀ W₁ : Set M) (r p s q : NNReal),
+      A.source = a.source ∧ B.source = b.source ∧
+      A.target = Ioo 0 1 ∧ B.target = Ioo 0 1 ∧
+      A.source ∩ B.source = W₀ ∪ W₁ ∧
+      A '' W₀ = Ioo 0 r ∧ A '' W₁ = Ioo p 1 ∧
+      B '' W₀ = Ioo q 1 ∧ B '' W₁ = Ioo 0 s ∧
+      0 < r ∧ r ≤ p ∧ p < 1 ∧ r < 1 / 4 ∧
+      0 < s ∧ s ≤ q ∧ q < 1 ∧ s < 1 / 4 := by
+  obtain ⟨A₀, B₀, W₀, W₁, r₀, p₀, s₀, q₀, hA₀s, hB₀s, hA₀t, hB₀t,
+    hunion, himgA₀, himgA₁, himgB₀, himgB₁, hr₀0, hr₀p, hp₀1, hs₀0, hs₀q, hq₀1⟩ :=
+    exists_oriented_charts a b h hdisc
+  obtain ⟨A, r, p, hAs, hAt, himA₀, himA₁, hr0, hrp, hp1, hr4⟩ :=
+    exists_shrunk_interval_chart A₀ hA₀t W₀ W₁ r₀ p₀ himgA₀ himgA₁ hr₀0 hr₀p hp₀1
+  obtain ⟨B, s, q, hBs, hBt, himB₁, himB₀, hs0, hsq, hq1, hs4⟩ :=
+    exists_shrunk_interval_chart B₀ hB₀t W₁ W₀ s₀ q₀ himgB₁ himgB₀ hs₀0 hs₀q hq₀1
   have hunion' : A.source ∩ B.source = W₀ ∪ W₁ := by
-    rw [hAs, hBs, ← ha₀s, ← hb₀s]
+    rw [hAs, hBs]
     exact hunion
-  exact ⟨A, B, W₀, W₁, mobiusFun cA r₀, mobiusFun cA p₁, mobiusFun cB s₂, mobiusFun cB q₂,
-    hAs, hBs, hAt, hBt, hunion', himA₀, himA₁, himB₀, himB₁,
-    hr'mem.1, hrp', hp'mem.2, hcA, hs'mem.1, hsq', hq'mem.2, hcB⟩
+  exact ⟨A, B, W₀, W₁, r, p, s, q, hAs.trans hA₀s, hBs.trans hB₀s,
+    hAt, hBt, hunion', himA₀, himA₁, himB₀, himB₁,
+    hr0, hrp, hp1, hr4, hs0, hsq, hq1, hs4⟩
 
 private theorem circle_overlap_membership
     {M : Type*}
