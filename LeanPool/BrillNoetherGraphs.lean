@@ -243,10 +243,12 @@ public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicAtlas
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCubicCoverage
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFivePseudocoreCoverage
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow03CoverReceipts
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow03FixedCover
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow04CoverBase
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow04CoverCells0
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow04CoverCells1
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow04CoverReceipts
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow04FixedCover
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow04Symmetry
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow05
@@ -258,6 +260,7 @@ public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06CoverCells1
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06CoverCells2
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06CoverCells3
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06CoverCells4
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06CoverReceipts
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06FixedCover
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06Symmetry
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow08
@@ -275,6 +278,7 @@ public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12Guarding
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow12Tripod
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow14
+public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow14CoverReceipts
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow14FixedCover
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow15
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow16

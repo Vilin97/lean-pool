@@ -128,7 +128,9 @@ def row01Focus0 : Data row01Core 4 5 4 5 where
   leftCore := row01LeftCore
   rightCore := row01RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 5, 7] ![0, 1, 2, 3, 4, 10, 5, 11, 6, 7, 8, 9] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 5, 7]
+    ![0, 1, 2, 3, 4, 10, 5, 11, 6, 7, 8, 9] (by decide) (by decide))
   leftPole := ![3, 2]
   rightPole := ![1, 0]
   left_nonempty := by decide
@@ -146,7 +148,9 @@ def row01Focus1 : Data row01Core 4 5 4 5 where
   leftCore := row01LeftCore
   rightCore := row01RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 7, 5] ![0, 1, 2, 3, 4, 11, 5, 10, 6, 7, 8, 9] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 7, 5]
+    ![0, 1, 2, 3, 4, 11, 5, 10, 6, 7, 8, 9] (by decide) (by decide))
   leftPole := ![2, 3]
   rightPole := ![0, 1]
   left_nonempty := by decide
@@ -167,8 +171,12 @@ def row01 (focus : Fin 2) : Data row01Core 4 5 4 5 :=
 def row02Focus0 : Data row02Core 4 5 4 5 where
   leftCore := row02RightCore
   rightCore := row02LeftCore
-  vertices := vertexIndex (permutation ![0, 5, 6, 7, 1, 2, 3, 4] ![0, 4, 5, 6, 7, 1, 2, 3] (by decide) (by decide))
-  slots := slotIndex (permutation ![3, 4, 5, 6, 7, 1, 8, 9, 10, 11, 0, 2] ![10, 5, 11, 0, 1, 2, 3, 4, 6, 7, 8, 9] (by decide) (by decide))
+  vertices := vertexIndex (permutation
+    ![0, 5, 6, 7, 1, 2, 3, 4]
+    ![0, 4, 5, 6, 7, 1, 2, 3] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![3, 4, 5, 6, 7, 1, 8, 9, 10, 11, 0, 2]
+    ![10, 5, 11, 0, 1, 2, 3, 4, 6, 7, 8, 9] (by decide) (by decide))
   leftPole := ![0, 1]
   rightPole := ![0, 1]
   left_nonempty := by decide
@@ -185,8 +193,12 @@ def row02Focus0 : Data row02Core 4 5 4 5 where
 def row02Focus1 : Data row02Core 4 5 4 5 where
   leftCore := row02LeftCore
   rightCore := row02RightCore
-  vertices := vertexIndex (permutation ![1, 2, 3, 4, 0, 5, 6, 7] ![4, 0, 1, 2, 3, 5, 6, 7] (by decide) (by decide))
-  slots := slotIndex (permutation ![1, 8, 9, 10, 11, 3, 4, 5, 6, 7, 2, 0] ![11, 0, 10, 5, 6, 7, 8, 9, 1, 2, 3, 4] (by decide) (by decide))
+  vertices := vertexIndex (permutation
+    ![1, 2, 3, 4, 0, 5, 6, 7]
+    ![4, 0, 1, 2, 3, 5, 6, 7] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![1, 8, 9, 10, 11, 3, 4, 5, 6, 7, 2, 0]
+    ![11, 0, 10, 5, 6, 7, 8, 9, 1, 2, 3, 4] (by decide) (by decide))
   leftPole := ![1, 0]
   rightPole := ![1, 0]
   left_nonempty := by decide
@@ -208,7 +220,9 @@ def row03Focus0 : Data row03Core 4 5 4 5 where
   leftCore := row03LeftCore
   rightCore := row03RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 5, 7] ![0, 1, 2, 3, 4, 10, 5, 11, 6, 7, 8, 9] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 5, 7]
+    ![0, 1, 2, 3, 4, 10, 5, 11, 6, 7, 8, 9] (by decide) (by decide))
   leftPole := ![2, 3]
   rightPole := ![2, 3]
   left_nonempty := by decide
@@ -226,7 +240,9 @@ def row03Focus1 : Data row03Core 4 5 4 5 where
   leftCore := row03LeftCore
   rightCore := row03RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 7, 5] ![0, 1, 2, 3, 4, 11, 5, 10, 6, 7, 8, 9] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 2, 3, 4, 6, 8, 9, 10, 11, 7, 5]
+    ![0, 1, 2, 3, 4, 11, 5, 10, 6, 7, 8, 9] (by decide) (by decide))
   leftPole := ![3, 2]
   rightPole := ![3, 2]
   left_nonempty := by decide
@@ -248,7 +264,9 @@ def row04Focus0 : Data row04Core 4 5 4 5 where
   leftCore := row04LeftCore
   rightCore := row04RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 9, 10, 11, 3, 4, 5, 6, 7, 2, 8] ![0, 1, 10, 5, 6, 7, 8, 9, 11, 2, 3, 4] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 9, 10, 11, 3, 4, 5, 6, 7, 2, 8]
+    ![0, 1, 10, 5, 6, 7, 8, 9, 11, 2, 3, 4] (by decide) (by decide))
   leftPole := ![1, 3]
   rightPole := ![0, 3]
   left_nonempty := by decide
@@ -265,8 +283,12 @@ def row04Focus0 : Data row04Core 4 5 4 5 where
 def row04Focus1 : Data row04Core 4 5 4 5 where
   leftCore := row04RightCore
   rightCore := row04LeftCore
-  vertices := vertexIndex (permutation ![4, 5, 6, 7, 0, 1, 2, 3] ![4, 5, 6, 7, 0, 1, 2, 3] (by decide) (by decide))
-  slots := slotIndex (permutation ![3, 4, 5, 6, 7, 0, 1, 9, 10, 11, 8, 2] ![5, 6, 11, 0, 1, 2, 3, 4, 10, 7, 8, 9] (by decide) (by decide))
+  vertices := vertexIndex (permutation
+    ![4, 5, 6, 7, 0, 1, 2, 3]
+    ![4, 5, 6, 7, 0, 1, 2, 3] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![3, 4, 5, 6, 7, 0, 1, 9, 10, 11, 8, 2]
+    ![5, 6, 11, 0, 1, 2, 3, 4, 10, 7, 8, 9] (by decide) (by decide))
   leftPole := ![3, 0]
   rightPole := ![3, 1]
   left_nonempty := by decide
@@ -288,7 +310,9 @@ def row07Focus0 : Data row07Core 4 5 4 5 where
   leftCore := row07LeftCore
   rightCore := row07RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 5, 6] ![0, 1, 2, 3, 4, 10, 11, 5, 6, 7, 8, 9] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 5, 6]
+    ![0, 1, 2, 3, 4, 10, 11, 5, 6, 7, 8, 9] (by decide) (by decide))
   leftPole := ![0, 1]
   rightPole := ![0, 1]
   left_nonempty := by decide
@@ -306,7 +330,9 @@ def row07Focus1 : Data row07Core 4 5 4 5 where
   leftCore := row07LeftCore
   rightCore := row07RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 6, 5] ![0, 1, 2, 3, 4, 11, 10, 5, 6, 7, 8, 9] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 2, 3, 4, 7, 8, 9, 10, 11, 6, 5]
+    ![0, 1, 2, 3, 4, 11, 10, 5, 6, 7, 8, 9] (by decide) (by decide))
   leftPole := ![1, 0]
   rightPole := ![1, 0]
   left_nonempty := by decide
@@ -346,7 +372,9 @@ def row13Focus1 : Data row13Core 4 5 4 5 where
   leftCore := row13LeftCore
   rightCore := row13RightCore
   vertices := vertexIndex (Equiv.refl _)
-  slots := slotIndex (permutation ![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10] ![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10] (by decide) (by decide))
+  slots := slotIndex (permutation
+    ![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10]
+    ![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 10] (by decide) (by decide))
   leftPole := ![1, 0]
   rightPole := ![1, 0]
   left_nonempty := by decide

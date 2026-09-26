@@ -2365,10 +2365,35 @@ theorem cell290_check :
 
 /-- The ordered row-06 closed-cover cell block with global indices 194 through 290, used when
 assembling the full 483-cell cover. -/
-def chunk : List (CoordinateCell row06Core) := [cell194, cell195, cell196, cell197, cell198, cell199, cell200, cell201, cell202, cell203, cell204, cell205, cell206, cell207, cell208, cell209, cell210, cell211, cell212, cell213, cell214, cell215, cell216, cell217, cell218, cell219, cell220, cell221, cell222, cell223, cell224, cell225, cell226, cell227, cell228, cell229, cell230, cell231, cell232, cell233, cell234, cell235, cell236, cell237, cell238, cell239, cell240, cell241, cell242, cell243, cell244, cell245, cell246, cell247, cell248, cell249, cell250, cell251, cell252, cell253, cell254, cell255, cell256, cell257, cell258, cell259, cell260, cell261, cell262, cell263, cell264, cell265, cell266, cell267, cell268, cell269, cell270, cell271, cell272, cell273, cell274, cell275, cell276, cell277, cell278, cell279, cell280, cell281, cell282, cell283, cell284, cell285, cell286, cell287, cell288, cell289, cell290]
+def chunk : List (CoordinateCell row06Core) :=
+  [cell194, cell195, cell196, cell197, cell198, cell199, cell200, cell201, cell202, cell203,
+  cell204, cell205, cell206, cell207, cell208, cell209, cell210, cell211, cell212, cell213, cell214,
+  cell215, cell216, cell217, cell218, cell219, cell220, cell221, cell222, cell223, cell224, cell225,
+  cell226, cell227, cell228, cell229, cell230, cell231, cell232, cell233, cell234, cell235, cell236,
+  cell237, cell238, cell239, cell240, cell241, cell242, cell243, cell244, cell245, cell246, cell247,
+  cell248, cell249, cell250, cell251, cell252, cell253, cell254, cell255, cell256, cell257, cell258,
+  cell259, cell260, cell261, cell262, cell263, cell264, cell265, cell266, cell267, cell268, cell269,
+  cell270, cell271, cell272, cell273, cell274, cell275, cell276, cell277, cell278, cell279, cell280,
+  cell281, cell282, cell283, cell284, cell285, cell286, cell287, cell288, cell289, cell290]
 
 theorem chunk_check :
     chunk.all (fun cell => cell.certificate.checkClosed 4) = true := by
-  simp [chunk, cell194_check, cell195_check, cell196_check, cell197_check, cell198_check, cell199_check, cell200_check, cell201_check, cell202_check, cell203_check, cell204_check, cell205_check, cell206_check, cell207_check, cell208_check, cell209_check, cell210_check, cell211_check, cell212_check, cell213_check, cell214_check, cell215_check, cell216_check, cell217_check, cell218_check, cell219_check, cell220_check, cell221_check, cell222_check, cell223_check, cell224_check, cell225_check, cell226_check, cell227_check, cell228_check, cell229_check, cell230_check, cell231_check, cell232_check, cell233_check, cell234_check, cell235_check, cell236_check, cell237_check, cell238_check, cell239_check, cell240_check, cell241_check, cell242_check, cell243_check, cell244_check, cell245_check, cell246_check, cell247_check, cell248_check, cell249_check, cell250_check, cell251_check, cell252_check, cell253_check, cell254_check, cell255_check, cell256_check, cell257_check, cell258_check, cell259_check, cell260_check, cell261_check, cell262_check, cell263_check, cell264_check, cell265_check, cell266_check, cell267_check, cell268_check, cell269_check, cell270_check, cell271_check, cell272_check, cell273_check, cell274_check, cell275_check, cell276_check, cell277_check, cell278_check, cell279_check, cell280_check, cell281_check, cell282_check, cell283_check, cell284_check, cell285_check, cell286_check, cell287_check, cell288_check, cell289_check, cell290_check]
+  simp [chunk, cell194_check, cell195_check, cell196_check, cell197_check, cell198_check,
+    cell199_check, cell200_check, cell201_check, cell202_check, cell203_check, cell204_check,
+    cell205_check, cell206_check, cell207_check, cell208_check, cell209_check, cell210_check,
+    cell211_check, cell212_check, cell213_check, cell214_check, cell215_check, cell216_check,
+    cell217_check, cell218_check, cell219_check, cell220_check, cell221_check, cell222_check,
+    cell223_check, cell224_check, cell225_check, cell226_check, cell227_check, cell228_check,
+    cell229_check, cell230_check, cell231_check, cell232_check, cell233_check, cell234_check,
+    cell235_check, cell236_check, cell237_check, cell238_check, cell239_check, cell240_check,
+    cell241_check, cell242_check, cell243_check, cell244_check, cell245_check, cell246_check,
+    cell247_check, cell248_check, cell249_check, cell250_check, cell251_check, cell252_check,
+    cell253_check, cell254_check, cell255_check, cell256_check, cell257_check, cell258_check,
+    cell259_check, cell260_check, cell261_check, cell262_check, cell263_check, cell264_check,
+    cell265_check, cell266_check, cell267_check, cell268_check, cell269_check, cell270_check,
+    cell271_check, cell272_check, cell273_check, cell274_check, cell275_check, cell276_check,
+    cell277_check, cell278_check, cell279_check, cell280_check, cell281_check, cell282_check,
+    cell283_check, cell284_check, cell285_check, cell286_check, cell287_check, cell288_check,
+    cell289_check, cell290_check]
 
 end AtanasovRanganathan.GenusFiveRow06CoverCells2

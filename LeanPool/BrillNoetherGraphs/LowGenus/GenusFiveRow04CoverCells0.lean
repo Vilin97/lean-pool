@@ -2516,10 +2516,35 @@ theorem cell97_check :
 
 /-- The ordered row-04 closed-cover cell block with global indices 0 through 97, used when
 assembling the full 195-cell cover. -/
-def chunk : List (CoordinateCell row04Core) := [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14, cell15, cell16, cell17, cell18, cell19, cell20, cell21, cell22, cell23, cell24, cell25, cell26, cell27, cell28, cell29, cell30, cell31, cell32, cell33, cell34, cell35, cell36, cell37, cell38, cell39, cell40, cell41, cell42, cell43, cell44, cell45, cell46, cell47, cell48, cell49, cell50, cell51, cell52, cell53, cell54, cell55, cell56, cell57, cell58, cell59, cell60, cell61, cell62, cell63, cell64, cell65, cell66, cell67, cell68, cell69, cell70, cell71, cell72, cell73, cell74, cell75, cell76, cell77, cell78, cell79, cell80, cell81, cell82, cell83, cell84, cell85, cell86, cell87, cell88, cell89, cell90, cell91, cell92, cell93, cell94, cell95, cell96, cell97]
+def chunk : List (CoordinateCell row04Core) :=
+  [cell0, cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12,
+  cell13, cell14, cell15, cell16, cell17, cell18, cell19, cell20, cell21, cell22, cell23, cell24,
+  cell25, cell26, cell27, cell28, cell29, cell30, cell31, cell32, cell33, cell34, cell35, cell36,
+  cell37, cell38, cell39, cell40, cell41, cell42, cell43, cell44, cell45, cell46, cell47, cell48,
+  cell49, cell50, cell51, cell52, cell53, cell54, cell55, cell56, cell57, cell58, cell59, cell60,
+  cell61, cell62, cell63, cell64, cell65, cell66, cell67, cell68, cell69, cell70, cell71, cell72,
+  cell73, cell74, cell75, cell76, cell77, cell78, cell79, cell80, cell81, cell82, cell83, cell84,
+  cell85, cell86, cell87, cell88, cell89, cell90, cell91, cell92, cell93, cell94, cell95, cell96,
+  cell97]
 
 theorem chunk_check :
     chunk.all (fun cell => cell.certificate.checkClosed 4) = true := by
-  simp [chunk, cell0_check, cell1_check, cell2_check, cell3_check, cell4_check, cell5_check, cell6_check, cell7_check, cell8_check, cell9_check, cell10_check, cell11_check, cell12_check, cell13_check, cell14_check, cell15_check, cell16_check, cell17_check, cell18_check, cell19_check, cell20_check, cell21_check, cell22_check, cell23_check, cell24_check, cell25_check, cell26_check, cell27_check, cell28_check, cell29_check, cell30_check, cell31_check, cell32_check, cell33_check, cell34_check, cell35_check, cell36_check, cell37_check, cell38_check, cell39_check, cell40_check, cell41_check, cell42_check, cell43_check, cell44_check, cell45_check, cell46_check, cell47_check, cell48_check, cell49_check, cell50_check, cell51_check, cell52_check, cell53_check, cell54_check, cell55_check, cell56_check, cell57_check, cell58_check, cell59_check, cell60_check, cell61_check, cell62_check, cell63_check, cell64_check, cell65_check, cell66_check, cell67_check, cell68_check, cell69_check, cell70_check, cell71_check, cell72_check, cell73_check, cell74_check, cell75_check, cell76_check, cell77_check, cell78_check, cell79_check, cell80_check, cell81_check, cell82_check, cell83_check, cell84_check, cell85_check, cell86_check, cell87_check, cell88_check, cell89_check, cell90_check, cell91_check, cell92_check, cell93_check, cell94_check, cell95_check, cell96_check, cell97_check]
+  simp [chunk, cell0_check, cell1_check, cell2_check, cell3_check, cell4_check, cell5_check,
+    cell6_check, cell7_check, cell8_check, cell9_check, cell10_check, cell11_check, cell12_check,
+    cell13_check, cell14_check, cell15_check, cell16_check, cell17_check, cell18_check,
+    cell19_check, cell20_check, cell21_check, cell22_check, cell23_check, cell24_check,
+    cell25_check, cell26_check, cell27_check, cell28_check, cell29_check, cell30_check,
+    cell31_check, cell32_check, cell33_check, cell34_check, cell35_check, cell36_check,
+    cell37_check, cell38_check, cell39_check, cell40_check, cell41_check, cell42_check,
+    cell43_check, cell44_check, cell45_check, cell46_check, cell47_check, cell48_check,
+    cell49_check, cell50_check, cell51_check, cell52_check, cell53_check, cell54_check,
+    cell55_check, cell56_check, cell57_check, cell58_check, cell59_check, cell60_check,
+    cell61_check, cell62_check, cell63_check, cell64_check, cell65_check, cell66_check,
+    cell67_check, cell68_check, cell69_check, cell70_check, cell71_check, cell72_check,
+    cell73_check, cell74_check, cell75_check, cell76_check, cell77_check, cell78_check,
+    cell79_check, cell80_check, cell81_check, cell82_check, cell83_check, cell84_check,
+    cell85_check, cell86_check, cell87_check, cell88_check, cell89_check, cell90_check,
+    cell91_check, cell92_check, cell93_check, cell94_check, cell95_check, cell96_check,
+    cell97_check]
 
 end AtanasovRanganathan.GenusFiveRow04CoverCells0

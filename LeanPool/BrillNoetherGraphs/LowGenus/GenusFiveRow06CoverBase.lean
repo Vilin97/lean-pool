@@ -325,6 +325,10 @@ def witness30 : AnchorWitness 12 8 12 :=
 
 /-- The thirty-one endpoint-slope and affine-potential witnesses shared by the row-06
 closed-cover cells. -/
-def witnesses : List (AnchorWitness 12 8 12) := [witness0, witness1, witness2, witness3, witness4, witness5, witness6, witness7, witness8, witness9, witness10, witness11, witness12, witness13, witness14, witness15, witness16, witness17, witness18, witness19, witness20, witness21, witness22, witness23, witness24, witness25, witness26, witness27, witness28, witness29, witness30]
+def witnesses : List (AnchorWitness 12 8 12) :=
+  [witness0, witness1, witness2, witness3, witness4, witness5, witness6, witness7, witness8,
+  witness9, witness10, witness11, witness12, witness13, witness14, witness15, witness16, witness17,
+  witness18, witness19, witness20, witness21, witness22, witness23, witness24, witness25, witness26,
+  witness27, witness28, witness29, witness30]
 
 end AtanasovRanganathan.GenusFiveRow06CoverBase
