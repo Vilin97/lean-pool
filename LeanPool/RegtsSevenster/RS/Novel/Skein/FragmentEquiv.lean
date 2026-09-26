@@ -55,12 +55,12 @@ def symm (e : Equiv W₁ W₂) : Equiv W₂ W₁ where
   vertexEquiv := e.vertexEquiv.symm
   attach_comm := fun f => by
     have h := e.attach_comm (e.flagEquiv.symm f)
-    simp at h
+    simp only [Equiv.apply_symm_apply] at h
     rw [h]
     rcases W₁.attach (e.flagEquiv.symm f) with v | ℓ <;> simp
   pairing_comm := fun f => by
     have h := e.pairing_comm (e.flagEquiv.symm f)
-    simp at h
+    simp only [Equiv.apply_symm_apply] at h
     rw [← h]
     simp
   circles_eq := e.circles_eq.symm
@@ -70,11 +70,11 @@ def trans (e₁ : Equiv W₁ W₂) (e₂ : Equiv W₂ W₃) : Equiv W₁ W₃ wh
   flagEquiv := e₁.flagEquiv.trans e₂.flagEquiv
   vertexEquiv := e₁.vertexEquiv.trans e₂.vertexEquiv
   attach_comm := fun f => by
-    simp [_root_.Equiv.trans_apply]
+    simp only [Equiv.trans_apply, Equiv.coe_trans]
     rw [e₂.attach_comm, e₁.attach_comm]
     rcases W₁.attach f with v | ℓ <;> simp
   pairing_comm := fun f => by
-    simp [_root_.Equiv.trans_apply]
+    simp only [Equiv.trans_apply]
     rw [e₁.pairing_comm, e₂.pairing_comm]
   circles_eq := e₁.circles_eq.trans e₂.circles_eq
 
@@ -163,11 +163,11 @@ def survivingFlagEquiv (e : Equiv W₁ W₂) (i j : α) :
   invFun f := ⟨e.flagEquiv.symm f.val, by
     refine ⟨fun h => f.prop.1 ?_, fun h => f.prop.2 ?_⟩
     · have h1 := congrArg e.flagEquiv h
-      simp at h1
+      simp only [ne_eq, Equiv.apply_symm_apply] at h1
       rw [e.boundaryFlag_comm i] at h1
       exact h1
     · have h1 := congrArg e.flagEquiv h
-      simp at h1
+      simp only [ne_eq, Equiv.apply_symm_apply] at h1
       rw [e.boundaryFlag_comm j] at h1
       exact h1⟩
   left_inv f := Subtype.ext (by simp)

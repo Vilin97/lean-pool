@@ -101,7 +101,7 @@ private theorem colourValueRank_injective :
   cases x with
   | inl a =>
     cases y with
-    | inl b => simp [colourValueRank] at hxy; exact congrArg Sum.inl (Fin.ext
+    | inl b => simp only [colourValueRank] at hxy; exact congrArg Sum.inl (Fin.ext
       hxy)
     | inr b => simp [colourValueRank] at hxy; omega
   | inr a =>
@@ -526,7 +526,7 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
     apply Fin.ext
     show a.val = b.val
     have := congrArg Fin.val hinj
-    simp at this; exact this
+    simp only [Nat.add_left_cancel_iff] at this; exact this
   -- g ∘ π is strictly monotone
   have gπ_mono : Monotone (g ∘ π) := Tuple.monotone_sort g
   have gπ_smono : StrictMono (g ∘ π) := fun a b hab =>
@@ -640,7 +640,7 @@ private theorem canonSortPerm_sign {d : ℕ} (c : MixedColouring k ℓ d)
           canonColouring (evenMultisetOf c) F (finCongr h (σ.symm q))
             from congr_fun comp _]
     unfold canonColouring
-    rw [dite_eq_left (by simp [finCongr_apply]; exact hq_low)]
+    rw [dite_eq_left (by simp only [finCongr_apply, Fin.val_cast]; exact hq_low)]
     exact Sum.getRight?_inl
   -- Step 3c: structural claim
   have step3 : oddListOf c = List.ofFn (v ∘ π) := by

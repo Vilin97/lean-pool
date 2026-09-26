@@ -400,6 +400,7 @@ theorem throughFlags_isEmpty [IsEmpty L] {V : Fragment L}
 attach to. -/
 theorem allInternal_isEmpty [IsEmpty L] {V : Fragment L}
     (F : EdgeSubset V) : F.allInternal := by
+  classical
   refine Finset.eq_empty_of_forall_notMem (fun f hf => ?_)
   obtain ⟨-, i, -⟩ := Finset.mem_filter.mp hf
   exact isEmptyElim i

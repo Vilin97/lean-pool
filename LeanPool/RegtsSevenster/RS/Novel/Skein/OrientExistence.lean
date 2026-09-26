@@ -65,6 +65,7 @@ theorem EdgeSubset.RelTransitionSystem.pathMatch_ne
 /-- Internal and boundary flags are disjoint. -/
 theorem internal_not_boundary {f : W.Flag}
     (hf : f ∈ F.internalFlags) : f ∉ F.boundaryFlags := by
+  classical
   intro hb
   obtain ⟨-, v, hv⟩ := mem_internalFlags_iff.mp hf
   obtain ⟨-, i, hi⟩ := Finset.mem_filter.mp hb
@@ -374,30 +375,27 @@ noncomputable def relBuildOrientation (κ : F.RelTransitionSystem) :
     if hg : g ∈ F.flags then
       decide (orbitMin (F.pairingPerm ⟨g, hg⟩) < orbitMin ⟨g, hg⟩)
     else false
-  have hmatch_flip : ∀ g ∈ F.internalFlags,
-      isOut (κ.match_ g) = !isOut g := by
-    intro g hg
-    have hgf : g ∈ F.flags := mem_flags_of_internalFlags F hg
-    simp only [isOut, dite_eq_left hgf,
-      dite_eq_left (mem_flags_of_internalFlags F (κ.match_mem g hg))]
-    rw [orbitMin_pairing_match ⟨g, hgf⟩ hg,
-      orbitMin_match ⟨g, hgf⟩ hg]
-    exact decide_lt_flip' (Ne.symm (orbitMin_pairing_ne ⟨g, hgf⟩))
-  have hpairing_flip : ∀ g ∈ F.internalFlags,
-      W.pairing g ∈ F.internalFlags →
-      isOut (W.pairing g) = !isOut g := by
-    intro g hg _hpg
-    have hgf : g ∈ F.flags := mem_flags_of_internalFlags F hg
-    simp only [isOut, dite_eq_left hgf,
-      dite_eq_left (F.pairing_mem g hgf)]
-    have hσσ : F.pairingPerm ⟨W.pairing g, F.pairing_mem g hgf⟩ =
-        ⟨g, hgf⟩ := Subtype.ext (by simp [W.pairing_invol g])
-    have hσ_eq : (⟨W.pairing g, F.pairing_mem g hgf⟩ :
-        {f : W.Flag // f ∈ F.flags}) = F.pairingPerm ⟨g, hgf⟩ :=
-      Subtype.ext (by simp)
-    rw [hσσ, hσ_eq]
-    exact decide_lt_flip' (Ne.symm (orbitMin_pairing_ne ⟨g, hgf⟩))
-  exact ⟨isOut, hmatch_flip, hpairing_flip⟩
+  exact ⟨isOut,
+    (by
+      intro g hg
+      have hgf : g ∈ F.flags := mem_flags_of_internalFlags F hg
+      simp only [isOut, dite_eq_left hgf,
+        dite_eq_left (mem_flags_of_internalFlags F (κ.match_mem g hg))]
+      rw [orbitMin_pairing_match ⟨g, hgf⟩ hg,
+        orbitMin_match ⟨g, hgf⟩ hg]
+      exact decide_lt_flip' (Ne.symm (orbitMin_pairing_ne ⟨g, hgf⟩))),
+    (by
+      intro g hg _hpg
+      have hgf : g ∈ F.flags := mem_flags_of_internalFlags F hg
+      simp only [isOut, dite_eq_left hgf,
+        dite_eq_left (F.pairing_mem g hgf)]
+      have hσσ : F.pairingPerm ⟨W.pairing g, F.pairing_mem g hgf⟩ =
+          ⟨g, hgf⟩ := Subtype.ext (by simp [W.pairing_invol g])
+      have hσ_eq : (⟨W.pairing g, F.pairing_mem g hgf⟩ :
+          {f : W.Flag // f ∈ F.flags}) = F.pairingPerm ⟨g, hgf⟩ :=
+        Subtype.ext (by simp)
+      rw [hσσ, hσ_eq]
+      exact decide_lt_flip' (Ne.symm (orbitMin_pairing_ne ⟨g, hgf⟩)))⟩
 
 end OrientExist
 

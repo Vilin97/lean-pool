@@ -86,9 +86,9 @@ theorem exists_involution_of_even {β : Type}
           · rw [h2, hm_b]; exact ha
           · rw [hm_other x h1 h2]
             have hxs' : x ∈ s' := by
-              simp [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
+              simp only [hs'_def, Finset.mem_erase, ne_eq]; exact ⟨h2, h1, hx⟩
             have := hm'_mem x hxs'
-            simp [hs'_def, Finset.mem_erase] at this; exact this.2.2
+            simp only [hs'_def, Finset.mem_erase, ne_eq] at this; exact this.2.2
       · -- m is an involution on s
         intro x hx
         by_cases h1 : x = a
@@ -97,7 +97,7 @@ theorem exists_involution_of_even {β : Type}
           · rw [h2, hm_b, hm_a]
           · rw [hm_other x h1 h2]
             have hxs' : x ∈ s' := by
-              simp [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
+              simp only [hs'_def, Finset.mem_erase, ne_eq]; exact ⟨h2, h1, hx⟩
             have hm'x_ne_a : m' x ≠ a := fun heq => ha' (heq ▸ hm'_mem x hxs')
             have hm'x_ne_b : m' x ≠ b := fun heq => hb' (heq ▸ hm'_mem x hxs')
             rw [hm_other (m' x) hm'x_ne_a hm'x_ne_b]
@@ -110,7 +110,7 @@ theorem exists_involution_of_even {β : Type}
           · rw [h2, hm_b] at hfp; exact hab hfp
           · rw [hm_other x h1 h2] at hfp
             have hxs' : x ∈ s' := by
-              simp [hs'_def, Finset.mem_erase]; exact ⟨h2, h1, hx⟩
+              simp only [hs'_def, Finset.mem_erase, ne_eq]; exact ⟨h2, h1, hx⟩
             exact hm'_ne x hxs' hfp
 
 /-! ### Part 1: constructing the transition system -/

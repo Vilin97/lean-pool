@@ -182,7 +182,8 @@ def disjUnion (W₁ : Fragment α) (W₂ : Fragment β) :
     | inl ℓ₁ =>
       cases f with
       | inl g =>
-        rcases ha : W₁.attach g with v | ℓ' <;> simp [ha] at h
+        rcases ha : W₁.attach g with v | ℓ' <;> simp only [Sum.elim_inl, ha, Sum.map_inl,
+          reduceCtorEq, Sum.map_inr, Sum.inr.injEq, Sum.inl.injEq] at h
         subst h
         simp [W₁.eq_boundaryFlag ℓ' g ha]
       | inr g =>
@@ -192,7 +193,8 @@ def disjUnion (W₁ : Fragment α) (W₂ : Fragment β) :
       | inl g =>
         rcases ha : W₁.attach g with v | ℓ' <;> simp [ha] at h
       | inr g =>
-        rcases ha : W₂.attach g with v | ℓ' <;> simp [ha] at h
+        rcases ha : W₂.attach g with v | ℓ' <;> simp only [Sum.elim_inr, ha, Sum.map_inl,
+          reduceCtorEq, Sum.map_inr, Sum.inr.injEq] at h
         subst h
         simp [W₂.eq_boundaryFlag ℓ' g ha]
   circles := W₁.circles + W₂.circles

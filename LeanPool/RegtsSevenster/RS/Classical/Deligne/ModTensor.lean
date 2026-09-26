@@ -243,7 +243,9 @@ lemma actLeft_actRight [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : D) [ModObj A X] [IsCommMonObj A] :
     A ◁ actRight A X ≫ actLeft A X =
       (α_ A X A).inv ≫ actLeft A X ▷ A ≫ actRight A X := by
-  simp [actRight, actLeft_actLeft]
+  simp only [actRight, whiskerLeft_comp, Category.assoc, actLeft_actLeft,
+    BraidedCategory.braiding_naturality_left_assoc, BraidedCategory.braiding_tensor_left_hom,
+    Iso.hom_inv_id_assoc, Iso.inv_hom_id_assoc]
   rw [← comp_whiskerRight_assoc, IsCommMonObj.mul_comm]
 
 /-- For a commutative monoid, the braided right action is
@@ -254,7 +256,10 @@ lemma actRight_actRight [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
     (X : D) [ModObj A X] [IsCommMonObj A] :
     actRight A X ▷ A ≫ actRight A X =
       (α_ X A A).hom ≫ X ◁ μ[A] ≫ actRight A X := by
-  simp [actRight, actLeft_actLeft]
+  simp only [actRight, comp_whiskerRight, Category.assoc,
+    BraidedCategory.braiding_naturality_left_assoc, BraidedCategory.braiding_tensor_left_hom,
+    actLeft_actLeft, Iso.hom_inv_id_assoc, BraidedCategory.braiding_naturality_right_assoc,
+    BraidedCategory.braiding_tensor_right_hom]
   rw [← comp_whiskerRight_assoc, IsCommMonObj.mul_comm]
 
 end RightAction
@@ -943,7 +948,7 @@ lemma modTensorAct_map [Category.{v} D] [MonoidalCategory D] (A : D) [MonObj A]
         A ◁ (f.hom ⊗ₘ g.hom) ≫ (α_ A M'.X N'.X).inv ≫
           actLeft A M'.X ▷ N'.X := by
     conv_rhs => rw [← id_tensorHom, associator_inv_naturality_assoc]
-    simp
+    simp only [id_tensorHom, Iso.cancel_iso_inv_left]
     rw [← tensorHom_id (actLeft A M.X) N.X,
       ← tensorHom_id (actLeft A M'.X) N'.X,
       tensorHom_comp_tensorHom, tensorHom_comp_tensorHom]

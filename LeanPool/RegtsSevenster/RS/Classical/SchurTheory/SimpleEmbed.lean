@@ -48,7 +48,8 @@ theorem exists_simple_submodule_linearEquiv [Group G] [Finite G]
       have h1 : φ 1 ∈ range φ := mem_range_self φ 1
       have h1bot := h h1
       rw [Submodule.mem_bot] at h1bot
-      simp [φ, toSpanSingleton, smulRight] at h1bot
+      simp only [toSpanSingleton, smulRight, id_coe, id_eq, coe_mk, AddHom.coe_mk, one_smul,
+        φ] at h1bot
       exact hm h1bot
     rcases hM.eq_bot_or_eq_top (range φ) with h | h
     · exact absurd h hne

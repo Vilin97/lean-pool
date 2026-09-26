@@ -53,22 +53,28 @@ theorem append_pair_slot_cases
   rcases post.eq_nil_or_concat with h | ⟨post', q, rfl⟩
   · subst h
     have := congrArg List.reverse hd
-    simp at this
+    simp only [List.reverse_append, List.reverse_cons, List.reverse_nil, List.nil_append,
+      List.cons_append, List.cons.injEq, List.reverse_inj] at this
     obtain ⟨h1, h2, h3⟩ := this
     exact Or.inr (Or.inr ⟨rfl, h2.symm, h1.symm, by
       simpa using congrArg List.reverse h3⟩)
   · rcases post'.eq_nil_or_concat with h | ⟨post'', q', rfl⟩
     · subst h
       have := congrArg List.reverse hd
-      simp at this
+      simp only [List.reverse_append, List.reverse_cons, List.reverse_nil, List.nil_append,
+        List.cons_append, List.concat_eq_append, List.cons.injEq, List.reverse_eq_cons_iff,
+        List.reverse_reverse] at this
       obtain ⟨h1, h2, h3⟩ := this
       refine Or.inr (Or.inl ⟨by simp [List.concat, h1],
         h2.symm, ?_⟩)
       have h4 := congrArg List.reverse h3
-      simp at h4
+      simp only [List.reverse_append, List.reverse_cons, List.reverse_nil, List.nil_append,
+        List.cons_append, List.reverse_eq_cons_iff, List.reverse_reverse] at h4
       rw [h4]
     · have := congrArg List.reverse hd
-      simp at this
+      simp only [List.reverse_append, List.reverse_cons, List.reverse_nil, List.nil_append,
+        List.cons_append, List.concat_eq_append, List.append_assoc, List.cons.injEq,
+        List.reverse_eq_append_iff, List.reverse_reverse] at this
       obtain ⟨h1, h2, h3⟩ := this
       refine Or.inl ⟨post'', ⟨by
         rw [show (post''.concat q').concat q =

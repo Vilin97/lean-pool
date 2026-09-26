@@ -1985,8 +1985,10 @@ theorem stepStatusLedger
     obtain ⟨ε₁, ε₂, hε₁, hε₂, hne, hPne, hcross, hfar, hout⟩ :=
       pathMatch_repair_swap hsq hloc
     by_cases hsame : o₁.isOut c = o₁.isOut a
-    · exact stepStatusLedger_nonseparated hM st hbnd hc₁ g hg hsq heq hloc hε₁ hε₂ hne hPne hcross hfar hout hsame
-    · exact stepStatusLedger_separated hM st hbnd hc₁ g hg hsq heq hloc hε₁ hε₂ hne hPne hcross hfar hout hsame
+    · exact stepStatusLedger_nonseparated hM st hbnd hc₁ g hg hsq heq hloc
+        hε₁ hε₂ hne hPne hcross hfar hout hsame
+    · exact stepStatusLedger_separated hM st hbnd hc₁ g hg hsq heq hloc
+        hε₁ hε₂ hne hPne hcross hfar hout hsame
 
 /-- **The chain status ledger**: fold the per-step ledger along a
 repair chain — the relabel set is the status difference of the

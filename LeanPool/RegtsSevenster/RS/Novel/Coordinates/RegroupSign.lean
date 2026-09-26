@@ -1092,7 +1092,7 @@ theorem sign_listIndexPerm_matched_global (W : ClosedFragment) (F : EdgeSubset
   rw [List.getElem?_eq_getElem h2k_bound, List.getElem?_eq_getElem hk]
     at hM2k_even
   have hM2k_is_mBk : M[2 * k] = mB[k] := by
-    have := Option.some.inj hM2k_even; simp at this; exact this
+    have := Option.some.inj hM2k_even; simp only [id_eq] at this; exact this
   have hmBk_in : o.isOut (mB[k]'hk).val = false := by
     simp only [mB, matchedBase, List.getElem_map]
     exact matchedInFlag_isIn W F o _

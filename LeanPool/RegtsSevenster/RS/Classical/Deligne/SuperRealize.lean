@@ -692,7 +692,9 @@ theorem unitHomMul_assoc
         R ◁ R ◁ c ≫ R ◁ μ[R] ≫ μ[R] := by
     rw [rightUnitor_inv_naturality_assoc, ← whisker_exchange_assoc,
       MonObj.mul_assoc, associator_naturality_right_assoc]
-  simp [unitHomMul, tensorHom_def]
+  simp only [unitHomMul, tensorHom_def, whiskerRight_id, Category.assoc, whiskerLeft_comp,
+    whiskerLeft_rightUnitor, whiskerLeft_rightUnitor_inv, triangle_assoc_comp_left_inv_assoc,
+    Iso.hom_inv_id_assoc, Iso.inv_hom_id_assoc, Iso.cancel_iso_inv_left, Iso.cancel_iso_hom_left]
   rw [← unitors_equal]
   simp only [Iso.inv_hom_id_assoc]
   rw [key]

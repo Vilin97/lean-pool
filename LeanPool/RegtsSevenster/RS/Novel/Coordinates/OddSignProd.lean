@@ -152,7 +152,8 @@ theorem prod_oddSignAt (o : κ.Orientation) (φ : F.OddColouring ℓ) :
   congr 1; ext f
   simp only [e, Equiv.coe_fn_mk]
   rw [o.match_flip _ f.prop]
-  cases hb : o.isOut f.val <;> simp
+  cases hb : o.isOut f.val <;> simp only [Bool.not_false, Bool.true_eq_false, ↓reduceIte,
+    Bool.false_eq_true, Bool.not_true]
   · unfold EdgeSubset.oddSignFn
     congr 1
     exact congrArg φ.val (Subtype.ext (κ.match_invol _ f.prop))

@@ -402,7 +402,7 @@ private theorem interfaceStepEquiv_symm_inr_below (s t u : ℕ) (j : Fin (t + u)
   simp only [finRemoveEquiv, Equiv.coe_fn_symm_mk]
   rw [finSuccEquiv'_symm_some_below]
   · simp [Fin.castSucc]
-  · simp [Fin.lt_def, Fin.castSucc]; exact hj
+  · simp only [Fin.castSucc, Fin.lt_def, Fin.val_castAdd]; exact hj
 
 private theorem interfaceStepEquiv_symm_inr_above (s t u : ℕ) (j : Fin (t + u))
     (hj : ¬ j.val < t) :
