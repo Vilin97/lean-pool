@@ -516,12 +516,9 @@ theorem measureReal_shiftedHighBottomPairEvent_quenchedProbeEnvelope_le_interpol
       simpa [K, N0, Hshift, D, S, b, L, τ, pref, highA, crudeA,
         Dhigh, Dcrude] using!
         hx hnm hqm ht hαt
-    have hη_pos : 0 < η := by
-      simpa [η] using
-        finiteQuenchedTailExponent_pos
-          (d := d) (σ := σ) (t := t) hσ_pos ht
-    have hτ_pos : 0 < τ := by
-      simpa [τ] using finiteQuenchedTailTau_pos hσ_pos
+    have hη_pos : 0 < η :=
+      finiteQuenchedTailExponent_pos (d := d) (σ := σ) (t := t) hσ_pos ht
+    have hτ_pos : 0 < τ := finiteQuenchedTailTau_pos hσ_pos
     have hb_pos : 0 < b := by
       dsimp [b]
       have hd : 0 < (d : ℝ) := by
