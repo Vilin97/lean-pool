@@ -13,6 +13,9 @@ on:
       - 'lean-toolchain'
       - 'docbuild/**'
       - 'python/lean_pool/exposition/**'
+      - 'python/lean_pool/quality.py'
+      - 'python/lean_pool/challenge.py'
+      - 'python/lean_pool/validation_cache.py'
       - 'python/lean_pool/ci_artifacts.py'
       - 'scripts/exposition/**'
       - '.github/workflows/docs.yml'
@@ -34,11 +37,20 @@ on:
       - 'lean-toolchain'
       - 'docbuild/**'
       - 'python/lean_pool/exposition/**'
+      - 'python/lean_pool/quality.py'
+      - 'python/lean_pool/challenge.py'
+      - 'python/lean_pool/validation_cache.py'
       - 'python/lean_pool/ci_artifacts.py'
       - 'scripts/exposition/**'
       - '.github/workflows/notice.yml'
       - '.github/workflows/docs.yml'
   workflow_dispatch:
+    inputs:
+      preview:
+        description: "Generate full documentation for this branch on demand"
+        type: boolean
+        required: false
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -157,7 +169,10 @@ jobs:
     # Exposition consumes compiled Lean, not doc-gen's Mathlib SQLite data.
     # Reuse the matching CI artifact directly instead of waiting for docInfo.
     needs: preflight
-    if: needs.preflight.outputs.readme_only != 'true'
+    if: >-
+      needs.preflight.outputs.readme_only != 'true' &&
+      ((github.ref == 'refs/heads/main' && github.event_name != 'pull_request') ||
+       (github.event_name == 'workflow_dispatch' && inputs.preview))
     runs-on: ubuntu-latest
     name: Build exposition site
     steps:
@@ -278,7 +293,10 @@ jobs:
   # can consume the remainder of GitHub's six-hour job limit.
   mathlib_doc_info:
     needs: preflight
-    if: needs.preflight.outputs.readme_only != 'true'
+    if: >-
+      needs.preflight.outputs.readme_only != 'true' &&
+      ((github.ref == 'refs/heads/main' && github.event_name != 'pull_request') ||
+       (github.event_name == 'workflow_dispatch' && inputs.preview))
     runs-on: ubuntu-latest
     name: Build Mathlib documentation data
     steps:
@@ -368,7 +386,10 @@ jobs:
     needs:
       - preflight
       - mathlib_doc_info
-    if: needs.preflight.outputs.readme_only != 'true'
+    if: >-
+      needs.preflight.outputs.readme_only != 'true' &&
+      ((github.ref == 'refs/heads/main' && github.event_name != 'pull_request') ||
+       (github.event_name == 'workflow_dispatch' && inputs.preview))
     runs-on: ubuntu-latest
     name: Build doc-gen4 site
     steps:
