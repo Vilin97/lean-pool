@@ -268,15 +268,9 @@ theorem Peps_not_nwFeasible {ε : ℝ} (h0 : 0 < ε) (h1 : ε ≤ 1 / 64) :
   rw [zEps_eq_atom (ε := ε), hA, hB, hC, Nat.cast_choose_two] at hfan
   linarith
 
-/-- Paper Proposition 5.13 (`prop:family`), part (c): `P_ε` violates the Finner inequality,
-since `m³ < ε² ≤ z²` when `ε < 1/8`; hence `P_ε ∉ C_tri`. -/
-theorem Peps_not_compatible {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) :
-    ¬ TriangleCompatible (Peps ε) := by
-  intro hc
-  have hε1 : ε < 1 := by linarith
-  have hfin := finner_of_compatible hc
-  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg (ε := ε)
-  rw [zEps_eq_atom (ε := ε), hA, hB, hC] at hfin
+/-- The numerical Finner obstruction for the family `P_ε`. -/
+theorem mEps_cube_lt_zEps_sq {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) :
+    mEps ε ^ 3 < zEps ε ^ 2 := by
   obtain ⟨u, hu0, hu3, hσ⟩ := exists_cube_root h0
   have hu2 : u < 1 / 2 := by nlinarith [hu3, h1, hu0, sq_nonneg u, mul_pos hu0 hu0]
   have hu2pos : (0 : ℝ) < u ^ 2 := pow_pos hu0 2
@@ -305,7 +299,17 @@ theorem Peps_not_compatible {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) :
   have hz2 : u ^ 6 ≤ zEps ε ^ 2 :=
     calc u ^ 6 = (u ^ 3) ^ 2 := by ring
       _ ≤ zEps ε ^ 2 := pow_le_pow_left₀ hu3pos.le hzlb 2
-  nlinarith [hfin, hm3, hz2]
+  exact hm3.trans_le hz2
+
+/-- Paper Proposition 5.13 (`prop:family`), part (c): `P_ε` violates the Finner inequality,
+since `m³ < ε² ≤ z²` when `ε < 1/8`; hence `P_ε ∉ C_tri`. -/
+theorem Peps_not_compatible {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) :
+    ¬ TriangleCompatible (Peps ε) := by
+  intro hc
+  have hfin := finner_of_compatible hc
+  obtain ⟨hA, hB, hC⟩ := mEps_eq_marg (ε := ε)
+  rw [zEps_eq_atom (ε := ε), hA, hB, hC] at hfin
+  nlinarith [hfin, mEps_cube_lt_zEps_sq h0 h1]
 
 /-- Paper Proposition 5.13 (`prop:family`), the finite sandwich on the first rejecting order
 of the Navascués–Wolfe hierarchy. -/

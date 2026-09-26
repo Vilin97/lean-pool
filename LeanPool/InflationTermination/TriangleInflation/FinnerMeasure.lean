@@ -609,53 +609,14 @@ theorem Rlaw_not_compatibleM {p : ℝ} (h0 : 0 < p) (h1 : p < 1) :
   rw [ha, hA, hB, hC] at hfin
   nlinarith [hfin, mul_pos (mul_pos h0 h0) (sub_pos.2 h1)]
 
-/-- The real cube root of `ε`, with `u³ = ε` and `σ = u²/2`. -/
-private lemma exists_cube_rootM {ε : ℝ} (h0 : 0 < ε) :
-    ∃ u : ℝ, 0 < u ∧ u ^ 3 = ε ∧ sigmaEps ε = u ^ 2 / 2 := by
-  refine ⟨ε ^ ((1 : ℝ) / 3), Real.rpow_pos_of_pos h0 _, ?_, ?_⟩
-  · rw [← Real.rpow_natCast (ε ^ ((1 : ℝ) / 3)) 3, ← Real.rpow_mul h0.le]
-    norm_num
-  · simp only [sigmaEps]
-    rw [← Real.rpow_natCast (ε ^ ((1 : ℝ) / 3)) 2, ← Real.rpow_mul h0.le]
-    norm_num
-
 /-- Paper Proposition 5.13 (`prop:family`), part (c), arbitrary latent alphabets. -/
 theorem Peps_not_compatibleM {ε : ℝ} (h0 : 0 < ε) (h1 : ε < 1 / 8) :
     ¬ TriangleCompatibleM (Peps ε) := by
   intro hc
-  have hε1 : ε < 1 := by linarith
   have hfin := finner_of_compatibleM hc
   obtain ⟨hA, hB, hC⟩ := mEps_eq_marg (ε := ε)
   rw [zEps_eq_atom (ε := ε), hA, hB, hC] at hfin
-  obtain ⟨u, hu0, hu3, hσ⟩ := exists_cube_rootM h0
-  have hu2 : u < 1 / 2 := by nlinarith [hu3, h1, hu0, sq_nonneg u, mul_pos hu0 hu0]
-  have hu2pos : (0 : ℝ) < u ^ 2 := pow_pos hu0 2
-  have hu3pos : (0 : ℝ) < u ^ 3 := pow_pos hu0 3
-  have hu3le : u ^ 3 ≤ 1 / 8 := by rw [hu3]; linarith
-  have hm : mEps ε = u ^ 3 + (1 - u ^ 3) * (u ^ 2 / 2) := by
-    simp only [mEps, hσ]; rw [hu3]
-  have hzz : zEps ε = u ^ 3 + (1 - u ^ 3) * (u ^ 2 / 2) ^ 3 := by
-    simp only [zEps, hσ]; rw [hu3]
-  have hm0 : 0 < mEps ε := by
-    rw [hm]
-    nlinarith [mul_pos (show (0 : ℝ) < 1 - u ^ 3 by linarith) hu2pos]
-  have hmub : mEps ε ≤ u ^ 3 + u ^ 2 / 2 := by
-    rw [hm]
-    nlinarith [mul_nonneg hu3pos.le hu2pos.le]
-  have hlt1 : u ^ 3 + u ^ 2 / 2 < u ^ 2 := by
-    nlinarith [mul_pos hu2pos (show (0 : ℝ) < 1 / 2 - u by linarith)]
-  have hm3 : mEps ε ^ 3 < u ^ 6 :=
-    calc mEps ε ^ 3 ≤ (u ^ 3 + u ^ 2 / 2) ^ 3 := pow_le_pow_left₀ hm0.le hmub 3
-      _ < (u ^ 2) ^ 3 := pow_lt_pow_left₀ hlt1 (by positivity) (show (3 : ℕ) ≠ 0 by norm_num)
-      _ = u ^ 6 := by ring
-  have hzlb : u ^ 3 ≤ zEps ε := by
-    rw [hzz]
-    nlinarith [mul_nonneg (show (0 : ℝ) ≤ 1 - u ^ 3 by linarith)
-      (show (0 : ℝ) ≤ (u ^ 2 / 2) ^ 3 by positivity)]
-  have hz2 : u ^ 6 ≤ zEps ε ^ 2 :=
-    calc u ^ 6 = (u ^ 3) ^ 2 := by ring
-      _ ≤ zEps ε ^ 2 := pow_le_pow_left₀ hu3pos.le hzlb 2
-  nlinarith [hfin, hm3, hz2]
+  nlinarith [hfin, mEps_cube_lt_zEps_sq h0 h1]
 
 /-- Paper Theorem 5.2 (`thm:main`), violation half, arbitrary latent alphabets. -/
 theorem main_violationM (t : ℕ) (ht : 1 ≤ t) :
