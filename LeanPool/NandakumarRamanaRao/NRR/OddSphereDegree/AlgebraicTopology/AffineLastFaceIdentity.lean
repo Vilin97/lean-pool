@@ -95,8 +95,8 @@ theorem affineSubdiv_face_last_eq_boundary_subdiv_of_faceData {n : ℕ}
   rw [ Fin.sum_univ_castSucc ];
   simp +decide only [← hy, prefixBarycenter_castSucc_eq_map_of_prefix π ι ρ hιρ,
     FiniteSimplex.map_coe, affineSubdivMap_apply];
-  simp? +decide [ Finset.sum_filter, Finset.mul_sum _ _ _, mul_comm,
-    FunOnFinite.linearMap_apply_apply ];
+  simp +decide only [FunOnFinite.linearMap_apply_apply, sum_filter,
+    Finset.mul_sum _ _ _, mul_ite, mul_comm, zero_mul, affineSubdivMap_apply];
   rw [ Finset.sum_comm ];
   simp +decide only [sum_ite_irrel, sum_const_zero, add_eq_left, mul_eq_zero];
   exact Or.inl hxlast
