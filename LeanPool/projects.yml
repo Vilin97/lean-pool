@@ -10308,49 +10308,40 @@ projects:
       - '12F05'
       - '13F25'
 
-  - slug: marshallhalltheorem
-    title: Marshall Hall's theorem through finite cores
-    summary: Formalizes Marshall Hall's finite-index free-factor theorem for finitely generated
-      subgroups of finite-rank free groups. The proof extracts the finitely many suffix states
-      of a subgroup generating set, completes the resulting partial generator actions to permutations
-      of a finite state set, identifies the connected orbit with a finite core, and extends
-      a geodesic spanning tree to obtain an inclusion-compatible free-product decomposition.
-      It also exposes an explicit finite permutation separator for every finitely generated
-      subgroup and element outside it, yielding the LERF consequence. The repository also proves
-      binary and finite-indexed free-group instances of Grushko--Neumann rank additivity, and
-      the arbitrary-factor binary theorem. The arbitrary-factor proof is carried by a finite
-      labelled-graph fold, source-unfold, and monochromatic-vertex contraction reduction.
-    branch: group theory
-    entry_module: LeanPool.MarshallHall
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Arthur Freitas Ramos
-    - David Barros Hulak
-    - Ruy J. G. B. de Queiroz
+    - Ezzeri Esa
     source:
-      url: https://github.com/arthur742ramos/marshallhalltheorem
-      github_repo: arthur742ramos/marshallhalltheorem
-      commit: 99f419644cebf61a5f78eac334fcc1f19b0ccc73
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
     main_declarations:
-    - MarshallHall.marshallHall
-    - MarshallHall.rank_freeProduct_eq_add
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: MarshallHall.marshallHall
-      informal: Every finitely generated subgroup of a finite-rank free group is an inclusion-compatible
-        free factor of a finite-index subgroup.
-    - declaration: LERFChallenge.freeGroup_finite_permutation_separator
-      informal: Every element outside a finitely generated subgroup of a finite-rank free group
-        can be separated by an explicit finite permutation action.
-    - declaration: MarshallHall.rank_freeProduct_eq_add
-      informal: The rank of a free product of finitely generated groups is the sum of their
-        ranks.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - group-theory
+    - functional-analysis
     msc:
-    - 20E07
-    - 20F65
-    - 05C25
+    - 47A10
+    - 47B15
     provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
@@ -10449,3 +10440,48 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: marshallhalltheorem
+    title: Marshall Hall's theorem through finite cores
+    summary: Formalizes Marshall Hall's finite-index free-factor theorem for finitely generated
+      subgroups of finite-rank free groups. The proof extracts the finitely many suffix states
+      of a subgroup generating set, completes the resulting partial generator actions to permutations
+      of a finite state set, identifies the connected orbit with a finite core, and extends
+      a geodesic spanning tree to obtain an inclusion-compatible free-product decomposition.
+      It also exposes an explicit finite permutation separator for every finitely generated
+      subgroup and element outside it, yielding the LERF consequence. The repository also proves
+      binary and finite-indexed free-group instances of Grushko--Neumann rank additivity, and
+      the arbitrary-factor binary theorem. The arbitrary-factor proof is carried by a finite
+      labelled-graph fold, source-unfold, and monochromatic-vertex contraction reduction.
+    branch: group theory
+    entry_module: LeanPool.MarshallHall
+    authors:
+    - Arthur Freitas Ramos
+    - David Barros Hulak
+    - Ruy J. G. B. de Queiroz
+    source:
+      url: https://github.com/arthur742ramos/marshallhalltheorem
+      github_repo: arthur742ramos/marshallhalltheorem
+      commit: 99f419644cebf61a5f78eac334fcc1f19b0ccc73
+    license: Apache-2.0
+    status: verified
+    main_declarations:
+    - MarshallHall.marshallHall
+    - MarshallHall.rank_freeProduct_eq_add
+    main_results:
+    - declaration: MarshallHall.marshallHall
+      informal: Every finitely generated subgroup of a finite-rank free group is an inclusion-compatible
+        free factor of a finite-index subgroup.
+    - declaration: LERFChallenge.freeGroup_finite_permutation_separator
+      informal: Every element outside a finitely generated subgroup of a finite-rank free group
+        can be separated by an explicit finite permutation action.
+    - declaration: MarshallHall.rank_freeProduct_eq_add
+      informal: The rank of a free product of finitely generated groups is the sum of their
+        ranks.
+    tags:
+    - group-theory
+    msc:
+    - 20E07
+    - 20F65
+    - 05C25
+    provenance: AI
