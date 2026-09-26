@@ -63,6 +63,7 @@ theorem throughAgree_isEmpty {V : Fragment L} [IsEmpty L]
     (st : GenBoundaryState k ℓ L)
     (hbnd : genBoundarySubsetMatches V F.flags st) :
     ThroughAgree F st hbnd := by
+  classical
   intro f hb _
   exact absurd (Finset.mem_filter.mp hb).2 (fun hx =>
     isEmptyElim hx.choose)
