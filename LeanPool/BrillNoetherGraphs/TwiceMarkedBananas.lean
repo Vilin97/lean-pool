@@ -27,7 +27,8 @@ formalization in this library.
 * Every proved lemma/proposition/theorem/corollary gets a **statement
   theorem** here (named `Bananas.TwiceMarkedBananas.s<section>_...`). Its
   statement is written over the self-contained, Mathlib-only vocabulary of
-  the namespace `TMB` in the imported vocabulary modules — the same vocabulary block, verbatim, as the
+  the namespace `TMB` in the imported vocabulary modules — the same vocabulary block, verbatim, as
+  the
   statement-only audit copy `TwiceMarkedBananasStatements.lean` — and its
   proof crosses explicitly from that vocabulary to the repository's proved
   API through the bridge lemmas of the section *Bridges to the
@@ -58,7 +59,8 @@ restatement of an existing proof. Further paper-specific reference sources are
 ## Bridges to the implementation library
 
 The imported `CoreVocabulary` and `StatementVocabulary` modules retain the
-standalone statement vocabulary corresponding to `TwiceMarkedBananasStatements.lean`.  The declarations below are where
+standalone statement vocabulary corresponding to `TwiceMarkedBananasStatements.lean`.  The
+declarations below are where
 this file deliberately crosses into the implementation library: each
 standalone notion is carried to its library counterpart by a conversion
 function (`toLib`, `toLibBanana`, `toLibTM`, ...), and the vocabulary
@@ -574,7 +576,8 @@ theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_12a
 > into two segments with the same ratio a/b ∈ ℚ, then (G,u,v) has
 > k-general transmission, where k is the torsion order of (G,u,v)."
 
-Exact and unconditional. Also Corollary 4.17 (`cor:evenlyMarkedKGT`). The theorem discharges the auxiliary inversion-data hypothesis. -/
+Exact and unconditional. Also Corollary 4.17 (`cor:evenlyMarkedKGT`). The theorem discharges the
+auxiliary inversion-data hypothesis. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_12b
     (B : Banana 2) (α β : Fin 3) (i : B.PathPosition α)
     (j : B.PathPosition β)
@@ -638,7 +641,9 @@ theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_13b
 > at least one of which lies at least distance 2 from both multivalent
 > vertices. Then there exist non-submodular divisors on (G,u,v)."
 
-**Formalization note.** The checked statement includes the additional case in which the other mark is the midpoint of a distinct length-two strand. This is represented by `CorrectedBananaSimpleException`; see `Bananas/FORMALIZATION_NOTES.md`. -/
+**Formalization note.** The checked statement includes the additional case in which the other mark
+is the midpoint of a distinct length-two strand. This is represented by
+`CorrectedBananaSimpleException`; see `Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s1_thm1_16
     {g : ℕ} (hg : 3 ≤ g) (B : Banana g) (alpha beta : Fin (g + 1))
     (i : B.PathPosition alpha) (j : B.PathPosition beta)
@@ -905,7 +910,8 @@ rather than as a separately-defined `Jac(G)`. -/
 > ℤ²/⟨(a+c,c),(-a,b)⟩."
 
 Exact: `Bananas.thetaLatticeQuotientEquivClassRange`
-(`Bananas/Theta/ThetaJacobianPresentation.lean`). (the checked declaration is the reference used hererow calling this partial; the isomorphism is present.) -/
+(`Bananas/Theta/ThetaJacobianPresentation.lean`). (the checked declaration is the reference used
+hererow calling this partial; the isomorphism is present.) -/
 
 /- **Definition 2.17** (unlabeled) — "Abel-Jacobi Map".
 
@@ -1237,7 +1243,9 @@ theorem _root_.Bananas.TwiceMarkedBananas.s3_cor3_8
 > (i,j) ∈ {(0,n_α),(1,n_α),(0,n_α-1)}; 1b) α≠β and, up to reversing each
 > strand, (i,j)=(1,n_β-1); or 2) there exist divisors D with Δ(D) < 0."
 
-**Formalization note.** The checked statement includes the additional length-two midpoint family as `NSMForBananaLengthTwoCrossException` and uses equality of represented vertices at shared endpoints rather than equality of strand labels; see `Bananas/FORMALIZATION_NOTES.md`. -/
+**Formalization note.** The checked statement includes the additional length-two midpoint family as
+`NSMForBananaLengthTwoCrossException` and uses equality of represented vertices at shared endpoints
+rather than equality of strand labels; see `Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s3_thm3_9
     {g : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β) :
@@ -1683,7 +1691,10 @@ Section 4.
 > reordering, n_0=n_1=2 and (G,u,v)=(G,v_{0,1},v_{1,1}), so k=2; or 2) the
 > torsion order is at least the genus, k ≥ g."
 
-**Formalization note.** The checked exception family includes distinct-strand midpoints when at least one supporting strand has length two. This is expressed by `CorrectedMidpointException`. The length-two branch now follows from the stronger revised Lemma 4.33 (`lem-midpointTorsion`); see `Bananas/FORMALIZATION_NOTES.md`. -/
+**Formalization note.** The checked exception family includes distinct-strand midpoints when at
+least one supporting strand has length two. This is expressed by `CorrectedMidpointException`. The
+length-two branch now follows from the stronger revised Lemma 4.33 (`lem-midpointTorsion`); see
+`Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_prop4_19
     {g k : ℕ} (hg : 3 ≤ g) (B : Banana g) (α β : Fin (g + 1))
     (i : B.PathPosition α) (j : B.PathPosition β)
@@ -1888,7 +1899,9 @@ Section 4.
 > "If D=gv_{0,n_0}, τ=τ_D then three residue-indexed cases give τ(b) as
 > b/n_1+1, g+(b+1)/n_1, or g+2⌊b/n_1⌋-b+2 according to b mod n_1."
 
-**Formalization note.** The checked block starts at `b = 2`, uses a single positive-remainder convention, and includes the `+2` term in the positive-residue row; see `Bananas/FORMALIZATION_NOTES.md`. -/
+**Formalization note.** The checked block starts at `b = 2`, uses a single positive-remainder
+convention, and includes the `+2` term in the positive-residue row; see
+`Bananas/FORMALIZATION_NOTES.md`. -/
 theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_30
     {g : ℕ} (B : Banana g) (alpha beta : Fin (g + 1))
     (b : ℕ) (tau : ℤ → ℤ)
@@ -1910,14 +1923,16 @@ theorem _root_.Bananas.TwiceMarkedBananas.s4_lem4_30
 > "When n_0 is sufficiently large relative to the genus, then we get a
 > lower bound on M which is quadratic in g."
 
-**Formalization note.** The checked target `correctedCrossOneOffForcedCount` separates the `n = 2` and `n ≥ 3` branches, and `CrossOneOffLongEnough` makes the length threshold explicit.
+**Formalization note.** The checked target `correctedCrossOneOffForcedCount` separates the `n = 2`
+and `n ≥ 3` branches, and `CrossOneOffLongEnough` makes the length threshold explicit.
 The generic affine-transmission-existence lemma
 (`exists_affine_transmission_of_allSubmodular`,
 `Bananas/Transmission/TransmissionAPI.lean`) supplies only that existence, not this
 quadratic count, so the theorem below (from
 `Bananas/CrossOneOff/CrossOneOffCorrectedInversion.lean`) is the one to cite.
 
-The required period-separation inequality is derived from the torsion order, outside the midpoint family `n_alpha = n_beta = 2` already excluded by `CrossOneOffLongEnough`, using
+The required period-separation inequality is derived from the torsion order, outside the midpoint
+family `n_alpha = n_beta = 2` already excluded by `CrossOneOffLongEnough`, using
 `crossOneOff_corrected_inversion_lower_bound_of_not_both_two`
 (`Bananas/CrossOneOff/CrossOneOffCorrectedInversion.lean`, via
 `crossOneOff_cutoff_le_torsionOrder_of_not_both_two`,

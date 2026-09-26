@@ -8,7 +8,8 @@ module
 
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow04CoverBase
 
-/-! **Independent generated check.** This module provides an additional generated proof of row 04 and is not imported by the main `LowGenus` root.
+/-! **Independent generated check.** This module provides an additional generated proof of row 04
+and is not imported by the main `LowGenus` root.
 
 Generated cell chunk 1 of 2 for the AR row-04 chamber cover
 (cells 98-194).  Split across modules because the kernel cost of

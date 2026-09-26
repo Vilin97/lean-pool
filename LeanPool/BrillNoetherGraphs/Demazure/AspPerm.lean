@@ -548,7 +548,8 @@ private lemma b_move_up_raw (a b b' : ℤ) (b_le_b' : b ≤ b') :
   rw [← h_union, Finset.card_union_of_disjoint h_disj]
 
 /-- We have $s_\alpha(a+1,b) = s_\alpha(a,b) + \delta(\alpha^{-1}(a) \ge b)$.
-This is Equation (13) (`eq:a+1`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+This is Equation (13) (`eq:a+1`) of [An extended Demazure
+product](https://arxiv.org/abs/2206.14227). -/
 private lemma a_step_raw (a b : ℤ) : τ.sRaw (a + 1) b = τ.sRaw a b + (if τ⁻¹ a ≥ b then 1 else 0)
   := by
   rw [a_move_up_raw τ a (a + 1) b (by omega)]
@@ -570,7 +571,8 @@ private lemma a_step_raw (a b : ℤ) : τ.sRaw (a + 1) b = τ.sRaw a b + (if τ�
 
 
 /-- We have $s_\alpha(a,b+1) = s_\alpha(a,b) - \delta(\alpha(b)<a)$.
-This is Equation (12) (`eq:b+1`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+This is Equation (12) (`eq:b+1`) of [An extended Demazure
+product](https://arxiv.org/abs/2206.14227). -/
 private lemma b_step_raw (a b : ℤ) : τ.sRaw a (b+1) = τ.sRaw a b - (if τ b < a then 1 else 0)
   := by
   have move_up := b_move_up_raw τ a b (b+1) (by omega)
@@ -600,7 +602,8 @@ private lemma b_step_raw (a b : ℤ) : τ.sRaw a (b+1) = τ.sRaw a b - (if τ b 
 
 /-- The key duality_raw formula for slipfaces of ASP permutations:
 $s_\alpha(a,b) - s_{\alpha^{-1}}(b,a) = \chi_\alpha + a - b$.
-This is Equation ($\dagger$) (`eq:saDuality`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227). -/
+This is Equation ($\dagger$) (`eq:saDuality`) of [An extended Demazure
+product](https://arxiv.org/abs/2206.14227). -/
 private theorem duality_raw (a b : ℤ) : τ.sRaw a b - (τ⁻¹).sRaw b a = τ.χ + a - b := by
   let h (a b : ℤ) := τ.sRaw a b - (τ⁻¹).sRaw b a - a + b
   have h_zero : h 0 0 = τ.χ := by
@@ -1286,7 +1289,8 @@ lemma Γ_eq : τ.s.Γ = { ⟨a, b⟩ | τ b = a } := by
     Decidable.not_not, Set.mem_ofPred_eq]
 
 /-- The slipface of an ASP permutation is submodular.
-*Proposition 4.3* (`prop:imageASP`) of [An extended Demazure product](https://arxiv.org/abs/2206.14227), one direction. -/
+*Proposition 4.3* (`prop:imageASP`) of [An extended Demazure
+product](https://arxiv.org/abs/2206.14227), one direction. -/
 lemma submodular : τ.s.submodular := by
   intro a b
   have Delta_eq := τ.Delta_eq a b

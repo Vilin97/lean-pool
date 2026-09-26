@@ -9,7 +9,8 @@ module
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveClosedOrbit
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveCoreAtlas
 
-/-! **Independent generated check.** This module provides an additional generated proof of row 06 and is not imported by the main `LowGenus` root.
+/-! **Independent generated check.** This module provides an additional generated proof of row 06
+and is not imported by the main `LowGenus` root.
 
 Generated symmetry data for the AR row-06 fundamental domain.
 

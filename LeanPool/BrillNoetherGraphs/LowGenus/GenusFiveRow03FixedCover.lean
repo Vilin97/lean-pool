@@ -48,7 +48,8 @@ affine potential is zero. -/
 def witness0 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [], [], [], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [], [], [], [],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 1 for the row-03 closed cover: `alpha` is 1 at slots 5, 6, 8, and
 zero elsewhere. `beta` is -1 at slots 5, 6, 7, 8, and zero elsewhere. The nonzero affine
@@ -56,7 +57,8 @@ potentials occur at vertices 4, 5, 6, 7. -/
 def witness1 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0,
+      1, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 2 for the row-03 closed cover: `alpha` is 1 at slots 6, 7, 8, and
 zero elsewhere. `beta` is -1 at slots 5, 6, 7, 8, and zero elsewhere. The nonzero affine
@@ -64,7 +66,9 @@ potentials occur at vertices 4, 5, 6, 7. -/
 def witness2 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0,
+      0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0,
+      1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 3 for the row-03 closed cover: `alpha` is 1 at slots 6, and zero
 elsewhere. `beta` is -1 at slots 6, 8, and zero elsewhere. The nonzero affine potentials occur
@@ -72,7 +76,8 @@ at vertices 4, 5. -/
 def witness3 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0,
+      0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 4 for the row-03 closed cover: `alpha` is 1 at slots 8, and zero
 elsewhere. `beta` is -1 at slots 6, 8, and zero elsewhere. The nonzero affine potentials occur
@@ -80,7 +85,8 @@ at vertices 4, 5. -/
 def witness4 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 5 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 5, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
@@ -88,7 +94,9 @@ nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness5 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, -1], [], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 6 for the row-03 closed cover: `alpha` is -1 at slots 2; 1 at slots
 7, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The nonzero
@@ -96,7 +104,8 @@ affine potentials occur at vertices 3, 4, 5. -/
 def witness6 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 0, 1, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0,
+      0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 7 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
@@ -104,7 +113,9 @@ affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness7 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], [], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 8 for the row-03 closed cover: `alpha` is -1 at slots 2; 1 at slots
 3, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The nonzero
@@ -112,7 +123,8 @@ affine potentials occur at vertices 3, 4, 5. -/
 def witness8 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 9 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 1, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
@@ -120,7 +132,9 @@ nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness9 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 10 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 1, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
@@ -128,7 +142,8 @@ affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness10 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 11 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
 slots 1, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The
@@ -136,7 +151,9 @@ nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness11 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 12 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
 slots 1, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 5, and zero
@@ -144,7 +161,9 @@ elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness12 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1, 0, 0, 0, -1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 13 for the row-03 closed cover: `alpha` is -1 at slots 2; 1 at slots
 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 2, and zero elsewhere. The
@@ -152,7 +171,8 @@ nonzero affine potentials occur at vertices 3, 4, 5. -/
 def witness13 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 14 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 1, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
@@ -160,7 +180,8 @@ affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness14 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 15 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11; 1 at slots 0, and zero
@@ -168,7 +189,9 @@ elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness15 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 16 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 1, 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
@@ -176,7 +199,9 @@ affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness16 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 17 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero elsewhere. The
@@ -184,7 +209,8 @@ nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness17 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 18 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
 slots 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero
@@ -192,7 +218,9 @@ elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness18 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 19 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
 slots 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, 5, and zero
@@ -200,7 +228,8 @@ elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness19 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, -1, 0, 0, 0, 0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 20 for the row-03 closed cover: `alpha` is 1 at slots 5, 6, 7, 8, and
 zero elsewhere. `beta` is -1 at slots 5, 6, 7, 8, and zero elsewhere. The nonzero affine
@@ -208,7 +237,9 @@ potentials occur at vertices 4, 5, 6, 7. -/
 def witness20 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, 0, 0, -1, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [], [0, 0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 0,
+      0, 0, 1, 1], [0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0,
+      1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 21 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The nonzero
@@ -216,7 +247,9 @@ affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness21 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], [], [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 22 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 1, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
@@ -224,7 +257,9 @@ nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness22 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 23 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 5, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11, and zero elsewhere. The
@@ -232,7 +267,9 @@ nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness23 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1, -1, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1, -1, 0, 1], [], [0, 0, 0, 0, 0,
+      0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 24 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, 11; 1 at slots 0, and zero
@@ -240,7 +277,9 @@ elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness24 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 25 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
 slots 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero
@@ -248,7 +287,9 @@ elsewhere. The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness25 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, -1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 26 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 8, 11, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero elsewhere.
@@ -256,7 +297,8 @@ The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness26 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 27 for the row-03 closed cover: `alpha` is -1 at slots 0, 5; 1 at
 slots 1, 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11, and zero elsewhere. The
@@ -264,7 +306,9 @@ nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness27 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, -1, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, -1, 0, 1],
+      []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 28 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 6, 8, and zero elsewhere. `beta` is -1 at slots 1, 6, 8, 11; 1 at slots 0, and zero elsewhere.
@@ -272,7 +316,8 @@ The nonzero affine potentials occur at vertices 2, 4, 5, 6. -/
 def witness28 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, -1, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, -1, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0,
+      0, 0, 0, 0, 0, 1], [0, -1], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 29 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 5, 6, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, and zero elsewhere. The nonzero
@@ -280,7 +325,8 @@ affine potentials occur at vertices 2, 4, 5. -/
 def witness29 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, 0, 0, 0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 30 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 6, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8; 1 at slots 0, and zero elsewhere. The
@@ -288,7 +334,8 @@ nonzero affine potentials occur at vertices 2, 4, 5. -/
 def witness30 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([1, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0,
+      0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 31 for the row-03 closed cover: `alpha` is -1 at slots 0; 1 at slots
 1, 6, and zero elsewhere. `beta` is -1 at slots 1, 5, 6, 8, and zero elsewhere. The nonzero
@@ -296,7 +343,8 @@ affine potentials occur at vertices 2, 4, 5. -/
 def witness31 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([-1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, -1, 0, 0, 0, -1, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [0, 0, -1], [], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0,
+      0, 0, 0, 0, 1], [], []] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 32 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, 7, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 11, and zero
@@ -304,7 +352,9 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness32 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, -1], [0, 0,
+      0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 33 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 11, and zero elsewhere.
@@ -312,7 +362,9 @@ The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness33 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1], [0, 0,
+      0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 34 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 11, and zero
@@ -320,7 +372,9 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness34 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 35 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8, and zero elsewhere. The nonzero
@@ -328,7 +382,8 @@ affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness35 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 36 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
 slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 11, and zero
@@ -336,7 +391,9 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness36 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 37 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
 slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 7, and zero elsewhere.
@@ -344,7 +401,9 @@ The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness37 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1, 0, 0, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 38 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 2, 11, and zero
@@ -352,7 +411,9 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness38 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, -1, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 39 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, and zero elsewhere.
@@ -360,7 +421,8 @@ The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness39 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 40 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
 slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, 11, and zero
@@ -368,7 +430,9 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness40 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 41 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
 slots 3, 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 8, and zero elsewhere. The
@@ -376,7 +440,9 @@ nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness41 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, -1, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 42 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 3, 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 11, and zero
@@ -384,7 +450,8 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness42 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 43 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
 slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, 7, and zero elsewhere.
@@ -392,7 +459,8 @@ The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness43 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, -1, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1, 0, 0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 44 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, 7, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The
@@ -400,7 +468,9 @@ nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness44 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 1, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 1, -1, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 1, -1, -1], [0, 0, 0, 0, 0,
+      0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 45 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 8, and zero elsewhere. The nonzero
@@ -408,7 +478,9 @@ affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness45 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1], [0, 0, 0, 0, 0,
+      0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 46 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 3, 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8, and zero elsewhere. The
@@ -416,7 +488,9 @@ nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness46 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 1, 0, 0, 1, 0, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 0, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0,
+      0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0,
+      -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 47 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 7, 8; 1 at slots 2, and zero
@@ -424,7 +498,8 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness47 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, -1, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 48 for the row-03 closed cover: `alpha` is -1 at slots 2, 7, 11; 1 at
 slots 6, 8, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, and zero elsewhere.
@@ -432,7 +507,8 @@ The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness48 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, -1, 1, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 0] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 1], [], [0, 0, 0, 0, 0, 0, 0, 1, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- Endpoint-slope witness 49 for the row-03 closed cover: `alpha` is -1 at slots 2, 11; 1 at
 slots 6, and zero elsewhere. `beta` is -1 at slots 3, 6, 8; 1 at slots 2, 11, and zero
@@ -440,7 +516,8 @@ elsewhere. The nonzero affine potentials occur at vertices 3, 4, 5, 7. -/
 def witness49 : AnchorWitness 12 8 12 :=
   { alpha := fun edge => ([0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 0, -1] : List ℤ).getD edge.val 0,
     beta := fun edge => ([0, 0, 1, -1, 0, 0, -1, 0, -1, 0, 0, 1] : List ℤ).getD edge.val 0,
-    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
+    potential := fun vertex => aff (([[], [], [], [0, 0, 0, -1], [0, 0, 0, 0, 0, 0, 0, 1], [0, 0,
+      0, 0, 0, 0, 0, 1], [], [0, 0, 0, -1]] : List (List ℤ)).getD vertex.val []) }
 
 /-- The fifty endpoint-slope and affine-potential witnesses shared by the row-03 closed-cover
 cells. -/

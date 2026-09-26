@@ -148,7 +148,8 @@ lemma config_degree_div_degree {q : G.V} (D : qEffectiveDivisor G q) : deg D.D =
   deg (c.chips - oneChip q) = configDegree c - 1 := by
   rw [map_sub, configDegree, deg_one_chip]
 
-/-- `toConfig` is a left inverse of `toQEffectiveDivisor`: converting a configuration to a $q$-effective
+/-- `toConfig` is a left inverse of `toQEffectiveDivisor`: converting a configuration to a
+$q$-effective
 divisor and back recovers the original configuration. -/
 private lemma config_of_div_of_config (c : Config G q) (d : ℤ)  :
   toConfig (toQEffectiveDivisor d c) = c := by
@@ -167,7 +168,8 @@ private lemma config_of_div_of_config (c : Config G q) (d : ℤ)  :
         Pi.mul_apply, Pi.intCast_apply, Int.cast_eq]
     simp only [h_v, ↓reduceIte, mul_zero, add_zero, mul_one, sub_zero]
 
-/-- `toQEffectiveDivisor` is a left inverse of `toConfig` at the correct degree: converting a $q$-effective
+/-- `toQEffectiveDivisor` is a left inverse of `toConfig` at the correct degree: converting a
+$q$-effective
 divisor to a configuration and back via `toDiv (deg D.D)` recovers the original divisor. -/
 lemma div_of_config_of_div (D : qEffectiveDivisor G q) :
   toDiv (deg D.D) (toConfig D) = D.D := by

@@ -2722,7 +2722,8 @@ def proof : PProof where
 
 /-- The deep-embedded checker accepts, by kernel reduction.
 
-`decide +kernel` uses ordinary kernel reduction and avoids duplicate evaluation by the elaborator. -/
+`decide +kernel` uses ordinary kernel reduction and avoids duplicate evaluation by the elaborator.
+-/
 theorem checks :
     PProof.checks 9 core 3 (rootContextClosed 9) proof = true := by
   decide +kernel

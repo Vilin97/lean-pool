@@ -14,7 +14,8 @@ public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06CoverCells3
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06CoverCells4
 public import LeanPool.BrillNoetherGraphs.LowGenus.GenusFiveRow06Symmetry
 
-/-! **Independent generated check.** This module provides an additional generated proof of row 06 and is not imported by the main `LowGenus` root.
+/-! **Independent generated check.** This module provides an additional generated proof of row 06
+and is not imported by the main `LowGenus` root.
 
 Generated exact replay of the fixed AR row-06 divisor on a
 fundamental domain for the core's slot-level symmetry group.

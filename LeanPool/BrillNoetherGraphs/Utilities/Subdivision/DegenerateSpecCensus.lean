@@ -47,7 +47,8 @@ Then:
 
 So the only two facts a row ever supplies are `IsForest` and `¬ IsLoopy` of
 the concrete Finset `zeroSlots certificate point` — both decidable, both
-already what a census enumerates. `bnExists_on_degenerate_subdivision_of_validClosed_of_forestCensus`
+already what a census enumerates.
+`bnExists_on_degenerate_subdivision_of_validClosed_of_forestCensus`
 below is the resulting one-call wrapper, shaped to exactly match
 `ExplicitPotential.Certificate.bnExists_on_degenerate_subdivision_of_validClosed_of_zeroReach`'s
 conclusion.
@@ -180,7 +181,8 @@ theorem censusRep_zeroReach (certificate : Certificate m n p) (point : Fin m →
 
 /-! ## The one-call wrapper, shaped to `bnExists_..._of_zeroReach` exactly -/
 
-/-- **The acceptance-test wrapper.** Everything `bnExists_on_degenerate_subdivision_of_validClosed_of_zeroReach`
+/-- **The acceptance-test wrapper.** Everything
+`bnExists_on_degenerate_subdivision_of_validClosed_of_zeroReach`
 needs beyond `ValidClosed`/`FormsHold`/core connectivity is produced from a
 single decidable pair of census facts about `zeroSlots certificate point`:
 that it is a forest (`IsForest`) and carries no semantic loop (`¬ IsLoopy`).
