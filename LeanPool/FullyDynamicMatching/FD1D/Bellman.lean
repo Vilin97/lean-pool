@@ -56,25 +56,7 @@ abbrev R (s r v : ℝ) : ℝ := normalizedResidual s r v
 
 /-- The cleared polynomial `P` from the exact certificate. -/
 def bellmanPolynomial (s r v : ℝ) : ℝ :=
-  let A := 1 + v
-  let S := s + 2
-  let BB := s + 1
-  let C := s + r
-  let M := s + 2 + 2 * v
-  let W0 := s * A * v
-  let dB := BB ^ 3 + 7 * C ^ 3
-  let dM := M ^ 3 + 7 * C ^ 3
-  let bp :=
-    -2 * BB ^ 2 * r ^ 2 + (4 * BB ^ 2 - BB * C) * r +
-      3 * C ^ 2 - 4 * BB * C
-  let bc :=
-    -M ^ 2 * (r ^ 2 * S + 4 * W0) +
-      M * (4 * M - C) * (r * A * S + 2 * W0) +
-      2 * C * (3 * C - 4 * M) * (A ^ 2 * S + W0)
-  600 * BB ^ 5 * M ^ 4 * C * (r * A * S + 2 * W0) +
-    25 * BB ^ 5 * dM * bc -
-    50 * S * M ^ 5 * dB * bp -
-    12 * BB ^ 5 * M ^ 5 * (S * (A ^ 2 - 1) + W0)
+  BellmanCertificate.bellmanRealAt s r v
 
 /-- Short mathematical name for the cleared polynomial certificate. -/
 abbrev P (s r v : ℝ) : ℝ := bellmanPolynomial s r v
@@ -94,7 +76,7 @@ theorem normalizedResidual_mul_denominator
     normalizedResidual s r v * bellmanDenominator s v =
       bellmanPolynomial s r v := by
   dsimp [normalizedResidual, normalizedW, bellmanDenominator,
-    bellmanPolynomial, d]
+    bellmanPolynomial, BellmanCertificate.bellmanRealAt, d]
   field_simp
   ring
 

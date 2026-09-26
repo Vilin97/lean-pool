@@ -878,6 +878,40 @@ theorem kernel_hasPositiveLoops (R : DeletionRule ι m) :
   exact lt_of_lt_of_le (by positivity : (0 : ℝ) < 1 / Fintype.card ι)
     (R.one_div_card_le_kernel_self x)
 
+/-- Integrating against a deletion kernel amounts to summing over its two moves. -/
+theorem kernel_expectation_eq_delete_arrive (R : DeletionRule ι m)
+    (x : InventoryState ι m) (f : InventoryState ι m → ℝ) :
+    ∑ y, R.kernel x y * f y =
+      ∑ deleted, ∑ arrived,
+        R.prob x deleted * (1 / Fintype.card ι : ℝ) *
+          f (InventoryState.move x deleted arrived) := by
+  simp only [DeletionRule.kernel_apply]
+  calc
+    ∑ y, (∑ deleted, ∑ arrived,
+          if InventoryState.move x deleted arrived = y then
+            R.prob x deleted *
+              (1 / Fintype.card ι : ℝ)
+          else 0) * f y =
+        ∑ deleted, ∑ arrived, ∑ y,
+          (if InventoryState.move x deleted arrived = y then
+            R.prob x deleted *
+              (1 / Fintype.card ι : ℝ)
+          else 0) * f y := by
+            simp_rw [Finset.sum_mul]
+            rw [Finset.sum_comm]
+            apply Finset.sum_congr rfl
+            intro deleted _
+            rw [Finset.sum_comm]
+    _ = ∑ deleted, ∑ arrived,
+          R.prob x deleted *
+            (1 / Fintype.card ι : ℝ) *
+              f (InventoryState.move x deleted arrived) := by
+            apply Finset.sum_congr rfl
+            intro deleted _
+            apply Finset.sum_congr rfl
+            intro arrived _
+            simp
+
 end DeletionRule
 
 end

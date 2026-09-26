@@ -150,33 +150,7 @@ theorem kernel_expectation_eq_delete_arrive
         (deletionRule a ha hm).prob x deleted *
           (1 / Fintype.card (DyadicNode L) : ℝ) *
             f (InventoryState.move x deleted arrived) := by
-  rw [kernel]
-  simp only [DeletionRule.kernel_apply]
-  calc
-    ∑ y, (∑ deleted, ∑ arrived,
-          if InventoryState.move x deleted arrived = y then
-            (deletionRule a ha hm).prob x deleted *
-              (1 / Fintype.card (DyadicNode L) : ℝ)
-          else 0) * f y =
-        ∑ deleted, ∑ arrived, ∑ y,
-          (if InventoryState.move x deleted arrived = y then
-            (deletionRule a ha hm).prob x deleted *
-              (1 / Fintype.card (DyadicNode L) : ℝ)
-          else 0) * f y := by
-            simp_rw [Finset.sum_mul]
-            rw [Finset.sum_comm]
-            apply Finset.sum_congr rfl
-            intro deleted _
-            rw [Finset.sum_comm]
-    _ = ∑ deleted, ∑ arrived,
-          (deletionRule a ha hm).prob x deleted *
-            (1 / Fintype.card (DyadicNode L) : ℝ) *
-              f (InventoryState.move x deleted arrived) := by
-            apply Finset.sum_congr rfl
-            intro deleted _
-            apply Finset.sum_congr rfl
-            intro arrived _
-            simp
+  exact DeletionRule.kernel_expectation_eq_delete_arrive (deletionRule a ha hm) x f
 
 theorem kernel_expected_nodePotentialChange
     (a : ℝ) (ha : 0 < a) (hm : 0 < m)

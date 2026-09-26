@@ -128,70 +128,6 @@ theorem stateDyadicMassAt_rootCoefficient
 
 /-! ## Canonical tree indexing -/
 
-private def appendDyadicNode {d r : ℕ}
-    (v : DyadicNode d) (w : DyadicNode r) :
-    DyadicNode (d + r) :=
-  ⟨v.val * 2 ^ r + w.val, by
-    rw [pow_add]
-    calc
-      v.val * 2 ^ r + w.val < (v.val + 1) * 2 ^ r := by
-        rw [Nat.add_mul, one_mul]
-        omega
-      _ ≤ 2 ^ d * 2 ^ r :=
-        Nat.mul_le_mul_right (2 ^ r) (Nat.succ_le_iff.mpr v.isLt)⟩
-
-@[simp] private theorem appendDyadicNode_zero
-    {d : ℕ} (v : DyadicNode d) :
-    appendDyadicNode v (0 : DyadicNode 0) = v := by
-  apply Fin.ext
-  simp [appendDyadicNode]
-
-private theorem appendDyadicNode_leftNode_heq
-    {d k : ℕ} (v : DyadicNode d) (j : CompleteHaarNode k) :
-    appendDyadicNode v (DyadicMass.leftNode j).2 ≍
-      appendDyadicNode (leftChild v) j.2 := by
-  apply (Fin.heq_ext_iff (by
-    congr 1
-    simp [DyadicMass.leftNode]
-    omega)).2
-  simp only [appendDyadicNode, DyadicMass.leftNode, leftChild_val]
-  simp only [Fin.val_succ, pow_succ]
-  ring
-
-private theorem appendDyadicNode_rightNode_heq
-    {d k : ℕ} (v : DyadicNode d) (j : CompleteHaarNode k) :
-    appendDyadicNode v (DyadicMass.rightNode j).2 ≍
-      appendDyadicNode (rightChild v) j.2 := by
-  apply (Fin.heq_ext_iff (by
-    congr 1
-    simp [DyadicMass.rightNode]
-    omega)).2
-  simp only [appendDyadicNode, DyadicMass.rightNode, rightChild_val]
-  simp only [Fin.val_succ, pow_succ]
-  ring
-
-private theorem appendDyadicNode_inl_heq
-    {d k : ℕ} (v : DyadicNode d) (w : DyadicNode k) :
-    appendDyadicNode v (dyadicLeafSumEquiv k (Sum.inl w)) ≍
-      appendDyadicNode (leftChild v) w := by
-  apply (Fin.heq_ext_iff (by
-    congr 1
-    omega)).2
-  simp only [appendDyadicNode, dyadicLeafSumEquiv_inl_val,
-    leftChild_val, pow_succ]
-  ring
-
-private theorem appendDyadicNode_inr_heq
-    {d k : ℕ} (v : DyadicNode d) (w : DyadicNode k) :
-    appendDyadicNode v (dyadicLeafSumEquiv k (Sum.inr w)) ≍
-      appendDyadicNode (rightChild v) w := by
-  apply (Fin.heq_ext_iff (by
-    congr 1
-    omega)).2
-  simp only [appendDyadicNode, dyadicLeafSumEquiv_inr_val,
-    rightChild_val, pow_succ]
-  ring
-
 private theorem deletionLabel_eq_of_depth_node_heq
     (a : ℝ) (x : InventoryState (DyadicNode L) m)
     {d e : ℕ} (hde : d = e)
@@ -238,47 +174,6 @@ theorem stateDyadicMass_leafMass_eq_deletionRule
   · omega
   · apply (Fin.heq_ext_iff (by simp)).2
     simp [appendDyadicNode, dyadicRoot]
-
-private theorem completeHaarNode_cases
-    {k : ℕ} (i : CompleteHaarNode (k + 1)) :
-    i = ⟨⟨0, Nat.zero_lt_succ k⟩, (0 : DyadicNode 0)⟩ ∨
-      (∃ j : CompleteHaarNode k, i = DyadicMass.leftNode j) ∨
-      ∃ j : CompleteHaarNode k, i = DyadicMass.rightNode j := by
-  rcases i with ⟨⟨d, hd⟩, w⟩
-  cases d with
-  | zero =>
-      left
-      congr 1
-      exact Fin.eq_zero w
-  | succ r =>
-      have hrk : r < k := by omega
-      let depth : Fin k := ⟨r, hrk⟩
-      by_cases hw : w.val < 2 ^ r
-      · right
-        left
-        let u : Fin (2 ^ r) := ⟨w.val, hw⟩
-        refine ⟨⟨depth, u⟩, ?_⟩
-        apply Sigma.ext
-        · apply Fin.ext
-          simp [DyadicMass.leftNode, depth]
-        · apply (Fin.heq_ext_iff
-            (by simp [DyadicMass.leftNode, depth])).2
-          rfl
-      · right
-        right
-        have hwlt : w.val < 2 ^ (r + 1) := w.isLt
-        have hpow : 2 ^ (r + 1) = 2 ^ r * 2 := by
-          rw [pow_succ]
-        have hu : w.val - 2 ^ r < 2 ^ r := by omega
-        let u : Fin (2 ^ r) := ⟨w.val - 2 ^ r, hu⟩
-        refine ⟨⟨depth, u⟩, ?_⟩
-        apply Sigma.ext
-        · apply Fin.ext
-          simp [DyadicMass.rightNode, depth]
-        · apply (Fin.heq_ext_iff
-            (by simp [DyadicMass.rightNode, depth])).2
-          dsimp [u, DyadicMass.rightNode, depth]
-          omega
 
 private theorem imbalance_eq_of_depth_node_heq
     (I : AggregatedInventory L m) (a : ℝ)
