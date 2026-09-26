@@ -804,6 +804,7 @@ theorem genEvenBoundaryMatch_hit_iff {k ℓ : ℕ}
     exact (congrArg ψ'.val (Subtype.ext (Subtype.ext rfl))).trans
       (hG ⟨b, hbi, hbj⟩ y hst')
 
+open scoped Classical in
 include hij hopen hct hcL hpi in
 /-- **The odd colouring sum is a sum over the glued colourings.** -/
 theorem sum_odd_hit {k ℓ : ℕ}

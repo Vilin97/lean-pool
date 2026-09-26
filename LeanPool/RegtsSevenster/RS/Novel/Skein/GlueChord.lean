@@ -544,6 +544,7 @@ theorem chordInv_closed_pair
       (liftSubsetClosed s' true) hcT : EdgeSubset W).boundaryFlags) :
     chordInv (EdgeSubset.mk (liftSubsetClosed s' true) hcT :
       EdgeSubset W) κ i = j := by
+  classical
   have hbj : W.pairing (W.boundaryFlag i) ∈ (EdgeSubset.mk
       (liftSubsetClosed s' true) hcT :
         EdgeSubset W).boundaryFlags := by

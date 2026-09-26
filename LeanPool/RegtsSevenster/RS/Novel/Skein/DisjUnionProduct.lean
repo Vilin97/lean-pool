@@ -78,8 +78,9 @@ attached to a vertex. -/
 theorem mem_internalFlags_iff {γ : Type} {W : Fragment γ}
     {F : EdgeSubset W} {f : W.Flag} :
     f ∈ F.internalFlags ↔ f ∈ F.flags ∧
-      ∃ v : W.Vertex, W.attach f = Sum.inl v :=
-  Finset.mem_filter
+      ∃ v : W.Vertex, W.attach f = Sum.inl v := by
+  classical
+  exact Finset.mem_filter
 
 /-! ## The canonical-value migration
 
