@@ -518,28 +518,26 @@ theorem upperAbsoluteFinite
 /-- The fixed-field norm-residue symbol for the lower horizontal extension,
 induced by the canonical local class formation. -/
 noncomputable def lowerNormResidueSymbol
-    (T : LocalFixedFieldNormRestrictionSquare k) := by
+    (T : LocalFixedFieldNormRestrictionSquare k) :=
   letI := T.lowerNormal
   letI := T.lowerFinite
   letI := T.lowerAbsoluteFinite
-  exact
-    abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
-      (localResidueDatum k) (localHenselianValuation k)
-      (separableClosureUnits_isClassFormation k)
-      T.lowerBase T.lowerTop T.lowerTop_le_lowerBase
+  abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
+    (localResidueDatum k) (localHenselianValuation k)
+    (separableClosureUnits_isClassFormation k)
+    T.lowerBase T.lowerTop T.lowerTop_le_lowerBase
 
 /-- The fixed-field norm-residue symbol for the upper horizontal extension,
 induced by the canonical local class formation. -/
 noncomputable def upperNormResidueSymbol
-    (T : LocalFixedFieldNormRestrictionSquare k) := by
+    (T : LocalFixedFieldNormRestrictionSquare k) :=
   letI := T.upperNormal
   letI := T.upperFinite
   letI := upperAbsoluteFinite T
-  exact
-    abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
-      (localResidueDatum k) (localHenselianValuation k)
-      (separableClosureUnits_isClassFormation k)
-      T.upperBase T.upperTop T.upperTop_le_upperBase
+  abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
+    (localResidueDatum k) (localHenselianValuation k)
+    (separableClosureUnits_isClassFormation k)
+    T.upperBase T.upperTop T.upperTop_le_upperBase
 
 /-- The ordinary field norm on units along the vertical base extension. -/
 noncomputable def normUnits
@@ -549,14 +547,13 @@ noncomputable def normUnits
 
 /-- Restriction between the abelianized actual relative Galois groups. -/
 noncomputable def abelianizedRestriction
-    (T : LocalFixedFieldNormRestrictionSquare k) := by
+    (T : LocalFixedFieldNormRestrictionSquare k) :=
   letI := T.lowerNormal
   letI := T.upperNormal
-  exact
-    abstractFixedFieldAbelianizedRestriction k (SeparableClosure k)
-      T.lowerBase T.upperBase T.lowerTop T.upperTop
-      T.lowerTop_le_lowerBase T.upperTop_le_upperBase
-      T.upperBase_le_lowerBase T.upperTop_le_lowerTop
+  abstractFixedFieldAbelianizedRestriction k (SeparableClosure k)
+    T.lowerBase T.upperBase T.lowerTop T.upperTop
+    T.lowerTop_le_lowerBase T.upperTop_le_upperBase
+    T.upperBase_le_lowerBase T.upperTop_le_lowerTop
 
 /-- Canonical norm-restriction naturality for a local fixed-field square.
 Restriction commutes with the ordinary field norm and the fixed-field
@@ -678,29 +675,27 @@ theorem intermediateAbsoluteFinite
 /-- The fixed-field norm-residue symbol for the total extension, induced by
 the canonical local class formation. -/
 noncomputable def baseNormResidueSymbol
-    (T : LocalFixedFieldTransferTower k) := by
+    (T : LocalFixedFieldTransferTower k) :=
   letI := T.totalNormal
   letI := T.totalFinite
   letI := T.baseAbsoluteFinite
-  exact
-    abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
-      (localResidueDatum k) (localHenselianValuation k)
-      (separableClosureUnits_isClassFormation k)
-      T.base T.top
-      (T.top_le_intermediate.trans T.intermediate_le_base)
+  abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
+    (localResidueDatum k) (localHenselianValuation k)
+    (separableClosureUnits_isClassFormation k)
+    T.base T.top
+    (T.top_le_intermediate.trans T.intermediate_le_base)
 
 /-- The fixed-field norm-residue symbol after changing the base to the
 intermediate fixed field, induced by the canonical local class formation. -/
 noncomputable def intermediateNormResidueSymbol
-    (T : LocalFixedFieldTransferTower k) := by
+    (T : LocalFixedFieldTransferTower k) :=
   letI := intermediateNormal T
   letI := intermediateFinite T
   letI := intermediateAbsoluteFinite T
-  exact
-    abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
-      (localResidueDatum k) (localHenselianValuation k)
-      (separableClosureUnits_isClassFormation k)
-      T.intermediate T.top T.top_le_intermediate
+  abstractFixedFieldNormResidueSymbol k (SeparableClosure k)
+    (localResidueDatum k) (localHenselianValuation k)
+    (separableClosureUnits_isClassFormation k)
+    T.intermediate T.top T.top_le_intermediate
 
 /-- Inclusion of actual fixed-field units along the base change. -/
 noncomputable def unitsInclusion
@@ -710,13 +705,12 @@ noncomputable def unitsInclusion
 
 /-- Transfer between the abelianized actual relative Galois groups. -/
 noncomputable def abelianizedTransfer
-    (T : LocalFixedFieldTransferTower k) := by
+    (T : LocalFixedFieldTransferTower k) :=
   letI := T.totalNormal
   letI := T.totalFinite
-  exact
-    abstractFixedFieldAbelianizedTransfer k (SeparableClosure k)
-      T.base T.intermediate T.top
-      T.top_le_intermediate T.intermediate_le_base
+  abstractFixedFieldAbelianizedTransfer k (SeparableClosure k)
+    T.base T.intermediate T.top
+    T.top_le_intermediate T.intermediate_le_base
 
 /-- Canonical transfer-inclusion naturality for a local fixed-field tower.
 Transfer commutes with inclusion of fixed-field units and the fixed-field

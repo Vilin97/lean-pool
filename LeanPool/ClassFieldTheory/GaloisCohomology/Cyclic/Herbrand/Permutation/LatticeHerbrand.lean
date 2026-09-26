@@ -871,7 +871,7 @@ theorem
         ∀ ω : MulAction.orbitRel.Quotient G ι,
           Fintype (permutationOrbitStabilizer ω) :=
       fun _ => Fintype.ofFinite _
-    ∃ h :
+    ∃ _ :
         HerbrandQuotientDefined
           G (Multiplicative L) σ,
       @herbrandQuotient

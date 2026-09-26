@@ -105,7 +105,7 @@ theorem ideleClass_herbrandQuotient_eq_card_of_relative_principal_values
           (A := RelativeIdeleGroup.principalSubgroup K L) σ =
         q / (Fintype.card (L ≃ₐ[K] L) : ℚ)) :
     letI := ideleClassMulDistribMulAction K L
-    ∃ hC :
+    ∃ _ :
         HerbrandQuotientDefined
           (L ≃ₐ[K] L)
           (RelativeIdeleGroup.ClassGroup K L) σ,

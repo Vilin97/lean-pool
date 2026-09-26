@@ -77,8 +77,9 @@ def concreteReciprocityAddEquivOfEmbedding
     (D : DegreeData (G K)) (v : ValuationData D (A K))
     (hcf : SatisfiesClassFieldAxiom (A K)) :
     Additive (Abelianization Gal(L/K)) ≃+
-      Additive (NormQuotient K L) :=
-  (MulEquiv.toAdditive
+      Additive (NormQuotient K L) := by
+  haveI : T2Space (G K) := krullTopology_t2
+  exact (MulEquiv.toAdditive
       ((finiteGaloisAbstractQuotientEquivGaloisGroupOfEmbedding K L
         i).abelianizationCongr.symm)).trans
     ((D.abstractReciprocityEquiv (A K) v hcf (intrinsicFiniteAbstractBase K)

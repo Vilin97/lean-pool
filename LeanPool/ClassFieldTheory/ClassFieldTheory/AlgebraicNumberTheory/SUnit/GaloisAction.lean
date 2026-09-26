@@ -1211,7 +1211,7 @@ theorem
               (SUnitGroup.LogPlace (K := L) S),
           Fintype (permutationOrbitStabilizer ω) :=
       fun _ => Fintype.ofFinite _
-    ∃ h :
+    ∃ _ :
         HerbrandQuotientDefined
           (L ≃ₐ[K] L)
           (Multiplicative

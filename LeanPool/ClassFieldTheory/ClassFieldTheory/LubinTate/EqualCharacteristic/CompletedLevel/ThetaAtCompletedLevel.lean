@@ -142,7 +142,8 @@ noncomputable def equalCharacteristicCompletedLevelCoefficientHom
     (powerSeriesEquivLaurentInteger
       (AlgebraicClosure F.residueField)).toRingHom
 
-private noncomputable local instance equalCharacteristicThetaCoefficientUniformSpace
+/-- The discrete uniform structure on the coefficient power-series ring used for evaluation. -/
+noncomputable local instance equalCharacteristicThetaCoefficientUniformSpace
     (F : LocalField.{u, v} K) :
     UniformSpace ((AlgebraicClosure F.residueField)⟦X⟧) := ⊥
 
@@ -165,7 +166,7 @@ noncomputable def equalCharacteristicCompletedLevelEvaluation
     (ha : PowerSeries.HasEval a) :
     ((AlgebraicClosure F.residueField)⟦X⟧)⟦X⟧ →+*
       Valued.integer (equalCharacteristicCompletedLevelField F n) :=
-  PowerSeries.eval₂Hom
+  PowerSeries.eval₂Hom (φ := equalCharacteristicCompletedLevelCoefficientHom F n)
     (by exact equalCharacteristicCompletedLevelCoefficientHom_continuous F n) ha
 
 /-- States the theorem `equalCharacteristicCompletedLevelEvaluation_X`. -/

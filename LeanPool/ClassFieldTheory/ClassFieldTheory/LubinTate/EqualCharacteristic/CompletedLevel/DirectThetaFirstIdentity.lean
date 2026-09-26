@@ -73,8 +73,8 @@ theorem equalCharacteristicDirectThetaAfterBracketCoefficient_zero
   rw [equalCharacteristicDirectThetaCoefficient_zero]
   simpa [equalCharacteristicDirectThetaAfterBracketCoefficient,
     equalCharacteristicQAdditiveCompositionCoefficient,
-    equalCharacteristicCompletedDirectBracketCoefficient,
-    mul_comm] using hsemi.symm
+    equalCharacteristicCompletedDirectBracketCoefficient] using
+      (mul_comm _ _).trans hsemi.symm
 
 /-- Since `[u]` is Frobenius-fixed and commutes with `e_T`, the composite
 `theta ∘ [u]` satisfies theta's direct Frobenius-intertwining equation. -/

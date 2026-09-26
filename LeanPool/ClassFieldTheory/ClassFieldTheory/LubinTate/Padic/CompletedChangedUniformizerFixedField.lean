@@ -44,7 +44,7 @@ noncomputable def padicCompletedChangedUniformizerFrobeniusAlgEquiv
     (u : (padicLocalField p).valuationSubringˣ) (n : ℕ) :
     padicCompletedLevelField p n ≃ₐ[ℚ_[p]]
       padicCompletedLevelField p n :=
-  AlgEquiv.ofRingEquiv (by
+  AlgEquiv.ofRingEquiv (f := padicCompletedUnitFrobeniusLiftEquiv p n u⁻¹) (by
     intro b
     change
       padicCompletedUnitFrobeniusLiftEquiv p n u⁻¹

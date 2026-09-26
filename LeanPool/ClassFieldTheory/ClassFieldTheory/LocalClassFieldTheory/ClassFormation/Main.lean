@@ -48,7 +48,7 @@ theorem exists_localIntegerUnitsHerbrandDefinedAndEqOne
     (g : Gal(L/K))
     (hg : ∀ sigma : Gal(L/K), sigma ∈ Subgroup.zpowers g) :
     letI := galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L
-    ∃ hU : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
+    ∃ _ : HerbrandQuotientDefined (Gal(L/K)) 𝒪[L]ˣ g,
       @herbrandQuotient (Gal(L/K)) 𝒪[L]ˣ _ _ _
         (galoisGroupIntegerUnitsMulDistribMulActionOfIsIntegralClosure K L)
         g = 1 := by

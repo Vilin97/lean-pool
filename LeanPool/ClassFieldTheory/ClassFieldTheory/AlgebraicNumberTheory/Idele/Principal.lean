@@ -184,7 +184,7 @@ theorem fieldUnits_herbrandQuotient_eq_principalIdeles
       relativeIdeleMulDistribMulAction K L
     letI _principalAction :=
       principalIdeleMulDistribMulAction K L
-    let hP :=
+    let _ :=
       principalIdelesHerbrandQuotientDefined
         K L σ h
     @herbrandQuotient

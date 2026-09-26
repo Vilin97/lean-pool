@@ -586,7 +586,7 @@ theorem ideleClassHerbrandQuotientDefined_of_principal_relative
     [Finite
       (HerbrandHMinusOne (L ≃ₐ[K] L)
         (RelativeIdeleGroup K L) σ)] :
-    ∃ hC :
+    ∃ _ :
         HerbrandQuotientDefined
           (L ≃ₐ[K] L)
           (RelativeIdeleGroup.ClassGroup K L) σ,
