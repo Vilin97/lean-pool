@@ -281,7 +281,8 @@ private theorem denseProgramInitialStore_eq (input : List Bool) :
 private theorem denseInit_sequence_parked {tapeCount : ℕ}
     (first second : TM tapeCount)
     {firstTime secondTime : ℕ}
-    {initial middle : Cfg tapeCount first.Q} {final : Cfg tapeCount second.Q}
+    {initial middle : Complexity.Cfg tapeCount first.Q}
+    {final : Complexity.Cfg tapeCount second.Q}
     (hfirst : first.reachesIn firstTime initial middle)
     (hhalt : first.halted middle)
     (hsecond : second.reachesIn secondTime
