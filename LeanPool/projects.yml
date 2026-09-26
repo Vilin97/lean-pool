@@ -10308,54 +10308,41 @@ projects:
       - '12F05'
       - '13F25'
 
-  - slug: nashembedding
-    title: Nash's smooth isometric embedding theorem
-    summary: 'A Lean 4 / Mathlib formalization of Nash''s C^∞ isometric embedding theorem
-      for closed manifolds: every compact smooth manifold without boundary, equipped
-      with a smooth Riemannian metric, admits a smooth injective map into some Euclidean
-      space ℝ^q whose differential pulls the Euclidean inner product back to the given
-      metric. The proof formalized is Günther''s (1989), which replaces the Nash-Moser
-      iteration by an elliptic fixed-point argument, following the presentation in A.
-      J. Wassermann''s Cambridge Part III lecture notes as the primary source. The development
-      has two layers. The first proves the theorem for the flat torus: a self-contained
-      Sobolev toolkit on 𝕋ⁿ (weighted ℓ² Sobolev spaces on ℤⁿ, Rellich compactness,
-      the Sobolev sup bound, three multiplication theorems, mollifiers, periodization,
-      Fourier inversion and Parseval), the approximation of smooth metrics by realizable
-      ones, Günther''s perturbation theorem proved by a contraction in Hˢ, and their
-      assembly into the statement that every smooth 2π-periodic positive-definite matrix
-      field on ℝⁿ is the pullback metric of a smooth periodic immersion that is injective
-      modulo 2πℤⁿ. The second layer reduces the closed-manifold case to the torus: a
-      Whitney embedding from Mathlib is extended to the ambient space, the metric is
-      extended by a pseudo-inverse construction, cut off, symmetrized and periodized,
-      and the torus theorem is applied. No bound on the embedding dimension is claimed.
-      Concrete instances (round spheres of every dimension, products of spheres, the
-      flat torus 𝕊¹ × 𝕊¹) are derived, and the flat-torus instance is shown to reproduce
-      the torus theorem''s conclusion, tying the two layers together. Nothing here is
-      claimed to be new.'
-    branch: differential geometry
-    entry_module: LeanPool.NashEmbedding
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - David Wiygul
+    - Ezzeri Esa
     source:
-      url: https://github.com/langlerangle/nashembedding
-      github_repo: langlerangle/nashembedding
-      commit: 515a8245c51c952db59d81ef840a146ed853e4ea
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - NashEmbeddingTheorem.nash_isometric_embedding
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: NashEmbeddingTheorem.nash_isometric_embedding
-      informal: Every compact smooth boundaryless manifold with a smooth Riemannian
-        metric admits a smooth isometric embedding in some finite-dimensional Euclidean
-        space.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - differential-geometry
-    - isometric-embedding
-    - sobolev-spaces
+    - functional-analysis
     msc:
-    - 53C24
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10453,3 +10440,52 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: nashembedding
+    title: Nash's smooth isometric embedding theorem
+    summary: 'A Lean 4 / Mathlib formalization of Nash''s C^∞ isometric embedding theorem
+      for closed manifolds: every compact smooth manifold without boundary, equipped
+      with a smooth Riemannian metric, admits a smooth injective map into some Euclidean
+      space ℝ^q whose differential pulls the Euclidean inner product back to the given
+      metric. The proof formalized is Günther''s (1989), which replaces the Nash-Moser
+      iteration by an elliptic fixed-point argument, following the presentation in A.
+      J. Wassermann''s Cambridge Part III lecture notes as the primary source. The development
+      has two layers. The first proves the theorem for the flat torus: a self-contained
+      Sobolev toolkit on 𝕋ⁿ (weighted ℓ² Sobolev spaces on ℤⁿ, Rellich compactness,
+      the Sobolev sup bound, three multiplication theorems, mollifiers, periodization,
+      Fourier inversion and Parseval), the approximation of smooth metrics by realizable
+      ones, Günther''s perturbation theorem proved by a contraction in Hˢ, and their
+      assembly into the statement that every smooth 2π-periodic positive-definite matrix
+      field on ℝⁿ is the pullback metric of a smooth periodic immersion that is injective
+      modulo 2πℤⁿ. The second layer reduces the closed-manifold case to the torus: a
+      Whitney embedding from Mathlib is extended to the ambient space, the metric is
+      extended by a pseudo-inverse construction, cut off, symmetrized and periodized,
+      and the torus theorem is applied. No bound on the embedding dimension is claimed.
+      Concrete instances (round spheres of every dimension, products of spheres, the
+      flat torus 𝕊¹ × 𝕊¹) are derived, and the flat-torus instance is shown to reproduce
+      the torus theorem''s conclusion, tying the two layers together. Nothing here is
+      claimed to be new.'
+    branch: differential geometry
+    entry_module: LeanPool.NashEmbedding
+    authors:
+    - David Wiygul
+    source:
+      url: https://github.com/langlerangle/nashembedding
+      github_repo: langlerangle/nashembedding
+      commit: 515a8245c51c952db59d81ef840a146ed853e4ea
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - NashEmbeddingTheorem.nash_isometric_embedding
+    main_results:
+    - declaration: NashEmbeddingTheorem.nash_isometric_embedding
+      informal: Every compact smooth boundaryless manifold with a smooth Riemannian
+        metric admits a smooth isometric embedding in some finite-dimensional Euclidean
+        space.
+    tags:
+    - differential-geometry
+    - isometric-embedding
+    - sobolev-spaces
+    msc:
+    - 53C24
