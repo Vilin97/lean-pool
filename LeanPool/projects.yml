@@ -10307,39 +10307,42 @@ projects:
     msc:
       - '12F05'
       - '13F25'
-  - slug: lean-operator-theory
-    title: Unitary dilation and the Crouzeix–Palencia bound
-    summary: Proves unitary power dilation for Hilbert-space contractions, von Neumann’s polynomial inequality,
-      and the Crouzeix–Palencia polynomial spectral-set estimate for the closed numerical range.
-    branch: operator theory
-    entry_module: LeanPool.OperatorTheory
+
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
+    branch: functional analysis
+    entry_module: LeanPool.SpectralTheory
     authors:
     - Ezzeri Esa
     source:
-      url: https://github.com/savarin/lean-operator-theory
-      github_repo: savarin/lean-operator-theory
-      commit: 6f90bb7e6b056b54f56005e0416d77d6d7c2a478
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
     license: Apache-2.0
     status: verified
-    provenance: AI
     main_declarations:
-    - PalomarCrouzeixPalencia.crouzeix_palencia
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: PalomarCrouzeixPalencia.exists_unitary_power_dilation
-      informal: Every contraction on a complex Hilbert space admits a unitary power dilation.
-    - declaration: PalomarCrouzeixPalencia.vonNeumann_inequality
-      informal: Polynomial evaluation on a contraction is bounded by the polynomial supremum on the closed
-        unit disk.
-    - declaration: PalomarCrouzeixPalencia.crouzeix_palencia
-      informal: The closure of the numerical range is a polynomial spectral set with constant 1 + √2.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
-    - operator-theory
     - functional-analysis
-    - spectral-theory
     msc:
-    - 47A12
-    - 47A20
-    - 47A25
+    - 47A10
+    - 47B15
+    provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
     summary: >-
@@ -10437,3 +10440,37 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: lean-operator-theory
+    title: Unitary dilation and the Crouzeix–Palencia bound
+    summary: Proves unitary power dilation for Hilbert-space contractions, von Neumann’s polynomial inequality,
+      and the Crouzeix–Palencia polynomial spectral-set estimate for the closed numerical range.
+    branch: operator theory
+    entry_module: LeanPool.OperatorTheory
+    authors:
+    - Ezzeri Esa
+    source:
+      url: https://github.com/savarin/lean-operator-theory
+      github_repo: savarin/lean-operator-theory
+      commit: 6f90bb7e6b056b54f56005e0416d77d6d7c2a478
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - PalomarCrouzeixPalencia.crouzeix_palencia
+    main_results:
+    - declaration: PalomarCrouzeixPalencia.exists_unitary_power_dilation
+      informal: Every contraction on a complex Hilbert space admits a unitary power dilation.
+    - declaration: PalomarCrouzeixPalencia.vonNeumann_inequality
+      informal: Polynomial evaluation on a contraction is bounded by the polynomial supremum on the closed
+        unit disk.
+    - declaration: PalomarCrouzeixPalencia.crouzeix_palencia
+      informal: The closure of the numerical range is a polynomial spectral set with constant 1 + √2.
+    tags:
+    - operator-theory
+    - functional-analysis
+    - spectral-theory
+    msc:
+    - 47A12
+    - 47A20
+    - 47A25
