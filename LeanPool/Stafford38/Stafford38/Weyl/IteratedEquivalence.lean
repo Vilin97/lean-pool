@@ -319,7 +319,7 @@ theorem oldGenerator_commutator (n : Nat) (i j : Fin n ⊕ Fin n) :
   have hentry :
       Matrix.J (Fin (n + 1)) k (oldIndex i) (oldIndex j) =
         Matrix.J (Fin n) k i j := by
-    cases i <;> cases j <;> simp [oldIndex, Matrix.J]
+    cases i <;> cases j <;> simp [oldIndex, Matrix.J, Matrix.one_apply]
   exact congrArg (algebraMap k (PresentedWeyl k (n + 1))) hentry
 
 /-- The canonical rank-shift embedding preserving the old generators. -/
