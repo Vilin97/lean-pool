@@ -21,22 +21,6 @@ namespace NagataFactoriality
 
 open scoped BigOperators
 
-/-- The product of a finite list, defined recursively. -/
-def listProd {α : Type*} [CommMonoid α] : List α → α
-  | [] => 1
-  | a :: as => a * listProd as
-
-@[simp] theorem listProd_nil {α : Type*} [CommMonoid α] : listProd ([] : List α) = 1 := rfl
-
-@[simp] theorem listProd_cons {α : Type*} [CommMonoid α] (a : α) (as : List α) :
-    listProd (a :: as) = a * listProd as := rfl
-
-theorem listProd_append {α : Type*} [CommMonoid α] (xs ys : List α) :
-    listProd (xs ++ ys) = listProd xs * listProd ys := by
-  induction xs with
-  | nil => simp [listProd]
-  | cons x xs ih => simp [listProd, ih, mul_assoc]
-
 theorem dvd_refl {α : Type*} [CommMonoid α] (a : α) : a ∣ a := dvd_rfl
 
 theorem dvd_trans {α : Type*} [CommMonoid α] {a b c : α} :

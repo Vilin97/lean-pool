@@ -107,10 +107,4 @@ theorem nagata_theorem_of_prime_or_unit_isLocalization {R T : Type*}
     (hasFactorization_of_noetherian (α := R))
     (fun p hp => nagata_key_lemma_isLocalization (S := S) (β := T) hS hp)
 
-theorem ufd_of_factorization_and_prime_irreducibles {α : Type*} [CommRing α] [IsDomain α]
-    (hfac : WfDvdMonoid α)
-    (hprime : ∀ p : α, Irreducible p → Prime p) :
-    UniqueFactorizationMonoid α :=
-  ufd_of_factorization_and_primes hfac hprime
-
 end NagataFactoriality
