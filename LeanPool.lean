@@ -6364,6 +6364,7 @@ public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Assembly
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChange
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.BaseChangePrime
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.CoefficientProjection
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ComponentDegree
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Degree
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension

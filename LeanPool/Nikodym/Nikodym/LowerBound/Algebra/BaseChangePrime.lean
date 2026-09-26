@@ -6,7 +6,7 @@ Authors: Shengtong Zhang
 module
 
 
-public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Interface
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.CoefficientProjection
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Dimension
 
 /-!
@@ -25,7 +25,7 @@ This file implements the base-change items **TR3** and **TR4** of the algebra ba
   `exists_integral_inj_algHom_of_quotient`, valid for every proper ideal) is base changed to
   `g' : MvPolynomial (Fin s) K' →ₐ[K'] P' ⧸ I.map ι`; `g'` is still integral (the monic
   witnesses are transported along the induced map of quotients) and still injective (via the
-  coefficient projections `BaseChangePrime.coeffProj` along `K`-linear functionals `K' → K`), so
+  coefficient projections `coeffProj` along `K`-linear functionals `K' → K`), so
   both quotients have Krull dimension `s` by `ringKrullDim_eq_of_isIntegral`.
 * `Nikodym.LowerBound.isPrime_map_ratFunc`: **TR4**, for `K' = RatFunc K` the extension of a
   prime ideal is prime. Through `MvPolynomial (Fin d) K[X] ≃ (MvPolynomial (Fin d) K)[X]` the
@@ -35,8 +35,8 @@ This file implements the base-change items **TR3** and **TR4** of the algebra ba
   `IsLocalization.isPrime_of_isPrime_disjoint` applies.
 * `Nikodym.LowerBound.infinite_ratFunc`: `RatFunc K` is infinite.
 
-The auxiliary coefficient projections live in the namespace `Nikodym.LowerBound.BaseChangePrime`
-and are private to this file; the public versions belong to `Algebra/BaseChange.lean` (TR0/TR1).
+The coefficient projections are shared with the Hilbert base-change proofs through
+`Algebra/CoefficientProjection.lean` (TR0/TR1).
 -/
 
 @[expose] public section
@@ -60,82 +60,6 @@ noncomputable local instance baseChangePolynomialQuotientModule
 namespace BaseChangePrime
 
 variable {σ : Type*}
-
-/-- Blueprint TR0 (private version): coefficientwise application of a `K`-linear functional
-`π : K' → K` to a polynomial with coefficients in `K'`. -/
-private noncomputable def coeffProj (π : K' →ₗ[K] K) (g : MvPolynomial σ K') :
-    MvPolynomial σ K :=
-  ∑ m ∈ g.support, MvPolynomial.monomial m (π (g.coeff m))
-
-/-- Blueprint TR0 (private version): the coefficients of `coeffProj π g`. -/
-private theorem coeff_coeffProj (π : K' →ₗ[K] K) (m : σ →₀ ℕ) (g : MvPolynomial σ K') :
-    (coeffProj π g).coeff m = π (g.coeff m) := by
-  classical
-  rw [coeffProj, MvPolynomial.coeff_sum]
-  simp only [MvPolynomial.coeff_monomial]
-  rw [Finset.sum_ite_eq']
-  split_ifs with h
-  · rfl
-  · rw [MvPolynomial.notMem_support_iff.mp h, map_zero]
-
-/-- Blueprint TR0 (private version): `coeffProj` is additive. -/
-private theorem coeffProj_add (π : K' →ₗ[K] K) (g h : MvPolynomial σ K') :
-    coeffProj π (g + h) = coeffProj π g + coeffProj π h := by
-  ext m
-  simp only [coeff_coeffProj, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, map_add]
-
-/-- Blueprint TR0 (private version): `coeffProj π 0 = 0`. -/
-private theorem coeffProj_zero (π : K' →ₗ[K] K) :
-    coeffProj π (0 : MvPolynomial σ K') = 0 := by
-  ext m
-  simp only [coeff_coeffProj, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, map_zero]
-
-/-- Blueprint TR0 (private version): `coeffProj` on constants. -/
-private theorem coeffProj_C (π : K' →ₗ[K] K) (c : K') :
-    coeffProj π (MvPolynomial.C c : MvPolynomial σ K') = MvPolynomial.C (π c) := by
-  classical
-  ext m
-  simp only [coeff_coeffProj, MvPolynomial.coeff_C]
-  split_ifs <;> simp
-
-/-- Blueprint TR0 (private version): `coeffProj π` is `P`-linear for the `P`-module structure
-on `P'` given by `ι`. -/
-private theorem coeffProj_map_mul (π : K' →ₗ[K] K) (f : MvPolynomial σ K)
-    (g : MvPolynomial σ K') :
-    coeffProj π (MvPolynomial.map (algebraMap K K') f * g) = f * coeffProj π g := by
-  classical
-  ext m
-  simp only [coeff_coeffProj, MvPolynomial.coeff_mul, MvPolynomial.coeff_map, map_sum]
-  refine Finset.sum_congr rfl fun x _ ↦ ?_
-  rw [← Algebra.smul_def, map_smul, smul_eq_mul]
-
-/-- Blueprint TR0 (private version): `coeffProj π` sends every multiple of an element of
-`I.map ι` into `I`. -/
-private theorem coeffProj_mul_mem (π : K' →ₗ[K] K) (I : Ideal (MvPolynomial σ K))
-    {g : MvPolynomial σ K'} (hg : g ∈ I.map (MvPolynomial.map (algebraMap K K')))
-    (a : MvPolynomial σ K') : coeffProj π (a * g) ∈ I := by
-  have hg' : g ∈ Submodule.span (MvPolynomial σ K')
-      (MvPolynomial.map (algebraMap K K') '' (I : Set (MvPolynomial σ K))) := hg
-  refine Submodule.span_induction
-    (p := fun x _ ↦ ∀ a : MvPolynomial σ K', coeffProj π (a * x) ∈ I) ?_ ?_ ?_ ?_ hg' a
-  · rintro x ⟨f, hf, rfl⟩ a
-    rw [mul_comm, coeffProj_map_mul]
-    exact I.mul_mem_right _ hf
-  · intro a
-    rw [mul_zero, coeffProj_zero]
-    exact I.zero_mem
-  · intro x y _ _ hx hy a
-    rw [mul_add, coeffProj_add]
-    exact I.add_mem (hx a) (hy a)
-  · intro b x _ hx a
-    rw [smul_eq_mul, ← mul_assoc]
-    exact hx (a * b)
-
-/-- Blueprint TR0 (private version): `coeffProj π` maps `I.map ι` into `I`. -/
-private theorem coeffProj_mem_of_mem_map (π : K' →ₗ[K] K) (I : Ideal (MvPolynomial σ K))
-    {g : MvPolynomial σ K'} (hg : g ∈ I.map (MvPolynomial.map (algebraMap K K'))) :
-    coeffProj π g ∈ I := by
-  simpa using coeffProj_mul_mem π I hg 1
 
 variable {τ : Type*}
 
@@ -162,11 +86,13 @@ private theorem coeffProj_aeval_map (π : K' →ₗ[K] K) (y : τ → MvPolynomi
     have h : (MvPolynomial.monomial u c : MvPolynomial τ K') =
         MvPolynomial.map (algebraMap K K') (MvPolynomial.monomial u 1) * MvPolynomial.C c := by
       rw [MvPolynomial.map_monomial, map_one, mul_comm, MvPolynomial.C_mul_monomial, mul_one]
-    rw [h, coeffProj_map_mul, coeffProj_C, map_mul, map_mul, MvPolynomial.aeval_C,
+    rw [h, coeffProj_map_mul, coeffProj_C, map_mul (MvPolynomial.aeval y),
+      map_mul (MvPolynomial.aeval (fun i ↦ MvPolynomial.map (algebraMap K K') (y i))),
+      MvPolynomial.aeval_C,
       MvPolynomial.aeval_C, aeval_map_eq_map_aeval, MvPolynomial.algebraMap_eq,
       MvPolynomial.algebraMap_eq, coeffProj_map_mul, coeffProj_C]
   | add p q hp hq =>
-    simp only [map_add, coeffProj_add, hp, hq]
+    simp only [map_add, hp, hq]
 
 end BaseChangePrime
 
