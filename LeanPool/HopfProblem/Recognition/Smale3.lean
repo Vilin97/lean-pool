@@ -1213,9 +1213,9 @@ private theorem Smale.NativeEuclideanEmbedding.fderiv_comp_eq {E M D : Type*} [N
     (hf : ContMDiff 𝓘(ℝ, D) 𝓘(ℝ, E) ∞ f) (x : D) :
     fderiv ℝ (e.toFun ∘ f) x =
       (mvfderiv 𝓘(ℝ, E) e.toFun (f x)).comp (mfderiv 𝓘(ℝ, D) 𝓘(ℝ, E) f x) := by
-  rw [← mfderiv_eq_fderiv,
-    mfderiv_comp x (e.smooth.mdifferentiableAt (by simp)) (hf.mdifferentiableAt (by simp))]
-  rfl
+  simpa only [mvfderiv_eq_fderiv] using!
+    (mvfderiv_comp x (e.smooth.mdifferentiableAt (by simp))
+      (hf.mdifferentiableAt (by simp)))
 
 private theorem
     Smale.NativeEuclideanEmbedding.diskTangentImage_le {E M D : Type*} [NormedAddCommGroup E]

@@ -3903,15 +3903,14 @@ private theorem Smale.NativeEuclideanEmbedding.SmoothRetraction.mfderiv_sheetCoo
     fderiv ℝ (e.toFun ∘ f) 0 =
       (mfderiv 𝓘(ℝ, E) (𝓡 e.ambientDimension) e.toFun (f 0)).comp (mfderiv 𝓘(ℝ, D) 𝓘(ℝ, E) f 0) :=
     by
-    rw [← mfderiv_eq_fderiv,
-      mfderiv_comp 0 (e.smooth.mdifferentiableAt (by simp)) (hf.mdifferentiableAt (by simp))]
+    simpa only [mfderiv_eq_fderiv] using!
+      (mfderiv_comp 0 (e.smooth.mdifferentiableAt (by simp)) (hf.mdifferentiableAt (by simp)))
   have hdg :
     fderiv ℝ (e.toFun ∘ g) 0 =
       (mfderiv 𝓘(ℝ, E) (𝓡 e.ambientDimension) e.toFun (f 0)).comp (mfderiv 𝓘(ℝ, Z) 𝓘(ℝ, E) g 0) :=
     by
-    rw [← mfderiv_eq_fderiv,
-      mfderiv_comp 0 (e.smooth.mdifferentiableAt (by simp)) (hg.mdifferentiableAt (by simp))]
-    rw [hzero]
+    simpa only [mfderiv_eq_fderiv, hzero] using!
+      (mfderiv_comp 0 (e.smooth.mdifferentiableAt (by simp)) (hg.mdifferentiableAt (by simp)))
   rw [sheetCoordinates, mfderiv_comp (0, 0) hr hsum.differentiableAt.mdifferentiableAt,
     mfderiv_eq_fderiv, hsum.fderiv, hbase, hdf, hdg]
   apply ContinuousLinearMap.ext
@@ -5248,11 +5247,9 @@ private theorem Smale.StripNormalData.injective_normalFrame_of_strip_germ {A B Z
     fderiv ℝ (Smale.TransverseCoordinates.normalCoordinate Ψ ∘ d.chart)
         (Smale.StripCoordinates.center t) =
       Q.comp T := by
-    rw [← mfderiv_eq_fderiv,
-      mfderiv_comp (Smale.StripCoordinates.center t) (hnormal'.mdifferentiableAt (by simp))
-        (d.chart.mdifferentiableAt (by simp) (d.line ht))]
-    rw [← hfp]
-    rfl
+    simpa only [mfderiv_eq_fderiv, ← hfp] using!
+      (mfderiv_comp (Smale.StripCoordinates.center t) (hnormal'.mdifferentiableAt (by simp))
+        (d.chart.mdifferentiableAt (by simp) (d.line ht)))
   change
     Function.Injective
       ((fderiv ℝ (Smale.TransverseCoordinates.normalCoordinate Ψ ∘ d.chart)

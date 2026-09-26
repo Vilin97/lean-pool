@@ -691,9 +691,11 @@ private theorem Smale.TransverseCoordinates.bijective_normalDerivative_transvers
   have hnormal := (contMDiffOn_normalCoordinate Φ).contMDiffAt (Φ.open_target.mem_nhds hy)
   have hg : ContMDiffAt 𝓘(ℝ, Z) 𝓘(ℝ, B) ∞ (normalCoordinate Φ ∘ G) (c z) :=
     hnormal.comp (c z) hG.contMDiffAt
-  rw [← mfderiv_eq_fderiv,
-    mfderiv_comp z (hg.mdifferentiableAt (by simp)) (c.mdifferentiableAt (by simp) hz)]
-  exact hb.comp (Smale.PartialChart.bijective_mfderiv c hz)
+  have hmanifold : Function.Bijective
+      (mfderiv 𝓘(ℝ, Z') 𝓘(ℝ, B) ((normalCoordinate Φ ∘ G) ∘ c) z) := by
+    rw [mfderiv_comp z (hg.mdifferentiableAt (by simp)) (c.mdifferentiableAt (by simp) hz)]
+    exact hb.comp (Smale.PartialChart.bijective_mfderiv c hz)
+  simpa only [mfderiv_eq_fderiv] using! hmanifold
 
 private def Smale.NativeParametrization.line {D : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
     (u : D) : ℝ →L[ℝ] D :=

@@ -2193,14 +2193,10 @@ private theorem Degree.FlowSuspension.native_field_transition_pushforward {D B E
     unfold Smale.FlowConstruction.partialChartField
     rw [VectorField.mpullback_apply]
     exact hinv.self_apply_inverse _
-  rw [← mfderiv_eq_fderiv,
-    mfderiv_comp p (C.symm.mdifferentiableAt (by simp) hpC) (A.mdifferentiableAt (by simp) hpA)]
-  change
-    (mfderiv 𝓘(ℝ, E) 𝓘(ℝ, B) C.symm (A p))
-        ((mfderiv 𝓘(ℝ, D) 𝓘(ℝ, E) A p) ((NormedSpace.fromTangentSpace p).symm (WA p))) =
-      _
-  rw [hpushA]
-  exact hpushC
+  have hchain := mfderiv_comp_apply p (C.symm.mdifferentiableAt (by simp) hpC)
+    (A.mdifferentiableAt (by simp) hpA) ((NormedSpace.fromTangentSpace p).symm (WA p))
+  rw [hpushA] at hchain
+  simpa only [mfderiv_eq_fderiv] using! hchain.trans hpushC
 
 private theorem Degree.FlowSuspension.native_vertical_transition_derivative {E M : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [TopologicalSpace M] [ChartedSpace E M] {Z : Type*}
