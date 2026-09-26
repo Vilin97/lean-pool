@@ -42,12 +42,16 @@ open KrauseLaceyStoppingRecursion KrauseLaceyThreeShiftGrid
 noncomputable
 section
 
-/-- The one-node good-part estimate implies sparse domination of the actual
-finite unit-phase positive dyadic suffix maximum. The factor `3` is exactly
-the cost of the three shifted grids. -/
-theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodeGoodPart
-    {A p : ℝ} (hlocal : HasOneNodeGoodPartPairingBound A)
-    (hp : 1 < p) (hp2 : p < 2) (j : ℤ) (hj : 1 ≤ j) (N : ℕ) :
+/-- Assemble the three shifted sparse bounds independently of the stopping rule. -/
+private theorem sparse_suffix_of_forest_bounds {A p : ℝ}
+    (hclosure : ∀ (ell₀ topScale : ℤ) (shift : Fin 3) (maxDepth : ℕ)
+      (F : Finset (ℕ × ℤ)) (S : Finset RealInterval) (f g : L0Infinity),
+      3 ≤ ell₀ → S ⊆ completeFiniteShiftGridForest topScale shift maxDepth F →
+      ∃ R : Finset RealInterval, IsSparse (1 / 4) (↑R : Set RealInterval) ∧
+        (∫⁻ x, localizedTailMaximal ell₀ (finiteShiftGridScale topScale shift) S f x *
+          ‖g x‖ₑ) ≤ ENNReal.ofReal (A * holderConjugate p) *
+          sparseForm p f g (↑R : Set RealInterval))
+    (j : ℤ) (hj : 1 ≤ j) (N : ℕ) :
     HasSparseOnePBound (3 * (A * holderConjugate p)) p
       (finitePositiveDyadicSuffixMaxOperator 1 j N) := by
   classical
@@ -66,7 +70,7 @@ theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodeGoodP
             (finiteShiftGridScale topScale shift) (branch shift) f x * ‖g x‖ₑ) ≤
           ENNReal.ofReal (A * holderConjugate p) *
             sparseForm p f g (↑R : Set RealInterval) := by
-    apply exists_recursive_sparse_bound_forest hlocal hp hp2
+    apply hclosure
       (j + 2) topScale shift N (roots shift) (branch shift) f g
     · omega
     · simpa only [topScale, roots, branch] using hforest shift
@@ -140,6 +144,17 @@ theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodeGoodP
     rw [hzero, norm_zero, ENNReal.ofReal_zero]
     exact bot_le
 
+/-- The one-node good-part estimate implies sparse domination of the actual
+finite unit-phase positive dyadic suffix maximum. The factor `3` is exactly
+the cost of the three shifted grids. -/
+theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodeGoodPart
+    {A p : ℝ} (hlocal : HasOneNodeGoodPartPairingBound A)
+    (hp : 1 < p) (hp2 : p < 2) (j : ℤ) (hj : 1 ≤ j) (N : ℕ) :
+    HasSparseOnePBound (3 * (A * holderConjugate p)) p
+      (finitePositiveDyadicSuffixMaxOperator 1 j N) :=
+  sparse_suffix_of_forest_bounds
+    (exists_recursive_sparse_bound_forest hlocal hp hp2) j hj N
+
 /-- Genuine `p`-monitor version of the three-shift suffix closure. The
 testing function remains `g`, but every recursive stopping family is selected
 using the local `p`-mass monitor. -/
@@ -147,96 +162,9 @@ theorem hasSparseOnePBound_finitePositiveDyadicSuffixMaxOperator_of_oneNodePStop
     {A p : ℝ} (hlocal : HasOneNodePStoppingGoodPartPairingBound A)
     (hp : 1 < p) (hp2 : p < 2) (j : ℤ) (hj : 1 ≤ j) (N : ℕ) :
     HasSparseOnePBound (3 * (A * holderConjugate p)) p
-      (finitePositiveDyadicSuffixMaxOperator 1 j N) := by
-  classical
-  intro f g
-  obtain ⟨E, hforest, hpoint⟩ :=
-    exists_threeShiftForests_finitePositiveDyadicSuffixMax j N f
-  let topScale : ℤ := j + (N : ℤ) - 1
-  let branch : Fin 3 → Finset RealInterval := fun shift ↦
-    finiteOneShiftMultiscaleFamily topScale (Finset.range N) E shift
-  let roots : Fin 3 → Finset (ℕ × ℤ) := fun shift ↦
-    finiteOneShiftMultiscaleAddresses (Finset.range N) E shift
-  have hbranch (shift : Fin 3) :
-      ∃ R : Finset RealInterval,
-        IsSparse (1 / 4) (↑R : Set RealInterval) ∧
-        (∫⁻ x, localizedTailMaximal (j + 2)
-            (finiteShiftGridScale topScale shift) (branch shift) f x * ‖g x‖ₑ) ≤
-          ENNReal.ofReal (A * holderConjugate p) *
-            sparseForm p f g (↑R : Set RealInterval) := by
-    apply exists_pStopping_recursive_sparse_bound_forest hlocal hp hp2.le
-      (j + 2) topScale shift N (roots shift) (branch shift) f g
-    · omega
-    · simpa only [topScale, roots, branch] using hforest shift
-  choose R hRsparse hRbound using hbranch
-  obtain ⟨shift₀, _, hmax⟩ := Finset.univ.exists_max_image
-    (fun shift : Fin 3 ↦ sparseForm p f g (↑(R shift) : Set RealInterval))
-    Finset.univ_nonempty
-  refine ⟨(↑(R shift₀) : Set RealInterval), hRsparse shift₀, ?_⟩
-  let T := finitePositiveDyadicSuffixMaxOperator 1 j N
-  by_cases hi : Integrable (fun x ↦ T f x * star (g x))
-  · have hnorm : ‖operatorPairing T f g‖ ≤
-        ∫ x, ‖T f x * star (g x)‖ := by
-      unfold operatorPairing
-      exact norm_integral_le_of_norm_le hi.norm
-        (Filter.Eventually.of_forall fun x ↦ le_rfl)
-    have hof : ENNReal.ofReal ‖operatorPairing T f g‖ ≤
-        ∫⁻ x, ‖T f x * star (g x)‖ₑ := by
-      exact (ENNReal.ofReal_le_ofReal hnorm).trans_eq
-        (ofReal_integral_norm_eq_lintegral_enorm hi)
-    have hthree : (∫⁻ x, ‖T f x * star (g x)‖ₑ) ≤
-        ∑ shift : Fin 3,
-          ∫⁻ x, localizedTailMaximal (j + 2)
-            (finiteShiftGridScale topScale shift) (branch shift) f x * ‖g x‖ₑ := by
-      calc
-        (∫⁻ x, ‖T f x * star (g x)‖ₑ) =
-            ∫⁻ x, ‖T f x‖ₑ * ‖g x‖ₑ := by
-          congr 1
-          funext x
-          simp only [enorm_mul]
-          rw [show ‖star (g x)‖ₑ = ‖g x‖ₑ by simp [← ofReal_norm]]
-        _ ≤ ∫⁻ x, (∑ shift : Fin 3,
-              localizedTailMaximal (j + 2)
-                (finiteShiftGridScale topScale shift) (branch shift) f x) *
-              ‖g x‖ₑ := by
-          apply lintegral_mono
-          intro x
-          exact mul_le_mul' (by simpa only [T, topScale, branch] using hpoint x) le_rfl
-        _ = _ := by
-          simp_rw [Finset.sum_mul]
-          apply lintegral_finsetSum
-          intro shift hshift
-          exact (measurable_localizedTailMaximal (j + 2)
-            (finiteShiftGridScale topScale shift) (branch shift)
-            f.measurable_toFun).mul g.measurable_toFun.enorm
-    have hsum : (∑ shift : Fin 3,
-          ∫⁻ x, localizedTailMaximal (j + 2)
-            (finiteShiftGridScale topScale shift) (branch shift) f x * ‖g x‖ₑ) ≤
-        3 * (ENNReal.ofReal (A * holderConjugate p) *
-          sparseForm p f g (↑(R shift₀) : Set RealInterval)) := by
-      calc
-        _ ≤ ∑ shift : Fin 3, ENNReal.ofReal (A * holderConjugate p) *
-              sparseForm p f g (↑(R shift₀) : Set RealInterval) := by
-          apply Finset.sum_le_sum
-          intro shift hshift
-          exact (hRbound shift).trans
-            (mul_le_mul' le_rfl (hmax shift (Finset.mem_univ shift)))
-        _ = _ := by simp [nsmul_eq_mul]
-    calc
-      ENNReal.ofReal ‖operatorPairing T f g‖ ≤
-          ∫⁻ x, ‖T f x * star (g x)‖ₑ := hof
-      _ ≤ 3 * (ENNReal.ofReal (A * holderConjugate p) *
-          sparseForm p f g (↑(R shift₀) : Set RealInterval)) := hthree.trans hsum
-      _ = ENNReal.ofReal (3 * (A * holderConjugate p)) *
-          sparseForm p f g (↑(R shift₀) : Set RealInterval) := by
-        rw [ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 3)]
-        norm_num
-        ring
-  · have hzero : operatorPairing T f g = 0 := by
-      unfold operatorPairing
-      exact integral_undef hi
-    rw [hzero, norm_zero, ENNReal.ofReal_zero]
-    exact bot_le
+      (finitePositiveDyadicSuffixMaxOperator 1 j N) :=
+  sparse_suffix_of_forest_bounds
+    (exists_pStopping_recursive_sparse_bound_forest hlocal hp hp2.le) j hj N
 
 /-- Sparse control of the unit positive suffixes in precisely the high range
 where the quadratic one-node estimate applies. Low scales must be kept in
