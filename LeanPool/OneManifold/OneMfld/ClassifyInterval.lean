@@ -389,85 +389,18 @@ lemma relu_mono : StrictMonoOn relu (Set.Ici 0) := by
 
 lemma relu_interval_ioo {U : Set NNReal} {a b : Real} (h : Ioo a b = relu ⁻¹' U) :
   (relu '' (Set.Ioo a b) = U) := by
-  ext x
-  simp only [mem_image, mem_Ioo]
-  constructor
-  · intro ⟨y,⟨ hya, hyb ⟩,hy'⟩
-    have : y ∈ Set.Ioo a b := by
-      apply mem_Ioo.mpr
-      exact ⟨ hya, hyb ⟩
-    rw [h] at this
-    simp only [mem_preimage] at this
-    rw [hy'] at this
-    assumption
-  · intro hx
-    use x.1
-    simp only [NNReal.val_eq_coe]
-    rw [relu_proj]
-    simp only [and_true]
-    by_cases h0 : 0 ∈ U
-    · have hneg : ¬ BddBelow (relu ⁻¹' U) := by
-        by_contra hneg
-        rcases hneg with ⟨ c, hc ⟩
-        have hn : Set.Iio 0 ⊆ relu ⁻¹' U := by
-          intro z
-          simp only [mem_Iio, mem_preimage]
-          intro hz
-          have : (relu z) = 0 := by
-            apply NNReal.coe_eq_zero.mp
-            rw [proj_relu']
-            linarith
-          rw [this]
-          assumption
-        dsimp [lowerBounds] at hc
-        have : - 2 ∈ relu ⁻¹' U := by
-          apply hn
-          simp only [mem_Iio]
-          simp only [Left.neg_neg_iff]
-          linarith
-        have c2 := hc this
-        have : c - 1 ∈ relu ⁻¹' U := by
-          apply hn
-          simp only [mem_Iio, sub_neg]
-          linarith
-        specialize hc this
-        linarith
-      rw [←h] at hneg
-      exfalso
-      exact hneg bddBelow_Ioo
-    · have hpos : x > 0 := by
-        have hnonneg : x ≥ 0 := by exact zero_le
-        have hzero : x ≠ 0 := by exact ne_of_mem_of_not_mem hx h0
-        exact pos_iff_ne_zero.mpr hzero
-      have : relu (NNReal.toReal x) = x := by exact relu_proj
-      rw [←this] at hx
-      have : ↑x ∈ relu ⁻¹' U := by exact hx
-      rw [←h] at this
-      exact this
+  apply subset_antisymm
+  · rintro _ ⟨y, hy, rfl⟩
+    exact h ▸ hy
+  · intro x hx
+    refine ⟨(x : ℝ), ?_, relu_proj⟩
+    rw [h]
+    simpa only [mem_preimage, relu_proj] using hx
 
 theorem StrictMonoOn.injOn_Ioo {α : Type u_1} {β : Type u_2} {f : α → β}
   [LinearOrder α] [LinearOrder β] {a : α} {b : α} (h : StrictMonoOn f (Set.Icc a b)) :
   InjOn f (Set.Ioo a b) := by
-      intro x hx y hy hf
-      have hx' : x ∈ Set.Icc a b := by exact mem_Icc_of_Ioo hx
-      have hy' : y ∈ Set.Icc a b := by exact mem_Icc_of_Ioo hy
-      by_cases hxy : x < y
-      · have : f x < f y := by
-          exact h hx' hy' (hxy)
-        exfalso
-        rw [hf] at this
-        exact (lt_self_iff_false (f y)).mp this
-      · by_cases hyx : y < x
-        · have : f y < f x := by
-            exact h hy' hx' hyx
-          exfalso
-          rw [hf] at this
-          exact (lt_self_iff_false (f y)).mp this
-        · have hyx' : x ≤ y := le_of_not_gt hyx
-          have hxy' : y ≤ x := le_of_not_gt hxy
-          apply le_antisymm
-          · assumption
-          assumption
+  exact (h.mono Ioo_subset_Icc_self).injOn
 
 lemma relu_ioo (a b : Real) :
   (relu '' (Set.Ioo a b) = Set.Ioo (relu a) (relu b)) ∨

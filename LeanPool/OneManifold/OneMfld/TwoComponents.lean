@@ -39,99 +39,6 @@ theorem tendsto_bot_of_strictAntiOn_image {p v q w : NNReal} (hpv : p < v)
 
 variable {M : Type*} [TopologicalSpace M]
 
-/-- Component version of `overlap_mono`: on a subset `W` of the overlap whose images are
-`Ioo p r` and `Ioo q w`, with the `r`-end interior to `a.target`, the `q`-end interior to
-`b.target`, and `r` not in the image of the full overlap, the transition is increasing. -/
-theorem overlap_mono_on [T2Space M] (a b : OpenPartialHomeomorph M NNReal)
-    {W : Set M} (hW : W ⊆ a.source ∩ b.source)
-    {p r q w : NNReal}
-    (ha : a '' W = Ioo p r)
-    (hb : b '' W = Ioo q w)
-    (hr : r ∈ a.target) (hq : q ∈ b.target)
-    (hrS : r ∉ a '' (a.source ∩ b.source)) :
-    ∀ x ∈ W, ∀ y ∈ W, a x < a y → b x < b y := by
-  have hWa : W ⊆ a.source := hW.trans inter_subset_left
-  have hWb : W ⊆ b.source := hW.trans inter_subset_right
-  have hacoord : ∀ x ∈ W, a x ∈ Ioo p r := fun x hx => ha ▸ mem_image_of_mem a hx
-  by_cases hpr : p < r
-  swap
-  · intro x hx y hy hxy
-    exact absurd ((hacoord x hx).1.trans (hacoord x hx).2) hpr
-  set τ : NNReal → NNReal := fun t => b (a.symm t) with hτdef
-  have hsymm : ∀ t ∈ Ioo p r, a.symm t ∈ W ∧ a (a.symm t) = t := by
-    intro t ht
-    rw [← ha] at ht
-    obtain ⟨x, hxW, rfl⟩ := ht
-    rw [a.left_inv (hWa hxW)]
-    exact ⟨hxW, rfl⟩
-  have hkey : ∀ x ∈ W, τ (a x) = b x := by
-    intro x hx
-    simp only [hτdef]
-    rw [a.left_inv (hWa hx)]
-  have hτmaps : ∀ t ∈ Ioo p r, τ t ∈ Ioo q w := by
-    intro t ht
-    have hb' : b (a.symm t) ∈ b '' W := mem_image_of_mem b (hsymm t ht).1
-    exact hb ▸ hb'
-  have hIoo_target : Ioo p r ⊆ a.target := by
-    rw [← ha]
-    rintro y ⟨z, hz, rfl⟩
-    exact a.map_source (hWa hz)
-  have hqw_target : Ioo q w ⊆ b.target := by
-    rw [← hb]
-    rintro y ⟨z, hz, rfl⟩
-    exact b.map_source (hWb hz)
-  have hcont : ContinuousOn τ (Ioo p r) :=
-    b.continuousOn.comp (a.symm.continuousOn.mono hIoo_target)
-      (fun t ht => hWb (hsymm t ht).1)
-  have hinj : InjOn τ (Ioo p r) := by
-    intro t1 ht1 t2 ht2 heq
-    obtain ⟨h1W, h1e⟩ := hsymm t1 ht1
-    obtain ⟨h2W, h2e⟩ := hsymm t2 ht2
-    have h12 : a.symm t1 = a.symm t2 := b.injOn (hWb h1W) (hWb h2W) heq
-    rw [← h1e, ← h2e, h12]
-  rcases strictMonoOn_or_strictAntiOn_of_injOn_Ioo hcont hinj with hmono | hanti
-  · intro x hx y hy hxy
-    have h := hmono (hacoord x hx) (hacoord y hy) hxy
-    rwa [hkey x hx, hkey y hy] at h
-  · exfalso
-    have himg : τ '' Ioo p r = Ioo q w := by
-      apply subset_antisymm
-      · rintro _ ⟨t, ht, rfl⟩
-        exact hτmaps t ht
-      · intro y hy
-        rw [← hb] at hy
-        obtain ⟨x, hxW, rfl⟩ := hy
-        exact ⟨a x, hacoord x hxW, hkey x hxW⟩
-    have hτlim : Tendsto τ (𝓝[<] r) (𝓝 q) :=
-      tendsto_top_of_strictAntiOn_image hpr hanti himg
-    have hF : 𝓝[Ioo p r] r = 𝓝[<] r := nhdsWithin_Ioo_eq_nhdsLT hpr
-    have hFne : (𝓝[Ioo p r] r).NeBot := by
-      apply mem_closure_iff_nhdsWithin_neBot.mp
-      rw [closure_Ioo hpr.ne]
-      exact ⟨hpr.le, le_refl r⟩
-    have hlim1 : Tendsto a.symm (𝓝[Ioo p r] r) (𝓝 (a.symm r)) :=
-      (a.symm.continuousOn r hr).mono hIoo_target
-    have hτq : Tendsto τ (𝓝[Ioo p r] r) (𝓝 q) := hF ▸ hτlim
-    have hτq' : Tendsto τ (𝓝[Ioo p r] r) (𝓝[b.target] q) := by
-      rw [tendsto_nhdsWithin_iff]
-      refine ⟨hτq, ?_⟩
-      filter_upwards [self_mem_nhdsWithin] with t ht
-      exact hqw_target (hτmaps t ht)
-    have hlim2 : Tendsto (b.symm ∘ τ) (𝓝[Ioo p r] r) (𝓝 (b.symm q)) :=
-      Tendsto.comp (b.symm.continuousOn q hq) hτq'
-    have hlim2' : Tendsto a.symm (𝓝[Ioo p r] r) (𝓝 (b.symm q)) := by
-      apply Tendsto.congr' _ hlim2
-      filter_upwards [self_mem_nhdsWithin] with t ht
-      change b.symm (τ t) = a.symm t
-      simp only [hτdef]
-      exact b.left_inv (hWb (hsymm t ht).1)
-    have hz : a.symm r = b.symm q := tendsto_nhds_unique' hFne hlim1 hlim2'
-    have hzS : a.symm r ∈ a.source ∩ b.source := by
-      refine ⟨a.map_target hr, ?_⟩
-      rw [hz]
-      exact b.map_target hq
-    exact hrS ⟨a.symm r, hzS, a.right_inv hr⟩
-
 /-- Mirror component version: with the `p`-end interior to `a.target`, the `w`-end
 interior to `b.target`, and `p` not in the image of the full overlap, the transition is
 again increasing. -/
@@ -169,19 +76,9 @@ theorem overlap_mono_on' [T2Space M] (a b : OpenPartialHomeomorph M NNReal)
     rw [← ha]
     rintro y ⟨z, hz, rfl⟩
     exact a.map_source (hWa hz)
-  have hqw_target : Ioo q w ⊆ b.target := by
-    rw [← hb]
-    rintro y ⟨z, hz, rfl⟩
-    exact b.map_source (hWb hz)
-  have hcont : ContinuousOn τ (Ioo p r) :=
-    b.continuousOn.comp (a.symm.continuousOn.mono hIoo_target)
+  obtain ⟨hcont, hinj⟩ : ContinuousOn τ (Ioo p r) ∧ InjOn τ (Ioo p r) :=
+    chartTransition_continuous_injective a b hIoo_target
       (fun t ht => hWb (hsymm t ht).1)
-  have hinj : InjOn τ (Ioo p r) := by
-    intro t1 ht1 t2 ht2 heq
-    obtain ⟨h1W, h1e⟩ := hsymm t1 ht1
-    obtain ⟨h2W, h2e⟩ := hsymm t2 ht2
-    have h12 : a.symm t1 = a.symm t2 := b.injOn (hWb h1W) (hWb h2W) heq
-    rw [← h1e, ← h2e, h12]
   rcases strictMonoOn_or_strictAntiOn_of_injOn_Ioo hcont hinj with hmono | hanti
   · intro x hx y hy hxy
     have h := hmono (hacoord x hx) (hacoord y hy) hxy
@@ -202,23 +99,10 @@ theorem overlap_mono_on' [T2Space M] (a b : OpenPartialHomeomorph M NNReal)
       apply mem_closure_iff_nhdsWithin_neBot.mp
       rw [closure_Ioo hpr.ne]
       exact ⟨le_refl p, hpr.le⟩
-    have hlim1 : Tendsto a.symm (𝓝[Ioo p r] p) (𝓝 (a.symm p)) :=
-      (a.symm.continuousOn p hp).mono hIoo_target
-    have hτw : Tendsto τ (𝓝[Ioo p r] p) (𝓝 w) := hF ▸ hτlim
-    have hτw' : Tendsto τ (𝓝[Ioo p r] p) (𝓝[b.target] w) := by
-      rw [tendsto_nhdsWithin_iff]
-      refine ⟨hτw, ?_⟩
-      filter_upwards [self_mem_nhdsWithin] with t ht
-      exact hqw_target (hτmaps t ht)
-    have hlim2 : Tendsto (b.symm ∘ τ) (𝓝[Ioo p r] p) (𝓝 (b.symm w)) :=
-      Tendsto.comp (b.symm.continuousOn w hw) hτw'
-    have hlim2' : Tendsto a.symm (𝓝[Ioo p r] p) (𝓝 (b.symm w)) := by
-      apply Tendsto.congr' _ hlim2
-      filter_upwards [self_mem_nhdsWithin] with t ht
-      change b.symm (τ t) = a.symm t
-      simp only [hτdef]
-      exact b.left_inv (hWb (hsymm t ht).1)
-    have hz : a.symm p = b.symm w := tendsto_nhds_unique' hFne hlim1 hlim2'
+    have hτend : Tendsto τ (𝓝[Ioo p r] p) (𝓝 w) := hF ▸ hτlim
+    have hz : a.symm p = b.symm w :=
+      chartTransition_endpoint_eq a b hIoo_target
+        (fun t ht => hWb (hsymm t ht).1) hp hw hFne hτend
     have hzS : a.symm p ∈ a.source ∩ b.source := by
       refine ⟨a.map_target hp, ?_⟩
       rw [hz]

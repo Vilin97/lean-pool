@@ -70,50 +70,15 @@ instance : LocallyConnectedSpace NNReal := by
     use this
     intro y yV
     dsimp [V] at yV
-    by_cases h : z' = y
-    · exact Inseparable.joinedIn (congrArg nhds h) this yV
     rw [JoinedIn]
     let γ : Path z' y := {
       toFun := fun t ↦ NNReal.mk ((unitInterval.symm t)*z' + t*y)
         (add_nonneg (mul_nonneg unitInterval.nonneg' znonneg)
           (mul_nonneg unitInterval.nonneg' y.coe_nonneg))
       continuous_toFun := by
+        apply Continuous.subtype_mk
         simp only [unitInterval.coe_symm_eq]
-        refine Metric.continuous_iff.mpr ?_
-        intro s ε εpos
-        let δ := ε / dist y z'
-        have dyz'pos : 0 < dist y z' := dist_pos.mpr (ne_comm.mpr h)
-        have δpos : δ > 0 := div_pos εpos dyz'pos
-        use δ
-        constructor
-        · exact δpos
-        intro a a_s_near
-        rw [NNReal.dist_eq]
-        simp only [NNReal.coe_mk]
-        rw [sub_mul, sub_mul, one_mul]
-        let ans : Real := (↑a - ↑s) * (↑y - ↑z')
-        have : ↑z' - ↑a * ↑z' + ↑a * ↑y - (↑z' - ↑s * ↑z' + ↑s * ↑y) = ans := by ring
-        rw [this]
-        dsimp [ans]
-        rw [abs_mul]
-        -- have : (max 0 l + u) / 2 - ↑a * ((max 0 l + u) / 2) + ↑a * ↑y - ((max 0 l +
-        -- u) / 2 - ↑s * ((max 0 l + u) / 2) + ↑s * ↑y)
-        --  = (↑a - ↑s) * (↑y - ((max 0 l + u) / 2)) := by ring
-        --ring_nf
-        have ha : |(a:ℝ) - (s:ℝ)| < δ := by
-          rw [← Real.dist_eq (a : ℝ) (s : ℝ)]
-          exact a_s_near
-        have this' : |↑y - (max 0 l + u) / 2| = dist y z' := rfl
-        have this : |(y:ℝ) - (z':ℝ)| = dist y z' := by
-          exact this'
-        rw [this]
-        calc
-          |↑a - ↑s| * dist y z'
-            < δ * dist y z' := by exact ((mul_lt_mul_iff_of_pos_right dyz'pos).mpr a_s_near)
-            _ = ε := by dsimp [δ]
-                        ring_nf
-                        refine mul_inv_cancel_right₀ ?_ ε
-                        exact dist_ne_zero.mpr fun a => h (id (Eq.symm a))
+        fun_prop
       source' := by
         simp only [unitInterval.symm_zero, Set.Icc.coe_one, one_mul,
           Set.Icc.coe_zero, zero_mul, add_zero]
