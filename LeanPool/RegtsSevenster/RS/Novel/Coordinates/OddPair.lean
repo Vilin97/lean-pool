@@ -62,7 +62,7 @@ theorem lambda_oddPair
 variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
 
--- Raised budget: the vanishing is checked through the tensorator
+-- The vanishing is checked through the tensorator
 -- on the odd block, unfolding both unitors.
 /-- **Split functionals vanish on odd pairs**: the tensor of two
 copoint functionals kills a structure-map image of an odd

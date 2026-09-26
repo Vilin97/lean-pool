@@ -428,7 +428,7 @@ noncomputable def oddColouringOf (W : ClosedFragment)
   ⟨oddDataOf W F c hfibre,
     oddDataOf_constancy W F c hfibre⟩
 
--- Raised budget: reconstruction is checked slot by slot, each slot
+-- Reconstruction is checked slot by slot, each slot
 -- unfolding the star enumeration and the membership dichotomy.
 /-- **Reconstruction**: a diagonal pattern colouring is the data
 colouring of its extracted data. -/

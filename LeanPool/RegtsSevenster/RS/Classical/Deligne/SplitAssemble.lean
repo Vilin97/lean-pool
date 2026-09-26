@@ -109,7 +109,7 @@ theorem splitOfBase_unit
 
 section Linear
 
--- Raised budget: linearity of the insertion unfolds the module
+-- Linearity of the insertion unfolds the module
 -- action through the duality datum on one generator.
 /-- **The module entry is linear over the base**, through the
 carrier entry of the base algebra: the splitting-data shape of
@@ -270,7 +270,7 @@ theorem splitIns_linear
   refine Eq.trans (whisker_eq _ habs) ?_
   exact Category.assoc _ _ _
 
--- Raised budget: linearity of the insertion unfolds the module
+-- Linearity of the insertion unfolds the module
 -- action through the duality datum on one generator.
 private theorem splitIns_dualStage_absorb
     [Category.{v} D] [MonoidalCategory D] [SymmetricCategory D]

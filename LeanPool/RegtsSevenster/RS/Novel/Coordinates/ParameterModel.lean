@@ -60,7 +60,7 @@ theorem stdToOmega_bmc_perm_all :
     rw [Category.comp_id, Category.id_comp]
   | n + 1, σ => stdToOmega_bmc_perm f P e σ
 
--- Raised budget: the parameter is rewritten over the model, so the
+-- The parameter is rewritten over the model, so the
 -- star vector, the sort word and the degree-sum recast all unfold
 -- in one term.
 /-- **The parameter value over the model**: the cap functional

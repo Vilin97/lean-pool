@@ -862,7 +862,7 @@ theorem match_pushData_liftData_bitsOf {k ℓ : ℕ} : ∀ (n : ℕ)
         (fun a => x a.castSucc) _ hct' hEt hnet (hbits' ▸ hal.2)
         (stage_matches_of_matches n V hcl s hc x hbm)
 
--- Raised budget: the round trip is followed through one stage of
+-- The round trip is followed through one stage of
 -- the recursion, so the push, the lift and the closing cut all
 -- unfold on the same subset.
 open Classical in

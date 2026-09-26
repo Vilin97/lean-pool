@@ -120,7 +120,7 @@ theorem colouringOf_natAdd (W : ClosedFragment) (F : EdgeSubset W)
     exact Eq.trans (congrArg ψ.val harg) (ψ.property ⟨_, h⟩)
 
 open Classical in
--- Raised budget: the diagonal pairing is expanded position by
+-- The diagonal pairing is expanded position by
 -- position over `Fin (edgeCount W)`, each with its membership
 -- dichotomy.
 /-- **The diagonal cap pairing on the data colouring**: the Koszul

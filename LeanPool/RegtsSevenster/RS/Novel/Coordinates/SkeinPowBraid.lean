@@ -113,7 +113,7 @@ variable (P : DelignePackage (SkeinObj f))
 variable {k ℓ : ℕ}
 variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 
--- Raised budget: the intertwining is proved by recursion on the
+-- The intertwining is proved by recursion on the
 -- arity with a top and a lower case, each unfolding the transport
 -- and the braiding.
 /-- **The transport intertwining**: the model transport carries

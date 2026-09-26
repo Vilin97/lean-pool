@@ -511,7 +511,7 @@ theorem lift_eq_mapPairs :
 
 attribute [instance] matchPairs_surv_isEmpty
 
--- Raised budget: the closure is matched with the self-glue along
+-- The closure is matched with the self-glue along
 -- the straight matching, which unfolds the glue list.
 /-- **The bundle closure is the straight-matching self-glue**:
 the full closure of an `(m + m)`-fragment against the strand

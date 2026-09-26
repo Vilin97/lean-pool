@@ -232,7 +232,7 @@ noncomputable def envMatDecomp (A : Mat_ (Karoubi (SkeinObj f))) :
 
 /-! ### The generator field -/
 
--- Raised budget: the retract is built from a finite biproduct
+-- The retract is built from a finite biproduct
 -- indexed by the object's own index type, so the biproduct
 -- structure is unfolded.
 /-- **The strand generates the envelope**: every object is a

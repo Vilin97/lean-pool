@@ -30,7 +30,7 @@ variable {k ℓ : ℕ}
 
 /-! ## The h-generic master summand -/
 
--- Raised budget: the definition names the sorted colouring, its
+-- The definition names the sorted colouring, its
 -- block restrictions and their odd lists, so the whole star
 -- enumeration elaborates here.
 open Classical in
@@ -63,7 +63,7 @@ noncomputable def hMaster (h : MixedFunctional k ℓ)
 
 /-! ## Per-vertex value lemmas -/
 
--- Raised budget: the block factor is matched with the vertex
+-- The block factor is matched with the vertex
 -- factor, unfolding the sorted colouring and its restriction.
 open Classical in
 /-- **The per-vertex value** (duplicate-free case): the h-generic

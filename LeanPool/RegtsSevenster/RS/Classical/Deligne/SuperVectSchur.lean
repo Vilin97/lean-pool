@@ -558,7 +558,7 @@ private theorem trace_comp_comm_monoid {M N : Type*}
   let : AddCommGroup N := Module.addCommMonoidToAddCommGroup ℂ
   exact LinearMap.trace_comp_comm' f g
 
--- Raised budget: the supertrace is conjugated through the
+-- The supertrace is conjugated through the
 -- braiding on each of the four parity blocks.
 private theorem sTr_comp_whiskerLeft_total (P X : SuperVect)
     (g : SuperVect.tensorObj P X ⟶ SuperVect.tensorObj P X) (k : X ⟶ X) :

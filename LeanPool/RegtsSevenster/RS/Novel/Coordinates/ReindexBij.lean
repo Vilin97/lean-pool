@@ -87,7 +87,7 @@ private theorem evenColouringOf_congr (W : ClosedFragment)
     evenColouringOf W F c₂ h₂ hd₂ := by
   subst h; rfl
 
--- Raised budget: the fibre sum is reindexed along the
+-- The fibre sum is reindexed along the
 -- data bijection, which unfolds the colouring construction on
 -- both the even and the odd side.
 /-- **The fibre sum reindexes over the colouring data.** -/

@@ -206,7 +206,7 @@ private lemma det_vanishing_of_all_ge {t : ℕ → ℂ} {a b : ℕ}
 
 /-! ### Stage 3: extracting the recurrence -/
 
--- Raised budget: one elaboration of the span/annihilator assembly
+-- One elaboration of the span/annihilator assembly
 -- over `Fin (a+1) → ℂ` with its instance searches, no proof search.
 /-- Schur-determinant vanishing on wide single-row extensions forces
 the complete-homogeneous sequence to satisfy a nontrivial linear

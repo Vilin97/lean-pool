@@ -60,7 +60,7 @@ variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
 variable (e' : P.ω.obj (SkeinObj.mk 1) ⟶ stdSuperPair k ℓ)
 
--- Raised budget: the coordinate factorisation is proved by
+-- The coordinate factorisation is proved by
 -- recursion on the degree list, carrying the merge equivalence at
 -- every step.
 /-- **The assembled coordinates factor over the blocks.** -/

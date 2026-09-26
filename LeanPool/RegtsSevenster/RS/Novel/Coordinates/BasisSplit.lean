@@ -46,7 +46,7 @@ theorem MixedColouring.ext_halves {a b : ℕ}
   funext (fun i => Fin.addCases
     (fun j => congrFun h1 j) (fun j => congrFun h2 j) i)
 
--- Raised budget: the basis vector is expanded through the merge on
+-- The basis vector is expanded through the merge on
 -- both halves, so the colouring equivalence at three arities enters
 -- the elaborated term.
 /-- **Basis vectors split over the merge.** -/

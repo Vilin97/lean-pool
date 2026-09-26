@@ -56,7 +56,7 @@ private theorem compι_ι_degCast
     (chainBGrCompι_eqToHom A M M' d h k) _) ?_
   exact Category.assoc _ _ _
 
--- Raised budget: the relative tensor projection unfolds against
+-- The relative tensor projection unfolds against
 -- the pair multiplication on one generator.
 /-- **Defining equation of the carrier-level pair product**:
 through the projection of the relative tensor product, the pair

@@ -65,7 +65,7 @@ private theorem filterMap_eq_map_of_some {γ δ : Type*}
         (some (g' a))).getD 0) = {g' a} from rfl]
     rw [Multiset.singleton_add]
 
--- Raised budget: the list is rewritten through `filterMap` on the
+-- The list is rewritten through `filterMap` on the
 -- universe multiset and split along the participating finset.
 open Classical in
 /-- **The odd list of a colouring over its participating slots**,

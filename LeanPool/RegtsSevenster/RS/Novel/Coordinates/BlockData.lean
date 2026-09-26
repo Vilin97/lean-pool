@@ -151,7 +151,7 @@ theorem blockSlot_not_mem {W : ClosedFragment}
     blockFlag W v j.val ∉ F.flags :=
   (Finset.mem_filter.mp j.prop).2
 
--- Raised budget: a filter over flags is matched against a filter
+-- A filter over flags is matched against a filter
 -- over block slots, so both attach-subtypes are unfolded.
 open Classical in
 /-- **The even colours at a block's vertex** are the even data at

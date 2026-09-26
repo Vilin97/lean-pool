@@ -112,7 +112,7 @@ theorem mul_chainBaseStage
   refine Eq.trans (Category.assoc _ _ _) ?_
   exact whisker_eq _ (by rw [chainBaseStage]; rfl)
 
--- Raised budget: the multiplication of the split algebra unfolds
+-- The multiplication of the split algebra unfolds
 -- through both stage inclusions and the duality datum.
 /-- **The base entry is multiplicative**: the carrier entry of
 the base algebra respects the multiplication, the multiplicative

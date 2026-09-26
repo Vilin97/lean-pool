@@ -26,7 +26,7 @@ open Finset
 
 variable {k ℓ : ℕ}
 
--- Raised budget: two sorting signs are matched with the key sign of
+-- Two sorting signs are matched with the key sign of
 -- the pair enumeration, so all three sorts unfold together.
 open Classical in
 /-- **The per-vertex sign collapse**: the block and Definition 5

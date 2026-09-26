@@ -260,7 +260,7 @@ theorem colourChar_extend_zero {n N k : ℕ} (hNk : N ≤ k)
     constructor
     · intro h
       have := congrArg Fin.val h
-      simp? [Fin.val_castLE] at this
+      simp [Fin.val_castLE] at this
       exact absurd (this ▸ (g x).isLt) (by omega)
     · intro h; exact absurd h (by simp)
   -- Key lemma: fibreCard of restriction

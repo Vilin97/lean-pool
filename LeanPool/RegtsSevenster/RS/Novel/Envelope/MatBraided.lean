@@ -128,7 +128,7 @@ open scoped Classical in
 
 /-! ### Braiding iso -/
 
--- Raised budget: the matrix identity is checked entrywise, and
+-- The matrix identity is checked entrywise, and
 -- each entry is a sum over the intermediate index.
 private theorem matBraid_hom_inv
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -187,7 +187,7 @@ def matBraidIso [Category.{v} C] [Preadditive C] [MonoidalCategory C]
 
 /-! ### Braiding naturality -/
 
--- Raised budget: naturality is checked entrywise, each entry a sum
+-- Naturality is checked entrywise, each entry a sum
 -- over the intermediate index.
 private theorem mat_braiding_naturality_right
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -310,7 +310,7 @@ private theorem mat_comp3_rev_rhs
   congr 1; ext dx; rw [Preadditive.comp_sum]
   congr 1; ext dz; rw [Preadditive.comp_sum]
 
--- Raised budget: the hexagon is checked entrywise on a triple
+-- The hexagon is checked entrywise on a triple
 -- index, so three matrix compositions expand.
 private theorem mat_hexagon_forward
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -448,7 +448,7 @@ end Braided
 
 section Symmetric
 
--- Raised budget: symmetry is checked entrywise.
+-- Symmetry is checked entrywise.
 /-- And a symmetric one stays symmetric. -/
 instance matSymmetric [Category.{v} C] [Preadditive C] [MonoidalCategory C]
     [MonoidalPreadditive C] [SymmetricCategory C] :

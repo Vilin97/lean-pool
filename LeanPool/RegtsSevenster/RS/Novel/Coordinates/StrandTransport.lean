@@ -53,7 +53,7 @@ theorem stdToOmega_one :
   rw [Category.comp_id] at h
   exact h
 
--- Raised budget: the one-strand transport is unfolded through the
+-- The one-strand transport is unfolded through the
 -- tensorator and the left unitor.
 /-- The even evaluation of the one-strand transport on a
 unit-padded even vector. -/

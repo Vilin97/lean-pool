@@ -67,7 +67,7 @@ theorem stdFromOmega_perm
   rw [stdFromOmega_stdToOmega f P e e' hee' d]
   rw [Category.id_comp]
 
--- Raised budget: `rfl`, but the two sides agree only after the
+-- `rfl`, but the two sides agree only after the
 -- transport and the coordinate extraction are unfolded.
 /-- The star coordinate is a model coordinate. -/
 theorem starCoord_eq_coordOf (d : ℕ)
@@ -76,7 +76,7 @@ theorem starCoord_eq_coordOf (d : ℕ)
       coordOf (((stdFromOmega f P e' d) :
         SuperVect.Hom _ _).evenMap (starVec f P d)) c := rfl
 
--- Raised budget: the symmetry is read through the transport and
+-- The symmetry is read through the transport and
 -- the colouring equivalence, so the permutation action unfolds on
 -- both.
 /-- **The star coordinate symmetry**: permuting the colouring

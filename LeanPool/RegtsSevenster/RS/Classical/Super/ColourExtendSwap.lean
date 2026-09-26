@@ -74,7 +74,7 @@ private theorem funTensorFun_map_id {ι κ : Type} [Fintype ι]
 
 /-! ### Computation lemmas for `colourPowerStep` applied at a point -/
 
--- Raised budget: the tensor step equivalence is applied to a
+-- The tensor step equivalence is applied to a
 -- `tensorHom` and split over the four graded blocks.
 private theorem step_tensorHom_even_apply (d : ℕ)
     (T : colourPower k ℓ d ⟶ colourPower k ℓ d)
@@ -339,7 +339,7 @@ private theorem oddSplitEquiv_swap_inr {n i : ℕ} (h : i + 2 ≤ n + 1)
 
 /-! ### Main theorem -/
 
--- Raised budget: both components unfold the step equivalence and
+-- Both components unfold the step equivalence and
 -- the swap at two arities to compare them position by position.
 /-- **Extension compatibility of the signed swap**: extending the
 adjacent Koszul swap by one position is the adjacent Koszul swap

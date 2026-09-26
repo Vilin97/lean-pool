@@ -178,7 +178,7 @@ private theorem blockTensorEnd_one_right (x : skeinEnd f a) :
       (blockTensorEnd f x (1 : skeinEnd f 0))).symm.trans
     (h.trans (HomSpace.comp_id_left f a a x))
 
--- Raised budget: associativity is stated up to an arity cast, so
+-- Associativity is stated up to an arity cast, so
 -- the cast transport is unfolded on both sides.
 /-- Tensor associativity for `blockTensorEnd`, up to `endCast`. -/
 private theorem blockTensor_assoc {a b c : ℕ}
@@ -379,7 +379,7 @@ private theorem blockPerm_sumCongr (n : ℕ) {a b : ℕ}
 
 /-! ### Braiding commutativity at block arities -/
 
--- Raised budget: the commutation is checked at the HomSpace level,
+-- The commutation is checked at the HomSpace level,
 -- where the tensor and the bundle map both expand.
 /-- The braiding `β_{n,n}` commutes with `g ⊗ g` at the HomSpace
 level. -/
@@ -595,7 +595,7 @@ private theorem swap01_comm_blockPow2 (g : skeinEnd f n) :
         (blockPow f n g 1) from blockPow_split f n g 1 1]
   exact blockSwap01_comm f (n * 1) (blockPow f n g 1)
 
--- Raised budget: the induction on the block count carries the
+-- The induction on the block count carries the
 -- permutation class and the block power at every step.
 /-- Adjacent swap commutes with blockPow (by induction on k). -/
 private theorem block_adj_swap_comm (k : ℕ) (i : ℕ)

@@ -92,7 +92,7 @@ theorem splitCapVal_merge (m : ℕ)
             SuperVect.Hom _ _).evenMap y) :=
   omegaFun_capTensor_merge f P e m x y
 
--- Raised budget: the merge of an odd pair is pushed through the
+-- The merge of an odd pair is pushed through the
 -- split cap on every graded block.
 /-- **The split cap value vanishes on odd merges.** -/
 theorem splitCapVal_oddMerge (m : ℕ)
@@ -152,7 +152,7 @@ theorem splitCapVal_oddMerge (m : ℕ)
   exact omegaFun_tensor_oddPair f P
     (bundleCapClass f m) (evClass f) _ _
 
--- Raised budget: peeling one cap rewrites the transport along a
+-- Peeling one cap rewrites the transport along a
 -- permutation and an arity cast at once.
 /-- **The cap value successor law in model form.** -/
 theorem capVal_succ (m : ℕ)

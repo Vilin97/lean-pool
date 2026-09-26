@@ -26,7 +26,7 @@ theorem len_flatMap_pair {α β : Type*} (L : List α) (f g : α → β) :
   | nil => simp
   | cons a t ih => simp [List.flatMap_cons, ih]; omega
 
--- Raised budget: the index arithmetic under the flat-map is
+-- The index arithmetic under the flat-map is
 -- carried through a list induction.
 /-- Even positions in a list of pairs come from the first component. -/
 theorem getElem?_flatMap_pair_even {α β : Type*}

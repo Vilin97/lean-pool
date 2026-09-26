@@ -48,7 +48,7 @@ noncomputable def modelStarVec :
             SuperVect.Hom _ _).evenMap (starVec f P d))
           (modelStarVec ds)))
 
--- Raised budget: the transport is compared with the assembled star
+-- The transport is compared with the assembled star
 -- vector by recursion on the degree list, carrying the tensorator
 -- at every step.
 /-- **The model star vector transports to the assembled star

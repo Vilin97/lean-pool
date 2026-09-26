@@ -31,7 +31,7 @@ variable {k ℓ : ℕ}
 variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 variable (e' : P.ω.obj (SkeinObj.mk 1) ⟶ stdSuperPair k ℓ)
 
--- Raised budget: the block's star coordinate is computed through
+-- The block's star coordinate is computed through
 -- the transport and matched with the vertex factor.
 open Classical in
 /-- **The per-vertex value** (duplicate-free case): the star

@@ -266,7 +266,7 @@ noncomputable def shiftLabelR (s : ℕ) {t : ℕ}
             List.Perm.refl _)).symm.trans
         ((interfaceSurvEquiv s t u).trans finSumFinEquiv))))
 
--- Raised budget: normalising the shifted side chains the glue-list
+-- Normalising the shifted side chains the glue-list
 -- presentation with two relabels.
 /-- The shifted left side, normalized. -/
 noncomputable def shiftNormalLeft {s t u : ℕ}

@@ -145,7 +145,7 @@ private theorem mat_assocHom_apply'
           (K.X k')).hom
       else 0 else 0 else 0 := rfl
 
--- Raised budget: associativity of the embedding is checked
+-- Associativity of the embedding is checked
 -- entrywise on a triple index.
 private theorem matEmb_associativity
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -268,7 +268,7 @@ private theorem mat_rightUnitorHom_apply'
       if h : i = k then eqToHom (by subst h; rfl) ≫ (ρ_ (M.X k)).hom else 0
         := rfl
 
--- Raised budget: unitality is checked entrywise against the
+-- Unitality is checked entrywise against the
 -- one-object index.
 private theorem matEmb_left_unitality
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
@@ -436,7 +436,7 @@ private theorem mat_braidHom_apply'
         eqToHom (by subst hi; subst hj; rfl) ≫ (β_ (M.X j₂) (N.X j₁)).hom
       else 0 else 0 := rfl
 
--- Raised budget: the braided axiom is checked entrywise through
+-- The braided axiom is checked entrywise through
 -- the tensorator.
 private theorem matEmb_braided
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]

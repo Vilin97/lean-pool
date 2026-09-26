@@ -50,7 +50,7 @@ theorem stdForm_oddPair (x y : (stdSuperPair k ℓ).odd) :
   rw [LinearMap.coprod_apply, map_zero, zero_add]
   exact TensorProduct.lift.tmul x y
 
--- Raised budget: the evaluation is computed on a two-position
+-- The evaluation is computed on a two-position
 -- basis vector through the transport, unfolding the tensorator and
 -- the standard form.
 /-- **The evaluation leaf**: the strand evaluation on a

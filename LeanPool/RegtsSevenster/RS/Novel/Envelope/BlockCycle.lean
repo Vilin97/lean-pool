@@ -116,7 +116,7 @@ theorem blockTensorEnd_mul {a b : ℕ}
 
 /-! ### The rotation step at fragments -/
 
--- Raised budget: five fragment equivalences are chained on each
+-- Five fragment equivalences are chained on each
 -- side of the closure before the splice applies.
 /-- Core fragment-level identity for the block rotation step:
 the trace of a rotated tensor equals the trace of the spliced

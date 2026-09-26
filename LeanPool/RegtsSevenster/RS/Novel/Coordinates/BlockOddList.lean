@@ -25,7 +25,7 @@ open Finset
 
 variable {k ℓ : ℕ}
 
--- Raised budget: the block's odd list is matched with the sorted
+-- The block's odd list is matched with the sorted
 -- slot enumeration order-exactly, so the flip, the sort and the
 -- block restriction are all unfolded together.
 open Classical in

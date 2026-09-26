@@ -90,7 +90,7 @@ theorem coev_comp_ev :
 
 variable (P : DelignePackage (SkeinObj f))
 
--- Raised budget: the circle value is read off the standard form
+-- The circle value is read off the standard form
 -- and copairing, both of which unfold over the even and odd
 -- blocks of the model.
 /-- **The circle value is the superdimension** `k − 2ℓ` under any

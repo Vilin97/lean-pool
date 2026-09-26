@@ -873,7 +873,7 @@ lemma isIso_of_coprod_eq_whiskerRight_indOf
   rw [key]
   infer_instance
 
--- Raised budget: the biproduct-preservation instances for
+-- The biproduct-preservation instances for
 -- `tensorLeft a` are assembled by instance search through the
 -- finite-biproduct hierarchy of `C`, and the two comparison maps
 -- are then unified across the transported tensor of `Ind C`.
@@ -905,7 +905,7 @@ lemma isIso_coprodComparison_tensorLeft_indOf₀
     (coprodComparison_inl (tensorLeft (indOf.obj a)))
     (coprodComparison_inr (tensorLeft (indOf.obj a)))
 
--- Raised budget: the mirror of the left version, with the same
+-- The mirror of the left version, with the same
 -- biproduct-preservation search for `tensorRight a`.
 /-- The embedded base case, right version. -/
 lemma isIso_coprodComparison_tensorRight_indOf₀
@@ -1211,7 +1211,7 @@ lemma isZero_colimit_of_isZero
   rw [Category.comp_id, comp_zero]
   exact (h j).eq_of_src _ _
 
--- Raised budget: three isomorphisms of ind-objects are chained
+-- Three isomorphisms of ind-objects are chained
 -- through the presentation colimit, each elaborated against the
 -- transported tensor of `Ind C` and the colimit-preservation
 -- instance for `tensorRight`.
@@ -1246,7 +1246,7 @@ lemma isZero_tensor_left_ind
   exact IsZero.of_iso (isZero_colimit_of_isZero
     (D ⋙ tensorRight (indOf.obj 0)) hpt) (e₁ ≪≫ e₂ ≪≫ e₃)
 
--- Raised budget: the mirror of the left version, with the same
+-- The mirror of the left version, with the same
 -- chain of three isomorphisms through the presentation colimit.
 /-- Tensoring a vanishing ind-object on the right kills it. -/
 lemma isZero_tensor_right_ind

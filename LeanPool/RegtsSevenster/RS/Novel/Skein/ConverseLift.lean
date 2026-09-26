@@ -395,7 +395,7 @@ theorem match_pushData_liftData_succ_open_at (n : ℕ)
     (match_unglue_glueDataOpen (cutL_ne_cutR n) hop 𝒟 hc hE hne
       hdc hcL hEL hneL hag f hf)
 
--- Raised budget: as for the directions, on the matching.
+-- As for the directions, on the matching.
 open Classical in
 /-- **The interface round trip, one stage on, at a closing cut, at
 one subset.**  The stage reads the family only at the subset the

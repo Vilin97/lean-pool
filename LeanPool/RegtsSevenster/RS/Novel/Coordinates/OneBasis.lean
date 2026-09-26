@@ -92,7 +92,7 @@ private theorem oddSplit0_inr (c : MixedColouring k ℓ 1)
     exact (colouringSplit_symm_last _ _).trans ha.symm
   rw [← inv, Equiv.apply_symm_apply]
 
--- Raised budget: the one-position basis vector is identified
+-- The one-position basis vector is identified
 -- coordinate by coordinate through the colouring equivalence.
 /-- **The one-position even basis vector is the unit-padded
 standard even basis vector.** -/

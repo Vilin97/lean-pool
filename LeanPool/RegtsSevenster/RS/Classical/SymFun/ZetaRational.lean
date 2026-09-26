@@ -27,7 +27,7 @@ open scoped Polynomial PowerSeries
 
 /-! ### Normalising both constant terms to 1 -/
 
--- Raised budget: the rational form is assembled from the
+-- The rational form is assembled from the
 -- recurrence, so the whole truncated product enters the term.
 /-- The Newton generating series of a sequence satisfying a nontrivial
 linear recurrence is a rational function: there exist coprime

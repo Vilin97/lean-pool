@@ -90,7 +90,7 @@ theorem lambda_evenPair {V W : SuperVect}
       ((h : SuperVect.Hom _ _).evenMap w) from rfl]
   exact TensorProduct.lid_tmul _ _
 
--- Raised budget: monoidality of the image functional unfolds the
+-- Monoidality of the image functional unfolds the
 -- tensorator and both unitors on each block.
 /-- **Image functionals are monoidal**: the image functional of a
 tensor of copoint morphisms, evaluated on a structure-map image

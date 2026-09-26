@@ -392,7 +392,7 @@ private theorem assoc_inv_odd_oe_tmul {k ℓ a b : ℕ}
 
 /-! ### Full chain reduction on pure tensor generators -/
 
--- Raised budget: the merge, the colouring equivalence at arity
+-- The merge, the colouring equivalence at arity
 -- `a + (b+1)` and the tensor step all unfold on a single pure
 -- tensor; four such chains, one per parity pattern.
 /-- The full chain on a pure ee tensor: the LHS of the inductive
@@ -740,7 +740,7 @@ theorem rhs_odd_oe {k ℓ b : ℕ}
 
 /-! ### The merge coordinate product rule -/
 
--- Raised budget: the even and odd coordinate formulas are proved
+-- The even and odd coordinate formulas are proved
 -- by one mutual induction, so both statements and all four chain
 -- lemmas are elaborated in a single declaration.
 private theorem colourMerge_pair_even_step {k ℓ : ℕ} (a : ℕ)
@@ -1172,7 +1172,7 @@ private theorem colourMerge_pair {k ℓ : ℕ} (a : ℕ)
     · exact colourMerge_pair_even_step a v b ih_even ih_odd
     · exact colourMerge_pair_odd_step a v b ih_even ih_odd
 
--- Raised budget: specializing the mutual induction re-elaborates
+-- Specializing the mutual induction re-elaborates
 -- the paired statement.
 /-- **The merge coordinate product rule**: coordinates of a
 merged even pair multiply over the halves, vanishing when the

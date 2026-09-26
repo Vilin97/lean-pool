@@ -329,7 +329,7 @@ theorem core_parity (W : ClosedFragment)
     _ = (-1 : ℂ) ^ κ.circuitCount := by
         rw [hs, ← hout_card, hG]
 
--- Raised budget: four sign families — pattern, crossing,
+-- Four sign families — pattern, crossing,
 -- representative and per-vertex sorting — are combined in one
 -- identity, so all four definitions unfold together.
 /-- **The grand parity identity**: the pattern, crossing,

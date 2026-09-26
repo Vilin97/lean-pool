@@ -42,7 +42,7 @@ private theorem topB_natural
   rw [associator_naturality_left_assoc, ← whisker_exchange_assoc,
     associator_inv_naturality_left]
 
--- Raised budget: the exchange is a coherence computation in an
+-- The exchange is a coherence computation in an
 -- arbitrary monoidal category, so both associators are unfolded.
 /-- **The abstract merge-braid exchange**: whiskering the braid
 inside the last two-strand block and merging equals merging and

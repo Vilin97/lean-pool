@@ -420,7 +420,7 @@ ledger reads neither the orientation nor which proof of the pairing
 record is supplied.
 -/
 
--- Raised budget: the ledger of the stepped data is computed, so
+-- The ledger of the stepped data is computed, so
 -- the stage data and its glue all unfold.
 /-- **The closed-cut step of the ledger**: gluing a closed pair the
 subset carries closes one more circuit, so the ledger drops by the
@@ -502,7 +502,7 @@ instance stageEmpty : IsEmpty (Fin (0 + 0) ⊕ Fin (0 + 0)) :=
     | Sum.inl a => a.elim0
     | Sum.inr b => b.elim0⟩
 
--- Raised budget: the recursion on the cut count carries the whole
+-- The recursion on the cut count carries the whole
 -- stage data at every step.
 /-- **RS21's (14), transported by the recursion.** -/
 theorem ledger_glueData : ∀ (n : ℕ)

@@ -38,7 +38,7 @@ variable (P : DelignePackage (SkeinObj f))
 variable {k ℓ : ℕ}
 variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 
--- Raised budget: the block transport is proved by recursion on the
+-- The block transport is proved by recursion on the
 -- second arity, carrying the tensorator and both unitors at every
 -- step.
 /-- **The block transport**: blockwise transports assembled by

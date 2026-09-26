@@ -402,7 +402,7 @@ private theorem interfaceStepEquiv_symm_inr_below (s t u : ℕ) (j : Fin (t + u)
   simp only [finRemoveEquiv, Equiv.coe_fn_symm_mk]
   rw [finSuccEquiv'_symm_some_below]
   · simp [Fin.castSucc]
-  · simp? [Fin.lt_def, Fin.castSucc]; exact hj
+  · simp [Fin.lt_def, Fin.castSucc]; exact hj
 
 private theorem interfaceStepEquiv_symm_inr_above (s t u : ℕ) (j : Fin (t + u))
     (hj : ¬ j.val < t) :
@@ -481,7 +481,7 @@ noncomputable abbrev sourceFragment (t t' u : ℕ) (ht : t' + 1 ≤ t)
     (Sum.inl ⟨t + t', by omega⟩) (Sum.inr ⟨t', by omega⟩)
     (by simp) (by exact stageStep_hopen t t' u ht F)).relabel (interfaceStepEquiv t t' u)
 
--- Raised budget: the four equivalence fields are checked against
+-- The four equivalence fields are checked against
 -- the glued fragment at once, each on both label halves.
 private theorem stageStep_attach_inl (t t' u : ℕ) (ht : t' + 1 ≤ t)
     (F : Fragment (Fin (t + u)))

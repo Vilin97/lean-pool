@@ -120,7 +120,7 @@ theorem superVect_leftUnitor_inv_one :
     (1 : ℂ) ⊗ₜ[ℂ] (1 : ℂ) from TensorProduct.lid_symm_apply 1]
   rfl
 
--- Raised budget: monoidality of the image vector unfolds the
+-- Monoidality of the image vector unfolds the
 -- tensorator and the left unitor on both sides.
 /-- **Image vectors are monoidal**: the image vector of a tensor
 of point morphisms is the structure-map image of the even pair

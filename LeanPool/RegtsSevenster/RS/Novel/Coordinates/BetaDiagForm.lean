@@ -416,7 +416,7 @@ private theorem sign_eq (m : ℕ)
 
 /-! ### The main theorem -/
 
--- Raised budget: the induction on the arity carries the whole
+-- The induction on the arity carries the whole
 -- Koszul crossing count through each step.
 /-- **The diagonal cap pairing equals the colour pairing**:
 `betaDiag m c = betaColour (firstHalf c) (secondHalf c)`. -/

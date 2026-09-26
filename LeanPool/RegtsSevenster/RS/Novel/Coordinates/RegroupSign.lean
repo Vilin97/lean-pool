@@ -458,7 +458,7 @@ private noncomputable def globalBase (W : ClosedFragment) (F : EdgeSubset W)
 
 /-! ## FlatMap decompositions -/
 
--- Raised budget: the two flat-map presentations are matched edge
+-- The two flat-map presentations are matched edge
 -- by edge, each with its orientation dichotomy.
 private theorem matchedPairList_eq_flatMap (W : ClosedFragment) (F : EdgeSubset
   W)
@@ -674,7 +674,7 @@ private theorem getElem_val_irrel {α : Type*} (l : List α) {a b : Nat}
 
 /-! ## Half 1: sign of oriented → matched = sign of outPerm -/
 
--- Raised budget: the index permutation between the two lists is
+-- The index permutation between the two lists is
 -- computed position by position, so both flat-map presentations
 -- and the out-permutation unfold together.
 private theorem walkPerm_pairingSub {W : ClosedFragment} {F : EdgeSubset W}
@@ -1092,7 +1092,7 @@ theorem sign_listIndexPerm_matched_global (W : ClosedFragment) (F : EdgeSubset
   rw [List.getElem?_eq_getElem h2k_bound, List.getElem?_eq_getElem hk]
     at hM2k_even
   have hM2k_is_mBk : M[2 * k] = mB[k] := by
-    have := Option.some.inj hM2k_even; simp? at this; exact this
+    have := Option.some.inj hM2k_even; simp at this; exact this
   have hmBk_in : o.isOut (mB[k]'hk).val = false := by
     simp only [mB, matchedBase, List.getElem_map]
     exact matchedInFlag_isIn W F o _

@@ -31,7 +31,7 @@ variable {k ℓ : ℕ}
 variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 variable (e' : P.ω.obj (SkeinObj.mk 1) ⟶ stdSuperPair k ℓ)
 
--- Raised budget: the termwise identity assembles the star
+-- The termwise identity assembles the star
 -- coordinates, the cap pairing and every sign family into one
 -- equation.
 /-- **The termwise value identity**: the master summand of the

@@ -533,7 +533,7 @@ The functor `toKaroubi C : C ⥤ Karoubi C` sends `X` to `⟨X, 𝟙 X⟩`.  It
 preserves the tensor unit on the nose and the tensor product up to the
 canonical identification `𝟙 X ⊗ₘ 𝟙 Y = 𝟙 (X ⊗ Y)`. -/
 
--- Raised budget: the eight coherence fields of a monoidal functor
+-- The eight coherence fields of a monoidal functor
 -- elaborate together.
 /-- The embedding is monoidal. -/
 noncomputable instance toKaroubiMonoidal
@@ -650,7 +650,7 @@ noncomputable def karoubiBraidingIso
     (𝟙 X ⊗ₘ (β_ Y Z).hom) ≫ (α_ X Z Y).inv ≫ ((β_ X Z).hom ⊗ₘ 𝟙 Y) := by
   rw [id_tensorHom, tensorHom_id]; exact BraidedCategory.hexagon_reverse X Y Z
 
--- Raised budget: naturality on both sides and both hexagons
+-- Naturality on both sides and both hexagons
 -- elaborate together, each conjugating the ambient braiding.
 /-- A braiding on the ambient category conjugates to one on the
 envelope. -/

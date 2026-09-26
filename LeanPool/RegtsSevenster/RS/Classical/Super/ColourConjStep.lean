@@ -46,7 +46,7 @@ private lemma congr_refl_map_id {M₁ M₂ N : Type*}
       TensorProduct.congr_tmul]
   | add x y hx hy => simp only [map_add, hx, hy]
 
--- Raised budget: the colouring equivalence at arity `n+1`
+-- The colouring equivalence at arity `n+1`
 -- is expanded through the tensor step on both components, so the
 -- elaborated term carries the whole step equivalence twice.
 /-- **The step compatibility**: conjugating a whiskered

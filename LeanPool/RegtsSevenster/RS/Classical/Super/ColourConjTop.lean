@@ -580,7 +580,7 @@ private theorem colourFun_neg_apply {n : ℕ}
 
 /-! ### The even-component coordinate identity -/
 
--- Raised budget: one coordinate of the Koszul braiding at two
+-- One coordinate of the Koszul braiding at two
 -- strands, elaborated through the colouring equivalence and both
 -- tensor decompositions; the term is large, the search is not.
 private theorem superPow_two_even_induction
@@ -1791,7 +1791,7 @@ private theorem adjSign_secondHalf (n : ℕ)
 
 /-! ### The general even coordinate identity -/
 
--- Raised budget: the two-strand coordinate transported over `n`
+-- The two-strand coordinate transported over `n`
 -- leading positions, so the merge equivalence at arity `n` enters
 -- the elaborated term alongside the braiding.
 private theorem braidN_coord_even (n : ℕ)
@@ -2250,7 +2250,7 @@ private theorem braidN_coord_odd (n : ℕ)
       exact hPadd _ _ hs ht
     | tmul p q => exact hblock2 p q
 
--- Raised budget: assembling the two coordinate formulas into an
+-- Assembling the two coordinate formulas into an
 -- equality of super morphisms unfolds the colouring equivalence on
 -- both components once more.
 /-- **The colour action of the top braiding.** -/

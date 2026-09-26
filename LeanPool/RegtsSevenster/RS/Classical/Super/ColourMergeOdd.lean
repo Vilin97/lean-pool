@@ -170,7 +170,7 @@ private theorem assoc_inv_even_oe_oe_tmul {k ℓ a b : ℕ}
 
 /-! ### Full chain reduction on pure tensor generators (odd input) -/
 
--- Raised budget: as in `ColourMerge`, the merge and the colouring
+-- As in `ColourMerge`, the merge and the colouring
 -- equivalence unfold on one pure tensor; four chains, one per
 -- parity pattern, now with an odd first factor.
 /-- Chain for part 1, ee generator: `cpe(a+(b+1)).oddEquiv` on
@@ -827,7 +827,7 @@ private theorem colourMerge_pair_odd_even_step {k ℓ : ℕ} (a : ℕ)
     Prod.ext (add_zero u_eo).symm (zero_add u_oe).symm
   rw [hu]; exact Goal_add _ _ (h_eo u_eo) (h_oe u_oe)
 
--- Raised budget: specializing the mutual induction re-elaborates
+-- Specializing the mutual induction re-elaborates
 -- the paired statement.
 
 private theorem colourMerge_pair_odd {k ℓ : ℕ} (a : ℕ)
@@ -988,7 +988,7 @@ theorem single_val_ne {n : ℕ}
       {c : MixedColouring k ℓ n // p c} → ℂ) y = 0 :=
   Pi.single_eq_of_ne (fun he => h (congrArg Subtype.val he)) 1
 
--- Raised budget: the graded single-basis-vector coordinate is
+-- The graded single-basis-vector coordinate is
 -- computed through the colouring equivalence.
 /-- Subtype coordinate singles evaluate by values: same. -/
 theorem single_val_same {n : ℕ}

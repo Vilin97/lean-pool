@@ -421,7 +421,7 @@ decompose product sums into iterated sums, and then collapse each sum
 via `Finset.sum_dite_irrel` + `Fintype.sum_dite_eq'`.  After all sums are
 gone both sides reduce to the corresponding coherence in `C`. -/
 
--- Raised budget: the pentagon is checked entrywise on a quadruple
+-- The pentagon is checked entrywise on a quadruple
 -- index, so four matrix compositions expand.
 open scoped Classical in
 private theorem mat_pentagon

@@ -406,7 +406,7 @@ end GradedMul
 
 section ZeroDegreeMul
 
--- Raised budget: the graded chain's structure maps unfold
+-- The graded chain's structure maps unfold
 -- through the colimit cocone and the duality datum together.
 /-- Under the degree-zero identification, the stage insertions of
 the balanced line are the stage transports followed by the stage
@@ -428,7 +428,7 @@ theorem chainBdegι_chainBdegZeroIso_hom
           (chainDelta A M M' d) k :=
   ι_chainColimitMapIso_hom _ _ _ _ _ k
 
--- Raised budget: the graded chain's structure maps unfold
+-- The graded chain's structure maps unfold
 -- through the colimit cocone and the duality datum together.
 
 end ZeroDegreeMul
@@ -806,7 +806,7 @@ theorem chainBdegShiftIso_succ
       chainBdegSuccIso A M M' d (p₀ + n) (q₀ + n) ≪≫
         chainBdegShiftIso A M M' d p₀ q₀ n := rfl
 
--- Raised budget: the graded chain's structure maps unfold
+-- The graded chain's structure maps unfold
 -- through the colimit cocone and the duality datum together.
 /-- Under the tail identification, the stage insertions of the
 raised line are the stage transports followed by the next stage
@@ -837,7 +837,7 @@ theorem chainBdegι_chainBdegSuccIso_hom
     (fun k => chainDelta2 A M M' d (p₀ + k) (q₀ + k)) k)) ?_
   rfl
 
--- Raised budget: the graded chain's structure maps unfold
+-- The graded chain's structure maps unfold
 -- through the colimit cocone and the duality datum together.
 /-- Under the iterated shift, the stage insertions of the raised
 line are the stage transports followed by the shifted stage
@@ -1381,7 +1381,7 @@ end CarrierAssoc
 
 section UnitLaws
 
--- Raised budget: the graded chain's structure maps unfold
+-- The graded chain's structure maps unfold
 -- through the colimit cocone and the duality datum together.
 /-- **The unit lands at the bottom stage**: through the
 degree-zero identification, the unit of the balanced algebra is
@@ -1436,7 +1436,7 @@ theorem ι_tensorHom_chainBGrCompMul_zero_left
             ((0 : ℤ).toNat + b.toNat - (0 + b).toNat)) :=
   ι_tensorHom_chainBGrCompMul A M M' d 0 b 0 j
 
--- Raised budget: the graded chain's structure maps unfold
+-- The graded chain's structure maps unfold
 -- through the colimit cocone and the duality datum together.
 /-- **The left unit law of the pairwise graded product**: the
 included unit against a component multiplies as the left unitor,

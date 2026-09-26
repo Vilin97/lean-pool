@@ -106,7 +106,7 @@ theorem colourFormEntry_inr_ne {u v : Fin (2 * ℓ)}
     colourFormEntry k ℓ (Sum.inr u) (Sum.inr v) = 0 := by
   rw [colourFormEntry_odd, stdFormOdd_stdF, ite_eq_right h]
 
--- Raised budget: the vanishing is located at one off-diagonal
+-- The vanishing is located at one off-diagonal
 -- slot, but reaching it unfolds the whole summand.
 /-- **Off-diagonal vanishing**: a pure non-diagonal colouring
 has vanishing master summand. -/

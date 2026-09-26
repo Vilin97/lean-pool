@@ -29,7 +29,7 @@ variable (P : DelignePackage (SkeinObj f))
 variable {k ℓ : ℕ}
 variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 
--- Raised budget: multiplicativity is checked by unfolding the
+-- Multiplicativity is checked by unfolding the
 -- transport, the merge and the tensor of the two functionals.
 /-- **The split cap is multiplicative over the merge.** -/
 theorem omegaFun_capTensor_merge (m : ℕ)

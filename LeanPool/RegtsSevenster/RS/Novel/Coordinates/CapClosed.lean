@@ -28,7 +28,7 @@ variable {R : ℕ} (f : EdgeRankParameter R)
 variable (P : DelignePackage (SkeinObj f))
 variable {k ℓ : ℕ}
 
--- Raised budget: the cap value is computed on a basis vector
+-- The cap value is computed on a basis vector
 -- through the fibre transport, which unfolds the tensorator, the
 -- evaluation and the standard form together.
 /-- **The cap closed form.** -/

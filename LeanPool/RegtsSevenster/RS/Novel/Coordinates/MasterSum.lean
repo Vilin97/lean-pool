@@ -29,7 +29,7 @@ variable {k ℓ : ℕ}
 variable (e : stdSuperPair k ℓ ⟶ P.ω.obj (SkeinObj.mk 1))
 variable (e' : P.ω.obj (SkeinObj.mk 1) ⟶ stdSuperPair k ℓ)
 
--- Raised budget: the parameter is rewritten as a colour sum, which
+-- The parameter is rewritten as a colour sum, which
 -- unfolds the star vector, the transport and the diagonal cap
 -- pairing in a single term.
 /-- **The master colour sum**: the parameter value is the

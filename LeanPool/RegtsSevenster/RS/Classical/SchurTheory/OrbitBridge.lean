@@ -152,7 +152,7 @@ end Helpers
 
 /-! ## Main theorem -/
 
--- Raised budget: the orbit cardinality is computed by rewriting a
+-- The orbit cardinality is computed by rewriting a
 -- `Finset` sum into a `Multiset` count, which unfolds both sides
 -- of the correspondence.
 /-- The orbit sizes are the cycle type together with a singleton per

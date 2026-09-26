@@ -27,7 +27,7 @@ variable {k ℓ : ℕ}
 
 /-! ## The h-generic value identity -/
 
--- Raised budget: the master summand of the flipped data colouring
+-- The master summand of the flipped data colouring
 -- is expanded to the vertex product, so the sort, the flip and the
 -- circuit count all unfold together.
 /-- **The h-generic value identity**: the h-generic master summand of

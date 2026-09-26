@@ -53,22 +53,22 @@ theorem append_pair_slot_cases
   rcases post.eq_nil_or_concat with h | ⟨post', q, rfl⟩
   · subst h
     have := congrArg List.reverse hd
-    simp? at this
+    simp at this
     obtain ⟨h1, h2, h3⟩ := this
     exact Or.inr (Or.inr ⟨rfl, h2.symm, h1.symm, by
       simpa using congrArg List.reverse h3⟩)
   · rcases post'.eq_nil_or_concat with h | ⟨post'', q', rfl⟩
     · subst h
       have := congrArg List.reverse hd
-      simp? at this
+      simp at this
       obtain ⟨h1, h2, h3⟩ := this
       refine Or.inr (Or.inl ⟨by simp [List.concat, h1],
         h2.symm, ?_⟩)
       have h4 := congrArg List.reverse h3
-      simp? at h4
+      simp at h4
       rw [h4]
     · have := congrArg List.reverse hd
-      simp? at this
+      simp at this
       obtain ⟨h1, h2, h3⟩ := this
       refine Or.inl ⟨post'', ⟨by
         rw [show (post''.concat q').concat q =

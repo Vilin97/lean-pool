@@ -178,7 +178,7 @@ private theorem matEv_apply_off
 
 /-! ### The snake identities -/
 
--- Raised budget: the snake identity is checked entrywise, and the
+-- The snake identity is checked entrywise, and the
 -- coevaluation contributes a sum over the dual index.
 private theorem mat_snake_one
     [Category.{v} C] [Preadditive C] [MonoidalCategory C]
