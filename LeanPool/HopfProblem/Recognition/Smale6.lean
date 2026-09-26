@@ -3909,8 +3909,8 @@ private theorem Smale.NativeEuclideanEmbedding.SmoothRetraction.mfderiv_sheetCoo
     fderiv ℝ (e.toFun ∘ g) 0 =
       (mfderiv 𝓘(ℝ, E) (𝓡 e.ambientDimension) e.toFun (f 0)).comp (mfderiv 𝓘(ℝ, Z) 𝓘(ℝ, E) g 0) :=
     by
-    simpa only [mfderiv_eq_fderiv, hzero] using!
-      (mfderiv_comp 0 (e.smooth.mdifferentiableAt (by simp)) (hg.mdifferentiableAt (by simp)))
+    simpa only [mvfderiv_eq_fderiv, hzero] using!
+      (mvfderiv_comp 0 (e.smooth.mdifferentiableAt (by simp)) (hg.mdifferentiableAt (by simp)))
   rw [sheetCoordinates, mfderiv_comp (0, 0) hr hsum.differentiableAt.mdifferentiableAt,
     mfderiv_eq_fderiv, hsum.fderiv, hbase, hdf, hdg]
   apply ContinuousLinearMap.ext
@@ -5247,8 +5247,8 @@ private theorem Smale.StripNormalData.injective_normalFrame_of_strip_germ {A B Z
     fderiv ℝ (Smale.TransverseCoordinates.normalCoordinate Ψ ∘ d.chart)
         (Smale.StripCoordinates.center t) =
       Q.comp T := by
-    simpa only [mfderiv_eq_fderiv, ← hfp] using!
-      (mfderiv_comp (Smale.StripCoordinates.center t) (hnormal'.mdifferentiableAt (by simp))
+    simpa only [mvfderiv_eq_fderiv, ← hfp] using!
+      (mvfderiv_comp (Smale.StripCoordinates.center t) (hnormal'.mdifferentiableAt (by simp))
         (d.chart.mdifferentiableAt (by simp) (d.line ht)))
   change
     Function.Injective

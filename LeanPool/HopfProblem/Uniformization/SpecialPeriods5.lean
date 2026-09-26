@@ -2677,7 +2677,7 @@ private theorem
     filter_upwards [V.isOpen.mem_nhds hz] with w hw
     exact descend_project V f hV hInv hw
   have h :=
-    hcomp.comp_of_eq hp.localInverse_contMDiffAt
+    hcomp.comp_of_eq hp.contMDiffAt_localInverse
       (hp.localInverse_left_inv hp.localInverse_mem_target)
   apply h.congr_of_eventuallyEq
   filter_upwards [hp.localInverse_eventuallyEq_right] with r hr
@@ -4573,7 +4573,7 @@ private theorem SpecialPeriods.MuTorsor.compactExtension_holomorphicAt_openInclu
     ContMDiffAt 𝓘(ℂ) 𝓘(ℂ) ω (compactExtension f c ∘ SpecialPeriods.triangleOpenInclusion) q :=
     hf q
   have h :=
-    hcomp.comp_of_eq hp.localInverse_contMDiffAt
+    hcomp.comp_of_eq hp.contMDiffAt_localInverse
       (hp.localInverse_left_inv hp.localInverse_mem_target)
   apply h.congr_of_eventuallyEq
   filter_upwards [hp.localInverse_eventuallyEq_right] with x hx
