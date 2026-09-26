@@ -55,7 +55,7 @@ variable {Φ : FlagDecomposition p d f} {anchor : Φ.flag.Node} {t : ℕ → ℕ
 /-- Intersection of the slabs selected by the direction chain. -/
 def selectedSet : Set (FpCoord p d) := slabIntersection D.count D.chain.direction t
 
-theorem selected_nonzero (_hp : Odd p) (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1) :
+theorem selected_nonzero (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1) :
     ∃ v, restrictWeight (Φ.cumulativeWeight anchor) D.selectedSet v ≠ 0 := by
   apply D.chain.slabIntersection_nonzero hδ D.count_le hsmall
   obtain ⟨q, hq⟩ := Φ.liftedSupport_nonempty anchor
@@ -67,11 +67,11 @@ variable (hp : Odd p) (hδ : 0 ≤ δ) (hsmall : (3 : ℝ) ^ (d + 1) * δ < 1)
 
 /-- Decomposition obtained by pruning to the selected slab intersection. -/
 noncomputable abbrev pruned : FlagDecomposition p d f :=
-  LocalizedPruning.decomposition Φ anchor D.selectedSet (D.selected_nonzero hp hδ hsmall) hp
+  LocalizedPruning.decomposition Φ anchor D.selectedSet (D.selected_nonzero hδ hsmall) hp
 
 /-- Distinguished anchor in the pruned decomposition. -/
 noncomputable abbrev prunedAnchor : (D.pruned hp hδ hsmall).flag.Node :=
-  LocalizedPruning.anchorNode Φ anchor D.selectedSet (D.selected_nonzero hp hδ hsmall) hp
+  LocalizedPruning.anchorNode Φ anchor D.selectedSet (D.selected_nonzero hδ hsmall) hp
 
 /-- Two-layer decomposition obtained by splitting the pruned anchor. -/
 noncomputable abbrev split : FlagDecomposition p d f :=
@@ -125,12 +125,12 @@ theorem card_le :
     (fun _ ↦ True) hp).trans
   apply Nat.mul_le_mul_left
   exact ((LocalizedPruning.prunedWeights Φ anchor D.selectedSet
-    (D.selected_nonzero hp hδ hsmall)).rebuildData hp).card_decomposition_le
+    (D.selected_nonzero hδ hsmall)).rebuildData hp).card_decomposition_le
 
 /-- Forget the lower-layer labels and recover a proper point of the old flag. -/
 noncomputable def subdivisionMap : SubdivisionMap Φ (D.split hp hδ hsmall) :=
   ((LocalizedPruning.prunedWeights Φ anchor D.selectedSet
-    (D.selected_nonzero hp hδ hsmall)).rebuiltSubdivisionMap hp).comp
+    (D.selected_nonzero hδ hsmall)).rebuiltSubdivisionMap hp).comp
       (FaceRefinement.subdivisionMap (D.pruned hp hδ hsmall) (D.prunedAnchor hp hδ hsmall)
         (fun _ ↦ True) hp)
 

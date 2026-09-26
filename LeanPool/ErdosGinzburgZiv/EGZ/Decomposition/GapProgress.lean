@@ -47,7 +47,7 @@ theorem gapState_gapCondition {i : ℕ} (hi : 1 ≤ i)
     (by exact_mod_cast hcard) (Nat.cast_nonneg _) hretained hscale hgap
 
 /-- Certify progress of a gap cleanup that restores the gap condition. -/
-noncomputable def gapProgress (_hε : 0 ≤ ε) (hδ : 0 ≤ δ)
+noncomputable def gapProgress (hδ : 0 ≤ δ)
     (hvalid : ¬ s.GapCondition δ) (hgap : (gapState s D).GapCondition δ)
     (g : ℕ → ℕ) : Progress s (gapState s D) ε δ g where
   event := .gap

@@ -53,7 +53,7 @@ variable {Φ : FlagDecomposition p d f} {anchor : Φ.flag.Node} {t : ℕ → ℕ
 noncomputable def splitStableNodeMap (x : (D.split hp hδ hsmall).flag.Node) :
     StableNodeMap Φ (D.split hp hδ hsmall) ((D.subdivisionMap hp hδ hsmall).node x) x :=
   ((LocalizedPruning.prunedWeights Φ anchor D.selectedSet
-      (D.selected_nonzero hp hδ hsmall)).rebuiltStableNodeMap hp x.val.val.1).comp
+      (D.selected_nonzero hδ hsmall)).rebuiltStableNodeMap hp x.val.val.1).comp
     (LowerTransfer.stableNodeMap (D.pruned hp hδ hsmall) (D.prunedAnchor hp hδ hsmall) hp x)
 
 /-- The stable node map after splitting and recharting the completion refinement. -/

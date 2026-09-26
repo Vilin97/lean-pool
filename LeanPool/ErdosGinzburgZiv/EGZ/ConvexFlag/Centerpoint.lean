@@ -165,9 +165,6 @@ theorem flagCenterpoint_family {F : ConvexFlag} (Ω : F.ProperPointSet)
     {S | ∃ A : Finset (Fin n),
       S = points '' (A : Set (Fin n)) ∧
         total - total / (H : ℝ) < ∑ i ∈ A, weight i}
-  have hfamily_proper : ∀ S ∈ ℱ, S ⊆ Ω.carrier := by
-    rintro S ⟨A, rfl, _⟩ q ⟨i, _, rfl⟩
-    exact hproper i
   have hlocal : ∀ G : Finset (Set F.Point),
       (G : Set (Set F.Point)) ⊆ ℱ → G.Nonempty →
       G.card ≤ hellyConstant Ω →
@@ -199,7 +196,7 @@ theorem flagCenterpoint_family {F : ConvexFlag} (Ω : F.ProperPointSet)
       exact ⟨i, hi s (Finset.mem_univ s), rfl⟩
     exact his
   obtain ⟨q, hqΩ, hqint, hqfamily⟩ :=
-    flagHelly Ω hnonempty ℱ hfamily_proper hlocal
+    flagHelly Ω hnonempty ℱ hlocal
   refine ⟨q, hqΩ, hqint, ?_⟩
   intro xi hq
   by_contra hbound

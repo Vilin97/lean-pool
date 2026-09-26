@@ -1002,7 +1002,6 @@ induction once the flagged Doignon step is available. -/
 private theorem flagHelly_finset {F : ConvexFlag} (Ω : F.ProperPointSet)
     (hnonempty : ∃ q, q ∈ Ω ∧ q.IsIntegral)
     (ℱ : Set (Set F.Point))
-    (_hproper : ∀ S ∈ ℱ, S ⊆ Ω.carrier)
     (hlocal : ∀ G : Finset (Set F.Point),
       (G : Set (Set F.Point)) ⊆ ℱ → G.Nonempty →
       G.card ≤ hellyConstant Ω →
@@ -1067,7 +1066,6 @@ assumption supplies the conclusion for an empty family. -/
 theorem flagHelly {F : ConvexFlag} (Ω : F.ProperPointSet)
     (hnonempty : ∃ q, q ∈ Ω ∧ q.IsIntegral)
     (ℱ : Set (Set F.Point))
-    (hproper : ∀ S ∈ ℱ, S ⊆ Ω.carrier)
     (hlocal : ∀ G : Finset (Set F.Point),
       (G : Set (Set F.Point)) ⊆ ℱ → G.Nonempty →
       G.card ≤ hellyConstant Ω →
@@ -1092,7 +1090,7 @@ theorem flagHelly {F : ConvexFlag} (Ω : F.ProperPointSet)
     obtain ⟨q, -, rfl⟩ := Finset.mem_image.mp hS
     exact hbadSetFamily q
   obtain ⟨q, hqΩ, hqint, hq⟩ :=
-    flagHelly_finset Ω hnonempty ℱ hproper hlocal G hGFamily
+    flagHelly_finset Ω hnonempty ℱ hlocal G hGFamily
   let a : A := ⟨⟨q, hqint⟩, hqΩ⟩
   have hbadMem : badSet a ∈ G :=
     Finset.mem_image.mpr ⟨a, Finset.mem_univ _, rfl⟩

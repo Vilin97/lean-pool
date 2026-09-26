@@ -47,7 +47,7 @@ theorem selected_of_extra_pos (x : (D.split hp hδ hsmall).flag.Node)
   have hbase : x.1.1.1 ≤ D.prunedAnchor hp hδ hsmall := x.1.2 hlayer
   rw [LowerTransfer.cumulativeWeight_projection] at hv
   rw [LocalizedPruning.cumulativeWeight_below Φ anchor D.selectedSet
-    (D.selected_nonzero hp hδ hsmall) hp x.1.1.1 hbase] at hv
+    (D.selected_nonzero hδ hsmall) hp x.1.1.1 hbase] at hv
   by_contra h
   exact hv (ite_eq_right h)
 

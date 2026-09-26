@@ -55,7 +55,7 @@ theorem exists_nextProgress (hd : 1 ≤ d) (hε : 0 < ε) (hεhalf : ε ≤ 1 / 
         (by simpa using s.card_bound) (s.mass_bounds hd hε hεhalf).1
         (initialScale_scale_bound hd hε hεhalf (i + 1))
     exact ⟨⟨gapState s.toState D,
-      gapProgress s.toState D hε.le hδ hE hgap g, D.radius_le⟩⟩
+      gapProgress s.toState D hδ hE hgap g, D.radius_le⟩⟩
   | face anchor Γ =>
     have hΓ : Γ ≠ ⊤ := by
       intro hΓ
