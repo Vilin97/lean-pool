@@ -10308,33 +10308,40 @@ projects:
       - '12F05'
       - '13F25'
 
-  - slug: lean-scottish-book-155
-    title: A counterexample to Scottish Book Problem 155
-    summary: A Lean proof that there are real Banach spaces X and Y and a bijection U from X
-      to Y which preserves every pairwise distance on every closed ball of radius one quarter
-      while failing to be a global isometry. This gives a counterexample to Scottish Book Problem
-      155.
+  - slug: lean-spectral-theory
+    title: lean-spectral-theory
+    summary: The spectral theorem for possibly unbounded self-adjoint operators on complex Hilbert
+      spaces, formalized through the Cayley transform and real projection-valued measures. The
+      selected spectral theorem constructs a PVM whose scalar measures give the exact finite-second-moment
+      domain and first-moment quadratic form, with measurable-set uniqueness, and is proved
+      equivalent to equality with the unbounded coordinate spectral integral. The selected Stone
+      theorem proves both that strongly continuous one-parameter unitary groups have self-adjoint
+      generators and that every self-adjoint operator generates such a group.
     branch: functional analysis
-    entry_module: LeanPool.ScottishBook155
+    entry_module: LeanPool.SpectralTheory
     authors:
-    - Yoshito Ishiki
+    - Ezzeri Esa
     source:
-      url: https://github.com/yoshito-ishiki-math/lean-scottish-book-155
-      github_repo: yoshito-ishiki-math/lean-scottish-book-155
-      commit: 233eff4af7901eadee7927a1eb1f814ad0f3c118
-    license: MIT
+      url: https://github.com/savarin/lean-spectral-theory
+      github_repo: savarin/lean-spectral-theory
+      commit: d19e279f0ab244657f02ce678e8d67fa69e2f407
+    license: Apache-2.0
     status: verified
     main_declarations:
-    - ScottishBook155.claim14
+    - PalomarSpectralStone.spectral_theorem_intrinsic
     main_results:
-    - declaration: ScottishBook155.claim14
-      informal: There exist real Banach spaces and a bijection between them that preserves all
-        pairwise distances on each closed ball of radius one quarter but is not a global isometry.
+    - declaration: PalomarSpectralStone.spectral_theorem_intrinsic
+      informal: Every self-adjoint partial linear operator on a complex Hilbert space has a
+        real projection-valued measure representing its domain and scalar moments, unique on
+        Borel sets.
+    - declaration: PalomarSpectralStone.stone_theorem_intrinsic
+      informal: Every strongly continuous one-parameter unitary group has a self-adjoint
+        generator, and every self-adjoint operator generates such a group.
     tags:
     - functional-analysis
     msc:
-    - 46B20
-    - 54E40
+    - 47A10
+    - 47B15
     provenance: AI
   - slug: nemytskii-lebesgue
     title: Nemytskii operators on Lebesgue spaces
@@ -10433,3 +10440,32 @@ projects:
       - 47H30
       - 46E30
       - 47J05
+
+  - slug: lean-scottish-book-155
+    title: A counterexample to Scottish Book Problem 155
+    summary: A Lean proof that there are real Banach spaces X and Y and a bijection U from X
+      to Y which preserves every pairwise distance on every closed ball of radius one quarter
+      while failing to be a global isometry. This gives a counterexample to Scottish Book Problem
+      155.
+    branch: functional analysis
+    entry_module: LeanPool.ScottishBook155
+    authors:
+    - Yoshito Ishiki
+    source:
+      url: https://github.com/yoshito-ishiki-math/lean-scottish-book-155
+      github_repo: yoshito-ishiki-math/lean-scottish-book-155
+      commit: 233eff4af7901eadee7927a1eb1f814ad0f3c118
+    license: MIT
+    status: verified
+    main_declarations:
+    - ScottishBook155.claim14
+    main_results:
+    - declaration: ScottishBook155.claim14
+      informal: There exist real Banach spaces and a bijection between them that preserves all
+        pairwise distances on each closed ball of radius one quarter but is not a global isometry.
+    tags:
+    - functional-analysis
+    msc:
+    - 46B20
+    - 54E40
+    provenance: AI
