@@ -80,6 +80,62 @@ GrothendieckVanishing:
     Attribution-NonCommercial-ShareAlike 4.0 International license, then
     relicensed under the Apache License, Version 2.0, by its sole author.
 
+HasseMinkowski:
+  attribution: |-
+    The source repository at commit
+    47f0e9b5cba6e6354b882bc5856a11962ba61f4a ships the following NOTICE.
+    Its HasseMinkowski/ paths are vendored under LeanPool/HasseMinkowski/.
+
+    The Hasse–Minkowski theorem, formalized in Lean 4
+    Copyright (c) 2026 jayyswan
+
+    This product includes software developed as part of this project.
+    Licensed under the Apache License, Version 2.0 (see the file LICENSE).
+
+    ================================================================================
+    Third-party material
+    ================================================================================
+
+    Portions of `HasseMinkowski/` are derived from the "HassePrinciple" project:
+
+        https://github.com/mariainesdff/HassePrinciple
+        Copyright (c) 2026 Nirvana Coppola, Maria Ines de Frutos-Fernandez.
+        All rights reserved.
+        Licensed under the Apache License, Version 2.0.
+
+    HassePrinciple is a collaborative formalization from the Women in Numbers 7
+    workshop, led by Nirvana Coppola and Maria Ines de Frutos-Fernandez, with
+    project members Mallory Dolorfino, Kate Finnerty, Cathy Hsu and Chi-Yun Hsu.
+
+    The following files of this project are derived works.  Each one carries the
+    upstream authors in its own file header, and each has been modified: the
+    statements and proofs were rewritten against Lean 4.33 / Mathlib without the
+    upstream module system, and the material was extended beyond what upstream
+    proves.
+
+        HasseMinkowski/HilbertSymbol/Existence.lean
+            derived from HassePrinciple/HilbertSymbol/ExistenceTheorem.lean
+            (the S / T / A / M construction and the lemmas named after it)
+
+        HasseMinkowski/Padics/Squares.lean
+            derived from HassePrinciple/Padics/Squares.lean and
+            HassePrinciple/Padics/Lemmas.lean
+            (PadicInt.isSquare_of_zmod, PadicInt.isSquare_of_zmodPow, and the
+            open-subgroup argument for p-adic unit squares)
+
+        HasseMinkowski/RankCriteria.lean
+            derived from HassePrinciple/QuadraticForm/HasseMinkowskiInvariant.lean
+            (the rank-two and rank-three local representability criteria)
+
+    The remaining files of `HasseMinkowski/` are original to this project.  In
+    particular, the results that upstream leaves as `sorry` -- the rank-three
+    local-global step, the rank-four case, the rank >= 5 induction (Meyer), the
+    2-adic Hilbert symbol formula, Hilbert reciprocity, and the assembled
+    `hasseMinkowski` and `meyer` theorems -- are proved here independently.
+
+    Upstream naming conventions are followed throughout so that the two
+    developments can be compared declaration by declaration.
+
 Koethe:
   attribution: |-
     The upstream repository ships a NOTICE file (Apache License, Version 2.0,
