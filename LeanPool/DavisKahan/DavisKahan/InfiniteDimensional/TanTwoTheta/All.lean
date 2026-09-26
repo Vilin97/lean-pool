@@ -1,0 +1,28 @@
+/-
+Copyright (c) 2026 Kitware, Inc. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jon Crall, OpenAI GPT-5.6 Thinking
+-/
+module
+
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalDegenerate
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalEstimate
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalHalfLine
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalOrderedGap
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalOrderedSets
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRestrictionSpectrum
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalReverseGap
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalRiccati
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedOffDiagonalSpectrumNonempty
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.BoundedRiccatiShift
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.CanonicalTangentBridge
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsion
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.OffDiagonalSpectralRepulsionUnbounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAcuteFormGap
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.QuarterAngleUnbounded
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNorming
+public import LeanPool.DavisKahan.DavisKahan.InfiniteDimensional.TanTwoTheta.SelectedBranchSymmetricNormingReal
+
+/-! # `DavisKahan/InfiniteDimensional/TanTwoTheta` -/
+
+@[expose] public section

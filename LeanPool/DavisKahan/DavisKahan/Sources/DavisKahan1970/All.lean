@@ -1,0 +1,105 @@
+/-
+Copyright (c) 2026 Kitware, Inc. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Jon Crall, OpenAI GPT-5.6 Thinking
+-/
+module
+
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Ideals.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section8.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section9.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Sylvester.All
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientBlockVocabulary
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.AmbientReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Directed
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DirectedUnboundedReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.DoubleAngleTangentOperator
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.GeneralSinThetaExtensions
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIII
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.PartIIIPresentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineTheta.Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Proposition61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.ScalarGenericFinite
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section1
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section10FunctionalCalculus
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section1UnitaryInvariantNorms
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section2TanThetaPerturbation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteCounterexample
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3AcuteDirectRotation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Classification
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary31
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Corollary32
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3PrincipalSquareRoot
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition32
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition34Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Proposition35
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section3Theorem31Realization
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4BasisAngleEnergy
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4DirectRotationSource
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Dominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Examples
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4FiniteSurface
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section4Real
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section5BanachSylvester
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakage
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6AppendixLeakageReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6Example61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceNormClass
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6SourceScope
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section6Theorem63Presentation
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section7IdealBounds
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Section7SwapAsymmetry
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwo
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwoSharpness
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SectionTwoUsage
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SeparableSourceScope
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpIdeal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SharpKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaAmbientUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaDirectedAngle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidual
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SinTwoThetaUnboundedDirectedResidualReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SineThetaSourceInventory
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.StableRiccatiPair
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.SymmetricNormingFanDominance
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaDirectedUnbounded
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaUnboundedAmbientReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanThetaScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoTheta
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaAmbientBranchFree
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFree
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfinite
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaBranchFreeInfiniteReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaReflectionAmbient
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedAmbientExact
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExact
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedExactReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramBridge
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramMiddle
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedGramReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedKyFan
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducing
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedReducingReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaScalarGeneric
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TanTwoThetaUnboundedResidual
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValues
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.TangentSingularValuesReal
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.Theorem61
+public import LeanPool.DavisKahan.DavisKahan.Sources.DavisKahan1970.UnboundedCompressionReal
+
+/-! # `DavisKahan/Sources/DavisKahan1970` -/
+
+@[expose] public section
