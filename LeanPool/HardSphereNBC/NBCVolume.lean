@@ -68,27 +68,10 @@ theorem sumNat_swap {X Y : Type} (xs : List X) (ys : List Y)
     sumNat (xs.map (fun x => sumNat (ys.map (f x)))) =
       sumNat (ys.map (fun y => sumNat (xs.map (fun x => f x y)))) := by
   induction xs with
-  | nil =>
-      simp [sumNat]
+  | nil => simp [sumNat]
   | cons x xs ih =>
-      calc
-        sumNat ((x :: xs).map (fun x => sumNat (ys.map (f x)))) =
-            sumNat (ys.map (f x)) +
-              sumNat (xs.map (fun x => sumNat (ys.map (f x)))) := by
-          rfl
-        _ = sumNat (ys.map (f x)) +
-              sumNat (ys.map (fun y => sumNat (xs.map (fun x => f x y)))) := by
-          rw [ih]
-        _ = sumNat (ys.map (fun y =>
-              f x y + sumNat (xs.map (fun x => f x y)))) := by
-          symm
-          exact sumNat_map_add ys (fun y => f x y)
-            (fun y => sumNat (xs.map (fun x => f x y)))
-        _ = sumNat (ys.map (fun y =>
-              sumNat ((x :: xs).map (fun x => f x y)))) := by
-          apply sumNat_map_congr
-          intro y
-          rfl
+      simpa only [List.map_cons, sumNat, List.sum_cons, List.sum_map_add] using
+        congrArg (fun n => (ys.map (f x)).sum + n) ih
 
 /-- Keep a natural-number weight exactly when the Boolean predicate holds. -/
 def indicator (p : Bool) (a : Nat) : Nat :=
@@ -170,9 +153,7 @@ theorem nbc_multiplicity_is_region_sum {X T : Type}
 def sumInt (xs : List Int) : Int := xs.sum
 
 /-- The alternating integer sign associated with a natural-number size. -/
-def paritySign : Nat -> Int
-  | 0 => 1
-  | n + 1 => -paritySign n
+def paritySign : Nat -> Int := matroidParitySign
 
 /-!
   This is the finite active-graph restriction used before the NBC step.  The
@@ -251,21 +232,7 @@ theorem signedList_eq_constant {A : Type} (xs : List A)
       paritySign (size a) = paritySign rank) :
     signedList xs size =
       sumInt (xs.map (fun _ => paritySign rank)) := by
-  induction xs with
-  | nil => rfl
-  | cons a as ih =>
-      have ha : paritySign (size a) = paritySign rank :=
-        same_sign a (List.mem_cons_self)
-      have htail : forall b, b ∈ as ->
-          paritySign (size b) = paritySign rank := by
-        intro b hb
-        exact same_sign b (List.mem_cons_of_mem a hb)
-      unfold signedList
-      change paritySign (size a) +
-          sumInt (as.map (fun b => paritySign (size b))) =
-        paritySign rank + sumInt (as.map (fun _ => paritySign rank))
-      rw [ha]
-      exact congrArg (fun z => paritySign rank + z) (ih htail)
+  exact congrArg sumInt (List.map_congr_left fun a ha => same_sign a ha)
 
 theorem sumInt_perm {as bs : List Int} (h : as.Perm bs) :
     sumInt as = sumInt bs := by
