@@ -59,9 +59,9 @@ theorem tape_writeAndMove_stable (t : Tape)
     t.writeAndMove (readBackWrite t.read).toΓ (idleDir t.read) = t := by
   have hne : t.read ≠ Γ.start := by simp only [Tape.read]; exact hns t.head hhead
   rw [toΓ_readBackWrite_of_ne_start hne]
-  show (t.write t.read).move (idleDir t.read) = t
+  change (t.write t.read).move (idleDir t.read) = t
   simp only [idleDir, hne, ↓reduceIte]
-  show (t.write (t.cells t.head)).move .stay = t
+  change (t.write (t.cells t.head)).move .stay = t
   simp only [Tape.write, show ¬(t.head = 0) by omega, ↓reduceIte,
              Function.update_eq_self, Tape.move]
 
@@ -157,7 +157,7 @@ theorem exists_reachesIn_of_rewindStep_tape (tm : TM n) (tape : Cfg n tm.Q → T
   | succ p ih =>
     intro c hstate hcell0 hnostart hhead
     have hread_ne : (tape c).read ≠ Γ.start := by
-      simp [Tape.read, hhead]; exact hnostart (p + 1) (by omega)
+      simpa only [Tape.read, hhead] using hnostart (p + 1) (by omega)
     obtain ⟨c', hstep, hst, hh, hcells⟩ := h_step_left c hstate hread_ne hcell0 hnostart
     have hh' : (tape c').head = p := by rw [hh, hhead]; omega
     obtain ⟨c_target, hreach, hst_t, hh_t, hcells_t⟩ := ih c' hst
@@ -253,7 +253,7 @@ theorem exists_reachesIn_of_rewindStep_frame (tm : TM n)
   | succ p ih =>
     intro c hstate hcell0 hnostart hhead h_ih h_ins h_wh h_wns
     have hread_ne : c.output.read ≠ Γ.start := by
-      simp [Tape.read, hhead]; exact hnostart (p + 1) (by omega)
+      simpa only [Tape.read, hhead] using hnostart (p + 1) (by omega)
     obtain ⟨c', hstep, hst, hh, hcells, hinp, hwork⟩ :=
       h_step_left c hstate hread_ne hcell0 hnostart h_ih h_ins h_wh h_wns
     have hh' : c'.output.head = p := by rw [hh, hhead]; omega

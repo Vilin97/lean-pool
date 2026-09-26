@@ -74,13 +74,13 @@ theorem write_readBack (t : Tape) (hread : t.read ≠ Γ.start) :
   split
   · rfl
   · refine Tape.ext rfl ?_
-    show Function.update t.cells t.head (readBackWrite t.read).toΓ = t.cells
+    change Function.update t.cells t.head (readBackWrite t.read).toΓ = t.cells
     rw [toΓ_readBackWrite_of_ne_start hread, Tape.read, Function.update_eq_self]
 
 /-- Writing back the symbol under an off-start head and moving is just the move. -/
 theorem writeAndMove_readBack (t : Tape) (hread : t.read ≠ Γ.start) (d : Dir3) :
     t.writeAndMove (readBackWrite t.read) d = t.move d := by
-  show (t.write _).move d = t.move d
+  change (t.write _).move d = t.move d
   rw [write_readBack t hread]
 
 /-- The "do nothing" transition output: all writes are `□`, all directions

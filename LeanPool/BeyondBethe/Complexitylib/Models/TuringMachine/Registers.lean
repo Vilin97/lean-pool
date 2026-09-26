@@ -157,7 +157,7 @@ end IsReg
 /-- A blank tape with the head bumped to cell 1 is the zero register. -/
 theorem reg_zero_init_bumped : IsReg 0 { head := 1, cells := (Tape.init []).cells } := by
   refine ⟨rfl, by simp [Tape.init], fun _ hi => by omega, fun j hj => ?_⟩
-  show (Tape.init []).cells j = Γ.blank
+  change (Tape.init []).cells j = Γ.blank
   simp only [Tape.init]
   rw [ite_eq_right (by omega : ¬ j = 0)]
   simp

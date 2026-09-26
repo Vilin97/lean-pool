@@ -663,8 +663,8 @@ private theorem inputLengthPlusOneCounterTM_start_step
       (c₁.work counterIdx).cells 0 = Γ.start := by
   have hread : (Tape.init (x.map Γ.ofBool)).read = Γ.start := by
     simp [Tape.read, Tape.init]
-  simp [TM.step, inputLengthPlusOneCounterTM, hread]
-  refine ⟨?_, ?_, ?_, ?_⟩
+  simp only [TM.step, inputLengthPlusOneCounterTM, hread]
+  refine ⟨_, rfl, rfl, ?_, ?_, ?_, ?_⟩
   · rw [Tape.move_cells]
   · simp [Tape.init, Tape.move]
   · have hcounter_read : (work counterIdx).read = Γ.start := by
@@ -694,7 +694,7 @@ private theorem inputLengthPlusOneCounterTM_scan_bit_step
       (c'.work counterIdx).HasUnaryPrefix (k + 1) ∧
       (c'.work counterIdx).cells 0 = Γ.start := by
   have hread : c.input.read = Γ.ofBool (x[k]'hk) := by
-    show c.input.cells c.input.head = _
+    change c.input.cells c.input.head = _
     rw [hinput_head, hinput_cells]
     exact Tape.init_ofBool_cells_lt x k hk
   have hstart : c.input.read ≠ Γ.start := by
@@ -766,7 +766,7 @@ private theorem inputLengthPlusOneCounterTM_scan_blank_step
       (c'.work counterIdx).HasUnaryPrefix (x.length + 1) ∧
       (c'.work counterIdx).cells 0 = Γ.start := by
   have hread : c.input.read = Γ.blank := by
-    show c.input.cells c.input.head = _
+    change c.input.cells c.input.head = _
     rw [hinput_head, hinput_cells]
     exact Tape.init_ofBool_cells_ge x x.length le_rfl
   simp only [TM.step, hstate, inputLengthPlusOneCounterTM, hread]
@@ -792,15 +792,14 @@ private theorem inputLengthPlusOneCounterTM_rewind_step_left
       (c'.work counterIdx).cells = (c.work counterIdx).cells := by
   simp only [TM.step, hstate, inputLengthPlusOneCounterTM, hread]
   refine ⟨_, rfl, rfl, ?_, ?_, ?_⟩
-  · show c.input.move (TM.idleDir c.input.read) = c.input
+  · change c.input.move (TM.idleDir c.input.read) = c.input
     exact TM.transitionInput_eq_self hinp
   · by_cases h0 : (c.work counterIdx).head = 0
     · simp [counterRewindDirs, moveLeftDir, hread, Tape.writeAndMove, Tape.move,
         Tape.write, h0]
     · simp [counterRewindDirs, moveLeftDir, hread, Tape.writeAndMove, Tape.move,
         Tape.write, h0]
-  · simp [counterRewindDirs, moveLeftDir, hread,
-      Tape.writeAndMove, Tape.move_cells]
+  · simp only [Tape.writeAndMove, Tape.move_cells]
     change ((c.work counterIdx).write
         ((readBackWrite (c.work counterIdx).read).toΓ)).cells =
       (c.work counterIdx).cells
@@ -828,7 +827,7 @@ private theorem inputLengthPlusOneCounterTM_rewind_step_base
     exact hnostart (c.work counterIdx).head (by omega) (by rwa [Tape.read] at hread)
   simp only [TM.step, hstate, inputLengthPlusOneCounterTM, hread]
   refine ⟨_, rfl, rfl, ?_, ?_, ?_⟩
-  · show c.input.move (TM.idleDir c.input.read) = c.input
+  · change c.input.move (TM.idleDir c.input.read) = c.input
     exact TM.transitionInput_eq_self hinp
   · simp [counterAdvanceDirs, Tape.writeAndMove, Tape.move, Tape.write, hhead]
   · simp [counterAdvanceDirs, Tape.writeAndMove, Tape.move_cells, Tape.write, hhead]
@@ -858,8 +857,7 @@ private theorem inputLengthPlusOneCounterTM_rewind_loop (counterIdx : Fin n) :
   | succ h ih =>
       intro c hstate hinp hcell0 hnostart hhead
       have hread : (c.work counterIdx).read ≠ Γ.start := by
-        simp [Tape.read, hhead]
-        exact hnostart (h + 1) (by omega)
+        simpa only [Tape.read, hhead] using hnostart (h + 1) (by omega)
       obtain ⟨c1, hstep, hstate1, hinput1_eq, hhead1, hcells1⟩ :=
         inputLengthPlusOneCounterTM_rewind_step_left counterIdx c hstate hinp hread hcell0 hnostart
       have hinp1_ns : c1.input.read ≠ Γ.start := by
@@ -1128,20 +1126,20 @@ private theorem inputLengthPlusOneCounterTM_step_preserves_started_other_work
       cases state with
       | scan =>
           by_cases hstart : input.read = Γ.start
-          · simp [TM.step, inputLengthPlusOneCounterTM, hstart] at hstep
+          · simp only [TM.step, inputLengthPlusOneCounterTM, hstart] at hstep
             have hcfg := Option.some.inj hstep
             subst c'
             simpa [counterPreserveWork, counterIdleDirs] using
               Tape.writeAndMove_readBack_idle_of_ne_start (work passiveIdx)
                 (by simpa [hpassive] using hpassive_read)
           · by_cases hblank : input.read = Γ.blank
-            · simp [TM.step, inputLengthPlusOneCounterTM, hblank] at hstep
+            · simp only [TM.step, inputLengthPlusOneCounterTM, hblank] at hstep
               have hcfg := Option.some.inj hstep
               subst c'
               simpa [counterWriteOneWork, counterAdvanceDirs, hne] using
                 Tape.writeAndMove_readBack_idle_of_ne_start (work passiveIdx)
                   (by simpa [hpassive] using hpassive_read)
-            · simp [TM.step, inputLengthPlusOneCounterTM, hstart, hblank] at hstep
+            · simp only [TM.step, inputLengthPlusOneCounterTM, hstart, hblank] at hstep
               have hcfg := Option.some.inj hstep
               subst c'
               simpa [counterWriteOneWork, counterAdvanceDirs, hne] using
@@ -1149,13 +1147,13 @@ private theorem inputLengthPlusOneCounterTM_step_preserves_started_other_work
                   (by simpa [hpassive] using hpassive_read)
       | rewind =>
           by_cases hcounter : (work counterIdx).read = Γ.start
-          · simp [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
+          · simp only [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
             have hcfg := Option.some.inj hstep
             subst c'
             simpa [counterPreserveWork, counterAdvanceDirs, hne] using
               Tape.writeAndMove_readBack_idle_of_ne_start (work passiveIdx)
                 (by simpa [hpassive] using hpassive_read)
-          · simp [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
+          · simp only [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
             have hcfg := Option.some.inj hstep
             subst c'
             simpa [counterPreserveWork, counterRewindDirs, hne] using
@@ -1198,20 +1196,20 @@ private theorem inputLengthPlusOneCounterTM_step_preserves_started_blank_output
       cases state with
       | scan =>
           by_cases hstart : input.read = Γ.start
-          · simp [TM.step, inputLengthPlusOneCounterTM, hstart] at hstep
+          · simp only [TM.step, inputLengthPlusOneCounterTM, hstart] at hstep
             have hcfg := Option.some.inj hstep
             subst c'
             simpa [hout] using
               Tape.writeAndMove_readBack_idle_of_ne_start output
                 hout_read
           · by_cases hblank : input.read = Γ.blank
-            · simp [TM.step, inputLengthPlusOneCounterTM, hblank] at hstep
+            · simp only [TM.step, inputLengthPlusOneCounterTM, hblank] at hstep
               have hcfg := Option.some.inj hstep
               subst c'
               simpa [hout] using
                 Tape.writeAndMove_readBack_idle_of_ne_start output
                   hout_read
-            · simp [TM.step, inputLengthPlusOneCounterTM, hstart, hblank] at hstep
+            · simp only [TM.step, inputLengthPlusOneCounterTM, hstart, hblank] at hstep
               have hcfg := Option.some.inj hstep
               subst c'
               simpa [hout] using
@@ -1219,13 +1217,13 @@ private theorem inputLengthPlusOneCounterTM_step_preserves_started_blank_output
                   hout_read
       | rewind =>
           by_cases hcounter : (work counterIdx).read = Γ.start
-          · simp [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
+          · simp only [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
             have hcfg := Option.some.inj hstep
             subst c'
             simpa [hout] using
               Tape.writeAndMove_readBack_idle_of_ne_start output
                 hout_read
-          · simp [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
+          · simp only [TM.step, inputLengthPlusOneCounterTM, hcounter] at hstep
             have hcfg := Option.some.inj hstep
             subst c'
             simpa [hout] using
