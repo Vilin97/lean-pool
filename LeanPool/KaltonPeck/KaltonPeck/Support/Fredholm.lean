@@ -534,6 +534,21 @@ theorem skewFredholmRange {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 end
 
+/-- A Fredholm alternating form on a reflexive space has the annihilator of its radical
+as its range. -/
+theorem alternatingFredholmRange {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    (eta : ContinuousAlternatingForm X)
+    (hReflexive : Function.Surjective (NormedSpace.inclusionInDoubleDual ℝ X))
+    (hFredholm : IsFredholm eta.toDual) :
+    eta.toDual.toLinearMap.range = Forms.continuousAnnihilator eta.radical := by
+  refine (skewFredholmRange eta.toDual hReflexive hFredholm ?_).2.1
+  ext x y
+  change eta.toDual y x = -eta.toDual x y
+  have h := eta.alternating (x + y)
+  have hsum : eta.toDual y x + eta.toDual x y = 0 := by
+    simpa [eta.alternating, add_assoc, add_left_comm, add_comm] using h
+  exact eq_neg_of_add_eq_zero_left hsum
+
 end KaltonPeck.Support.Fredholm
 
 /-

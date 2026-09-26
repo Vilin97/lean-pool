@@ -92,65 +92,7 @@ def fredholmQuotientStrong {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X
     exact hFredholm.2.1
   let eRange : Y ≃L[ℝ] SY.toLinearMap.range :=
     ContinuousLinearMap.equivRange hSY_injective hSY_closed
-  have hRange :
-      eta.toDual.toLinearMap.range = Forms.continuousAnnihilator eta.radical := by
-    apply le_antisymm
-    · rintro phi ⟨x, rfl⟩
-      change ((ContinuousLinearMap.compL ℝ eta.radical X ℝ).flip
-        eta.radical.subtypeL) (eta.toDual x) = 0
-      apply ContinuousLinearMap.ext
-      intro f
-      change eta.toDual x (f : X) = 0
-      rw [hSkew, hRadical f]
-      exact neg_zero
-    · intro phi hphi
-      let phiY : StrongDual ℝ Y := (phi : StrongDual ℝ X).comp Y.subtypeL
-      let g : StrongDual ℝ SY.toLinearMap.range :=
-        phiY.comp eRange.symm.toContinuousLinearMap
-      obtain ⟨G, hG, _⟩ := exists_extension_norm_eq SY.toLinearMap.range g
-      obtain ⟨x, hx⟩ := hReflexive G
-      refine ⟨-x, ?_⟩
-      apply ContinuousLinearMap.ext
-      intro z
-      let y : Y := pY z
-      have hG_on_y : G (eta.toDual (y : X)) = phi (y : X) := by
-        have heRange : eRange y = SY.rangeRestrict y :=
-          congrFun (ContinuousLinearMap.coe_equivRange hSY_injective hSY_closed) y
-        calc
-          G (eta.toDual (y : X)) =
-              G ((eRange y : SY.toLinearMap.range) : StrongDual ℝ X) := by
-                rw [heRange]
-                rfl
-          _ = g (eRange y) := hG (eRange y)
-          _ = phiY (eRange.symm (eRange y)) := rfl
-          _ = phiY y := by rw [eRange.symm_apply_apply]
-          _ = phi (y : X) := rfl
-      have hphi_radical : phi (pF z : X) = 0 := by
-        exact DFunLike.congr_fun hphi (pF z)
-      calc
-        eta.toDual (-x) z = -eta.toDual x z := by
-          simp only [map_neg, neg_apply]
-        _ = eta.toDual z x := by rw [hSkew]; simp
-        _ = G (eta.toDual z) := by
-          have h := DFunLike.congr_fun hx (eta.toDual z)
-          change (eta.toDual z) x = G (eta.toDual z) at h
-          exact h
-        _ = G (eta.toDual (y : X)) := by
-          congr 1
-          change eta.toDual z = eta.toDual (pY z : X)
-          calc
-            eta.toDual z = eta.toDual ((pF z : X) + (pY z : X)) :=
-              congrArg eta.toDual (hProj z).symm
-            _ = eta.toDual (pY z : X) := by
-              rw [map_add, hRadical, zero_add]
-        _ = phi (y : X) := hG_on_y
-        _ = phi z := by
-          change phi (pY z : X) = phi z
-          calc
-            phi (pY z : X) = phi (pF z : X) + phi (pY z : X) := by
-              rw [hphi_radical, zero_add]
-            _ = phi ((pF z : X) + (pY z : X)) := by rw [map_add]
-            _ = phi z := congrArg phi (hProj z)
+  have hRange := Fredholm.alternatingFredholmRange eta hReflexive hFredholm
   let hSYAnn :
       SY.toLinearMap.range = Forms.continuousAnnihilator eta.radical :=
     hSY_range.trans hRange
