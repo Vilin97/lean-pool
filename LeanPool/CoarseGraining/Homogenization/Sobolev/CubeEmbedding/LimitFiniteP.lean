@@ -228,30 +228,11 @@ theorem cubeSobolevEmbedding_finiteLp {d : ℕ} (hd : 0 < d)
   have hℓ : (0 : ℝ) < L / 2 := by linarith
   set χ : Vec (m + 1) → ℝ := boxCutoff z hi (L / 2) with hχ
   have hχ_smooth : ContDiff ℝ (⊤ : ℕ∞) χ := boxCutoff_contDiff
-  have hχ_one : ∀ x ∈ Box z hi, χ x = 1 := by
-    intro x hx
-    exact boxCutoff_eq_one hℓ (Set.mem_Icc.2
-      ⟨fun k => (Set.mem_univ_pi.1 hx k).1.le,
-        fun k => (Set.mem_univ_pi.1 hx k).2.le⟩)
-  have hχ_sub : tsupport χ ⊆ Box3 z hi := by
-    have hsupp : Function.support χ ⊆
-        Set.Icc (fun k => z k - L / 2) (fun k => hi k + L / 2) :=
-      fun x hx => by by_contra hxn; exact hx (boxCutoff_eq_zero hℓ hxn)
-    refine (closure_minimal hsupp isClosed_Icc).trans ?_
-    rw [Box3_eq_Box]
-    intro x hx
-    rw [Set.mem_Icc] at hx
-    refine Set.mem_univ_pi.2 fun k => ?_
-    exact ⟨by have := hx.1 k; have := hval k; linarith,
-      by have := hx.2 k; have := hval k; linarith⟩
+  obtain ⟨_hχ_cptsupp, hχ_one, hχ_sub, hχ_deriv⟩ :=
+    boxCutoff_halfSide_properties z hi L hL hval
   have hχ_le1 : ∀ x, ‖χ x‖ ≤ 1 := fun x => by
     rw [Real.norm_of_nonneg (boxCutoff_nonneg x)]
     exact boxCutoff_le_one x
-  have hχ_deriv : ∀ x i, |fderiv ℝ χ x (basisVec i)| ≤ 32 / L := by
-    intro x i
-    have h := boxCutoff_deriv_bound (lo := z) (hi := hi) hℓ x i
-    have h2 : (16 : ℝ) / (L / 2) = 32 / L := by field_simp; ring
-    simpa [χ, basisVec, h2] using h
   set x0 : Vec (m + 1) := fun k => (z k + hi k) / 2 with hx0
   set r : ℝ := L / 4 with hrdef
   have hr : 0 < r := by rw [hrdef]; linarith

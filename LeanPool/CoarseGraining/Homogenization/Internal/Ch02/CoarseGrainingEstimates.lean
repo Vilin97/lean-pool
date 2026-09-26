@@ -77,6 +77,47 @@ private theorem responseCoarseGrainingEstimatesTheory_zero_dim
     rw [variationEnergyValue_zero_dim U a w]
     simp [vecDot, matVecMul]
 
+/-- The linear-response estimate follows from a response maximizer and integrability,
+independently of the canonical coarse-matrix constructions. -/
+private theorem linear_response_of_isEllipticFieldOn
+    {d : ℕ} [NeZero d] (U : Domain d) (a : CoeffOn U)
+    (hEll : IsEllipticFieldOn a.lam a.Lam (U : Set (Vec d)) a.toCoeffField)
+    (p q : Vec d) (w : Solution U a) :
+    |average U
+      (fun x =>
+        vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x)) -
+          vecDot q (w.toH1.grad x))| ≤
+      Real.sqrt (variationEnergyValue U a w) *
+        Real.sqrt ((2 : ℝ) * responseJ U a p q) := by
+  let hInt : ResponseLinearIntegrabilityData (U : Set (Vec d)) a.toCoeffField :=
+    ResponseLinearIntegrabilityData.of_isEllipticFieldOn hEll
+  rcases (responseExistenceTheory U a).exists_maximizer p q with
+    ⟨u, _hmean, hmax⟩
+  have hOld :=
+    basic_cg_identities_linear_response_of_isResponseMaximizer
+      (U : Set (Vec d)) a.toCoeffField hEll p q hInt u hmax w
+  have hAvg :
+      average U
+          (fun x =>
+            vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x)) -
+              vecDot q (w.toH1.grad x)) =
+        volumeAverage (U : Set (Vec d))
+            (fun x => vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x))) -
+          volumeAverage (U : Set (Vec d))
+            (fun x => vecDot q (w.toH1.grad x)) := by
+    change
+      volumeAverage (U : Set (Vec d))
+          (fun x =>
+            vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x)) -
+              vecDot q (w.toH1.grad x)) =
+        volumeAverage (U : Set (Vec d))
+            (fun x => vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x))) -
+          volumeAverage (U : Set (Vec d))
+            (fun x => vecDot q (w.toH1.grad x))
+    exact volumeAverage_sub (hInt.flux p w) (hInt.grad q w)
+  rw [hAvg, abs_sub_comm]
+  simpa [variationEnergyValue, book_responseJ_eq_ResponseJ U a p q] using! hOld
+
 private theorem responseCoarseGrainingEstimatesTheory_of_isEllipticFieldOn
     {d : ℕ} [NeZero d] (U : Domain d) (a : CoeffOn U)
     (hEll : IsEllipticFieldOn a.lam a.Lam (U : Set (Vec d)) a.toCoeffField) :
@@ -166,33 +207,7 @@ private theorem responseCoarseGrainingEstimatesTheory_of_isEllipticFieldOn
       coarse_graining := ?_
       average_gradient_energy := ?_
       average_flux_energy := ?_ }
-  · intro p q w
-    rcases (responseExistenceTheory U a).exists_maximizer p q with
-      ⟨u, _hmean, hmax⟩
-    have hOld :=
-      basic_cg_identities_linear_response_of_isResponseMaximizer
-        (U : Set (Vec d)) a.toCoeffField hEll p q hInt u hmax w
-    have hAvg :
-        average U
-            (fun x =>
-              vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x)) -
-                vecDot q (w.toH1.grad x)) =
-          volumeAverage (U : Set (Vec d))
-              (fun x => vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x))) -
-            volumeAverage (U : Set (Vec d))
-              (fun x => vecDot q (w.toH1.grad x)) := by
-      change
-        volumeAverage (U : Set (Vec d))
-            (fun x =>
-              vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x)) -
-                vecDot q (w.toH1.grad x)) =
-          volumeAverage (U : Set (Vec d))
-              (fun x => vecDot p (matVecMul (a.toCoeffField x) (w.toH1.grad x))) -
-            volumeAverage (U : Set (Vec d))
-              (fun x => vecDot q (w.toH1.grad x))
-      exact volumeAverage_sub (hInt.flux p w) (hInt.grad q w)
-    rw [hAvg, abs_sub_comm]
-    simpa [variationEnergyValue, book_responseJ_eq_ResponseJ U a p q] using! hOld
+  · exact linear_response_of_isEllipticFieldOn U a hEll
   · intro p w
     let q0 : Vec d :=
       matVecMul (Book.Ch02.sigmaStarCoarse U a - Book.Ch02.kappaCoarse U a) p

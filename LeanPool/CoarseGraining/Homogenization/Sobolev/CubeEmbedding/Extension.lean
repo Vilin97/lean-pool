@@ -56,6 +56,41 @@ theorem isOpenBoundedConvexDomain_Box (lo hi : Vec d) :
 theorem Box3_eq_Box (lo hi : Vec d) :
     Box3 lo hi = Box (fun k => 2 * lo k - hi k) (fun k => 2 * hi k - lo k) := rfl
 
+/-- The cutoff with half the cube side as margin is compactly supported in the tripled
+box, equals one on the base box, and has coordinate derivatives bounded by `32 / L`. -/
+theorem boxCutoff_halfSide_properties (z hi : Vec d) (L : ℝ) (hL : 0 < L)
+    (hval : ∀ k, hi k = z k + L) :
+    HasCompactSupport (boxCutoff z hi (L / 2)) ∧
+      (∀ x ∈ Box z hi, boxCutoff z hi (L / 2) x = 1) ∧
+      tsupport (boxCutoff z hi (L / 2)) ⊆ Box3 z hi ∧
+      (∀ x i, |fderiv ℝ (boxCutoff z hi (L / 2)) x (basisVec i)| ≤ 32 / L) := by
+  have hℓ : (0 : ℝ) < L / 2 := by linarith
+  set χ : Vec d → ℝ := boxCutoff z hi (L / 2) with hχ
+  have hχ_cptsupp : HasCompactSupport χ := by
+    apply HasCompactSupport.intro
+      (K := Set.Icc (fun k => z k - L / 2) (fun k => hi k + L / 2)) isCompact_Icc
+    intro x hx; exact boxCutoff_eq_zero hℓ hx
+  have hχ_one : ∀ x ∈ Box z hi, χ x = 1 := by
+    intro x hx
+    exact boxCutoff_eq_one hℓ (Set.mem_Icc.2
+      ⟨fun k => (Set.mem_univ_pi.1 hx k).1.le, fun k => (Set.mem_univ_pi.1 hx k).2.le⟩)
+  have hχ_sub : tsupport χ ⊆ Box3 z hi := by
+    have hsupp : Function.support χ ⊆ Set.Icc (fun k => z k - L / 2) (fun k => hi k + L / 2) :=
+      fun x hx => by by_contra hxn; exact hx (boxCutoff_eq_zero hℓ hxn)
+    refine (closure_minimal hsupp isClosed_Icc).trans ?_
+    rw [Box3_eq_Box]
+    intro x hx
+    rw [Set.mem_Icc] at hx
+    refine Set.mem_univ_pi.2 fun k => ?_
+    exact ⟨by have := hx.1 k; have := hval k; simp only [] at *; linarith,
+      by have := hx.2 k; have := hval k; simp only [] at *; linarith⟩
+  have hχ_deriv : ∀ x i, |fderiv ℝ χ x (basisVec i)| ≤ 32 / L := by
+    intro x i
+    have := boxCutoff_deriv_bound (lo := z) (hi := hi) hℓ x i
+    have h2 : (16 : ℝ) / (L / 2) = 32 / L := by field_simp; ring
+    simpa [hχ, basisVec, h2] using this
+  exact ⟨hχ_cptsupp, hχ_one, hχ_sub, hχ_deriv⟩
+
 /-- A concrete closed ball inside a nonempty base box. -/
 theorem exists_ball_subset_Box (lo hi : Vec d) (hlt : ∀ k, lo k < hi k) (hd : 0 < d) :
     ∃ (x0 : Vec d) (r : ℝ), 0 < r ∧ Metric.closedBall x0 r ⊆ Box lo hi := by
