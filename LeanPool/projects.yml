@@ -10563,3 +10563,32 @@ projects:
     - 20E05
     - 68Q45
     - 03B35
+  - title: Conway refinement for omnific integers
+    summary: 'Proves multiplicative refinement for omnific integers: every equality ab = cd admits a
+      two-by-two factor refinement. Develops factorization and refinement of generalized power-series
+      integer parts and connects these to surreal-number and standalone Mathlib formulations.'
+    branch: ordered algebra
+    main_declarations:
+    - ConwayRefinement.Palomar.conwayRefinement
+    main_results:
+    - declaration: ConwayRefinement.Palomar.conwayRefinement
+      informal: If four omnific integers satisfy ab = cd, there are omnific integers e, f, g, h with
+        a = ef, b = gh, c = eg, and d = fh, including degenerate cases.
+    tags:
+    - surreal-numbers
+    - ordered-algebra
+    - factorization
+    msc:
+    - 06A05
+    - 13F25
+    provenance: AI
+    slug: conway-refinement
+    entry_module: LeanPool.ConwayRefinement
+    authors:
+    - Dan Abramov
+    source:
+      url: https://github.com/gaearon/conway-refinement
+      github_repo: gaearon/conway-refinement
+      commit: 264445c93b78554c408e99e4e7f663693b4e91ab
+    license: Apache-2.0
+    status: verified
