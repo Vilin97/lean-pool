@@ -272,7 +272,8 @@ lemma Subspace.relativeDensity_compose {α η ζ ι : Type*}
     (A : Finset (ι → α)) :
     (relativeDensity (compose V W) A : ℝ) =
       (relativeDensity W (pullback V A) : ℝ) := by
-  simp only [relativeDensity, pullback, Finset.mem_filter, Finset.mem_univ, true_and,
+  simp only [relativeDensity, pullback, parameterPreimage, Finset.mem_filter, Finset.mem_univ,
+    true_and,
     compose_apply]
 
 /-- Tile a structured insensitive intersection and extract a dense tile.

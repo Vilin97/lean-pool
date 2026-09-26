@@ -373,22 +373,14 @@ lemma blockSubspace_apply {α : Type*} {m : ℕ} (x : Fin m → α) : blockSubsp
 
 /-- Prepend a fixed block of letters to the coordinates of a subspace. -/
 def prependFixed {α η : Type*} {m p : ℕ} (u : Fin m → α)
-    (V : Combinatorics.Subspace η α (Fin p)) : Combinatorics.Subspace η α (Fin (m + p)) where
-  idxFun i :=
-    match finSumFinEquiv.symm i with
-    | Sum.inl j => Sum.inl (u j)
-    | Sum.inr j => V.idxFun j
-  proper e := by
-    obtain ⟨i, hi⟩ := V.proper e
-    exact ⟨finSumFinEquiv (Sum.inr i), by simp only [Equiv.symm_apply_apply, hi]⟩
+    (V : Combinatorics.Subspace η α (Fin p)) : Combinatorics.Subspace η α (Fin (m + p)) :=
+  transportSubspace finSumFinEquiv.symm u V
 
 @[simp]
 lemma prependFixed_apply {α η : Type*} {m p : ℕ} (u : Fin m → α)
     (V : Combinatorics.Subspace η α (Fin p)) (x : η → α) :
-    prependFixed u V x = Sum.elim u (V x) ∘ finSumFinEquiv.symm := by
-  funext i
-  simp only [Function.comp_apply, Combinatorics.Subspace.coe_apply, prependFixed]
-  cases hi : finSumFinEquiv.symm i <;> simp [Combinatorics.Subspace.coe_apply]
+    prependFixed u V x = Sum.elim u (V x) ∘ finSumFinEquiv.symm :=
+  transportSubspace_apply finSumFinEquiv.symm u V x
 
 /-- Regroup a cut of the coordinates following a fixed block. -/
 def prependCoords {m p q r : ℕ} (e : Fin p ⊕ Fin q ≃ Fin r) :

@@ -164,11 +164,12 @@ private lemma composeLine_reindex {β : Type*} (e : α ≃ β)
 
 /-- The line case of the Graham--Rothschild theorem. -/
 lemma lines (α C : Type*) [Fintype α] [Nontrivial α] [Fintype C] [Nonempty C]
-    [DecidableEq α] (m n : ℕ)
+    (m n : ℕ)
     (hn : bound (Fintype.card α) (Fintype.card C) m ≤ n)
     (χ : Combinatorics.Line α (Fin n) → C) :
     ∃ V : Combinatorics.Subspace (Fin m) α (Fin n),
       ∃ c, ∀ l : Combinatorics.Line α (Fin m), χ (Subspace.mapLine V l) = c := by
+  classical
   obtain ⟨V, c, hc⟩ :=
     isLineBound_of_bound_le (k := Fintype.card α) (r := Fintype.card C) (m := m)
       (le_trans one_le_two Fintype.one_lt_card) Fintype.card_pos n hn
@@ -180,7 +181,7 @@ lemma lines (α C : Type*) [Fintype α] [Nontrivial α] [Fintype C] [Nonempty C]
     Equiv.symm_apply_apply]
 
 /-- The two-color form of Graham--Rothschild used by the density argument. -/
-lemma lines_twoColor (α : Type*) [Fintype α] [Nontrivial α] [DecidableEq α]
+lemma lines_twoColor (α : Type*) [Fintype α] [Nontrivial α]
     (m n : ℕ)
     (hn : bound (Fintype.card α) 2 m ≤ n)
     (L : Finset (Combinatorics.Line α (Fin n))) :

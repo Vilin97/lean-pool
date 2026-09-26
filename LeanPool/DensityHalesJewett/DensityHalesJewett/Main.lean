@@ -310,26 +310,24 @@ lemma density_increment_chain_step {k R n j : ℕ} (hk : 2 ≤ k)
       ∃ W : Combinatorics.Subspace (Fin (d (j + 1))) (Fin (k + 1)) (Fin n),
         δ + ((j + 1 : ℕ) : ℝ) * (Parameters.γ k δ / 2) ≤
           (Subspace.relativeDensity W A : ℝ) := by
-  let : Nontrivial (Fin (k + 1)) :=
-    Fintype.one_lt_card_iff_nontrivial.mp (by
-      simp only [Fintype.card_fin]
-      omega)
   let ρ := δ + (j : ℝ) * (Parameters.γ k δ / 2)
   have hγ := Parameters.γ_mono_lowerBound hk hδ
   have hρ₀ : 0 < ρ := by
     dsimp only [ρ]
     nlinarith [hγ.1, (Nat.cast_nonneg j : (0 : ℝ) ≤ (j : ℝ))]
-  have hρ₁ : ρ ≤ 1 := hV.trans (by exact_mod_cast Finset.dens_le_one (s := pullback V A))
+  have hρ₁ : ρ ≤ 1 := hV.trans (by
+    rw [← dens_pullback]
+    exact_mod_cast Finset.dens_le_one (s := pullback V A))
   have hinc := density_increment hk hDHJ (d (j + 1))
     (hd (j + 1) (Nat.succ_le_of_lt hj)) ρ hρ₀ hρ₁ (d j) (hstep j hj)
       (pullback V A) (by
-        simpa only [ρ, Subspace.relativeDensity, pullback] using hV)
+        simpa only [ρ, dens_pullback] using hV)
   obtain ⟨l, hl⟩ | ⟨U, hU⟩ := hinc
   · left
     use Subspace.mapLine V l
     intro a
-    simpa only [Subspace.mapLine_apply, pullback, Finset.mem_filter, Finset.mem_univ,
-      true_and] using hl a
+    simpa only [Subspace.mapLine_apply, pullback, parameterPreimage,
+      Finset.mem_filter, Finset.mem_univ, true_and] using hl a
   · right
     use Subspace.compose V U
     rw [Subspace.relativeDensity_compose]
@@ -393,7 +391,9 @@ lemma line_or_iterated_density_le_one {k R n : ℕ} (hk : 2 ≤ k) (hDHJ : HasDe
   · left
     exact hline
   · right
-    exact hV.trans (mod_cast Finset.dens_le_one (s := pullback V A))
+    apply hV.trans
+    rw [← dens_pullback]
+    exact_mod_cast Finset.dens_le_one (s := pullback V A)
 
 /-- Density Hales--Jewett for every finite alphabet of cardinality at least two. -/
 lemma density_hales_jewett_fin (k : ℕ) (hk : 2 ≤ k) : HasDensityHJ k := by

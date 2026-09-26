@@ -52,22 +52,6 @@ lemma dens_transportWords {α ι ι' : Type*} [Fintype (ι → α)] [Fintype (ι
     (e : ι ≃ ι') (D : Finset (ι → α)) : (transportWords e D).dens = D.dens := by
   rw [transportWords, Finset.dens_map_equiv]
 
-/-- Fix the coordinates outside a designated block, keeping a subspace on the block. -/
-def transportSubspace {α η ι ω ν : Type*} (e : ι ≃ ω ⊕ ν) (z : ω → α)
-    (V : Combinatorics.Subspace η α ν) : Combinatorics.Subspace η α ι where
-  idxFun c := Sum.elim (fun a ↦ Sum.inl (z a)) V.idxFun (e c)
-  proper x := by
-    obtain ⟨c, hc⟩ := V.proper x
-    exact ⟨e.symm (Sum.inr c), by simp only [Equiv.apply_symm_apply, Sum.elim_inr, hc]⟩
-
-@[simp]
-lemma transportSubspace_apply {α η ι ω ν : Type*} (e : ι ≃ ω ⊕ ν) (z : ω → α)
-    (V : Combinatorics.Subspace η α ν) (x : η → α) :
-    transportSubspace e z V x = Sum.elim z (V x) ∘ e := by
-  funext c
-  simp only [Combinatorics.Subspace.coe_apply, transportSubspace, Function.comp_apply]
-  cases e c <;> simp only [Sum.elim_inl, Sum.elim_inr, id_eq, Combinatorics.Subspace.coe_apply]
-
 namespace IsInsensitive
 
 /-- Reindexing coordinates preserves insensitivity. -/
@@ -289,25 +273,16 @@ private lemma uncovered_empty {η α ι : Type*} [Fintype (η → α)] [Decidabl
 private def padExtraSubspace {α η : Type*} {r N n : ℕ}
     (e : Fin r ⊕ Fin N ≃ Fin n) (z : Fin r → α)
     (V : Combinatorics.Subspace η α (Fin N)) :
-    Combinatorics.Subspace η α (Fin n) where
-  idxFun i :=
-    match e.symm i with
-    | Sum.inl j => Sum.inl (z j)
-    | Sum.inr j => V.idxFun j
-  proper a := by
-    obtain ⟨i, hi⟩ := V.proper a
-    refine ⟨e (Sum.inr i), ?_⟩
-    simp only [Equiv.symm_apply_apply, hi]
+    Combinatorics.Subspace η α (Fin n) :=
+  transportSubspace e.symm z V
 
 @[simp]
 private lemma padExtraSubspace_apply {α η : Type*} {r N n : ℕ}
     (e : Fin r ⊕ Fin N ≃ Fin n) (z : Fin r → α)
     (V : Combinatorics.Subspace η α (Fin N)) (x : η → α) :
     padExtraSubspace e z V x =
-      Sum.elim z (V x) ∘ e.symm := by
-  funext i
-  cases hi : e.symm i <;>
-    simp [padExtraSubspace, Combinatorics.Subspace.coe_apply, hi, Sum.elim, Function.comp_apply]
+      Sum.elim z (V x) ∘ e.symm :=
+  transportSubspace_apply e.symm z V x
 
 /-- Fiberwise tiles remain finite, contained, and disjoint after their fixed prefixes are padded
 back into the ambient cube. -/
@@ -845,14 +820,6 @@ lemma tilingBound_spec (k m n : ℕ) (hDHJ : HasDensityHJ k) (hm : 1 ≤ m)
   classical
   rw [tilingBound, dite_eq_left ⟨hDHJ, hm, hβ₀⟩] at hn
   exact Nat.find_spec (exists_eventually_tilingSufficient k m hDHJ hm hβ₀) n hn
-
-/-- The preimage of a word family in a subspace parameter cube. -/
-noncomputable def parameterPreimage {η α ι : Type*} [Fintype (η → α)]
-    (V : Combinatorics.Subspace η α ι) (D : Finset (ι → α)) : Finset (η → α) := by
-  classical
-  apply Finset.univ.filter
-  intro x
-  exact V x ∈ D
 
 /-- Pulling an insensitive family back through a subspace preserves its sensitivity pair. -/
 lemma parameterPreimage_isInsensitive {α η ι : Type*}

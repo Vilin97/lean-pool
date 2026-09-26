@@ -30,10 +30,19 @@ def IsLineFree {α ι : Type*} (A : Finset (ι → α)) : Prop :=
   ∀ l : Combinatorics.Line α ι, ∃ a, l a ∉ A
 
 /-- Pull a word family back to the parameter cube of a subspace. -/
-def pullback {η α ι : Type*} [Fintype (η → α)] [DecidableEq (ι → α)]
+noncomputable def pullback {η α ι : Type*} [Fintype (η → α)]
     (V : Combinatorics.Subspace η α ι)
     (A : Finset (ι → α)) : Finset (η → α) :=
-  Finset.univ.filter fun x ↦ V x ∈ A
+  parameterPreimage V A
+
+/-- Pullback density agrees with the subspace-relative density. -/
+lemma dens_pullback {η α ι : Type*} [Fintype (η → α)] [DecidableEq (ι → α)]
+    (V : Combinatorics.Subspace η α ι) (A : Finset (ι → α)) :
+    (pullback V A).dens = Subspace.relativeDensity V A := by
+  unfold pullback parameterPreimage Subspace.relativeDensity
+  congr 1
+  ext x
+  simp only [Finset.mem_filter]
 
 /-- The working parameter dimension of the correlated-fibers lemma. -/
 noncomputable def correlatedFibersParameters (k m : ℕ) (δ : ℝ) : ℕ :=

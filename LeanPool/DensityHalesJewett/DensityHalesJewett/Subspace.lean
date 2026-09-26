@@ -224,19 +224,16 @@ noncomputable def linesEquiv [Fintype (η → α)] [DecidableEq (ι → α)]
     exact uncomposeLine_apply V q a
 
 /-- Map a parameter-cube line to the corresponding ambient line in a subspace. -/
-noncomputable def mapLine [Fintype (η → α)] [DecidableEq (ι → α)]
-    [Nontrivial α] (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η) :
+def mapLine (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η) :
     Combinatorics.Line α ι :=
-  (linesEquiv V l).1
+  composeLine V l
 
-lemma mapLine_eq_composeLine [Fintype (η → α)] [DecidableEq (ι → α)]
-    [Nontrivial α] (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η) :
+lemma mapLine_eq_composeLine (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η) :
     mapLine V l = composeLine V l :=
   rfl
 
 @[simp]
-lemma mapLine_apply [Fintype (η → α)] [DecidableEq (ι → α)]
-    [Nontrivial α] (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η)
+lemma mapLine_apply (V : Combinatorics.Subspace η α ι) (l : Combinatorics.Line α η)
     (a : α) : mapLine V l a = V (l a) :=
   composeLine_apply V l a
 
@@ -246,4 +243,29 @@ def restrictAlphabet {β : Type*} [Fintype (η → β)] [DecidableEq (ι → α)
   Finset.univ.image fun x ↦ V (e ∘ x)
 
 end Subspace
+
+/-- Fix the coordinates outside a designated block, keeping a subspace on the block. -/
+def transportSubspace {α η ι ω ν : Type*} (e : ι ≃ ω ⊕ ν) (z : ω → α)
+    (V : Combinatorics.Subspace η α ν) : Combinatorics.Subspace η α ι where
+  idxFun c := Sum.elim (fun a ↦ Sum.inl (z a)) V.idxFun (e c)
+  proper x := by
+    obtain ⟨c, hc⟩ := V.proper x
+    exact ⟨e.symm (Sum.inr c), by simp only [Equiv.apply_symm_apply, Sum.elim_inr, hc]⟩
+
+@[simp]
+lemma transportSubspace_apply {α η ι ω ν : Type*} (e : ι ≃ ω ⊕ ν) (z : ω → α)
+    (V : Combinatorics.Subspace η α ν) (x : η → α) :
+    transportSubspace e z V x = Sum.elim z (V x) ∘ e := by
+  funext c
+  simp only [Combinatorics.Subspace.coe_apply, transportSubspace, Function.comp_apply]
+  cases e c <;> simp only [Sum.elim_inl, Sum.elim_inr, id_eq, Combinatorics.Subspace.coe_apply]
+
+/-- The preimage of a word family in a subspace parameter cube. -/
+noncomputable def parameterPreimage {η α ι : Type*} [Fintype (η → α)]
+    (V : Combinatorics.Subspace η α ι) (D : Finset (ι → α)) : Finset (η → α) := by
+  classical
+  apply Finset.univ.filter
+  intro x
+  exact V x ∈ D
+
 end DensityHalesJewett

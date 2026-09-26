@@ -249,7 +249,8 @@ lemma pullback_inter_endpointFamily_subset_restricted {k m n : ℕ}
     have hi := IsInsensitive.mem_intersection.mp hxinter i
     simpa only [endpointFamily, Finset.mem_filter, Finset.mem_univ, true_and] using hi
   · rw [hp_last]
-    simpa only [pullback, Finset.mem_filter, Finset.mem_univ, true_and] using hxpull
+    simpa only [pullback, parameterPreimage, Finset.mem_filter,
+      Finset.mem_univ, true_and] using hxpull
 
 /-- In a sufficiently large parameter cube, words avoiding the final letter have density at most
 `η`. -/
@@ -343,7 +344,7 @@ lemma exists_large_insensitive_intersection {k : ℕ} (hk : 2 ≤ k)
   apply density_complement_bounds
   · exact hδ₀.le
   · exact (Parameters.η_pos hk hδ₀).le
-  · simpa only [Subspace.relativeDensity, pullback] using hV
+  · simpa only [dens_pullback] using hV
   · exact hCdense
   · exact hAC
   · exact Parameters.large_intersection_complement_gain hk hδ₀
@@ -631,7 +632,7 @@ lemma exists_structured_correlation {k : ℕ} (hk : 2 ≤ k)
         sq_nonneg (1 - Parameters.η k δ)]
     · rw [hD]
       norm_num
-      change δ + Parameters.γ k δ ≤ (Subspace.relativeDensity V A : ℝ)
+      rw [dens_pullback]
       linarith [Parameters.γ_le_η_sq_div_two k δ]
   · have hsmall : ∀ V : Combinatorics.Subspace (Fin m) (Fin (k + 1)) (Fin n),
         (Subspace.relativeDensity V A : ℝ) < δ + Parameters.η k δ ^ 2 / 2 := by
