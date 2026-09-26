@@ -7,6 +7,7 @@ module
 
 
 public import Mathlib.Algebra.MvPolynomial.Funext
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolynomialDegree
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.FreeFiber
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.GradedNorm
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Homogenization
@@ -151,24 +152,6 @@ section PointIdeal
 
 variable {K : Type*} [Field K] {k : ℕ}
 
-/-- Node A08 (step 5, auxiliary): substituting polynomials of total degree at most one does not
-increase the total degree (a local copy of `totalDegree_aeval_le_of_totalDegree_le_one` from
-`Algebra/BaseChange.lean`, which cannot be imported here). -/
-theorem totalDegree_aeval_le_of_totalDegree_le_one' {f : Fin k → MvPolynomial (Fin k) K}
-    (hf : ∀ i, (f i).totalDegree ≤ 1) (g : MvPolynomial (Fin k) K) :
-    (aeval f g).totalDegree ≤ g.totalDegree := by
-  conv_lhs => rw [g.as_sum]
-  rw [map_sum]
-  refine (totalDegree_finsetSum _ _).trans (Finset.sup_le fun α hα ↦ ?_)
-  rw [aeval_monomial, algebraMap_eq]
-  refine (totalDegree_mul _ _).trans ?_
-  rw [totalDegree_C, zero_add, Finsupp.prod]
-  refine (totalDegree_finsetProd _ _).trans ?_
-  refine (Finset.sum_le_sum fun i _ ↦
-    (totalDegree_pow _ _).trans (Nat.mul_le_mul_left (α i) (hf i))).trans ?_
-  simp only [mul_one]
-  exact le_totalDegree hα
-
 /-- Node A08 (step 5): **a polynomial of total degree `< m` lying in `𝔪ₐ ^ m` is zero**: after
 translating the point `a` to the origin, all monomials of an element of `𝔪₀ ^ m` have degree
 `≥ m`. -/
@@ -180,7 +163,7 @@ theorem eq_zero_of_mem_pointIdeal_pow_of_totalDegree_lt {a : Fin k → K} {m : �
     at hg
   obtain ⟨g', hg', rfl⟩ := hg
   have hle : g'.totalDegree ≤ (translate a g').totalDegree := by
-    have h := totalDegree_aeval_le_of_totalDegree_le_one' (f := fun i ↦ X i + C (a i))
+    have h := totalDegree_aeval_le_of_totalDegree_le_one (f := fun i ↦ X i + C (a i))
       (fun i ↦ (totalDegree_add _ _).trans
         (max_le (totalDegree_X i).le (by rw [totalDegree_C]; exact Nat.zero_le _)))
       (translate a g')

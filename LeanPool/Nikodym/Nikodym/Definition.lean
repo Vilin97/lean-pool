@@ -6,10 +6,9 @@ Authors: Shengtong Zhang
 module
 
 
-public import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.Tactic
+public import Mathlib.LinearAlgebra.Pi
+public import Mathlib.Data.Fintype.Pi
+public import Mathlib.Data.Fintype.Card
 
 /-!
 # Finite field Nikodym sets

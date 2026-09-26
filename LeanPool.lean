@@ -6493,6 +6493,7 @@ public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LinearNormalization
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.LocalParameters
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.NormalizationSetting
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolyAsymptotics
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolynomialDegree
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.ProperCut
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.Transfer
 public import LeanPool.Nikodym.Nikodym.LowerBound.Arithmetic

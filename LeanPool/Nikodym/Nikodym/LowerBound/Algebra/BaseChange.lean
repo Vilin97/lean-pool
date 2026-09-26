@@ -6,6 +6,7 @@ Authors: Shengtong Zhang
 module
 
 
+public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.PolynomialDegree
 public import LeanPool.Nikodym.Nikodym.LowerBound.Algebra.CoefficientProjection
 public import LeanPool.Nikodym.Nikodym.LowerBound.Hilbert.Defs
 public import LeanPool.Nikodym.Nikodym.LowerBound.Jets.Defs
@@ -224,23 +225,6 @@ theorem map_pointIdeal (x : Fin d → K) :
 theorem map_jetIdeal (I : Ideal (MvPolynomial (Fin d) K)) (x : Fin d → K) (r : ℕ) :
     (jetIdeal I x r).map ι = jetIdeal (I.map ι) (fun i ↦ algebraMap K K' (x i)) r := by
   rw [jetIdeal, jetIdeal, Ideal.map_sup, Ideal.map_pow, map_pointIdeal]
-
-/-- Blueprint TR6 (auxiliary): substituting polynomials of total degree at most one does not
-increase the total degree. -/
-theorem totalDegree_aeval_le_of_totalDegree_le_one {f : Fin d → MvPolynomial (Fin d) K}
-    (hf : ∀ i, (f i).totalDegree ≤ 1) (g : MvPolynomial (Fin d) K) :
-    (aeval f g).totalDegree ≤ g.totalDegree := by
-  conv_lhs => rw [g.as_sum]
-  rw [map_sum]
-  refine (totalDegree_finsetSum _ _).trans (Finset.sup_le fun α hα ↦ ?_)
-  rw [aeval_monomial, algebraMap_eq]
-  refine (totalDegree_mul _ _).trans ?_
-  rw [totalDegree_C, zero_add, Finsupp.prod]
-  refine (totalDegree_finsetProd _ _).trans ?_
-  refine (Finset.sum_le_sum fun i _ ↦
-    (totalDegree_pow _ _).trans (Nat.mul_le_mul_left (α i) (hf i))).trans ?_
-  simp only [mul_one]
-  exact le_totalDegree hα
 
 /-- Blueprint TR6 (auxiliary): translation does not increase the total degree. -/
 theorem totalDegree_translate_le (x : Fin d → K) (g : MvPolynomial (Fin d) K) :

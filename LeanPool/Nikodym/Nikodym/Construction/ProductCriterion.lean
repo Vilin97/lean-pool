@@ -7,6 +7,8 @@ module
 
 
 public import LeanPool.Nikodym.Nikodym.Definition
+public import Mathlib.Data.Fintype.BigOperators
+public import Mathlib.Basic.Real.Basic
 
 /-!
 # Product-complement criterion
