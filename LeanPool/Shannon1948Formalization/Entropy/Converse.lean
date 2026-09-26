@@ -26,7 +26,7 @@ positive multiple of `entropyNat`.
 - `entropyNat_shannonAxioms`: `ShannonEntropyAxioms entropyNat`
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

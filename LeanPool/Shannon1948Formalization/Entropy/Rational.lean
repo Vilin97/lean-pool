@@ -23,7 +23,7 @@ It also includes a worked decomposition corresponding to Shannon's
 `(1/2, 1/3, 1/6)` narrative.
 -/
 
-@[expose] public section
+public section
 
 namespace LeanPool.Shannon1948Formalization
 
@@ -152,7 +152,7 @@ def workedP : ProbDist Bool :=
 
 /-- Second-stage alphabets for the worked decomposition:
 `true` has one outcome; `false` has two outcomes. -/
-def workedFib : Bool → Type
+@[expose] def workedFib : Bool → Type
   | true => Fin 1
   | false => Fin 2
 
@@ -161,7 +161,7 @@ instance : ∀ b : Bool, Fintype (workedFib b)
   | false => by simpa [workedFib] using (inferInstance : Fintype (Fin 2))
 
 /-- Second-stage conditional probabilities for the worked decomposition. -/
-def workedQ : (b : Bool) → ProbDist (workedFib b)
+@[expose] def workedQ : (b : Bool) → ProbDist (workedFib b)
   | true => by
       change ProbDist (Fin 1)
       exact (uniformPNat ⟨1, by norm_num⟩ : ProbDist (Fin 1))

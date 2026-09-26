@@ -14,7 +14,7 @@ import LeanPool.ChannelCapacity.StrictConcavity
 Capacity and generic existence/uniqueness packaging for maximizing mutual information.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory
 open ProbabilityTheory

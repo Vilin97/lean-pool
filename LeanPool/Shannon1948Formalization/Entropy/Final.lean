@@ -23,7 +23,7 @@ Combines the rational characterization and continuity extension to prove:
 - base-parametric uniqueness (`entropyBase_unique`).
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

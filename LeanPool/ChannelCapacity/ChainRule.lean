@@ -21,7 +21,7 @@ The main theorem rewrites the KL divergence from the joint law `p ⊗ k` to the 
 against `ν`.
 -/
 
-@[expose] public section
+public section
 
 open MeasureTheory ProbabilityTheory
 open scoped ENNReal

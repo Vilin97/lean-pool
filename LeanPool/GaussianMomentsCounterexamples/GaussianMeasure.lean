@@ -12,7 +12,7 @@ public import Mathlib.Algebra.MvPolynomial.Eval
 /-! The canonical Gaussian probability space and its polynomial integrability.
 All expectations in this development are genuine Bochner integrals. -/
 
-@[expose] public section
+public section
 
 
 noncomputable section
@@ -22,7 +22,7 @@ open scoped BigOperators
 namespace GaussianMomentsCounterexamples
 
 /-- The law of `n` independent standard real Gaussian coordinates. -/
-def gaussianMeasure (n : ℕ) : Measure (Fin n → ℝ) :=
+@[expose] def gaussianMeasure (n : ℕ) : Measure (Fin n → ℝ) :=
   Measure.pi (fun _ => gaussianReal 0 1)
 
 instance (n : ℕ) : IsProbabilityMeasure (gaussianMeasure n) := by
@@ -30,11 +30,11 @@ instance (n : ℕ) : IsProbabilityMeasure (gaussianMeasure n) := by
   infer_instance
 
 /-- Evaluate a complex polynomial on real coordinates. -/
-def realEval {n : ℕ} (P : MvPolynomial (Fin n) ℂ) (x : Fin n → ℝ) : ℂ :=
+@[expose] def realEval {n : ℕ} (P : MvPolynomial (Fin n) ℂ) (x : Fin n → ℝ) : ℂ :=
   MvPolynomial.eval (fun i => (x i : ℂ)) P
 
 /-- Genuine Gaussian expectation of a complex polynomial. -/
-def expectation {n : ℕ} (P : MvPolynomial (Fin n) ℂ) : ℂ :=
+@[expose] def expectation {n : ℕ} (P : MvPolynomial (Fin n) ℂ) : ℂ :=
   ∫ x, realEval P x ∂gaussianMeasure n
 
 lemma integrable_real_pow (k : ℕ) :
@@ -65,7 +65,7 @@ theorem integrable_realEval {n : ℕ} (P : MvPolynomial (Fin n) ℂ) :
     exact hP.add hQ
 
 /-- The conjecture with its actual eventual-vanishing quantifiers. -/
-def GMC (n : ℕ) : Prop :=
+@[expose] def GMC (n : ℕ) : Prop :=
   ∀ P : MvPolynomial (Fin n) ℂ,
     (∀ m : ℕ, 1 ≤ m → expectation (P ^ m) = 0) →
     ∀ Q : MvPolynomial (Fin n) ℂ,
@@ -118,7 +118,7 @@ theorem expectation_X_pow {n : ℕ} (i : Fin n) (k : ℕ) :
     (integrable_complex_pow k).aestronglyMeasurable
 
 /-- The integral is a complex-linear functional on the entire polynomial ring. -/
-def expectationLinear (n : ℕ) : MvPolynomial (Fin n) ℂ →ₗ[ℂ] ℂ where
+@[expose] def expectationLinear (n : ℕ) : MvPolynomial (Fin n) ℂ →ₗ[ℂ] ℂ where
   toFun := expectation
   map_add' := expectation_add
   map_smul' c P := by

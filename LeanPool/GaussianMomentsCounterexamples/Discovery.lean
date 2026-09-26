@@ -21,7 +21,7 @@ import Mathlib.Tactic.Ring
 /-! Exact formal inverse-branch calculations for the two explicit examples.
 These do not assert a general Lagrange–Good or half-pair inversion theorem. -/
 
-@[expose] public section
+public section
 noncomputable section
 namespace GaussianMomentsCounterexamples
 open PowerSeries
@@ -49,7 +49,7 @@ theorem geometricSeries_eq_inv : geometricSeries = (1 - X : ℂ⟦X⟧)⁻¹ := 
   simp
 
 /-- The branch t/(1-t), with formal division by a unit. -/
-def branchZeta : ℂ⟦X⟧ := X * geometricSeries
+@[expose] def branchZeta : ℂ⟦X⟧ := X * geometricSeries
 
 lemma one_add_branchZeta : 1 + branchZeta = geometricSeries := by
   unfold branchZeta
@@ -77,7 +77,7 @@ theorem discoveryBranch_equation (i : Fin 2) :
     rw [one_add_branchZeta]; rfl
 
 /-- The polynomial map whose evaluation is `discoveryH`. -/
-def discoveryHPolynomial : Fin 2 → MvPolynomial (Fin 2) ℂ :=
+@[expose] def discoveryHPolynomial : Fin 2 → MvPolynomial (Fin 2) ℂ :=
   ![(1 - MvPolynomial.X 0) * (1 + MvPolynomial.X 1), 1 + MvPolynomial.X 1]
 
 theorem discoveryHPolynomial_eval (z : Fin 2 → ℂ⟦X⟧) (i : Fin 2) :

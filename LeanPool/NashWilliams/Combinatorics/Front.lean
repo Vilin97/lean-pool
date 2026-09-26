@@ -9,4 +9,4 @@ public import LeanPool.NashWilliams.Combinatorics.Front.NashWilliams
 
 /-! Nash-Williams fronts, their ranks and restrictions, and the Nash-Williams theorem. -/
 
-@[expose] public section
+public section

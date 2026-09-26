@@ -10,4 +10,4 @@ public import LeanPool.NashWilliams.Order.WellQuasiOrder.Regular
 
 /-! Monotone subsequences and regular sequences in well-quasi-orders. -/
 
-@[expose] public section
+public section

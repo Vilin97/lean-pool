@@ -17,7 +17,7 @@ import Mathlib.Tactic.Ring
 
 /-! Finite coefficient identities underlying the Gaussian counterexamples. -/
 
-@[expose] public section
+public section
 
 namespace GaussianMomentsCounterexamples
 open Finset

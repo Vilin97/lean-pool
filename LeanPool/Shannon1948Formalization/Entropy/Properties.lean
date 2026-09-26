@@ -26,7 +26,7 @@ Gibbs inequality and concavity of `negMulLog`.
 6. `condEntropy_nonneg` — conditional entropy is nonnegative
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section

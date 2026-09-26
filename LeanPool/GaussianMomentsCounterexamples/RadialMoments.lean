@@ -10,7 +10,7 @@ public import LeanPool.GaussianMomentsCounterexamples.DimensionTwo
 /-! Exact radial and two-weight moment formulas in dimension two.
 No one-variable Factorial Conjecture or two-dimensional exclusion theorem is assumed. -/
 
-@[expose] public section
+public section
 noncomputable section
 open MvPolynomial Finset
 open scoped BigOperators

@@ -22,7 +22,7 @@ Main outputs:
 - positivity of the scale factor `K`.
 -/
 
-@[expose] public section
+public section
 namespace LeanPool.Shannon1948Formalization
 
 noncomputable section
@@ -288,7 +288,7 @@ lemma Apos_monotone
   hH.uniformMonotone.monotone
 
 /-- Entropy-form expression with natural logarithm. -/
-def entropyNat
+@[expose] def entropyNat
     {α : Type} [Fintype α]
     (p : ProbDist α) : ℝ :=
   -∑ a, p a * Real.log (p a)

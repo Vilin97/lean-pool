@@ -10,18 +10,18 @@ public import LeanPool.GaussianMomentsCounterexamples.Coordinates
 
 /-! Normalized complex Gaussian contractions, derived from real Gaussian Stein identities. -/
 
-@[expose] public section
+public section
 noncomputable section
 open MeasureTheory ProbabilityTheory MvPolynomial
 namespace GaussianMomentsCounterexamples
 
 /-- Differentiation with respect to Z in the invertible (W,Z) coordinates. -/
-def derivZ {n : ℕ} (i j : Fin n) : Derivation ℂ (MvPolynomial (Fin n) ℂ)
+@[expose] def derivZ {n : ℕ} (i j : Fin n) : Derivation ℂ (MvPolynomial (Fin n) ℂ)
     (MvPolynomial (Fin n) ℂ) :=
   normalization • (pderiv i - Complex.I • pderiv j)
 
 /-- Differentiation with respect to W in the invertible (W,Z) coordinates. -/
-def derivW {n : ℕ} (i j : Fin n) : Derivation ℂ (MvPolynomial (Fin n) ℂ)
+@[expose] def derivW {n : ℕ} (i j : Fin n) : Derivation ℂ (MvPolynomial (Fin n) ℂ)
     (MvPolynomial (Fin n) ℂ) :=
   normalization • (pderiv i + Complex.I • pderiv j)
 

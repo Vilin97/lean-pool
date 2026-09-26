@@ -10,7 +10,7 @@ public import LeanPool.GaussianMomentsCounterexamples.AlgebraicMoments
 
 /-! Agreement of the natural-coordinate algebraic moment functionals with actual integrals. -/
 
-@[expose] public section
+public section
 noncomputable section
 open MeasureTheory ProbabilityTheory MvPolynomial
 namespace GaussianMomentsCounterexamples

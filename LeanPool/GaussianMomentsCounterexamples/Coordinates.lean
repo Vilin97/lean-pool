@@ -16,17 +16,17 @@ import Mathlib.Tactic.LinearCombination
 
 /-! Explicit polynomials and normalized complex Gaussian coordinates. -/
 
-@[expose] public section
+public section
 
 noncomputable section
 namespace GaussianMomentsCounterexamples
 open MvPolynomial
 
 /-- Natural complex coordinates are ordered `W, Z, T`. -/
-def naturalP3 : MvPolynomial (Fin 3) ℂ :=
+@[expose] def naturalP3 : MvPolynomial (Fin 3) ℂ :=
   (1 + X 1) * (X 0 - C (1 / 2) * (2 + X 1) * X 2 ^ 2)
 /-- Natural complex coordinates are ordered `W₁, Z₁, W₂, Z₂`. -/
-def naturalP4 : MvPolynomial (Fin 4) ℂ :=
+@[expose] def naturalP4 : MvPolynomial (Fin 4) ℂ :=
   (1 + X 3) * (X 0 * (1 - X 1) + X 2)
 
 theorem naturalP3_expansion : naturalP3 =
@@ -145,7 +145,7 @@ theorem naturalP4_ne_zero : naturalP4 ≠ 0 := by
   simp [h] at this
 
 /-- The normalization used in the manuscript. -/
-def normalization : ℂ := ((Real.sqrt 2 : ℝ) : ℂ)⁻¹
+@[expose] def normalization : ℂ := ((Real.sqrt 2 : ℝ) : ℂ)⁻¹
 
 lemma normalization_sq : normalization ^ 2 = 1 / 2 := by
   unfold normalization
@@ -153,11 +153,11 @@ lemma normalization_sq : normalization ^ 2 = 1 / 2 := by
   norm_num [Real.sq_sqrt]
 
 /-- The normalized complex coordinate (Xᵢ + iXⱼ)/√2. -/
-def normalizedZ {n : ℕ} (i j : Fin n) : MvPolynomial (Fin n) ℂ :=
+@[expose] def normalizedZ {n : ℕ} (i j : Fin n) : MvPolynomial (Fin n) ℂ :=
   C normalization * (X i + C Complex.I * X j)
 
 /-- The conjugate normalized coordinate (Xᵢ - iXⱼ)/√2. -/
-def normalizedW {n : ℕ} (i j : Fin n) : MvPolynomial (Fin n) ℂ :=
+@[expose] def normalizedW {n : ℕ} (i j : Fin n) : MvPolynomial (Fin n) ℂ :=
   C normalization * (X i - C Complex.I * X j)
 
 lemma recoverX {n : ℕ} (i j : Fin n) :
@@ -200,35 +200,35 @@ lemma recombineZ {n : ℕ} (a b : MvPolynomial (Fin n) ℂ) :
   linear_combination b * h
 
 /-- Substitution from natural complex coordinates into the real-coordinate polynomial ring. -/
-def normalizedSub3 : MvPolynomial (Fin 3) ℂ →ₐ[ℂ] MvPolynomial (Fin 3) ℂ :=
+@[expose] def normalizedSub3 : MvPolynomial (Fin 3) ℂ →ₐ[ℂ] MvPolynomial (Fin 3) ℂ :=
   aeval ![normalizedW 0 1, normalizedZ 0 1, X 2]
 
 /-- Substitute two normalized conjugate pairs into four real coordinates. -/
-def normalizedSub4 : MvPolynomial (Fin 4) ℂ →ₐ[ℂ] MvPolynomial (Fin 4) ℂ :=
+@[expose] def normalizedSub4 : MvPolynomial (Fin 4) ℂ →ₐ[ℂ] MvPolynomial (Fin 4) ℂ :=
   aeval ![normalizedW 0 1, normalizedZ 0 1, normalizedW 2 3, normalizedZ 2 3]
 
 /-- Recover three original coordinates from the natural complex coordinates. -/
-def inverseSub3 : MvPolynomial (Fin 3) ℂ →ₐ[ℂ] MvPolynomial (Fin 3) ℂ :=
+@[expose] def inverseSub3 : MvPolynomial (Fin 3) ℂ →ₐ[ℂ] MvPolynomial (Fin 3) ℂ :=
   aeval ![C normalization * (X 0 + X 1),
     C (Complex.I * normalization) * (X 0 - X 1), X 2]
 
 /-- Recover four original coordinates from two natural conjugate pairs. -/
-def inverseSub4 : MvPolynomial (Fin 4) ℂ →ₐ[ℂ] MvPolynomial (Fin 4) ℂ :=
+@[expose] def inverseSub4 : MvPolynomial (Fin 4) ℂ →ₐ[ℂ] MvPolynomial (Fin 4) ℂ :=
   aeval ![C normalization * (X 0 + X 1),
     C (Complex.I * normalization) * (X 0 - X 1),
     C normalization * (X 2 + X 3),
     C (Complex.I * normalization) * (X 2 - X 3)]
 
 /-- The explicit three-variable counterexample, on the original real coordinates. -/
-def P3 : MvPolynomial (Fin 3) ℂ := normalizedSub3 naturalP3
+@[expose] def P3 : MvPolynomial (Fin 3) ℂ := normalizedSub3 naturalP3
 
 /-- The linear multiplier witnessing nonvanishing mixed moments in three dimensions. -/
-def Q3 : MvPolynomial (Fin 3) ℂ := normalizedZ 0 1
+@[expose] def Q3 : MvPolynomial (Fin 3) ℂ := normalizedZ 0 1
 
 /-- The explicit four-variable counterexample, on the original real coordinates. -/
-def P4 : MvPolynomial (Fin 4) ℂ := normalizedSub4 naturalP4
+@[expose] def P4 : MvPolynomial (Fin 4) ℂ := normalizedSub4 naturalP4
 
 /-- The linear multiplier witnessing nonvanishing mixed moments in four dimensions. -/
-def Q4 : MvPolynomial (Fin 4) ℂ := normalizedZ 2 3
+@[expose] def Q4 : MvPolynomial (Fin 4) ℂ := normalizedZ 2 3
 
 end GaussianMomentsCounterexamples

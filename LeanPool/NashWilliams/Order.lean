@@ -15,4 +15,4 @@ import Mathlib.Tactic.NormNum.Pow
 
 /-! Results about well- and better-quasi-orders. -/
 
-@[expose] public section
+public section

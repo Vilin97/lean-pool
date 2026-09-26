@@ -41,7 +41,7 @@ import that one. The only lemmas the two developments share are the generic help
 `NashWilliams.Data`.
 -/
 
-@[expose] public section
+public section
 
 open Set List
 
