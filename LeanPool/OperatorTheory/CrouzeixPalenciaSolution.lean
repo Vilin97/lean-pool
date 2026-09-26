@@ -16,9 +16,9 @@ public import LeanPool.OperatorTheory.Operator.Crouzeix.SmoothSupportDomain
 /-!
 # Operator theory (Solution)
 
-Redeclare-bridge: every definition and theorem from
-`CrouzeixPalenciaChallenge.lean` is restated in the `PalomarCrouzeixPalencia`
-namespace and closed by delegating to the proof library.
+Compatibility namespace for the upstream `CrouzeixPalenciaChallenge.lean` statements.
+The definitions abbreviate the proof library's public representations, and the
+theorems delegate to its proofs.
 -/
 
 @[expose] public section
@@ -30,17 +30,16 @@ namespace PalomarCrouzeixPalencia
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
 
 /-- The numerical range of a bounded operator. -/
-noncomputable def numericalRange (A : E →L[ℂ] E) : Set ℂ :=
-  { z | ∃ x : E, ‖x‖ = 1 ∧ ⟪x, A x⟫_ℂ = z }
+noncomputable abbrev numericalRange (A : E →L[ℂ] E) : Set ℂ :=
+  _root_.numericalRange A
 
 /-- The supremum norm of a polynomial on a set. -/
-noncomputable def polynomialSupNorm (p : Polynomial ℂ) (X : Set ℂ) : ℝ :=
-  ⨆ z ∈ X, ‖Polynomial.eval z p‖
+noncomputable abbrev polynomialSupNorm (p : Polynomial ℂ) (X : Set ℂ) : ℝ :=
+  _root_.polynomialSupNorm p X
 
 /-- The predicate that `X` is a `K`-polynomial spectral set for `A`. -/
-def IsKPolynomialSpectralSet (A : E →L[ℂ] E) (K : ℝ) (X : Set ℂ) : Prop :=
-  spectrum ℂ (A : E →L[ℂ] E) ⊆ X ∧
-  ∀ p : Polynomial ℂ, ‖Polynomial.aeval A p‖ ≤ K * polynomialSupNorm p X
+abbrev IsKPolynomialSpectralSet (A : E →L[ℂ] E) (K : ℝ) (X : Set ℂ) : Prop :=
+  _root_.IsKPolynomialSpectralSet A K X
 
 universe u
 
