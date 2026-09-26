@@ -340,36 +340,13 @@ theorem oneStepAnnealedImprovement_homogenizationScale_of_auxiliary
       Cshift * Real.rpow (3 : ℝ)
           (-(section53CoarseFluctuationBetaParams params) * (l : ℝ)) *
           widetildeThetaAtScale P (0 : ℤ) hP4 ≤ sigma / 2 := by
-    have hdecay_le :
-        Real.rpow (3 : ℝ)
-            (-(section53CoarseFluctuationBetaParams params) * (l : ℝ)) ≤
-          Real.rpow (3 : ℝ)
-            (-(section53CoarseFluctuationBetaParams params) * (h : ℝ)) :=
-      rpow_three_neg_mul_antitone_nat hβpos hl
-    have hdecay_nonneg :
-        0 ≤ Real.rpow (3 : ℝ)
-          (-(section53CoarseFluctuationBetaParams params) * (l : ℝ)) :=
-      Real.rpow_nonneg (by norm_num : 0 ≤ (3 : ℝ)) _
-    have hdecay_h_nonneg :
-        0 ≤ Real.rpow (3 : ℝ)
-          (-(section53CoarseFluctuationBetaParams params) * (h : ℝ)) :=
-      Real.rpow_nonneg (by norm_num : 0 ≤ (3 : ℝ)) _
-    calc
-      Cshift * Real.rpow (3 : ℝ)
-          (-(section53CoarseFluctuationBetaParams params) * (l : ℝ)) *
-          widetildeThetaAtScale P (0 : ℤ) hP4
-          ≤ C * Real.rpow (3 : ℝ)
-              (-(section53CoarseFluctuationBetaParams params) * (l : ℝ)) *
-              widetildeThetaAtScale P (0 : ℤ) hP4 := by
-            exact mul_le_mul_of_nonneg_right
-              (mul_le_mul_of_nonneg_right hCshift_le_C hdecay_nonneg) hW0_nonneg
-      _ ≤ C * Real.rpow (3 : ℝ)
-              (-(section53CoarseFluctuationBetaParams params) * (h : ℝ)) *
-              widetildeThetaAtScale P (0 : ℤ) hP4 := by
-            have hC_nonneg : 0 ≤ C := hC_pos.le
-            exact mul_le_mul_of_nonneg_right
-              (mul_le_mul_of_nonneg_left hdecay_le hC_nonneg) hW0_nonneg
-      _ ≤ sigma / 2 := hsmall_tail
+    have hdecay := rpow_three_neg_mul_antitone_nat hβpos hl
+    have hcoefficient := mul_le_mul_of_nonneg_right hCshift_le_C
+      (Real.rpow_nonneg (by norm_num : 0 ≤ (3 : ℝ))
+        (-(section53CoarseFluctuationBetaParams params) * (l : ℝ)))
+    exact (mul_le_mul_of_nonneg_right
+      (hcoefficient.trans (mul_le_mul_of_nonneg_left hdecay hC_pos.le))
+      hW0_nonneg).trans hsmall_tail
   have hdelta_at_le :
       Cstep * Real.rpow delta (1 / 4 : ℝ) ≤ sigma / 2 := by
     have hdelta_pow_nonneg : 0 ≤ Real.rpow delta (1 / 4 : ℝ) :=
