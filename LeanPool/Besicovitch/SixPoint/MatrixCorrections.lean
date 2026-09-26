@@ -41,6 +41,36 @@ theorem pairCorrection_posSemidef [Finite ι] (r : ℝ) (i j : ι) :
     (pairCorrection r i j).PosSemidef :=
   (Matrix.posSemidef_vecMulVec_self_star (pairVector r i j)).smul (abs_nonneg r)
 
+/-- Complete a five-vector certificate with positive two-coordinate corrections. -/
+def fivePairCompletion (base : Matrix (Fin 5) (Fin 5) ℝ)
+    (residual : Fin 5 → Fin 5 → ℝ) : Matrix (Fin 5) (Fin 5) ℝ :=
+  base +
+    pairCorrection (residual 0 1) 0 1 +
+    pairCorrection (residual 0 2) 0 2 +
+    pairCorrection (residual 0 3) 0 3 +
+    pairCorrection (residual 0 4) 0 4 +
+    pairCorrection (residual 1 2) 1 2 +
+    pairCorrection (residual 1 3) 1 3 +
+    pairCorrection (residual 1 4) 1 4 +
+    pairCorrection (residual 2 3) 2 3 +
+    pairCorrection (residual 2 4) 2 4 +
+    pairCorrection (residual 3 4) 3 4
+
+/-- Pairwise completion preserves positive semidefiniteness. -/
+theorem fivePairCompletion_posSemidef {base : Matrix (Fin 5) (Fin 5) ℝ}
+    (hbase : base.PosSemidef) (residual : Fin 5 → Fin 5 → ℝ) :
+    (fivePairCompletion base residual).PosSemidef := by
+  have h := hbase.add (pairCorrection_posSemidef (residual 0 1) 0 1)
+  have h := h.add (pairCorrection_posSemidef (residual 0 2) 0 2)
+  have h := h.add (pairCorrection_posSemidef (residual 0 3) 0 3)
+  have h := h.add (pairCorrection_posSemidef (residual 0 4) 0 4)
+  have h := h.add (pairCorrection_posSemidef (residual 1 2) 1 2)
+  have h := h.add (pairCorrection_posSemidef (residual 1 3) 1 3)
+  have h := h.add (pairCorrection_posSemidef (residual 1 4) 1 4)
+  have h := h.add (pairCorrection_posSemidef (residual 2 3) 2 3)
+  have h := h.add (pairCorrection_posSemidef (residual 2 4) 2 4)
+  exact h.add (pairCorrection_posSemidef (residual 3 4) 3 4)
+
 omit [DecidableEq ι] in
 /-- The signed absolute value recovers the original residual. -/
 theorem abs_mul_pairSign (r : ℝ) : |r| * pairSign r = r := by

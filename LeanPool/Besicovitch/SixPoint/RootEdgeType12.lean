@@ -79,17 +79,7 @@ private def residual (i j : Five) : ℝ :=
   targetOffDiagonal i j - factorGram i j
 
 private def certificateMatrix : Matrix Five Five ℝ :=
-  factorGram + (1 / 10000000 : ℝ) • 1 +
-    pairCorrection (residual 0 1) 0 1 +
-    pairCorrection (residual 0 2) 0 2 +
-    pairCorrection (residual 0 3) 0 3 +
-    pairCorrection (residual 0 4) 0 4 +
-    pairCorrection (residual 1 2) 1 2 +
-    pairCorrection (residual 1 3) 1 3 +
-    pairCorrection (residual 1 4) 1 4 +
-    pairCorrection (residual 2 3) 2 3 +
-    pairCorrection (residual 2 4) 2 4 +
-    pairCorrection (residual 3 4) 3 4
+  fivePairCompletion (factorGram + (1 / 10000000 : ℝ) • 1) (residual)
 
 private theorem certificateMatrix_posSemidef : certificateMatrix.PosSemidef := by
   have hfactor : factorGram.PosSemidef := by
@@ -98,17 +88,7 @@ private theorem certificateMatrix_posSemidef : certificateMatrix.PosSemidef := b
     exact Matrix.posSemidef_vecMulVec_self_star (factorRow i)
   have hepsilon : ((1 / 10000000 : ℝ) • (1 : Matrix Five Five ℝ)).PosSemidef :=
     Matrix.PosSemidef.one.smul (by norm_num)
-  have h := hfactor.add hepsilon
-  have h := h.add (pairCorrection_posSemidef (residual 0 1) 0 1)
-  have h := h.add (pairCorrection_posSemidef (residual 0 2) 0 2)
-  have h := h.add (pairCorrection_posSemidef (residual 0 3) 0 3)
-  have h := h.add (pairCorrection_posSemidef (residual 0 4) 0 4)
-  have h := h.add (pairCorrection_posSemidef (residual 1 2) 1 2)
-  have h := h.add (pairCorrection_posSemidef (residual 1 3) 1 3)
-  have h := h.add (pairCorrection_posSemidef (residual 1 4) 1 4)
-  have h := h.add (pairCorrection_posSemidef (residual 2 3) 2 3)
-  have h := h.add (pairCorrection_posSemidef (residual 2 4) 2 4)
-  exact h.add (pairCorrection_posSemidef (residual 3 4) 3 4)
+  exact fivePairCompletion_posSemidef (hfactor.add hepsilon) (residual)
 
 private theorem factorGram_apply_comm (i j : Five) : factorGram i j = factorGram j i := by
   simp only [factorGram, Matrix.sum_apply, Matrix.vecMulVec_apply]
@@ -149,7 +129,7 @@ private theorem factorGram_apply_comm (i j : Five) : factorGram i j = factorGram
 private theorem certificateMatrix_offDiagonal {i j : Five} (hij : i ≠ j) :
     certificateMatrix i j = targetOffDiagonal i j := by
   fin_cases i <;> fin_cases j <;>
-    simp_all [certificateMatrix, residual, targetOffDiagonal]
+    simp_all [certificateMatrix, fivePairCompletion, residual, targetOffDiagonal]
 
 private def diagonal₀ : ℝ :=
   factorGram 0 0 + 1 / 10000000 + |residual 0 1| + |residual 0 2| +
@@ -172,19 +152,19 @@ private def diagonal₄ : ℝ :=
     |residual 2 4| + |residual 3 4|
 
 private theorem certificateMatrix_diagonal₀_eq : certificateMatrix 0 0 = diagonal₀ := by
-  simp [certificateMatrix, diagonal₀]
+  simp [certificateMatrix, fivePairCompletion, diagonal₀]
 
 private theorem certificateMatrix_diagonal₁_eq : certificateMatrix 1 1 = diagonal₁ := by
-  simp [certificateMatrix, diagonal₁]
+  simp [certificateMatrix, fivePairCompletion, diagonal₁]
 
 private theorem certificateMatrix_diagonal₂_eq : certificateMatrix 2 2 = diagonal₂ := by
-  simp [certificateMatrix, diagonal₂]
+  simp [certificateMatrix, fivePairCompletion, diagonal₂]
 
 private theorem certificateMatrix_diagonal₃_eq : certificateMatrix 3 3 = diagonal₃ := by
-  simp [certificateMatrix, diagonal₃]
+  simp [certificateMatrix, fivePairCompletion, diagonal₃]
 
 private theorem certificateMatrix_diagonal₄_eq : certificateMatrix 4 4 = diagonal₄ := by
-  simp [certificateMatrix, diagonal₄]
+  simp [certificateMatrix, fivePairCompletion, diagonal₄]
 
 private theorem certificateMatrix_diagonal₀ :
     certificateMatrix 0 0 = 2294557211 / 3225000000 := by

@@ -319,17 +319,7 @@ private def residual (certificate : LensCertificate) (i j : Five) : ℝ :=
   targetOffDiagonal certificate i j - factorGram certificate i j
 
 private def certificateMatrix (certificate : LensCertificate) : Matrix Five Five ℝ :=
-  factorGram certificate + (1 / 1000000 : ℝ) • 1 +
-    pairCorrection (residual certificate 0 1) 0 1 +
-    pairCorrection (residual certificate 0 2) 0 2 +
-    pairCorrection (residual certificate 0 3) 0 3 +
-    pairCorrection (residual certificate 0 4) 0 4 +
-    pairCorrection (residual certificate 1 2) 1 2 +
-    pairCorrection (residual certificate 1 3) 1 3 +
-    pairCorrection (residual certificate 1 4) 1 4 +
-    pairCorrection (residual certificate 2 3) 2 3 +
-    pairCorrection (residual certificate 2 4) 2 4 +
-    pairCorrection (residual certificate 3 4) 3 4
+  fivePairCompletion (factorGram certificate + (1 / 1000000 : ℝ) • 1) (residual certificate)
 
 private theorem certificateMatrix_posSemidef (certificate : LensCertificate) :
     (certificateMatrix certificate).PosSemidef := by
@@ -339,17 +329,7 @@ private theorem certificateMatrix_posSemidef (certificate : LensCertificate) :
     exact Matrix.posSemidef_vecMulVec_self_star (factorRow certificate i)
   have hepsilon : ((1 / 1000000 : ℝ) • (1 : Matrix Five Five ℝ)).PosSemidef :=
     Matrix.PosSemidef.one.smul (by norm_num)
-  have h := hfactor.add hepsilon
-  have h := h.add (pairCorrection_posSemidef (residual certificate 0 1) 0 1)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 0 2) 0 2)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 0 3) 0 3)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 0 4) 0 4)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 1 2) 1 2)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 1 3) 1 3)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 1 4) 1 4)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 2 3) 2 3)
-  have h := h.add (pairCorrection_posSemidef (residual certificate 2 4) 2 4)
-  exact h.add (pairCorrection_posSemidef (residual certificate 3 4) 3 4)
+  exact fivePairCompletion_posSemidef (hfactor.add hepsilon) (residual certificate)
 
 private theorem factorGram_apply_comm (certificate : LensCertificate) (i j : Five) :
     factorGram certificate i j = factorGram certificate j i := by
@@ -402,7 +382,7 @@ private theorem certificateMatrix_offDiagonal (certificate : LensCertificate) {i
     (hij : i ≠ j) :
     certificateMatrix certificate i j = targetOffDiagonal certificate i j := by
   fin_cases i <;> fin_cases j <;>
-    simp_all [certificateMatrix, residual, targetOffDiagonal]
+    simp_all [certificateMatrix, fivePairCompletion, residual, targetOffDiagonal]
 
 private def diagonal₀ (certificate : LensCertificate) : ℝ :=
   factorGram certificate 0 0 + 1 / 1000000 + |residual certificate 0 1| +
@@ -426,23 +406,23 @@ private def diagonal₄ (certificate : LensCertificate) : ℝ :=
 
 private theorem certificateMatrix_diagonal₀ (certificate : LensCertificate) :
     certificateMatrix certificate 0 0 = diagonal₀ certificate := by
-  simp [certificateMatrix, diagonal₀]
+  simp [certificateMatrix, fivePairCompletion, diagonal₀]
 
 private theorem certificateMatrix_diagonal₁ (certificate : LensCertificate) :
     certificateMatrix certificate 1 1 = diagonal₁ certificate := by
-  simp [certificateMatrix, diagonal₁]
+  simp [certificateMatrix, fivePairCompletion, diagonal₁]
 
 private theorem certificateMatrix_diagonal₂ (certificate : LensCertificate) :
     certificateMatrix certificate 2 2 = diagonal₂ certificate := by
-  simp [certificateMatrix, diagonal₂]
+  simp [certificateMatrix, fivePairCompletion, diagonal₂]
 
 private theorem certificateMatrix_diagonal₃ (certificate : LensCertificate) :
     certificateMatrix certificate 3 3 = diagonal₃ certificate := by
-  simp [certificateMatrix, diagonal₃]
+  simp [certificateMatrix, fivePairCompletion, diagonal₃]
 
 private theorem certificateMatrix_diagonal₄ (certificate : LensCertificate) :
     certificateMatrix certificate 4 4 = diagonal₄ certificate := by
-  simp [certificateMatrix, diagonal₄]
+  simp [certificateMatrix, fivePairCompletion, diagonal₄]
 
 private theorem gram_sum_nonneg {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] (certificate : LensCertificate) (v : Five → E) :
