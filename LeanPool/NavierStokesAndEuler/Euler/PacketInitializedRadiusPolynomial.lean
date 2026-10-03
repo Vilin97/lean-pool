@@ -218,12 +218,23 @@ theorem primary_weak_le : weakRadius L ≤ 2*weakEnvelope W*(16*W+1) := by
   have hInv : inverseCost τ L.C₀ L.C₁ (D.initial τ hτ hτT.le).frameLower ≤ inverseEnvelope W := by
     unfold inverseCost transportCeiling
     calc
-      _ ≤ 2*(1+((2*W^2*W^2*W+W*W)*1+W*W))^2 := by gcongr
+      _ ≤ 2*(1+((2*W^2*W^2*W+W*W)*1+W*W))^2 :=
+        mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (by positivity) (add_le_add le_rfl
+          (add_le_add (mul_le_mul (add_le_add (mul_le_mul (mul_le_mul
+            (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hc0 hci 2) zero_le_two)
+            (pow_le_pow_left₀ h0 hC0 2) (sq_nonneg _) (by positivity)) hC1 h1 (by positivity))
+            (mul_le_mul hci hC1 h1 hW0)) ht1 ht0 (by positivity))
+            (mul_le_mul hci hC0 h0 hW0))) 2) zero_le_two
       _ = _ := by unfold inverseEnvelope; ring
   have hForm : formCost τ L.C₀ L.C₁ L.CH ≤ formEnvelope W := by
     unfold formCost derivativeCost
     calc
-      _ ≤ 9*(1*W+W)^2*(1+1^2*W) := by gcongr
+      _ ≤ 9*(1*W+W)^2*(1+1^2*W) :=
+        mul_le_mul (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ (add_nonneg (mul_nonneg ht0 h1) h0)
+            (add_le_add (mul_le_mul ht1 hC1 h1 zero_le_one) hC0) 2) (by norm_num))
+          (add_le_add le_rfl (mul_le_mul (pow_le_pow_left₀ ht0 ht1 2) hCH hh (sq_nonneg _)))
+          (add_nonneg zero_le_one (mul_nonneg (sq_nonneg τ) hh))
+          (mul_nonneg (by norm_num) (sq_nonneg _))
       _ = _ := by unfold formEnvelope; ring
   have hEp := endpointForcing_le L W hW hτi hRc hC1
   have he0 : 0 ≤ endpointForcingCost (Fin 4) 6 τ L.Rc L.C₁ := by
@@ -235,7 +246,8 @@ theorem primary_weak_le : weakRadius L ≤ 2*weakEnvelope W*(16*W+1) := by
     have hd : τ*derivativeCost τ L.C₀ L.C₁ ≤ 2*W := by
       unfold derivativeCost
       calc
-        _ ≤ 1*(1*W+W) := by gcongr
+        _ ≤ 1*(1*W+W) := mul_le_mul ht1 (add_le_add (mul_le_mul ht1 hC1 h1 zero_le_one) hC0)
+          (add_nonneg (mul_nonneg ht0 h1) h0) zero_le_one
         _ = _ := by ring
     have hd0 : 0 ≤ τ*derivativeCost τ L.C₀ L.C₁ := by unfold derivativeCost; positivity
     have heW : 0 ≤ endpointEnvelope W := by
@@ -307,7 +319,13 @@ theorem primary_forward_le : forwardRadius L ≤ 2*forwardEnvelope W*(64*W+1) :=
   have hba : frozenAmplitude (D.T-τ) L.C (18*L.Ri*L.C₀*L.C₁) ≤ 1+36*W^4 := by
     unfold frozenAmplitude
     calc
-      _ ≤ 1+2*W*1*(18*W*W*W) := by gcongr
+      _ ≤ 1+2*W*1*(18*W*W*W) := add_le_add le_rfl (mul_le_mul
+          (mul_le_mul (mul_le_mul_of_nonneg_left hC zero_le_two) hs1 hs0
+            (mul_nonneg zero_le_two hW0))
+          (mul_le_mul (mul_le_mul (mul_le_mul_of_nonneg_left hRi (by norm_num)) hC0 h0
+            (mul_nonneg (by norm_num) hW0)) hC1 h1 (mul_nonneg (mul_nonneg (by norm_num) hW0) hW0))
+          (mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) hi0) h0) h1)
+          (mul_nonneg (mul_nonneg zero_le_two hW0) zero_le_one))
       _ = _ := by ring
   have hba0 : 0 ≤ frozenAmplitude (D.T-τ) L.C (18*L.Ri*L.C₀*L.C₁) := by
     unfold frozenAmplitude
@@ -347,7 +365,9 @@ theorem requiredEnvelope_bounds (W : ℝ) (hW : 0 ≤ W) :
   have hps : 0 ≤ strongEnvelope W*(16*W+1) := mul_nonneg hs (by positivity)
   have hpf : 0 ≤ forwardEnvelope W*(64*W+1) := mul_nonneg hf (by positivity)
   unfold requiredEnvelope
-  exact ⟨by nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith⟩
+  exact ⟨by linarith only [hW, hj, hpw, hps, hpf], by linarith only [hW, hj, hpw, hps, hpf],
+    by linarith only [hW, hj, hpw, hps, hpf], by linarith only [hW, hj, hpw, hps, hpf],
+    by linarith only [hW, hj, hpw, hps, hpf]⟩
 
 theorem jetRadius_le (δ W : ℝ) (hδ : 0 < δ) (hi : δ⁻¹ ≤ W) : jetRadius δ ≤ jetEnvelope W := by
   have hi0 := (inv_pos.mpr hδ).le
@@ -361,10 +381,12 @@ theorem primary_required_le (δ : ℝ) (hδ : 0 < δ) (hi : δ⁻¹ ≤ W) :
   have hW0 := zero_le_one.trans hW
   have hb := requiredEnvelope_bounds W hW0
   have hw := primary_weak_le L W hW hτi hci hRc hC0 hC1 hCH
-  have hs := primary_gram_le L W hW hτi hci hRc hC0 hC1 1 zero_le_one (by linarith)
+  have hs := primary_gram_le L W hW hτi hci hRc hC0 hC1 1 zero_le_one (by linarith only [hτ, hτT,
+      hW, hT])
   have ht0 := traceCost_nonneg τ hτ.le
   have ht := EulerPacketParentTransverseCosts.traceCost_le τ W hτ L.history_length hτi
-  have hu := primary_gram_le L W hW hτi hci hRc hC0 hC1 (traceCost τ) ht0 (by linarith)
+  have hu := primary_gram_le L W hW hτi hci hRc hC0 hC1 (traceCost τ) ht0 (by linarith only [hτ,
+      hτT, hW, hT, ht])
   have hf := primary_forward_le L W hW hT hτi hC0 hC1 hC hRi
   have hsw := strongEnvelope_nonneg W hW0
   have hrc0 := L.Rc_nonneg
@@ -441,12 +463,14 @@ theorem physicalCost_le (Ri C0 C1 Df Da W : ℝ)
   have hb' : coeff (4*Ri) (18*Ri*C0*C1) ≤ coeff (4*W) (18*W^3) := by
     apply sobolevCoefficientAmplitude_mono_all 6 (by positivity) (by positivity) (by gcongr)
     calc
-      _ ≤ 18*W*W*W := by gcongr
+      _ ≤ 18*W*W*W := mul_le_mul (mul_le_mul (mul_le_mul_of_nonneg_left hRi (by norm_num)) hC0 hC00
+          (mul_nonneg (by norm_num) hW)) hC1 hC10 (mul_nonneg (mul_nonneg (by norm_num) hW) hW)
       _ = _ := by ring
   have hf' : coeff (4*Ri) (3*Ri*C0) ≤ coeff (4*W) (3*W^2) := by
     apply sobolevCoefficientAmplitude_mono_all 6 (by positivity) (by positivity) (by gcongr)
     calc
-      _ ≤ 3*W*W := by gcongr
+      _ ≤ 3*W*W := mul_le_mul (mul_le_mul_of_nonneg_left hRi (by norm_num)) hC0 hC00
+          (mul_nonneg (by norm_num) hW)
       _ = _ := by ring
   unfold physicalCost coordinateCost
   calc
@@ -463,7 +487,7 @@ theorem joined_common_le : L.commonCost ≤ commonEnvelope W := by
   have hi0 := joined_inverseRadius_nonneg L
   have ht0 := traceCost_nonneg τ hτ.le
   have ht := EulerPacketParentTransverseCosts.traceCost_le τ W hτ L.history_length hτi
-  have ht' : traceCost τ ≤ 2*W+2 := by linarith
+  have ht' : traceCost τ ≤ 2*W+2 := by linarith only [hW, ht]
   have ha0 := coeff_nonneg L.Rc L.C₀ hr h0
   have ha1 := coeff_nonneg L.Rc L.C₁ hr h1
   have haw := coeff_nonneg W W hW0 hW0
@@ -488,7 +512,7 @@ theorem primary_common_le (H : EulerTransversePacketPrimary.Budget L) :
   have hi0 := joined_inverseRadius_nonneg L
   have ht0 := traceCost_nonneg τ hτ.le
   have ht := EulerPacketParentTransverseCosts.traceCost_le τ W hτ L.history_length hτi
-  have ht' : τ⁻¹+traceCost τ ≤ 2*W+2 := by linarith
+  have ht' : τ⁻¹+traceCost τ ≤ 2*W+2 := by linarith only [hτi, ht]
   have hcoord0 : 0 ≤ τ⁻¹+traceCost τ := add_nonneg (inv_nonneg.mpr hτ.le) ht0
   have ha0 := coeff_nonneg L.Rc L.C₀ hr h0
   have ha1 := coeff_nonneg L.Rc L.C₁ hr h1
@@ -514,7 +538,7 @@ theorem normal_block_le {qR : ℝ} (N : NormalBudget D 6 qR) (W : ℝ) (hW : 0 �
   have hi := N.Ri_nonneg
   have hcr : N.coefficientRadius ≤ 5*W+1 := by
     unfold NormalBudget.coefficientRadius Data.correctorCoefficientRadius
-    linarith
+    linarith only [hNR, hNI]
   have hca : N.coefficientAmplitude ≤ 1+W+6*W^2+729*W^6 := by
     unfold NormalBudget.coefficientAmplitude Data.correctorCoefficientAmplitude
     calc

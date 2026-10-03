@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.Complex.Exponential
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketExistence
 import Mathlib.Analysis.ODE.ExistUnique
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # An actual global flow for a bounded, uniformly Lipschitz velocity

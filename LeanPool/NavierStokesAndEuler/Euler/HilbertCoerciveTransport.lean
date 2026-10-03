@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Coercive operator transport between Hilbert models
@@ -30,7 +31,7 @@ variable {V W : Type*}
 
 /-- Pull a genuine bounded operator back along a bounded linear coordinate map. -/
 def transportedOperator (D : V →L[ℝ] W) (A : W →L[ℝ] W) : V →L[ℝ] V :=
-  D.adjoint.comp (A.comp D)
+  (adjoint (𝕜 := ℝ) (E := V) (F := W) D).comp (A.comp D)
 
 /-- The transported bilinear form is exactly the original form on the image. -/
 theorem transportedOperator_inner (D : V →L[ℝ] W) (A : W →L[ℝ] W) (u v : V) :
@@ -51,6 +52,6 @@ theorem transportedOperator_coercive (D : V →L[ℝ] W) (A : W →L[ℝ] W)
 
 /-- The transported forcing is the actual adjoint pullback. -/
 theorem transported_forcing_inner (D : V →L[ℝ] W) (f : W) (v : V) :
-    ⟪D.adjoint f, v⟫_ℝ = ⟪f, D v⟫_ℝ := adjoint_inner_left D v f
+    ⟪adjoint (𝕜 := ℝ) (E := V) (F := W) D f, v⟫_ℝ = ⟪f, D v⟫_ℝ := adjoint_inner_left D v f
 
 end EulerHilbertCoerciveTransport

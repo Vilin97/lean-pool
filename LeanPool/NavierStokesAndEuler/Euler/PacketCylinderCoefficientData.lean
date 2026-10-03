@@ -66,10 +66,12 @@ def multiply (A : MatrixCoefficient T coef) (G : Field P T raw) :
 /-- Adjoint, bundling `path`, `orbit`, `translateCoefficientPath`, `exact` and the required
 compatibility proofs. -/
 def adjoint (A : MatrixCoefficient T coef) :
-    MatrixCoefficient T (fun z => (coef z).adjoint) where
-  path := pathAdjointMap A.path
+    MatrixCoefficient T
+      (fun z => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (coef z)) where
+  path := pathAdjointMap (α := Space) (K := Icc (0 : ℝ) T) (U := Space) (E := Space) A.path
   orbit := by
-    have he : translateCoefficientPath (pathAdjointMap A.path) =
+    have he : translateCoefficientPath
+          (pathAdjointMap (α := Space) (K := Icc (0 : ℝ) T) (U := Space) (E := Space) A.path) =
         (pathAdjointMap (α := Space) (K := Icc (0 : ℝ) T) (U := Space) (E := Space)) ∘
           translateCoefficientPath A.path := by
       funext a
@@ -79,9 +81,13 @@ def adjoint (A : MatrixCoefficient T coef) :
       intro x
       rfl
     rw [he]
-    exact (pathAdjointMap (α := Space) (K := Icc (0 : ℝ) T) (U := Space) (E :=
-        Space)).contDiff.comp A.orbit
-  raw_eq t x θ := by rw [A.raw_eq]; rfl
+    exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
+      (E := C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
+      (F := C(Icc (0 : ℝ) T, Space →ᵇ Space →L[ℝ] Space))
+      (pathAdjointMap (α := Space) (K := Icc (0 : ℝ) T) (U := Space) (E := Space))).comp A.orbit
+  raw_eq t x θ := by
+    exact congrArg (fun L => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) L)
+      (A.raw_eq t x θ)
 
 end MatrixCoefficient
 

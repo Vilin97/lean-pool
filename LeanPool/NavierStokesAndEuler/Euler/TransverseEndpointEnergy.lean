@@ -122,7 +122,7 @@ def endpointExtension (L : U →L[ℝ] E) : U →L[ℝ] E :=
 
 /-- The operator representing the actual stationary endpoint energy. -/
 def endpointOperator (L : U →L[ℝ] E) : U →L[ℝ] U :=
-  (endpointExtension S A c hc hA L).adjoint.comp
+  (adjoint (𝕜 := ℝ) (E := U) (F := E) (endpointExtension S A c hc hA L)).comp
     (A.comp (endpointExtension S A c hc hA L))
 
 theorem endpointOperator_inner (L : U →L[ℝ] E) (x y : U) :
@@ -198,8 +198,8 @@ def energyOperator : TimeLp T E →L[ℝ] TimeLp T E :=
 
 theorem energyOperator_inner (u v : TimeLp T E) :
     ⟪energyOperator T hT H u, v⟫_ℝ = ⟪u, v⟫_ℝ -
-      ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u),
-        initialPrimitiveTimeLp T hT v⟫_ℝ :=
+      ⟪timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u),
+        initialPrimitiveTimeLp (E := E) T hT v⟫_ℝ :=
   dirichletOperator_inner _ _ u v
 
 /-- The source upper Hessian bound and time smallness give actual coercivity,
@@ -233,24 +233,25 @@ theorem energyOperator_symmetric (hH : ∀ t, (H t).IsSymmetric) :
     energyOperator_inner, real_inner_comm u v]
   congr 1
   have hs := timeMultiplier_symmetric T hT H hH
-    (initialPrimitiveTimeLp T hT u) (initialPrimitiveTimeLp T hT v)
-  change ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u),
-      initialPrimitiveTimeLp T hT v⟫_ℝ =
-    ⟪initialPrimitiveTimeLp T hT u, timeMultiplier T hT H (initialPrimitiveTimeLp T hT v)⟫_ℝ at hs
+    (initialPrimitiveTimeLp (E := E) T hT u) (initialPrimitiveTimeLp (E := E) T hT v)
+  change ⟪timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u),
+      initialPrimitiveTimeLp (E := E) T hT v⟫_ℝ =
+    ⟪initialPrimitiveTimeLp (E := E) T hT u,
+      timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT v)⟫_ℝ at hs
   exact hs.trans (real_inner_comm _ _)
 
 omit [CompleteSpace E] in
 theorem initialPrimitive_transverse (u : transverseDerivatives T hT m)
     (t : Icc (0 : ℝ) T) :
-    initialPrimitive T hT (u : TimeLp T E) t =
-      terminalPrimitive T hT (u : TimeLp T E) t := by
+    initialPrimitive (E := E) T hT (u : TimeLp T E) t =
+      terminalPrimitive (E := E) T hT (u : TimeLp T E) t := by
   rw [initialPrimitive_eq_terminal_sub, u.property.1, sub_zero]
 
 omit [CompleteSpace E] in
 theorem initialPrimitiveTimeLp_transverse (u : transverseDerivatives T hT m) :
-    initialPrimitiveTimeLp T hT (u : TimeLp T E) = transversePrimitive T hT m u := by
-  change pathLpOperator T hT (initialPrimitive T hT (u : TimeLp T E)) =
-    pathLpOperator T hT (terminalPrimitive T hT (u : TimeLp T E))
+    initialPrimitiveTimeLp (E := E) T hT (u : TimeLp T E) = transversePrimitive T hT m u := by
+  change pathLpOperator (E := E) T hT (initialPrimitive (E := E) T hT (u : TimeLp T E)) =
+    pathLpOperator (E := E) T hT (terminalPrimitive (E := E) T hT (u : TimeLp T E))
   congr 1
   ext t
   exact initialPrimitive_transverse T hT m u t
@@ -270,7 +271,7 @@ def endpointDisplacement (L : U →L[ℝ] TimeLp T E) : U →L[ℝ] C(Icc (0 : �
 
 /-- The genuine endpoint quadratic form represented by a bounded operator. -/
 def dirichletToNeumann (L : U →L[ℝ] TimeLp T E) : U →L[ℝ] U :=
-  endpointOperator (transverseDerivatives T hT m) (energyOperator T hT H)
+  endpointOperator (transverseDerivatives (E := E) T hT m) (energyOperator (E := E) T hT H)
     (1 / 2) (by norm_num) (energyOperator_coercive T hT H K hK hH hsmall) L
 
 omit [CompleteSpace U] in
@@ -287,13 +288,13 @@ omit [CompleteSpace U] in
 /-- The stationary correction preserves the actual terminal trace. -/
 theorem endpointDisplacement_terminal (L : U →L[ℝ] TimeLp T E) (Y : U) :
     endpointDisplacement T hT m H K hK hH hsmall L Y ⟨T, hT, le_rfl⟩ =
-      initialPrimitive T hT (L Y) ⟨T, hT, le_rfl⟩ := by
+      initialPrimitive (E := E) T hT (L Y) ⟨T, hT, le_rfl⟩ := by
   let v : transverseDerivatives T hT m :=
     ⟨endpointDerivative T hT m H K hK hH hsmall L Y - L Y,
       endpointDerivative_sub_mem T hT m H K hK hH hsmall L Y⟩
   have hv := initialPrimitive_transverse T hT m v ⟨T, hT, le_rfl⟩
   rw [terminalPrimitive_terminal] at hv
-  change initialPrimitive T hT
+  change initialPrimitive (E := E) T hT
     (endpointDerivative T hT m H K hK hH hsmall L Y - L Y) ⟨T, hT, le_rfl⟩ = 0 at hv
   rw [map_sub, ContinuousMap.sub_apply] at hv
   exact sub_eq_zero.mp hv
@@ -301,16 +302,16 @@ theorem endpointDisplacement_terminal (L : U →L[ℝ] TimeLp T E) (Y : U) :
 omit [CompleteSpace U] in
 /-- A genuinely tangent trial produces a genuinely tangent stationary path. -/
 theorem endpointDisplacement_tangent (L : U →L[ℝ] TimeLp T E)
-    (hL : ∀ Y t, ⟪m t, initialPrimitive T hT (L Y) t⟫_ℝ = 0) (Y : U)
+    (hL : ∀ Y t, ⟪m t, initialPrimitive (E := E) T hT (L Y) t⟫_ℝ = 0) (Y : U)
     (t : Icc (0 : ℝ) T) :
     ⟪m t, endpointDisplacement T hT m H K hK hH hsmall L Y t⟫_ℝ = 0 := by
   let v : transverseDerivatives T hT m :=
     ⟨endpointDerivative T hT m H K hK hH hsmall L Y - L Y,
       endpointDerivative_sub_mem T hT m H K hK hH hsmall L Y⟩
-  have hv : ⟪m t, initialPrimitive T hT (v : TimeLp T E) t⟫_ℝ = 0 := by
+  have hv : ⟪m t, initialPrimitive (E := E) T hT (v : TimeLp T E) t⟫_ℝ = 0 := by
     rw [initialPrimitive_transverse]
     exact v.property.2 t
-  change ⟪m t, initialPrimitive T hT
+  change ⟪m t, initialPrimitive (E := E) T hT
     (endpointDerivative T hT m H K hK hH hsmall L Y - L Y) t⟫_ℝ = 0 at hv
   rw [map_sub, ContinuousMap.sub_apply, inner_sub_right, hL, sub_zero] at hv
   exact hv
@@ -321,10 +322,10 @@ theorem endpointDerivative_weak (L : U →L[ℝ] TimeLp T E) (Y : U)
     (v : transverseDerivatives T hT m) :
     ⟪endpointDerivative T hT m H K hK hH hsmall L Y, (v : TimeLp T E)⟫_ℝ -
       ⟪timeMultiplier T hT H
-        (initialPrimitiveTimeLp T hT (endpointDerivative T hT m H K hK hH hsmall L Y)),
+        (initialPrimitiveTimeLp (E := E) T hT (endpointDerivative T hT m H K hK hH hsmall L Y)),
           transversePrimitive T hT m v⟫_ℝ = 0 := by
-  have hh := stationaryPart_orthogonal (transverseDerivatives T hT m)
-    (energyOperator T hT H) (1 / 2) (by norm_num)
+  have hh := stationaryPart_orthogonal (transverseDerivatives (E := E) T hT m)
+    (energyOperator (E := E) T hT H) (1 / 2) (by norm_num)
     (energyOperator_coercive T hT H K hK hH hsmall) (L Y) v
   rw [energyOperator_inner, initialPrimitiveTimeLp_transverse] at hh
   exact hh
@@ -335,8 +336,9 @@ theorem dirichletToNeumann_inner (L : U →L[ℝ] TimeLp T E) (Y Z : U) :
       ⟪endpointDerivative T hT m H K hK hH hsmall L Y,
         endpointDerivative T hT m H K hK hH hsmall L Z⟫_ℝ -
       ⟪timeMultiplier T hT H
-        (initialPrimitiveTimeLp T hT (endpointDerivative T hT m H K hK hH hsmall L Y)),
-        initialPrimitiveTimeLp T hT (endpointDerivative T hT m H K hK hH hsmall L Z)⟫_ℝ := by
+        (initialPrimitiveTimeLp (E := E) T hT (endpointDerivative T hT m H K hK hH hsmall L Y)),
+        initialPrimitiveTimeLp (E := E) T hT
+          (endpointDerivative T hT m H K hK hH hsmall L Z)⟫_ℝ := by
   rw [dirichletToNeumann, endpointOperator_inner, energyOperator_inner]
   rfl
 
@@ -350,8 +352,8 @@ theorem dirichletToNeumann_positive (hHs : ∀ t, (H t).IsSymmetric)
 theorem dirichletToNeumann_norm_le (hHs : ∀ t, (H t).IsSymmetric)
     (L : U →L[ℝ] TimeLp T E) (C : ℝ) (hC : 0 ≤ C)
     (hL : ∀ Y, ‖L Y‖ ^ 2 -
-      ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT (L Y)),
-        initialPrimitiveTimeLp T hT (L Y)⟫_ℝ ≤ C * ‖Y‖ ^ 2) :
+      ⟪timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT (L Y)),
+        initialPrimitiveTimeLp (E := E) T hT (L Y)⟫_ℝ ≤ C * ‖Y‖ ^ 2) :
     ‖dirichletToNeumann T hT m H K hK hH hsmall L‖ ≤ C := by
   apply endpointOperator_norm_le _ _ _ _ _ (energyOperator_symmetric T hT H hHs) L C hC
   intro Y

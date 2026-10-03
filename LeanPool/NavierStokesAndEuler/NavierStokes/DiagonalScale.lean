@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Diagonal cutoff scales from actual logarithmic limits

@@ -75,13 +75,13 @@ theorem coordinates_injective (b : Module.Basis ι ℝ E) (n : ℕ) :
 n).toLinearMap.leftInverse).toContinuousLinearMap`. -/
 def reassembly (b : Module.Basis ι ℝ E) (n : ℕ) :
     ((Fin n → ι) → V) →L[ℝ] (E [×n]→L[ℝ] V) :=
-  ((coordinates (V := V) b n).toLinearMap.leftInverse).toContinuousLinearMap
+  ((coordinates (V := V) b n).toLinearMap.leftInverse).toContinuousLinearMap (𝕜 := ℝ)
 
 omit [FiniteDimensional ℝ E] in
 theorem reassembly_coordinates (b : Module.Basis ι ℝ E) (n : ℕ) (A : E [×n]→L[ℝ] V) :
-    reassembly b n (coordinates b n A) = A :=
+    reassembly (V := V) b n (coordinates (V := V) b n A) = A :=
   LinearMap.leftInverse_apply_of_inj
-    (LinearMap.ker_eq_bot.mpr (coordinates_injective b n)) A
+    (LinearMap.ker_eq_bot.mpr (coordinates_injective (V := V) b n)) A
 
 /-- Tuple bounded as an element of `(j → (X →ᵇ V)) →L[ℝ] (X →ᵇ (j → V))`. -/
 def tupleBounded {j : Type*} [Fintype j] :
@@ -94,18 +94,21 @@ def tupleBounded {j : Type*} [Fintype j] :
 omit [FiniteDimensional ℝ V] in
 theorem tupleBounded_apply {j : Type*} [Fintype j]
     (u : j → (X →ᵇ V)) (x : X) (i : j) :
-    tupleBounded u x i = u i x := by
+    tupleBounded (X := X) (V := V) (j := j) u x i = u i x := by
   classical
-  simp [tupleBounded]
+  simp only [tupleBounded, sum_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.proj_apply, BoundedContinuousFunction.coe_sum, Finset.sum_apply,
+      ContinuousLinearMap.compLeftContinuousBounded_apply, ContinuousLinearMap.single_apply,
+      Finset.sum_pi_single, Finset.mem_univ, ↓reduceIte]
 
 /-- Coordinate path, bundling `toFun`, `continuous_toFun`. -/
 def coordinatePath (b : Module.Basis ι ℝ E) (n : ℕ)
     (u : (Fin n → ι) → C(K, X →ᵇ V)) : C(K, X →ᵇ (E [×n]→L[ℝ] V)) where
   toFun t := (reassembly (V := V) b n).compLeftContinuousBounded X
-    (tupleBounded (fun w => u w t))
+    (tupleBounded (X := X) (V := V) (j := Fin n → ι) (fun w => u w t))
   continuous_toFun :=
     ((reassembly (V := V) b n).compLeftContinuousBounded X).continuous.comp
-      ((tupleBounded (X := X) (V := V)).continuous.comp
+      ((tupleBounded (X := X) (V := V) (j := Fin n → ι)).continuous.comp
         (continuous_pi (fun w => (u w).continuous)))
 
 omit [CompactSpace K] [FiniteDimensional ℝ E] in
@@ -113,8 +116,9 @@ theorem coordinatePath_eq (b : Module.Basis ι ℝ E) (n : ℕ)
     (u : (Fin n → ι) → C(K, X →ᵇ V)) (t : K) (x : X)
     (A : E [×n]→L[ℝ] V) (hu : ∀ w, u w t x = A (fun i => b (w i))) :
     coordinatePath b n u t x = A := by
-  change reassembly b n (tupleBounded _ x) = A
-  have he : tupleBounded (fun w => u w t) x = coordinates b n A := by
+  change reassembly (V := V) b n (tupleBounded (X := X) (V := V) (j := Fin n → ι) _ x) = A
+  have he : tupleBounded (X := X) (V := V) (j := Fin n → ι) (fun w => u w t) x =
+      coordinates (V := V) b n A := by
     funext w
     rw [tupleBounded_apply]
     exact hu w
@@ -201,7 +205,7 @@ local instance instFieldTowerSmoothTimeField6 (n : ℕ) : NormedSpace ℝ
 
 /-- Bounded cover, given by `coverPathMap P (A.realization 3)`. -/
 def boundedCover : C(Icc (0 : ℝ) T, LiftTangent →ᵇ Space) :=
-  coverPathMap P (A.realization 3)
+  coverPathMap (K := Icc (0 : ℝ) T) P (A.realization 3)
 
 @[simp] theorem boundedCover_apply (t : Icc (0 : ℝ) T) (x : LiftTangent) :
     A.boundedCover t x = A.pointField t (coveringMap P x) := rfl
@@ -209,8 +213,9 @@ def boundedCover : C(Icc (0 : ℝ) T, LiftTangent →ᵇ Space) :=
 /-- Bounded word, given by `coverPathMap P ((wordAtLevel P 3 n w (le_refl
 (n+3))).compLeftContinuous ℝ (Icc (0 : ℝ) T) (A.realization (n+3)))`. -/
 def boundedWord (n : ℕ) (w : Fin n → Fin 4) : C(Icc (0 : ℝ) T, LiftTangent →ᵇ Space) :=
-  coverPathMap P ((wordAtLevel P 3 n w (le_refl (n+3))).compLeftContinuous ℝ (Icc (0 : ℝ) T)
-    (A.realization (n+3)))
+  coverPathMap (K := Icc (0 : ℝ) T) P
+    ((wordAtLevel P 3 n w (le_refl (n+3))).compLeftContinuous ℝ (Icc (0 : ℝ) T)
+      (A.realization (n+3)))
 
 theorem boundedWord_apply (n : ℕ) (w : Fin n → Fin 4)
     (t : Icc (0 : ℝ) T) (x : LiftTangent) :

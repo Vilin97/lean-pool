@@ -141,13 +141,14 @@ def normalMap : (Space →L[ℝ] Space) →L[ℝ] Space :=
     (ContinuousLinearMap.adjoint.toContinuousLinearEquiv.toContinuousLinearMap :
       (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space))
 
-@[simp] theorem normalMap_apply (A : Space →L[ℝ] Space) : normalMap m₀ A = A.adjoint m₀ := rfl
+@[simp] theorem normalMap_apply (A : Space →L[ℝ] Space) :
+    normalMap m₀ A = adjoint (𝕜 := ℝ) (E := Space) (F := Space) A m₀ := rfl
 
 theorem normalMap_norm (hm₀ : ‖m₀‖ = 1) : ‖normalMap m₀‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
   intro A
-  change ‖A.adjoint m₀‖ ≤ 1*‖A‖
-  have h := A.adjoint.le_opNorm m₀
+  change ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) A m₀‖ ≤ 1*‖A‖
+  have h := (adjoint (𝕜 := ℝ) (E := Space) (F := Space) A).le_opNorm m₀
   simpa only [hm₀,mul_one,one_mul,ContinuousLinearEquiv.coe_coe,
     LinearIsometryEquiv.norm_map] using h
 
@@ -158,7 +159,8 @@ def normalCoefficient (FInv : SmoothCoefficientPath K (Space →L[ℝ] Space)) :
     SmoothCoefficientPath K Space := SmoothCoefficientPath.map (normalMap m₀) FInv
 
 @[simp] theorem normalCoefficient_apply (FInv : SmoothCoefficientPath K (Space →L[ℝ] Space))
-    (t : K) (x : Space) : (normalCoefficient m₀ FInv).field t x = (FInv.field t x).adjoint m₀ := rfl
+    (t : K) (x : Space) : (normalCoefficient m₀ FInv).field t x =
+      adjoint (𝕜 := ℝ) (E := Space) (F := Space) (FInv.field t x) m₀ := rfl
 
 theorem normalCoefficient_derivative_bound (FInv : SmoothCoefficientPath K (Space →L[ℝ] Space))
     (hm₀ : ‖m₀‖ = 1) (n : ℕ) (C : ℝ)
@@ -202,17 +204,20 @@ theorem normalCoefficient_lower (hm₀ : ‖m₀‖ = 1)
     (hInv : ∀ t x v, FInv.field t x (F.field t x v) = v)
     (B : ℝ) (hB : 0 < B) (hFnorm : ∀ t x, ‖F.field t x‖ ≤ B) (t : K) (x : Space) :
     (B⁻¹)^2 ≤ ‖(normalCoefficient m₀ FInv).field t x‖^2 := by
-  have he : (F.field t x).adjoint ((normalCoefficient m₀ FInv).field t x) = m₀ := by
+  have he : adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)
+      ((normalCoefficient m₀ FInv).field t x) = m₀ := by
     apply ext_inner_right ℝ
     intro v
     rw [adjoint_inner_left,normalCoefficient_apply,adjoint_inner_left,hInv]
-  have hnorm : ‖(F.field t x).adjoint‖ = ‖F.field t x‖ :=
+  have hnorm : ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)‖ = ‖F.field t x‖ :=
     ContinuousLinearMap.adjoint.norm_map (F.field t x)
   have hn : 1 ≤ B*‖(normalCoefficient m₀ FInv).field t x‖ := by
     calc
-      1 = ‖(F.field t x).adjoint ((normalCoefficient m₀ FInv).field t x)‖ := by rw [he,hm₀]
-      _ ≤ ‖(F.field t x).adjoint‖*‖(normalCoefficient m₀ FInv).field t x‖ :=
-        (F.field t x).adjoint.le_opNorm _
+      1 = ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)
+          ((normalCoefficient m₀ FInv).field t x)‖ := by rw [he,hm₀]
+      _ ≤ ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)‖*
+          ‖(normalCoefficient m₀ FInv).field t x‖ :=
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)).le_opNorm _
       _ ≤ B*‖(normalCoefficient m₀ FInv).field t x‖ := by
         rw [hnorm]
         exact mul_le_mul_of_nonneg_right (hFnorm t x) (norm_nonneg _)

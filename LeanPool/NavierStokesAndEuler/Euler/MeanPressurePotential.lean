@@ -59,16 +59,24 @@ theorem gradientSpace_radial_potential (p : L2) (hp : p ∈ gradientSpace)
     radialPotential_zero g, radialPotential_gradient g hg.continuous q hq hgrad⟩
 
 /-- An F-adjoint pressure residual is the actual pullback of a scalar gradient. -/
-theorem weighted_pressure_has_potential (F FT : Field) (hFT : ∀ x, FT x = (F x).adjoint)
-    (r : L2) (hr : (multiplier F).adjoint r ∈ gradientSpace)
+theorem weighted_pressure_has_potential (F FT : Field)
+    (hFT : ∀ x, FT x = ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F x))
+    (r : L2)
+    (hr : ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2) (multiplier F) r ∈
+      gradientSpace)
     (g : Space → Space) (hrep : r =ᵐ[volume] g)
-    (hg : ContDiff ℝ ∞ (fun x => (F x).adjoint (g x))) :
-    ContDiff ℝ ∞ (radialPotential (fun x => (F x).adjoint (g x))) ∧
-      radialPotential (fun x => (F x).adjoint (g x)) 0 = 0 ∧
-      ∀ x, gradient (radialPotential (fun x => (F x).adjoint (g x))) x =
-        (F x).adjoint (g x) := by
-  apply gradientSpace_radial_potential ((multiplier F).adjoint r) hr
-    (fun x => (F x).adjoint (g x)) ?_ hg
+    (hg : ContDiff ℝ ∞ (fun x =>
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F x) (g x))) :
+    ContDiff ℝ ∞ (radialPotential (fun x =>
+        ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F x) (g x))) ∧
+      radialPotential (fun x =>
+        ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F x) (g x)) 0 = 0 ∧
+      ∀ x, gradient (radialPotential (fun x =>
+        ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F x) (g x))) x =
+        ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F x) (g x) := by
+  apply gradientSpace_radial_potential
+    (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2) (multiplier F) r) hr
+    (fun x => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F x) (g x)) ?_ hg
   rw [← multiplier_adjoint F FT hFT]
   filter_upwards [multiplier_ae FT r, hrep] with x hx hrx
   rw [hx, hrx, hFT]

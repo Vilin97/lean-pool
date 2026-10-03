@@ -62,10 +62,8 @@ local instance timeOperatorSpace : NormedSpace ℝ (TimeLp T E →L[ℝ] TimeLp 
 
 /-- The actual coefficient-to-multiplier map is a linear contraction. -/
 theorem coefficientMap_norm : ‖coefficientMap (E := E) (F := F) T hT‖ ≤ 1 := by
-  apply opNorm_le_bound _ zero_le_one
-  intro A
-  change ‖timeMultiplier T hT A‖ ≤ 1 * ‖A‖
-  simpa only [one_mul] using timeMultiplier_norm T hT A
+  refine (coefficientMap (E := E) (F := F) T hT).opNorm_le_bound zero_le_one fun A => ?_
+  exact (timeMultiplier_norm T hT A).trans_eq (one_mul _).symm
 
 /-- A convenient polynomial bound for the genuine terminal primitive. -/
 theorem primitive_norm_le_time : ‖primitiveTimeLp (E := E) T hT‖ ≤ T := by
@@ -73,7 +71,7 @@ theorem primitive_norm_le_time : ‖primitiveTimeLp (E := E) T hT‖ ≤ T := by
   have h := (sq_le_sq₀ (norm_nonneg _) (Real.sqrt_nonneg (T^2/2))).2
     (primitiveTimeLp_norm_le (E := E) T hT)
   rw [Real.sq_sqrt (by positivity)] at h
-  nlinarith [sq_nonneg T]
+  linarith only [h, sq_nonneg T]
 
 /-- Actual multiplier derivatives retain the coefficient factorial bounds. -/
 theorem timeMultiplier_bound
@@ -99,10 +97,10 @@ theorem productDerivative_bound
       (T*D+C) * majorant R d n := by
   have hMB := contDiff_timeMultiplier T hT B hB
   have hright := clm_comp_const_right_bound
-    (fun y => timeMultiplier T hT (B y)) (primitiveTimeLp (E := E) T hT)
+    (fun y => timeMultiplier (E := E) (F := F) T hT (B y)) (primitiveTimeLp (E := E) T hT)
     hMB R D hR hD d (timeMultiplier_bound T hT B hB R D hR hD d hb)
   have hsum := add_bound
-    (fun y => (timeMultiplier T hT (B y)).comp (primitiveTimeLp T hT))
+    (fun y => (timeMultiplier T hT (B y)).comp (primitiveTimeLp (E := E) T hT))
     (fun y => timeMultiplier T hT (A y))
     (hMB.clm_comp contDiff_const) (contDiff_timeMultiplier T hT A hA)
     R (‖primitiveTimeLp (E := E) T hT‖*D) C d hright

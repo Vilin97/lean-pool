@@ -101,12 +101,14 @@ def compositionLift : C(K,E →L[ℝ] F) →L[ℝ] C(K,(U →L[ℝ] E) →L[ℝ]
   (compL ℝ U E F).compLeftContinuous ℝ K
 
 include U E F in
-theorem compositionLift_norm : ‖compositionLift (K := K) (U := U) (E := E) (F := F)‖ ≤ 1 :=
-  (postcomposition_norm (K := K) (compL ℝ U E F)).trans (norm_compL_le ℝ U E F)
+theorem compositionLift_norm : ‖compositionLift (K := K) (U := U) (E := E) (F := F)‖ ≤ 1 := by
+  have h := (postcomposition_norm (K := K) (compL ℝ U E F)).trans (norm_compL_le ℝ U E F)
+  exact h
 
 /-- Literal pointwise composition of two continuous coefficient paths. -/
 def compose (A : C(K, E →L[ℝ] F)) (B : C(K, U →L[ℝ] E)) : C(K,U →L[ℝ] F) :=
-  multiplier (compositionLift A) B
+  multiplier (K := K) (E := U →L[ℝ] E) (F := U →L[ℝ] F)
+    (compositionLift (K := K) (U := U) (E := E) (F := F) A) B
 
 @[simp] theorem compose_apply (A : C(K, E →L[ℝ] F)) (B : C(K, U →L[ℝ] E)) (t : K) :
     compose A B t = (A t).comp (B t) := rfl
@@ -117,12 +119,8 @@ variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 theorem contDiff_compose (A : P → C(K, E →L[ℝ] F)) (B : P → C(K, U →L[ℝ] E))
     {n : ℕ∞ω} (hA : ContDiff ℝ n A) (hB : ContDiff ℝ n B) :
     ContDiff ℝ n (fun x => compose (A x) (B x)) := by
-  have hLift : ContDiff ℝ n (fun x => compositionLift (U := U) (A x)) :=
-    ContDiff.comp (g := compositionLift (K := K) (U := U) (E := E) (F := F)) (f := A)
-      (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
-        (E := C(K,E →L[ℝ] F)) (F := C(K,(U →L[ℝ] E) →L[ℝ] U →L[ℝ] F))
-        (compositionLift (K := K) (U := U) (E := E) (F := F))) hA
-  exact contDiff_apply (fun x => compositionLift (U := U) (A x)) B hLift hB
+  have hLift := hA.continuousLinearMap_comp (compositionLift (K := K) (U := U) (E := E) (F := F))
+  exact contDiff_apply _ B hLift hB
 
 /-- Pointwise composition has the same fixed factorial product constant. -/
 theorem compose_bound (A : P → C(K, E →L[ℝ] F)) (B : P → C(K, U →L[ℝ] E))
@@ -133,15 +131,10 @@ theorem compose_bound (A : P → C(K, E →L[ℝ] F)) (B : P → C(K, U →L[ℝ
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => compose (A y) (B y)) x‖ ≤
       (3*C*D)*majorant R (c+d) n := by
-  have hLift : ContDiff ℝ ∞ (fun x => compositionLift (U := U) (A x)) :=
-    ContDiff.comp (g := compositionLift (K := K) (U := U) (E := E) (F := F)) (f := A)
-      (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
-        (E := C(K,E →L[ℝ] F)) (F := C(K,(U →L[ℝ] E) →L[ℝ] U →L[ℝ] F))
-        (compositionLift (K := K) (U := U) (E := E) (F := F))) hA
+  have hLift := hA.continuousLinearMap_comp (compositionLift (K := K) (U := U) (E := E) (F := F))
   have hbLift := contraction_bound (compositionLift (K := K) (U := U) (E := E) (F := F))
     compositionLift_norm A hA R C hR hC c hbA
-  exact apply_bound (fun y => compositionLift (U := U) (A y)) B hLift hB
-    R C D hR hC hD c d hbLift hbB n x
+  exact apply_bound _ B hLift hB R C D hR hC hD c d hbLift hbB n x
 
 end Normed
 
@@ -176,28 +169,27 @@ def adjointMap : C(K,U →L[ℝ] E) →L[ℝ] C(K,E →L[ℝ] U) :=
 
 omit [CompactSpace K] in
 @[simp] theorem adjointMap_apply (A : C(K, U →L[ℝ] E)) (t : K) :
-    adjointMap A t = (A t).adjoint := rfl
+    adjointMap (K := K) (U := U) (E := E) A t =
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := U) (F := E) (A t) := rfl
 
 theorem adjointMap_norm : ‖adjointMap (K := K) (U := U) (E := E)‖ ≤ 1 := by
   apply (postcomposition_norm (K := K) (realAdjoint (U := U) (E := E))).trans
   apply opNorm_le_bound _ zero_le_one
   intro A
-  change ‖A.adjoint‖ ≤ (1 : ℝ)*‖A‖
+  change ‖ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := U) (F := E) A‖ ≤ (1 : ℝ)*‖A‖
   simp only [LinearIsometryEquiv.norm_map, one_mul, le_refl]
 
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
 theorem contDiff_adjoint (A : P → C(K, U →L[ℝ] E)) {n : ℕ∞ω} (hA : ContDiff ℝ n A) :
-    ContDiff ℝ n (fun x => adjointMap (A x)) :=
-  ContDiff.comp (g := adjointMap (K := K) (U := U) (E := E)) (f := A)
-    (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
-      (E := C(K,U →L[ℝ] E)) (F := C(K,E →L[ℝ] U))
-      (adjointMap (K := K) (U := U) (E := E))) hA
+    ContDiff ℝ n (fun x => adjointMap (K := K) (U := U) (E := E) (A x)) :=
+  (adjointMap (K := K) (U := U) (E := E)).contDiff.comp hA
 
 theorem adjoint_bound (A : P → C(K, U →L[ℝ] E)) (hA : ContDiff ℝ ∞ A)
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (d : ℕ)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant R d n) (n : ℕ) (x : P) :
-    ‖iteratedFDeriv ℝ n (fun y => adjointMap (A y)) x‖ ≤ C*majorant R d n :=
+    ‖iteratedFDeriv ℝ n (fun y => adjointMap (K := K) (U := U) (E := E) (A y)) x‖ ≤
+      C*majorant R d n :=
   contraction_bound (adjointMap (K := K) (U := U) (E := E)) adjointMap_norm A hA R C hR hC d hb n x
 
 end Hilbert

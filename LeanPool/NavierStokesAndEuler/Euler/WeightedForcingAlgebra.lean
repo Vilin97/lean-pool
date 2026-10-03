@@ -42,7 +42,7 @@ theorem familyNorm_add_le (v w : β → H) : familyNorm (v+w) ≤ familyNorm v +
   have hcs := family_cauchy_schwarz v w
   have hv := familyNorm_sq v
   have hw := familyNorm_sq w
-  nlinarith
+  nlinarith only [hsq, hcs, hv, hw]
 
 /-- Signs do not change the genuine Hilbert family norm. -/
 theorem familyNorm_neg (v : β → H) : familyNorm (-v) = familyNorm v := by
@@ -70,7 +70,9 @@ theorem weightedForcingSum_sum_le {ι : Type*} (ρ : ℝ) (hρ : 0 < ρ) (order 
     weightedForcingSum ρ order (∑ i ∈ S, f i) ≤ ∑ i ∈ S, weightedForcingSum ρ order (f i) := by
   classical
   induction S using Finset.induction_on with
-  | empty => simp [weightedForcingSum, familyNorm, familySquaredNorm]
+  | empty => simp only [weightedForcingSum, familyNorm, familySquaredNorm, Finset.sum_apply,
+      Finset.sum_empty, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      Finset.sum_const_zero, Real.sqrt_zero, mul_zero, Std.le_refl]
   | @insert i S hi ih =>
     rw [Finset.sum_insert hi, Finset.sum_insert hi]
     exact (weightedForcingSum_add_le ρ hρ order (f i) (∑ j ∈ S, f j)).trans (add_le_add le_rfl ih)
@@ -127,7 +129,8 @@ theorem nonlinear_externalPressure_bound_all {s : ℕ} (hs : 6 ≤ s) {A : Smoot
       (32*Rc*M*productConstant period 3)*weightedNorm period 6 N ρ u*weightedLoss period 6 N ρ v :=
           by
   cases N with
-  | zero => simp [externalPressureNorm, weightedLoss, commutatorBlock_zero]
+  | zero => simp only [externalPressureNorm, zero_add, Finset.range_one, Finset.sum_singleton,
+      commutatorBlock_zero, mul_zero, weightedLoss, CharP.cast_eq_zero, zero_mul, Std.le_refl]
   | succ N =>
       exact nonlinear_externalPressure_bound period hs K κ m c hc hpos N hN ρ Rc M hρ hRc hM hbase
           hsmall hcoeff L hL u v

@@ -146,8 +146,8 @@ theorem weightedMean_hasDerivAt_on (c : ℕ) {R : ℝ} {f : ℝ → E}
   let b : ℝ := |r| + δ
   have hrR : |r| < R := by simpa only [radialDomain, Metric.mem_ball,
     dist_zero_right, Real.norm_eq_abs] using hr
-  have hδ : 0 < δ := by dsimp [δ]; linarith
-  have hbR : b < R := by dsimp [b, δ]; linarith
+  have hδ : 0 < δ := half_pos (sub_pos.mpr hrR)
+  have hbR : b < R := by dsimp [b, δ]; linarith only [hrR]
   have hsub : Metric.closedBall (0 : ℝ) b ⊆ radialDomain R := by
     intro x hx
     exact lt_of_le_of_lt hx hbR
@@ -160,7 +160,7 @@ theorem weightedMean_hasDerivAt_on (c : ℕ) {R : ℝ} {f : ℝ → E}
       have ht := abs_add_le (x - r) r
       rw [sub_add_cancel] at ht
       dsimp [b]
-      linarith
+      linarith only [ht, hx']
     change dist (t * x) 0 ≤ b
     rw [dist_zero_right, Real.norm_eq_abs, abs_mul, abs_of_nonneg ht.1]
     exact (mul_le_of_le_one_left (abs_nonneg x) ht.2).trans hxn
@@ -308,8 +308,7 @@ theorem scale_contDiffOn (c : ι → ℕ) {R : ℝ}
         exact contDiffOn_zero.mpr (hW j)
     | succ n ih =>
         intro j
-        have hrhs : ContDiffOn ℝ n (fun r =>
-            f j r + (A₀ j r) (W j r) + (A₁ j r) (W (j + 1) r)) (radialDomain R) :=
+        have hrhs :=
           ((contDiffOn_infty.1 (hf j) n).add
             ((contDiffOn_infty.1 (hA₀ j) n).clm_apply (ih j))).add
             ((contDiffOn_infty.1 (hA₁ j) n).clm_apply (ih (j + 1)))
@@ -386,7 +385,7 @@ theorem regularPrimitive_evaluate (c : ℕ) {R : ℝ} {f : ℝ → C(K, E)}
     hc.intervalIntegrable_of_Icc zero_le_one
   simp only [regularPrimitive, ContinuousMap.smul_apply]
   congr 1
-  exact ((ContinuousMap.evalCLM ℝ z).intervalIntegral_comp_comm hi).symm
+  exact ((ContinuousMap.evalCLM ℝ (M := E) z).intervalIntegral_comp_comm hi).symm
 
 end CompactEvaluation
 
@@ -416,7 +415,7 @@ open VolterraAnalyticBounds CauchyRestriction
 projection only defines values outside the radial interval; it is the
 identity everywhere used in the regularity theorem. -/
 noncomputable def fieldDiskCurve (R : ℝ) (hR : 0 ≤ R) {U : Set ℂ}
-    (W : Field)
+    (W : VolterraAnalyticBounds.Field)
     (hW : ContinuousOn (fun p : ℝ × ℂ => W p.1 p.2) (Icc (-R) R ×ˢ U))
     (center : ℂ) (ρ : ℝ) (hDisk : Metric.closedBall center ρ ⊆ U)
     (r : ℝ) (i : Fin 6) : C(Disk center ρ, ℂ) where
@@ -427,7 +426,7 @@ noncomputable def fieldDiskCurve (R : ℝ) (hR : 0 ≤ R) {U : Set ℂ}
         (fun z => ⟨(radiusProjection R hR r).property, hDisk z.property⟩))
 
 theorem fieldDiskCurve_continuous (R : ℝ) (hR : 0 ≤ R) {U : Set ℂ}
-    (W : Field)
+    (W : VolterraAnalyticBounds.Field)
     (hW : ContinuousOn (fun p : ℝ × ℂ => W p.1 p.2) (Icc (-R) R ×ˢ U))
     (center : ℂ) (ρ : ℝ) (hDisk : Metric.closedBall center ρ ⊆ U) (i : Fin 6) :
     Continuous (fun r => fieldDiskCurve R hR W hW center ρ hDisk r i) := by
@@ -439,7 +438,7 @@ theorem fieldDiskCurve_continuous (R : ℝ) (hR : 0 ≤ R) {U : Set ℂ}
       (fun p => ⟨(radiusProjection R hR p.1).property, hDisk p.2.property⟩))
 
 theorem fieldDiskCurve_apply (R : ℝ) (hR : 0 ≤ R) {U : Set ℂ}
-    (W : Field)
+    (W : VolterraAnalyticBounds.Field)
     (hW : ContinuousOn (fun p : ℝ × ℂ => W p.1 p.2) (Icc (-R) R ×ˢ U))
     (center : ℂ) (ρ : ℝ) (hDisk : Metric.closedBall center ρ ⊆ U)
     {r : ℝ} (hr : r ∈ Icc (-R) R) (i : Fin 6) (z : Disk center ρ) :
@@ -450,14 +449,14 @@ theorem fieldDiskCurve_apply (R : ℝ) (hR : 0 ≤ R) {U : Set ℂ}
 /-- Smoothness of the disk-valued curve implies actual scalar radial
 smoothness, by bounded evaluation. -/
 theorem fieldDiskCurve_radial_contDiffOn (R : ℝ) (hR : 0 ≤ R) {U : Set ℂ}
-    (W : Field)
+    (W : VolterraAnalyticBounds.Field)
     (hW : ContinuousOn (fun p : ℝ × ℂ => W p.1 p.2) (Icc (-R) R ×ˢ U))
     (center : ℂ) (ρ : ℝ) (hDisk : Metric.closedBall center ρ ⊆ U)
     (i : Fin 6) (n : WithTop ℕ∞)
     (hs : ContDiffOn ℝ n (fun r => fieldDiskCurve R hR W hW center ρ hDisk r i)
       (radialDomain R)) (z : Disk center ρ) :
     ContDiffOn ℝ n (fun r => W r z i) (radialDomain R) := by
-  apply ((ContinuousMap.evalCLM ℝ z).contDiff.comp_contDiffOn hs).congr
+  apply ((ContinuousMap.evalCLM ℝ (M := ℂ) z).contDiff.comp_contDiffOn hs).congr
   intro r hr
   exact (fieldDiskCurve_apply R hR W hW center ρ hDisk
     (radialDomain_subset_Icc R hr) i z).symm
@@ -471,7 +470,7 @@ The radii increase with the level. Each induction step spends one disk gap
 through the concrete bounded Cauchy operator and gains one radial derivative
 through the actual regular Volterra integral. -/
 theorem symmetric_solution_disk_curves_contDiffOn
-    {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} {A₀ A₁ : Coeff} {f W : Field}
+    {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (center : ℂ) (ρ : ℕ → ℝ) (hρ : ∀ j, ρ j < ρ (j + 1))
     (hDisk : ∀ j, Metric.closedBall center (ρ j) ⊆ U)
@@ -547,7 +546,7 @@ noncomputable def cauchyJetCurve (center : ℂ) (ρ : ℕ → ℝ)
     (V : ∀ j, ℝ → C(Disk center (ρ j), E)) :
     ℕ → ∀ j, ℝ → C(Disk center (ρ j), E)
   | 0, j, r => V j r
-  | k + 1, j, r => CauchyRestriction.derivativeCLM center (hρ j)
+  | k + 1, j, r => CauchyRestriction.derivativeCLM (E := E) center (hρ j)
       (cauchyJetCurve center ρ hρ V k (j + 1) r)
 
 omit [CompleteSpace E] in
@@ -604,7 +603,7 @@ theorem parameterJets_radial_contDiffOn (center : ℂ) (ρ : ℕ → ℝ)
     (hV : ∀ j r, r ∈ S → ∀ z : Disk center (ρ j), V j r z = F r z)
     (hs : ∀ j, ContDiffOn ℝ ∞ (V j) S) (k j : ℕ) (z : Disk center (ρ j)) :
     ContDiffOn ℝ ∞ (fun r => iteratedDeriv k (F r) z) S := by
-  apply ((ContinuousMap.evalCLM ℝ z).contDiff.comp_contDiffOn
+  apply ((ContinuousMap.evalCLM ℝ (M := E) z).contDiff.comp_contDiffOn
     (cauchyJetCurve_contDiffOn center ρ hρ V hs k j)).congr
   intro r hr
   exact (cauchyJetCurve_apply_of_eq center ρ hρ V hU hDisk F hF hV k j r hr z).symm
@@ -671,7 +670,7 @@ open VolterraAnalyticBounds CauchyRestriction CompactSmoothFamily
 and all matrix entries are jointly smooth in the real radial variable
 and the two real coordinates of the complex parameter. -/
 structure SmoothCoefficientData (R : ℝ) (U : Set ℂ)
-    (A₀ A₁ : Coeff) (f : Field) : Prop where
+    (A₀ A₁ : Coeff) (f : VolterraAnalyticBounds.Field) : Prop where
   forcing : ∀ i, ContDiffOn ℝ ∞ (fun p : ℝ × ℂ => f p.1 p.2 i) (radialDomain R ×ˢ U)
   zeroth : ∀ i k, ContDiffOn ℝ ∞ (fun p : ℝ × ℂ => A₀ p.1 p.2 i k) (radialDomain R ×ˢ U)
   first : ∀ i k, ContDiffOn ℝ ∞ (fun p : ℝ × ℂ => A₁ p.1 p.2 i k) (radialDomain R ×ˢ U)
@@ -680,7 +679,7 @@ structure SmoothCoefficientData (R : ℝ) (U : Set ℂ)
 from the actual jointly smooth coefficient entries. -/
 theorem symmetric_solution_disk_curves_of_smooth_coefficients
     {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} (hU : IsOpen U)
-    {A₀ A₁ : Coeff} {f W : Field}
+    {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (hdata : SmoothCoefficientData R U A₀ A₁ f)
     (center : ℂ) (ρ : ℕ → ℝ) (hρ : ∀ j, ρ j < ρ (j + 1))
@@ -712,7 +711,7 @@ theorem symmetric_solution_disk_curves_of_smooth_coefficients
 solution is real smooth through the radial origin. -/
 theorem symmetric_solution_parameterJets_radial_contDiffOn
     {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} (hU : IsOpen U)
-    {A₀ A₁ : Coeff} {f W : Field}
+    {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (hdata : SmoothCoefficientData R U A₀ A₁ f)
     (center : ℂ) (ρ : ℕ → ℝ) (hρ : ∀ j, ρ j < ρ (j + 1))
@@ -762,7 +761,7 @@ domain. Thus every actual parameter jet is radially smooth at every
 parameter point, with no auxiliary disk-family hypothesis. -/
 theorem symmetric_solution_parameterJets_radial_contDiffOn_local
     {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} (hU : IsOpen U)
-    {A₀ A₁ : Coeff} {f W : Field}
+    {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (hdata : SmoothCoefficientData R U A₀ A₁ f)
     {z : ℂ} (hz : z ∈ U) (k : ℕ) (i : Fin 6) :
@@ -779,7 +778,7 @@ through the real radial origin. The order of operations here is parameter
 differentiation followed by radial differentiation. -/
 theorem symmetric_solution_mixed_contDiffOn
     {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} (hU : IsOpen U)
-    {A₀ A₁ : Coeff} {f W : Field}
+    {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (hdata : SmoothCoefficientData R U A₀ A₁ f)
     {z : ℂ} (hz : z ∈ U) (n k : ℕ) (i : Fin 6) :
@@ -791,7 +790,7 @@ theorem symmetric_solution_mixed_contDiffOn
 
 theorem symmetric_solution_mixed_contDiffAt_zero
     {R : ℝ} (hR : 0 < R) {U : Set ℂ} (hU : IsOpen U)
-    {A₀ A₁ : Coeff} {f W : Field}
+    {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (hdata : SmoothCoefficientData R U A₀ A₁ f)
     {z : ℂ} (hz : z ∈ U) (n k : ℕ) (i : Fin 6) :
@@ -802,7 +801,7 @@ theorem symmetric_solution_mixed_contDiffAt_zero
 
 theorem symmetric_solution_radial_contDiffOn
     {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} (hU : IsOpen U)
-    {A₀ A₁ : Coeff} {f W : Field}
+    {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (hdata : SmoothCoefficientData R U A₀ A₁ f)
     {z : ℂ} (hz : z ∈ U) :
@@ -814,7 +813,7 @@ theorem symmetric_solution_radial_contDiffOn
 
 theorem symmetric_solution_uniform_mixed_bound
     {R : ℝ} (hR : 0 ≤ R) {U : Set ℂ} (hU : IsOpen U)
-    {A₀ A₁ : Coeff} {f W : Field}
+    {A₀ A₁ : Coeff} {f W : VolterraAnalyticBounds.Field}
     (hW : VolterraParity.IsSymmetricIntegralSolution R U A₀ A₁ f W)
     (hdata : SmoothCoefficientData R U A₀ A₁ f)
     (center : ℂ) (ρ : ℕ → ℝ) (hρ : ∀ j, ρ j < ρ (j + 1))

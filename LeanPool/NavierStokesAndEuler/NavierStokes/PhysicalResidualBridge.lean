@@ -68,13 +68,14 @@ theorem along_twice_scaled_pull {Ω : Set E} {U : Set F} {Γ : E → F}
       (fun y => (c * k) * along W f (Γ y)) Ω := by
     intro y hy
     exact along_scaled_pull c k
-      ((hΓ.contDiffAt (hΩ.mem_nhds hy)).differentiableAt (by simp))
-      ((hf.contDiffAt (hU.mem_nhds (hmap hy))).differentiableAt (by simp)) (hV y hy)
+      ((hΓ.contDiffAt (hΩ.mem_nhds hy)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      ((hf.contDiffAt (hU.mem_nhds (hmap hy))).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (hV y hy)
   rw [along_congr hΩ he hx]
   rw [along_scaled_pull (c * k) k
-    ((hΓ.contDiffAt (hΩ.mem_nhds hx)).differentiableAt (by simp))
+    ((hΓ.contDiffAt (hΩ.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     (((contDiffOn_along hU hW hf).contDiffAt (hU.mem_nhds (hmap hx))).differentiableAt
-      (by simp)) (hV x hx)]
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (hV x hx)]
   ring
 
 /-- Differential data used by the generic pullback calculation below.  The
@@ -128,11 +129,12 @@ theorem graphResidual_scaled_pull {Ω : Set E} {U : Set F} {Γ : E → F}
   have hPθ := along_scaled_pull (v ^ 2) 1 hdΓ hdp (hθ x hx)
   have hPz := along_scaled_pull (v ^ 2) l hdΓ hdp (G.axial x hx)
   fin_cases i <;>
-    simp [graphResidual, LinearWaveResidual.realTransport,
-      LinearWaveResidual.realFrameLaplacian, LinearWaveResidual.realAngularGenerator,
-      cylindricalLaplacian, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, hAr, hAθ, hAz, hAt, hArr, hAθθ, hAzz, hPr, hPθ, hPz,
-      smul_eq_mul, G.radius x hx] <;>
+    simp only [graphResidual, Fin.zero_eta, Fin.isValue, hAt, LinearWaveResidual.realTransport, hAr,
+        hAθ, mul_one, LinearWaveResidual.realAngularGenerator, Matrix.cons_val_zero, hAz,
+        LinearWaveResidual.realFrameLaplacian, cylindricalLaplacian, hArr, smul_eq_mul, hAθθ,
+        one_pow, hAzz, mul_neg, Matrix.cons_val_one, one_mul, Nat.succ_eq_add_one, Nat.reduceAdd,
+        hPr, hPθ, hPz, G.radius x hx, mul_inv_rev, Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val_two,
+        Matrix.tail_cons, Matrix.head_cons, add_zero, mul_zero] <;>
     field_simp [hl, hr] <;> rw [hε] <;> ring
 
 theorem graphResidual_eq_cylindrical {U : Set SpaceTime}
@@ -146,8 +148,10 @@ theorem graphResidual_eq_cylindrical {U : Set SpaceTime}
       fun i => CylindricalResidual.cylindricalResidual a p t q i := by
   have hAc (i : Fin 3) : ContDiffOn ℝ ∞ (fun z => a z i) U :=
     (AxisymmetricFields.projection i).contDiff.comp_contDiffOn ha
-  have had := (ha.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have hpd := (hp.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
+  have had := (ha.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have hpd := (hp.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have has : ContDiffAt ℝ 2 (fun y : Space => a (t, y)) q :=
     ((ha.contDiffAt (hU.mem_nhds hx)).comp q (contDiffAt_const.prodMk contDiffAt_id)).of_le
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2)
@@ -156,7 +160,8 @@ theorem graphResidual_eq_cylindrical {U : Set SpaceTime}
       along (LinearWaveResidual.spaceDirection i) (fun z => a z j) (t, q) =
       CylindricalResidual.dCoord i (fun y => a (t, y)) q j := by
     rw [LinearWaveResidual.along_space_slice
-      (((hAc j).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))]
+      (((hAc j).contDiffAt (hU.mem_nhds hx)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))]
     exact CylindricalResidual.dCoord_map (AxisymmetricFields.projection j) hasd i
   have hLap (j : Fin 3) : cylindricalLaplacian LinearWaveResidual.coordinateRadius
       (LinearWaveResidual.spaceDirection 0) (LinearWaveResidual.spaceDirection 1)
@@ -171,14 +176,19 @@ theorem graphResidual_eq_cylindrical {U : Set SpaceTime}
       _ = (along LinearWaveResidual.physicalTimeDirection a (t, q)) j :=
         LinearWaveResidual.along_map (AxisymmetricFields.projection j) _ had
       _ = _ := congrArg (fun v : Space => v j) (LinearWaveResidual.along_time_slice had)
+  have hps := LinearWaveResidual.along_space_slice hpd
   ext i
   fin_cases i <;>
-    simp [graphResidual, LinearWaveResidual.realTransport,
-      LinearWaveResidual.realFrameLaplacian, LinearWaveResidual.realAngularGenerator,
-      hfirst, hLap, htime, LinearWaveResidual.along_space_slice hpd,
-      LinearWaveResidual.coordinateRadius, CylindricalResidual.cylindricalResidual,
-      CylindricalResidual.vectorAdvection, CylindricalResidual.vectorLaplacian,
-      CylindricalResidual.scalarGradient, CylindricalResidual.connection_apply] <;> ring
+    simp only [graphResidual, Fin.zero_eta, Fin.isValue, htime, LinearWaveResidual.realTransport,
+        hfirst, LinearWaveResidual.coordinateRadius, LinearWaveResidual.realAngularGenerator,
+        Matrix.cons_val_zero, LinearWaveResidual.realFrameLaplacian, hLap, mul_neg,
+        Matrix.cons_val_one, one_mul, Nat.succ_eq_add_one, Nat.reduceAdd,
+        hps, CylindricalResidual.cylindricalResidual,
+        CylindricalResidual.vectorAdvection, CylindricalResidual.connection_apply, smul_add,
+        CylindricalResidual.vectorLaplacian, AxisymmetricResidual.pack_one,
+        AxisymmetricResidual.pack_zero, CylindricalResidual.scalarGradient, PiLp.add_apply,
+        PiLp.sub_apply, PiLp.smul_apply, smul_eq_mul, add_left_inj, Fin.mk_one, Fin.reduceFinMk,
+        Matrix.cons_val, add_zero, mul_zero, AxisymmetricResidual.pack_two] <;> ring
 
 /-- Plane: an abbreviation for `ℝ × ℝ`. -/
 abbrev Plane := ℝ × ℝ
@@ -283,31 +293,40 @@ theorem fderiv_map_apply (G : ScaledGraph) {p : SpaceTime}
     (hY.add hT))).prodMk (hP 1)
   change HasFDerivAt G.map _ p at hd
   rw [hd.fderiv]
-  ext <;> simp [ContinuousLinearMap.fst, GraphCalculus.radialSpeed,
-    smul_eq_mul] <;> ring_nf <;> simp
+  simp only [Fin.isValue, ContinuousLinearMap.fst, zero_sub, smul_neg,
+    ContinuousLinearMap.prod_apply, smul_apply, PhysicalGraphBounds.coordinateProjection_apply,
+    smul_eq_mul, neg_apply, ContinuousLinearMap.coe_mk', LinearMap.fst_apply, add_apply,
+    ContinuousLinearMap.smulRight_apply, neg_mul, GraphCalculus.radialSpeed]
+  ext <;> simp only [Fin.isValue, Prod.fst_add, Prod.smul_fst, Prod.snd_add, Prod.smul_snd,
+    smul_eq_mul] <;> ring
 
 theorem map_radial (G : ScaledGraph) {p : SpaceTime}
     (hr : G.radialScale * p.2 0 ≠ 0) :
     fderiv ℝ G.map p (LinearWaveResidual.spaceDirection 0 p) =
       G.radialScale • G.radial (G.map p) := by
   rw [G.fderiv_map_apply hr]
-  ext <;> simp [radial, map, LinearWaveResidual.spaceDirection,
-    coordinateVector, smul_eq_mul] <;> ring
+  ext <;> simp only [Fin.isValue, LinearWaveResidual.spaceDirection, coordinateVector,
+      PiLp.single_eq_same, mul_one, radial, map, Prod.smul_mk, smul_eq_mul, mul_zero, ne_eq,
+      Fin.reduceEq, not_false_eq_true, PiLp.single_eq_of_ne, zero_smul, add_zero, Prod.smul_fst,
+      Prod.smul_snd, one_ne_zero] <;> ring
 
 theorem map_angular (G : ScaledGraph) {p : SpaceTime}
     (hr : G.radialScale * p.2 0 ≠ 0) :
     fderiv ℝ G.map p (LinearWaveResidual.spaceDirection 1 p) = angular (G.map p) := by
   rw [G.fderiv_map_apply hr]
-  ext <;> simp [angular, LinearWaveResidual.spaceDirection,
-    coordinateVector]
+  ext <;> simp only [Fin.isValue, LinearWaveResidual.spaceDirection, coordinateVector, ne_eq,
+      zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, angular, Prod.fst_zero,
+      Fin.reduceEq, Prod.snd_zero, zero_smul, add_zero, PiLp.single_eq_same]
 
 theorem map_axial (G : ScaledGraph) {p : SpaceTime}
     (hr : G.radialScale * p.2 0 ≠ 0) :
     fderiv ℝ G.map p (LinearWaveResidual.spaceDirection 2 p) =
       G.radialScale • G.axial (G.map p) := by
   rw [G.fderiv_map_apply hr]
-  ext <;> simp [axial, LinearWaveResidual.spaceDirection,
-    coordinateVector, smul_eq_mul]
+  ext <;> simp only [Fin.isValue, LinearWaveResidual.spaceDirection, coordinateVector, ne_eq,
+      Fin.reduceEq, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, axial, Prod.smul_mk,
+      smul_eq_mul, smul_zero, PiLp.single_eq_same, mul_one, zero_smul, add_zero, Prod.fst_zero,
+      Prod.snd_zero]
 
 /-- Forward physical time produces minus the slow-time direction. -/
 theorem map_temporal (G : ScaledGraph) {p : SpaceTime}
@@ -315,7 +334,9 @@ theorem map_temporal (G : ScaledGraph) {p : SpaceTime}
     fderiv ℝ G.map p (LinearWaveResidual.physicalTimeDirection p) =
       (G.velocityScale * G.radialScale) • G.temporal (G.map p) := by
   rw [G.fderiv_map_apply hr]
-  ext <;> simp [temporal, LinearWaveResidual.physicalTimeDirection, smul_eq_mul] <;> ring
+  ext <;> simp only [Fin.isValue, LinearWaveResidual.physicalTimeDirection, PiLp.zero_apply,
+      mul_zero, temporal, Prod.smul_mk, smul_eq_mul, mul_neg, mul_one, zero_smul, zero_add,
+      Prod.smul_fst, Prod.smul_snd] <;> ring
 
 theorem radial_smooth (G : ScaledGraph) {U : Set Cylinder}
     (hR : ∀ x ∈ U, x.1.1 ≠ 0) : ContDiffOn ℝ ∞ G.radial U := by
@@ -367,7 +388,8 @@ noncomputable def velocity (G : ScaledGraph) (a : Cylinder → Fin 3 → ℝ) : 
 
 @[simp] theorem velocity_apply (G : ScaledGraph) (a : Cylinder → Fin 3 → ℝ)
     (p : SpaceTime) (i : Fin 3) : G.velocity a p i = G.velocityScale * a (G.map p) i := by
-  fin_cases i <;> simp [velocity]
+  fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, velocity, AxisymmetricResidual.pack_zero,
+      Fin.mk_one, AxisymmetricResidual.pack_one, Fin.reduceFinMk, AxisymmetricResidual.pack_two]
 
 /-- Pressure, defined pointwise by `G.velocityScale ^ 2 * p (G.map z)`. -/
 noncomputable def pressure (G : ScaledGraph) (p : Cylinder → ℝ) : PressureField :=
@@ -517,7 +539,7 @@ theorem commonGraph_map {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (i : ℕ)
     commonGraph_fastTimeScale hQ, commonGraph_radialScale hQ hr]
   simp only [map_add, map_smul, PhysicalGraphBounds.cover_pow_radialDirection,
     PhysicalGraphBounds.cover_pow_timeDirection, smul_smul, Real.rpow_neg_one]
-  simp [commonGraph, div_eq_mul_inv, mul_comm]
+  simp only [commonGraph, div_eq_mul_inv, one_mul, mul_comm, Fin.isValue]
 
 theorem commonGraph_residualScale {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (i : ℕ) :
     Q ^ (2 * CoordinateAlgebra.A h + 1 / 2) *
@@ -565,12 +587,15 @@ theorem twice_along_add {U : Set E} (hU : IsOpen U) {V : E → E}
   have he : EqOn (along V (fun y => f y + g y))
       (fun y => along V f y + along V g y) U := by
     intro y hy
-    exact along_add V ((hf.contDiffAt (hU.mem_nhds hy)).differentiableAt (by simp))
-      ((hg.contDiffAt (hU.mem_nhds hy)).differentiableAt (by simp))
+    exact along_add V ((hf.contDiffAt (hU.mem_nhds hy)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      ((hg.contDiffAt (hU.mem_nhds hy)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   rw [along_congr hU he hx]
   exact along_add V
-    (((contDiffOn_along hU hV hf).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
-    (((contDiffOn_along hU hV hg).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
+    (((contDiffOn_along hU hV hf).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp only [
+        ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
+    (((contDiffOn_along hU hV hg).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp only [
+        ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
 
 theorem laplacian_add {U : Set E} (hU : IsOpen U) (R : E → ℝ) {Vr Vθ Vz : E → E}
     (hr : ContDiffOn ℝ ∞ Vr U) (hθ : ContDiffOn ℝ ∞ Vθ U) (hz : ContDiffOn ℝ ∞ Vz U)
@@ -580,8 +605,10 @@ theorem laplacian_add {U : Set E} (hU : IsOpen U) (R : E → ℝ) {Vr Vθ Vz : E
       cylindricalLaplacian R Vr Vθ Vz f x + cylindricalLaplacian R Vr Vθ Vz g x := by
   simp only [cylindricalLaplacian, twice_along_add hU hr hf hg hx,
     twice_along_add hU hθ hf hg hx, twice_along_add hU hz hf hg hx,
-    along_add Vr ((hf.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
-      ((hg.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)), smul_eq_mul]
+    along_add Vr ((hf.contDiffAt (hU.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      ((hg.contDiffAt (hU.mem_nhds hx)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)), smul_eq_mul]
   ring
 
 theorem graphResidual_add {U : Set E} (hU : IsOpen U) (ε : ℝ) (R : E → ℝ)
@@ -597,17 +624,19 @@ theorem graphResidual_add {U : Set E} (hU : IsOpen U) (ε : ℝ) (R : E → ℝ)
       LinearWaveResidual.realComponentLinearResidual ε R Vr Vθ Vz Vt B a p x i +
       LinearWaveResidual.realTransport R Vr Vθ Vz a a x i := by
   have hfirst (V : E → E) (j : Fin 3) := along_add V
-    (((hB j).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
-    (((ha j).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
+    (((hB j).contDiffAt (hU.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+    (((ha j).contDiffAt (hU.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   have hLap (j : Fin 3) := laplacian_add hU R hr hθ hz (hB j) (ha j) hx
   have hP (V : E → E) := along_add V
-    ((hp₀.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
-    ((hp.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
+    ((hp₀.contDiffAt (hU.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+    ((hp.contDiffAt (hU.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   fin_cases i <;>
-    simp [graphResidual, LinearWaveResidual.realComponentLinearResidual,
-      LinearWaveResidual.realTransport, LinearWaveResidual.realFrameLaplacian,
-      LinearWaveResidual.realAngularGenerator, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, hfirst, hLap, hP] <;> ring
+    simp only [graphResidual, Fin.zero_eta, Fin.isValue, hfirst, LinearWaveResidual.realTransport,
+        LinearWaveResidual.realAngularGenerator, neg_add_rev, Matrix.cons_val_zero,
+        LinearWaveResidual.realFrameLaplacian, hLap, Matrix.cons_val_one, Nat.succ_eq_add_one,
+        Nat.reduceAdd, hP, mul_neg, LinearWaveResidual.realComponentLinearResidual, Fin.mk_one,
+        Fin.reduceFinMk, Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons, add_zero,
+        mul_zero] <;> ring
 
 theorem transport_realLift (R : E → ℝ) (Vr Vθ Vz : E → E)
     {a : E → Fin 3 → ℝ} {x : E}
@@ -617,9 +646,12 @@ theorem transport_realLift (R : E → ℝ) (Vr Vθ Vz : E → E)
       LinearWaveResidual.realTransport R Vr Vθ Vz a a x i := by
   have hD (V : E → E) (j : Fin 3) := along_ofReal V (ha j)
   fin_cases i <;>
-    simp [LinearWaveResidual.transport, LinearWaveResidual.realTransport,
-      LinearWaveResidual.realLift, angularGenerator, LinearWaveResidual.realAngularGenerator,
-      hD, ← Complex.ofReal_div]
+    simp only [LinearWaveResidual.transport, LinearWaveResidual.realLift, Fin.isValue, Fin.zero_eta,
+        hD, ← Complex.ofReal_div, angularGenerator, Matrix.cons_val_zero, Complex.add_re,
+        Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, mul_zero, sub_zero, Complex.neg_re,
+        Complex.add_im, Complex.neg_im, neg_zero, add_zero, LinearWaveResidual.realTransport,
+        LinearWaveResidual.realAngularGenerator, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val]
 
 /-- Complex increment as an element of `ℝ`. -/
 noncomputable def complexIncrement (ε : ℝ) (R : E → ℝ) (Vr Vθ Vz Vt : E → E)
@@ -643,12 +675,14 @@ theorem complexIncrement_eq {U : Set E} (hU : IsOpen U) (ε : ℝ) (R : E → �
     Complex.ofRealCLM.contDiff.comp_contDiffOn (ha j)
   have hpC : DifferentiableAt ℝ (fun y => (p y : ℂ)) x :=
     Complex.ofRealCLM.differentiableAt.comp x
-      ((hp.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
+      ((hp.contDiffAt (hU.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   have hl := congrFun (LinearWaveResidual.realMap_linearResidual Complex.reCLM ε R Vt
     hU hr hθ hz haC
-    (fun j => ((hB j).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)) hpC hx) i
+    (fun j => ((hB j).contDiffAt (hU.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hpC hx) i
   have ht := transport_realLift R Vr Vθ Vz
-    (fun j => ((ha j).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)) i
+    (fun j => ((ha j).contDiffAt (hU.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) i
   simp only [complexIncrement, Complex.add_re, ht]
   have h := congrArg
     (fun z : ℝ => z + LinearWaveResidual.realTransport R Vr Vθ Vz a a x i) hl
@@ -687,8 +721,8 @@ theorem commonGraph_eq_physicalToChart (h : ℝ) (n k : ℕ) {p : SpaceTime}
   rw [commonGraph_map (ChartScales.Q_pos n) h k hr,
     MeanChartCompatibility.physicalToChart_apply,
     MeanChartCompatibility.coverMap_eq_coverPower, CommonCoverSolve.coverPower_apply]
-  simp [absoluteLift, MeanChartCompatibility.chartScale, Real.rpow_neg_one,
-    div_eq_mul_inv, mul_comm]
+  simp only [Fin.isValue, div_eq_mul_inv, one_mul, pow_apply_eq_iterate, iterate_map_add,
+      MeanChartCompatibility.chartScale, absoluteLift, Real.rpow_neg_one, mul_comm]
 
 /-- Matching consists of the literal coefficient and direction data at one
 band, with no assumption about a residual or a differential operator. -/
@@ -727,22 +761,26 @@ theorem matchesAt_graphOperators (r : CorrectionState.ReconstructionData)
 theorem MatchesAt.radialDirection {c : CorrectionState.Context Lift} {G : ScaledGraph} {n : ℕ}
     (H : MatchesAt c.operators G n) : LiftedMeanResidual.radialDirection c n = G.radial := by
   funext x
-  simp [LiftedMeanResidual.radialDirection, LiftedMeanResidual.liftDirection,
-    LiftedMeanResidual.radialVector, H.eR, H.frequency, H.profile, H.vR,
-    ScaledGraph.radial]
+  simp only [LiftedMeanResidual.radialDirection, LiftedMeanResidual.liftDirection,
+      LiftedMeanResidual.radialVector, H.eR, H.frequency, H.profile, H.vR, Prod.smul_mk,
+      smul_eq_mul, mul_zero, smul_zero, Prod.mk_add_mk, add_zero, zero_add, ScaledGraph.radial,
+      Prod.mk.injEq, and_true, true_and]
   rfl
 
 theorem MatchesAt.axialDirection {c : CorrectionState.Context Lift} {G : ScaledGraph} {n : ℕ}
     (H : MatchesAt c.operators G n) : LiftedMeanResidual.axialDirection c n = G.axial := by
   funext x
-  simp [LiftedMeanResidual.axialDirection, LiftedMeanResidual.liftDirection,
-    LiftedMeanResidual.axialVector, H.epsilon, H.eZ, ScaledGraph.axial]
+  simp only [LiftedMeanResidual.axialDirection, LiftedMeanResidual.liftDirection,
+      LiftedMeanResidual.axialVector, H.epsilon, H.eZ, Prod.smul_mk, smul_eq_mul, mul_zero, mul_one,
+      smul_zero, ScaledGraph.axial]
 
 theorem MatchesAt.timeDirection {c : CorrectionState.Context Lift} {G : ScaledGraph} {n : ℕ}
     (H : MatchesAt c.operators G n) : LiftedMeanResidual.timeDirection c n = G.temporal := by
   funext x
-  simp [LiftedMeanResidual.timeDirection, LiftedMeanResidual.liftDirection,
-    LiftedMeanResidual.temporalVector, H.epsilon, H.fast, H.vT, H.eT, ScaledGraph.temporal]
+  simp only [LiftedMeanResidual.timeDirection, LiftedMeanResidual.liftDirection,
+      LiftedMeanResidual.temporalVector, H.fast, H.vT, Prod.smul_mk, smul_eq_mul, mul_zero,
+      smul_zero, H.epsilon, H.eT, mul_one, Prod.mk_sub_mk, sub_self, zero_sub, Prod.neg_mk,
+      neg_zero, sub_zero, ScaledGraph.temporal]
 
 /-- Base components, given by `![c.base.radial n x.1, c.base.angular n x.1, c.base.axial n
 x.1]`. -/

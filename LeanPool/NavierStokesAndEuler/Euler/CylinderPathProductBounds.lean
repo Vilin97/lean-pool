@@ -100,24 +100,25 @@ def pathWordOperator {q : ℕ} (w : SobolevWord q) :
   (wordOperator P w).compLeftContinuous ℝ K
 
 theorem pathWordOperator_norm_le {q : ℕ} (w : SobolevWord q) (u : C(K, SobolevSpace P q)) :
-    ‖pathWordOperator P w u‖ ≤ ‖u‖ := by
+    ‖pathWordOperator (K := K) P w u‖ ≤ ‖u‖ := by
   apply (ContinuousMap.norm_le _ (norm_nonneg u)).mpr
   intro t
   exact (word_norm_le P (u t) w).trans (u.norm_coe_le_norm t)
 
 theorem path_norm_le_sum_words {q : ℕ} (u : C(K, SobolevSpace P q)) :
-    ‖u‖ ≤ ∑ w : SobolevWord q, ‖pathWordOperator P w u‖ := by
+    ‖u‖ ≤ ∑ w : SobolevWord q, ‖pathWordOperator (K := K) P w u‖ := by
   apply (ContinuousMap.norm_le _ (sum_nonneg (fun _ _ => norm_nonneg _))).mpr
   intro t
   apply (norm_le_sumNorm P (u t)).trans
-  exact sum_le_sum (fun w _ => (pathWordOperator P w u).norm_coe_le_norm t)
+  exact sum_le_sum (fun w _ => (pathWordOperator (K := K) P w u).norm_coe_le_norm t)
 
 variable (q : ℕ) (p : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
 
 theorem pathWordOperator_sobolevOrbit (w : SobolevWord q) :
-    pathWordOperator P w ∘ sobolevOrbit P q p hp =
-      wordDerivative standardDirection (fun a : LiftTangent => pathTranslate P a p) w.2 := by
+    pathWordOperator (K := K) P w ∘ sobolevOrbit P q p hp =
+      wordDerivative standardDirection
+        (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p) w.2 := by
   funext a
   apply ContinuousMap.ext
   intro t
@@ -125,11 +126,11 @@ theorem pathWordOperator_sobolevOrbit (w : SobolevWord q) :
 
 theorem sobolevOrbit_word_coordinate {n : ℕ} (v : Fin n → Fin 4)
     (w : SobolevWord q) (a : LiftTangent) :
-    pathWordOperator P w (wordDerivative standardDirection (sobolevOrbit P q p hp) v a) =
+    pathWordOperator (K := K) P w (wordDerivative standardDirection (sobolevOrbit P q p hp) v a) =
       wordDerivative standardDirection
-        (wordDerivative standardDirection (fun b : LiftTangent => pathTranslate P b p) w.2) v a :=
-            by
-  have h := wordDerivative_comp_clm standardDirection (pathWordOperator P w)
+        (wordDerivative standardDirection
+          (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) w.2) v a := by
+  have h := wordDerivative_comp_clm standardDirection (pathWordOperator (K := K) P w)
     (sobolevOrbit P q p hp) (sobolevOrbit_contDiff P q p hp) v a
   rw [pathWordOperator_sobolevOrbit P q p hp w] at h
   exact h.symm
@@ -138,24 +139,29 @@ include hp in
 theorem sum_sobolev_word_levels (n : ℕ) (a : LiftTangent) :
     (∑ w : SobolevWord q,
       wordSum standardDirection
-        (wordDerivative standardDirection (fun b : LiftTangent => pathTranslate P b p) w.2) n a) =
-      block standardDirection q (fun b : LiftTangent => pathTranslate P b p) n a := by
+        (wordDerivative standardDirection
+          (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) w.2) n a) =
+      block standardDirection q
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) n a := by
   simp only [Fintype.sum_sigma]
   simp_rw [sum_wordSum_wordDerivative standardDirection _ hp]
   rw [block_eq_sum_levels standardDirection q _ hp]
   rw [← Fin.sum_univ_eq_sum_range (fun k =>
-    wordSum standardDirection (fun b : LiftTangent => pathTranslate P b p) (n+k) a) (q+1)]
+    wordSum standardDirection
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) (n+k) a) (q+1)]
   exact sum_congr rfl (fun k _ => by rw [Nat.add_comm k.val n])
 
 /-- Promotion to the actual Hq path norm costs no external-order factor. -/
 theorem sobolevOrbit_wordSum_le_block (n : ℕ) (a : LiftTangent) :
     wordSum standardDirection (sobolevOrbit P q p hp) n a ≤
-      block standardDirection q (fun b : LiftTangent => pathTranslate P b p) n a := by
+      block standardDirection q
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) n a := by
   rw [← sum_sobolev_word_levels P q p hp n a]
   unfold wordSum
   calc
     _ ≤ ∑ v : Fin n → Fin 4, ∑ w : SobolevWord q,
-        ‖pathWordOperator P w (wordDerivative standardDirection (sobolevOrbit P q p hp) v a)‖ :=
+        ‖pathWordOperator (K := K) P w
+          (wordDerivative standardDirection (sobolevOrbit P q p hp) v a)‖ :=
       sum_le_sum (fun v _ => path_norm_le_sum_words P _)
     _ = _ := by
       rw [sum_comm]
@@ -163,7 +169,8 @@ theorem sobolevOrbit_wordSum_le_block (n : ℕ) (a : LiftTangent) :
 
 /-- Returning to the source derivative sum costs only the fixed Hq array size. -/
 theorem block_le_card_sobolevOrbit_wordSum (n : ℕ) (a : LiftTangent) :
-    block standardDirection q (fun b : LiftTangent => pathTranslate P b p) n a ≤
+    block standardDirection q
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) n a ≤
       (Fintype.card (SobolevWord q) : ℝ)*wordSum standardDirection (sobolevOrbit P q p hp) n a := by
   rw [← sum_sobolev_word_levels P q p hp n a]
   calc
@@ -218,13 +225,13 @@ local instance instCylinderPathProductBounds4 : NormedSpace ℝ (C(K,SobolevSpac
     inferInstance
 
 variable (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) (p q : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a q))
 
 theorem scalarProductPath_sobolevOrbit (a : LiftTangent) :
     sobolevOrbit P 6 (scalarProductPath P L hL p q hp hq)
         (scalarProductPath_orbit P L hL p q hp hq) a =
-      pathBilinear (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
+      pathBilinear (K := K) (productHqBilinear (q := 6) P (by norm_num : 6 ≤ 6) L hL)
         (sobolevOrbit P 6 p hp a) (sobolevOrbit P 6 q hq a) := by
   apply ContinuousMap.ext
   intro t
@@ -242,7 +249,7 @@ theorem productBlockConstant_nonneg : 0 ≤ productBlockConstant P :=
   mul_nonneg (Nat.cast_nonneg _) (sobolevProductConstant_nonneg P 6)
 
 theorem productH6PathBilinear_norm :
-    ‖pathBilinear (K := K) (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)‖ ≤
+    ‖pathBilinear (K := K) (productHqBilinear (q := 6) P (by norm_num : 6 ≤ 6) L hL)‖ ≤
       sobolevProductConstant P 6 := by
   apply (pathBilinear_norm _).trans
   exact opNorm_le_bound _ (sobolevProductConstant_nonneg P 6)
@@ -251,19 +258,24 @@ theorem productH6PathBilinear_norm :
 /-- Actual external word blocks of the genuine product obey the H6 algebra convolution. -/
 theorem scalarProductPath_block_bound (n : ℕ) (a : LiftTangent) :
     block standardDirection 6
-      (fun b : LiftTangent => pathTranslate P b (scalarProductPath P L hL p q hp hq)) n a ≤
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b
+        (scalarProductPath P L hL p q hp hq)) n a ≤
       productBlockConstant P * leibnizConvolution
-        (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) k a)
-        (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) k a) n :=
+        (fun k => block standardDirection 6
+          (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) k a)
+        (fun k => block standardDirection 6
+          (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b q) k a) n :=
             by
-  let B := pathBilinear (K := K) (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
+  let B := pathBilinear (K := K) (productHqBilinear (q := 6) P (by norm_num : 6 ≤ 6) L hL)
   have he := funext (scalarProductPath_sobolevOrbit P L hL p q hp hq)
   have hc : leibnizConvolution
       (fun k => wordSum standardDirection (sobolevOrbit P 6 p hp) k a)
       (fun k => wordSum standardDirection (sobolevOrbit P 6 q hq) k a) n ≤
       leibnizConvolution
-        (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) k a)
-        (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) k a) n :=
+        (fun k => block standardDirection 6
+          (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) k a)
+        (fun k => block standardDirection 6
+          (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b q) k a) n :=
             by
     unfold leibnizConvolution
     apply sum_le_sum
@@ -292,16 +304,21 @@ theorem scalarProductPath_block_bound (n : ℕ) (a : LiftTangent) :
 /-- The actual product retains the input radius and adds only the two factorial shifts. -/
 theorem scalarProductPath_majorant (R A C : ℝ) (hR : 0 ≤ R) (hA : 0 ≤ A) (hC : 0 ≤ C)
     (d e : ℕ) (a : LiftTangent)
-    (hb : ∀ n, block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) n a ≤
+    (hb : ∀ n, block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) n a ≤
       A*majorant R d n)
-    (hc : ∀ n, block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) n a ≤
+    (hc : ∀ n, block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b q) n a ≤
       C*majorant R e n) (n : ℕ) :
     block standardDirection 6
-      (fun b : LiftTangent => pathTranslate P b (scalarProductPath P L hL p q hp hq)) n a ≤
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b
+        (scalarProductPath P L hL p q hp hq)) n a ≤
       (3*productBlockConstant P*A*C)*majorant R (d+e) n := by
   have hs := sequence_product_majorant R A C hR hA hC d e
-    (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) k a)
-    (fun k => block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) k a)
+    (fun k => block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) k a)
+    (fun k => block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b q) k a)
     (fun k => by rw [abs_of_nonneg (block_nonneg _ _ _ _ _)]; exact hb k)
     (fun k => by rw [abs_of_nonneg (block_nonneg _ _ _ _ _)]; exact hc k) n
   have hs' := (le_abs_self _).trans hs
@@ -354,17 +371,18 @@ theorem bilinear_components (B : Space →L[ℝ] Space →L[ℝ] Space) (u v : S
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace K]
   (B : Space →L[ℝ] Space →L[ℝ] Space) (p q : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a q))
 
 /-- Bilinear term, given by `pathMap P (B (basisVector i)) (scalarProductPath P (component i)
 (component_norm i) p q hp hq)`. -/
 def bilinearTerm (i : Fin 3) : C(K,LiftL2 P) :=
-  pathMap P (B (basisVector i))
+  pathMap (K := K) P (B (basisVector i))
     (scalarProductPath P (component i) (component_norm i) p q hp hq)
 
 theorem bilinearTerm_orbit (i : Fin 3) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (bilinearTerm P B p q hp hq i)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (bilinearTerm P B p q hp hq i)) :=
   pathMap_orbit_contDiff P (B (basisVector i)) _
     (scalarProductPath_orbit P (component i) (component_norm i) p q hp hq)
 
@@ -372,8 +390,8 @@ theorem bilinearTerm_orbit (i : Fin 3) :
 def bilinearProductPath : C(K,LiftL2 P) := ∑ i : Fin 3, bilinearTerm P B p q hp hq i
 
 theorem bilinearProductPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (bilinearProductPath P B p q hp hq)) :=
-        by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (bilinearProductPath P B p q hp hq)) := by
   simp only [bilinearProductPath, map_sum]
   exact ContDiff.sum (fun i _ => bilinearTerm_orbit P B p q hp hq i)
 

@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 public import Mathlib.Analysis.Fourier.FourierTransform
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 The Fourier integral bundled with Schwartz regularity. Keeping the underlying function

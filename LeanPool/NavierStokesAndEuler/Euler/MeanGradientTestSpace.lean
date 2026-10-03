@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
 import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+public import LeanPool.NavierStokesAndEuler.ForMathlib.NormedSpaceShortcuts
 
 /-! The actual homogeneous first-order test space on ordinary Euclidean three-space. -/
 
@@ -138,6 +139,12 @@ def homogeneousSpace : Submodule ℝ GradientTensor := testGradient.range.topolo
 
 instance : CompleteSpace homogeneousSpace :=
     testGradient.range.isClosed_topologicalClosure.completeSpace_coe
+
+real_normed_space_shortcut_instances homogeneousSpace : homogeneousSpace
+
+/-- Shortcut for the inner product space structure of the homogeneous space. -/
+instance homogeneousSpace.instInnerProductSpace : InnerProductSpace ℝ homogeneousSpace :=
+  inferInstance
 
 /-- The dense map from genuine tests into the homogeneous Hilbert space. -/
 def homogeneousGradient : Test →ₗ[ℝ] homogeneousSpace :=

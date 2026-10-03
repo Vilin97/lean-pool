@@ -76,7 +76,8 @@ theorem rawMean_continuous : Continuous (rawMean P f) := by
     (continuous_id.prodMk continuous_const)
 
 theorem average_ae_rawMean :
-    (average P (value P u) : LiftDomain P → Space) =ᵐ[liftMeasure P] fun z => rawMean P f z.1 := by
+    (average (V := Vector3) P (value P u) : LiftDomain P → Space) =ᵐ[liftMeasure P]
+      fun z => rawMean P f z.1 := by
   have he (z : LiftDomain P) : representative P (sobolevAverage P 3 u) z = rawMean P f z.1 := by
     obtain ⟨θ,hθ⟩ := QuotientAddGroup.mk_surjective z.2
     have hz : z=(z.1,(θ : AddCircle P)) := by
@@ -90,22 +91,23 @@ theorem average_ae_rawMean :
 
 theorem rawMean_memLp : MemLp (rawMean P f) 2 (volume : Measure Space) := by
   apply continuous_memLp_of_lift P (rawMean P f) (rawMean_continuous P u f hf hrep)
-  exact (memLp_congr_ae (average_ae_rawMean P u f hf hrep)).mp (Lp.memLp (average P (value P u)))
+  exact (memLp_congr_ae (average_ae_rawMean P u f hf hrep)).mp
+    (Lp.memLp (average (V := Vector3) P (value P u)))
 
 /-- The actual ordinary-space L² mean has the normalized integral as its representative. -/
 theorem mean_ae_rawMean :
-    (mean P (value P u) : Space → Space) =ᵐ[volume] rawMean P f := by
+    (mean (V := Vector3) P (value P u) : Space → Space) =ᵐ[volume] rawMean P f := by
   let v : SpatialL2 Space := (rawMean_memLp P u f hf hrep).toLp (rawMean P f)
   have hv : (v : Space → Space) =ᵐ[volume] rawMean P f :=
     (rawMean_memLp P u f hf hrep).coeFn_toLp
-  have he : embedding P v = average P (value P u) := by
+  have he : embedding (V := Space) P v = average (V := Vector3) P (value P u) := by
     apply Lp.ext
     filter_upwards [lift_ae P v,
       (Measure.quasiMeasurePreserving_fst (μ := (volume : Measure Space))
         (ν := (volume : Measure (AddCircle P)))).ae hv,
       average_ae_rawMean P u f hf hrep] with z hl hm ha
     exact hl.trans (hm.trans ha.symm)
-  have hm : mean P (value P u) = v := by
+  have hm : mean (V := Vector3) P (value P u) = v := by
     rw [← mean_average P (value P u), ← he, mean_embedding]
   rw [hm]
   exact hv
@@ -134,26 +136,29 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
-  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (p : C(K, LiftL2 P))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
 
 include hp
 
 /-- The ordinary L² time path represents the actual angular integral at every time. -/
 theorem pathMean_pointField_ae (t : K) :
-    (pathMean P p t : Space → Space) =ᵐ[volume] rawMean P (pointField P p hp t) := by
+    (pathMean (K := K) (V := Vector3) P p t : Space → Space) =ᵐ[volume]
+      rawMean P (pointField P p hp t) := by
   have h := mean_ae_rawMean P (sobolevPath P 3 p hp t) (pointField P p hp t)
     (smoothField_continuous P _ (pointField_smooth P p hp t))
     (by simpa only [sobolevPath_value] using pointField_ae P p hp t)
   simpa only [pathMean_apply, sobolevPath_value] using h
 
 theorem mean_slice_orbit (t : K) :
-    EulerMeanSmoothRepresentative.SmoothOrbit (pathMean P p t) := by
+    EulerMeanSmoothRepresentative.SmoothOrbit (pathMean (K := K) (V := Vector3) P p t) := by
   have h := (ContinuousMap.evalCLM ℝ t).contDiff.comp (pathMean_orbit_contDiff P p hp)
   exact h
 
 /-- Uniqueness identifies the mean solver's ordinary representative with the literal integral. -/
 theorem mean_pointField_eq (t : K) :
-    EulerMeanSmoothRepresentative.representative (pathMean P p t) (mean_slice_orbit P p hp t) =
+    EulerMeanSmoothRepresentative.representative (pathMean (K := K) (V := Vector3) P p t)
+        (mean_slice_orbit P p hp t) =
       rawMean P (pointField P p hp t) := by
   apply EulerMeanSmoothRepresentative.representative_unique
   · exact rawMean_continuous P (sobolevPath P 3 p hp t) (pointField P p hp t)
@@ -187,7 +192,8 @@ open scoped ContDiff
 
 variable (D : Data) (P : ℝ) [Fact (0 < P)]
   (p : C(Icc (0 : ℝ) D.T, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a p))
 
 /-- The literal normalized integral of the actual cylinder representative. -/
 def angularMeanRaw : VectorField := fun z =>
@@ -195,13 +201,15 @@ def angularMeanRaw : VectorField := fun z =>
 
 include hp in
 theorem angularMean_orbit :
-    ContDiff ℝ ∞ (fun a : Space => pathTranslation D.T a (pathMean P p)) := by
+    ContDiff ℝ ∞ (fun a : Space => pathTranslation D.T a
+      (pathMean (K := Icc (0 : ℝ) D.T) (V := Space) P p)) := by
   simpa only [pathTranslation, spatialPathTranslation, EulerLpTranslation.translation,
     EulerMeanSolenoidal.translation] using pathMean_orbit_contDiff P p hp
 
 /-- A genuine forcing witness for the normalized angular mean. -/
 def angularMeanForcing : Forcing D (angularMeanRaw D P p hp) :=
-  Forcing.ofOrbitPath (pathMean P p) (angularMean_orbit D P p hp) (fun t x θ => by
+  Forcing.ofOrbitPath (pathMean (K := Icc (0 : ℝ) D.T) (V := Space) P p)
+    (angularMean_orbit D P p hp) (fun t x θ => by
     simp only [angularMeanRaw, Data.clamp_coe]
     exact congrFun (mean_pointField_eq P p hp t).symm x)
 
@@ -241,7 +249,8 @@ variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField}
 
 /-- Its path is the genuine average operator, and its raw field is exactly the angular integral. -/
 def angleMean (G : Field P T raw) : Field P T (EulerPacketProfileRecursion.angleMean P raw) :=
-  ofLifted (pathAverage P G.path) (pathAverage_orbit_contDiff P G.path G.orbit)
+  ofLifted (pathAverage (K := Icc (0 : ℝ) T) (V := Vector3) P G.path)
+    (pathAverage_orbit_contDiff P G.path G.orbit)
     (fun t x => rawMean P (pointField P G.path G.orbit t) x.1)
     (fun t => (rawMean_continuous P (sobolevPath P 3 G.path G.orbit t)
       (pointField P G.path G.orbit t) (smoothField_continuous P _ (pointField_smooth P G.path
@@ -268,7 +277,7 @@ def highPart (G : Field P T raw) : Field P T (raw-EulerPacketProfileRecursion.an
   G.sub G.angleMean
 
 @[simp] theorem angleMean_path (G : Field P T raw) :
-    G.angleMean.path = pathAverage P G.path := rfl
+    G.angleMean.path = pathAverage (K := Icc (0 : ℝ) T) (V := Vector3) P G.path := rfl
 
 /-- The same actual angular integral is admissible for the constructed ordinary-space mean solver.
 -/

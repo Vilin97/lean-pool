@@ -251,8 +251,8 @@ noncomputable def potentialCoefficient (l : SignedLabel B N0) (n : ℕ) (x : Poi
 theorem potentialCoefficient_zero (l : SignedLabel B N0) (n : ℕ) (x : Point)
     (ha : (cutCoefficients l).amplitude n x = 0) :
     potentialCoefficient l n x = 0 := by
-  simp [potentialCoefficient, CurlClassBounds.normalCoefficient,
-    CurlClassBounds.normalCross, ha]
+  simp only [potentialCoefficient, CurlClassBounds.normalCoefficient, CurlClassBounds.normalCross,
+      ha, map_zero, smul_zero]
 
 theorem potentialCoefficient_zero_germ (l : SignedLabel B N0) (n : ℕ) {x : Point}
     (ha : (cutCoefficients l).amplitude n =ᶠ[𝓝 x] fun _ => 0) :
@@ -388,8 +388,8 @@ theorem copyPotential_zero_germ (l : SignedLabel B N0) (k : Frequency) (n : ℕ)
     (hk : nativeOfFull x ∉ (copyCells l).carrier n k) :
     copyPotentialCoefficient l k n =ᶠ[𝓝 x] fun _ => 0 := by
   filter_upwards [copyAmplitude_zero_germ l k n hk] with y hy
-  simp [copyPotentialCoefficient, CurlClassBounds.normalCoefficient,
-    CurlClassBounds.normalCross, hy]
+  simp only [copyPotentialCoefficient, CurlClassBounds.normalCoefficient,
+      CurlClassBounds.normalCross, hy, map_zero, smul_zero]
 
 theorem copyPressure_germ (l : SignedLabel B N0) (k : Frequency) (n : ℕ) {x : Point}
     (hx : x ∈ fullStrip.domain) (hk : nativeOfFull x ∈ (copyCells l).carrier n k) :
@@ -710,14 +710,15 @@ theorem attached_pair_support (l : SignedLabel B N0) (x : ActualSignedGeometry.N
   have hraw : ActualPrimary.rawVelocity l.1 l.2 x ≠ 0 := by
     intro hv
     rcases hne with hne | hne
-    · exact hne (by simp [ActualPrimary.attachedRawVelocity, WaveEdgeExtension.nativeExtension,
-        WaveEdgeExtension.extension, ActualPrimary.outerRawVelocity, hv])
+    · exact hne (by simp only [ActualPrimary.attachedRawVelocity, WaveEdgeExtension.nativeExtension,
+        WaveEdgeExtension.extension, ActualPrimary.outerRawVelocity, hv, smul_zero, ite_self])
     · have hp := ActualPrimary.rawPressure_zero_of_velocity_zero l.1 l.2 x hv
-      exact hne (by simp [ActualPrimary.attachedRawPressure, WaveEdgeExtension.nativeExtension,
-        WaveEdgeExtension.extension, ActualPrimary.outerRawPressure, hp])
+      exact hne (by simp only [ActualPrimary.attachedRawPressure, WaveEdgeExtension.nativeExtension,
+          WaveEdgeExtension.extension, ActualPrimary.outerRawPressure, hp, smul_zero, ite_self])
   have hm : ActualPrimary.spatialMask l.2 x.1 ≠ 0 := by
     intro hz
-    exact hraw (by simp [ActualPrimary.rawVelocity, PartitionedCovariance.amplitude, hz])
+    exact hraw (by simp only [ActualPrimary.rawVelocity, PartitionedCovariance.amplitude, hz,
+        zero_mul, mul_zero, zero_smul])
   refine ⟨hr, ActualPrimary.spatialMask_q_range l.2 x.1 hm,
     ActualPrimary.spatialMask_native_support l.2 x.1 hm, ?_⟩
   exact hne.elim (ActualPrimary.attachedRawVelocity_core l.1 l.2 x)
@@ -736,10 +737,10 @@ theorem cut_pair_support (l : SignedLabel B N0) (x : ActualSignedGeometry.Native
   rcases hne with hv | hp
   · left
     intro hz
-    exact hv (by simp [cutNativeVelocity, hz])
+    exact hv (by simp only [cutNativeVelocity, hz, map_zero, smul_zero])
   · right
     intro hz
-    exact hp (by simp [cutNativePressure, hz])
+    exact hp (by simp only [cutNativePressure, hz, smul_zero])
 
 end ActualSupport
 
@@ -812,8 +813,8 @@ theorem potential_amplitude_data (i : Fin 3) (k : Frequency) (I : PhysicalWaveSu
     (congrArg (fun L : PhysicalWaveSum.BandLabel => L.val.1) hl).symm
   have ha : copyAmplitude l k I.1.val.1 (PhysicalClassBounds.cylindricalMap x, 0) ≠ 0 := by
     intro hz
-    exact hn (by simp [copyPotentialCoefficient, CurlClassBounds.normalCoefficient,
-      CurlClassBounds.normalCross, hz])
+    exact hn (by simp only [copyPotentialCoefficient, CurlClassBounds.normalCoefficient,
+        CurlClassBounds.normalCross, hz, map_zero, smul_zero])
   rw [hm, copyAmplitude_nativeAt, hl] at ha
   exact ⟨l, hl, hI, ht, ha⟩
 
@@ -923,15 +924,18 @@ theorem cut_pair_mask (l : SignedLabel B N0) (x : ActualSignedGeometry.Native)
     ActualPrimary.spatialMask l.2 x.1 ≠ 0 := by
   intro hm
   have hv : ActualPrimary.rawVelocity l.1 l.2 x = 0 := by
-    simp [ActualPrimary.rawVelocity, PartitionedCovariance.amplitude, hm]
+    simp only [ActualPrimary.rawVelocity, PartitionedCovariance.amplitude, hm, zero_mul, mul_zero,
+        zero_smul]
   have hp := ActualPrimary.rawPressure_zero_of_velocity_zero l.1 l.2 x hv
   rcases hne with hne | hne
   · apply hne
-    simp [cutNativeVelocity, ActualPrimary.attachedRawVelocity, WaveEdgeExtension.nativeExtension,
-      WaveEdgeExtension.extension, ActualPrimary.outerRawVelocity, hv]
+    simp only [cutNativeVelocity, ActualPrimary.attachedRawVelocity,
+        WaveEdgeExtension.nativeExtension, WaveEdgeExtension.extension,
+        ActualPrimary.outerRawVelocity, hv, smul_zero, ite_self, map_zero]
   · apply hne
-    simp [cutNativePressure, ActualPrimary.attachedRawPressure, WaveEdgeExtension.nativeExtension,
-      WaveEdgeExtension.extension, ActualPrimary.outerRawPressure, hp]
+    simp only [cutNativePressure, ActualPrimary.attachedRawPressure,
+        WaveEdgeExtension.nativeExtension, WaveEdgeExtension.extension,
+        ActualPrimary.outerRawPressure, hp, smul_zero, ite_self]
 
 theorem cut_pair_domain (l : SignedLabel B N0) (L : PhysicalWaveSum.BandLabel)
     (k : Frequency) (x : LiftPoint) (ht : 0 < x.1.1)
@@ -953,9 +957,9 @@ theorem cut_pair_annulus (l : SignedLabel B N0) (L : PhysicalWaveSum.BandLabel)
   have hq : 0 < q := lt_trans (by norm_num) hqlo
   have hs := Real.sqrt_pos.mpr hq
   have hslo : (1 / 2 : ℝ) ≤ Real.sqrt q :=
-    (Real.le_sqrt (by norm_num) hq.le).mpr (by nlinarith)
+    (Real.le_sqrt (by norm_num) hq.le).mpr (by nlinarith only [hqlo])
   have hshi : Real.sqrt q ≤ 2 :=
-    (Real.sqrt_le_left (by norm_num)).mpr (by linarith)
+    (Real.sqrt_le_left (by norm_num)).mpr (by linarith only [hqhi])
   have hradius : WaveEdgeExtension.nativeRadius ActualPrimary.h (nativeAt L k x) =
       PolarCharts.radius (PhysicalGraphBounds.liftXY x) / Real.sqrt q := by
     rw [WaveEdgeExtension.nativeRadius_eq_qLength]
@@ -972,11 +976,11 @@ theorem cut_pair_annulus (l : SignedLabel B N0) (L : PhysicalWaveSum.BandLabel)
   have hnhi : ‖PhysicalGraphBounds.liftXY x‖ ≤ outerRadius := by
     apply (PolarCharts.norm_le_radius _).trans
     change _ ≤ 2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal
-    nlinarith
+    nlinarith only [hrhi, hshi, hb]
   have hnlo : innerRadius ≤ ‖PhysicalGraphBounds.liftXY x‖ := by
     have hh := PolarCharts.radius_le_two_norm (PhysicalGraphBounds.liftXY x)
     change PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 4 ≤ _
-    nlinarith
+    nlinarith only [hrlo, hh, hslo, ha]
   refine ⟨⟨?_, hnlo⟩, ?_⟩
   · simpa only [Metric.mem_closedBall, dist_zero_right] using hnhi
   · have hz := ActualSignedPhysicalData.normalized_slow_norm
@@ -1016,7 +1020,8 @@ theorem carrier_integer (L : PhysicalWaveSum.BandLabel) (k : Frequency) :
       (ActualPrimary.choice B N0).prepared (selected L hL).1 (selected L hL).2, ?_⟩
     rw [carrier, dite_eq_left hL, ← selected_band L hL]
     exact PrimaryGeometryAssembly.carrier_mul_phase_p _ _ _ ActualPrimary.slots.radius_pos _ _
-  · exact ⟨0, by simp [carrier, hL, ActualSignedPhysicalData.carrier]⟩
+  · exact ⟨0, by simp only [carrier, hL, ↓reduceDIte, ActualSignedPhysicalData.carrier, Fin.isValue,
+      mul_zero, Int.cast_zero]⟩
 
 theorem gap_bound (L : PhysicalWaveSum.BandLabel) : gap L ≤ CommonWindow.gap ActualPrimary.h := by
   have hh := CommonWindow.native_le_index_add ActualPrimary.h ActualPrimary.outgoing.data.h_pos.le
@@ -1325,9 +1330,9 @@ theorem cut_pair_source_domain (l : SignedLabel B N0) (L : PhysicalWaveSum.BandL
   have hl : innerRadius ≤ ‖PhysicalGraphBounds.liftXY x‖ := hg.2
   refine ⟨⟨?_, ?_⟩, cut_pair_domain l L k x ht hne⟩
   · change innerRadius / 2 < _
-    linarith [innerRadius_pos]
+    linarith only [hl, innerRadius_pos]
   · change _ < outerRadius + 1
-    linarith
+    linarith only [hu]
 
 theorem potential_source_domain (B N0 : ℕ) (i : Fin 3) (k : Frequency)
     (I : PhysicalWaveSum.WaveIndex 1) (x : LiftPoint)
@@ -1384,7 +1389,8 @@ noncomputable def identitySourceChartOn {N : ℕ} {K I : Type}
     intro k J x hx j hj hjm
     simp only [pow_zero, mul_one]
     exact (PhysicalGraphBounds.norm_positive_jet_linear_le
-        (ContinuousLinearMap.id ℝ LiftPoint) x hj).trans (by simp)
+        (ContinuousLinearMap.id ℝ LiftPoint) x hj).trans (by simp only [ContinuousLinearMap.norm_id,
+            Std.le_refl])
   amplitude_eq := he
   contains k J z _ _ _ _ hz := by
     have hrad := (hs.tsupport_geometry J k hz).1
@@ -1516,7 +1522,7 @@ theorem commonLift_mem_paddedPast (n d : ℕ) {w : ProblemStatement.SpaceTime}
   have hu : ‖PhysicalGraphBounds.scaledRadial n w‖ ≤ outerRadius := by
     simpa only [Metric.mem_closedBall, dist_zero_right] using hann.1
   have hl : innerRadius ≤ ‖PhysicalGraphBounds.scaledRadial n w‖ := hann.2
-  exact ⟨by linarith [innerRadius_pos], by linarith⟩
+  exact ⟨by linarith only [hl, innerRadius_pos], by linarith only [hu]⟩
 
 theorem potentialSmooth (B N0 : ℕ) (i : Fin 3) :
     LocalPhysicalCopyBounds.SmoothData (potentialFamily B N0 i) innerRadius ActualPrimary.h
@@ -2047,7 +2053,7 @@ theorem cut_pair_physicalX (l : SignedLabel B N0) (L : PhysicalWaveSum.BandLabel
   have hlo := mul_pos (sub_pos.mpr hd.1.1) (add_pos hrad ha)
   have hhi := mul_pos (sub_pos.mpr hd.1.2) (add_pos hb hrad)
   rw [he]
-  constructor <;> nlinarith
+  exact ⟨by linarith only [hlo, hla], by linarith only [hhi, hlb]⟩
 
 theorem potential_amplitude_zero_exterior (B N0 : ℕ) (i : Fin 3) (k : Frequency)
     (I : PhysicalWaveSum.WaveIndex 1) {w : ProblemStatement.SpaceTime}
@@ -2137,7 +2143,8 @@ theorem graph_cartesian_forward (h : ℝ) (n d : ℕ)
     exact (PolarCharts.radius_polar _ _).trans (abs_of_pos hR)
   have hp : PhysicalGraphBounds.radialProjection (z.1, CylindricalResidual.chart z.2) =
       PolarCharts.polar (z.2 0, z.2 1) := by
-    simp [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart, PolarCharts.polar]
+    simp only [CylindricalResidual.chart, Fin.isValue, PhysicalGraphBounds.radialProjection_apply,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, PolarCharts.polar]
   have hy := congrArg Prod.snd (PhysicalWaveSum.commonLift_formula h n d hd
     (z.1, CylindricalResidual.chart z.2))
   change (CommonCoverSolve.coverPower d).symm
@@ -2493,13 +2500,17 @@ theorem scaledRepresentative_spec {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     · rfl
     ext i
     fin_cases i
-    · simpa [scaledRepresentative, CylindricalResidual.chart,
-        PhysicalGraphBounds.radialProjection_apply,
-        PolarCharts.polar, mul_assoc] using congrArg Prod.fst he
-    · simpa [scaledRepresentative, CylindricalResidual.chart,
-        PhysicalGraphBounds.radialProjection_apply,
-        PolarCharts.polar, mul_assoc] using congrArg Prod.snd he
-    · simp [scaledRepresentative, CylindricalResidual.chart]
+    · simpa only [CylindricalResidual.chart, Fin.isValue, scaledRepresentative, one_div,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, mul_assoc,
+        AxisymmetricResidual.pack_two, Fin.zero_eta, PolarCharts.polar, Prod.smul_mk, smul_eq_mul,
+        PhysicalGraphBounds.radialProjection_apply] using congrArg Prod.fst he
+    · simpa only [CylindricalResidual.chart, Fin.isValue, scaledRepresentative, one_div,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, mul_assoc,
+        AxisymmetricResidual.pack_two, Fin.mk_one, PolarCharts.polar, Prod.smul_mk, smul_eq_mul,
+        PhysicalGraphBounds.radialProjection_apply] using congrArg Prod.snd he
+    · simp only [CylindricalResidual.chart, Fin.isValue, scaledRepresentative, one_div,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
+        AxisymmetricResidual.pack_two, Fin.reduceFinMk]
 
 theorem exists_scaledRepresentative (n : ℕ) (w : ProblemStatement.SpaceTime)
     (hw : PhysicalGraphBounds.radialProjection w ≠ 0) :
@@ -2555,7 +2566,8 @@ theorem cartesianPotential_zero_of_common_zero (l : SignedLabel B N0)
       (ActualPrimaryCoherence.physicalPotential_zero_axis l.1 l.2) (z := z) hr
     have hzero : PhysicalCurlCovariance.realVector (0 : ComplexVector) = 0 := by
       ext i
-      simp
+      simp only [PhysicalCurlCovariance.realVector_apply, Pi.zero_apply, Complex.zero_re,
+          PiLp.zero_apply]
     simp only [hphys, hzero, map_zero, hb] at he
     exact he
 
@@ -2605,7 +2617,7 @@ theorem potential_periodized_eq (l : SignedLabel B N0) (i : Fin 3)
   · have hp := potentialCoefficient_zero_off_annulus l w hw hann
     have hz := cartesianPotential_zero_of_common_zero l w hw hp
     rw [potential_periodized l i w hw, hp, hz]
-    simp [map_zero, smul_zero, zero_mul, Complex.zero_re]
+    simp only [map_zero, Pi.zero_apply, smul_zero, zero_mul, Complex.zero_re, PiLp.zero_apply]
 
 end GlobalPrimaryPotential
 
@@ -2653,7 +2665,8 @@ theorem physicalPressure_periodic (l : SignedLabel B N0) (t r z : ℝ) :
 theorem space_pack (q : ProblemStatement.Space) :
     AxisymmetricResidual.pack (q 0) (q 1) (q 2) = q := by
   ext i
-  fin_cases i <;> simp
+  fin_cases i <;> simp only [Fin.isValue, Fin.zero_eta, AxisymmetricResidual.pack_zero, Fin.mk_one,
+      AxisymmetricResidual.pack_one, Fin.reduceFinMk, AxisymmetricResidual.pack_two]
 
 theorem physicalPressure_eq_of_chart_eq (l : SignedLabel B N0)
     {z z' : ProblemStatement.SpaceTime} (hr : 0 < z.2 0) (hr' : 0 < z'.2 0)
@@ -2666,8 +2679,9 @@ theorem physicalPressure_eq_of_chart_eq (l : SignedLabel B N0)
     simpa [CylindricalResidual.chart] using congrArg (fun x : ProblemStatement.SpaceTime => x.2 2)
         he
   have hpolar : PolarCharts.polar (z.2 0, z.2 1) = PolarCharts.polar (z'.2 0, z'.2 1) := by
-    simpa [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart,
-        PolarCharts.polar] using
+    simpa only [PolarCharts.polar, Fin.isValue, Prod.mk.injEq, CylindricalResidual.chart,
+        PhysicalGraphBounds.radialProjection_apply, AxisymmetricResidual.pack_zero,
+        AxisymmetricResidual.pack_one] using
       congrArg PhysicalGraphBounds.radialProjection he
   have hrad : z.2 0 = z'.2 0 := by
     have hh := congrArg PolarCharts.radius hpolar
@@ -2870,8 +2884,10 @@ theorem vectorSum_apply {H : ℕ} {K : Type*} (f : Fin 3 → PhysicalCopyBounds.
     PhysicalCopyBounds.vectorSum f a h r0 w i = ((f i).sum a h r0 w).re := by
   unfold PhysicalCopyBounds.vectorSum
   rw [Fin.sum_univ_three]
-  fin_cases i <;> simp [PhysicalWaveSum.realCoordinate_apply,
-    ProblemStatement.coordinateVector]
+  fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, PhysicalWaveSum.realCoordinate_apply,
+      ProblemStatement.coordinateVector, PiLp.add_apply, PiLp.smul_apply, PiLp.single_eq_same,
+      smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero,
+      add_zero, Fin.reduceEq, Fin.mk_one, one_ne_zero, zero_add, Fin.reduceFinMk]
 
 theorem graph_smooth_of_strip (n d : ℕ) {w : ProblemStatement.SpaceTime}
     (hx : PhysicalMeanJetBounds.graph ActualPrimary.h n d w ∈ strip.domain) :
@@ -2880,7 +2896,8 @@ theorem graph_smooth_of_strip (n d : ℕ) {w : ProblemStatement.SpaceTime}
   have hne : PhysicalGraphBounds.scaledRadial n w ≠ 0 := by
     intro he
     rw [PhysicalMeanJetBounds.graph_radius, he] at hr
-    simp [PolarCharts.radius] at hr
+    simp only [PolarCharts.radius, Prod.fst_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+        zero_pow, Prod.snd_zero, add_zero, Real.sqrt_zero, lt_self_iff_false] at hr
   let a := ‖PhysicalGraphBounds.scaledRadial n w‖
   have ha : 0 < a := norm_pos_iff.mpr hne
   have hann : PhysicalGraphBounds.scaledRadial n w ∈ PhysicalGraphBounds.annulus a a := by
@@ -2910,7 +2927,8 @@ theorem primary_cartesianCurl_sum (s : Finset (ActualPrimary.Label B N0 × Fin 2
   apply spatialCurl_finset_sum
   intro l hl
   exact ((ActualPrimaryCoherence.cartesianPotential_smooth l.2 l.1).contDiffAt
-    (PhysicalWaveSum.preterminal_open.mem_nhds hw)).differentiableAt (by simp)
+    (PhysicalWaveSum.preterminal_open.mem_nhds hw)).differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
 
 /-- The constructed global potential is the literal finite primary sum on
 every valid current-band chart. -/
@@ -3074,12 +3092,12 @@ theorem graph_mem_strip_of_activeX (n d : ℕ) {w : ProblemStatement.SpaceTime}
     apply (sq_lt_sq₀ ha.le hr).mp
     rw [ha2]
     rw [he] at hX
-    linarith [hX.1]
+    linarith only [hX, hX.1]
   have hhi : r < PrimaryTargetBounds.rightRadius ActualPrimary.nominal := by
     apply (sq_lt_sq₀ hr hb.le).mp
     rw [hb2]
     rw [he] at hX
-    linarith [hX.2]
+    linarith only [hX, hX.2]
   exact (BaseContextAssembly.nativeStrip_mem ActualPrimary.nominal ActualPrimary.standardRegion
       x).mpr
     ⟨hs, hlo, hhi⟩

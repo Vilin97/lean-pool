@@ -41,10 +41,10 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
   (Ti : ℝ) (hT1 : A.T ≤ 1) (hTi : A.T⁻¹ ≤ Ti)
 
-local notation "J" => L.geometryForwardInputs H m hm R S hS P G hball Ω hΩ hΩo hsub hΩball Ti hT1
-    hTi
-local notation "BC" => forwardCoefficientBudget period (A.meanData H) (A.transverseData m hm R S hS)
-  rfl (ForwardInputs.normal J)
+local notation "J" => (L.geometryForwardInputs H m hm R S hS P G hball Ω hΩ hΩo hsub hΩball Ti hT1
+    hTi)
+local notation "BC" => (forwardCoefficientBudget period (A.meanData H) (A.transverseData m hm R S
+    hS) rfl (ForwardInputs.normal J))
 local notation "Cp" => (560*P.horizon^10/P.epsilon)
 
 /-- Geometry canonical radius, given by `EulerPacketForwardRadius.canonicalRadius (J).linear
@@ -176,10 +176,10 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
   (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
-local notation "A" => L.geometryForwardInputs H m hm R S hS P J hball
-  Ω hΩ hΩo hsub hΩball Ti hT1 hTi
-local notation "BC" => forwardCoefficientBudget period (G.meanData H)
-  (G.transverseData m hm R S hS) rfl (ForwardInputs.normal A)
+local notation "A" => (L.geometryForwardInputs H m hm R S hS P J hball
+  Ω hΩ hΩo hsub hΩball Ti hT1 hTi)
+local notation "BC" => (forwardCoefficientBudget period (G.meanData H)
+  (G.transverseData m hm R S hS) rfl (ForwardInputs.normal A))
 
 /-- Geometry forward parameter size, given by `parameterSize L.K 0 Ti
 (560*P.horizon^10/P.epsilon) H.L J.δ ‖ξ‖+J.hchild`. -/

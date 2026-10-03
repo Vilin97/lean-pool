@@ -83,11 +83,12 @@ def projectPath : C(K,CylinderL2 period V) →L[ℝ] C(K,Supported period V S hS
 
 omit [CompactSpace K] in
 @[simp] theorem includePath_apply (f : C(K, Supported period V S hS)) (t : K) :
-    includePath period S hS f t = (f t : CylinderL2 period V) := rfl
+    includePath (K := K) (V := V) period S hS f t = (f t : CylinderL2 period V) := rfl
 
 omit [CompactSpace K] in
 @[simp] theorem projectPath_apply (f : C(K, CylinderL2 period V)) (t : K) :
-    projectPath period S hS f t = projection (liftMeasure period) (spatialSet period S)
+    projectPath (K := K) (V := V) period S hS f t =
+      projection (liftMeasure period) (spatialSet period S)
         (spatialSet_measurable period S hS) (f t) := rfl
 
 /-- Time-path inclusion is a contraction (indeed an isometry). -/
@@ -112,7 +113,8 @@ theorem projectPath_norm : ‖projectPath (K := K) (V := V) period S hS‖ ≤ 1
 omit [CompactSpace K] in
 /-- Projecting an already supported continuous path fixes it. -/
 theorem project_include (f : C(K, Supported period V S hS)) :
-    projectPath period S hS (includePath period S hS f) = f := by
+    projectPath (K := K) (V := V) period S hS (includePath (K := K) (V := V) period S hS f) =
+      f := by
   apply ContinuousMap.ext
   intro t
   exact projection_supported (liftMeasure period) (spatialSet period S) (spatialSet_measurable
@@ -121,12 +123,12 @@ theorem project_include (f : C(K, Supported period V S hS)) :
 /-- A globally defined actual mixed translation followed by supported projection. -/
 def translatedData (u : CylinderL2 period V) (a : LiftTangent) : Supported period V S hS :=
   projection (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
-      (translate period a u)
+      (translate (V := V) period a u)
 
 /-- The corresponding globally defined family of actual continuous forcing paths. -/
 def translatedForcing (f : C(K, CylinderL2 period V)) (a : LiftTangent) :
     C(K,Supported period V S hS) :=
-  projectPath period S hS (pathTranslate period a f)
+  projectPath (K := K) (V := V) period S hS (pathTranslate (K := K) (V := V) period a f)
 
 /-- On the allowed translation neighborhood, projected data are exact translations. -/
 theorem translatedData_eq_intoLarger (S₀ : Set Space) (hS₀ : MeasurableSet S₀)
@@ -142,7 +144,7 @@ omit [CompactSpace K] in
 theorem translatedForcing_eq_intoLarger (S₀ : Set Space) (hS₀ : MeasurableSet S₀)
     (f : C(K, Supported period V S₀ hS₀)) (a : LiftTangent)
     (ha : shiftedSet a.1 S₀ ⊆ S) :
-    translatedForcing period S hS (includePath period S₀ hS₀ f) a =
+    translatedForcing period S hS (includePath (K := K) (V := V) period S₀ hS₀ f) a =
       (EulerLpCylinderTranslation.intoLarger (V := V) period a S₀ S hS₀ hS
           ha).toContinuousLinearMap.compLeftContinuous ℝ K f := by
   apply ContinuousMap.ext
@@ -151,7 +153,7 @@ theorem translatedForcing_eq_intoLarger (S₀ : Set Space) (hS₀ : MeasurableSe
 
 /-- Smoothness is inherited from the true ordinary L² translation orbit. -/
 theorem translatedData_contDiff (u : CylinderL2 period V)
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a u)) :
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := V) period a u)) :
     ContDiff ℝ ∞ (translatedData period S hS u) := by
   exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞) (E := CylinderL2 period V)
     (F := Supported period V S hS) (projection (liftMeasure period) (spatialSet period S)
@@ -159,9 +161,10 @@ theorem translatedData_contDiff (u : CylinderL2 period V)
 
 /-- The supported parameter family has no larger actual derivative norm. -/
 theorem norm_iteratedFDeriv_translatedData_le (u : CylinderL2 period V)
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a u)) (n : ℕ) (a : LiftTangent) :
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := V) period a u)) (n : ℕ)
+    (a : LiftTangent) :
     ‖iteratedFDeriv ℝ n (translatedData period S hS u) a‖ ≤
-      ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate period b u) a‖ := by
+      ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate (V := V) period b u) a‖ := by
   have h := (projection (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable
       period S hS)).norm_iteratedFDeriv_comp_left
     (hu.contDiffAt (x := a)) (n := n) (by simp)
@@ -171,17 +174,18 @@ theorem norm_iteratedFDeriv_translatedData_le (u : CylinderL2 period V)
 
 /-- Uniform-time orbit smoothness is preserved by the fixed support projection. -/
 theorem translatedForcing_contDiff (f : C(K, CylinderL2 period V))
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a f)) :
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := V) period a f)) :
     ContDiff ℝ ∞ (translatedForcing period S hS f) := by
   exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞) (E := C(K,CylinderL2 period V))
     (F := C(K,Supported period V S hS)) (projectPath period S hS)).comp hf
 
 /-- The projected forcing jets are bounded by the genuine uniform-time spatial orbit jets. -/
 theorem norm_iteratedFDeriv_translatedForcing_le (f : C(K, CylinderL2 period V))
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a f))
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := V) period a f))
     (n : ℕ) (a : LiftTangent) :
     ‖iteratedFDeriv ℝ n (translatedForcing period S hS f) a‖ ≤
-      ‖iteratedFDeriv ℝ n (fun b : LiftTangent => pathTranslate period b f) a‖ := by
+      ‖iteratedFDeriv ℝ n
+        (fun b : LiftTangent => pathTranslate (K := K) (V := V) period b f) a‖ := by
   have h := ContinuousLinearMap.norm_iteratedFDeriv_comp_left (𝕜 := ℝ) (E := LiftTangent)
     (F := C(K,CylinderL2 period V)) (G := C(K,Supported period V S hS))
     (projectPath (K := K) (V := V) period S hS) (hf.contDiffAt (x := a)) (n := n) (by simp)
@@ -193,13 +197,14 @@ variable {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
 
 /-- The true mixed initial-data derivative blocks are unchanged by support projection. -/
 theorem translatedData_block_le (u : CylinderL2 period V)
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a u)) (n : ℕ) (a : LiftTangent) :
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := V) period a u)) (n : ℕ)
+    (a : LiftTangent) :
     block directions q (translatedData period S hS u) n a ≤
-      block directions q (fun b : LiftTangent => translate period b u) n a := by
+      block directions q (fun b : LiftTangent => translate (V := V) period b u) n a := by
   have h := block_comp_clm_le directions q
     (projection (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
         hS))
-    (fun b : LiftTangent => translate period b u) hu n a
+    (fun b : LiftTangent => translate (V := V) period b u) hu n a
   exact h.trans ((mul_le_mul_of_nonneg_right
     (projection_norm (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable
         period S hS))
@@ -207,12 +212,13 @@ theorem translatedData_block_le (u : CylinderL2 period V)
 
 /-- The true mixed forcing derivative blocks are unchanged by support projection. -/
 theorem translatedForcing_block_le (f : C(K, CylinderL2 period V))
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a f))
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := V) period a f))
     (n : ℕ) (a : LiftTangent) :
     block directions q (translatedForcing period S hS f) n a ≤
-      block directions q (fun b : LiftTangent => pathTranslate period b f) n a := by
+      block directions q
+        (fun b : LiftTangent => pathTranslate (K := K) (V := V) period b f) n a := by
   have h := block_comp_clm_le directions q (projectPath (V := V) period S hS)
-    (fun b : LiftTangent => pathTranslate period b f) hf n a
+    (fun b : LiftTangent => pathTranslate (K := K) (V := V) period b f) hf n a
   exact h.trans ((mul_le_mul_of_nonneg_right
     (projectPath_norm (K := K) (V := V) period S hS)
     (block_nonneg directions q _ n a)).trans_eq (one_mul _))
@@ -220,7 +226,8 @@ theorem translatedForcing_block_le (f : C(K, CylinderL2 period V))
 /-- Inclusion transfers the same fixed-Hq block to actual cylinder L². -/
 theorem includePath_block_le (u : LiftTangent → C(K, Supported period V S hS))
     (hu : ContDiff ℝ ∞ u) (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b => includePath period S hS (u b)) n a ≤ block directions q u n a := by
+    block directions q (fun b => includePath (K := K) (V := V) period S hS (u b)) n a ≤
+      block directions q u n a := by
   have h := block_comp_clm_le directions q (includePath (V := V) period S hS) u hu n a
   exact h.trans ((mul_le_mul_of_nonneg_right
     (includePath_norm (K := K) (V := V) period S hS)

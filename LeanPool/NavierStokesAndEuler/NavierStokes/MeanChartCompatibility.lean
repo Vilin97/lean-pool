@@ -235,7 +235,7 @@ theorem divideRadius_pull {l : ℝ} (hl : l ≠ 0) (C : E →L[ℝ] F)
   change (u * f (chartLinear l C z)) / z.1 =
     (u * l) * (f (chartLinear l C z) / (l * z.1))
   by_cases hz : z.1 = 0
-  · simp [hz]
+  · simp only [chartLinear_apply, hz, mul_zero, div_zero]
   · field_simp
 
 theorem graphDr_pull (l : ℝ) (C : E →L[ℝ] F) (u : ℝ)
@@ -248,7 +248,8 @@ theorem graphDr_pull (l : ℝ) (C : E →L[ℝ] F) (u : ℝ)
   have he : chartLinear l C (PressureStream.radialVector knew v z) =
       l • PressureStream.radialVector kold w (chartLinear l C z) := by
     apply Prod.ext
-    · simp [chartLinear_apply, PressureStream.radialVector]
+    · simp only [PressureStream.radialVector, chartLinear_apply, mul_one, map_smul, Prod.smul_mk,
+        smul_eq_mul]
     · exact hvector
   rw [he, map_smul]
   simp only [smul_eq_mul, PressureStream.graphDr]
@@ -262,7 +263,7 @@ theorem graphDz_pull (l : ℝ) (C : E →L[ℝ] F) (u k : ℝ) (v : E) (w : F)
   rw [PressureStream.graphDz, fderiv_pull_apply l C u hf]
   have he : chartLinear l C (0, v) = k • ((0 : ℝ), w) := by
     apply Prod.ext
-    · simp
+    · simp only [chartLinear_apply, mul_zero, Prod.smul_mk, smul_eq_mul]
     · exact hvector
   rw [he, map_smul]
   simp only [smul_eq_mul, PressureStream.graphDz]
@@ -425,7 +426,8 @@ theorem meanPressure_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
   have hvector : M • (P.prodMap (TemporalMeanUpdate.coverMap k)) ((0 : S), v) =
       (N * l ^ d) • ((0 : T), w) := by
     apply Prod.ext
-    · simp
+    · simp only [ContinuousLinearMap.coe_prodMap', Prod.map_apply, map_zero, Prod.smul_mk,
+        smul_zero]
     · exact hshift
   unfold PressureStream.meanPressure
   rw [pressureSource_coverPull hl hab P k u hf hp]
@@ -572,7 +574,9 @@ theorem normalizeDebt_scale {l u ell U : ℝ} (hl : l ≠ 0) (hu : u ≠ 0)
     MeanRankUpdate.normalizeDebt (l * ell) (u * U) (MeanRankUpdate.scaleDebt l u d) =
       MeanRankUpdate.normalizeDebt ell U d := by
   ext i
-  fin_cases i <;> simp [MeanRankUpdate.normalizeDebt, MeanRankUpdate.scaleDebt] <;>
+  fin_cases i <;> simp only [MeanRankUpdate.normalizeDebt, MeanRankUpdate.scaleDebt, Fin.isValue,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, Fin.zero_eta, Fin.mk_one,
+      Fin.reduceFinMk] <;>
     field_simp [hl, hu, hell, hU]
 
 /-- Naturality of the constructed five-row inverse, not just of its rows. -/
@@ -685,7 +689,8 @@ theorem temporalAtIndex_fast_cancellation (h : ℝ) (n i : ℕ) {f : PressureStr
     (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _)).ne'
   have hi := TemporalMeanUpdate.temporalInverse_smooth
     (TemporalMeanUpdate.centered_smooth hf) (TemporalMeanUpdate.centered_periodic hp)
-  have hd := (((hi.differentiable (by simp)) z).hasFDerivAt).const_smul (-c⁻¹)
+  have hd := (((hi.differentiable (by simp only [ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero,
+      not_false_eq_true])) z).hasFDerivAt).const_smul (-c⁻¹)
   change HasFDerivAt (temporalAtIndex h n i f) _ z at hd
   rw [fastAtIndex, PressureStream.graphDz, hd.fderiv]
   change c * (-c⁻¹ * PressureStream.graphDz ((0 : S), vector .temporal)
@@ -734,12 +739,12 @@ theorem radialFrequency_scale (h : ℝ) (n i : ℕ) (d M : ℝ) :
     congr 1
     ring
   rw [hs, radialFrequency, mul_assoc, ← Real.rpow_add (ChartScales.Q_pos n)]
-  simp
+  simp only [add_neg_cancel, Real.rpow_zero, mul_one]
 
 theorem radialFrequency_native (h : ℝ) (n : ℕ) :
     radialFrequency h n (ChartScales.nativeIndex h n) (ChartScales.radialExponent h) 1 =
       ChartScales.radialCoefficient h n := by
-  simp [radialFrequency, ChartScales.radialCoefficient]
+  simp only [radialFrequency, one_mul, ChartScales.radialCoefficient]
 
 theorem radialFrequency_shift (h : ℝ) (n i : ℕ) (d M : ℝ) :
     M • TemporalMeanUpdate.coverMap i (vector .radial) =
@@ -875,7 +880,8 @@ theorem reconstructedGamma_pull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
   rw [streamPotential_pull hl ha hab hd C M N u v w hshift hf hs,
     streamGamma_pull hl.ne' C (u / l) _ _ v w
       (((PressureStream.streamPotential_contDiff (mul_pos hl ha)
-        (mul_lt_mul_of_pos_left hab hl) hd w hf hs).differentiable (by simp)) _)
+        (mul_lt_mul_of_pos_left hab hl) hd w hf hs).differentiable (by simp only [ne_eq,
+            WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])) _)
       (physicalSpeed_vector hl hz C d M N v w hshift), div_mul_cancel₀ _ hl.ne']
 
 theorem reconstructedBeta_pull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
@@ -890,7 +896,8 @@ theorem reconstructedBeta_pull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
   rw [streamPotential_pull hl ha hab hd C M N u v w hshift hf hs,
     streamBeta_pull l C (u / l) l znew zold
       (((PressureStream.streamPotential_contDiff (mul_pos hl ha)
-        (mul_lt_mul_of_pos_left hab hl) hd w hf hs).differentiable (by simp)) _) haxial,
+        (mul_lt_mul_of_pos_left hab hl) hd w hf hs).differentiable (by simp only [ne_eq,
+            WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])) _) haxial,
     div_mul_cancel₀ _ hl.ne']
 
 /-- The axial alias itself transforms as a velocity. It is retained as
@@ -949,7 +956,8 @@ theorem pressureAlias_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
   let C := P.prodMap (TemporalMeanUpdate.coverMap k)
   have hvector : M • C ((0 : S), v) = (N * l ^ d) • ((0 : T), w) := by
     apply Prod.ext
-    · simp [C]
+    · simp only [ContinuousLinearMap.coe_prodMap', Prod.map_apply, map_zero, Prod.smul_mk,
+        smul_zero, C]
     · exact hshift
   have hpressure : PressureStream.meanPressure d a b M hab v (coverPull l P k u f) =
       pull l C (u / l) (PressureStream.meanPressure d (l * a) (l * b) N
@@ -961,7 +969,8 @@ theorem pressureAlias_coverPull {l a b d : ℝ} (hl : 0 < l) (ha : 0 < a)
   rw [pressureAlias_eq_source_sub_derivative ha hab hd v (coverPull_smooth l P k u hf)
     (pull_supported hl C u hs), pressureSource_coverPull hl hab P k u hf hp, hpressure,
     graphDr_pull l C (u / l) _ _ ((0 : S), v) ((0 : T), w)
-      ((hps.differentiable (by simp)) _)
+      ((hps.differentiable (by simp only [ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero,
+          not_false_eq_true])) _)
       (physicalSpeed_vector hl hz C d M N ((0 : S), v) ((0 : T), w) hvector),
     div_mul_cancel₀ _ hl.ne']
   change u * PressureStream.pressureSource (l * a) (l * b) _ f (chartLinear l C z) -
@@ -1083,7 +1092,8 @@ theorem commonTemporalFields_fast_cancellation (r : ℕ → CorrectionState.Reco
   constructor
   · exact add_eq_zero_iff_eq_neg.mpr (temporalAtIndex_fast_cancellation h n (index n) hθ hpθ z)
   · rw [commonTemporalFields_axial_eq r h index epsilon axial fθ fz n ha hd hz hpz hsz]
-    have hf := (temporalAtIndex_smooth h n (index n) hz hpz).differentiable (by simp)
+    have hf := (temporalAtIndex_smooth h n (index n) hz hpz).differentiable (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
     have hg := (commonTemporalAlias_smooth r h index fz n ha hd hz hpz hsz).differentiable (by simp)
     have he : fastAtIndex h n (index n)
         (fun z => temporalAtIndex h n (index n) (fz n) z - commonTemporalAlias r h index fz n z) z =
@@ -1111,14 +1121,16 @@ theorem physicalAuxiliary_radial (h : ℝ) (n i : ℕ) (d M : ℝ) :
     M • physicalAuxiliary h n i ((0 : Plane), vector .radial) =
       (radialFrequency h n i d M * chartScale n ^ d) • ((0 : Plane), vector .radial) := by
   apply Prod.ext
-  · simp [physicalAuxiliary]
+  · simp only [physicalAuxiliary, ContinuousLinearMap.coe_prodMap', Prod.map_apply, map_zero,
+      Prod.smul_mk, smul_zero]
   · exact radialFrequency_shift h n i d M
 
 theorem physicalAuxiliary_temporal (h : ℝ) (n i : ℕ) :
     physicalAuxiliary h n i ((0 : Plane), vector .temporal) =
       ChartScales.Tg ^ i • ((0 : Plane), vector .temporal) := by
   apply Prod.ext
-  · simp [physicalAuxiliary]
+  · simp only [physicalAuxiliary, ContinuousLinearMap.coe_prodMap', Prod.map_apply, map_zero,
+      Prod.smul_mk, smul_zero]
   · exact TemporalMeanUpdate.coverMap_temporal i
 
 theorem physicalAuxiliary_axial (h : ℝ) (n i : ℕ) :
@@ -1144,7 +1156,8 @@ theorem physicalFast_naturality (h : ℝ) (n i : ℕ) {f : PressureStream.Lift P
   have he := graphDz_pull (chartScale n) (physicalAuxiliary h n i)
     (ChartScales.Q n ^ (-CoordinateAlgebra.A h)) (ChartScales.Tg ^ i)
     ((0 : Plane), vector .temporal) ((0 : Plane), vector .temporal)
-    ((hf.differentiable (by simp)) (physicalToChart h n i z)) (physicalAuxiliary_temporal h n i)
+    ((hf.differentiable (by simp only [ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero,
+        not_false_eq_true])) (physicalToChart h n i z)) (physicalAuxiliary_temporal h n i)
   change PressureStream.graphDz _ (fieldOnPhysical h n i (CoordinateAlgebra.A h) f) z = _ at he
   rw [he, fieldOnPhysical_apply, fastAtIndex]
   have hunit : ChartScales.Q n ^ (-(2 * CoordinateAlgebra.A h + 1 / 2)) *
@@ -1269,11 +1282,10 @@ theorem sourceMoment_coverPull {l : ℝ} (hl : 0 < l) (P : S →L[ℝ] T)
   have he : (fun z : PressureStream.Lift S => z.1 ^ m * coverPull l P k u f z) =
       coverPull l P k (u / l ^ m) (fun z => z.1 ^ m * f z) := by
     funext z
-    change z.1 ^ m * (u * f (chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k)) z)) =
-      (u / l ^ m) * ((l * z.1) ^ m * f (chartLinear l (P.prodMap (TemporalMeanUpdate.coverMap k))
-          z))
-    rw [mul_pow]
-    field_simp
+    change z.1 ^ m * (u * _) = (u / l ^ m) * ((l * z.1) ^ m * _)
+    rw [mul_pow, mul_assoc (l ^ m), ← mul_assoc (u / l ^ m),
+      div_mul_cancel₀ u (pow_ne_zero m hl.ne')]
+    exact mul_left_comm _ _ _
   have hfp : PressureStream.TorusPeriodicLift (fun z : PressureStream.Lift T => z.1 ^ m * f z) := by
     intro r t Y j
     exact congrArg (r ^ m * ·) (hp r t Y j)
@@ -1297,7 +1309,7 @@ theorem sourceDebt_coverPull {l : ℝ} (hl : 0 < l) (P : S →L[ℝ] T) (k : ℕ
   · change sourceMoment 0 (coverPull l P k (l * u ^ 2) g) s =
       u ^ 2 * sourceMoment 0 g (P s)
     rw [sourceMoment_coverPull hl P k 0 (l * u ^ 2) hg hpg]
-    simp [hl.ne']
+    simp only [zero_add, pow_one, ne_eq, hl.ne', not_false_eq_true, mul_div_cancel_left₀]
   · change sourceMoment 2 (coverPull l P k (u ^ 2) qθ) s =
       l⁻¹ ^ 3 * u ^ 2 * sourceMoment 2 qθ (P s)
     rw [sourceMoment_coverPull hl P k 2 (u ^ 2) hθ hpθ]
@@ -1372,9 +1384,9 @@ noncomputable def slowProjection (z : PressureStream.Lift Plane) : SimilarityHom
 theorem slowProjection_physicalToChart (h : ℝ) (n i : ℕ) (z : PressureStream.Lift Plane) :
     slowProjection (physicalToChart h n i z) =
       SimilarityHomogeneity.chartTransition h 1 (ChartScales.Q n) (slowProjection z) := by
-  simp [slowProjection, physicalToChart_apply, SimilarityHomogeneity.chartTransition,
-    chartScale, one_div, Real.inv_rpow (ChartScales.Q_pos n).le,
-    Real.rpow_neg (ChartScales.Q_pos n).le]
+  simp only [slowProjection, physicalToChart_apply, chartScale, one_div,
+      Real.rpow_neg (ChartScales.Q_pos n).le, Real.rpow_one, SimilarityHomogeneity.chartTransition,
+      Real.inv_rpow (ChartScales.Q_pos n).le]
 
 theorem physicalProfile_inner {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (n i : ℕ) {z : PressureStream.Lift Plane} (hz : 0 < z.2.1.2) :

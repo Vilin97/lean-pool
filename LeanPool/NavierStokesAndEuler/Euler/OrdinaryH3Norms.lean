@@ -69,6 +69,6 @@ theorem sqrt_energy_le_tensorNorm (A : SmoothL2Field Space) :
   have hs := Real.sq_sqrt (wordEnergy_nonneg 3 A)
   have ht := tensorNorm_nonneg 3 A
   have hr := Real.sqrt_nonneg (wordEnergy 3 A)
-  nlinarith [sq_nonneg (tensorNorm 3 A)]
+  nlinarith only [he, hs, ht, hr, sq_nonneg (tensorNorm 3 A)]
 
 end EulerOrdinarySobolev

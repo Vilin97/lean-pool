@@ -916,7 +916,7 @@ theorem slowCarrier_subset_closedSlowSet :
   · simpa only [Metric.mem_closedBall, dist_zero_right] using hg.bounded 0 p hp
   · have hm := mul_le_mul_of_nonneg_left hpow (sq_nonneg p.2.1)
     dsimp only [SimilarityCoordinates.forwardScalar] at hs
-    linarith [hq.1, hs.2]
+    linarith only [hs, hm, hq, hq.1, hs.2]
 
 theorem closedSlowSet_radius {p : Slow} (hp : p ∈ closedSlowSet W U) : 0 < p.1 :=
   (BaseContextAssembly.geometryRadius_pos W U).trans_le hp.2.1
@@ -943,8 +943,14 @@ theorem bandPoint_affine (h Q : ℝ) (p : Slow) :
     ring
   · ext i
     fin_cases i <;>
-      simp [BaseChartJets.bandPoint, bandLinear, AxisymmetricResidual.packDerivative,
-          coordinateVector]
+      simp only [BaseChartJets.bandPoint, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue,
+        Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, bandLinear, neg_smul,
+        AxisymmetricResidual.packDerivative, coordinateVector, ContinuousLinearMap.zero_smulRight,
+        add_zero, ContinuousLinearMap.prod_apply, neg_apply, smul_apply,
+        ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_snd', smul_eq_mul, add_apply,
+        ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.coe_fst', Prod.mk_add_mk,
+        PiLp.add_apply, PiLp.smul_apply, PiLp.single_eq_same, mul_one, ne_eq, Fin.reduceEq,
+        not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, one_ne_zero, zero_add]
 
 theorem bandPoint_smooth (h Q : ℝ) : ContDiff ℝ ∞ (BaseChartJets.bandPoint h Q) := by
   have he : BaseChartJets.bandPoint h Q = fun p => bandLinear h Q p + (1, 0) :=
@@ -1003,12 +1009,12 @@ theorem bandLinear_bound {h Q : ℝ} (hQ : 0 < Q) (hQone : Q ≤ 1)
   apply max_le
   · have hn : ‖-Q * p.2.2‖ = |Q * p.2.2| := by simp [Real.norm_eq_abs, abs_mul]
     rw [hn]
-    linarith [norm_nonneg p]
+    linarith only [hT, norm_nonneg p]
   · have hh := PhaseEstimates.vec3_norm_le_sum
       (AxisymmetricResidual.pack (Real.sqrt Q * p.1) 0 (Q ^ CoordinateAlgebra.D h * p.2.1))
     simp only [AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
       AxisymmetricResidual.pack_two, abs_zero, add_zero] at hh
-    linarith [norm_nonneg p]
+    linarith only [hR, hZ, hh, norm_nonneg p]
 
 theorem Q_tendsto_zero : Tendsto ChartScales.Q atTop (𝓝 0) := by
   simpa only [ChartScales.epsilon, Real.rpow_zero, Real.rpow_one, one_mul] using
@@ -1052,7 +1058,7 @@ noncomputable def nativeApproach : BaseResidual.PhysicalApproach
     exact Filter.Eventually.of_forall (fun n p hp => by
       rw [Metric.mem_closedBall, dist_zero_right, bandPoint_affine]
       have hD : 0 ≤ CoordinateAlgebra.D F.data.h := by
-        unfold CoordinateAlgebra.D; linarith [F.data.h_lt_half]
+        unfold CoordinateAlgebra.D; linarith only [F.data.h_lt_half]
       have hb := (bandLinear_bound (ChartScales.Q_pos n) (ChartScales.Q_le_one n) hD)
       have hn := (BaseContextAssembly.native_geometry W U ℕ).bounded 0 p hp
       have he := (bandLinear F.data.h (ChartScales.Q n)).le_opNorm p
@@ -1061,7 +1067,7 @@ noncomputable def nativeApproach : BaseResidual.PhysicalApproach
         _ ≤ 4 * ‖p‖ + 1 := by
           have hx := he.trans (mul_le_mul_of_nonneg_right hb (norm_nonneg p))
           simpa using add_le_add_left hx 1
-        _ ≤ _ := by linarith)
+        _ ≤ _ := by linarith only [hn])
   past := by
     rw [nativeApproachFilter, Filter.eventually_map, Filter.eventually_prod_principal_iff]
     exact Filter.Eventually.of_forall (fun n p hp =>
@@ -1199,9 +1205,10 @@ theorem normalizedBase_prefix (alpha : ℝ) (m : ℕ) :
   have hr : 0 ≤ r := le_max_left _ _
   have hexp : F.data.h * alpha ≤ a + r := by
     have hh : F.data.h * alpha - a ≤ r := le_max_right _ _
-    linarith
+    linarith only [hh]
   obtain ⟨C, hC, hb⟩ := physical_error_prefix_bound W U H v upper B m r hr
-  refine ⟨C * 4 ^ m, mul_nonneg hC (by positivity), fun n p hp j hj => ?_⟩
+  have h4 : (0 : ℝ) ≤ 4 ^ m := pow_nonneg zero_le_four m
+  refine ⟨C * 4 ^ m, mul_nonneg hC h4, fun n p hp j hj => ?_⟩
   have ht := (BaseContextAssembly.native_geometry W U ℕ).time 0 p hp
   have he : ContDiffAt ℝ ∞
       (fun p => FinalSlowBase.error H v upper B (BaseChartJets.bandPoint F.data.h (ChartScales.Q n)
@@ -1218,7 +1225,7 @@ theorem normalizedBase_prefix (alpha : ℝ) (m : ℕ) :
         ⟨BaseChartJets.bandPoint_time (h := F.data.h) (ChartScales.Q_pos n) ht, Set.mem_univ _⟩)) j
   simp only [← bandPoint_affine] at hcomp
   have hD : 0 ≤ CoordinateAlgebra.D F.data.h := by
-    unfold CoordinateAlgebra.D; linarith [F.data.h_lt_half]
+    unfold CoordinateAlgebra.D; exact sub_nonneg.mpr F.data.h_lt_half.le
   have hnorm : ‖bandLinear F.data.h (ChartScales.Q n)‖ ^ j ≤ 4 ^ m :=
     (pow_le_pow_left₀ (norm_nonneg _)
       (bandLinear_bound (ChartScales.Q_pos n) (ChartScales.Q_le_one n) hD) j).trans
@@ -1239,13 +1246,13 @@ theorem normalizedBase_prefix (alpha : ℝ) (m : ℕ) :
             ‖bandLinear F.data.h (ChartScales.Q n)‖ ^ j) :=
       mul_le_mul_of_nonneg_left hcomp (Real.rpow_pos_of_pos (ChartScales.Q_pos n) a).le
     _ ≤ ChartScales.Q n ^ a * (C * ChartScales.Q n ^ r * 4 ^ m) :=
-      mul_le_mul_of_nonneg_left (mul_le_mul (hb n p hp j hj) hnorm (by positivity)
+      mul_le_mul_of_nonneg_left (mul_le_mul (hb n p hp j hj) hnorm (pow_nonneg (norm_nonneg _) j)
         (mul_nonneg hC (Real.rpow_pos_of_pos (ChartScales.Q_pos n) r).le))
         (Real.rpow_pos_of_pos (ChartScales.Q_pos n) a).le
     _ = (C * 4 ^ m) * ChartScales.Q n ^ (a + r) := by
       rw [Real.rpow_add (ChartScales.Q_pos n) a r]; ring
     _ ≤ (C * 4 ^ m) * ChartScales.epsilon F.data.h n ^ alpha := by
-      apply mul_le_mul_of_nonneg_left _ (mul_nonneg hC (by positivity))
+      apply mul_le_mul_of_nonneg_left _ (mul_nonneg hC h4)
       rw [ChartScales.epsilon, ← Real.rpow_mul (ChartScales.Q_pos n).le]
       exact Real.rpow_le_rpow_of_exponent_ge (ChartScales.Q_pos n) (ChartScales.Q_le_one n) hexp
 
@@ -1257,9 +1264,9 @@ theorem normalizedBase_envelope (alpha : ℝ) :
     normalizedBase_smooth H v upper B U, ?_⟩
   intro m
   obtain ⟨C, hC, hb⟩ := normalizedBase_prefix H v upper B U alpha m
-  refine ⟨C + 1, by linarith, 0, fun n p hp j hj => ?_⟩
+  refine ⟨C + 1, by linarith only [hC], 0, fun n p hp j hj => ?_⟩
   simpa only [pow_zero, mul_one] using (hb n p hp j hj).trans
-    (mul_le_mul_of_nonneg_right (by linarith : C ≤ C + 1)
+    (mul_le_mul_of_nonneg_right (by linarith only : C ≤ C + 1)
       (Real.rpow_pos_of_pos (ChartScales.epsilon_pos F.data.h n) alpha).le)
 
 theorem baseError_zero_angle (n : ℕ) (x : BaseContextAssembly.Point) (i : Fin 3) :
@@ -1348,7 +1355,7 @@ noncomputable def nativeBandScales : GaussianTailFlat.BandScaleControl nativeStr
     change max 1 (ChartScales.S n) ≤ 1 * (1 + ChartScales.S n) ^ 1
     simp only [pow_one, one_mul]
     have hS : 0 ≤ ChartScales.S n := by unfold ChartScales.S; positivity
-    exact max_le (by linarith) (by linarith)
+    exact max_le (by linarith only [hS]) (by linarith only)
 
 /-- Gaussian length lower, given by `2 * ActualPrimary.slots.radius / 25`. -/
 noncomputable def gaussianLengthLower : ℝ := 2 * ActualPrimary.slots.radius / 25
@@ -1371,7 +1378,7 @@ theorem gaussianLength_near (l : SignedLabel B N0) (n : ℕ) (hn : near l n) :
   change _ ≤ ChartScales.slotLength ActualPrimary.slots.radius ActualPrimary.h
       (BaseChartJets.cellBand l.2)
   unfold gaussianLengthLower
-  nlinarith [mul_le_mul_of_nonneg_left hs ActualPrimary.slots.radius_pos.le]
+  nlinarith only [hl, hs, mul_le_mul_of_nonneg_left hs ActualPrimary.slots.radius_pos.le]
 
 /-- Outside the active finite band window the copied field is identically
 zero. The auxiliary length merely makes the global index bookkeeping total. -/
@@ -1397,7 +1404,7 @@ theorem gaussianRate_pos (B N0 : ℕ) : 0 < gaussianRate B N0 :=
 
 theorem nativeEnvelope_gaussian (l : SignedLabel B N0) {v : ℝ}
     (hv : v ∈ Icc 0 ((ActualPrimary.phases B N0 0).L l.2)) :
-    pulseEnvelope l v ≤ Real.exp (-gaussianRate B N0 *
+    ActualPrimaryBounds.pulseEnvelope l v ≤ Real.exp (-gaussianRate B N0 *
       (v / ((ActualPrimary.phases B N0 0).L l.2) - 1 / 2) ^ 2 *
         ((ActualPrimary.phases B N0 0).L l.2)) := by
   have hl := ActualGaussianCoverage.prepared_lambda_lower ActualPrimary.certificate
@@ -1474,7 +1481,7 @@ theorem periodizedGaussian_all_gains (a β : ℝ) :
     · have hf : nativeGaussian l (copyPoint l n k x) ≠ 0 := by
         intro hz
         exact hx (by simp only [copied, ite_eq_left hn, hz, smul_zero])
-      exact nativeGaussian_core l _ hf
+      exact nativeGaussian_core l (copyPoint l n k x) hf
     · exact (hx (by simp only [copied, ite_eq_right hn])).elim
   · exact copiedGaussian_all_gains a β
 
@@ -1547,9 +1554,9 @@ theorem nativeGaussian_source_support (l : SignedLabel B N0) :
       Pi.zero_apply, _root_.zero_apply, zero_smul])
   have hL := (ActualPrimary.phases B N0 0).L_pos l.2
   have hlo : (1 / 6 : ℝ) ≤ x.2.2 / ((ActualPrimary.phases B N0 0).L l.2) := by
-    linarith [(abs_le.mp hg).1]
+    linarith only [hg, (abs_le.mp hg).1]
   have hhi : x.2.2 / ((ActualPrimary.phases B N0 0).L l.2) ≤ 5 / 6 := by
-    linarith [(abs_le.mp hg).2]
+    linarith only [hg, (abs_le.mp hg).2]
   refine ⟨hs, ⟨ht.1.le, ht.2.le⟩, ?_, ?_⟩
   · change ((ActualPrimary.phases B N0 0).L l.2 / 1) / 6 ≤ x.2.2
     simpa only [div_eq_mul_inv, inv_one, mul_one, one_mul, mul_comm] using
@@ -1705,7 +1712,7 @@ theorem periodizedGaussian_eq (l : SignedLabel B N0) (n : ℕ) {x : Native}
     · have hg : nativeGaussian l (copyPoint l n k y) ≠ 0 := by
         intro hz
         exact hy (by simp only [copied, ite_eq_left hn, hz, smul_zero])
-      exact nativeGaussian_core l _ hg
+      exact nativeGaussian_core l (copyPoint l n k y) hg
     · exact (hy (by simp only [copied, ite_eq_right hn])).elim
   by_cases hn : near l n
   · by_cases hc : ∃ k, x ∈ (copyCells l).carrier n k
@@ -1765,7 +1772,8 @@ theorem gaussianCoefficient_all_gains (β : ℝ) (i : Fin 3) (j : ℤ) :
 theorem gaussianCoefficient_zero (l : SignedLabel B N0) (n : ℕ) (i : Fin 3) (j : ℤ)
     {x : Point} (hx : x ∉ labelCarrier l n) :
     ErrorHarmonics.conjugatePair 1 (fun y => chartGaussian l n (y, 0) i) j x = 0 := by
-  have hz : chartGaussian l n (x, 0) = 0 := (chartGaussian_zero_germ l n hx).eq_of_nhds
+  have hz : chartGaussian l n (x, 0) = 0 :=
+    (chartGaussian_zero_germ l n (x := (x, 0)) hx).eq_of_nhds
   simp only [ParticularWaveAssembly.pair_apply, hz, Pi.zero_apply, zero_div]
   split_ifs <;> simp
 

@@ -50,20 +50,21 @@ local instance instCylinderSpatialMeanPath6 : NormedSpace ℝ (C(K,CylinderL2 P 
 
 /-- Path mean, given by `(mean P).compLeftContinuous ℝ K`. -/
 def pathMean : C(K,CylinderL2 P V) →L[ℝ] C(K,SpatialL2 V) :=
-  (mean P).compLeftContinuous ℝ K
+  (mean (V := V) P).compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem pathMean_apply (p : C(K, CylinderL2 P V)) (t : K) :
-    pathMean P p t = mean P (p t) := rfl
+    pathMean (K := K) (V := V) P p t = mean P (p t) := rfl
 
 /-- Spatial path translation, given by `(EulerLpTranslation.translation
 a).toContinuousLinearMap.compLeftContinuous ℝ K`. -/
 def spatialPathTranslation (a : Space) : C(K,SpatialL2 V) →L[ℝ] C(K,SpatialL2 V) :=
-  (EulerLpTranslation.translation a).toContinuousLinearMap.compLeftContinuous ℝ K
+  (EulerLpTranslation.translation (V := V) a).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 theorem pathMean_translation (p : C(K, CylinderL2 P V)) (a : LiftTangent) :
-    pathMean P (pathTranslate P a p) = spatialPathTranslation a.1 (pathMean P p) := by
+    pathMean (K := K) (V := V) P (pathTranslate (K := K) (V := V) P a p) =
+      spatialPathTranslation (K := K) (V := V) a.1 (pathMean (K := K) (V := V) P p) := by
   apply ContinuousMap.ext
   intro t
   exact mean_translate P a (p t)
@@ -80,8 +81,9 @@ theorem pathMean_norm : ‖pathMean (K := K) (V := V) P‖ ≤ P⁻¹*Real.sqrt 
 
 /-- All ordinary spatial derivatives of the mean are inherited from the actual mixed orbit. -/
 theorem pathMean_orbit_contDiff (p : C(K, CylinderL2 P V))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
-    ContDiff ℝ ∞ (fun a : Space => spatialPathTranslation a (pathMean P p)) := by
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := V) P a p)) :
+    ContDiff ℝ ∞ (fun a : Space =>
+      spatialPathTranslation (K := K) (V := V) a (pathMean (K := K) (V := V) P p)) := by
   have h := (pathMean (K := K) (V := V) P).contDiff.comp
     (hp.comp (contDiff_id.prodMk (contDiff_const : ContDiff ℝ ∞ (fun _ : Space => (0 : ℝ)))))
   simpa only [Function.comp_def, pathMean_translation, id_eq] using h
@@ -90,7 +92,7 @@ variable {X ι : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [Fintype ι]
 
 theorem pathMean_block_bound (directions : ι → X) (q : ℕ)
     (f : X → C(K, CylinderL2 P V)) (hf : ContDiff ℝ ∞ f) (n : ℕ) (x : X) :
-    block directions q (fun y => pathMean P (f y)) n x ≤
+    block directions q (fun y => pathMean (K := K) (V := V) P (f y)) n x ≤
       (P⁻¹*Real.sqrt P)*block directions q f n x := by
   have h := block_comp_clm_le (E := C(K,CylinderL2 P V)) (F := C(K,SpatialL2 V))
     directions q (pathMean (K := K) (V := V) P) f hf n x
@@ -99,7 +101,7 @@ theorem pathMean_block_bound (directions : ι → X) (q : ℕ)
 theorem pathMean_block_majorant (directions : ι → X) (q : ℕ)
     (f : X → C(K, CylinderL2 P V)) (hf : ContDiff ℝ ∞ f) (R C : ℝ) (d : ℕ)
     (hb : ∀ n x, block directions q f n x ≤ C * majorant R d n) (n : ℕ) (x : X) :
-    block directions q (fun y => pathMean P (f y)) n x ≤
+    block directions q (fun y => pathMean (K := K) (V := V) P (f y)) n x ≤
       ((P⁻¹*Real.sqrt P)*C)*majorant R d n :=
   (pathMean_block_bound P directions q f hf n x).trans
     ((mul_le_mul_of_nonneg_left (hb n x)

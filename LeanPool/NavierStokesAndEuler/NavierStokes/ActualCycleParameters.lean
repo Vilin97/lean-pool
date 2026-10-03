@@ -195,7 +195,7 @@ noncomputable def reindexParameters {ι κ : Type} (e : κ ≃ ι)
     (v : CycleCoefficients ι) (n : ℕ) (l : κ) :
     l ∈ (reindexCoefficients e v).labels n ↔ e l ∈ v.labels n := by
   classical
-  simp [reindexCoefficients]
+  simp only [reindexCoefficients, Finset.mem_map_equiv, Equiv.symm_symm]
 
 @[simp] theorem reindexState_state {ι κ : Type} (e : κ ≃ ι)
     (x : CycleState ι) : (reindexState e x).state = x.state := rfl
@@ -216,13 +216,13 @@ theorem reindexCoefficients_symm {ι κ : Type} (e : κ ≃ ι)
   congr 1
   · funext n
     ext l
-    simp
+    simp only [Equiv.symm_symm, Finset.mem_map_equiv, Finset.mem_map_mk]
   · funext l
-    simp
+    simp only [Equiv.apply_symm_apply]
   · funext l
-    simp
+    simp only [Equiv.apply_symm_apply]
   · funext l
-    simp
+    simp only [Equiv.apply_symm_apply]
 
 theorem reindexState_symm {ι κ : Type} (e : κ ≃ ι)
     (x : CycleState ι) : reindexState e.symm (reindexState e x) = x := by
@@ -234,7 +234,7 @@ theorem reindexCoefficients_sum {ι κ : Type} (e : κ ≃ ι)
     (n : ℕ) (f : ι → E) :
     (∑ l ∈ (reindexCoefficients e v).labels n, f (e l)) = ∑ l ∈ v.labels n, f l := by
   classical
-  simp [reindexCoefficients]
+  simp only [reindexCoefficients, Finset.sum_map, Embedding.coeFn_mk, Equiv.apply_symm_apply]
 
 theorem reindexState_representation {ι κ : Type} (e : κ ≃ ι)
     (x : CycleState ι)
@@ -243,13 +243,17 @@ theorem reindexState_representation {ι κ : Type} (e : κ ≃ ι)
       (reindexState e x).axisymmetricAlias := by
   constructor
   · intro n z i
-    simpa [reindexState, reindexCoefficients] using H.velocity n z i
+    simpa only [reindexState, reindexCoefficients, Finset.sum_map, Embedding.coeFn_mk,
+        Equiv.apply_symm_apply] using H.velocity n z i
   · intro n z
-    simpa [reindexState, reindexCoefficients] using H.pressure n z
+    simpa only [reindexState, reindexCoefficients, Finset.sum_map, Embedding.coeFn_mk,
+        Equiv.apply_symm_apply] using H.pressure n z
   · intro n z i
-    simpa [reindexState, reindexCoefficients] using H.gaussian n z i
+    simpa only [reindexState, reindexCoefficients, Finset.sum_map, Embedding.coeFn_mk,
+        Equiv.apply_symm_apply] using H.gaussian n z i
   · intro n z i
-    simpa [reindexState, reindexCoefficients] using H.aliasError n z i
+    simpa only [reindexState, reindexCoefficients, Finset.sum_map, Embedding.coeFn_mk,
+        Equiv.apply_symm_apply] using H.aliasError n z i
 
 theorem reindexState_bands {ι κ : Type} (e : κ ≃ ι)
     (x : CycleState ι) (H : CoefficientBands x.coefficients) :

@@ -66,7 +66,8 @@ theorem chartPoint_fderiv (G : ScaledGraph) {z : SpaceTime}
     (hr : G.radialScale * z.2 0 ≠ 0) (w : SpaceTime) :
     fderiv ℝ (chartPoint G) z w = PhysicalResidualTZ.swapSlow ((fderiv ℝ G.map z w).1) := by
   have hd := PhysicalResidualTZ.swapSlow.toContinuousLinearEquiv.hasFDerivAt.comp z
-    (((G.map_smoothAt hr).differentiableAt (by simp)).hasFDerivAt.fst)
+    (((G.map_smoothAt hr).differentiableAt (by simp only [ne_eq, WithTop.coe_eq_zero,
+        ENat.top_ne_zero, not_false_eq_true])).hasFDerivAt.fst)
   change fderiv ℝ (PhysicalResidualTZ.swapSlow.toContinuousLinearEquiv ∘ fun p => (G.map p).1) z w
       = _
   rw [hd.fderiv]
@@ -82,18 +83,20 @@ theorem chartPoint_radial (G : ScaledGraph) {z : SpaceTime}
         (PressureStream.physicalSpeed G.exponent G.frequency)
         ((0 : ℝ × ℝ), G.radialVector) (chartPoint G z) := by
   rw [chartPoint_fderiv G hr, G.map_radial hr]
-  ext <;> simp [PhysicalResidualBridge.ScaledGraph.radial, PhysicalResidualTZ.swapSlow_apply,
-    PressureStream.radialVector, PressureStream.physicalSpeed, RadialPullback.radialJacobian,
-    GraphCalculus.radialSpeed, chartPoint_radius, PhysicalResidualBridge.ScaledGraph.map,
-    smul_smul, smul_eq_mul] <;> ring_nf <;> simp
+  ext <;> simp only [PhysicalResidualBridge.ScaledGraph.radial, GraphCalculus.radialSpeed,
+      PhysicalResidualBridge.ScaledGraph.map, Fin.isValue, Prod.smul_mk, smul_eq_mul, mul_one,
+      mul_zero, smul_smul, PhysicalResidualTZ.swapSlow_apply, PressureStream.radialVector,
+      PressureStream.physicalSpeed, RadialPullback.radialJacobian, chartPoint_radius, smul_zero,
+      Prod.fst_zero, Prod.snd_zero, Prod.smul_fst, mul_eq_mul_right_iff, mul_eq_mul_left_iff,
+      Prod.smul_snd] <;> ring_nf <;> simp only [true_or]
 
 theorem chartPoint_axial (G : ScaledGraph) {z : SpaceTime}
     (hr : G.radialScale * z.2 0 ≠ 0) :
     fderiv ℝ (chartPoint G) z (LinearWaveResidual.spaceDirection 2 z) =
       G.radialScale • ((0 : ℝ), G.epsilon • axial) := by
   rw [chartPoint_fderiv G hr, G.map_axial hr]
-  ext <;> simp [PhysicalResidualBridge.ScaledGraph.axial, PhysicalResidualTZ.swapSlow_apply,
-    axial, smul_eq_mul]
+  ext <;> simp only [PhysicalResidualBridge.ScaledGraph.axial, Prod.smul_mk, smul_eq_mul, mul_zero,
+      smul_zero, PhysicalResidualTZ.swapSlow_apply, axial, mul_one, Prod.fst_zero, Prod.snd_zero]
 
 theorem scalar_radial (G : ScaledGraph) (hl : 0 < G.radialScale) {z : SpaceTime}
     (hr : 0 < z.2 0) {Ψ : Point → ℝ} (hΨ : DifferentiableAt ℝ Ψ (chartPoint G z)) :
@@ -104,7 +107,8 @@ theorem scalar_radial (G : ScaledGraph) (hl : 0 < G.radialScale) {z : SpaceTime}
         ((0 : ℝ × ℝ), G.radialVector) Ψ (chartPoint G z) := by
   have he := PhysicalResidualBridge.along_scaled_pull (G.velocityScale / G.radialScale)
       G.radialScale
-    ((chartPoint_smoothAt G (mul_pos hl hr).ne').differentiableAt (by simp)) hΨ
+    ((chartPoint_smoothAt G (mul_pos hl hr).ne').differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])) hΨ
     (chartPoint_radial G (mul_pos hl hr).ne')
   simpa only [div_mul_cancel₀ _ hl.ne', along, PressureStream.graphDr] using he
 
@@ -116,7 +120,8 @@ theorem scalar_axial (G : ScaledGraph) (hl : 0 < G.radialScale) {z : SpaceTime}
   have he := PhysicalResidualBridge.along_scaled_pull
     (V := LinearWaveResidual.spaceDirection 2) (W := fun _ : Point => ((0 : ℝ), G.epsilon • axial))
     (G.velocityScale / G.radialScale) G.radialScale
-    ((chartPoint_smoothAt G (mul_pos hl hr).ne').differentiableAt (by simp)) hΨ
+    ((chartPoint_smoothAt G (mul_pos hl hr).ne').differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])) hΨ
     (chartPoint_axial G (mul_pos hl hr).ne')
   simpa only [div_mul_cancel₀ _ hl.ne', along, PressureStream.graphDz] using he
 
@@ -128,7 +133,8 @@ theorem componentPotential_smoothAt (G : ScaledGraph) {z : SpaceTime}
     contDiffAt_const.mul (hΨ.comp z (chartPoint_smoothAt G hr))
   convert! h.smul (contDiffAt_const (c := coordinateVector 1)) using 1
   funext p
-  simp [componentPotential, AxisymmetricResidual.pack]
+  simp only [componentPotential, AxisymmetricResidual.pack, Fin.isValue, zero_smul, zero_add,
+      add_zero, Pi.smul_apply']
 
 /-- The connection term Ψ/R is retained in the actual cylindrical curl. -/
 theorem componentPotential_realCurl (G : ScaledGraph) (hl : 0 < G.radialScale) {z : SpaceTime}
@@ -139,7 +145,7 @@ theorem componentPotential_realCurl (G : ScaledGraph) (hl : 0 < G.radialScale) {
       G.velocityScale * meridional G Ψ (PhysicalResidualTZ.graphMapTZ G z) i := by
   have h0 (k : Fin 3) : along (LinearWaveResidual.spaceDirection k) (fun _ : SpaceTime => (0 : ℝ))
       z = 0 := by
-    simp [along]
+    simp only [along, fderiv_fun_const, Pi.zero_apply, zero_apply]
   have hR := scalar_radial G hl hr hΨ
   have hZ := scalar_axial G hl hr hΨ
   fin_cases i <;> simp only [PhysicalCurlCovariance.realCurl, LinearWaveResidual.coordinateRadius,
@@ -207,11 +213,16 @@ theorem cartesianPotential_curl_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.
       (SpatialCurl.spatialCurl (cartesianPotential a j G Ψ) (z.1, CylindricalResidual.chart z.2)) =
       CyclePhysicalPrefixes.velocityMap G (meridional G Ψ) z := by
     ext i
-    rw [PhysicalCurlCovariance.curl_of_representation (ha'.differentiableAt (by simp))
-      (hb.differentiableAt (by simp)) hz.1.ne' (cartesianPotential_forward_germ ha j G Ψ hz) i,
-      componentPotential_realCurl G hl hz.1 (hΨ.differentiableAt (by simp))]
-    simp [CyclePhysicalPrefixes.velocityMap, PhysicalResidualTZ.velocityTZ,
-      PhysicalResidualBridge.ScaledGraph.velocity_apply, PhysicalResidualTZ.graphMapTZ]
+    rw [PhysicalCurlCovariance.curl_of_representation (ha'.differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
+      (hb.differentiableAt (by simp only [ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero,
+          not_false_eq_true])) hz.1.ne' (cartesianPotential_forward_germ ha j G Ψ hz) i,
+      componentPotential_realCurl G hl hz.1 (hΨ.differentiableAt (by simp only [ne_eq,
+          WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))]
+    simp only [PhysicalResidualTZ.graphMapTZ, PhysicalResidualTZ.swapCylinder_apply,
+        PhysicalResidualTZ.swapSlow_apply, CyclePhysicalPrefixes.velocityMap, LinearMap.coe_mk,
+        AddHom.coe_mk, PhysicalResidualTZ.velocityTZ,
+        PhysicalResidualBridge.ScaledGraph.velocity_apply]
   rw [polar_forward ha j _ hz]
   simpa only [CylindricalResidual.frame_inverse'] using
     congrArg (CylindricalResidual.frame (z.2 1)) he
@@ -262,18 +273,19 @@ theorem polarCoordinates_back {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) {w 
   · rfl
   · ext i
     fin_cases i
-    · simpa [PhysicalCurlCovariance.polarCoordinates, CylindricalResidual.chart,
+    · simpa only [CylindricalResidual.chart, Fin.isValue, PhysicalCurlCovariance.polarCoordinates,
+        PhysicalCurlCovariance.polarInput, PhysicalGraphBounds.radialProjection_apply,
         AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
-        PhysicalCurlCovariance.polarInput, PolarCharts.polar,
-            PhysicalGraphBounds.radialProjection_apply]
+        AxisymmetricResidual.pack_two, Fin.zero_eta, PolarCharts.polar]
         using congrArg Prod.fst hp
-    · simpa [PhysicalCurlCovariance.polarCoordinates, CylindricalResidual.chart,
+    · simpa only [CylindricalResidual.chart, Fin.isValue, PhysicalCurlCovariance.polarCoordinates,
+        PhysicalCurlCovariance.polarInput, PhysicalGraphBounds.radialProjection_apply,
         AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
-        PhysicalCurlCovariance.polarInput, PolarCharts.polar,
-            PhysicalGraphBounds.radialProjection_apply]
+        AxisymmetricResidual.pack_two, Fin.mk_one, PolarCharts.polar]
         using congrArg Prod.snd hp
-    · simp [PhysicalCurlCovariance.polarCoordinates, CylindricalResidual.chart,
-        AxisymmetricResidual.pack_two]
+    · simp only [CylindricalResidual.chart, Fin.isValue, PhysicalCurlCovariance.polarCoordinates,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
+        AxisymmetricResidual.pack_two, Fin.reduceFinMk]
 
 theorem cartesianPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     (G : ScaledGraph) (hl : 0 < G.radialScale) {Ψ : Point → ℝ} {w : SpaceTime}
@@ -302,8 +314,8 @@ theorem similarityGauge_matches (h a b : ℝ) (hab : a < b) (index : ℕ → ℕ
         index)
       c (PhysicalResidualBridge.commonGraph (ChartScales.Q n) h (index n)) n := by
   refine ⟨hε, rfl, ?_, rfl⟩
-  simp [VariableGaugeMean.similarityGauge, MeanChartCompatibility.radialFrequency,
-    PhysicalResidualBridge.commonGraph]
+  simp only [VariableGaugeMean.similarityGauge, MeanChartCompatibility.radialFrequency, one_mul,
+      PhysicalResidualBridge.commonGraph, one_div]
 
 theorem meridional_temporal (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (h : ℝ)
     (index : ℕ → ℕ) (c : CorrectionState.Context Point) (u : CorrectionState.State Point)
@@ -312,8 +324,10 @@ theorem meridional_temporal (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (h : 
       CyclePhysicalPrefixes.meridionalComponents
         (VariableGaugeMean.temporalIncrementState g h index axial c u) n := by
   funext x i
-  fin_cases i <;> simp [meridional, CyclePhysicalPrefixes.meridionalComponents,
-    VariableGaugeMean.temporalIncrementState, H.epsilon, H.exponent, H.frequency, H.radialVector]
+  fin_cases i <;> simp only [meridional, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      CyclePhysicalPrefixes.meridionalComponents, VariableGaugeMean.temporalIncrementState,
+      H.exponent, H.radialVector, H.epsilon, H.frequency, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 theorem meridional_rank (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (r : CorrectionState.RankData (ℝ
     × ℝ))
@@ -323,8 +337,10 @@ theorem meridional_rank (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (r : Corr
       CyclePhysicalPrefixes.meridionalComponents
         (VariableGaugeMean.rankIncrementState g r axial c u) n := by
   funext x i
-  fin_cases i <;> simp [meridional, CyclePhysicalPrefixes.meridionalComponents,
-    VariableGaugeMean.rankIncrementState, H.epsilon, H.exponent, H.frequency, H.radialVector]
+  fin_cases i <;> simp only [meridional, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      CyclePhysicalPrefixes.meridionalComponents, VariableGaugeMean.rankIncrementState, H.exponent,
+      H.radialVector, H.epsilon, H.frequency, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+      Matrix.cons_val]
 
 theorem temporalPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     (g : VariableGaugeMean.GaugeData (ℝ × ℝ)) (h : ℝ) (index : ℕ → ℕ)
@@ -359,7 +375,8 @@ theorem rankPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
 theorem projection_forward (z : SpaceTime) :
     PhysicalGraphBounds.radialProjection (z.1, CylindricalResidual.chart z.2) =
       PolarCharts.polar (z.2 0, z.2 1) := by
-  simp [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart, PolarCharts.polar]
+  simp only [CylindricalResidual.chart, Fin.isValue, PhysicalGraphBounds.radialProjection_apply,
+      AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, PolarCharts.polar]
 
 theorem radius_forward {z : SpaceTime} (hr : 0 < z.2 0) :
     PhysicalClassBounds.cartesianRadius
@@ -412,8 +429,13 @@ theorem angularVector_forward {z : SpaceTime} (hr : 0 < z.2 0) :
       CylindricalResidual.frame (z.2 1) (coordinateVector 1) := by
   rw [PhysicalMeanJetBounds.angularVector, radius_forward hr]
   ext i
-  fin_cases i <;> simp [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart,
-    CylindricalResidual.frame_apply, coordinateVector]
+  fin_cases i <;> simp only [CylindricalResidual.chart, Fin.isValue,
+      PhysicalGraphBounds.radialProjection_apply, AxisymmetricResidual.pack_zero,
+      AxisymmetricResidual.pack_one, coordinateVector, Fin.zero_eta, PiLp.add_apply,
+      PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+      not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, CylindricalResidual.frame_apply,
+      zero_sub, zero_add, Fin.reduceEq, Fin.mk_one, one_ne_zero, Fin.reduceFinMk,
+      AxisymmetricResidual.pack_two]
   · field_simp [hr.ne']
   · field_simp [hr.ne']
 
@@ -554,7 +576,9 @@ theorem meridionalComponents_updated (m t : MeanIncrementBounds.Triple Point) (n
       CyclePhysicalPrefixes.meridionalComponents m n + CyclePhysicalPrefixes.meridionalComponents t
           n := by
   funext x i
-  fin_cases i <;> simp [CyclePhysicalPrefixes.meridionalComponents, MeanIncrementBounds.updated]
+  fin_cases i <;> simp only [CyclePhysicalPrefixes.meridionalComponents,
+      MeanIncrementBounds.updated, Pi.add_apply, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      Fin.mk_one, Matrix.cons_val_one, add_zero, Fin.reduceFinMk, Matrix.cons_val]
 
 /-- The temporal and rank inputs may be successive actual states. Their
 potentials realize exactly the radial/axial parts of those literal increments. -/

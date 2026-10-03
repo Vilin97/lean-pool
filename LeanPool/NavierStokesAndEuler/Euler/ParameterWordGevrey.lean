@@ -8,6 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.Gevrey
 public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Actual ordered parameter derivatives and their factorial word sums

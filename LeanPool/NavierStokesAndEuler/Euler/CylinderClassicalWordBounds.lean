@@ -36,7 +36,7 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- The actual strong L² derivative for an ordered mixed word. -/
 def strongWord (u : LiftL2 period) {n : ℕ} (w : Fin n → Fin 4) : LiftL2 period :=
-  wordDerivative standardDirection (fun a : LiftTangent => translate period a u) w 0
+  wordDerivative standardDirection (fun a : LiftTangent => translate (V := Vector3) period a u) w 0
 
 @[simp] theorem strongWord_zero (u : LiftL2 period) (w : Fin 0 → Fin 4) : strongWord period u w = u
     := by
@@ -47,8 +47,10 @@ theorem strongWord_snoc (u : LiftL2 period) (hu : SmoothOrbit period u)
     {n : ℕ} (w : Fin n → Fin 4) (i : Fin 4) :
     strongWord period u (Fin.snoc w i) = strongWord period (orbitDerivative period u
         (standardDirection i)) w := by
-  have he : directional standardDirection (fun a : LiftTangent => translate period a u) i =
-      fun a : LiftTangent => translate period a (orbitDerivative period u (standardDirection i)) :=
+  have he : directional standardDirection
+        (fun a : LiftTangent => translate (V := Vector3) period a u) i =
+      fun a : LiftTangent => translate (V := Vector3) period a
+        (orbitDerivative period u (standardDirection i)) :=
     funext (fun a => (orbitDerivative_translation period u hu (standardDirection i) a).symm)
   unfold strongWord
   rw [wordDerivative_snoc standardDirection _ hu w i 0,he]
@@ -56,8 +58,9 @@ theorem strongWord_snoc (u : LiftL2 period) (hu : SmoothOrbit period u)
 /-- A strong word is the actual mixed derivative at each translated label. -/
 theorem strongWord_translation (u : LiftL2 period) (hu : SmoothOrbit period u)
     {n : ℕ} (w : Fin n → Fin 4) (a : LiftTangent) :
-    translate period a (strongWord period u w) =
-      wordDerivative standardDirection (fun b : LiftTangent => translate period b u) w a := by
+    translate (V := Vector3) period a (strongWord period u w) =
+      wordDerivative standardDirection
+        (fun b : LiftTangent => translate (V := Vector3) period b u) w a := by
   induction n generalizing u with
   | zero => simp only [strongWord_zero,wordDerivative_zero]
   | succ n ih =>
@@ -67,20 +70,22 @@ theorem strongWord_translation (u : LiftL2 period) (hu : SmoothOrbit period u)
       simpa only [Fin.snoc_init_self] using strongWord_snoc period u hu (Fin.init w) (w (Fin.last
           n))
     rw [ho,ih _ (orbitDerivative_smooth period u hu _) (Fin.init w)]
-    have he : directional standardDirection (fun b : LiftTangent => translate period b u) (w
-        (Fin.last n)) =
-        fun b : LiftTangent => translate period b (orbitDerivative period u (standardDirection (w
-            (Fin.last n)))) :=
+    have he : directional standardDirection
+        (fun b : LiftTangent => translate (V := Vector3) period b u) (w (Fin.last n)) =
+        fun b : LiftTangent => translate (V := Vector3) period b
+          (orbitDerivative period u (standardDirection (w (Fin.last n)))) :=
       funext (fun b => (orbitDerivative_translation period u hu _ b).symm)
     simpa only [Fin.snoc_init_self,he] using
-      (wordDerivative_snoc standardDirection (fun b : LiftTangent => translate period b u) hu
+      (wordDerivative_snoc standardDirection
+        (fun b : LiftTangent => translate (V := Vector3) period b u) hu
         (Fin.init w) (w (Fin.last n)) a).symm
 
 /-- Every strong word has its genuine smooth full mixed orbit. -/
 theorem strongWord_smooth (u : LiftL2 period) (hu : SmoothOrbit period u)
     {n : ℕ} (w : Fin n → Fin 4) : SmoothOrbit period (strongWord period u w) := by
-  have he : (fun a : LiftTangent => translate period a (strongWord period u w)) =
-      wordDerivative standardDirection (fun a : LiftTangent => translate period a u) w :=
+  have he : (fun a : LiftTangent => translate (V := Vector3) period a (strongWord period u w)) =
+      wordDerivative standardDirection
+        (fun a : LiftTangent => translate (V := Vector3) period a u) w :=
     funext (strongWord_translation period u hu w)
   change ContDiff ℝ ∞ _
   rw [he]
@@ -117,7 +122,8 @@ theorem classicalWord_memLp (u : LiftL2 period) (hu : SmoothOrbit period u)
 /-- The actual classical Hq norm is exactly the finite mixed-word base sum. -/
 theorem classicalBaseSize_eq (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) :
     liftSobolevNorm period q (representative period u hu) =
-      baseSize standardDirection q (fun a : LiftTangent => translate period a u) 0 := by
+      baseSize standardDirection q
+        (fun a : LiftTangent => translate (V := Vector3) period a u) 0 := by
   rw [← jet_sobolevNorm_eq period u (spatialJet period q u hu) (representative period u hu)
     (representative_ae period u hu) (representative_smooth period u hu)]
   exact spatialJet_norm period q u hu
@@ -130,7 +136,8 @@ def classicalBlockSize (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u)
 /-- Exact norm identification, with no dimension factor and no radius enlargement. -/
 theorem classicalBlockSize_eq (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) (n : ℕ) :
     classicalBlockSize period q u hu n =
-      block standardDirection q (fun a : LiftTangent => translate period a u) n 0 := by
+      block standardDirection q
+        (fun a : LiftTangent => translate (V := Vector3) period a u) n 0 := by
   unfold classicalBlockSize block
   apply sum_congr rfl
   intro w _
@@ -142,10 +149,11 @@ variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Time evaluation is a contraction, including for the full actual mixed-word Hq norm. -/
 theorem path_classicalBlockSize_le (q : ℕ) (p : C(K, LiftL2 period))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) period a p))
     (t : K) (n : ℕ) :
     classicalBlockSize period q (p t) (path_evaluation_smooth period p hp t) n ≤
-      block standardDirection q (fun a : LiftTangent => pathTranslate period a p) n 0 := by
+      block standardDirection q
+        (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) period a p) n 0 := by
   rw [classicalBlockSize_eq]
   have hn : ‖(ContinuousMap.evalCLM ℝ t : C(K,LiftL2 period) →L[ℝ] LiftL2 period)‖ ≤ 1 := by
     apply opNorm_le_bound _ zero_le_one
@@ -153,7 +161,7 @@ theorem path_classicalBlockSize_le (q : ℕ) (p : C(K, LiftL2 period))
     simpa only [one_mul,ContinuousMap.evalCLM_apply] using f.norm_coe_le_norm t
   have h := block_comp_clm_le standardDirection q
     (ContinuousMap.evalCLM ℝ t : C(K,LiftL2 period) →L[ℝ] LiftL2 period)
-    (fun a : LiftTangent => pathTranslate period a p) hp n 0
+    (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) period a p) hp n 0
   exact h.trans ((mul_le_mul_of_nonneg_right hn
     (block_nonneg standardDirection q _ n 0)).trans_eq (one_mul _))
 

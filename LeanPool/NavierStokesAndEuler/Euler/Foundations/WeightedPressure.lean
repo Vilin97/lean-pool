@@ -101,7 +101,8 @@ theorem shifted_weighted_inverse (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc)
   let v : ℕ → ℝ := fun n => ((n + 1 : ℕ) : ℝ) * weight ρ (n + 1)
   have hv : ∀ n, 0 ≤ v n := fun n => mul_nonneg (Nat.cast_nonneg _) (weight_pos hρ _).le
   have hq : 0 ≤ ρ * Rc := mul_nonneg hρ.le hRc
-  have hhalf : ρ * Rc ≤ 1 / 2 := by nlinarith
+  have hhalf : ρ * Rc ≤ 1 / 2 := by
+    linarith only [mul_le_mul_of_nonneg_right hM hq, hsmall]
   have hcomm : (∑ n ∈ range (N + 1), v n * ∑ l ∈ range n,
       (n.choose (l + 1) : ℝ) * A (l + 1) * Z (n - (l + 1))) ≤
       (2 * (ρ * Rc)) * ∑ j ∈ range (N + 1), v j * Z j := by
@@ -135,14 +136,17 @@ theorem shifted_weighted_inverse (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc)
       M * ((∑ n ∈ range (N + 1), v n * F n) +
         ∑ n ∈ range (N + 1), v n * ∑ l ∈ range n,
           (n.choose (l + 1) : ℝ) * A (l + 1) * Z (n - (l + 1))) := by
-    simp only [mul_add, sum_add_distrib, mul_sum, mul_assoc, mul_left_comm, mul_comm]
+    rw [← sum_add_distrib, mul_sum]
+    apply sum_congr rfl
+    intro n _
+    ring
   rw [hsumid] at hs
   have hzsum : 0 ≤ ∑ n ∈ range (N + 1), v n * Z n :=
     sum_nonneg (fun n _ => mul_nonneg (hv n) (hZ n))
   have hsmall' := mul_le_mul_of_nonneg_right hsmall hzsum
-  have hcomm' := mul_le_mul_of_nonneg_left hcomm (show 0 ≤ M by linarith)
+  have hcomm' := mul_le_mul_of_nonneg_left hcomm (show 0 ≤ M by linarith only [hM])
   change (∑ n ∈ range (N + 1), v n * Z n) ≤ 2 * M * ∑ n ∈ range (N + 1), v n * F n
-  nlinarith
+  linarith only [hs, hsmall', hcomm']
 
 open EulerLiftedGradientSpace EulerSpatialSobolevInverse EulerJetProductBounds
 

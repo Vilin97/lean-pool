@@ -30,6 +30,8 @@ public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 public import Mathlib.LinearAlgebra.Trace
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-!
 # Independent definitions for the Navier–Stokes Comparator submission
@@ -53,7 +55,7 @@ namespace NavierStokes.Comparator
 
 -- Inlined notation from FormalConjecturesForMathlib.Geometry.Euclidean and Geometry.«3d».
 local notation "ℝ^" n:65 => EuclideanSpace ℝ (Fin n)
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 variable {n : ℕ}
 

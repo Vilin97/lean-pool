@@ -51,7 +51,7 @@ variable (M : EulerMeanPacketProvider.Data)
 /-- Forward uniform budget used in packet forward uniform budget. -/
 def forwardUniformBudget : EulerAllOrderDriftCorrection.Budget period D.T_pos
     (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree
-      (truncation k) (truncation_bounds k (by linarith)).1 k hk) := by
+      (truncation k) (truncation_bounds k (by linarith only [hk])).1 k hk) := by
   let BC := forwardCoefficientBudget period M D hTime NB
   let L' := forwardInitializedLinearBudget LM L NB BC δ ξ
   let NB' := forwardInitializedNormalBudget LM L NB BC δ ξ
@@ -86,8 +86,8 @@ theorem forwardUniformBudget_initialRadius :
 
 open EulerPacketCorrectionOutput EulerSobolevGevreyOperators EulerAllOrderDriftCorrection
 
-local notation "Q" => forwardUniformBudget M D hTime δ hδ hδ1 ξ hs α hα
-  L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet
+local notation "Q" => (forwardUniformBudget M D hTime δ hδ hδ1 ξ hs α hα
+  L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet)
 
 theorem forwardUniformBudget_weighted (s N : ℕ) (hN : N + 6 ≤ s) (t : Icc (0 : ℝ) D.T) :
     weightedNorm period 6 N ((Q).initialRadius/4) (((Q).fieldTower period).realization s t) ≤

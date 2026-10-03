@@ -43,18 +43,20 @@ theorem cutoff_sub_one_norm (n : ℕ) (x : Space) : ‖cutoff n x - 1‖ ≤ 1 :
 
 theorem cutoff_tendsto (x : Space) : Tendsto (fun n => cutoff n x) atTop (𝓝 1) := by
   have h := spatialBump.continuous.continuousAt.tendsto.comp (cutoffScale_tendsto.smul_const x)
-  have hb : spatialBump (0 : Space) = 1 := spatialBump.one_of_mem_closedBall (by simp [spatialBump])
+  have hb : spatialBump (0 : Space) = 1 := spatialBump.one_of_mem_closedBall (by simp only [
+      spatialBump, Metric.mem_closedBall, dist_self, zero_le_one])
   simpa only [cutoff, zero_smul, hb, Function.comp_def] using h
 
 theorem cutoff_derivative_bound : ∃ M : ℝ, 0 ≤ M ∧
     ∀ n x, ‖fderiv ℝ (cutoff n) x‖ ≤ M * cutoffScale n := by
   have hs : ContDiff ℝ ∞ (spatialBump : Space → ℝ) := spatialBump.contDiff
   obtain ⟨M, hM⟩ := (spatialBump.hasCompactSupport.fderiv ℝ).exists_bound_of_continuous
-    (hs.fderiv_right (m := ∞) (by simp)).continuous
+    (hs.fderiv_right (m := ∞) (by simp only [ENat.coe_top_add_one, Std.le_refl])).continuous
   have hM0 : 0 ≤ M := (norm_nonneg _).trans (hM 0)
   refine ⟨M, hM0, ?_⟩
   intro n x
-  have hder := ((hs.differentiable (by simp)) (cutoffScale n • x)).hasFDerivAt.comp x
+  have hder := ((hs.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (cutoffScale n • x)).hasFDerivAt.comp x
     ((hasFDerivAt_id x).const_smul (cutoffScale n))
   change HasFDerivAt (cutoff n)
     ((fderiv ℝ (spatialBump : Space → ℝ) (cutoffScale n • x)).comp
@@ -88,7 +90,9 @@ theorem cutoffField_compact (f : Space → V) (n : ℕ) : HasCompactSupport (cut
 theorem cutoffField_fderiv (f : Space → V) (hf : ContDiff ℝ ∞ f) (n : ℕ) (x : Space) :
     fderiv ℝ (cutoffField f n) x = cutoff n x • fderiv ℝ f x +
       (fderiv ℝ (cutoff n) x).smulRight (f x) :=
-  fderiv_fun_smul ((cutoff_smooth n).differentiable (by simp) x) (hf.differentiable (by simp) x)
+  fderiv_fun_smul ((cutoff_smooth n).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x) (hf.differentiable (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]) x)
 
 theorem cutoffField_tendsto (f : Space → V) (x : Space) :
     Tendsto (fun n => cutoffField f n x) atTop (𝓝 (f x)) := by
@@ -97,7 +101,8 @@ theorem cutoffField_tendsto (f : Space → V) (x : Space) :
 theorem cutoffField_fderiv_tendsto (f : Space → V) (hf : ContDiff ℝ ∞ f) (x : Space) :
     Tendsto (fun n => fderiv ℝ (cutoffField f n) x) atTop (𝓝 (fderiv ℝ f x)) := by
   have hright : Tendsto (fun n => (fderiv ℝ (cutoff n) x).smulRight (f x)) atTop (𝓝 0) := by
-    have hc : Continuous (fun L : Space →L[ℝ] ℝ => L.smulRight (f x)) := by fun_prop
+    have hc : Continuous (fun L : Space →L[ℝ] ℝ => L.smulRight (f x)) :=
+      ((ContinuousLinearMap.smulRightL ℝ Space V).flip (f x)).continuous
     simpa only [ContinuousLinearMap.zero_smulRight, Function.comp_def] using
         hc.continuousAt.tendsto.comp
       (cutoff_derivative_tendsto x)

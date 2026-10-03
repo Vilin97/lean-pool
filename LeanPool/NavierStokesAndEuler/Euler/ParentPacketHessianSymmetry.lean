@@ -30,9 +30,11 @@ theorem hessian_isSymmetric (p : Space → ℝ) (hp : ContDiff ℝ 2 p) (x : Spa
     (fderiv ℝ (gradient p) x).IsSymmetric := by
   have hd : DifferentiableAt ℝ (fderiv ℝ p) x :=
     ((hp.fderiv_right (m := 1) le_rfl).differentiable one_ne_zero).differentiableAt
-  have hg : fderiv ℝ (gradient p) x =
-      (toDual ℝ Space).symm.toContinuousLinearMap.comp (fderiv ℝ (fderiv ℝ p) x) :=
-    ((toDual ℝ Space).symm.toContinuousLinearMap.hasFDerivAt.comp x hd.hasFDerivAt).fderiv
+  let L :=
+    LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := StrongDual ℝ Space) (F' := Space)
+      (toDual ℝ Space).symm.toLinearEquiv.toLinearMap
+  have hg : fderiv ℝ (gradient p) x = L.comp (fderiv ℝ (fderiv ℝ p) x) :=
+    (L.hasFDerivAt.comp x hd.hasFDerivAt).fderiv
   intro v w
   change ⟪fderiv ℝ (gradient p) x v,w⟫_ℝ = ⟪v,fderiv ℝ (gradient p) x w⟫_ℝ
   rw [hg]

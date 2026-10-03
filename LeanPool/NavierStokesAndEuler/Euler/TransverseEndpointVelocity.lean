@@ -52,22 +52,23 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- The literal derivative of Q*η_t for the homogeneous stationary equation. -/
 def initialMomentumForcing : TimeLp T E →L[ℝ] TimeLp T U :=
-  (timeMultiplier T hT Q₁).adjoint -
-    (timeMultiplier T hT Q).adjoint.comp
+  adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q₁) -
+    (adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q)).comp
       ((timeMultiplier T hT H).comp (initialPrimitiveTimeLp T hT))
 
 theorem initialMomentumForcing_ae (u : TimeLp T E) :
     (initialMomentumForcing T hT Q Q₁ H u : ℝ → U) =ᵐ[timeMeasure T]
-      fun t => (extendPath T hT Q₁ t).adjoint (u t) -
-        (extendPath T hT Q t).adjoint (extendPath T hT H t (initialRealPrimitive T u t)) := by
+      fun t => adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q₁ t) (u t) -
+        adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q t)
+          (extendPath T hT H t (initialRealPrimitive T u t)) := by
   change (momentum T hT Q₁ u -
-    momentum T hT Q (timeMultiplier T hT H (initialPrimitiveTimeLp T hT u)) : TimeLp T U)
+    momentum T hT Q (timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u)) : TimeLp T U)
       =ᵐ[timeMeasure T] _
   filter_upwards [Lp.coeFn_sub (momentum T hT Q₁ u)
-      (momentum T hT Q (timeMultiplier T hT H (initialPrimitiveTimeLp T hT u))),
+      (momentum T hT Q (timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u))),
     momentum_ae T hT Q₁ u,
-    momentum_ae T hT Q (timeMultiplier T hT H (initialPrimitiveTimeLp T hT u)),
-    timeMultiplier_ae T hT H (initialPrimitiveTimeLp T hT u),
+    momentum_ae T hT Q (timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u)),
+    timeMultiplier_ae T hT H (initialPrimitiveTimeLp (E := E) T hT u),
     initialPrimitiveTimeLp_ae T hT u] with t hs hq₁ hq hH hη
   simp only [Pi.sub_apply] at hs
   rw [hs, hq₁, hq, hH, hη]
@@ -80,26 +81,26 @@ theorem initialMomentum_weak
     (u : TimeLp T E)
     (hu : ∀ v : transverseDerivatives T hT m,
       ⟪u, (v : TimeLp T E)⟫_ℝ -
-        ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u),
+        ⟪timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u),
           transversePrimitive T hT m v⟫_ℝ = 0)
-    (v : TimeLp T U) (hv : initialTrace T hT v = 0) :
+    (v : TimeLp T U) (hv : initialTrace (E := U) T hT v = 0) :
     ⟪momentum T hT Q u, v⟫_ℝ =
-      -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ := by
+      -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp (E := U) T hT v⟫_ℝ := by
   have ht := hu ⟨productDerivative T hT Q Q₁ v,
     productDerivative_mem_transverse T hT Q Q₁ hd m hm v hv⟩
   change ⟪u, productDerivative T hT Q Q₁ v⟫_ℝ -
-    ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u),
-      primitiveTimeLp T hT (productDerivative T hT Q Q₁ v)⟫_ℝ = 0 at ht
+    ⟪timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u),
+      primitiveTimeLp (E := E) T hT (productDerivative T hT Q Q₁ v)⟫_ℝ = 0 at ht
   rw [primitiveTimeLp_productDerivative T hT Q Q₁ hd] at ht
   simp only [productDerivative, add_apply, comp_apply, inner_add_right] at ht
   simp only [momentum, initialMomentumForcing, sub_apply, comp_apply,
     inner_sub_left, adjoint_inner_left]
-  linarith only [ht]
+  linear_combination ht
 
 /-- A bounded linear map giving the terminal value of the actual momentum. -/
 def terminalMomentum : TimeLp T E →L[ℝ] U :=
   (-T)⁻¹ • (initialTrace T hT).comp
-    ((timeMultiplier T hT Q).adjoint -
+    (adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q) -
       (primitiveTimeLp T hT).comp (initialMomentumForcing T hT Q Q₁ H))
 
 /-- The canonical momentum representative, including both time endpoints. -/
@@ -128,34 +129,34 @@ theorem momentumPath_hasDerivAt_ae (u : TimeLp T E) :
   exact ht.add_const _
 
 theorem momentum_eq_primitive_add_terminal (hTpos : 0 < T) (u : TimeLp T E)
-    (hweak : ∀ v : TimeLp T U, initialTrace T hT v = 0 →
+    (hweak : ∀ v : TimeLp T U, initialTrace (E := U) T hT v = 0 →
       ⟪momentum T hT Q u, v⟫_ℝ =
-        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ) :
-    momentum T hT Q u = primitiveTimeLp T hT (initialMomentumForcing T hT Q Q₁ H u) +
+        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp (E := U) T hT v⟫_ℝ) :
+    momentum T hT Q u = primitiveTimeLp (E := U) T hT (initialMomentumForcing T hT Q Q₁ H u) +
       constantField T hT (terminalMomentum T hT Q Q₁ H u) := by
   obtain ⟨v, hv⟩ := weak_derivative_eq_primitive_add_constant T hTpos
     (momentum T hT Q u) (initialMomentumForcing T hT Q Q₁ H u) hweak
   have hr : momentum T hT Q u -
-      primitiveTimeLp T hT (initialMomentumForcing T hT Q Q₁ H u) =
+      primitiveTimeLp (E := U) T hT (initialMomentumForcing T hT Q Q₁ H u) =
       constantField T hT v := by
     rw [hv]
     abel
   have hc : terminalMomentum T hT Q Q₁ H u = v := by
-    change (-T)⁻¹ • initialTrace T hT (momentum T hT Q u -
-      primitiveTimeLp T hT (initialMomentumForcing T hT Q Q₁ H u)) = v
+    change (-T)⁻¹ • initialTrace (E := U) T hT (momentum T hT Q u -
+      primitiveTimeLp (E := U) T hT (initialMomentumForcing T hT Q Q₁ H u)) = v
     rw [hr, initialTrace_constantField, smul_smul,
       inv_mul_cancel₀ (neg_ne_zero.mpr hTpos.ne'), one_smul]
   rw [hc]
   exact hv
 
 theorem momentumPath_ae_of_weak (hTpos : 0 < T) (u : TimeLp T E)
-    (hweak : ∀ v : TimeLp T U, initialTrace T hT v = 0 →
+    (hweak : ∀ v : TimeLp T U, initialTrace (E := U) T hT v = 0 →
       ⟪momentum T hT Q u, v⟫_ℝ =
-        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ) :
+        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp (E := U) T hT v⟫_ℝ) :
     (momentum T hT Q u : ℝ → U) =ᵐ[timeMeasure T] momentumPath T hT Q Q₁ H u := by
   rw [momentum_eq_primitive_add_terminal T hT Q Q₁ H hTpos u hweak]
   filter_upwards [Lp.coeFn_add
-      (primitiveTimeLp T hT (initialMomentumForcing T hT Q Q₁ H u))
+      (primitiveTimeLp (E := U) T hT (initialMomentumForcing T hT Q Q₁ H u))
       (constantField T hT (terminalMomentum T hT Q Q₁ H u)),
     primitiveTimeLp_ae T hT (initialMomentumForcing T hT Q Q₁ H u),
     constantField_ae T hT (terminalMomentum T hT Q Q₁ H u)] with t ha hp hc
@@ -219,9 +220,9 @@ theorem initial_coordinate_green (hTpos : 0 < T)
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT Q) (Q₁ t) (Icc (0 : ℝ) T) t)
     (u v : TimeLp T E)
-    (hweak : ∀ w : TimeLp T U, initialTrace T hT w = 0 →
+    (hweak : ∀ w : TimeLp T U, initialTrace (E := U) T hT w = 0 →
       ⟪momentum T hT Q u, w⟫_ℝ =
-        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT w⟫_ℝ)
+        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp (E := U) T hT w⟫_ℝ)
     (hvRange : ∀ t : Icc (0 : ℝ) T, ∃ x : U, Q t x = initialRealPrimitive T v t) :
     ⟪energyOperator T hT H u, v⟫_ℝ =
       ⟪terminalMomentum T hT Q Q₁ H u, initialCoordinates T hT Q c hc hQ v T⟫_ℝ := by
@@ -236,8 +237,8 @@ theorem initial_coordinate_green (hTpos : 0 < T)
     exact hφ.integral_deriv_eq_sub
   have hder : ∀ᵐ t ∂timeMeasure T,
       ⟪u t, v t⟫_ℝ -
-        ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u) t,
-          initialPrimitiveTimeLp T hT v t⟫_ℝ = deriv φ t := by
+        ⟪timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u) t,
+          initialPrimitiveTimeLp (E := E) T hT v t⟫_ℝ = deriv φ t := by
     filter_upwards [ae_restrict_mem measurableSet_Icc,
       momentumPath_ae_of_weak T hT Q Q₁ H hTpos u hweak,
       momentum_ae T hT Q u,
@@ -245,9 +246,10 @@ theorem initial_coordinate_green (hTpos : 0 < T)
       initialCoordinateDerivative_reconstruct_ae T hT Q Q₁ c hc hQ hd v hvRange,
       initialMomentumForcing_ae T hT Q Q₁ H u,
       initialPrimitiveTimeLp_ae T hT u, initialPrimitiveTimeLp_ae T hT v,
-      timeMultiplier_ae T hT H (initialPrimitiveTimeLp T hT u)]
+      timeMultiplier_ae T hT H (initialPrimitiveTimeLp (E := E) T hT u)]
       with t ht hp hpu hpd hξd hv hf hηu hηv hHu
-    have hp' : momentumPath T hT Q Q₁ H u t = (extendPath T hT Q t).adjoint (u t) :=
+    have hp' : momentumPath T hT Q Q₁ H u t =
+        adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath T hT Q t) (u t) :=
       hp.symm.trans hpu
     have hη : extendPath T hT Q t (initialCoordinates T hT Q c hc hQ v t) =
         initialRealPrimitive T v t := by
@@ -257,19 +259,20 @@ theorem initial_coordinate_green (hTpos : 0 < T)
         ⟪initialMomentumForcing T hT Q Q₁ H u t, initialCoordinates T hT Q c hc hQ v t⟫_ℝ +
         ⟪momentumPath T hT Q Q₁ H u t,
           initialCoordinateDerivative T hT Q Q₁ c hc hQ v t⟫_ℝ :=
-      by simpa only [φ, add_comm] using (hpd.inner ℝ hξd).deriv
-    rw [hφd, hf, hp', hHu, hηu, hηv, hv, ← hη]
-    simp only [inner_add_right, inner_sub_left, adjoint_inner_left]
+      (hpd.inner ℝ hξd).deriv.trans (add_comm _ _)
+    simp only [hφd, hf, hp', hHu, hηu, hηv, hv, ← hη, inner_add_right, inner_sub_left,
+      adjoint_inner_left]
     ring
   calc
     ⟪energyOperator T hT H u, v⟫_ℝ =
         ∫ t, ⟪u t, v t⟫_ℝ -
-          ⟪timeMultiplier T hT H (initialPrimitiveTimeLp T hT u) t,
-            initialPrimitiveTimeLp T hT v t⟫_ℝ ∂timeMeasure T := by
+          ⟪timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u) t,
+            initialPrimitiveTimeLp (E := E) T hT v t⟫_ℝ ∂timeMeasure T := by
       rw [energyOperator_inner, L2.inner_def, L2.inner_def]
-      exact (integral_sub (L2.integrable_inner u v)
-        (L2.integrable_inner (timeMultiplier T hT H (initialPrimitiveTimeLp T hT u))
-          (initialPrimitiveTimeLp T hT v))).symm
+      exact (integral_sub (L2.integrable_inner (𝕜 := ℝ) u v)
+        (L2.integrable_inner (𝕜 := ℝ)
+          (timeMultiplier T hT H (initialPrimitiveTimeLp (E := E) T hT u))
+          (initialPrimitiveTimeLp (E := E) T hT v))).symm
     _ = ∫ t, deriv φ t ∂timeMeasure T := integral_congr_ae hder
     _ = φ T - φ 0 := hftc
     _ = _ := by
@@ -290,10 +293,10 @@ theorem dirichletToNeumann_eq_terminalMomentum (hTpos : 0 < T)
     (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖ ^ 2)
     (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
     (L : V →L[ℝ] TimeLp T E) (R : V →L[ℝ] E)
-    (hL : ∀ Y t, ⟪m t, initialPrimitive T hT (L Y) t⟫_ℝ = 0)
-    (hLT : ∀ Y, initialPrimitive T hT (L Y) ⟨T, hT, le_rfl⟩ = R Y) (Y : V) :
+    (hL : ∀ Y t, ⟪m t, initialPrimitive (E := E) T hT (L Y) t⟫_ℝ = 0)
+    (hLT : ∀ Y, initialPrimitive (E := E) T hT (L Y) ⟨T, hT, le_rfl⟩ = R Y) (Y : V) :
     dirichletToNeumann T hT m H K hK hH hsmall L Y =
-      (terminalCoordinates T hT Q c hc hQ R).adjoint
+      adjoint (𝕜 := ℝ) (E := V) (F := U) (terminalCoordinates T hT Q c hc hQ R)
         (terminalMomentum T hT Q Q₁ H (endpointDerivative T hT m H K hK hH hsmall L Y)) := by
   apply ext_inner_right ℝ
   intro Z
@@ -376,14 +379,15 @@ theorem physicalVelocityPath_continuous (u : TimeLp T E) :
 
 /-- The continuous velocity has the exact prescribed momentum at every time. -/
 theorem physicalVelocityPath_momentum (u : TimeLp T E) (t : ℝ) :
-    (extendPath T hT Q t).adjoint (physicalVelocityPath T hT Q Q₁ c hc hQ H u t) =
+    adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q t)
+        (physicalVelocityPath T hT Q Q₁ c hc hQ H u t) =
       momentumPath T hT Q Q₁ H u t := by
-  change (Q (projIcc 0 T hT t)).adjoint
+  change adjoint (𝕜 := ℝ) (E := U) (F := E) (Q (projIcc 0 T hT t))
     (Q₁ (projIcc 0 T hT t) (initialCoordinates T hT Q c hc hQ u t) +
       Q (projIcc 0 T hT t)
         (gramInverse (Q (projIcc 0 T hT t)) c hc (hQ (projIcc 0 T hT t))
           (momentumPath T hT Q Q₁ H u t -
-            (Q (projIcc 0 T hT t)).adjoint
+            adjoint (𝕜 := ℝ) (E := U) (F := E) (Q (projIcc 0 T hT t))
               (Q₁ (projIcc 0 T hT t) (initialCoordinates T hT Q c hc hQ u t))))) = _
   rw [map_add]
   change _ + gram (Q (projIcc 0 T hT t))
@@ -395,9 +399,9 @@ variable (hd : ∀ t : Icc (0 : ℝ) T,
 
 include hd in
 theorem coordinateVelocityPath_ae (hTpos : 0 < T) (u : TimeLp T E)
-    (hweak : ∀ v : TimeLp T U, initialTrace T hT v = 0 →
+    (hweak : ∀ v : TimeLp T U, initialTrace (E := U) T hT v = 0 →
       ⟪momentum T hT Q u, v⟫_ℝ =
-        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ)
+        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp (E := U) T hT v⟫_ℝ)
     (huRange : ∀ t : Icc (0 : ℝ) T, ∃ x : U, Q t x = initialRealPrimitive T u t) :
     (initialCoordinateDerivative T hT Q Q₁ c hc hQ u : ℝ → U) =ᵐ[timeMeasure T]
       coordinateVelocityPath T hT Q Q₁ c hc hQ H u := by
@@ -405,7 +409,8 @@ theorem coordinateVelocityPath_ae (hTpos : 0 < T) (u : TimeLp T E)
     momentum_ae T hT Q u,
     initialCoordinateDerivative_reconstruct_ae T hT Q Q₁ c hc hQ hd u huRange]
     with t hp hpm hu
-  have hp' : momentumPath T hT Q Q₁ H u t = (extendPath T hT Q t).adjoint (u t) :=
+  have hp' : momentumPath T hT Q Q₁ H u t =
+      adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath T hT Q t) (u t) :=
     hp.symm.trans hpm
   unfold coordinateVelocityPath
   rw [hp']
@@ -416,9 +421,9 @@ theorem coordinateVelocityPath_ae (hTpos : 0 < T) (u : TimeLp T E)
 include hd in
 /-- The continuous physical velocity represents the original variational derivative. -/
 theorem physicalVelocityPath_ae (hTpos : 0 < T) (u : TimeLp T E)
-    (hweak : ∀ v : TimeLp T U, initialTrace T hT v = 0 →
+    (hweak : ∀ v : TimeLp T U, initialTrace (E := U) T hT v = 0 →
       ⟪momentum T hT Q u, v⟫_ℝ =
-        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ)
+        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp (E := U) T hT v⟫_ℝ)
     (huRange : ∀ t : Icc (0 : ℝ) T, ∃ x : U, Q t x = initialRealPrimitive T u t) :
     (u : ℝ → E) =ᵐ[timeMeasure T] physicalVelocityPath T hT Q Q₁ c hc hQ H u := by
   filter_upwards [initialCoordinateDerivative_reconstruct_ae T hT Q Q₁ c hc hQ hd u huRange,
@@ -450,9 +455,9 @@ theorem initialPrimitive_hasDerivWithinAt_of_continuous (u : TimeLp T E)
 
 include hd in
 theorem stationary_displacement_hasDerivWithinAt (hTpos : 0 < T) (u : TimeLp T E)
-    (hweak : ∀ v : TimeLp T U, initialTrace T hT v = 0 →
+    (hweak : ∀ v : TimeLp T U, initialTrace (E := U) T hT v = 0 →
       ⟪momentum T hT Q u, v⟫_ℝ =
-        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp T hT v⟫_ℝ)
+        -⟪initialMomentumForcing T hT Q Q₁ H u, primitiveTimeLp (E := U) T hT v⟫_ℝ)
     (huRange : ∀ t : Icc (0 : ℝ) T, ∃ x : U, Q t x = initialRealPrimitive T u t)
     (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (initialRealPrimitive T u)
@@ -472,10 +477,10 @@ theorem dirichletToNeumann_eq_terminal_velocity (hTpos : 0 < T)
     (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖ ^ 2)
     (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2)
     (L : V →L[ℝ] TimeLp T E) (R : V →L[ℝ] E)
-    (hL : ∀ Y t, ⟪m t, initialPrimitive T hT (L Y) t⟫_ℝ = 0)
-    (hLT : ∀ Y, initialPrimitive T hT (L Y) ⟨T, hT, le_rfl⟩ = R Y) (Y : V) :
+    (hL : ∀ Y t, ⟪m t, initialPrimitive (E := E) T hT (L Y) t⟫_ℝ = 0)
+    (hLT : ∀ Y, initialPrimitive (E := E) T hT (L Y) ⟨T, hT, le_rfl⟩ = R Y) (Y : V) :
     dirichletToNeumann T hT m H K hK hH hsmall L Y =
-      R.adjoint (physicalVelocityPath T hT Q Q₁ c hc hQ H
+      adjoint (𝕜 := ℝ) (E := V) (F := E) R (physicalVelocityPath T hT Q Q₁ c hc hQ H
         (endpointDerivative T hT m H K hK hH hsmall L Y) T) := by
   rw [dirichletToNeumann_eq_terminalMomentum T hT Q Q₁ c hc hQ H hTpos hd
     m hm hRange K hK hH hsmall L R hL hLT]
@@ -484,8 +489,8 @@ theorem dirichletToNeumann_eq_terminal_velocity (hTpos : 0 < T)
   have hR : ⟪m ⟨T, hT, le_rfl⟩, R Z⟫_ℝ = 0 := by
     rw [← hLT Z]
     exact hL Z ⟨T, hT, le_rfl⟩
-  obtain ⟨z, hz⟩ := hRange ⟨T, hT, le_rfl⟩ (R Z) hR
   have hrec : Q ⟨T, hT, le_rfl⟩ (terminalCoordinates T hT Q c hc hQ R Z) = R Z := by
+    obtain ⟨z, hz⟩ := hRange ⟨T, hT, le_rfl⟩ (R Z) hR
     change Q ⟨T, hT, le_rfl⟩
       (frameLeftInverse (Q ⟨T, hT, le_rfl⟩) c hc (hQ ⟨T, hT, le_rfl⟩) (R Z)) = R Z
     rw [← hz, frameLeftInverse_apply]
@@ -502,7 +507,7 @@ theorem endpointDisplacement_hasDerivWithinAt (hTpos : 0 < T)
     (hRange : ∀ t η, ⟪m t, η⟫_ℝ = 0 → ∃ x : U, Q t x = η)
     (K : ℝ) (hK : 0 ≤ K) (hH : ∀ t x, ⟪H t x, x⟫_ℝ ≤ K * ‖x‖ ^ 2)
     (hsmall : K * (T ^ 2 / 2) ≤ 1 / 2) (L : V →L[ℝ] TimeLp T E)
-    (hL : ∀ Y t, ⟪m t, initialPrimitive T hT (L Y) t⟫_ℝ = 0)
+    (hL : ∀ Y t, ⟪m t, initialPrimitive (E := E) T hT (L Y) t⟫_ℝ = 0)
     (Y : V) (t : Icc (0 : ℝ) T) :
     let u := endpointDerivative T hT m H K hK hH hsmall L Y
     HasDerivWithinAt (initialRealPrimitive T u)

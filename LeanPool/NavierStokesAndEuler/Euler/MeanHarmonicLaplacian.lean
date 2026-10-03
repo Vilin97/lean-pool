@@ -15,10 +15,15 @@ public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 import LeanPool.NavierStokesAndEuler.Euler.MeanHarmonicEnergy
 import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-! Canonical Laplacian and the quantitative local harmonic energy bound. -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 
 noncomputable section

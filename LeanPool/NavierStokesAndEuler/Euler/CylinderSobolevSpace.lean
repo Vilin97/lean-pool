@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.ClosedTranslationGraph
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.CylinderSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SpatialSobolevInverse
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PressureJetIdentities
+public import LeanPool.NavierStokesAndEuler.ForMathlib.NormedSpaceShortcuts
 
 /-! A complete cylinder Sobolev space constructed from closed graphs of actual L² derivatives. -/
 
@@ -70,9 +71,15 @@ instance sobolevNormedAddCommGroup (q : ℕ) : NormedAddCommGroup (SobolevSpace 
 instance sobolevNormedSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace period q) :=
   inferInstanceAs (NormedSpace ℝ (sobolevSubspace period q).toSubmodule)
 
+real_normed_space_shortcut_instances SobolevSpace (q : ℕ) : SobolevSpace period q
+
 /-- Completeness follows from closedness of the derivative graphs in a finite product of L² spaces.
 -/
 theorem sobolev_complete (q : ℕ) : CompleteSpace (SobolevSpace period q) := inferInstance
+
+/-- Shortcut for the completeness of the cylinder Sobolev space. -/
+instance SobolevSpace.instCompleteSpace (q : ℕ) : CompleteSpace (SobolevSpace period q) :=
+  sobolev_complete period q
 
 /-- The underlying L² field of a Sobolev derivative array. -/
 def value {q : ℕ} (u : SobolevSpace period q) : LiftL2 period := u.val (emptyWord q)

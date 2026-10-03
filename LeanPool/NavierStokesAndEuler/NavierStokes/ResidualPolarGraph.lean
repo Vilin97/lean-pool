@@ -46,15 +46,15 @@ noncomputable def cylindricalPoint (a : ℝ) (j : PolarCharts.Index) (n : ℕ)
 @[simp] theorem cylindricalPoint_radius (a : ℝ) (j : PolarCharts.Index) (n : ℕ) (w : SpaceTime) :
     (cylindricalPoint a j n w).2 0 =
       PolarCharts.radius (PhysicalGraphBounds.radialProjection w) := by
-  simp [cylindricalPoint]
+  simp only [Fin.isValue, cylindricalPoint, PhysicalGraphBounds.radialProjection_apply, pack_zero]
 
 @[simp] theorem cylindricalPoint_angle (a : ℝ) (j : PolarCharts.Index) (n : ℕ) (w : SpaceTime) :
     (cylindricalPoint a j n w).2 1 = angle a j n w := by
-  simp [cylindricalPoint]
+  simp only [Fin.isValue, cylindricalPoint, PhysicalGraphBounds.radialProjection_apply, pack_one]
 
 @[simp] theorem cylindricalPoint_axial (a : ℝ) (j : PolarCharts.Index) (n : ℕ) (w : SpaceTime) :
     (cylindricalPoint a j n w).2 2 = w.2 2 := by
-  simp [cylindricalPoint]
+  simp only [Fin.isValue, cylindricalPoint, PhysicalGraphBounds.radialProjection_apply, pack_two]
 
 theorem rotated_projection_pos {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) (n : ℕ)
     {w : SpaceTime}
@@ -108,11 +108,16 @@ theorem chart_cylindricalPoint {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) (n
   have hp := polar_radius_angle ha j n hw
   ext i
   fin_cases i
-  · simpa [CylindricalResidual.chart, cylindricalPoint, PolarCharts.polar] using congrArg Prod.fst
+  · simpa only [CylindricalResidual.chart, Fin.isValue, cylindricalPoint,
+      PhysicalGraphBounds.radialProjection_apply, pack_zero, pack_one, pack_two, Fin.zero_eta,
+      PolarCharts.polar] using congrArg Prod.fst
       hp
-  · simpa [CylindricalResidual.chart, cylindricalPoint, PolarCharts.polar] using congrArg Prod.snd
+  · simpa only [CylindricalResidual.chart, Fin.isValue, cylindricalPoint,
+      PhysicalGraphBounds.radialProjection_apply, pack_zero, pack_one, pack_two, Fin.mk_one,
+      PolarCharts.polar] using congrArg Prod.snd
       hp
-  · simp [CylindricalResidual.chart, cylindricalPoint]
+  · simp only [CylindricalResidual.chart, Fin.isValue, cylindricalPoint,
+      PhysicalGraphBounds.radialProjection_apply, pack_zero, pack_one, pack_two, Fin.reduceFinMk]
 
 /-- The time coordinate is unchanged by the actual spatial chart. -/
 theorem spacetimeChart_cylindricalPoint {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) (n : ℕ)

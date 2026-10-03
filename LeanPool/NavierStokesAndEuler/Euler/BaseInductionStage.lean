@@ -100,7 +100,8 @@ theorem homogeneousSourceErrors_of_global (ev ep : ℝ)
     (herr : ∀ (t : Icc (0 : ℝ) A.T) (x : Space),
       ‖fderiv ℝ (A.normalizedPacketVelocity m hm J support hSupport B residual k E.inverse t) x -
         ((δ * hchild) * deriv (profile δ) (k * ⟪m, E.inverse.normalized t x⟫_ℝ)) •
-          rankOne ℝ (canonicalVelocity (A.transverseData m hm J support hSupport) ξ t
+          rankOne ℝ (E := Space) (F := Space)
+            (canonicalVelocity (A.transverseData m hm J support hSupport) ξ t
               (E.inverse.normalized t x))
             ((A.transverseData m hm J support hSupport).normal.field t (E.inverse.normalized t x))‖
                 < ev ∧
@@ -110,7 +111,8 @@ theorem homogeneousSourceErrors_of_global (ev ep : ℝ)
             (δ * hchild) t
             (E.inverse.normalized t x) *
  deriv (profile δ) (k * ⟪m, E.inverse.normalized t x⟫_ℝ)) •
-          rankOne ℝ ((A.transverseData m hm J support hSupport).normal.field t
+          rankOne ℝ (E := Space) (F := Space)
+            ((A.transverseData m hm J support hSupport).normal.field t
               (E.inverse.normalized t x))
             ((A.transverseData m hm J support hSupport).normal.field t (E.inverse.normalized t x))‖
                 < ep) :
@@ -145,9 +147,9 @@ theorem exactHomogeneousPacket_low_bounds
     ∀ z, ⟪fderiv ℝ (gradient (fun y => A.exactPacketPressure m hm J support hSupport B residual k
         E.inverse.field E.pressure (t,y))) x z,z⟫_ℝ ≤
       (Kupper+2*CM*δ*(hchild*EulerPacketFirstLowBounds.firstRatio)+ep)*‖z‖^2 := by
-  let y := E.inverse.normalized t (A.ell⁻¹ • x)
   have herr' := herr t (A.ell⁻¹ • x)
   have he := E.exactPacket_derivative_split m hm J support hSupport B residual k hk t x
+  set y := E.inverse.normalized t (A.ell⁻¹ • x)
   have hm' : (A.transverseData m hm J support hSupport).M.field t y =
       fderiv ℝ (fun y => E.velocity (t,y)) x := E.strain_at_normalized_inverse t x
   apply good_step_bounds _ _ _ _ ((A.transverseData m hm J support hSupport).M.field t y)
@@ -232,7 +234,7 @@ def firstChildLowBounds (hL : H.L = 0) (hquarter : A.ell ≤ 1 / 4)
     (A.sourceAgreement m hm J support hSupport H) N hN k hk
   let V := forwardInitializedNormalizedField (A.meanData H)
     (A.transverseData m hm J support hSupport) rfl δ hδ ξ hs (δ*hchild) N k
-  have hkinv : k*k⁻¹=1 := mul_inv_cancel₀ (by linarith : k ≠ 0)
+  have hkinv : k*k⁻¹=1 := mul_inv_cancel₀ (by linarith only [hk] : k ≠ 0)
   let EC := E.child m hm J support hSupport Q residual V rfl G hG k hkinv hgraph nextEll hnext
       hnext1
   let Cnew := CM+hchild*firstRatio+ev
@@ -250,12 +252,13 @@ def firstChildLowBounds (hL : H.L = 0) (hquarter : A.ell ≤ 1 / 4)
   apply EC.lowBoundsFromPhysical CM Cnew (boundaryLocalizationC1*Cnew+1) A.ell Knew
     hCM0
   · dsimp [Cnew]
-    positivity [firstRatio_pos]
+    exact add_nonneg (add_nonneg hCM0 (mul_nonneg hhchild firstRatio_pos.le)) hev
   · exact le_add_of_nonneg_right zero_le_one
   · exact A.ell_pos.le
   · exact hquarter
   · dsimp [Knew]
-    positivity [H.K_nonneg,firstRatio_pos]
+    exact add_nonneg (add_nonneg H.K_nonneg (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two hCM0)
+      hδ.le) (mul_nonneg hhchild firstRatio_pos.le))) hep
   · intro x hx z
     have he : fderiv ℝ (fun y => EC.velocity (0,y)) x=fderiv ℝ (fun y => E.velocity (0,y)) x :=
       A.exactForwardPacket_initial_gradient_exterior H m hm J support hSupport
@@ -425,8 +428,9 @@ def firstPacketState
   (packetBaseState β hβ ell hell hell1 T hT hTB).forwardChild
     (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)
     firstNormal firstNormal_unit firstFrame support compact symmetric
-    δ hδ firstCoordinate (subset_refl _) (δ*hchild) N hN k hk Q G hG hgraph nextEll hnext hnext1
-        labels
+    δ hδ firstCoordinate (subset_refl _) (δ*hchild) N hN k hk Q G
+    (by dsimp only [firstPacketMeanData, firstPacketData] at hG; exact hG) hgraph nextEll hnext
+    hnext1 labels
 
 /-- First packet low bounds as an element of `LowBounds ((packetBaseParent β hβ ell hell hell1 T
 hT hTB).child G k firstNormal hgraph nextEll hnext hnext1)`. -/
@@ -540,14 +544,17 @@ theorem exists_firstPacketChoice (hδ1 : δ ≤ 1) (hh : 0 < hchild)
         _)
     (δ*hchild) (mul_pos hδ hh) (profileEnvelope (firstParameterSize T δ hchild)) hp.1 hp.2.1
     k hk hfrequency hKk hinv nextEll hnext hnext1
-  refine ⟨⟨hn,Q,G,hgraph,hG,LC,hLC,hdisplacement,?_⟩⟩
+  refine ⟨⟨hn,Q,G,hgraph,?_,LC,hLC,hdisplacement,?_⟩⟩
+  · dsimp only [H] at hG
+    dsimp only [firstPacketMeanData, firstPacketData]
+    exact hG
   intro t x
   dsimp only [firstPacketMeanData, firstPacketData]
   constructor
   · rw [A.normalizedPacketVelocity_forwardInitialized H firstNormal firstNormal_unit
       firstFrame support compact δ hδ firstCoordinate (subset_refl _) (δ*hchild)
       (truncation k) hn k hk.four Q S.evolution.inverse t]
-    exact (herror t x).1
+    apply (herror t x).1
   · rw [A.normalizedPacketPressure_forwardInitialized H firstNormal firstNormal_unit
       firstFrame support compact δ hδ firstCoordinate (subset_refl _) (δ*hchild)
       (truncation k) hn k hk.four Q S.evolution.inverse t]
@@ -556,7 +563,7 @@ theorem exists_firstPacketChoice (hδ1 : δ ≤ 1) (hh : 0 < hchild)
       erw [forwardPressureTerm_eq_coefficient
         (D := A.transverseData firstNormal firstNormal_unit firstFrame support compact)
         firstCoordinate]
-    exact (herror t x).2
+    apply (herror t x).2
 
 namespace FirstPacketChoice
 
@@ -784,29 +791,23 @@ theorem center_error (t : Icc (0 : ℝ) T) :
       ((δ*hchild)*deriv (profile δ)
         (k*⟪firstNormal,(packetBaseState β hβ ell hell hell1 T hT hTB).evolution.inverse.normalized
             t 0⟫_ℝ)) •
-        rankOne ℝ (canonicalVelocity (firstPacketData β hβ ell hell hell1 T hT hTB) firstCoordinate
+        rankOne ℝ (E := Space) (F := Space)
+          (canonicalVelocity (firstPacketData β hβ ell hell hell1 T hT hTB) firstCoordinate
             t
           ((packetBaseState β hβ ell hell hell1 T hT hTB).evolution.inverse.normalized t 0))
           ((firstPacketData β hβ ell hell hell1 T hT hTB).normal.field t
             ((packetBaseState β hβ ell hell hell1 T hT hTB).evolution.inverse.normalized t 0))‖ ≤
                 k^(-(1/4 : ℝ)) := by
-  let S := packetBaseState β hβ ell hell hell1 T hT hTB
-  let H := packetBaseLowBounds β hβ ell hell hell1 T hT hTB
-  let D := firstPacketData β hβ ell hell hell1 T hT hTB
-  let C (s : Icc (0 : ℝ) T) : Space →L[ℝ] Space := shearTerm (δ*hchild)
-    (deriv (profile δ) (k*⟪firstNormal,S.evolution.inverse.normalized s 0⟫_ℝ))
-    (D.normal.field s (S.evolution.inverse.normalized s 0))
-    (canonicalVelocity D firstCoordinate s (S.evolution.inverse.normalized s 0))
   have hcoefficient := F.coefficient
+  have herror (s : Icc (0 : ℝ) T) := (F.errors s 0).1
   dsimp only [firstPacketMeanData, firstPacketData] at hcoefficient
-  dsimp only [state, firstPacketState]
-  exact S.forwardChild_center_error H
+  dsimp only [firstPacketMeanData, firstPacketData, shearTerm] at herror
+  dsimp only [state, firstPacketState, parent, firstPacketData]
+  exact (packetBaseState β hβ ell hell hell1 T hT hTB).forwardChild_center_error
+    (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)
     firstNormal firstNormal_unit firstFrame support compact symmetric δ hδ firstCoordinate
     (subset_refl _) (δ*hchild) (truncation k) F.hn k hk.four F.Q F.G hcoefficient F.graph
-    nextEll hnext hnext1 F.labels C (k^(-(1/4 : ℝ))) (fun s => by
-      have hs := (F.errors s 0).1
-      dsimp only [firstPacketMeanData, firstPacketData] at hs
-      exact hs) t
+    nextEll hnext hnext1 F.labels _ (k^(-(1/4 : ℝ))) herror t
 
 end EulerBaseDatum.FirstPacketChoice
 
@@ -1035,7 +1036,6 @@ variable {β : ℝ} {hβ : |β| ≤ 1} {ell : ℝ} {hell : 0 < ell} {hell1 : ell
 
 /-- Initial frame as an element of `ParentFrame (F.parent.transverseData m hm R S hS) 0`. -/
 def initialFrame : ParentFrame (F.parent.transverseData m hm R S hS) 0 := by
-  let baseParent := packetBaseParent β hβ ell hell hell1 T hT hTB
   let B := packetBaseState β hβ ell hell hell1 T hT hTB
   have h0 := initialCoefficientCost_nonneg
   exact B.forwardRenewal F.state rfl firstNormal firstNormal_unit firstFrame support compact
@@ -1044,12 +1044,10 @@ def initialFrame : ParentFrame (F.parent.transverseData m hm R S hS) 0 := by
     (le_add_of_nonneg_left zero_le_one) (by linarith only [h0])
     (fun t _ => by
       dsimp only [Parent.centerStrain, EulerVolterraConvolution.extendPath]
-      exact packetBase_strain_bound β hβ ell hell hell1 T hT hTB
-        (projIcc 0 baseParent.T baseParent.T_pos.le t) 0)
+      exact packetBase_strain_bound β hβ ell hell hell1 T hT hTB _ 0)
     (fun t _ => by
       dsimp only [Parent.centerCurvature, EulerVolterraConvolution.extendPath]
-      exact packetBase_curvature_bound β hβ ell hell hell1 T hT hTB
-        (projIcc 0 baseParent.T baseParent.T_pos.le t) 0)
+      exact packetBase_curvature_bound β hβ ell hell hell1 T hT hTB _ 0)
     δ hδ (δ*hchild) k firstCoordinate
     (by intro h; have he := firstCoordinate_norm; rw [h,norm_zero] at he; norm_num at he)
     (fun t _ => F.center_error t)

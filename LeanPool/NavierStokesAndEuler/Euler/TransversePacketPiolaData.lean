@@ -28,13 +28,15 @@ open scoped ContDiff
 
 /-- Normal, given by `(F y).symm.toContinuousLinearMap.adjoint m₀`. -/
 def normal (F : Space → Space ≃L[ℝ] Space) (m₀ : Space) (y : Space) : Space :=
-  (F y).symm.toContinuousLinearMap.adjoint m₀
+  ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+    (F y).symm.toContinuousLinearMap m₀
 
 theorem normal_ne_zero (F : Space → Space ≃L[ℝ] Space) (m₀ : Space) (hm₀ : m₀ ≠ 0)
     (y : Space) : normal F m₀ y ≠ 0 := by
   intro hz
   have he := congrArg (fun v : Space => ⟪v,F y m₀⟫_ℝ) hz
-  change ⟪(F y).symm.toContinuousLinearMap.adjoint m₀,F y m₀⟫_ℝ = ⟪0,F y m₀⟫_ℝ at he
+  change ⟪ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+    (F y).symm.toContinuousLinearMap m₀,F y m₀⟫_ℝ = ⟪0,F y m₀⟫_ℝ at he
   rw [ContinuousLinearMap.adjoint_inner_left] at he
   simp only [ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.symm_apply_apply,
       inner_zero_left] at he

@@ -220,16 +220,14 @@ theorem extendedJets_hasFDerivWithinAt {T : ℝ}
     (hz : z ∈ closedPast T) :
     HasFDerivWithinAt (fun y => extendJets T J L y n)
       (extendJets T J L z (n + 1)).curryLeft (closedPast T) z := by
-  let A : (SpaceTime[×(n + 1)]→L[ℝ] V) →L[ℝ]
-      (SpaceTime →L[ℝ] (SpaceTime[×n]→L[ℝ] V)) :=
-    (continuousMultilinearCurryLeftEquiv ℝ
-    (fun _ : Fin (n + 1) => SpaceTime) V).toContinuousLinearEquiv.toContinuousLinearMap
+  have hA := (continuousMultilinearCurryLeftEquiv ℝ
+    (fun _ : Fin (n + 1) => SpaceTime) V).isometry
   have hLC : Continuous (fun x => (L x (n + 1)).curryLeft) :=
-    A.continuous.comp (derivative_trace_continuous hderiv hlim (n + 1))
+    hA.continuous.comp (derivative_trace_continuous hderiv hlim (n + 1))
   have hlimC : TendstoLocallyUniformly (fun t x => (J (t, x) (n + 1)).curryLeft)
       (fun x => (L x (n + 1)).curryLeft) (𝓝[<] T) := by
     intro u hu x
-    exact hlim (n + 1) _ (A.uniformContinuous hu) x
+    exact hlim (n + 1) _ (hA.uniformContinuous hu) x
   have h := hasFDerivWithinAt_extendTrace (T := T) (f := fun z => J z n)
     (f' := fun z => (J z (n + 1)).curryLeft)
     (L := fun x => L x n) (L' := fun x => (L x (n + 1)).curryLeft) (hderiv n)
@@ -322,17 +320,10 @@ theorem extendedJets_contDiffOn {T : ℝ}
       exact (extendedJets_hasFDerivWithinAt hderiv hlim n z hz).continuousWithinAt
     | succ m ih =>
       intro n
-      let A : (SpaceTime[×(n + 1)]→L[ℝ] V) →L[ℝ]
-          (SpaceTime →L[ℝ] (SpaceTime[×n]→L[ℝ] V)) :=
-        (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime)
-            V).toContinuousLinearEquiv.toContinuousLinearMap
-      have hA : ContDiff ℝ (m : WithTop ℕ∞) A :=
-        ContinuousLinearMap.contDiff (𝕜 := ℝ)
-          (E := SpaceTime[×(n + 1)]→L[ℝ] V)
-          (F := SpaceTime →L[ℝ] (SpaceTime[×n]→L[ℝ] V)) A
       have hd : ContDiffOn ℝ (m : WithTop ℕ∞)
-          (fun z => (extendJets T J L z (n + 1)).curryLeft) (closedPast T) := by
-        exact hA.comp_contDiffOn (ih (n + 1))
+          (fun z => (extendJets T J L z (n + 1)).curryLeft) (closedPast T) :=
+        (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => SpaceTime)
+          V).contDiff.comp_contDiffOn (ih (n + 1))
       have hsucc : ContDiffOn ℝ ((m : WithTop ℕ∞) + 1)
           (fun z => extendJets T J L z n) (closedPast T) := by
         apply (contDiffOn_succ_iff_hasFDerivWithinAt_of_uniqueDiffOn (closedPast_uniqueDiff T)).mpr

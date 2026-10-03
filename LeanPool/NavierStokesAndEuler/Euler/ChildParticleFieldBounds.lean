@@ -49,6 +49,8 @@ theorem norm_jetLp_le_wordSum (A : SmoothL2Field Space) (n : ℕ) :
     rw [show H w = fun x => ‖wordDerivative direction A.field w x‖ from rfl,
       eLpNorm_norm _ (hm w).aestronglyMeasurable]
     rw [← eLpNorm_congr_ae (ha w),Lp.norm_def]
+  have : SecondCountableTopologyEither Space (Space [×n]→L[ℝ] Space) :=
+    secondCountableTopologyEither_of_left _ _
   have hb := (finite_domination volume (univ : Finset (Fin n → Fin 3)) (iteratedFDeriv ℝ n A.field)
     ((A.smooth.continuous_iteratedFDeriv (m := n) (by simp)).aestronglyMeasurable)
     H (fun w _ => (hm w).norm) (fun x => tensor_le_wordSum A.field n x)).2
@@ -190,16 +192,16 @@ theorem inner_positive (n : ℕ) (hn : 0 < n) (x : Space) :
 /-- Parent composed, constructed using `composeField`. -/
 def parentComposed (U : SmoothL2Field Space) (hU : HasLabelBound G.K U) : SmoothL2Field Space :=
   composeField G.inner G.inner_smooth G.volume_preserving (1+G.amp) (1+G.rad)
-    (by linarith [G.amp_nonneg]) (by linarith [G.rad_nonneg]) G.inner_positive
+    (by linarith only [G.amp_nonneg]) (by linarith only [G.rad_nonneg]) G.inner_positive
     U G.K G.K G.K_nonneg G.K_nonneg (hasJetBound_of_labelBound U G.K hU)
 
 theorem parentComposed_bound (U : SmoothL2Field Space) (hU : HasLabelBound G.K U) :
     (G.parentComposed U hU).HasJetBound G.K G.radius := by
   have h := composeField_bound G.inner G.inner_smooth G.volume_preserving (1+G.amp) (1+G.rad)
-    (by linarith [G.amp_nonneg]) (by linarith [G.rad_nonneg]) G.inner_positive
+    (by linarith only [G.amp_nonneg]) (by linarith only [G.rad_nonneg]) G.inner_positive
     U G.K G.K G.K_nonneg G.K_nonneg (hasJetBound_of_labelBound U G.K hU)
   exact h.mono G.K_nonneg (G.compositionRadius_nonneg G.K G.K_nonneg) le_rfl
-    (G.compositionRadius_le_radius G.K (by nlinarith [G.K_nonneg]))
+    (G.compositionRadius_le_radius G.K (by nlinarith only [G.K_nonneg]))
 
 /-- First coefficient, given by `fderiv ℝ U.field (G.inner x)`. -/
 def firstCoefficient (U : SmoothL2Field Space) (x : Space) : Space →L[ℝ] Space :=
@@ -218,10 +220,11 @@ theorem firstCoefficient_bound (U : SmoothL2Field Space) (hU : HasLabelBound G.K
   have hu : HasSupBound U.field (embeddingCost*G.K) G.K := sup_bound_of_labelBound U G.K hU
   have hd := hu.derivative (mul_nonneg embeddingCost_nonneg G.K_nonneg) G.K_nonneg
   have hc := hd.comp G.inner_smooth (U.smooth.fderiv_right (m := ∞) (by simp))
-    G.firstAmplitude_nonneg (by linarith [G.amp_nonneg]) (by linarith [G.rad_nonneg])
+    G.firstAmplitude_nonneg (by linarith only [G.amp_nonneg]) (by linarith only [G.rad_nonneg])
     (mul_nonneg (by norm_num) G.K_nonneg) G.inner_positive
-  exact hc.mono G.firstAmplitude_nonneg (G.compositionRadius_nonneg _ (by nlinarith [G.K_nonneg]))
-    le_rfl (G.compositionRadius_le_radius (4*G.K) (by nlinarith [G.K_nonneg]))
+  exact hc.mono G.firstAmplitude_nonneg (G.compositionRadius_nonneg _ (by nlinarith only [
+      G.K_nonneg]))
+    le_rfl (G.compositionRadius_le_radius (4*G.K) (by nlinarith only [G.K_nonneg]))
 
 theorem secondCoefficient_bound (U : SmoothL2Field Space) (hU : HasLabelBound G.K U) :
     HasSupBound (G.secondCoefficient U) G.secondAmplitude G.radius := by
@@ -230,11 +233,12 @@ theorem secondCoefficient_bound (U : SmoothL2Field Space) (hU : HasLabelBound G.
     G.firstAmplitude_nonneg (mul_nonneg (by norm_num) G.K_nonneg)
   have hc := hd.comp G.inner_smooth
     ((U.smooth.fderiv_right (m := ∞) (by simp)).fderiv_right (m := ∞) (by simp))
-    G.secondAmplitude_nonneg (by linarith [G.amp_nonneg]) (by linarith [G.rad_nonneg])
-    (by nlinarith [G.K_nonneg]) G.inner_positive
+    G.secondAmplitude_nonneg (by linarith only [G.amp_nonneg]) (by linarith only [G.rad_nonneg])
+    (by nlinarith only [G.K_nonneg]) G.inner_positive
   have he : (4 : ℝ)*(4*G.K)=16*G.K := by ring
   rw [he] at hc
-  exact hc.mono G.secondAmplitude_nonneg (G.compositionRadius_nonneg _ (by nlinarith [G.K_nonneg]))
+  exact hc.mono G.secondAmplitude_nonneg (G.compositionRadius_nonneg _ (by nlinarith only [
+      G.K_nonneg]))
     le_rfl (G.compositionRadius_le_radius (16*G.K) le_rfl)
 
 theorem velocity_bound_radius : G.velocity.HasJetBound G.amp G.radius :=
@@ -333,7 +337,7 @@ theorem childDisplacement_bound : G.childDisplacement.HasJetBound G.amplitude G.
   have h₁ := mul_nonneg G.firstAmplitude_nonneg G.amp_nonneg
   have h₂ := mul_nonneg G.secondAmplitude_nonneg (sq_nonneg G.amp)
   unfold amplitude
-  nlinarith
+  nlinarith only [h₁, h₂]
 
 theorem childVelocity_bound : G.childVelocity.HasJetBound G.amplitude G.radius := by
   have h := ((G.parentComposed_bound G.parentVelocity G.parentVelocity_bound).add
@@ -341,9 +345,9 @@ theorem childVelocity_bound : G.childVelocity.HasJetBound G.amplitude G.radius :
     (G.firstTerm_bound G.parentDisplacement G.parentDisplacement_bound)
   have h₁ := mul_nonneg G.firstAmplitude_nonneg G.amp_nonneg
   have h₂ := mul_nonneg G.secondAmplitude_nonneg (sq_nonneg G.amp)
-  apply h.mono (by nlinarith [G.K_nonneg,G.amp_nonneg]) G.radius_nonneg _ le_rfl
+  apply h.mono (by nlinarith only [h₁, G.K_nonneg, G.amp_nonneg]) G.radius_nonneg _ le_rfl
   unfold amplitude
-  nlinarith
+  nlinarith only [h₁, h₂]
 
 theorem childAcceleration_bound : G.childAcceleration.HasJetBound G.amplitude G.radius := by
   have h := (((((G.parentComposed_bound G.parentAcceleration G.parentAcceleration_bound).add

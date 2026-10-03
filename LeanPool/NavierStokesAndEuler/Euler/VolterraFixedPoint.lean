@@ -41,7 +41,8 @@ theorem convolution_sub (f g : C(Icc (0 : ℝ) T, Y)) :
     (causalIntegrand_integrable T hT K k hK hk hk0 hbound g t)]
   apply integral_congr_ae
   exact Filter.Eventually.of_forall fun r => by
-    by_cases hr : r ≤ t.val <;> simp [causalIntegrand, indicator, hr, extendPath, map_sub]
+    by_cases hr : r ≤ t.val <;> simp only [causalIntegrand, indicator, mem_Iic, hr, ↓reduceIte,
+        extendPath, ContinuousMap.sub_apply, map_sub, sub_self]
 
 include hK hk hk0 hbound in
 /-- The actual convolution is Lipschitz with constant equal to its scalar kernel mass. -/

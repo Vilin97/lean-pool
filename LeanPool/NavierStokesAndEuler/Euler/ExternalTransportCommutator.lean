@@ -64,7 +64,7 @@ theorem scalar_word_pointwise {k : ℕ} (hk : k ≤ 2) (w : Fin k → Fin 4)
   unfold mixedConstant
   have hpos := mul_nonneg (cylinderEmbeddingConstant_nonneg period) (liftSobolevNorm_nonneg period
       5 f)
-  nlinarith
+  nlinarith only [hpos]
 
 /-- Low vector derivatives are bounded by the original H⁵ norm. -/
 theorem vector_word_pointwise {k : ℕ} (hk : k ≤ 2) (w : Fin k → Fin 4)
@@ -332,7 +332,8 @@ theorem mixed_scalarCommutator_bound {n l : ℕ} (hnl : n + l ≤ 6)
       ((2 : ℝ)^n-1) * mixedConstant period * gradientFiveNorm period f * liftSobolevNorm period 5 g
           := by
   induction n generalizing l with
-  | zero => simp [scalarCommutator, iteratedFieldDerivative_zero]
+  | zero => simp only [scalarCommutator, iteratedFieldDerivative_zero, sub_self, MemLp.zero,
+      eLpNorm_zero, ENNReal.toReal_zero, pow_zero, zero_mul, Std.le_refl, and_self]
   | succ n ih =>
     let i := w (Fin.last n)
     have hgV := iteratedFieldDerivative_smooth period v g hg
@@ -406,7 +407,8 @@ theorem fieldDerivative_sub (a : LiftTangent) (f g : LiftDomain period → F)
     fieldDerivative period a (f-g) = fieldDerivative period a f-fieldDerivative period a g := by
   funext x
   have h := (((hf x).differentiable (by
-      simp)) 0).hasFDerivAt.sub (((hg x).differentiable (by simp)) 0).hasFDerivAt
+      simp)) 0).hasFDerivAt.sub (((hg x).differentiable
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) 0).hasFDerivAt
   exact congrArg (fun A : LiftTangent →L[ℝ] F => A a) h.fderiv
 
 omit [Fact (0 < period)] in
@@ -465,8 +467,9 @@ theorem commutatorH6Norm_nonneg (n : ℕ) (f : LiftDomain period → ℝ) (g : L
 @[simp] theorem commutatorH6Norm_zero (f : LiftDomain period → ℝ) (g : LiftDomain period → Vector3)
     :
     commutatorH6Norm period 0 f g = 0 := by
-  simp [commutatorH6Norm, scalarCommutator, iteratedFieldDerivative_zero, liftSobolevNorm,
-      EulerH6Nonlinear.word_zero]
+  simp only [commutatorH6Norm, Finset.univ_unique, liftSobolevNorm, Nat.reduceAdd, scalarCommutator,
+      iteratedFieldDerivative_zero, sub_self, word_zero, eLpNorm_zero, ENNReal.toReal_zero,
+      Finset.sum_const_zero]
 
 /-- The exact differential recurrence gives a recurrence of the actual fixed-base Sobolev norms. -/
 theorem commutatorH6Norm_succ_le (n : ℕ) (f : LiftDomain period → ℝ) (g : LiftDomain period →
@@ -488,7 +491,8 @@ theorem commutatorH6Norm_succ_le (n : ℕ) (f : LiftDomain period → ℝ) (g : 
   apply Finset.sum_le_sum
   intro w _
   rw [scalarCommutator_recurrence period _ f g hf hg]
-  have hi : (Fin.snoc (α := fun _ : Fin (n+1) => Fin 4) w i) (Fin.last n) = i := by simp [Fin.snoc]
+  have hi : (Fin.snoc (α := fun _ : Fin (n+1) => Fin 4) w i) (Fin.last n) = i := by simp only [
+      Fin.snoc, Fin.val_last, lt_self_iff_false, ↓reduceDIte, cast_eq]
   simp only [Fin.init_snoc, hi]
   have hdf := fieldDerivative_smooth period (standardDirection i) f hf
   have hdg := fieldDerivative_smooth period (standardDirection i) g hg
@@ -513,7 +517,9 @@ theorem commutatorH6Norm_bound (n : ℕ) (f : LiftDomain period → ℝ) (g : Li
       commutatorConvolution (fun l => wordSobolevNorm period 6 l f) (fun l => wordSobolevNorm
           period 6 l g) n := by
   induction n generalizing f g with
-  | zero => simp [commutatorConvolution_eq_sum]
+  | zero => simp only [commutatorH6Norm_zero, commutatorConvolution_eq_sum, Finset.range_zero,
+      Nat.choose_zero_succ, CharP.cast_eq_zero, zero_mul, zero_tsub, wordSobolevNorm_zero,
+      Finset.sum_const_zero, mul_zero, Std.le_refl]
   | succ n ih =>
     apply (commutatorH6Norm_succ_le period n f g hf hg hfL hgL).trans
     calc

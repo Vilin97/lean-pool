@@ -119,7 +119,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- The concrete normalized scalar mean pressure, constructed by a radial integral. -/
 def pressureScalar (t : Icc (0 : ℝ) T) : Space → ℝ :=
-  radialPotential (fun x => (F.field t x).adjoint
+  radialPotential (fun x => adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)
     (pathRepresentative T (s.pressurePath c hc hLower fC) hR t x))
 
 /-- Spatial smoothness, normalization, and exact gradient of the constructed pressure. -/
@@ -127,8 +127,10 @@ theorem pressureScalar_spec (t : Icc (0 : ℝ) T) :
     ContDiff ℝ ∞ (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) ∧
     pressureScalar T hT F F₁ FInv s c hc hLower fC hR t 0 = 0 ∧
     ∀ x, gradient (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) x =
-      (F.field t x).adjoint (pathRepresentative T (s.pressurePath c hc hLower fC) hR t x) := by
-  have hAdj : ContDiff ℝ ∞ (fun x : Space => (F.field t x).adjoint) :=
+      adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)
+        (pathRepresentative T (s.pressurePath c hc hLower fC) hR t x) := by
+  have hAdj : ContDiff ℝ ∞
+      (fun x : Space => adjoint (𝕜 := ℝ) (E := Space) (F := Space) (F.field t x)) :=
     (EulerTransverseGramInverse.realAdjoint (U := Space) (E := Space)).contDiff.comp (F.smooth t)
   exact weighted_pressure_has_potential (F.field t) (adjointField (F.field t)) (fun _ => rfl)
     (s.pressurePath c hc hLower fC t) (s.pressurePath_gradient c hc hLower fC t)
@@ -149,7 +151,8 @@ theorem pressureScalar_physicalGradient
     (Finv : C(Icc (0 : ℝ) T, Field))
     (hFinv : ∀ t x v, F.field t x (Finv t x v) = v)
     (t : Icc (0 : ℝ) T) (x : Space) :
-    (Finv t x).adjoint (gradient (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) x) =
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) (Finv t x)
+        (gradient (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) x) =
       pathRepresentative T (s.pressurePath c hc hLower fC) hR t x := by
   rw [(pressureScalar_spec T hT F F₁ FInv s c hc hLower fC hR t).2.2 x]
   apply ext_inner_right ℝ
@@ -172,7 +175,8 @@ theorem pressureScalar_equation
     (t : Icc (0 : ℝ) T) (x : Space) :
     pathRepresentative T (s.classicalPhysicalDerivative c hc hLower fC) hD t x +
       M.field t x (pathRepresentative T s.continuousVelocity hB t x) +
-      (Finv t x).adjoint (gradient (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) x) =
+      adjoint (𝕜 := ℝ) (E := Space) (F := Space) (Finv t x)
+          (gradient (pressureScalar T hT F F₁ FInv s c hc hLower fC hR t) x) =
         pathRepresentative T fC hfC t x := by
   rw [pressureScalar_physicalGradient T hT F F₁ FInv s c hc hLower fC hR Finv hFinv t x]
   exact pathRepresentative_equation T s.continuousVelocity
@@ -285,8 +289,8 @@ theorem vector_hasDerivWithinAt (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
 /-- The genuine raw mean equation, with the normalized actual scalar pressure. -/
 theorem equation (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     G.vectorDerivative (t,(x,θ))+D.strain (t,(x,θ)) (G.vector (t,(x,θ))) +
-      (D.inverseFrame (t,(x,θ))).adjoint (gradient (fun y => G.scalar (t,(y,θ))) x) = raw (t,(x,θ))
-          := by
+      adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.inverseFrame (t,(x,θ)))
+        (gradient (fun y => G.scalar (t,(y,θ))) x) = raw (t,(x,θ)) := by
   have hp := pressureScalar_equation D.T D.T_pos.le D.F D.F₁ D.opInv G.solution
     D.frameLower D.frameLower_pos D.frame_lower G.path G.pressureForcePath_orbit
     D.T_pos D.opF_time D.M D.strain_equation D.FInv D.inverse_right
@@ -317,7 +321,7 @@ theorem meanSolve_contract (D : Data) (raw : VectorField) (h : Nonempty (Forcing
             t) ∧
       (∀ (t : Icc (0 : ℝ) D.T) x θ,
         bt (t,(x,θ))+D.strain (t,(x,θ)) ((meanSolve D raw).1 (t,(x,θ))) +
-          (D.inverseFrame (t,(x,θ))).adjoint
+          adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.inverseFrame (t,(x,θ)))
             (gradient (fun y => (meanSolve D raw).2 (t,(y,θ))) x) = raw (t,(x,θ))) ∧
       (∀ t, ContDiff ℝ ∞ (fun y : Space × ℝ => (meanSolve D raw).1 (t,y))) ∧
       (∀ t, ContDiff ℝ ∞ (fun y : Space × ℝ => (meanSolve D raw).2 (t,y))) ∧

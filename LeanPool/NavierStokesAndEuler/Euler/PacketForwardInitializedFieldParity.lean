@@ -83,7 +83,7 @@ theorem forwardInitializedNormalizedResidualField_odd (Cagree : SourceCoefficien
     (forwardInitializedNormalizedResidualField M D hTime δ hδ ξ hs α
       Cagree N hN k hk).ReflectionOdd := by
   have h := forwardInitializedResidualField_odd M D hTime δ hδ ξ hs α
-    eM hSym hF hDM Cagree N hN k⁻¹ (inv_ne_zero (by linarith))
+    eM hSym hF hDM Cagree N hN k⁻¹ (inv_ne_zero (by linarith only [hk]))
   exact ((h.multiply (sourceCoefficientData period M D (InitialData.zero period D) hTime).inverse
     (sourceCoefficientEven period M D (InitialData.zero period D) hF hDM).inverse).smul
         k).changeTime hTime

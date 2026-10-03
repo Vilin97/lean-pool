@@ -86,7 +86,8 @@ theorem exists_smooth_of_lift (u : EulerMeanSolenoidal.L2) (g : LiftDomain 1 →
     Measure.measurePreserving_swap.quasiMeasurePreserving.ae heq
   have hsections : ∀ᵐ θ : AddCircle (1 : ℝ) ∂volume,
       (u : Space → Space) =ᵐ[volume] fun x => g (x, θ) :=
-    Measure.ae_ae_of_ae_prod hswap
+    Measure.ae_ae_of_ae_prod
+      (p := fun z : AddCircle (1 : ℝ) × Space => u z.2 = g (z.2, z.1)) hswap
   obtain ⟨θ, hθ⟩ := hsections.exists
   exact ⟨fun x => g (x, θ), smooth_angle_slice g hg θ, hθ⟩
 

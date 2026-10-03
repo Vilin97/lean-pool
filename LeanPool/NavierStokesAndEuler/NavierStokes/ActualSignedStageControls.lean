@@ -157,7 +157,8 @@ theorem coefficientScale_pos (l : SignedLabel B N0) (n : ℕ) :
 theorem nativePoint_slow_auxiliary (l : SignedLabel B N0) (n : ℕ) (k : Frequency)
     (x : FullPoint) (v : Plane) (t : ℝ) :
     (nativePoint l n k (x + t • ((0, (0, v)), 0))).1 = (nativePoint l n k x).1 := by
-  simp [nativePoint, ActualPrimary.nativeSlow, ActualPrimary.toAbsolute]
+  simp only [nativePoint, ActualPrimary.nativeSlow, ActualPrimary.toAbsolute, Prod.smul_mk,
+      smul_eq_mul, mul_zero, smul_zero, Prod.fst_add, add_zero, Prod.snd_add, map_add, map_smul]
 
 theorem nativePoint_angle (l : SignedLabel B N0) (n : ℕ) (k : Frequency)
     (x : FullPoint) (t : ℝ) :
@@ -405,9 +406,9 @@ theorem native_phase_jets (U : LocalSignedRequest.SlowRegion (2 * ActualPrimary.
   let r := min (ActualPrimary.phases B N0 0).r (ActualPrimary.phases B N0 1).r
   have hM0 := (ActualPrimary.phases B N0 0).one_le_M
   have hM1 := (ActualPrimary.phases B N0 1).one_le_M
-  have hM : 1 ≤ M := by dsimp [M]; linarith
+  have hM : 1 ≤ M := by dsimp only [Fin.isValue, M]; linarith only [hM0, hM1]
   have hMj (j : Fin 2) : (ActualPrimary.phases B N0 j).M ≤ M := by
-    fin_cases j <;> dsimp [M] <;> linarith
+    fin_cases j <;> dsimp [M] <;> linarith only [hM1, hM0]
   have hr : 0 < r := lt_min (ActualPrimary.phases B N0 0).r_pos (ActualPrimary.phases B N0 1).r_pos
   have hrj (j : Fin 2) : r ≤ (ActualPrimary.phases B N0 j).r := by
     fin_cases j
@@ -580,7 +581,7 @@ theorem cutoff_support (l : SignedLabel B N0) (n : ℕ) (k : Frequency) :
     by_contra hn
     exact hg (GaussianTailFlat.profile_zero (le_of_not_gt hn))
   obtain ⟨htlo, hthi⟩ := abs_lt.mp hdist
-  have htime : nativeTime l n k x ∈ Ioo (0 : ℝ) 1 := ⟨by linarith, by linarith⟩
+  have htime : nativeTime l n k x ∈ Ioo (0 : ℝ) 1 := ⟨by linarith, by linarith only [hthi]⟩
   have hL := (ActualPrimary.phases B N0 0).L_pos l.1
   apply (cells_mem l n k x).mpr
   have hu' := hu
@@ -597,11 +598,11 @@ theorem cutoff_zero_germ_outside_time (l : SignedLabel B N0) (n : ℕ) (k : Freq
   have hdist : 1 / 3 < |nativeTime l n k x - 1 / 2| := by
     rcases not_and_or.mp hx with hlo | hhi
     · have hh := lt_of_not_ge hlo
-      rw [abs_of_neg (by linarith)]
-      linarith
+      rw [abs_of_neg (by linarith only [hlo])]
+      linarith only [hlo]
     · have hh := lt_of_not_ge hhi
-      rw [abs_of_pos (by linarith)]
-      linarith
+      rw [abs_of_pos (by linarith only [hhi])]
+      linarith only [hhi]
   have hg := (GaussianTailFlat.profile_eventually_zero hdist).comp_tendsto
     (nativeTime_smooth l n k).continuous.continuousAt
   filter_upwards [hg] with y hy
@@ -637,7 +638,7 @@ theorem nativePoint_eq_fullCopy (l : SignedLabel B N0) (n : ℕ) (k : Frequency)
 
 theorem phaseCell_time {l : SignedLabel B N0} {n : ℕ} {k : Frequency} {x : FullPoint}
     (hc : x ∈ phaseCell l n k) : nativeTime l n k x ∈ Ioo (0 : ℝ) 1 :=
-  ⟨by linarith [hc.2.1], by linarith [hc.2.2]⟩
+  ⟨by linarith only [hc, hc.2.1], by linarith only [hc, hc.2.2]⟩
 
 theorem uniform_of_primary {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {w : PulseLabel B N0 → ℕ → FullPoint → ℝ} {α : ℝ}
@@ -691,7 +692,9 @@ theorem native_jets_on_phaseCell {J D E : Type} [NormedAddCommGroup D] [NormedSp
         _ ≤ (H * fullStrip.slow n) ^ m :=
           (pow_le_pow_left₀ (norm_nonneg _) (hlinear l n k x hx hc) j).trans
             (pow_le_pow_right₀ (one_le_mul_of_one_le_of_one_le hH hS) hj)
-        _ ≤ (H * fullStrip.growth n x) ^ m := by gcongr; exact fullStrip.slow_le_growth n x
+        _ ≤ (H * fullStrip.growth n x) ^ m :=
+          pow_le_pow_left₀ (mul_nonneg (zero_le_one.trans hH) (zero_le_one.trans hS))
+            (mul_le_mul_of_nonneg_left (fullStrip.slow_le_growth n x) (zero_le_one.trans hH)) m
         _ = _ := mul_pow _ _ _
     have hu := norm_jet_comp_affine (V.isOpen (index l n)) (hf.smooth (index l n))
       (L l n k) (c l n k) hm j
@@ -699,14 +702,21 @@ theorem native_jets_on_phaseCell {J D E : Type} [NormedAddCommGroup D] [NormedSp
       _ ≤ ‖iteratedFDeriv ℝ j (f (index l n)) (L l n k x + c l n k)‖ * ‖L l n k‖ ^ j := hu
       _ ≤ (C * V.growth (index l n) (L l n k x + c l n k) ^ p *
           w (index l n) (L l n k x + c l n k)) * (H ^ m * fullStrip.growth n x ^ m) :=
-        mul_le_mul (hb _ _ hm j hj) hlin (by positivity)
+        mul_le_mul (hb _ _ hm j hj) hlin (pow_nonneg (norm_nonneg _) j)
           (mul_nonneg (mul_nonneg (zero_le_one.trans hC)
             (pow_nonneg (zero_le_one.trans hGN) _)) hw)
       _ ≤ (C * (A * fullStrip.growth n x) ^ p * W l n x) *
-          (H ^ m * fullStrip.growth n x ^ m) := by
-        gcongr
-        · exact hgrowth l n k x hx hc
-        · exact hweight l n k x hx hc
+          (H ^ m * fullStrip.growth n x ^ m) :=
+        mul_le_mul_of_nonneg_right
+          (mul_le_mul
+            (mul_le_mul_of_nonneg_left
+              (pow_le_pow_left₀ (zero_le_one.trans hGN) (hgrowth l n k x hx hc) p)
+              (zero_le_one.trans hC))
+            (hweight l n k x hx hc) hw
+            (mul_nonneg (zero_le_one.trans hC)
+              (pow_nonneg (mul_nonneg (zero_le_one.trans hA) (zero_le_one.trans hG)) p)))
+          (mul_nonneg (pow_nonneg (zero_le_one.trans hH) m)
+            (pow_nonneg (zero_le_one.trans hG) m))
       _ = majorant fullStrip (W l) 0 (C * A ^ p * H ^ m) (p + m) n x := by
         rw [majorant, Real.rpow_zero, mul_pow, pow_add]
         ring

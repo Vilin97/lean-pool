@@ -67,16 +67,17 @@ private def operatorCoordinates :
     (ContinuousLinearMap.coeLM ℝ)).toContinuousLinearMap
 
 private theorem operatorCoordinates_comp (A B : E →L[ℝ] E) :
-    operatorCoordinates (A.comp B) = operatorCoordinates A * operatorCoordinates B := by
+    operatorCoordinates (E := E) (A.comp B) =
+      operatorCoordinates (E := E) A * operatorCoordinates (E := E) B := by
   exact LinearMap.toMatrix_comp (Module.finBasis ℝ E) (Module.finBasis ℝ E)
     (Module.finBasis ℝ E) A.toLinearMap B.toLinearMap
 
 private theorem operatorCoordinates_det (A : E →L[ℝ] E) :
-    (operatorCoordinates A).det = A.det :=
+    (operatorCoordinates (E := E) A).det = A.det :=
   LinearMap.det_toMatrix (Module.finBasis ℝ E) A.toLinearMap
 
 private theorem operatorCoordinates_trace (A : E →L[ℝ] E) :
-    (operatorCoordinates A).trace = LinearMap.trace ℝ E A.toLinearMap :=
+    (operatorCoordinates (E := E) A).trace = LinearMap.trace ℝ E A.toLinearMap :=
   (LinearMap.trace_eq_matrix_trace ℝ (Module.finBasis ℝ E) A.toLinearMap).symm
 
 /-- The finite-dimensional Jacobi formula does not assume invertibility. -/
@@ -92,8 +93,8 @@ theorem operatorJacobi (F M : ℝ → (E →L[ℝ] E)) (S : Set ℝ) (t : ℝ)
     (F := E →L[ℝ] E)
     (E := Matrix (Fin (Module.finrank ℝ E)) (Fin (Module.finrank ℝ E)) ℝ) t hc hF
   have hm' := hm.congr_deriv (operatorCoordinates_comp (M t) (F t))
-  have h := matrixJacobi (fun s => operatorCoordinates (F s))
-    (fun s => operatorCoordinates (M s)) S t hm'
+  have h := matrixJacobi (fun s => operatorCoordinates (E := E) (F s))
+    (fun s => operatorCoordinates (E := E) (M s)) S t hm'
   simpa only [operatorCoordinates_det, operatorCoordinates_trace] using h
 
 end Operators

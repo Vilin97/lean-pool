@@ -48,7 +48,7 @@ theorem word_unique {s t n : ℕ} {f g : LiftL2 period}
     (hfg : f = g) (hn : n ≤ s) (hm : n ≤ t) (w : Fin n → Fin 4) : J.word w = K.word w := by
   subst g
   induction n with
-  | zero => simp
+  | zero => simp only [SpatialJet.word_zero]
   | succ n ih =>
     have hbase := ih (by omega) (by omega) (Fin.tail w)
     have hJ := J.word_hasDerivAt (by omega : n < s) (Fin.tail w) (w 0)
@@ -62,7 +62,7 @@ theorem word_mem_gradientSpace {s n : ℕ} {f : LiftL2 period}
     (κ : ℝ) (m : Vector3) (hf : f ∈ gradientSpace period κ m) (hn : n ≤ s)
     (w : Fin n → Fin 4) : J.word w ∈ gradientSpace period κ m := by
   induction n with
-  | zero => simpa using hf
+  | zero => simpa only [SpatialJet.word_zero] using hf
   | succ n ih =>
     have h := gradientSpace_translation_derivative period κ m (directions (w 0))
       (ih (by omega) (Fin.tail w))
@@ -75,7 +75,7 @@ theorem word_mem_divergenceFreeSpace {s n : ℕ} {f : LiftL2 period}
     (κ : ℝ) (m : Vector3) (hf : f ∈ divergenceFreeSpace period κ m) (hn : n ≤ s)
     (w : Fin n → Fin 4) : J.word w ∈ divergenceFreeSpace period κ m := by
   induction n with
-  | zero => simpa using hf
+  | zero => simpa only [SpatialJet.word_zero] using hf
   | succ n ih =>
     have h := divergenceFree_translation_derivative period κ m (directions (w 0))
       (ih (by omega) (Fin.tail w))
@@ -101,10 +101,10 @@ theorem map_word {s n : ℕ} {f : LiftL2 period}
     (hL : ∀ a f, translation period a (L f) = L (translation period a f))
     (w : Fin n → Fin 4) : (map L hL J).word w = L (J.word w) := by
   induction J generalizing n with
-  | zero f => cases n <;> simp [map, EulerSpatialSobolevInverse.SpatialJet.word]
+  | zero f => cases n <;> simp only [map, SpatialJet.word_zero, SpatialJet.word, map_zero]
   | succ df lower hd ih =>
     cases n with
-    | zero => simp
+    | zero => simp only [SpatialJet.word_zero]
     | succ n => simpa only [map, EulerSpatialSobolevInverse.SpatialJet.word_succ] using
         (ih (w (Fin.last n)) (Fin.init w))
 

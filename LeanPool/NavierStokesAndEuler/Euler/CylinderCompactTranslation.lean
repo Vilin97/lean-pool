@@ -88,8 +88,9 @@ theorem translation_support (A : CompactField P V) :
     (continuous_fst.sub ((coveringMap_isOpenQuotient P).continuous.comp continuous_snd))
   refine ⟨K,hK,?_,?_⟩
   · intro x hx
-    refine ⟨(x,0),⟨hx,by simp⟩,?_⟩
-    simp [coveringMap]
+    refine ⟨(x,0),⟨hx,by simp only [Metric.mem_closedBall, dist_self, zero_le_one]⟩,?_⟩
+    simp only [coveringMap, Prod.fst_zero, Prod.snd_zero, QuotientAddGroup.mk_zero, sub_eq_self,
+        Prod.mk_eq_zero, and_self]
   · intro a ha x hx
     by_contra hn
     apply hx
@@ -110,7 +111,8 @@ theorem increment_bound (A : CompactField P V) :
   · rw [Set.indicator_of_mem hx]
     have hh := Convex.norm_image_sub_le_of_norm_fderiv_le
       (𝕜 := ℝ) (f := localFieldLift P A.field x) (s := Set.univ)
-      (fun b _ => (A.smooth x).differentiable (by simp) b) (fun b _ => hb x b)
+      (fun b _ => (A.smooth x).differentiable
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero) b) (fun b _ => hb x b)
       (convex_univ : Convex ℝ (Set.univ : Set LiftTangent)) (Set.mem_univ 0) (Set.mem_univ a)
     change ‖A.field (x.1+a.1,x.2+(a.2 : AddCircle P))-A.field x‖ ≤ C*‖a‖
     simpa only [localFieldLift,Prod.fst_zero,Prod.snd_zero,AddCircle.coe_zero,
@@ -120,13 +122,12 @@ theorem increment_bound (A : CompactField P V) :
         hx,zero_mul,le_refl]
 
 theorem hasFDerivAt_zero (A : CompactField P V) :
-    HasFDerivAt (fun a : LiftTangent => translate P a A.toLp)
+    HasFDerivAt (fun a : LiftTangent => translate (V := V) P a A.toLp)
       (derivativeMap (liftMeasure P) A.derivative.toLp) 0 := by
   obtain ⟨M,hM,hM0,hb⟩ := A.increment_bound
   refine hasFDerivAt_of_dominated (liftMeasure P)
-    (fun a : LiftTangent => translate P a A.toLp)
-    (fun a x => A.field (x+coveringMap P a)) ?_ A.derivative.toLp ?_ M hM (Eventually.of_forall
-        hM0) ?_
+    (fun a : LiftTangent => translate (V := V) P a A.toLp)
+    (fun a x => A.field (x+coveringMap P a)) ?_ _ ?_ M hM (Eventually.of_forall hM0) ?_
   · intro a
     filter_upwards [translate_ae P a A.toLp,
       (measurePreserving_translation P (coveringMap P a)).quasiMeasurePreserving.ae A.toLp_ae]
@@ -134,7 +135,7 @@ theorem hasFDerivAt_zero (A : CompactField P V) :
     exact ht.trans hx
   · filter_upwards [A.derivative.toLp_ae] with x hx
     rw [hx]
-    exact ((A.smooth x).differentiable (by simp) 0).hasFDerivAt
+    exact ((A.smooth x).differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) 0).hasFDerivAt
   · filter_upwards [Metric.ball_mem_nhds (0 : LiftTangent) zero_lt_one] with a ha
     apply Eventually.of_forall
     intro x
@@ -144,33 +145,33 @@ theorem hasFDerivAt_zero (A : CompactField P V) :
 
 theorem derivativeMap_translation (D : CylinderL2 P (LiftTangent →L[ℝ] V)) (a : LiftTangent) :
     derivativeMap (liftMeasure P) (translate P a D) =
-      (translate P a).toContinuousLinearMap.comp (derivativeMap (liftMeasure P) D) := by
+      (translate (V := V) P a).toContinuousLinearMap.comp (derivativeMap (liftMeasure P) D) := by
   apply ContinuousLinearMap.ext
   intro v
   apply Lp.ext
-  filter_upwards [derivativeMap_ae (liftMeasure P) (translate P a D) v,translate_ae P a D,
+  filter_upwards [derivativeMap_ae (liftMeasure P) (translate (V := LiftTangent →L[ℝ] V) P a D) v,
+    translate_ae P a D,
     translate_ae P a (derivativeMap (liftMeasure P) D v),
     (measurePreserving_translation P (coveringMap P a)).quasiMeasurePreserving.ae
       (derivativeMap_ae (liftMeasure P) D v)] with x hm ht hv hd
-  change derivativeMap (liftMeasure P) (translate P a D) v x = translate P a (derivativeMap
-      (liftMeasure P) D v) x
-  rw [hm,ht,hv,hd]
+  exact hm.trans ((congrArg (fun f : LiftTangent →L[ℝ] V => f v) ht).trans (hd.symm.trans hv.symm))
 
 theorem translation_hasFDerivAt (A : CompactField P V) (a : LiftTangent) :
-    HasFDerivAt (fun b : LiftTangent => translate P b A.toLp)
+    HasFDerivAt (fun b : LiftTangent => translate (V := V) P b A.toLp)
       (derivativeMap (liftMeasure P) (translate P a A.derivative.toLp)) a := by
   rw [derivativeMap_translation]
-  exact EulerIsometricAction.hasFDerivAt_all (translate P) (translate_add P)
+  exact EulerIsometricAction.hasFDerivAt_all (translate (V := V) P) (translate_add (V := V) P)
     A.toLp _ A.hasFDerivAt_zero a
 
 theorem translation_fderiv (A : CompactField P V) :
-    fderiv ℝ (fun a : LiftTangent => translate P a A.toLp) =
-      fun a => derivativeBundling (liftMeasure P) (translate P a A.derivative.toLp) :=
+    fderiv ℝ (fun a : LiftTangent => translate (V := V) P a A.toLp) =
+      fun a => derivativeBundling (P := LiftTangent) (V := V) (liftMeasure P)
+        (translate P a A.derivative.toLp) :=
   funext (fun a => (A.translation_hasFDerivAt a).fderiv)
 
 private theorem translation_contDiff_aux (n : ℕ) :
     ∀ (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] (A : CompactField P V),
-      ContDiff ℝ n (fun a : LiftTangent => translate P a A.toLp) := by
+      ContDiff ℝ n (fun a : LiftTangent => translate (V := V) P a A.toLp) := by
   induction n with
   | zero =>
     intro V _ _ A
@@ -178,15 +179,15 @@ private theorem translation_contDiff_aux (n : ℕ) :
   | succ n ih =>
     intro V _ _ A
     rw [Nat.cast_add,Nat.cast_one,contDiff_succ_iff_fderiv]
-    refine ⟨fun a => (A.translation_hasFDerivAt a).differentiableAt,by simp,?_⟩
+    refine ⟨fun a => (A.translation_hasFDerivAt a).differentiableAt,by simp only [
+        WithTop.natCast_ne_top, IsEmpty.forall_iff],?_⟩
     rw [A.translation_fderiv]
-    exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := (n : ℕ∞ω))
-      (E := CylinderL2 P (LiftTangent →L[ℝ] V)) (F := LiftTangent →L[ℝ] CylinderL2 P V)
-      (derivativeBundling (liftMeasure P))).comp (ih (LiftTangent →L[ℝ] V) A.derivative)
+    exact (derivativeBundling (P := LiftTangent) (V := V) (liftMeasure P)).contDiff.comp
+      (ih (LiftTangent →L[ℝ] V) A.derivative)
 
 /-- All four covering directions are differentiated in the actual L² norm. -/
 theorem translation_contDiff (A : CompactField P V) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => translate P a A.toLp) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := V) P a A.toLp) :=
   contDiff_infty.mpr (fun n => translation_contDiff_aux n V A)
 
 end CompactField

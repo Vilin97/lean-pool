@@ -52,11 +52,13 @@ uniform bounds for all mixed parameter derivatives of a given order. -/
 def UnitWord (l : List P) : Prop := ∀ v ∈ l, ‖v‖ ≤ 1
 
 omit [NormedSpace ℝ P] in
-@[simp] theorem unitWord_nil : UnitWord ([] : List P) := by simp [UnitWord]
+@[simp] theorem unitWord_nil : UnitWord ([] : List P) := by simp only [UnitWord, List.not_mem_nil,
+    IsEmpty.forall_iff, implies_true]
 
 omit [NormedSpace ℝ P] in
 @[simp] theorem unitWord_cons (v : P) (l : List P) :
-    UnitWord (v :: l) ↔ ‖v‖ ≤ 1 ∧ UnitWord l := by simp [UnitWord]
+    UnitWord (v :: l) ↔ ‖v‖ ≤ 1 ∧ UnitWord l := by simp only [UnitWord, List.mem_cons,
+        forall_eq_or_imp]
 
 theorem contDiffOn_directional {U : Set P} (hU : IsOpen U) {f : P → E}
     (hf : ContDiffOn ℝ ∞ f U) (v : P) :
@@ -91,7 +93,9 @@ theorem directional_add {U : Set P} (hU : IsOpen U) {f g : P → E}
   have hdf := (hf p hp).contDiffAt (hU.mem_nhds hp)
   have hdg := (hg p hp).contDiffAt (hU.mem_nhds hp)
   exact congrArg (fun L : P →L[ℝ] E => L v)
-    (fderiv_fun_add (hdf.differentiableAt (by simp)) (hdg.differentiableAt (by simp)))
+    (fderiv_fun_add (hdf.differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (hdg.differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)))
 
 theorem jet_add {U : Set P} (hU : IsOpen U) {f g : P → E}
     (hf : ContDiffOn ℝ ∞ f U) (hg : ContDiffOn ℝ ∞ g U) (l : List P) :
@@ -106,7 +110,8 @@ theorem directional_clm {U : Set P} (hU : IsOpen U) {f : P → E}
     (hf : ContDiffOn ℝ ∞ f U) (L : E →L[ℝ] F) (v : P) :
     EqOn (directional (fun p => L (f p)) v) (fun p => L (directional f v p)) U := by
   intro p hp
-  have hdf := ((hf p hp).contDiffAt (hU.mem_nhds hp)).differentiableAt (by simp)
+  have hdf := ((hf p hp).contDiffAt (hU.mem_nhds hp)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   exact congrArg (fun M : P →L[ℝ] F => M v) (L.hasFDerivAt.comp p hdf.hasFDerivAt).fderiv
 
 theorem jet_clm {U : Set P} (hU : IsOpen U) {f : P → E}
@@ -124,7 +129,8 @@ theorem jet_ofFn_reverse {U : Set P} (hU : IsOpen U) {f : P → E}
     (hf : ContDiffOn ℝ ∞ f U) (n : ℕ) (v : Fin n → P) {p : P} (hp : p ∈ U) :
     jet f (List.ofFn v).reverse p = iteratedFDeriv ℝ n f p v := by
   induction n generalizing f with
-  | zero => simp [jet]
+  | zero => simp only [jet, List.ofFn_zero, List.reverse_nil, List.foldl_nil,
+      iteratedFDeriv_zero_apply]
   | succ n ih =>
     rw [List.ofFn_succ', List.concat_eq_append, List.reverse_concat, jet_cons]
     rw [ih (contDiffOn_directional hU hf (v (Fin.last n))) (fun i => v i.castSucc)]
@@ -161,14 +167,14 @@ theorem multilinear_norm_le_of_unit {n : ℕ} (T : P [×n]→L[ℝ] E)
   let w : Fin n → P := fun i => ‖v i‖⁻¹ • v i
   have hw (i : Fin n) : ‖w i‖ ≤ 1 := by
     by_cases hz : v i = 0
-    · simp [w, hz]
-    · simp [w, norm_smul,
-        inv_mul_cancel₀ (norm_ne_zero_iff.mpr hz)]
+    · simp only [hz, norm_zero, inv_zero, smul_zero, zero_le_one, w]
+    · simp only [norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ (norm_ne_zero_iff.mpr hz),
+        Std.le_refl, w]
   have hv : (fun i => ‖v i‖ • w i) = v := by
     funext i
     by_cases hz : v i = 0
-    · simp [w, hz]
-    · simp [w, smul_smul, mul_inv_cancel₀ (norm_ne_zero_iff.mpr hz)]
+    · simp only [hz, norm_zero, inv_zero, smul_zero, w]
+    · simp only [smul_smul, mul_inv_cancel₀ (norm_ne_zero_iff.mpr hz), one_smul, w]
   have hp : 0 ≤ ∏ i, ‖v i‖ := Finset.prod_nonneg (fun i _ => norm_nonneg _)
   calc
     ‖T v‖ = ‖(∏ i, ‖v i‖) • T w‖ := by rw [← T.map_smul_univ, hv]
@@ -207,7 +213,7 @@ theorem productJet_split (A : P → Coefficient a b E) (u : P → Curve a b E)
     (l : List P) (p : P) :
     productJet A u l p = applyCoefficient (A p) (jet u l p) + crossJet A u l p := by
   induction l generalizing A u with
-  | nil => simp [productJet, crossJet]
+  | nil => simp only [productJet, jet_nil, crossJet, add_zero]
   | cons v l ih =>
     change productJet (directional A v) u l p + productJet A (directional u v) l p =
       applyCoefficient (A p) (jet (directional u v) l p) +
@@ -222,23 +228,25 @@ theorem directional_product {U : Set P} (hU : IsOpen U)
       (fun p => applyCoefficient (directional A v p) (u p) +
         applyCoefficient (A p) (directional u v p)) U := by
   intro p hp
-  have hdA := ((hA p hp).contDiffAt (hU.mem_nhds hp)).differentiableAt (by simp)
-  have hdu := ((hu p hp).contDiffAt (hU.mem_nhds hp)).differentiableAt (by simp)
+  have hdA := ((hA p hp).contDiffAt (hU.mem_nhds hp)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have hdu := ((hu p hp).contDiffAt (hU.mem_nhds hp)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hmap : HasFDerivAt (coefficientAction (E := E) (a := a) (b := b))
       (coefficientAction (E := E)) (A p) :=
     ContinuousLinearMap.hasFDerivAt (𝕜 := ℝ)
       (E := Coefficient a b E) (F := Curve a b E →L[ℝ] Curve a b E)
       (coefficientAction (E := E))
   have hlin : HasFDerivAt
-      (fun q => coefficientAction (E := E) (A q))
-      ((coefficientAction (E := E)).comp (fderiv ℝ A p)) p :=
+      (fun q => coefficientAction (E := E) (a := a) (b := b) (A q))
+      ((coefficientAction (E := E) (a := a) (b := b)).comp (fderiv ℝ A p)) p :=
     HasFDerivAt.comp (𝕜 := ℝ) (E := P) (F := Coefficient a b E)
       (G := Curve a b E →L[ℝ] Curve a b E) p hmap hdA.hasFDerivAt
   have h := congrArg (fun M : P →L[ℝ] Curve a b E => M v)
     (hlin.clm_apply hdu.hasFDerivAt).fderiv
   simp only [_root_.add_apply, ContinuousLinearMap.comp_apply,
-    ContinuousLinearMap.flip_apply, add_comm] at h
-  convert! h using 1; apply add_comm
+    ContinuousLinearMap.flip_apply] at h
+  exact h.trans (add_comm _ _)
 
 theorem jet_product {U : Set P} (hU : IsOpen U)
     {A : P → Coefficient a b E} {u : P → Curve a b E}
@@ -249,8 +257,7 @@ theorem jet_product {U : Set P} (hU : IsOpen U)
   | cons v l ih =>
     have hdA := contDiffOn_directional hU hA v
     have hdu := contDiffOn_directional hU hu v
-    have hcoeff : ContDiff ℝ ∞ (coefficientAction (E := E) (a := a) (b := b)) :=
-      ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
+    have hcoeff := ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
         (E := Coefficient a b E) (F := Curve a b E →L[ℝ] Curve a b E)
         (coefficientAction (E := E))
     have hleft : ContDiffOn ℝ ∞ (fun p => applyCoefficient (directional A v p) (u p)) U :=
@@ -316,7 +323,8 @@ theorem norm_crossJet_le
     (hl : UnitWord l) :
     ‖crossJet A u l p t‖ ≤ (2 : ℝ) ^ l.length * M * B := by
   induction l generalizing A u with
-  | nil => simpa [crossJet] using mul_nonneg hM hB
+  | nil => simpa only [crossJet, ContinuousMap.zero_apply, norm_zero, List.length_nil, pow_zero,
+      one_mul] using mul_nonneg hM hB
   | cons v l ih =>
     obtain ⟨hv, hl⟩ := unitWord_cons v l |>.mp hl
     have hDA (k : List P) (hk : k.length ≤ l.length) (hku : UnitWord k) :
@@ -362,29 +370,30 @@ theorem jet_solution_eq_solution (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
   have hAu : ContDiffOn ℝ ∞ (fun q => applyCoefficient (A q) (u q)) U :=
     (hcoeff.comp_contDiffOn hA).clm_apply hu
   have hright : EqOn u
-      (fun q => constantCurve (x₀ q) + integrator hab (applyCoefficient (A q) (u q) + f q)) U :=
+      (fun q => constantCurve (E := E) (a := a) (b := b) (x₀ q) +
+        integrator (E := E) hab (applyCoefficient (A q) (u q) + f q)) U :=
     fun q _ => solution_integralEquation hab (A q) (x₀ q) (f q)
-  have hC : ContDiffOn ℝ ∞ (fun q => (constantCurve (a := a) (b := b)) (x₀ q)) U :=
+  have hC : ContDiffOn ℝ ∞ (fun q => (constantCurve (E := E) (a := a) (b := b)) (x₀ q)) U :=
     (constantCurve (E := E)).contDiff.comp_contDiffOn hx₀
   have hI : ContDiffOn ℝ ∞
-      (fun q => integrator hab (applyCoefficient (A q) (u q) + f q)) U :=
+      (fun q => integrator (E := E) hab (applyCoefficient (A q) (u q) + f q)) U :=
     (integrator (E := E) hab).contDiff.comp_contDiffOn (hAu.add hf)
-  have hj : jet u l p = constantCurve (jet x₀ l p) +
-      integrator hab (applyCoefficient (A p) (jet u l p) + jetSource A f u l p) := by
+  have hj : jet u l p = constantCurve (E := E) (a := a) (b := b) (jet x₀ l p) +
+      integrator (E := E) hab (applyCoefficient (A p) (jet u l p) + jetSource A f u l p) := by
     calc
       jet u l p = jet
-          (fun q => constantCurve (x₀ q) + integrator hab (applyCoefficient (A q) (u q) + f q)) l p
-              :=
+          (fun q => constantCurve (E := E) (a := a) (b := b) (x₀ q) +
+            integrator (E := E) hab (applyCoefficient (A q) (u q) + f q)) l p :=
         jet_congr hU hright l hp
-      _ = jet (fun q => constantCurve (x₀ q)) l p +
-          jet (fun q => integrator hab (applyCoefficient (A q) (u q) + f q)) l p :=
+      _ = jet (fun q => constantCurve (E := E) (a := a) (b := b) (x₀ q)) l p +
+          jet (fun q => integrator (E := E) hab (applyCoefficient (A q) (u q) + f q)) l p :=
         jet_add hU hC hI l hp
-      _ = constantCurve (jet x₀ l p) +
-          integrator hab (jet (fun q => applyCoefficient (A q) (u q) + f q) l p) := by
+      _ = constantCurve (E := E) (a := a) (b := b) (jet x₀ l p) +
+          integrator (E := E) hab (jet (fun q => applyCoefficient (A q) (u q) + f q) l p) := by
         rw [jet_clm hU hx₀ (constantCurve (E := E)) l hp,
           jet_clm hU (hAu.add hf) (integrator (E := E) hab) l hp]
-      _ = constantCurve (jet x₀ l p) +
-          integrator hab (applyCoefficient (A p) (jet u l p) + jetSource A f u l p) := by
+      _ = constantCurve (E := E) (a := a) (b := b) (jet x₀ l p) +
+          integrator (E := E) hab (applyCoefficient (A p) (jet u l p) + jetSource A f u l p) := by
         rw [jet_add hU hAu hf l hp]
         dsimp only
         rw [jet_product hU hA hu l hp, productJet_split]
@@ -392,13 +401,15 @@ theorem jet_solution_eq_solution (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
         unfold jetSource
         abel
   change jet u l p = (equationOperator hab (A p)).inverse
-    (constantCurve (jet x₀ l p) + integrator hab (jetSource A f u l p))
+    (constantCurve (E := E) (a := a) (b := b) (jet x₀ l p) +
+      integrator (E := E) hab (jetSource A f u l p))
   symm
   apply (equationOperator_isInvertible hab (A p)).inverse_apply_eq.mpr
-  change constantCurve (jet x₀ l p) + integrator hab (jetSource A f u l p) =
-    jet u l p - integrator hab (applyCoefficient (A p) (jet u l p))
-  rw [(integrator hab).map_add] at hj
-  exact (eq_sub_iff_add_eq.mpr (by simpa only [add_assoc, add_comm, add_left_comm] using hj.symm))
+  change constantCurve (E := E) (a := a) (b := b) (jet x₀ l p) +
+      integrator (E := E) hab (jetSource A f u l p) =
+    jet u l p - integrator (E := E) hab (applyCoefficient (A p) (jet u l p))
+  rw [(integrator (E := E) hab).map_add] at hj
+  exact eq_sub_iff_add_eq.mpr ((add_right_comm _ _ _).trans ((add_assoc _ _ _).trans hj.symm))
 
 /-- The time derivative of each actual parameter jet is its triangular
 variational equation on the original closed interval. -/
@@ -407,7 +418,7 @@ theorem jet_solution_hasDerivWithinAt (hab : a ≤ b) {U : Set P} (hU : IsOpen U
     (hA : ContDiffOn ℝ ∞ A U) (hx₀ : ContDiffOn ℝ ∞ x₀ U)
     (hf : ContDiffOn ℝ ∞ f U) (l : List P) {p : P} (hp : p ∈ U) (t : Icc a b) :
     let u := fun q => solution hab (A q) (x₀ q) (f q)
-    HasDerivWithinAt (extend hab (jet u l p))
+    HasDerivWithinAt (ParametricODE.extend hab (jet u l p))
       (A p t (jet u l p t) + jetSource A f u l p t) (Icc a b) t := by
   dsimp only
   rw [jet_solution_eq_solution hab hU A x₀ f hA hx₀ hf l hp]
@@ -436,32 +447,33 @@ theorem norm_solution_le_envelope (hab : a ≤ b)
     ‖solution hab A x₀ f t‖ ≤ C * (X + (b - a) * F₀) * W t := by
   let u : Curve a b H := solution hab A x₀ f
   have hode (s : ℝ) (hs : s ∈ Ico a b) :
-      HasDerivWithinAt (extend hab u)
-        (extend hab A s (extend hab u s) + extend hab f s) (Ici s) s := by
+      HasDerivWithinAt (ParametricODE.extend hab u)
+        (ParametricODE.extend hab A s (ParametricODE.extend hab u s) +
+          ParametricODE.extend hab f s) (Ici s) s := by
     have hscc := Ico_subset_Icc_self hs
     have hh := (solution_hasDerivWithinAt hab A x₀ f ⟨s, hscc⟩).mono_of_mem_nhdsWithin
       (Icc_mem_nhdsGE_of_mem hs)
     simpa only [u, ParametricODE.extend, projIcc_of_mem hab hscc] using hh
   have he (s : ℝ) (hs : s ∈ Ico a b) (x : H) :
-      ⟪x, extend hab A s x⟫_ℝ ≤ (rate s + μ) * ‖x‖ ^ 2 := by
+      ⟪x, ParametricODE.extend hab A s x⟫_ℝ ≤ (rate s + μ) * ‖x‖ ^ 2 := by
     simpa only [ParametricODE.extend, projIcc_of_mem hab (Ico_subset_Icc_self hs)]
       using henergy ⟨s, Ico_subset_Icc_self hs⟩ x
-  have hbase := ViscousPropagator.norm_le_envelope_mul_integral_on (extend hab A)
+  have hbase := ViscousPropagator.norm_le_envelope_mul_integral_on (ParametricODE.extend hab A)
     rate W hμ hW hdW (continuous_extend hab u).continuousOn
     (continuous_extend hab f).continuousOn hode he
-  have hua : extend hab u a = x₀ := by
+  have hua : ParametricODE.extend hab u a = x₀ := by
     simpa only [ParametricODE.extend, projIcc_of_mem hab (show a ∈ Icc a b from ⟨le_rfl, hab⟩)]
       using solution_initial hab A x₀ f
-  have hstart : ‖extend hab u a‖ / W a ≤ X := by
+  have hstart : ‖ParametricODE.extend hab u a‖ / W a ≤ X := by
     rw [hua]
     exact (div_le_iff₀ (hW a)).mpr hx₀
   have hcW : Continuous W := continuous_iff_continuousAt.mpr fun s => (hdW s).continuousAt
-  have hcq : Continuous (fun s => ‖extend hab f s‖ / W s) :=
+  have hcq : Continuous (fun s => ‖ParametricODE.extend hab f s‖ / W s) :=
     (continuous_extend hab f).norm.div hcW (fun s => ne_of_gt (hW s))
-  have hint : (∫ s in a..(t : ℝ), ‖extend hab f s‖ / W s) ≤ (b - a) * F₀ := by
+  have hint : (∫ s in a..(t : ℝ), ‖ParametricODE.extend hab f s‖ / W s) ≤ (b - a) * F₀ := by
     have hm := intervalIntegral.integral_mono_on (μ := volume) t.2.1
       (hcq.intervalIntegrable a t) (continuous_const.intervalIntegrable a t)
-      (show ∀ s ∈ Icc a (t : ℝ), ‖extend hab f s‖ / W s ≤ F₀ from by
+      (show ∀ s ∈ Icc a (t : ℝ), ‖ParametricODE.extend hab f s‖ / W s ≤ F₀ from by
         intro s hs
         have hscc : s ∈ Icc a b := ⟨hs.1, hs.2.trans t.2.2⟩
         apply (div_le_iff₀ (hW s)).mpr
@@ -475,7 +487,8 @@ theorem norm_solution_le_envelope (hab : a ≤ b)
   have hnonneg : 0 ≤ X + (b - a) * F₀ := add_nonneg hX (mul_nonneg (sub_nonneg.mpr hab) hF)
   calc
     ‖solution hab A x₀ f t‖ ≤ Real.exp (μ * ((t : ℝ) - a)) * W t *
-        (‖extend hab u a‖ / W a + ∫ s in a..(t : ℝ), ‖extend hab f s‖ / W s) := by
+        (‖ParametricODE.extend hab u a‖ / W a +
+          ∫ s in a..(t : ℝ), ‖ParametricODE.extend hab f s‖ / W s) := by
       simpa only [extend_coe, u] using hbase t t.2
     _ ≤ Real.exp (μ * ((t : ℝ) - a)) * W t * (X + (b - a) * F₀) :=
       mul_le_mul_of_nonneg_left (add_le_add hstart hint)
@@ -525,8 +538,8 @@ theorem norm_jet_solution_le (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
         have hk0 : k = [] := List.length_eq_zero_iff.mp hk
         subst k
         have hh := norm_solution_le_envelope hab (A p) (x₀ p) (f p) rate W hμ hW hdW
-          henergy hC hX hF (hxj [] (by simp) unitWord_nil)
-          (hfj [] (by simp) unitWord_nil) s
+          henergy hC hX hF (hxj [] (by simp only [List.length_nil, zero_le]) unitWord_nil)
+          (hfj [] (by simp only [List.length_nil, zero_le]) unitWord_nil) s
         simpa only [jet_nil, pow_zero, mul_one, B₀, L, u] using hh
       | succ n =>
         have hlower (r : List P) (hr : r.length < k.length) (hru : UnitWord r)
@@ -537,11 +550,9 @@ theorem norm_jet_solution_le (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
             (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hQ hrn) hB) (hW z).le)
         have hforce (z : Icc a b) :
             ‖jetSource A f u k p z‖ ≤ (F₀ + K * B₀ * Q ^ n) * W z := by
-          have hjA (r : List P) (hr : r.length ≤ k.length) (hru : UnitWord r) :
-              ‖jet A r p z‖ ≤ M := hAj r (by omega) hru z
           have hcross := norm_crossJet_le A u k p z hM
             (mul_nonneg (mul_nonneg hB (pow_nonneg hQ0 _)) (hW z).le)
-            hjA (fun r hr hru => hlower r hr hru z) hku
+            (fun r hr hru => hAj r (by omega) hru z) (fun r hr hru => hlower r hr hru z) hku
           have hpow : (2 : ℝ) ^ k.length ≤ (2 : ℝ) ^ N :=
             pow_le_pow_right₀ (by norm_num) (by omega)
           calc
@@ -552,17 +563,18 @@ theorem norm_jet_solution_le (hab : a ≤ b) {U : Set P} (hU : IsOpen U)
               exact add_le_add_right (mul_le_mul_of_nonneg_right
                 (mul_le_mul_of_nonneg_right hpow hM)
                 (mul_nonneg (mul_nonneg hB (pow_nonneg hQ0 _)) (hW z).le)) _
-            _ = (F₀ + K * B₀ * Q ^ n) * W z := by dsimp [K]; ring
-        have hforce0 : 0 ≤ F₀ + K * B₀ * Q ^ n := by positivity
+            _ = (F₀ + K * B₀ * Q ^ n) * W z := by dsimp only [K]; ring
+        have hforce0 : 0 ≤ F₀ + K * B₀ * Q ^ n :=
+          add_nonneg hF (mul_nonneg (mul_nonneg hK hB) (pow_nonneg hQ0 n))
         have hh := norm_solution_le_envelope hab (A p) (jet x₀ k p) (jetSource A f u k p)
           rate W hμ hW hdW henergy hC hX hforce0 (hxj k (by omega) hku) hforce s
         have hBpow : B₀ ≤ B₀ * Q ^ n := by
           simpa only [mul_one] using mul_le_mul_of_nonneg_left (one_le_pow₀ hQ) hB
         have hamp : C * (X + L * (F₀ + K * B₀ * Q ^ n)) ≤ B₀ * Q ^ (n + 1) := by
           calc
-            _ = B₀ + (C * L * K) * (B₀ * Q ^ n) := by dsimp [B₀]; ring
+            _ = B₀ + (C * L * K) * (B₀ * Q ^ n) := by dsimp only [B₀]; ring
             _ ≤ B₀ * Q ^ n + (C * L * K) * (B₀ * Q ^ n) := add_le_add_left hBpow _
-            _ = B₀ * Q ^ (n + 1) := by rw [pow_succ]; dsimp [Q]; ring
+            _ = B₀ * Q ^ (n + 1) := by rw [pow_succ]; dsimp only [Q]; ring
         calc
           ‖jet u k p s‖ = ‖solution hab (A p) (jet x₀ k p) (jetSource A f u k p) s‖ := by
             rw [jet_solution_eq_solution hab hU A x₀ f hA hx₀ hf k hp]
@@ -585,38 +597,42 @@ theorem amplitude_le_polynomial {S K w L : ℝ} (hS : 1 ≤ S) (hK : 1 ≤ K)
   have hK0 : 0 ≤ K := zero_le_one.trans hK
   have hT : 1 ≤ T := one_le_pow₀ hS
   have hT0 : 0 ≤ T := zero_le_one.trans hT
-  have hD0 : 0 ≤ D := by dsimp [D]; positivity
-  have hB0 : 0 ≤ B := by dsimp [B]; positivity
-  have hQ0 : 0 ≤ Q := by dsimp [Q]; positivity
+  have hD0 : 0 ≤ D := mul_nonneg (pow_nonneg zero_le_two _) (pow_nonneg hK0 3)
+  have hwKS : 0 ≤ w * K * S ^ m := mul_nonneg (mul_nonneg hw hK0) (pow_nonneg hS0 m)
+  have hB0 : 0 ≤ B := mul_nonneg hK0 (add_nonneg hwKS (mul_nonneg hL hwKS))
+  have h2KS : 0 ≤ (2 : ℝ) ^ N * (K * S ^ m) :=
+    mul_nonneg (pow_nonneg zero_le_two N) (mul_nonneg hK0 (pow_nonneg hS0 m))
+  have hQ0 : 0 ≤ Q := add_nonneg zero_le_one (mul_nonneg (mul_nonneg hK0 hL) h2KS)
   have hKS : 1 ≤ K * S := one_le_mul_of_one_le_of_one_le hK hS
   have htwopow : (2 : ℝ) ≤ (2 : ℝ) ^ (N + 1) := by
     simpa only [pow_one] using pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2)
       (show 1 ≤ N + 1 by omega)
   have hbase : B ≤ w * D * T := by
     calc
-      B = (w * K ^ 2 * S ^ m) * (1 + L) := by dsimp [B]; ring
+      B = (w * K ^ 2 * S ^ m) * (1 + L) := by dsimp only [B]; ring
       _ ≤ (w * K ^ 2 * S ^ m) * (2 * K * S) :=
-        mul_le_mul_of_nonneg_left (by linarith) (by positivity)
-      _ = w * (2 * K ^ 3) * T := by dsimp [T]; rw [pow_succ]; ring
-      _ ≤ w * D * T := by dsimp [D]; gcongr
+        mul_le_mul_of_nonneg_left (by linarith only [hLS, hKS])
+          (mul_nonneg (mul_nonneg hw (pow_nonneg hK0 2)) (pow_nonneg hS0 m))
+      _ = w * (2 * K ^ 3) * T := by dsimp only [T]; rw [pow_succ]; ring
+      _ ≤ w * D * T := mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right htwopow (pow_nonneg hK0 3)) hw) hT0
   have hprod : 1 ≤ (2 : ℝ) ^ N * K ^ 3 * T :=
     one_le_mul_of_one_le_of_one_le
       (one_le_mul_of_one_le_of_one_le (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 2))
         (one_le_pow₀ hK)) hT
   have hstep : Q ≤ D * T := by
     calc
-      Q ≤ 1 + K * (K * S) * ((2 : ℝ) ^ N * (K * S ^ m)) := by dsimp [Q]; gcongr
-      _ = 1 + (2 : ℝ) ^ N * K ^ 3 * T := by dsimp [T]; rw [pow_succ]; ring
-      _ ≤ 2 * ((2 : ℝ) ^ N * K ^ 3 * T) := by linarith
-      _ = D * T := by dsimp [D]; rw [pow_succ]; ring
+      Q ≤ 1 + K * (K * S) * ((2 : ℝ) ^ N * (K * S ^ m)) :=
+        add_le_add (le_refl 1) (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hLS hK0) h2KS)
+      _ = 1 + (2 : ℝ) ^ N * K ^ 3 * T := by dsimp only [T]; rw [pow_succ]; ring
+      _ ≤ 2 * ((2 : ℝ) ^ N * K ^ 3 * T) := by linarith only [hprod]
+      _ = D * T := by dsimp only [D]; rw [pow_succ]; ring
   calc
     B * Q ^ n ≤ (w * D * T) * (D * T) ^ n :=
-      mul_le_mul hbase (pow_le_pow_left₀ hQ0 hstep n) (pow_nonneg hQ0 _) (by positivity)
-    _ = w * D ^ (n + 1) * T ^ (n + 1) := by
-      rw [mul_pow]
-      simp only [pow_succ]
-      ring
-    _ = w * D ^ (n + 1) * S ^ ((m + 1) * (n + 1)) := by dsimp [T]; rw [pow_mul]
+      mul_le_mul hbase (pow_le_pow_left₀ hQ0 hstep n) (pow_nonneg hQ0 _)
+        (mul_nonneg (mul_nonneg hw hD0) hT0)
+    _ = w * D ^ (n + 1) * T ^ (n + 1) := by ring
+    _ = w * D ^ (n + 1) * S ^ ((m + 1) * (n + 1)) := by dsimp only [T]; rw [pow_mul]
 
 /-- An error of order `1/S` on a slot of length at most `d*S` has a uniform
 exponential factor, independent of `S`. -/
@@ -741,7 +757,9 @@ theorem norm_iteratedFDeriv_odeFamily_le_polynomial (hab : a ≤ b)
   have hS0 : 0 ≤ S := zero_le_one.trans hS
   have hK0 : 0 ≤ K := zero_le_one.trans hK
   have hWt : 0 ≤ W t := (hW t).le
-  apply multilinear_norm_le_of_unit _ (by positivity)
+  apply multilinear_norm_le_of_unit _ (mul_nonneg (mul_nonneg (mul_nonneg hw
+    (pow_nonneg (mul_nonneg (pow_nonneg zero_le_two _) (pow_nonneg hK0 3)) _))
+    (pow_nonneg hS0 _)) hWt)
   intro v hv
   let l := (List.ofFn v).reverse
   have hl : UnitWord l := by

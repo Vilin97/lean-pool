@@ -126,6 +126,30 @@ theorem Budget.correctedFieldTower_error_energy (B : Budget period hT A)
   rw [heq]
   exact B.fieldTower_energy period P t
 
+theorem atOrder_residual_apply (q : ℕ) (t : Icc (0 : ℝ) T) :
+    (A.atOrder period q).residual t = A.residual.realization q t := rfl
+
+theorem atOrder_approximation_apply (q : ℕ) (t : Icc (0 : ℝ) T) :
+    (A.atOrder period q).approximation t = A.approximation.realization (q+1) t := rfl
+
+theorem atOrder_metric_jet_apply (q : ℕ) (t : Icc (0 : ℝ) T) :
+    (A.atOrder period q).metric.jet t = A.metric.jet q t := rfl
+
+theorem Budget.correctedFieldTower_realization_apply (B : Budget period hT A) (q : ℕ)
+    (t : Icc (0 : ℝ) T) :
+    (B.correctedFieldTower period).realization q t =
+      A.approximation.realization q t + (B.fieldTower period).realization q t := rfl
+
+theorem Budget.correctedPressureTower_realization_apply (B : Budget period hT A)
+    (R : ApproximationResidual period hT A) (q : ℕ) (t : Icc (0 : ℝ) T) :
+    (B.correctedPressureTower period R).realization q t =
+      R.pressure.realization q t + (B.pressureTower period).realization q t := rfl
+
+theorem Budget.extendPath_correctedFieldTower (B : Budget period hT A) (q : ℕ) :
+    extendPath T hT.le ((B.correctedFieldTower period).realization q) =
+      extendPath T hT.le (A.approximation.realization q) +
+        extendPath T hT.le ((B.fieldTower period).realization q) := rfl
+
 /-- The input residual identity and the proved correction equation give the
 actual zero-residual nonlinear equation, with the actual total pressure.
 There is no assumption of existence or an energy bound for the correction. -/
@@ -143,11 +167,14 @@ theorem Budget.correctedFieldTower_hasDerivAt (B : Budget period hT A)
     ⟨t, ht.1.le, ht.2.le⟩
     ((B.fieldTower period).realization (q+1) ⟨t, ht.1.le, ht.2.le⟩)
     (R.pressure.realization q ⟨t, ht.1.le, ht.2.le⟩)
-  have hsum := (hz.add he).congr_deriv hcancel
+  dsimp only [atOrder_residual_apply, atOrder_approximation_apply, atOrder_metric_jet_apply]
+    at hcancel
   have hp := B.pressure_eq_realization period q hq ⟨t, ht.1.le, ht.2.le⟩
   rw [B.solution_eq_realization period q hq] at hp
-  rw [hp] at hsum
-  exact hsum
+  simp only [hp] at he hcancel
+  dsimp only [B.extendPath_correctedFieldTower, B.correctedFieldTower_realization_apply,
+    B.correctedPressureTower_realization_apply]
+  exact (hz.add he).congr_deriv hcancel
 
 /-- A single coherent exact lifted solution and total pressure are constructed
 from the drift budget and the literal approximate residual identity. -/

@@ -10,6 +10,7 @@ import Mathlib.Analysis.Calculus.Deriv.Inv
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Calculus
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 Differentiating the actual normalized ray and primary velocity.  The rates
@@ -95,14 +96,15 @@ theorem unit_hasDerivWithinAt {f : ℝ → E} {f' : E} {t : ℝ} {S : Set ℝ}
 variable [CompleteSpace E]
 
 /-- Ray rate, given by `-B.adjoint p + ⟪p,B p⟫_ℝ • p`. -/
-def rayRate (B : E →L[ℝ] E) (p : E) : E := -B.adjoint p + ⟪p,B p⟫_ℝ • p
+def rayRate (B : E →L[ℝ] E) (p : E) : E :=
+  -adjoint (𝕜 := ℝ) (E := E) (F := E) B p + ⟪p,B p⟫_ℝ • p
 
 /-- Velocity rate, given by `-B q + (2*⟪p,B q⟫_ℝ) • p + ⟪q,B q⟫_ℝ • q`. -/
 def velocityRate (B : E →L[ℝ] E) (p q : E) : E :=
   -B q + (2*⟪p,B q⟫_ℝ) • p + ⟪q,B q⟫_ℝ • q
 
 theorem normalized_ray_hasDerivAt (B : E →L[ℝ] E) {m : ℝ → E} {t : ℝ}
-    (hm : HasDerivAt m (-B.adjoint (m t)) t) (hm0 : m t ≠ 0) :
+    (hm : HasDerivAt m (-adjoint (𝕜 := ℝ) (E := E) (F := E) B (m t)) t) (hm0 : m t ≠ 0) :
     HasDerivAt (fun s => unit (m s)) (rayRate B (unit (m t))) t := by
   have h := unit_hasDerivAt hm hm0
   convert h using 1
@@ -127,7 +129,7 @@ theorem normalized_velocity_hasDerivAt (B : E →L[ℝ] E) {m v : ℝ → E} {t 
   module
 
 theorem normalized_ray_hasDerivWithinAt (B : E →L[ℝ] E) {m : ℝ → E} {t : ℝ} {S : Set ℝ}
-    (hm : HasDerivWithinAt m (-B.adjoint (m t)) S t) (hm0 : m t ≠ 0) :
+    (hm : HasDerivWithinAt m (-adjoint (𝕜 := ℝ) (E := E) (F := E) B (m t)) S t) (hm0 : m t ≠ 0) :
     HasDerivWithinAt (fun s => unit (m s)) (rayRate B (unit (m t))) S t := by
   have h := unit_hasDerivWithinAt hm hm0
   convert h using 1

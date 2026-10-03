@@ -21,6 +21,10 @@ the actual improper integral.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -80,11 +84,11 @@ theorem clockSlope_le (d : TailData) (y : ℝ) : clockSlope d y ≤ 1 / 5 := by
     have h1 := mul_nonneg d.core.lam_pos.le
       (sigma_nonneg (y - (d.core.dropLength + 1)))
     dsimp [OutgoingSchedule.slope]
-    linarith
+    linarith only [h0, h1]
   have hr := (releaseSlope_bounds d (y - d.releaseStart)).2
   have ht := (tail_taper_log_derivative d (y - tailStart d)).2
   dsimp [clockSlope]
-  linarith [d.core.lam_lt, d.h_pos]
+  linarith only [hf, hs, hr, ht, d.core.lam_lt, d.h_pos]
 
 theorem clockSlope_le_after_one (d : TailData) {y : ℝ} (hy : 1 ≤ y) :
     clockSlope d y ≤ -(2 / 5) := by
@@ -98,7 +102,7 @@ theorem clockSlope_le_after_one (d : TailData) {y : ℝ} (hy : 1 ≤ y) :
   have hr := (releaseSlope_bounds d (y - d.releaseStart)).2
   have ht := (tail_taper_log_derivative d (y - tailStart d)).2
   dsimp [clockSlope]
-  linarith [d.core.lam_lt, d.h_pos]
+  linarith only [hf, hs, hr, ht, d.core.lam_lt, d.h_pos]
 
 theorem logClock_increment (d : TailData) {y t : ℝ} (hyt : y ≤ t) :
     logClock d t - logClock d y ≤ (1 / 5) * (t - y) := by
@@ -119,12 +123,13 @@ theorem logClock_increment_after_one (d : TailData) {y t : ℝ}
 theorem logClock_future (d : TailData) {y t : ℝ} (hy : 0 ≤ y) (hyt : y ≤ t) :
     logClock d t - logClock d y ≤ 3 / 5 - (2 / 5) * (t - y) := by
   by_cases hy1 : 1 ≤ y
-  · linarith [logClock_increment_after_one d hy1 hyt]
+  · linarith only [hy1, hyt, logClock_increment_after_one d hy1 hyt]
   · have hy1' : y ≤ 1 := le_of_not_ge hy1
     by_cases ht1 : t ≤ 1
-    · linarith [logClock_increment d hyt]
+    · linarith only [hy, ht1, hyt, logClock_increment d hyt]
     · have ht1' : 1 ≤ t := le_of_not_ge ht1
-      linarith [logClock_increment d hy1', logClock_increment_after_one d le_rfl ht1']
+      linarith only [hy, hy1', ht1', logClock_increment d hy1',
+          logClock_increment_after_one d le_rfl ht1']
 
 theorem finalAngular_clock_eq (d : TailData) (y : ℝ) :
     finalAngular d (y, 0) =
@@ -155,7 +160,7 @@ theorem clock_future_bound (d : TailData) {y t : ℝ} (hy : 0 ≤ y) (hyt : y �
       Real.exp (-(4 / 5) * (t - y)) := by
   have he := Real.exp_le_exp.mpr (show
     2 * (logClock d t - logClock d y) ≤ 6 / 5 - (4 / 5) * (t - y) by
-      linarith [logClock_future d hy hyt])
+      linarith only [hy, hyt, logClock_future d hy hyt])
   calc
     clockWeight d t = clockWeight d y * Real.exp (2 * (logClock d t - logClock d y)) := by
       rw [clockWeight, finalAngular_clock_ratio d y t, mul_pow, clockWeight]
@@ -188,17 +193,17 @@ theorem angular_square_le_clock (d : TailData) (t eta : ℝ) :
 
 theorem clock_le_four_angular_square (d : TailData) (y : ℝ) {eta : ℝ}
     (heta : |eta| ≤ 1) : clockWeight d y ≤ 4 * finalAngular d (y, eta) ^ 2 := by
-  have hs : eta ^ 2 ≤ 1 := by nlinarith [sq_abs eta, abs_nonneg eta]
+  have hs : eta ^ 2 ≤ 1 := by nlinarith only [heta, sq_abs eta, abs_nonneg eta]
   have hk : (1 / 4 : ℝ) ≤ PressureDatum.kernel (shapeExponent d y) eta := by
     apply le_trans _ (PressureDatum.kernel_antitone (shapeExponent_bounds d y).2 eta)
     rw [PressureDatum.kernel_one]
     have hi : (1 / 2 : ℝ) ≤ (1 + eta ^ 2)⁻¹ := by
       have hdiv : (1 : ℝ) / 2 ≤ 1 / (1 + eta ^ 2) :=
-        one_div_le_one_div_of_le (by positivity) (by linarith)
+        one_div_le_one_div_of_le (by positivity) (by linarith only [hs])
       simpa only [one_div] using hdiv
-    nlinarith [sq_nonneg ((1 + eta ^ 2)⁻¹ - 1 / 2)]
+    nlinarith only [hi, sq_nonneg ((1 + eta ^ 2)⁻¹ - 1 / 2)]
   rw [angular_square_factorization]
-  nlinarith [mul_le_mul_of_nonneg_left hk (clockWeight_pos d y).le]
+  nlinarith only [hk, mul_le_mul_of_nonneg_left hk (clockWeight_pos d y).le]
 
 /-- A single numerical constant, independent of every schedule parameter. -/
 noncomputable def envelopeConstant : ℝ := 5 * Real.exp (6 / 5)
@@ -389,8 +394,7 @@ theorem Pi_deriv_abs_le_pressure (d : TailData) (y eta : ℝ) :
     rw [abs_div, abs_mul, abs_of_pos hden]
     norm_num
     apply (div_le_iff₀ hden).mpr
-    nlinarith [sq_nonneg eta, abs_nonneg eta,
-      mul_nonneg (sq_nonneg eta) (abs_nonneg eta)]
+    nlinarith only [sq_nonneg eta, abs_nonneg eta, mul_nonneg (sq_nonneg eta) (abs_nonneg eta)]
   rw [Pi_deriv_eta, abs_mul, abs_of_nonneg (futureMass_nonneg d y 1 eta), Pi_abs_eq]
   calc
     _ ≤ (2 * |eta|) * futureMass d y 0 eta :=
@@ -411,18 +415,18 @@ theorem Pi_deriv_abs_le (d : TailData) {y eta : ℝ}
 theorem Pi_second_deriv_abs_le_pressure (d : TailData) (y : ℝ) {eta : ℝ}
     (heta : |eta| ≤ 1) :
     |deriv (deriv (Pi d y)) eta| ≤ 20 * |Pi d y eta| := by
-  have hs : eta ^ 2 ≤ 1 := by nlinarith [sq_abs eta, abs_nonneg eta]
+  have hs : eta ^ 2 ≤ 1 := (sq_le_one_iff_abs_le_one eta).mpr heta
   have hsub : 0 ≤ 1 - eta ^ 2 := sub_nonneg.mpr hs
-  have hsq : (1 : ℝ) ≤ (1 + eta ^ 2) ^ 2 := by nlinarith [sq_nonneg eta]
+  have hsq : (1 : ℝ) ≤ (1 + eta ^ 2) ^ 2 := one_le_pow₀ (le_add_of_nonneg_right (sq_nonneg eta))
   have hpos : 0 < (1 + eta ^ 2) ^ 2 := by positivity
   have h1 : |2 * (1 - eta ^ 2) / (1 + eta ^ 2) ^ 2| ≤ 2 := by
     rw [abs_of_nonneg (by positivity : 0 ≤ 2 * (1 - eta ^ 2) / (1 + eta ^ 2) ^ 2)]
     apply (div_le_iff₀ hpos).mpr
-    nlinarith [sq_nonneg eta]
+    linear_combination 2 * hsq + 2 * sq_nonneg eta
   have h2 : |8 * eta ^ 2 / (1 + eta ^ 2) ^ 2| ≤ 8 := by
     rw [abs_of_nonneg (by positivity : 0 ≤ 8 * eta ^ 2 / (1 + eta ^ 2) ^ 2)]
     apply (div_le_iff₀ hpos).mpr
-    nlinarith
+    linear_combination 8 * hs + 8 * hsq
   rw [Pi_second_deriv_eta]
   calc
     _ ≤ |(2 * (1 - eta ^ 2) / (1 + eta ^ 2) ^ 2) * futureMass d y 1 eta| +
@@ -453,7 +457,7 @@ theorem Pi_increment (d : TailData) (a y eta : ℝ) :
   have hd := intervalIntegral.integral_Iic_sub_Iic (a := a) (b := y)
     hi.integrableOn hi.integrableOn
   unfold Pi
-  linarith
+  linarith only [ha, hy, hd]
 
 theorem Pi_hasDerivAt_y (d : TailData) (y eta : ℝ) :
     HasDerivAt (fun t => Pi d t eta) ((1 / 2) * finalAngular d (y, eta) ^ 2) y := by
@@ -478,7 +482,7 @@ theorem Pi_eq_axisPressure_add (d : TailData) (y eta : ℝ) :
   have hsum := intervalIntegral.integral_Iic_add_Ioi (b := y)
     hi.integrableOn hi.integrableOn
   unfold Pi axisPressure
-  linarith
+  linarith only [hsum]
 
 theorem ideal_left_integral (d : TailData) (eta : ℝ) :
     (∫ t in Iic (0 : ℝ), finalAngular d (t, eta) ^ 2) =
@@ -548,7 +552,7 @@ theorem corrected_square_integrable {d : TailData} {K : ℝ}
   have hb := abs_le.mp (w.small_jets eta (t - UniformAngularReset.correctionCenter d)).1
   have hr : (1 + AngularMomentReset.relative (w.coefficients eta)
       (t - UniformAngularReset.correctionCenter d)) ^ 2 ≤ 9 / 4 := by
-    nlinarith
+    nlinarith only [hb]
   simp only [UniformAngularReset.correctedAngular, mul_pow]
   exact (mul_le_mul_of_nonneg_left hr (sq_nonneg _)).trans_eq (mul_comm _ _)
 

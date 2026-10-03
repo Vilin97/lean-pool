@@ -58,7 +58,8 @@ def heatSecondSymbol (s : ℝ) (i j : Fin 3) (ξ : Space) : ℝ :=
 
 @[simp] theorem heatSecondSymbol_zero (s : ℝ) (i j : Fin 3) :
     heatSecondSymbol s i j 0 = 0 := by
-  simp [heatSecondSymbol]
+  simp only [heatSecondSymbol, PiLp.zero_apply, mul_zero, neg_zero, norm_zero, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_mul, Real.exp_zero, mul_one]
 
 /-- Positive-time integrability holds also at the zero frequency. -/
 theorem integrableOn_heatSecondSymbol (i j : Fin 3) (ξ : Space) :
@@ -76,7 +77,8 @@ theorem integral_heatSecondSymbol (i j : Fin 3) (ξ : Space) :
     (∫ s : ℝ in Ioi 0, heatSecondSymbol s i j ξ) = rieszSymbol i j ξ := by
   by_cases hξ : ξ = 0
   · subst ξ
-    simp [rieszSymbol]
+    simp only [heatSecondSymbol_zero, integral_zero, rieszSymbol, PiLp.zero_apply, mul_zero,
+        neg_zero, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, div_zero]
   · have hpos : 0 < 4 * Real.pi ^ 2 * ‖ξ‖ ^ 2 := by
       positivity
     have hpi : Real.pi ≠ 0 := ne_of_gt Real.pi_pos
@@ -107,12 +109,10 @@ private theorem heatSecondTest_eq_integral (s : ℝ) (i j : Fin 3)
       ∫ ξ : Space, heatSecondSymbol s i j ξ •
         (Real.fourierChar ⟪ξ, x⟫ • (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) := by
   rw [heatSecondTest, Real.fourierInv_eq]
-  rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
-      (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
   apply integral_congr_ae
   filter_upwards [] with ξ
   simp only [Circle.smul_def, smul_eq_mul, Algebra.smul_def, realAlgebraMap_apply]
-  ring
+  exact mul_left_comm _ _ _
 
 private theorem integrable_heatFourierProduct (i j : Fin 3) (ψ : ComplexTest)
     (x : Space) :
@@ -155,20 +155,19 @@ theorem integrableOn_heatSecondTest (i j : Fin 3) (ψ : ComplexTest) (x : Space)
 /-- The actual double Riesz test operator is the positive-time heat integral. -/
 theorem rieszTest_eq_integral_heatSecondTest (i j : Fin 3) (ψ : ComplexTest) (x : Space) :
     rieszTest i j ψ x = ∫ s : ℝ in Ioi 0, heatSecondTest s i j ψ x := by
+  let ψhat : ComplexTest := FourierTransform.fourierCLE ℂ ComplexTest ψ
   calc
     rieszTest i j ψ x = ∫ ξ : Space, ∫ s : ℝ in Ioi 0,
-        heatSecondSymbol s i j ξ •
-          (Real.fourierChar ⟪ξ, x⟫ • (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) := by
-      rw [rieszTest, Real.fourierInv_eq]
-      rw [show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) =
-          (FourierTransform.fourierCLE ℂ ComplexTest : ComplexTest → ComplexTest) from rfl]
+        heatSecondSymbol s i j ξ • (Real.fourierChar ⟪ξ, x⟫ • ψhat ξ) := by
+      rw [rieszTest, Real.fourierInv_eq,
+        show EulerSobolev.schwartzFourier (V := Space) (E := ℂ) ψ = ψhat from rfl]
       apply integral_congr_ae
       filter_upwards [] with ξ
       rw [integral_smul_const, integral_heatSecondSymbol]
       simp only [Circle.smul_def, smul_eq_mul, Algebra.smul_def, realAlgebraMap_apply]
       ring
     _ = ∫ s : ℝ in Ioi 0, ∫ ξ : Space, heatSecondSymbol s i j ξ •
-        (Real.fourierChar ⟪ξ, x⟫ • (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ) :=
+        (Real.fourierChar ⟪ξ, x⟫ • ψhat ξ) :=
       integral_integral_swap (integrable_heatFourierProduct i j ψ x)
     _ = ∫ s : ℝ in Ioi 0, heatSecondTest s i j ψ x := by
       apply integral_congr_ae
@@ -294,13 +293,13 @@ theorem fourierIntegral_gaussian_real {a : ℝ} (ha : 0 < a) (z : Space) :
       (((Real.pi / a) ^ (3 / 2 : ℝ) *
         Real.exp (-Real.pi ^ 2 * ‖z‖ ^ 2 / a) : ℝ) : ℂ) := by
   have hdim : Module.finrank ℝ Space = 3 := by
-    simp [Space, NavierStokes.ProblemStatement.Space]
+    simp only [Space, NavierStokes.ProblemStatement.Space, finrank_euclideanSpace, Fintype.card_fin]
   have hpow : ((Real.pi : ℂ) / (a : ℂ)) ^ ((3 : ℂ) / 2) =
       (((Real.pi / a) ^ (3 / 2 : ℝ) : ℝ) : ℂ) := by
     rw [← Complex.ofReal_div, Complex.ofReal_cpow (by positivity)]
-    simp
+    simp only [Complex.ofReal_div, Complex.ofReal_ofNat]
   have h := fourier_gaussian_innerProductSpace
-    (V := Space) (b := (a : ℂ)) (by simpa using ha) z
+    (V := Space) (b := (a : ℂ)) (by simpa only [Complex.ofReal_re] using ha) z
   rw [hdim] at h
   norm_num only [Nat.cast_ofNat] at h
   rw [hpow] at h
@@ -386,7 +385,8 @@ private theorem differentiable_partial_heatKernel {s : ℝ} (hs : 0 < s) (j : Fi
     convert! (innerSL ℝ (NavierStokes.ProblemStatement.coordinateVector j)).differentiable
       using 1
     ext x
-    simp [NavierStokes.ProblemStatement.coordinateVector, EuclideanSpace.inner_single_left]
+    simp only [NavierStokes.ProblemStatement.coordinateVector, coe_innerSL_apply,
+        EuclideanSpace.inner_single_left, conj_trivial, one_mul]
   rw [show partialD j (heatKernel s) =
     (fun x : Space => -(x j / (2 * s)) * heatKernel s x) from
     funext (partial_heatKernel hs j)]
@@ -413,7 +413,7 @@ private theorem heatKernelFourierData {s : ℝ} (hs : 0 < s) (i j : Fin 3) :
   let c : ℂ := 2 * Real.pi * Complex.I
   let f1 : Space → ℂ := fun ξ => c * (ξ j : ℂ) * g ξ
   let f2 : Space → ℂ := fun ξ => c * (ξ i : ℂ) * f1 ξ
-  have ha : 0 < a := by dsimp [a]; positivity
+  have ha : 0 < a := by dsimp only [a]; positivity
   have hg : Integrable g := integrable_complex_gaussian ha
   have hg1 : Integrable (fun ξ : Space => ‖ξ‖ * ‖g ξ‖) := by
     simpa only [g, Complex.norm_real, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] using
@@ -429,29 +429,29 @@ private theorem heatKernelFourierData {s : ℝ} (hs : 0 < s) (i j : Fin 3) :
     integrable_coordinate_multiplier c i hf1.aestronglyMeasurable hf1moment
   have hf2eq : f2 = (fun ξ : Space => (heatSecondSymbol s i j ξ : ℂ)) := by
     funext ξ
-    dsimp [f2, f1, g, c, a]
+    dsimp only [f2, c, f1, g, a]
     unfold heatSecondSymbol
     have he : -(4 * Real.pi ^ 2 * s) * ‖ξ‖ ^ 2 =
         -(4 * Real.pi ^ 2 * ‖ξ‖ ^ 2) * s := by ring
     rw [he]
     push_cast
     ring_nf
-    simp [Complex.I_sq]
+    simp only [Complex.I_sq, mul_neg, mul_one, neg_mul]
   have h0 : FourierTransform.fourierInv g = (fun x : Space => (heatKernel s x : ℂ)) := by
     funext x
     exact fourierIntegralInv_heatGaussian hs x
   have hd1 : partialD j (FourierTransform.fourierInv g) = FourierTransform.fourierInv f1 := by
     funext x
     unfold partialD NavierStokes.SolutionDifference.spatialPartial
-    simpa [f1, c, NavierStokes.ProblemStatement.coordinateVector,
-      EuclideanSpace.inner_single_right] using
+    simpa only [NavierStokes.ProblemStatement.coordinateVector, EuclideanSpace.inner_single_right,
+        conj_trivial, one_mul] using
       RieszTestOperators.fderiv_fourierInv_apply hg hg1 x
         (NavierStokes.ProblemStatement.coordinateVector j)
   have hd2 : partialD i (FourierTransform.fourierInv f1) = FourierTransform.fourierInv f2 := by
     funext x
     unfold partialD NavierStokes.SolutionDifference.spatialPartial
-    simpa [f2, c, NavierStokes.ProblemStatement.coordinateVector,
-      EuclideanSpace.inner_single_right] using
+    simpa only [NavierStokes.ProblemStatement.coordinateVector, EuclideanSpace.inner_single_right,
+        conj_trivial, one_mul] using
       RieszTestOperators.fderiv_fourierInv_apply hf1 hf1moment x
         (NavierStokes.ProblemStatement.coordinateVector i)
   constructor

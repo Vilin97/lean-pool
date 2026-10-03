@@ -239,7 +239,8 @@ theorem componentDivergence_pullback {E F : Type*}
     (ha : ∀ i, ContDiffOn ℝ ∞ (fun y => a y i) U) {x : E} (hx : x ∈ Ω) (hr : r x ≠ 0) :
     componentDivergence r Sr Sθ Sz (fun y i => v * a (Γ y) i) x =
       v * l * componentDivergence R Vr Vθ Vz a (Γ x) := by
-  have hΓ := (G.smooth.contDiffAt (G.source_open.mem_nhds hx)).differentiableAt (by simp)
+  have hΓ := (G.smooth.contDiffAt (G.source_open.mem_nhds hx)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   have hd i := ((ha i).contDiffAt (G.target_open.mem_nhds (G.mapsTo hx))).differentiableAt (by simp)
   have ht : fderiv ℝ Γ x (Sθ x) = (1 : ℝ) • Vθ (Γ x) := by
     simpa only [one_smul] using G.angular x hx
@@ -271,17 +272,20 @@ theorem radialDirection_match {c : Context Point} {G : PhysicalResidualBridge.Sc
     (H : PhysicalResidualTZ.MatchesAtTZ c.operators G n) :
     LiftedMeanResidual.radialDirection c n = PhysicalResidualTZ.graphRadialTZ G := by
   funext x
-  simp [LiftedMeanResidual.radialDirection, LiftedMeanResidual.liftDirection,
-    LiftedMeanResidual.radialVector, H.eR, H.frequency, H.profile, H.vR,
-    PhysicalResidualTZ.graphRadialTZ_eq, PhysicalResidualBridge.ScaledGraph.radial]
+  simp only [LiftedMeanResidual.radialDirection, LiftedMeanResidual.liftDirection,
+      LiftedMeanResidual.radialVector, H.eR, H.frequency, H.profile, H.vR, Prod.smul_mk,
+      smul_eq_mul, mul_zero, smul_zero, Prod.mk_add_mk, add_zero, zero_add,
+      PhysicalResidualTZ.graphRadialTZ_eq, PhysicalResidualBridge.ScaledGraph.radial, Prod.mk.injEq,
+      and_true, true_and]
   rfl
 
 theorem axialDirection_match {c : Context Point} {G : PhysicalResidualBridge.ScaledGraph} {n : ℕ}
     (H : PhysicalResidualTZ.MatchesAtTZ c.operators G n) :
     LiftedMeanResidual.axialDirection c n = PhysicalResidualTZ.graphAxialTZ G := by
   funext x
-  simp [LiftedMeanResidual.axialDirection, LiftedMeanResidual.liftDirection,
-    LiftedMeanResidual.axialVector, H.epsilon, H.eZ, PhysicalResidualTZ.graphAxialTZ_apply]
+  simp only [LiftedMeanResidual.axialDirection, LiftedMeanResidual.liftDirection,
+      LiftedMeanResidual.axialVector, H.epsilon, H.eZ, Prod.smul_mk, smul_eq_mul, mul_zero, mul_one,
+      smul_zero, PhysicalResidualTZ.graphAxialTZ_apply]
 
 theorem scaled_base_divergence (B n : ℕ) {x : Full} (hx : x ∈ ActualBaseResidual.domain) :
     componentDivergence PhysicalResidualBridge.ScaledGraph.radius
@@ -309,8 +313,7 @@ theorem scaled_base_divergence (B n : ℕ) {x : Full} (hx : x ∈ ActualBaseResi
     simpa only [ActualBaseResidual.cylinderPoint, AxisymmetricResidual.pack_zero] using
       mul_pos (Real.sqrt_pos.2 (ChartScales.Q_pos n)) hx.1
   have hda := (ha.contDiffAt (BaseResidual.past_isOpen.mem_nhds ⟨ht, mem_univ _⟩)).differentiableAt
-      (by
-      simp)
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hmem :
       ((ActualBaseResidual.cylinderPoint h (ChartScales.Q n) x).1,
         CylindricalResidual.chart (ActualBaseResidual.cylinderPoint h (ChartScales.Q n) x).2) ∈
@@ -319,7 +322,8 @@ theorem scaled_base_divergence (B n : ℕ) {x : Full} (hx : x ∈ ActualBaseResi
       ((ActualBaseResidual.cylinderPoint h (ChartScales.Q n) x).1,
         CylindricalResidual.chart (ActualBaseResidual.cylinderPoint h (ChartScales.Q n) x).2) :=
     ((FinalSlowBase.velocity_smooth certificate modulation upper B).contDiffAt
-    (BaseResidual.past_isOpen.mem_nhds hmem)).differentiableAt (by simp)
+    (BaseResidual.past_isOpen.mem_nhds hmem)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hv : componentDivergence LinearWaveResidual.coordinateRadius
       (LinearWaveResidual.spaceDirection 0) (LinearWaveResidual.spaceDirection 1)
       (LinearWaveResidual.spaceDirection 2) (fun z i => a z i)
@@ -375,21 +379,23 @@ theorem piece_divergence {B N0 : ℕ} (l : Label B N0 × Fin 2) (n : ℕ) {x : F
       (fun y => (ActualInitialCoherence.pieces B N0 l).velocity n y i) x :=
     ((contDiffOn_pi.mp (ActualPrimaryCoherence.piece_velocity_smooth standardRegion l.2 l.1 n)
         i).contDiffAt
-      (ActualPrimaryCoherence.positiveChart_open.mem_nhds hx.2)).differentiableAt (by simp)
+      (ActualPrimaryCoherence.positiveChart_open.mem_nhds hx.2)).differentiableAt (by simp only [
+          ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   have hz := ActualPrimaryCoherence.piece_full_divergence standardRegion l.2 l.1 n hx
   have hr : (PrimaryResidualClass.directions (commonContext B)).radialField n =
       LiftedMeanResidual.radialDirection (commonContext B) n := by
     funext y
-    simp [PrimaryResidualClass.directions, LinearWaveBounds.GraphDirections.radialField,
-      LiftedMeanResidual.radialDirection, LiftedMeanResidual.radialVector,
-      LiftedMeanResidual.liftDirection, smul_smul]
+    simp only [LinearWaveBounds.GraphDirections.radialField, PrimaryResidualClass.directions,
+        Prod.smul_mk, smul_eq_mul, mul_zero, smul_smul, Prod.mk_add_mk, add_zero,
+        LiftedMeanResidual.radialDirection, LiftedMeanResidual.liftDirection,
+        LiftedMeanResidual.radialVector]
   have hzz : (PrimaryResidualClass.directions (commonContext B)).axialField
       (piece standardRegion l.2 l.1).strip n =
         LiftedMeanResidual.axialDirection (commonContext B) n := by
     funext y
-    simp [PrimaryResidualClass.directions, LinearWaveBounds.GraphDirections.axialField,
-      LiftedMeanResidual.axialDirection, LiftedMeanResidual.axialVector,
-      LiftedMeanResidual.liftDirection]
+    simp only [LinearWaveBounds.GraphDirections.axialField, PrimaryResidualClass.directions,
+        Prod.smul_mk, smul_eq_mul, mul_zero, LiftedMeanResidual.axialDirection,
+        LiftedMeanResidual.liftDirection, LiftedMeanResidual.axialVector, Prod.mk.injEq, and_true]
     rfl
   rw [hr, hzz] at hz
   exact componentDivergence_of_complex _ _ _ _ hv hz
@@ -407,8 +413,8 @@ theorem seed_oscillation_divergence (B N0 n : ℕ) {x : Full}
   rw [componentDivergence_sum _ _ _ _ _ (fun l _ i =>
     ((contDiffOn_pi.mp (ActualPrimaryCoherence.piece_velocity_smooth standardRegion l.2 l.1 n)
         i).contDiffAt
-      (ActualPrimaryCoherence.positiveChart_open.mem_nhds (strip_time hx.1))).differentiableAt (by
-          simp))]
+      (ActualPrimaryCoherence.positiveChart_open.mem_nhds (strip_time hx.1))).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))]
   exact Finset.sum_eq_zero (fun l _ => piece_divergence l n ⟨strip_radius hx.1, strip_time hx.1⟩)
 
 theorem primary_oscillation (B N0 : ℕ) :
@@ -433,10 +439,12 @@ theorem primary_fullDivergence (B N0 n : ℕ) {x : Full}
       fun y => LiftedMeanResidual.baseLift (commonContext B) n y +
         (ActualInitialCoherence.seed B N0).oscillation n y := by
     funext y i
-    fin_cases i <;> simp [State.totalVelocity, ActualInitialCoherence.primary,
-      CorrectionInitialization.GaugeInitialization.primaryBands, VariableGaugeMean.reconstructState,
-      ActualInitialCoherence.seed, CorrectionInitialization.bandSeed, LiftedMeanResidual.baseLift,
-      LiftedMeanResidual.tripleVector, Matrix.cons_val, Matrix.cons_val_zero, Matrix.cons_val_one]
+    fin_cases i <;> simp only [State.totalVelocity, ActualInitialCoherence.primary,
+        CorrectionInitialization.GaugeInitialization.primaryBands,
+        VariableGaugeMean.reconstructState, CorrectionInitialization.bandSeed, commonGauge_length,
+        Pi.zero_apply, add_zero, Fin.isValue, Fin.zero_eta, Matrix.cons_val_zero,
+        LiftedMeanResidual.baseLift, LiftedMeanResidual.tripleVector, ActualInitialCoherence.seed,
+        Pi.add_apply, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   have hb (i : Fin 3) := (LiftedMeanResidual.liftScalar_smooth
     (LiftedMeanResidual.tripleVector_smooth (GaugeDebtIncrement.smoothTriple_mono
       (ActualInitialCoherence.common_base_data B).smooth (fun _ hx => strip_to_positive hx)) n i))
@@ -450,11 +458,9 @@ theorem primary_fullDivergence (B N0 n : ℕ) {x : Full}
     (a := LiftedMeanResidual.baseLift (commonContext B) n)
     (b := (ActualInitialCoherence.seed B N0).oscillation n)
     (fun i => ((hb i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-        hx)).differentiableAt (by
-        simp))
+        hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     (fun i => ((hw i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-        hx)).differentiableAt (by
-        simp))]
+        hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))]
   exact (congrArg₂ (fun a b : ℝ => a + b) (base_divergence B n hx)
     (seed_oscillation_divergence B N0 n hx)).trans (zero_add 0)
 
@@ -482,15 +488,13 @@ theorem initialized_fullDivergence (B N0 n : ℕ) {x : Full}
     (TorusInverse.vector .temporal) (common_graphOperators B) n (strip_to_slow hx.1)
     (strip_radius hx.1).ne' x.2
     (fun i => ((hp n i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-        hx)).differentiableAt (by
-        simp))
+        hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   have hr := rankStage_fullDivergence_local (ActualInitialCoherence.rank_geometry_of_primitive B _
     (ActualInitialCoherence.temporal_primitive B N0)) commonGauge_length ((0,1),0) ((1,0),0)
     (TorusInverse.vector .temporal) (common_graphOperators B) n (strip_to_slow hx.1)
     (strip_radius hx.1).ne' x.2
     (fun i => ((ht n i).contDiffAt ((LiftedMeanResidual.cylinder_open strip.isOpen_domain).mem_nhds
-        hx)).differentiableAt (by
-        simp))
+        hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   exact hr.trans (hm.trans (primary_fullDivergence B N0 n hx))
 
 /-! ## Literal angular harmonics and the retained errors -/
@@ -536,7 +540,8 @@ private theorem conjugatePair_zero (a : Point → ℂ) (x : Point) :
   classical
   change Finsupp.single (1 : ℤ) (fun y => a y / 2) 0 x +
     (starRingEnd ℂ) (Finsupp.single (1 : ℤ) (fun y => a y / 2) 0 x) = 0
-  simp
+  simp only [ne_eq, zero_ne_one, not_false_eq_true, Finsupp.single_eq_of_ne, Pi.zero_apply,
+      map_zero, add_zero]
 
 theorem piece_velocity_mean_zero (l : Label B N0 × Fin 2) (n : ℕ)
     (x : Point) (i : Fin 3) :
@@ -549,8 +554,9 @@ theorem piece_velocity_mean_zero (l : Label B N0 × Fin 2) (n : ℕ)
       ((ActualInitialCoherence.primaryBlock l).angularFrequency n) (x, θ)).re) = 0
   trans (((ActualInitialCoherence.primaryBlock l).velocity n i) 0 x).re
   · exact HarmonicResidual.realAngularMean_field _ _ _ (ActualInitialCoherence.angularMode_ne l n) x
-  · simp [ActualInitialCoherence.primaryBlock, CorrectionInitialization.PrimaryPiece.harmonicBlock,
-      CorrectionInitialization.PrimaryHarmonics.block, conjugatePair_zero]
+  · simp only [ActualInitialCoherence.primaryBlock,
+      CorrectionInitialization.PrimaryPiece.harmonicBlock,
+      CorrectionInitialization.PrimaryHarmonics.block, conjugatePair_zero, Complex.zero_re]
 
 theorem piece_pressure_mean_zero (l : Label B N0 × Fin 2) (n : ℕ) (x : Point) :
     angularAverage (ActualInitialCoherence.pieces B N0 l).pressure n x = 0 := by
@@ -562,8 +568,9 @@ theorem piece_pressure_mean_zero (l : Label B N0 × Fin 2) (n : ℕ) (x : Point)
       ((ActualInitialCoherence.primaryBlock l).angularFrequency n) (x, θ)).re) = 0
   trans (((ActualInitialCoherence.primaryBlock l).pressure n) 0 x).re
   · exact HarmonicResidual.realAngularMean_field _ _ _ (ActualInitialCoherence.angularMode_ne l n) x
-  · simp [ActualInitialCoherence.primaryBlock, CorrectionInitialization.PrimaryPiece.harmonicBlock,
-      CorrectionInitialization.PrimaryHarmonics.block, conjugatePair_zero]
+  · simp only [ActualInitialCoherence.primaryBlock,
+      CorrectionInitialization.PrimaryPiece.harmonicBlock,
+      CorrectionInitialization.PrimaryHarmonics.block, conjugatePair_zero, Complex.zero_re]
 
 end Angular
 

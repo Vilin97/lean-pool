@@ -81,7 +81,8 @@ open Set InnerProductSpace EulerSmoothLimit EulerParentPacketFrames
 /-- First normal, given by `EuclideanSpace.single 0 1`. -/
 def firstNormal : Space := EuclideanSpace.single 0 1
 
-theorem firstNormal_unit : ‖firstNormal‖=1 := by simp [firstNormal]
+theorem firstNormal_unit : ‖firstNormal‖=1 := by simp only [firstNormal, Fin.isValue,
+    PiLp.norm_single, norm_one]
 
 /-- First plane: an abbreviation for `referencePlane firstNormal`. -/
 abbrev FirstPlane := referencePlane firstNormal
@@ -92,13 +93,14 @@ def firstFrame : FirstPlane ≃ₗᵢ[ℝ] referencePlane firstNormal := LinearI
 /-- First coordinate as an element of `FirstPlane`. -/
 def firstCoordinate : FirstPlane := ⟨EuclideanSpace.single 1 1,by
   rw [Submodule.mem_orthogonal_singleton_iff_inner_right]
-  simp [firstNormal,EuclideanSpace.inner_single_left]⟩
+  simp only [firstNormal, Fin.isValue, EuclideanSpace.inner_single_left, conj_trivial, ne_eq,
+      zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero]⟩
 
 theorem firstCoordinate_map : (firstFrame firstCoordinate : Space)=EuclideanSpace.single 1 1 := rfl
 
 theorem firstCoordinate_norm : ‖firstCoordinate‖=1 := by
   change ‖(EuclideanSpace.single 1 1 : Space)‖=1
-  simp
+  simp only [Fin.isValue, PiLp.norm_single, norm_one]
 
 variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
   (T : ℝ) (hT : 0 < T) (hTB : T ≤ initialTime)
@@ -140,14 +142,14 @@ theorem packetBase_sign_short :
 theorem packetBase_strain_bound (t : Icc (0 : ℝ) T) (x : Space) :
     ‖(packetBaseParent β hβ ell hell hell1 T hT hTB).strain.field t x‖ ≤ initialCoefficientCost :=
         by
-  change ‖((initialParent β hβ ell hell hell1).restrictTime T hT hTB).strain.field t x‖ ≤ _
+  unfold packetBaseParent
   erw [Parent.restrictTime_strain]
   exact initial_strain_bound β hβ ell hell hell1 _ x
 
 theorem packetBase_curvature_bound (t : Icc (0 : ℝ) T) (x : Space) :
     ‖(packetBaseParent β hβ ell hell hell1 T hT hTB).curvature.field t x‖ ≤ initialCoefficientCost
         := by
-  change ‖((initialParent β hβ ell hell hell1).restrictTime T hT hTB).curvature.field t x‖ ≤ _
+  unfold packetBaseParent
   erw [Parent.restrictTime_curvature]
   exact initial_curvature_bound β hβ ell hell hell1 _ x
 
@@ -190,7 +192,9 @@ theorem firstPacket_pressure_numerator (t : Icc (0 : ℝ) T)
   apply source_numerator_pos (packetBaseState β hβ ell hell hell1 T hT hTB).labels
     firstNormal firstNormal_unit firstFrame support compact firstCoordinate firstCoordinate_norm x
   · rw [packetBase_initialStrain β hβ ell hell hell1 T hT hTB x hx,firstCoordinate_map,linear_q]
-    simp [firstNormal,EuclideanSpace.inner_single_left,PiLp.add_apply,PiLp.smul_apply]
+    simp only [firstNormal, Fin.isValue, EuclideanSpace.inner_single_left, conj_trivial,
+        PiLp.add_apply, PiLp.single_eq_same, PiLp.smul_apply, ne_eq, Fin.reduceEq,
+        not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, add_zero, mul_one]
   · exact packetBase_short T hTB
   · exact packetBase_sign_short T hTB
 

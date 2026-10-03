@@ -244,11 +244,9 @@ theorem viscous_mild_hasDerivAt {q : ℕ} (hq : 2 ≤ q) (ν : ℝ) (hν : 0 < �
       (fun r hr => parabolicKernelBound_nonneg ν r hr.1)
       (fun r hr y => heatKernel_bound period q ν hν r hr.1 y) f s] at hc
     change truncateOperator period q (u s) = _
-    rw [hsol s, map_add, truncate_heatOperator]
-    change heatFlow period q ν s.val (truncateOperator period q u₀) +
-      truncateOperator period q (∫ r in (0 : ℝ)..s.val,
-        heatKernel period q ν hν r (extendPath T hT f (s.val - r))) = _
-    rw [hc]
+    exact (congrArg (truncateOperator period q) (hsol s)).trans
+      (((truncateOperator period q).map_add _ _).trans
+        (congrArg₂ (· + ·) (truncate_heatOperator period _ u₀) hc))
   have hd := ordinary_mild_hasDerivAt period hq ν hν T hT (truncateOperator period q u₀) f v hv t ht
   change HasDerivAt (fun r => value period (truncateOperator period q (extendPath T hT u r)))
     (ν • laplacianEvaluation period q hq (truncateOperator period q (u ⟨t, ht.1.le, ht.2.le⟩)) +

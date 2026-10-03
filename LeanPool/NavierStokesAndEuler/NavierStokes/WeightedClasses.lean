@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.NavierStokes.JetBounds
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.Calculus.ContDiff.Operations
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanSpaceShortcuts
 
 /-!
 # Indexed weighted classes of actual stripped derivatives

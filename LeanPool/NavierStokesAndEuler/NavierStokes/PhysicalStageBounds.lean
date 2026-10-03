@@ -37,7 +37,7 @@ theorem abs_time_le_one {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {w : SpaceTime} (hw : w ∈ PhysicalWaveSum.preterminal)
     (hq : PhysicalWaveSum.physicalQ h w ≤ 1) : |w.1| ≤ 1 := by
   have ha : 0 < 2 * h := by positivity
-  have ha1 : 2 * h < 1 := by linarith
+  have ha1 : 2 * h < 1 := by linarith only [hh1]
   have he := SimilarityCoordinates.coordinateQ_spec ha ha1
     (p := (1 - w.1, w.2 2)) (sub_pos.mpr hw)
   have hn : 0 ≤ (w.2 2) ^ 2 *
@@ -49,7 +49,7 @@ theorem abs_time_le_one {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       1 - w.1 := he.2
   change w.1 < 1 at hw
   apply abs_le.mpr
-  constructor <;> linarith
+  constructor <;> linarith only [hh, hh1, hn, hq, heq, hw]
 
 section Waves
 
@@ -279,7 +279,7 @@ theorem WaveData.vector_bound_with_gain (W : WaveData h D I K (Fin 3))
   apply mul_le_mul_of_nonneg_left _ hC
   apply Real.rpow_le_rpow_of_exponent_ge (PhysicalWaveSum.physicalQ_pos hh hh1 hw) hq
   unfold PhysicalClassBounds.physicalLoss
-  linarith
+  linarith only [hg]
 
 theorem WaveData.pressure_bound_with_gain (W : WaveData h D I K Unit)
     (hh : 0 < h) (hh1 : h < 1 / 2) (hg : g ≤ h * W.alpha + W.shift + delta) (m : ℕ) :
@@ -292,7 +292,7 @@ theorem WaveData.pressure_bound_with_gain (W : WaveData h D I K Unit)
   apply mul_le_mul_of_nonneg_left _ hC
   apply Real.rpow_le_rpow_of_exponent_ge (PhysicalWaveSum.physicalQ_pos hh hh1 hw) hq
   unfold PhysicalClassBounds.physicalLoss
-  linarith
+  linarith only [hg]
 
 theorem MeanData.field_bound_with_gain {degree qbig : ℝ} (M : MeanData h degree)
     (hh : 0 < h) (hh1 : h < 1 / 2) (hq : qbig ≤ ChartScales.Q M.firstBand)
@@ -305,7 +305,7 @@ theorem MeanData.field_bound_with_gain {degree qbig : ℝ} (M : MeanData h degre
   refine ⟨C, hC, fun w hw hq1 => (hb w hw hq1).trans ?_⟩
   exact mul_le_mul_of_nonneg_left
     (Real.rpow_le_rpow_of_exponent_ge (PhysicalWaveSum.physicalQ_pos hh hh1 hw.1) hq1
-      (by linarith)) hC
+      (by linarith only [hg])) hC
 
 theorem MeanData.angular_bound_with_gain {degree qbig : ℝ} (M : MeanData h degree)
     (hh : 0 < h) (hh1 : h < 1 / 2) (hq : qbig ≤ ChartScales.Q M.firstBand)
@@ -318,7 +318,7 @@ theorem MeanData.angular_bound_with_gain {degree qbig : ℝ} (M : MeanData h deg
   refine ⟨C, hC, fun w hw hq1 => (hb w hw hq1).trans ?_⟩
   exact mul_le_mul_of_nonneg_left
     (Real.rpow_le_rpow_of_exponent_ge (PhysicalWaveSum.physicalQ_pos hh hh1 hw.1) hq1
-      (by linarith)) hC
+      (by linarith only [hg])) hC
 
 end GainComparison
 

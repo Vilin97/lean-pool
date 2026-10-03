@@ -136,6 +136,12 @@ local instance limitDerivativeGroup (s : ℕ) : NormedAddCommGroup (SobolevSpace
 /-- The inherited real normed space on each actual Sobolev value space. -/
 local instance limitDerivativeSpace (s : ℕ) : NormedSpace ℝ (SobolevSpace period s) := inferInstance
 
+theorem sourcePath_truncate_apply {q : ℕ} {T : ℝ}
+    (C : Coefficients (Icc (0 : ℝ) T) (SobolevSpace period (q + 1)) (SobolevSpace period q))
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period ((q + 1) + 1))) (t : Icc (0 : ℝ) T) :
+    sourcePath C ((truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) u) t =
+      C.apply t (truncateOperator period (q+1) (u t)) := rfl
+
 /-- The actual derivative of a high-order mild correction equals viscosity plus the literal
 lower-order nonlinear source. -/
 theorem lower_mild_path_derivative {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤ T)
@@ -155,10 +161,10 @@ theorem lower_mild_path_derivative {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 �
         valuePath period T (sourcePath ((lowerData period D KG KL KQ hG hL hQ).coefficients period
             hq)
           ((truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) u))) r) r := by
-  exact EulerViscousPathDerivative.hasDerivAt_path period (by omega : 2 ≤ (q+1)+1) ν T hT u
-    (sourcePath ((lowerData period D KG KL KQ hG hL hQ).coefficients period hq)
-      ((truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) u)) r hr
-    (EulerCorrectionLimitDerivative.lower_mild_value_derivative period hq T hT D KG KL KQ hG hL hQ
-        ν hν u hsol r hr)
+  have hv := EulerCorrectionLimitDerivative.lower_mild_value_derivative period hq T hT D KG KL KQ
+    hG hL hQ ν hν u hsol r hr
+  rw [← sourcePath_truncate_apply] at hv
+  exact EulerViscousPathDerivative.hasDerivAt_path period (by omega : 2 ≤ (q+1)+1) ν T hT u _ r hr
+    hv
 
 end EulerCorrectionLimitPathDerivative

@@ -103,7 +103,8 @@ theorem periodicVelocity_eventuallyEq (A v : VelocityField) {z : SpaceTime}
 
 theorem periodicVelocity_origin (A v : VelocityField) (t : ℝ) :
     periodicVelocity A v (t, 0) = velocity A v (t, 0) :=
-  (periodicVelocity_eventuallyEq A v SpatialLocalization.zero_mem_plateau).self_of_nhds
+  (periodicVelocity_eventuallyEq A v (z := (t, 0))
+    SpatialLocalization.zero_mem_plateau).self_of_nhds
 
 theorem periodicResidual_eventuallyEq_cut (A v : VelocityField) (p : PressureField)
     {z : SpaceTime} (hz : z.2 ∈ PeriodicLocalization.innerCube (1 / 4)) :

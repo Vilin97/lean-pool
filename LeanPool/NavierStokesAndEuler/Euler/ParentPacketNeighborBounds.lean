@@ -90,10 +90,9 @@ theorem source_frame_derivative_norm :
   apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
       unfold frameDifferenceCost; positivity)
   intro t x
-  have h := coefficient_derivative_bound m R G.frame.toSmoothCoefficientPath 1
-    (frameAmplitude L.K*majorant L.scaledRadius 0 1) (L.frame_scaled_bound 1) t x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  exact (coefficient_derivative_bound m R G.frame.toSmoothCoefficientPath 1
+    (frameAmplitude L.K*majorant L.scaledRadius 0 1) (L.frame_scaled_bound 1) t x).trans_eq
+    (L.scaled_first_majorant _)
 
 theorem source_first_derivative_norm :
     ‖(G.transverseData m hm R S hS).frameDerivative.derivative.field‖ ≤ L.firstDifferenceCost*G.ell
@@ -104,10 +103,9 @@ theorem source_first_derivative_norm :
   apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
       unfold firstDifferenceCost; positivity)
   intro t x
-  have h := coefficient_derivative_bound m R G.first.toSmoothCoefficientPath 1
-    (gradientAmplitude L.K*majorant L.scaledRadius 0 1) (L.first_scaled_bound 1) t x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  exact (coefficient_derivative_bound m R G.first.toSmoothCoefficientPath 1
+    (gradientAmplitude L.K*majorant L.scaledRadius 0 1) (L.first_scaled_bound 1) t x).trans_eq
+    (L.scaled_first_majorant _)
 
 theorem source_normal_derivative_norm :
     ‖(G.transverseData m hm R S hS).normal.derivative.field‖ ≤ L.normalDifferenceCost*G.ell := by
@@ -116,10 +114,9 @@ theorem source_normal_derivative_norm :
   apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
       unfold normalDifferenceCost; positivity)
   intro t x
-  have h := normalCoefficient_derivative_bound m G.inverse.toSmoothCoefficientPath hm 1
-    ((9*(frameAmplitude L.K)^2)*majorant L.scaledRadius 0 1) (L.inverse_scaled_bound 1) t x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  exact (normalCoefficient_derivative_bound m G.inverse.toSmoothCoefficientPath hm 1
+    ((9*(frameAmplitude L.K)^2)*majorant L.scaledRadius 0 1) (L.inverse_scaled_bound 1) t
+      x).trans_eq (L.scaled_first_majorant _)
 
 theorem source_strain_derivative_norm :
     ‖(G.transverseData m hm R S hS).M.derivative.field‖ ≤ L.strainDifferenceCost*G.ell := by
@@ -129,9 +126,7 @@ theorem source_strain_derivative_norm :
   apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
       unfold strainDifferenceCost; positivity)
   intro t x
-  have h := L.strain_scaled_bound 1 t x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  exact (L.strain_scaled_bound 1 t x).trans_eq (L.scaled_first_majorant _)
 
 theorem source_curvature_derivative_norm (H : LowBounds G) :
     ‖(G.historyData m hm R S hS H).H.derivative.field‖ ≤ L.strainDifferenceCost*G.ell := by
@@ -141,9 +136,7 @@ theorem source_curvature_derivative_norm (H : LowBounds G) :
   apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
       unfold strainDifferenceCost; positivity)
   intro t x
-  have h := L.curvature_scaled_bound 1 t x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  exact (L.curvature_scaled_bound 1 t x).trans_eq (L.scaled_first_majorant _)
 
 variable [CompleteSpace U]
 
@@ -160,6 +153,7 @@ omit [CompleteSpace U] in
 theorem source_history_derivative_scale (H : LowBounds G) :
     historyLabelDifferenceCost (G.historyData m hm R S hS H) ≤
       L.historyDifferenceScaleCost m hm R S hS H*G.ell := by
+  unfold historyLabelDifferenceCost historyDifferenceScaleCost
   apply historyDifferenceCost_le_scale
   · exact G.T_pos.le
   · exact (G.transverseData m hm R S hS).frameLower_pos.le

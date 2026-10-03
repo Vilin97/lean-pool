@@ -87,18 +87,15 @@ theorem density_eq_physical (X f U : ℝ) (hX : 0 < X) :
       _ = Real.sqrt (2 * X) ^ 2 * f := by ring
       _ = _ := by rw [hs]
   have h2 : (Real.sqrt (2 * X) * f) ^ 2 = 2 * X * f ^ 2 := by rw [mul_pow, hs]
-  ext i
-  fin_cases i
-  · rfl
-  · exact h1.symm
-  · change U * (2 * X * f) = U * Real.sqrt (2 * X) * (Real.sqrt (2 * X) * f)
-    simpa only [mul_assoc] using congrArg (fun z => U * z) h1.symm
-  · change U ^ 2 - X * f ^ 2 = U ^ 2 - (Real.sqrt (2 * X) * f) ^ 2 / 2
+  have h3 : U * Real.sqrt (2 * X) * (Real.sqrt (2 * X) * f) = U * (2 * X * f) := by
+    rw [mul_assoc, h1]
+  have h4 : U ^ 2 - (Real.sqrt (2 * X) * f) ^ 2 / 2 = U ^ 2 - X * f ^ 2 := by
     rw [h2]
     ring
-  · change f ^ 2 = (Real.sqrt (2 * X) * f) ^ 2 / (2 * X)
+  have h5 : (Real.sqrt (2 * X) * f) ^ 2 / (2 * X) = f ^ 2 := by
     rw [h2]
-    field_simp
+    exact mul_div_cancel_left₀ _ (mul_pos two_pos hX).ne'
+  rw [densityAt, h3, h1, h4, h5]
 
 variable {a m p₁ p₂ : Point → ℝ} {K B : Set Point}
 
@@ -115,7 +112,7 @@ noncomputable def rawU (r : ParametricModulation.TrueConeRealization a m p₁ p�
 theorem rawF_physical (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B)
     (f E : Field) (N X eta : ℝ) (hE : E (X, eta) = Real.sqrt (2 * X) * f (X, eta)) :
     Real.sqrt (2 * X) * rawF r f N (X, eta) = ParametricModulation.realizedE r E N X eta := by
-  dsimp [rawF, ParametricModulation.realizedE, RadialModulation.modulatedE]
+  dsimp only [rawF, ParametricModulation.realizedE, RadialModulation.modulatedE]
   rw [hE]
   ring
 
@@ -165,7 +162,8 @@ theorem densityFamily_periodic
 theorem densityFamily_zero
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B) (f E U : Field)
     (X eta theta : ℝ) : densityFamily r f E U (0, X, eta, theta) = density f U (X, eta) := by
-  simp [densityFamily, RadialModulation.angularFamily, RadialModulation.axialFamily, density]
+  simp only [densityFamily, RadialModulation.angularFamily, zero_mul, Real.exp_zero, mul_one,
+      RadialModulation.axialFamily, add_zero, density]
 
 theorem densityFamily_frequency
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B) (f E U : Field)
@@ -205,9 +203,9 @@ theorem density_uniform_eta_jets
     have hj := Finset.single_le_sum
       (f := fun j : Fin (q + 1) => ∑ i : Fin 5, c j i)
       (fun j _ => Finset.sum_nonneg (fun i _ => hc j i)) (Finset.mem_univ j)
-    dsimp [C]
-    linarith
-  refine ⟨C, by dsimp [C]; linarith, ?_⟩
+    dsimp only [C]
+    linarith only [hi, hj]
+  refine ⟨C, by dsimp only [C]; linarith only [hsum], ?_⟩
   intro N hN X hX eta heta j hj i
   exact (hbound ⟨j, Nat.lt_succ_of_le hj⟩ i N hN X hX eta heta).trans
     (div_le_div_of_nonneg_right (hle _ i) (le_trans zero_le_one hN))
@@ -331,11 +329,11 @@ noncomputable def splice (W : Window) (base actual : Field) (p : Point) : ℝ :=
 
 theorem splice_eq_before (W : Window) (base actual : Field) {p : Point}
     (hp : p.1 ≤ W.left) : splice W base actual p = base p := by
-  simp [splice, show p.1 ∉ Ioc W.left W.right from fun h => (not_lt_of_ge hp) h.1]
+  simp only [splice, show p.1 ∉ Ioc W.left W.right from fun h => (not_lt_of_ge hp) h.1, ↓reduceIte]
 
 theorem splice_eq_after (W : Window) (base actual : Field) {p : Point}
     (hp : W.right < p.1) : splice W base actual p = base p := by
-  simp [splice, show p.1 ∉ Ioc W.left W.right from fun h => (not_le_of_gt hp) h.2]
+  simp only [splice, show p.1 ∉ Ioc W.left W.right from fun h => (not_le_of_gt hp) h.2, ↓reduceIte]
 
 theorem splice_eq_of_eq (W : Window) {base actual : Field} {p : Point}
     (hp : actual p = base p) : splice W base actual p = base p := by
@@ -473,7 +471,7 @@ theorem axisHistory_localized_sub (W : Window)
     have hsum := hnom.add hi.intervalIntegrable
     apply hsum.congr_ae
     filter_upwards with s
-    linarith [localized_density_difference W r f E U N s eta i]
+    linarith only [localized_density_difference W r f E U N s eta i]
   change (∫ s in (0 : ℝ)..X, density (localizedF W r f N) (localizedU W r E U N) (s, eta) i) -
     (∫ s in (0 : ℝ)..X, density f U (s, eta) i) = _
   rw [← intervalIntegral.integral_sub hnew hnom]
@@ -543,9 +541,10 @@ theorem smooth_solver_linear_jets {g : Coeff → Coeff} {r C : ℝ}
   let V : Set Coeff := L ⁻¹' Metric.ball 0 r
   let T : Set ℝ := v ⁻¹' V
   have hLv (x : ℝ) : L (v x) = f x := by
-    simp [L, v, smul_smul, hd.ne']
+    simp only [map_smul, smul_apply, ContinuousLinearMap.id_apply, smul_smul, ne_eq, hd.ne',
+        not_false_eq_true, inv_mul_cancel₀, one_smul, L, v]
   have hLnorm : ‖L‖ ≤ delta := by
-    dsimp [L]
+    dsimp only [L]
     rw [norm_smul delta (ContinuousLinearMap.id ℝ Coeff), Real.norm_of_nonneg hd.le]
     simpa only [mul_one] using
       mul_le_mul_of_nonneg_left (ContinuousLinearMap.norm_id_le (𝕜 := ℝ) (E := Coeff)) hd.le
@@ -557,7 +556,7 @@ theorem smooth_solver_linear_jets {g : Coeff → Coeff} {r C : ℝ}
     change L (v eta) ∈ Metric.ball 0 r
     rwa [hLv]
   have hinner (k : ℕ) (hk : k ≤ q) : ‖iteratedFDeriv ℝ k v eta‖ ≤ 1 := by
-    dsimp [v]
+    dsimp only [v]
     rw [iteratedFDeriv_const_smul_apply' (hf.of_le (nat_le_infty k)).contDiffAt,
       norm_smul (delta⁻¹) (iteratedFDeriv ℝ k f eta), Real.norm_of_nonneg (inv_nonneg.mpr hd.le)]
     calc
@@ -682,11 +681,13 @@ theorem profileRows_eq_axisHistory {D : ProfileHistories.RadialDomain}
     profileRows P p = axisHistory P.f P.U p + Pi.single 4 (P.pressure0 p.2) := by
   ext i
   fin_cases i <;>
-    simp [profileRows, axisHistory, density, densityAt, ProfileHistories.Profiles.M,
-      ProfileHistories.Profiles.I, ProfileHistories.Profiles.J, ProfileHistories.Profiles.S,
-      ProfileHistories.Profiles.pressure, ProfileHistories.Profiles.H,
-      ProfileHistories.Profiles.transportDensity, ProfileHistories.Profiles.energyDensity,
-      ProfileHistories.primitive, add_comm]
+    simp only [profileRows, ProfileHistories.Profiles.M, ProfileHistories.primitive,
+        ProfileHistories.Profiles.I, ProfileHistories.Profiles.H, ProfileHistories.Profiles.J,
+        ProfileHistories.Profiles.transportDensity, ProfileHistories.Profiles.S,
+        ProfileHistories.Profiles.energyDensity, ProfileHistories.Profiles.pressure, Fin.zero_eta,
+        Fin.isValue, Matrix.cons_val_zero, Pi.add_apply, axisHistory, density, densityAt, ne_eq,
+        Fin.reduceEq, not_false_eq_true, Pi.single_eq_of_ne, add_comm, zero_add, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val, Pi.single_eq_same]
 
 theorem profileRows_sub {D D' : ProfileHistories.RadialDomain}
     (P : ProfileHistories.Profiles D) (Q : ProfileHistories.Profiles D')
@@ -703,7 +704,7 @@ theorem smooth_extension_ball {g : Coeff → Coeff} {r : ℝ} (hr : 0 < r)
   obtain ⟨χ⟩ := ParametricModulation.exists_compactCutoff
     (Metric.closedBall (0 : Coeff) (r / 2)) (Metric.ball 0 r)
     (isCompact_closedBall _ _) Metric.isOpen_ball
-    (Metric.closedBall_subset_ball (by linarith))
+    (Metric.closedBall_subset_ball (by linarith only [hr]))
   let G : Coeff → Coeff := fun z => χ.value z • g z
   refine ⟨G, contDiff_iff_contDiffAt.mpr ?_, ?_⟩
   · intro z
@@ -735,25 +736,24 @@ theorem repair_family_rate (P : FiveProfileMoments.Patch) (b : ℝ)
         JetBounds.FiniteJetBound q c S (C / N) := by
   obtain ⟨g, r, C0, hr, hC0, hg, _, hbranch⟩ := FiveProfileMoments.exists_normalized_repair P b hb
   obtain ⟨gext, hgext, hext⟩ := smooth_extension_ball hr hg
-  have hr2 : 0 < r / 2 := by positivity
+  have hr2 : 0 < r / 2 := half_pos hr
   have hvalue : ∀ z ∈ Metric.ball (0 : Coeff) (r / 2), ‖gext z‖ ≤ C0 * ‖z‖ := by
     intro z hz
     rw [hext hz]
-    exact (hbranch z ((Metric.ball_subset_ball (by linarith : r / 2 ≤ r)) hz)).2.1
+    exact (hbranch z ((Metric.ball_subset_ball (half_le_self hr.le)) hz)).2.1
   obtain ⟨J, hJ, hjet⟩ := smooth_solver_linear_jets hr2 hC0 hgext.contDiffOn hvalue q
   obtain ⟨B0, hB0, hnormal⟩ := FiveProfileMoments.compact_normalizedDebt_jets
     S hS hA hG (fun eta => (hApos eta).ne') q
   let delta : ℝ := min 1 (r / 2 / 2)
-  have hdelta : 0 < delta := lt_min zero_lt_one (by positivity)
+  have hdelta : 0 < delta := lt_min zero_lt_one (half_pos hr2)
   let N0 : ℝ := max 1 (B0 * D / delta)
-  refine ⟨N0, J * (B0 * D), le_max_left _ _, by positivity, ?_⟩
+  refine ⟨N0, J * (B0 * D), le_max_left _ _, mul_pos hJ (mul_pos hB0 hD), ?_⟩
   intro N hN
   have hN1 : 1 ≤ N := (le_max_left _ _).trans hN
   have hNpos : 0 < N := zero_lt_one.trans_le hN1
   have hsmall : B0 * D / N ≤ delta := by
     apply (div_le_iff₀ hNpos).mpr
-    have ht := (div_le_iff₀ hdelta).mp ((le_max_right _ _).trans hN)
-    nlinarith
+    exact ((div_le_iff₀ hdelta).mp ((le_max_right _ _).trans hN)).trans_eq (mul_comm _ _)
   let v : ℝ → Coeff := fun eta => FiveProfileMoments.normalizedDebt (A eta) (G eta) (d N eta)
   have hv : ContDiff ℝ ∞ v := FiveProfileMoments.normalizedDebt_contDiff hA hG (hd N)
     (fun eta => (hApos eta).ne')
@@ -767,11 +767,11 @@ theorem repair_family_rate (P : FiveProfileMoments.Patch) (b : ℝ)
     change ‖v eta - 0‖ < r / 2
     rw [sub_zero]
     exact (hvb.norm_le heta).trans_lt (hsmall.trans_lt (by
-      dsimp [delta]
-      exact (min_le_right _ _).trans_lt (by linarith)))
+      dsimp only [delta]
+      exact (min_le_right _ _).trans_lt (half_lt_self hr2)))
   refine ⟨c, V, hgext.comp hv, hV, hSV, ?_, ?_⟩
   · intro eta heta
-    have hb0 := hbranch (v eta) ((Metric.ball_subset_ball (by linarith : r / 2 ≤ r)) heta)
+    have hb0 := hbranch (v eta) ((Metric.ball_subset_ball (half_le_self hr.le)) heta)
     have hc : c eta = g (v eta) := hext heta
     constructor
     · rw [hc, FiveProfileMoments.physicalMoments_eq P b (A eta) (G eta) (hApos eta).ne']
@@ -875,8 +875,9 @@ theorem editE_contDiff (P : FiveProfileMoments.Patch) (A : ℝ → ℝ) (c : ℝ
 theorem edits_zero_outside (P : FiveProfileMoments.Patch) (A : ℝ → ℝ) (c : ℝ → Coeff)
     {p : Point} (hp : p.1 ∉ Ioo P.left P.right) :
     editU P A c p = 0 ∧ editE P A c p = 0 ∧ editF P A c p = 0 := by
-  simp [editU, editE, editF, FiveProfileMoments.u_zero_outside P (c p.2) hp,
-    FiveProfileMoments.e_zero_outside P (c p.2) hp]
+  simp only [editU, FiveProfileMoments.u_zero_outside P (c p.2) hp, mul_zero, editE,
+      FiveProfileMoments.e_zero_outside P (c p.2) hp, editF, Nat.ofNat_nonneg, Real.sqrt_mul,
+      zero_div, and_self]
 
 theorem editF_contDiff (P : FiveProfileMoments.Patch) (A : ℝ → ℝ) (c : ℝ → Coeff)
     (hA : ContDiff ℝ ∞ A) (hc : ContDiff ℝ ∞ c) : ContDiff ℝ ∞ (editF P A c) := by
@@ -897,7 +898,7 @@ theorem repair_preserves_outside (P : FiveProfileMoments.Patch) (A : ℝ → ℝ
     (f U : Field) {p : Point} (hp : p.1 ∉ Ioo P.left P.right) :
     applyRepairF P A c f p = f p ∧ applyRepairU P A c U p = U p := by
   have hz := edits_zero_outside P A c hp
-  simp [applyRepairF, applyRepairU, hz.1, hz.2.2]
+  simp only [applyRepairF, hz.2.2, add_zero, applyRepairU, hz.1, and_self]
 
 theorem repair_preserves_radial_germ (P : FiveProfileMoments.Patch) (A : ℝ → ℝ)
     (c : ℝ → Coeff) (f U : Field) (X eta : ℝ) (hX : X ∉ Ioo P.left P.right) :
@@ -910,9 +911,10 @@ theorem repair_preserves_radial_germ (P : FiveProfileMoments.Patch) (A : ℝ →
   rw [notMem_tsupport_iff_eventuallyEq] at hu he
   constructor
   · filter_upwards [he] with x hx
-    simp [applyRepairF, editF, editE, hx]
+    simp only [applyRepairF, editF, editE, hx, Pi.zero_apply, Nat.ofNat_nonneg, Real.sqrt_mul,
+        zero_div, add_zero]
   · filter_upwards [hu] with x hx
-    simp [applyRepairU, editU, hx]
+    simp only [applyRepairU, editU, hx, Pi.zero_apply, add_zero]
 
 theorem physical_mixed_edits_bound (P : FiveProfileMoments.Patch) (S : Set ℝ)
     (hS : IsCompact S) (A : ℝ → ℝ) (hA : ContDiff ℝ ∞ A) (q : ℕ) :
@@ -934,16 +936,16 @@ theorem physical_mixed_edits_bound (P : FiveProfileMoments.Patch) (S : Set ℝ)
     funext e
     congr 1
     funext x
-    simp [editU, v, FiveProfileMoments.u, FiveProfileMoments.correction,
-      Pi.smul_apply, smul_eq_mul, mul_assoc]
+    simp only [editU, FiveProfileMoments.u, FiveProfileMoments.correction, Fin.sum_univ_two,
+        Fin.isValue, Prod.smul_fst, Pi.smul_apply, smul_eq_mul, mul_assoc, v]
     ring
   have hEfun : (fun e => iteratedDeriv k (fun x => editE P A c (x, e)) X) =
       fun e => iteratedDeriv k (FiveProfileMoments.e P (v e)) X := by
     funext e
     congr 1
     funext x
-    simp [editE, v, FiveProfileMoments.e, FiveProfileMoments.correction,
-      Pi.smul_apply, smul_eq_mul, Finset.mul_sum, mul_assoc]
+    simp only [editE, FiveProfileMoments.e, FiveProfileMoments.correction, Finset.mul_sum,
+        Prod.smul_snd, Pi.smul_apply, smul_eq_mul, mul_assoc, v]
   rw [hUfun, hEfun]
   have hb := hjets k hk j v eta hv.contDiffAt X
   have hcost : J * ‖iteratedFDeriv ℝ j v eta‖ ≤ (J * (2 : ℝ) ^ q * B0) * eps := by
@@ -965,7 +967,9 @@ theorem normalized_density_change (X f U dE dU : ℝ) (hX : 0 < X) :
     density_eq_physical X f U hX]
   simp only [he]
   ext i
-  fin_cases i <;> dsimp [FiveProfileMoments.profileChangeDensity] <;> ring
+  fin_cases i <;> dsimp only [Nat.succ_eq_add_one, Nat.reduceAdd, Fin.zero_eta, Fin.isValue,
+      Pi.sub_apply, Matrix.cons_val_zero, FiveProfileMoments.profileChangeDensity, Fin.mk_one,
+      Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;> ring
 
 theorem density_repair_change (P : FiveProfileMoments.Patch) (b : ℝ) (A G : ℝ → ℝ)
     (c : ℝ → Coeff) (f U : Field) (eta : ℝ)
@@ -1004,7 +1008,7 @@ theorem axisHistory_repair_sub (P : FiveProfileMoments.Patch) (b : ℝ) (A G : �
     filter_upwards with x
     have he := congrFun (density_repair_change P b A G c f U eta hU hE x) i
     simp only [Pi.sub_apply] at he
-    linarith
+    linarith only [he]
   change (∫ x in (0 : ℝ)..X, density (applyRepairF P A c f) (applyRepairU P A c U) (x, eta) i) -
     (∫ x in (0 : ℝ)..X, density f U (x, eta) i) = _
   rw [← intervalIntegral.integral_sub hnew (hi i)]
@@ -1017,7 +1021,8 @@ theorem axisHistory_repair_sub (P : FiveProfileMoments.Patch) (b : ℝ) (A G : �
     have hp : x ∈ Ioo P.left P.right := by
       by_contra hp
       exact hx (by
-          simp [FiveProfileMoments.physicalDensity_zero_outside P b (A eta) (G eta) (c eta) hp])
+          simp only [FiveProfileMoments.physicalDensity_zero_outside P b (A eta) (G eta) (c eta) hp,
+              Pi.zero_apply])
     exact ⟨P.left_pos.trans hp.1, hp.2.le.trans hX⟩
   rw [intervalIntegral.integral_eq_integral_of_support_subset hs]
   rfl
@@ -1038,7 +1043,7 @@ theorem localized_density_integrable (W : Window)
         continuous_const)).intervalIntegrable 0 X
   apply (hnom.add hi.intervalIntegrable).congr_ae
   filter_upwards with s
-  linarith [localized_density_difference W r f E U N s eta i]
+  linarith only [localized_density_difference W r f E U N s eta i]
 
 theorem actual_histories_restored (W : Window)
     (r : ParametricModulation.TrueConeRealization a m p₁ p₂ K B) (f E U : Field)
@@ -1109,7 +1114,7 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
         (densityAt X (f e + df e) (U e + dU e) - densityAt X (f e) (U e)) i) eta|
       ≤ ((1 + 2 * R) * (1 + (2 : ℝ) ^ n * (2 * B + 1))) * eps := by
   let H : ℝ := (2 : ℝ) ^ n * (2 * B + 1)
-  have hH : 0 ≤ H := by dsimp [H]; positivity
+  have hH : 0 ≤ H := by dsimp only [H]; positivity
   have hcross : |iteratedDeriv n (fun e => U e * df e) eta| ≤ (2 : ℝ) ^ n * B * eps :=
     ShapeTransition.product_jet_bound hU hdf n eta hB heps hUb hdfb
   have hcross' : |iteratedDeriv n (fun e => f e * dU e) eta| ≤ (2 : ℝ) ^ n * B * eps :=
@@ -1120,7 +1125,7 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
   have hJ : |iteratedDeriv n (fun e => U e * df e + f e * dU e + dU e * df e) eta| ≤ H * eps := by
     have h := deriv_add_bound ((hU.mul hdf).add (hf.mul hdU)) (hdU.mul hdf) n eta _ _
       (deriv_add_bound (hU.mul hdf) (hf.mul hdU) n eta _ _ hcross hcross') hsmall
-    convert! h using 1; dsimp [H]; ring
+    convert! h using 1; dsimp only [H]; ring
   have square (g dg : ℝ → ℝ) (hg : ContDiff ℝ ∞ g) (hdg : ContDiff ℝ ∞ dg)
       (hgb : ∀ j ≤ n, |iteratedDeriv j g eta| ≤ B)
       (hdgb : ∀ j ≤ n, |iteratedDeriv j dg eta| ≤ eps) :
@@ -1132,7 +1137,7 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
     have hm := deriv_const_mul_bound (hg.mul hdg) n eta 2 _ hp
     rw [abs_of_pos (by norm_num : (0 : ℝ) < 2)] at hm
     have hh := deriv_add_bound (contDiff_const.mul (hg.mul hdg)) (hdg.mul hdg) n eta _ _ hm hs'
-    convert! hh using 1; dsimp [H]; ring
+    convert! hh using 1; dsimp only [H]; ring
   have hS := square U dU hU hdU hUb hdUb
   have hP := square f df hf hdf hfb hdfb
   have heq : (fun e => densityAt X (f e + df e) (U e + dU e) - densityAt X (f e) (U e)) =
@@ -1141,15 +1146,18 @@ theorem density_perturbation_jet_bound (f U df dU : ℝ → ℝ)
         2 * (f e * df e) + df e * df e] := by
     funext e
     ext j
-    fin_cases j <;> dsimp [densityAt] <;> ring
+    fin_cases j <;> dsimp only [densityAt, Fin.zero_eta, Fin.isValue, Pi.sub_apply,
+        Matrix.cons_val_zero, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.mk_one, Matrix.cons_val_one,
+        Fin.reduceFinMk, Matrix.cons_val] <;> ring
   change |iteratedDeriv n (fun e => ((fun e => densityAt X (f e + df e) (U e + dU e) - densityAt X
       (f e) (U e)) e) i) eta| ≤ _
   rw [heq]
-  have hK0 : 1 ≤ (1 + 2 * R) * (1 + H) := by nlinarith
-  have hK1 : 2 * R ≤ (1 + 2 * R) * (1 + H) := by nlinarith
-  have hK2 : (2 * R) * H ≤ (1 + 2 * R) * (1 + H) := by nlinarith
-  have hK3 : (1 + R) * H ≤ (1 + 2 * R) * (1 + H) := by nlinarith
-  have hK4 : H ≤ (1 + 2 * R) * (1 + H) := by nlinarith
+  have hRH := mul_nonneg hR hH
+  have hK0 : 1 ≤ (1 + 2 * R) * (1 + H) := by linarith only [hR, hH, hRH]
+  have hK1 : 2 * R ≤ (1 + 2 * R) * (1 + H) := by linarith only [hR, hH, hRH]
+  have hK2 : (2 * R) * H ≤ (1 + 2 * R) * (1 + H) := by linarith only [hR, hH, hRH]
+  have hK3 : (1 + R) * H ≤ (1 + 2 * R) * (1 + H) := by linarith only [hR, hH, hRH]
+  have hK4 : H ≤ (1 + 2 * R) * (1 + H) := by linarith only [hR, hH, hRH]
   fin_cases i
   · exact (hdUb n le_rfl).trans (by simpa only [one_mul] using mul_le_mul_of_nonneg_right hK0 heps)
   · have h := deriv_const_mul_bound hdf n eta (2 * X) eps (hdfb n le_rfl)
@@ -1191,11 +1199,11 @@ theorem compact_eta_jet_bound (F : Field) (hF : ContDiff ℝ ∞ F)
   choose B hB hb using hsingle
   refine ⟨1 + ∑ j : Fin (q + 1), B j, ?_, ?_⟩
   · have hs := Finset.sum_nonneg (s := Finset.univ) (fun j _ => hB j)
-    linarith
+    linarith only [hs]
   · intro X hX eta heta j hj
     have hsum := Finset.single_le_sum (fun j _ => hB j)
       (Finset.mem_univ (⟨j, Nat.lt_succ_of_le hj⟩ : Fin (q + 1)))
-    exact (hb ⟨j, Nat.lt_succ_of_le hj⟩ X hX eta heta).trans (by linarith)
+    exact (hb ⟨j, Nat.lt_succ_of_le hj⟩ X hX eta heta).trans (by linarith only [hj, hsum])
 
 theorem normalized_edits_eta_bound (P : FiveProfileMoments.Patch) (S : Set ℝ)
     (hS : IsCompact S) (A : ℝ → ℝ) (hA : ContDiff ℝ ∞ A) (q : ℕ) :
@@ -1211,17 +1219,17 @@ theorem normalized_edits_eta_bound (P : FiveProfileMoments.Patch) (S : Set ℝ)
   have h := hj c hc eps heps hcb eta heta 0 (Nat.zero_le q) j hjq X
   simp only [iteratedDeriv_zero, norm_iteratedFDeriv_eq_norm_iteratedDeriv, Real.norm_eq_abs] at h
   have hcost : J * eps ≤ ((1 + t) * J) * eps :=
-    mul_le_mul_of_nonneg_right (by nlinarith : J ≤ (1 + t) * J) heps
+    mul_le_mul_of_nonneg_right (by nlinarith only [hJ, ht] : J ≤ (1 + t) * J) heps
   refine ⟨?_, h.1.trans hcost⟩
   by_cases hX : X ∈ Ioo P.left P.right
-  · have hXs : 0 < Real.sqrt (2 * X) := Real.sqrt_pos.2 (by linarith [P.left_pos, hX.1])
+  · have hXs : 0 < Real.sqrt (2 * X) := Real.sqrt_pos.2 (by linarith only [hX, P.left_pos, hX.1])
     have hts : (Real.sqrt (2 * X))⁻¹ ≤ t := by
-      apply inv_anti₀ (Real.sqrt_pos.2 (by linarith [P.left_pos]))
-      exact Real.sqrt_le_sqrt (by linarith [hX.1])
+      apply inv_anti₀ (Real.sqrt_pos.2 (by linarith only [P.left_pos]))
+      exact Real.sqrt_le_sqrt (by linarith only [hX, hX.1])
     have he : (fun e => editF P A c (X, e)) =
         fun e => (Real.sqrt (2 * X))⁻¹ * editE P A c (X, e) := by
       funext e
-      simp [editF, div_eq_mul_inv, mul_comm]
+      simp only [editF, mul_comm, Nat.ofNat_nonneg, Real.sqrt_mul', div_eq_mul_inv, mul_inv_rev]
     rw [he]
     have hec : ContDiff ℝ ∞ (fun e => editE P A c (X, e)) :=
       (editE_contDiff P A c hA hc).comp (contDiff_const.prodMk contDiff_id)
@@ -1230,7 +1238,7 @@ theorem normalized_edits_eta_bound (P : FiveProfileMoments.Patch) (S : Set ℝ)
     exact hb.trans (by
       calc
         _ ≤ t * (J * eps) := mul_le_mul_of_nonneg_right hts (mul_nonneg hJ.le heps)
-        _ ≤ ((1 + t) * J) * eps := by nlinarith)
+        _ ≤ ((1 + t) * J) * eps := by nlinarith only [hJ, heps])
   · have he : (fun e => editF P A c (X, e)) = fun _ => (0 : ℝ) := by
       funext e
       exact (edits_zero_outside P A c hX).2.2
@@ -1291,12 +1299,12 @@ theorem repairHistory_scalar_jets (P : FiveProfileMoments.Patch) (S : Set ℝ)
   let K0 : ℝ := (1 + 2 * P.right) * (1 + (2 : ℝ) ^ q * (2 * B0 + 1)) * J
   have hR : 0 < P.right := P.left_pos.trans P.ordered
   have hB0 : 0 < B0 := add_pos hBf hBU
-  have hK0 : 0 < K0 := by dsimp [K0]; positivity
+  have hK0 : 0 < K0 := by dsimp only [K0]; positivity
   refine ⟨1 / J, K0 * (P.right - P.left), by positivity, mul_pos hK0 (sub_pos.mpr P.ordered), ?_⟩
   intro c hc eps heps hepsJ hcb X eta heta j hjq i
   have hsmall : J * eps ≤ 1 := by
     have h := (le_div_iff₀ hJ).mp hepsJ
-    nlinarith
+    nlinarith only [h]
   have hdensity : ∀ s ∈ Ioc P.left ((patchWindow P).clamp X),
       |iteratedDeriv j (fun e => repairDensity P A c f U (s, e) i) eta| ≤ K0 * eps := by
     intro s hs
@@ -1317,11 +1325,13 @@ theorem repairHistory_scalar_jets (P : FiveProfileMoments.Patch) (S : Set ℝ)
       (fun k hk => (hj c hc eps heps hcb eta heta k (hk.trans hjq) s).2) i
     apply hb.trans
     change ((1 + 2 * P.right) * (1 + 2 ^ j * (2 * B0 + 1))) * (J * eps) ≤ _
-    dsimp [K0]
+    dsimp only [K0]
     calc
-      _ ≤ ((1 + 2 * P.right) * (1 + 2 ^ q * (2 * B0 + 1))) * (J * eps) := by
-        gcongr
-        norm_num
+      _ ≤ ((1 + 2 * P.right) * (1 + 2 ^ q * (2 * B0 + 1))) * (J * eps) :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left (add_le_add le_rfl
+          (mul_le_mul_of_nonneg_right (pow_le_pow_right₀ one_le_two hjq)
+            (add_pos (mul_pos two_pos hB0) one_pos).le))
+          (add_pos one_pos (mul_pos two_pos hR)).le) (mul_nonneg hJ.le heps)
       _ = _ := by ring
   have hb := ShapeTransition.integral_jet_bound_on ((patchWindow P).clamp_mem X).1
     (fun _ _ _ => (repairDensity_contDiff P A c f U hA hc hf hU i).contDiffAt) j eta hdensity
@@ -1392,7 +1402,7 @@ theorem actual_repair_history_identity (W : Window)
     have he := hdelta x
     dsimp only [repairDensity, Pi.sub_apply] at he
     dsimp only [repairDensity, Pi.sub_apply]
-    linarith
+    linarith only [he]
   change (∫ x in (0 : ℝ)..X, density (applyRepairF P A c (localizedF W r f N))
       (applyRepairU P A c (localizedU W r E U N)) (x, eta) i) -
     (∫ x in (0 : ℝ)..X, density (localizedF W r f N) (localizedU W r E U N) (x, eta) i) = _
@@ -1406,7 +1416,8 @@ theorem actual_repair_history_identity (W : Window)
     intro x hx
     by_cases hout : x ∈ Ioo P.left P.right
     · exact ⟨hout.1, hout.2.le⟩
-    · exact False.elim (hx (by simp [repairDensity_zero_outside P A c f U (p := (x, eta)) hout]))
+    · exact False.elim (hx (by simp only [repairDensity_zero_outside P A c f U (p := (x, eta)) hout,
+        Pi.zero_apply]))
   have hiw := integral_indicator_window (patchWindow P) (fun x => repairDensity P A c f U (x, eta)
       i) hX
   change (∫ s in (0 : ℝ)..X, (Ioc P.left P.right).indicator

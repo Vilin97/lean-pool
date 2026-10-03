@@ -89,26 +89,19 @@ noncomputable def freeE (F : Profile) (z : Raw) : ℝ :=
     (Real.exp (z.2.1 - OutgoingDilation.patchClock F))
 
 theorem freeE_contDiff (F : Profile) : ContDiff ℝ ∞ (freeE F) := by
-  have he := F.logE_contDiff.comp (contDiff_snd : ContDiff ℝ ∞ (fun z : Raw => z.2))
-  have hs : ContDiff ℝ ∞ (fun z : Raw => OutgoingSchedule.sigma
-      ((z.2.1 - HeatTailEdit.switchStart F.data) / (3 / 10))) :=
-    OutgoingSchedule.sigma_contDiff.comp ((contDiff_snd.fst.sub contDiff_const).div_const _)
-  have hz : ContDiff ℝ ∞ (fun z : Raw =>
-      2 * (1 - z.2.2 ^ 2) * z.1.1 * Real.exp (-z.2.1)) :=
-    ((contDiff_const.mul (contDiff_const.sub (contDiff_snd.snd.pow 2))).mul
-      contDiff_fst.fst).mul contDiff_snd.fst.neg.exp
-  have hh := (HeatProfileExtension.extension_contDiff
-    (show 1 < 1 + F.data.h by linarith [F.data.h_pos])).comp hz
+  have he := F.logE_contDiff
+  have hs := OutgoingSchedule.sigma_contDiff
+  have hh := HeatProfileExtension.extension_contDiff (lt_add_of_pos_right 1 F.data.h_pos)
+  have ha := OutgoingDilation.shapedPatchAmplitude_contDiff F
   have hb : ContDiff ℝ ∞ (fun z : Raw => TerminalCompensation.correction
       OutgoingDilation.compensationPatch z.1.2
       (Real.exp (z.2.1 - OutgoingDilation.patchClock F))) := by
     apply ContDiff.sum
     intro j _
-    exact ((contDiff_apply ℝ ℝ j).comp contDiff_fst.snd).mul
-      ((TerminalCompensation.bump_contDiff OutgoingDilation.compensationPatch j).comp
-        (contDiff_snd.fst.sub contDiff_const).exp)
-  exact (he.mul (contDiff_const.add (hs.mul (hh.sub contDiff_const)))).add
-    (((OutgoingDilation.shapedPatchAmplitude_contDiff F).comp contDiff_snd.snd).mul hb)
+    have hj := TerminalCompensation.bump_contDiff OutgoingDilation.compensationPatch j
+    fun_prop
+  unfold freeE
+  fun_prop
 
 @[simp] theorem freeE_zero (F : Profile) (p : Point) : freeE F ((0, 0), p) = F.logE p := by
   simp [freeE, HeatProfileExtension.extension_zero
@@ -216,9 +209,10 @@ theorem parameterJet_contDiff {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f) :
 theorem radialJet_hasDerivAt {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f)
     (v : Control) (p : Point) :
     HasDerivAt (fun y => value f (v, (y, p.2))) (radialJet f (v, p)) p.1 := by
+  have h2 : HasDerivAt (fun y => (y, p.2) : ℝ → Point) (1, 0) p.1 :=
+    (hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2)
   have hg : HasDerivAt (fun y => ((v.1, v.2.1), (y, p.2)) : ℝ → Raw)
-      ((0, 0), (1, 0)) p.1 :=
-    (hasDerivAt_const _ _).prodMk ((hasDerivAt_id _).prodMk (hasDerivAt_const _ _))
+      ((0, 0), (1, 0)) p.1 := (hasDerivAt_const p.1 (v.1, v.2.1)).prodMk h2
   exact ((hf.differentiable (by simp) _).hasFDerivAt.comp_hasDerivAt _ hg)
 
 theorem parameterJet_hasDerivWithinAt {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f)
@@ -226,10 +220,12 @@ theorem parameterJet_hasDerivWithinAt {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f
     (hc : HasDerivWithinAt c dc s eta) (delta y : ℝ) :
     HasDerivWithinAt (fun t => f ((delta, c t), (y, t)))
       (parameterJet f ((delta, (c eta, dc)), (y, eta))) s eta := by
+  have h1 : HasDerivWithinAt (fun t => (delta, c t) : ℝ → ℝ × Coeff) (0, dc) s eta :=
+    (hasDerivWithinAt_const eta s delta).prodMk hc
+  have h2 : HasDerivWithinAt (fun t => (y, t) : ℝ → Point) (0, 1) s eta :=
+    (hasDerivWithinAt_const eta s y).prodMk (hasDerivWithinAt_id eta s)
   have hg : HasDerivWithinAt (fun t => ((delta, c t), (y, t)) : ℝ → Raw)
-      ((0, dc), (0, 1)) s eta :=
-    ((hasDerivWithinAt_const _ _ _).prodMk hc).prodMk
-      ((hasDerivWithinAt_const _ _ _).prodMk (hasDerivWithinAt_id _ _))
+      ((0, dc), (0, 1)) s eta := h1.prodMk h2
   exact ((hf.differentiable (by simp) _).hasFDerivAt.comp_hasDerivWithinAt _ hg)
 
 theorem radialJet_zero {f : Raw → ℝ} {g : Point → ℝ}
@@ -693,8 +689,9 @@ theorem observations_estimate (F : Profile) {anchor left : ℝ}
     ∃ r L : ℝ, 0 < r ∧ 0 ≤ L ∧ ∀ v : Control, ‖v‖ ≤ r →
       ∀ p ∈ OutgoingCone.trueWindow F.data, (v, p) ∈ regular F ∧
         ‖observations F (v, p) - observations F (0, p)‖ ≤ L * ‖v‖ := by
-  apply compact_control_estimate (isCompact_Icc.prod isCompact_Icc)
-    ((convex_Icc _ _).prod (convex_Icc _ _)) (regular_isOpen F)
+  have hs : IsCompact (OutgoingCone.trueWindow F.data) := isCompact_Icc.prod isCompact_Icc
+  have hc : Convex ℝ (OutgoingCone.trueWindow F.data) := (convex_Icc _ _).prod (convex_Icc _ _)
+  apply compact_control_estimate hs hc (regular_isOpen F)
   · rintro ⟨v, p⟩ ⟨hv, hp⟩
     have hv' : v = 0 := hv
     subst v
@@ -1006,15 +1003,25 @@ theorem compensated_source_margins (F : Profile) {anchor left : ℝ}
       |actualObservations F XR w.coefficients p i - observations F (0, p) i| ≤ err :=
     fun i => (he i).trans hsmall
   have hq : |Qs F XR w.coefficients p - OutgoingHistories.Qs F.reset F.amp p| ≤ err := by
-    simpa [actualObservations, observations] using herrs 9
+    simpa only [actualObservations, Fin.isValue, Matrix.cons_val, observations,
+      familyQ_zero, familyN_zero, familyA_zero, familyB_zero, familyR_zero, familyC_zero,
+      familyJ_zero, familyV_zero, familyGap_zero] using herrs 9
   have ha' : |radialA F XR w.coefficients p - OutgoingEntranceCone.coneA F.reset p| ≤ err := by
-    simpa [actualObservations, observations] using herrs 11
+    simpa only [actualObservations, Fin.isValue, Matrix.cons_val, observations,
+      familyQ_zero, familyN_zero, familyA_zero, familyB_zero, familyR_zero, familyC_zero,
+      familyJ_zero, familyV_zero, familyGap_zero] using herrs 11
   have hv : |normalV F XR w.coefficients p - OutgoingCone.normalV F.reset F.amp p| ≤ err := by
-    simpa [actualObservations, observations] using herrs 16
+    simpa only [actualObservations, Fin.isValue, Matrix.cons_val, observations,
+      familyQ_zero, familyN_zero, familyA_zero, familyB_zero, familyR_zero, familyC_zero,
+      familyJ_zero, familyV_zero, familyGap_zero] using herrs 16
   have hc' : |sourceC F XR w.coefficients p - OutgoingCone.sourceC F.reset F.amp p| ≤ err := by
-    simpa [actualObservations, observations] using herrs 14
+    simpa only [actualObservations, Fin.isValue, Matrix.cons_val, observations,
+      familyQ_zero, familyN_zero, familyA_zero, familyB_zero, familyR_zero, familyC_zero,
+      familyJ_zero, familyV_zero, familyGap_zero] using herrs 14
   have hg : |leadingGap F XR w.coefficients p - OutgoingCone.leadingGap F.reset F.amp p| ≤ err := by
-    simpa [actualObservations, observations] using herrs 17
+    simpa only [actualObservations, Fin.isValue, Matrix.cons_val, observations,
+      familyQ_zero, familyN_zero, familyA_zero, familyB_zero, familyR_zero, familyC_zero,
+      familyJ_zero, familyV_zero, familyGap_zero] using herrs 17
   have hm' := hm p hp
   have herreps : err ≤ eps / 2 := min_le_left _ _
   have herrone : err ≤ 1 := min_le_right _ _
@@ -1022,16 +1029,20 @@ theorem compensated_source_margins (F : Profile) {anchor left : ℝ}
     have hi := norm_le_pi_norm (observations F (0, p)) i
     exact hi.trans (hM p hp)
   have hCM : |OutgoingCone.sourceC F.reset F.amp p| ≤ M := by
-    simpa [observations] using habs 14
+    simpa only [observations, Fin.isValue, Matrix.cons_val,
+      familyQ_zero, familyN_zero, familyA_zero, familyB_zero, familyR_zero, familyC_zero,
+      familyJ_zero, familyV_zero, familyGap_zero] using habs 14
   have hVM : |OutgoingCone.normalV F.reset F.amp p| ≤ M := by
-    simpa [observations] using habs 16
+    simpa only [observations, Fin.isValue, Matrix.cons_val,
+      familyQ_zero, familyN_zero, familyA_zero, familyB_zero, familyR_zero, familyC_zero,
+      familyJ_zero, familyV_zero, familyGap_zero] using habs 16
   dsimp only [OutgoingProfile.Profile.amp] at hq hv hc' hg
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · linarith [(abs_le.mp hq).1, hm'.1]
-  · linarith [(abs_le.mp ha').1, hm'.2.1]
-  · linarith [(abs_le.mp hv).1, hm'.2.2.1]
-  · linarith [(abs_le.mp hc').1, hm'.2.2.2.1]
-  · linarith [(abs_le.mp hg).1, hm'.2.2.2.2]
+  · linarith only [(abs_le.mp hq).1, hm'.1, herreps]
+  · linarith only [(abs_le.mp ha').1, hm'.2.1, herreps]
+  · linarith only [(abs_le.mp hv).1, hm'.2.2.1, herreps]
+  · linarith only [(abs_le.mp hc').1, hm'.2.2.2.1, herreps]
+  · linarith only [(abs_le.mp hg).1, hm'.2.2.2.2, herreps]
   · calc
       |sourceC F XR w.coefficients p| ≤
           |sourceC F XR w.coefficients p - OutgoingCone.sourceC F.reset F.amp p| +
@@ -1040,7 +1051,7 @@ theorem compensated_source_margins (F : Profile) {anchor left : ℝ}
               (sourceC F XR w.coefficients p - OutgoingCone.sourceC F.reset F.amp p)
               (OutgoingCone.sourceC F.reset F.amp p)
       _ ≤ err + M := add_le_add hc' hCM
-      _ ≤ T := by dsimp [T]; linarith [le_max_right (1 : ℝ) (M + 1)]
+      _ ≤ T := by dsimp [T]; linarith only [le_max_right (1 : ℝ) (M + 1), herrone]
   · calc
       |normalV F XR w.coefficients p| ≤
           |normalV F XR w.coefficients p - OutgoingCone.normalV F.reset F.amp p| +
@@ -1049,7 +1060,7 @@ theorem compensated_source_margins (F : Profile) {anchor left : ℝ}
               (normalV F XR w.coefficients p - OutgoingCone.normalV F.reset F.amp p)
               (OutgoingCone.normalV F.reset F.amp p)
       _ ≤ err + M := add_le_add hv hVM
-      _ ≤ T := by dsimp [T]; linarith [le_max_right (1 : ℝ) (M + 1)]
+      _ ≤ T := by dsimp [T]; linarith only [le_max_right (1 : ℝ) (M + 1), herrone]
 
 /-- Stress scale, given by `XR * Real.exp p.1 * Qs F XR c p / CoordinateAlgebra.L F.data.h p.2`. -/
 noncomputable def stressScale (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (p : Point) : ℝ :=
@@ -1094,7 +1105,7 @@ theorem preserves_true_cone (F : Profile) {anchor left : ℝ}
     (OutgoingEntranceCone.parameter_square_le_one (abs_le.mpr hp.2))
   have hL1 : CoordinateAlgebra.L F.data.h p.2 ≤ 1 := by
     unfold CoordinateAlgebra.L
-    nlinarith [mul_nonneg F.data.h_pos.le (sq_nonneg p.2)]
+    linarith only [mul_nonneg F.data.h_pos.le (sq_nonneg p.2)]
   have hscale : 0 < stressScale F XR w.coefficients p :=
     div_pos (mul_pos (mul_pos w.radius_pos (Real.exp_pos _)) hqpos) hL
   have hlow : XR * k * m ≤ stressScale F XR w.coefficients p := by
@@ -1119,11 +1130,11 @@ theorem preserves_true_cone (F : Profile) {anchor left : ℝ}
     hB.trans (mul_le_mul_of_nonneg_left hc hscale.le)
   have hP : 2 < normalP F XR w.coefficients p := by
     dsimp [B] at hpc
-    nlinarith [sq_nonneg T]
+    linarith only [hpc, hT, sq_nonneg T]
   have hvc : normalV F XR w.coefficients p < normalP F XR w.coefficients p := by
     have hvT' := (le_abs_self _).trans hvT
     dsimp [B] at hpc
-    nlinarith [sq_nonneg T]
+    linarith only [hvT', hpc, sq_nonneg T]
   have hquad : 4 * sourceC F XR w.coefficients p * normalV F XR w.coefficients p <
       stressScale F XR w.coefficients p * leadingGap F XR w.coefficients p := by
     have hpT : sourceC F XR w.coefficients p * normalV F XR w.coefficients p ≤ T ^ 2 := by
@@ -1132,7 +1143,7 @@ theorem preserves_true_cone (F : Profile) {anchor left : ℝ}
       simpa only [pow_two] using hh
     have hgap := hB.trans (mul_le_mul_of_nonneg_left hg hscale.le)
     dsimp [B] at hgap
-    nlinarith
+    linarith only [hpT, hgap, hT]
   refine ⟨hqpos, harpos, hvpos, hP, ?_⟩
   exact ConeAlgebra.finite_amplitude_cone hscale hP hvc hquad
 

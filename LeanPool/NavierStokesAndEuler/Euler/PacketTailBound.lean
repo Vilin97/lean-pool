@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.Normed.Operator.Basic
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Bounds for the surviving grades of the actual finite packet residual. -/
 

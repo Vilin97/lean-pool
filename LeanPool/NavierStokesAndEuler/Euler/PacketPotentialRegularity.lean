@@ -31,7 +31,8 @@ def curlLinear : (Space →L[ℝ] Space) →ₗ[ℝ] Space where
   map_smul' := curlMatrix_smul
 
 /-- Curl operator, given by `curlLinear.toContinuousLinearMap`. -/
-def curlOperator : (Space →L[ℝ] Space) →L[ℝ] Space := curlLinear.toContinuousLinearMap
+def curlOperator : (Space →L[ℝ] Space) →L[ℝ] Space :=
+  LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := Space →L[ℝ] Space) (F' := Space) curlLinear
 
 @[simp] theorem curlOperator_apply (A : Space →L[ℝ] Space) : curlOperator A = curlMatrix A := rfl
 
@@ -59,16 +60,21 @@ theorem coveringSlowCurl_contDiff (P : ℝ) (hP : 0 ≤ P)
 theorem smooth_coveringPotential_pair_piola (P κ : ℝ) (hP : 0 ≤ P)
     (m₀ : Space) (Ξ : Space → Space) (A : LiftTangent → Space)
     (hΞ : ContDiff ℝ 2 Ξ) (F : Space → Space ≃L[ℝ] Space)
-    (hNormal : ContDiff ℝ ∞ (fun y => (F y).symm.toContinuousLinearMap.adjoint m₀))
-    (hm : ∀ y, (F y).symm.toContinuousLinearMap.adjoint m₀ ≠ 0)
+    (hNormal : ContDiff ℝ ∞ (fun y => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space)
+      (F := Space) (F y).symm.toContinuousLinearMap m₀))
+    (hm : ∀ y, ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F y).symm.toContinuousLinearMap m₀ ≠ 0)
     (hA : ContDiff ℝ ∞ A) (z : LiftTangent)
     (hF : fderiv ℝ Ξ z.1 = (F z.1).toContinuousLinearMap)
     (hdet : (operatorMatrix (F z.1).toContinuousLinearMap).det = 1)
-    (htan : ⟪(F z.1).symm.toContinuousLinearMap.adjoint m₀, A z⟫_ℝ = 0) :
+    (htan : ⟪ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F z.1).symm.toContinuousLinearMap m₀, A z⟫_ℝ = 0) :
     (F z.1).symm (A z+κ • coveringSlowCurl (F z.1).symm.toContinuousLinearMap
-      (coveringPotential P (fun y => (F y).symm.toContinuousLinearMap.adjoint m₀) A) z) =
+      (coveringPotential P (fun y => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space)
+        (F := Space) (F y).symm.toContinuousLinearMap m₀) A) z) =
       coveringCurl κ m₀ (coveringPullbackCovector Ξ
-        (coveringPotential P (fun y => (F y).symm.toContinuousLinearMap.adjoint m₀) A)) z := by
+        (coveringPotential P (fun y => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space)
+          (F := Space) (F y).symm.toContinuousLinearMap m₀) A)) z := by
   exact coveringPotential_pair_piola P κ m₀ Ξ A hΞ F z hF hdet (hm z.1) htan
     (hA.continuous.comp (continuous_const.prodMk continuous_id))
     ((coveringPotential_contDiff P hP _ A hNormal hm hA).differentiable (by simp) z)

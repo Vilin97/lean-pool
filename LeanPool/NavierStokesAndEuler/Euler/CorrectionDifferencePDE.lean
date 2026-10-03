@@ -125,7 +125,7 @@ theorem differenceRhs_eq_sub {q : ℕ} {T : Type*} [TopologicalSpace T]
   have hp := (D.metric.coefficient t).operator.map_sub
     (value period (D.pressure period hq t u)) (value period (D.pressure period hq t v))
   unfold differenceRhs
-  rw [hlap,hp]
+  simp only [hlap, hp]
   exact vector_difference_identity ν μ _ _ _ _ _ _ _ _ hraw
 
 /-- Subtracting two actual mild correction equations gives the literal transport-pressure-heat

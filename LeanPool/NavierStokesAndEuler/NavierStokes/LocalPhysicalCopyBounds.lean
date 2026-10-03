@@ -636,14 +636,16 @@ theorem commonChart_amplitude_bound {s : StripData D} {α σ : ℝ}
         A * ChartScales.Q I.1.val.1 ^ (h * α + σ) * ChartScales.S I.1.val.1 ^ p := by
   obtain ⟨A, hA, p, hb⟩ := hs.chart_bound m
   obtain ⟨B, hB, q, hq⟩ := hchart.positive_jets m
-  refine ⟨(m.factorial : ℝ) * A * B ^ m, by positivity, p + q * m, ?_⟩
+  refine ⟨(m.factorial : ℝ) * A * B ^ m,
+    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hA) (pow_nonneg (zero_le_one.trans hB) _),
+    p + q * m, ?_⟩
   intro k I x hx j hj
   have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by
       have := I.1.property; omega)
   have hQ := ChartScales.Q_pos I.1.val.1
   have hS0 : 0 ≤ ChartScales.S I.1.val.1 := zero_le_one.trans hS
-  have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p := by
-      positivity
+  have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p :=
+    mul_nonneg (mul_nonneg hA (Real.rpow_nonneg hQ.le _)) (pow_nonneg hS0 _)
   have hB0 : 1 ≤ B * ChartScales.S I.1.val.1 ^ q :=
     one_le_mul_of_one_le_of_one_le hB (one_le_pow₀ hS)
   have hjb := composition_jet_bound_on (hchart.open_domain k I) s.isOpen_domain
@@ -663,9 +665,7 @@ theorem commonChart_amplitude_bound {s : StripData D} {α σ : ℝ}
   change ‖iteratedFDeriv ℝ j (fun x => (ChartScales.Q I.1.val.1 ^ σ) •
     (source (hchart.sourceIndex k I) I.1.val.1 ∘ hchart.map k I) x) x‖ ≤ _
   rw [iteratedFDeriv_const_smul_apply' (hcomp.of_le (nat_le_infty j)),
-    norm_smul (ChartScales.Q I.1.val.1 ^ σ)
-      (iteratedFDeriv ℝ j (source (hchart.sourceIndex k I) I.1.val.1 ∘ hchart.map k I) x),
-    Real.norm_of_nonneg (Real.rpow_pos_of_pos hQ σ).le]
+    norm_smul_of_nonneg (Real.rpow_pos_of_pos hQ σ).le]
   calc
     _ ≤ ChartScales.Q I.1.val.1 ^ σ * ((m.factorial : ℝ) *
         (A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p) *

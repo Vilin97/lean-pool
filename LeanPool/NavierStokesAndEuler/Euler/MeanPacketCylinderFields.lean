@@ -59,7 +59,7 @@ def spatialEmbeddingPath : C(Icc (0 : ℝ) T,L2) →L[ℝ] C(Icc (0 : ℝ) T,Lif
     (t : Icc (0 : ℝ) T) : spatialEmbeddingPath P T p t = embedding P (p t) := rfl
 
 theorem spatialEmbeddingPath_translation (p : C(Icc (0 : ℝ) T, L2)) (a : LiftTangent) :
-    pathTranslate P a (spatialEmbeddingPath P T p) =
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a (spatialEmbeddingPath P T p) =
       spatialEmbeddingPath P T (pathTranslation T a.1 p) := by
   apply ContinuousMap.ext
   intro t
@@ -67,7 +67,8 @@ theorem spatialEmbeddingPath_translation (p : C(Icc (0 : ℝ) T, L2)) (a : LiftT
 
 theorem spatialEmbeddingPath_orbit (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (spatialEmbeddingPath P T p)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a (spatialEmbeddingPath P T p)) := by
   have h := (spatialEmbeddingPath P T).contDiff.comp
     (hp.comp (contDiff_fst : ContDiff ℝ ∞ (Prod.fst : LiftTangent → Space)))
   simpa only [Function.comp_def,spatialEmbeddingPath_translation] using h

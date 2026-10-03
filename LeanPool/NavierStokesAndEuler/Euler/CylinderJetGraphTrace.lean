@@ -45,7 +45,8 @@ include hperiod in
 theorem jetSeries_smooth (hf : ContDiff ℝ ∞ f) (n : ℕ) (q : LiftDomain P) :
     ContDiff ℝ ∞ (localFieldLift P (fun x => jetSeries P f x n) q) :=
   descend_smooth P (iteratedFDeriv ℝ n f) (iteratedFDeriv_deck P f hperiod n)
-    (hf.iteratedFDeriv_right (m := ∞) (by simp)) q
+    (hf.iteratedFDeriv_right (m := ∞) (by simp only [WithTop.le_coe_top, ne_eq, WithTop.add_eq_top,
+        WithTop.coe_ne_top, WithTop.natCast_ne_top, or_self, not_false_eq_true])) q
 
 include hperiod in
 theorem angularJet_bound (n : ℕ) (q : LiftDomain P) :
@@ -69,6 +70,9 @@ theorem angularJet_memLp_and_bound (hf : ContDiff ℝ ∞ f) (n : ℕ)
   have hb : ∀ᵐ q ∂liftMeasure P,
       ‖fieldDerivative P (0,1) (fun x => jetSeries P f x n) q‖ ≤ ‖jetSeries P f q (n+1)‖ :=
     Eventually.of_forall (angularJet_bound P f hperiod n)
+  have : SecondCountableTopologyEither (LiftDomain P)
+      (ContinuousMultilinearMap ℝ (fun _ : Fin n => LiftTangent) W) :=
+    secondCountableTopologyEither_of_left _ _
   exact ⟨hLp.of_le hc.aestronglyMeasurable hb,
     ENNReal.toReal_mono hLp.eLpNorm_ne_top (eLpNorm_mono_ae hc.aestronglyMeasurable hb)⟩
 

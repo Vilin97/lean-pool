@@ -97,7 +97,7 @@ theorem integralLinear_bound (f : C(Icc (0 : ℝ) T, E)) :
     simpa only [realIntegral, extendPath, sub_zero, abs_of_nonneg t.property.1] using
       (intervalIntegral.norm_integral_le_of_norm_le_const
         (fun s (_ : s ∈ Ι (0 : ℝ) (t : ℝ)) => f.norm_coe_le_norm (projIcc 0 T hT s)))
-  exact hp.trans (by nlinarith [t.property.2, norm_nonneg f])
+  exact hp.trans (by nlinarith only [t.property.2, norm_nonneg f])
 
 /-- The zero-initial-time integral as a bounded linear operator. -/
 def integral : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E) :=

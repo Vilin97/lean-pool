@@ -385,14 +385,16 @@ def spaceRestriction (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V] :
 theorem space_fderiv_eq_full {f : SpaceTime → V} {z : SpaceTime}
     (hf : DifferentiableAt ℝ f z) :
     fderiv ℝ (fun y : Space => f (z.1, y)) z.2 = spaceRestriction V (fderiv ℝ f z) :=
-  (hf.hasFDerivAt.comp z.2 (hasFDerivAt_prodMk_right z.1 z.2)).fderiv
+  (hf.hasFDerivAt.comp (f := fun y : Space => (z.1, y)) z.2
+    (hasFDerivAt_prodMk_right z.1 z.2)).fderiv
 
 theorem temporalDerivative_eq_full {f : VelocityField} {z : SpaceTime}
     (hf : DifferentiableAt ℝ f z) :
     temporalDerivative f z.1 z.2 = fderiv ℝ f z (1, 0) := by
   have h : fderiv ℝ (fun t : ℝ => f (t, z.2)) z.1 =
       (fderiv ℝ f z).comp (ContinuousLinearMap.inl ℝ ℝ Space) :=
-    (hf.hasFDerivAt.comp z.1 (hasFDerivAt_prodMk_left (𝕜 := ℝ) z.1 z.2)).fderiv
+    (hf.hasFDerivAt.comp (f := fun t : ℝ => (t, z.2)) z.1
+      (hasFDerivAt_prodMk_left (𝕜 := ℝ) z.1 z.2)).fderiv
   exact congrArg (fun L : ℝ →L[ℝ] Space => L 1) h
 
 variable {l : Filter SpaceTime} {q : SpaceTime → ℝ} {U : Set SpaceTime}
@@ -400,7 +402,7 @@ variable {l : Filter SpaceTime} {q : SpaceTime → ℝ} {U : Set SpaceTime}
 theorem AllJetsFlat.space_fderiv {f : SpaceTime → V} (hf : AllJetsFlat l q f)
     (hU : IsOpen U) (hl : ∀ᶠ z in l, z ∈ U) (hs : ContDiffOn ℝ ∞ f U) :
     AllJetsFlat l q (fun z => _root_.fderiv ℝ (fun y : Space => f (z.1, y)) z.2) := by
-  have hfull : ContDiffOn ℝ ∞ (_root_.fderiv ℝ f) U := hs.fderiv_of_isOpen hU (by simp)
+  have hfull := hs.fderiv_of_isOpen (m := ∞) hU (by simp)
   apply (hf.fderiv.linear_map (spaceRestriction V) hU hl hfull).congr_on hU hl
   intro z hz
   exact (space_fderiv_eq_full ((hs.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp))).symm
@@ -408,7 +410,7 @@ theorem AllJetsFlat.space_fderiv {f : SpaceTime → V} (hf : AllJetsFlat l q f)
 theorem AllJetsGrowth.space_fderiv {f : SpaceTime → V} (hf : AllJetsGrowth l q f)
     (hU : IsOpen U) (hl : ∀ᶠ z in l, z ∈ U) (hs : ContDiffOn ℝ ∞ f U) :
     AllJetsGrowth l q (fun z => _root_.fderiv ℝ (fun y : Space => f (z.1, y)) z.2) := by
-  have hfull : ContDiffOn ℝ ∞ (_root_.fderiv ℝ f) U := hs.fderiv_of_isOpen hU (by simp)
+  have hfull := hs.fderiv_of_isOpen (m := ∞) hU (by simp)
   apply (hf.fderiv.linear_map (spaceRestriction V) hU hl hfull).congr_on hU hl
   intro z hz
   exact (space_fderiv_eq_full ((hs.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp))).symm
@@ -416,8 +418,9 @@ theorem AllJetsGrowth.space_fderiv {f : SpaceTime → V} (hf : AllJetsGrowth l q
 theorem AllJetsFlat.temporalDerivative {f : VelocityField} (hf : AllJetsFlat l q f)
     (hU : IsOpen U) (hl : ∀ᶠ z in l, z ∈ U) (hs : ContDiffOn ℝ ∞ f U) :
     AllJetsFlat l q (fun z => temporalDerivative f z.1 z.2) := by
-  have hfull : ContDiffOn ℝ ∞ (_root_.fderiv ℝ f) U := hs.fderiv_of_isOpen hU (by simp)
-  apply (hf.fderiv.linear_map (ContinuousLinearMap.apply ℝ Space (1, 0)) hU hl hfull).congr_on hU hl
+  have hfull := hs.fderiv_of_isOpen (m := ∞) hU (by simp)
+  apply (hf.fderiv.linear_map (ContinuousLinearMap.apply ℝ Space (E := SpaceTime) (1, 0))
+    hU hl hfull).congr_on hU hl
   intro z hz
   exact (temporalDerivative_eq_full
     ((hs.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp))).symm
@@ -432,7 +435,8 @@ theorem AllJetsFlat.pressureGradient {p : PressureField} (hp : AllJetsFlat l q p
   · intro i _
     exact (hD.clm_apply contDiffOn_const).smul contDiffOn_const
   · intro i _
-    have hi := hflatD.linear_map (ContinuousLinearMap.apply ℝ ℝ (coordinateVector i)) hU hl hD
+    have hi := hflatD.linear_map
+      (ContinuousLinearMap.apply ℝ ℝ (E := Space) (coordinateVector i)) hU hl hD
     exact hi.linear_map ((ContinuousLinearMap.id ℝ ℝ).smulRight (coordinateVector i))
       hU hl (hD.clm_apply contDiffOn_const)
 
@@ -447,25 +451,26 @@ theorem AllJetsFlat.spatialLaplacian {f : VelocityField} (hf : AllJetsFlat l q f
     exact (ResidualRegularity.contDiffOn_space_fderiv hU
       (hD.clm_apply contDiffOn_const) (m := ∞) (by simp)).clm_apply contDiffOn_const
   · intro i _
-    have hi := hflatD.linear_map (ContinuousLinearMap.apply ℝ Space (coordinateVector i)) hU hl hD
+    have hi := hflatD.linear_map
+      (ContinuousLinearMap.apply ℝ Space (E := Space) (coordinateVector i)) hU hl hD
     have his : ContDiffOn ℝ ∞
         (fun z => spatialDerivative f z.1 z.2 (coordinateVector i)) U :=
       hD.clm_apply contDiffOn_const
     exact (hi.space_fderiv hU hl his).linear_map
-      (ContinuousLinearMap.apply ℝ Space (coordinateVector i)) hU hl
+      (ContinuousLinearMap.apply ℝ Space (E := Space) (coordinateVector i)) hU hl
       (ResidualRegularity.contDiffOn_space_fderiv hU his (m := ∞) (by simp))
 
 theorem spatialSlice_differentiable {f : SpaceTime → V}
     (hU : IsOpen U) (hf : ContDiffOn ℝ ∞ f U) {z : SpaceTime} (hz : z ∈ U) :
     DifferentiableAt ℝ (fun y : Space => f (z.1, y)) z.2 :=
-  ((hf.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)).comp z.2
-    (hasFDerivAt_prodMk_right z.1 z.2).differentiableAt
+  ((hf.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)).comp
+    (f := fun y : Space => (z.1, y)) z.2 (hasFDerivAt_prodMk_right z.1 z.2).differentiableAt
 
 theorem timeSlice_differentiable {f : SpaceTime → V}
     (hU : IsOpen U) (hf : ContDiffOn ℝ ∞ f U) {z : SpaceTime} (hz : z ∈ U) :
     DifferentiableAt ℝ (fun t : ℝ => f (t, z.2)) z.1 :=
-  ((hf.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)).comp z.1
-    (hasFDerivAt_prodMk_left z.1 z.2).differentiableAt
+  ((hf.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)).comp
+    (f := fun t : ℝ => (t, z.2)) z.1 (hasFDerivAt_prodMk_left z.1 z.2).differentiableAt
 
 /-- Local version of the Laplacian additivity used in `ResidualCalculus`.
 Only smoothness on the open domain is needed, not on an entire spatial slice. -/
@@ -534,8 +539,7 @@ theorem allJetsFlat_residualDifference {u w : VelocityField} {p r : PressureFiel
     (hp : ContDiffOn ℝ ∞ p U) (hr : ContDiffOn ℝ ∞ r U)
     (hgrowth : AllJetsGrowth l q u) (hwflat : AllJetsFlat l q w)
     (hrflat : AllJetsFlat l q r) : AllJetsFlat l q (residualDifference u w p r) := by
-  let L : (Space →L[ℝ] Space) →L[ℝ] Space →L[ℝ] Space :=
-    (ContinuousLinearMap.apply ℝ Space).flip
+  let L := (ContinuousLinearMap.apply ℝ Space (E := Space)).flip
   have hDu := ResidualRegularity.contDiffOn_spatialDerivative hU hu
   have hDw := ResidualRegularity.contDiffOn_spatialDerivative hU hw
   have hDug := hgrowth.space_fderiv hU hl hu
@@ -549,15 +553,17 @@ theorem allJetsFlat_residualDifference {u w : VelocityField} {p r : PressureFiel
   have htime := ResidualRegularity.contDiffOn_temporalDerivative hU hw
   have hlap := ResidualRegularity.contDiffOn_spatialLaplacian hU hw
   have hgrad := ResidualRegularity.contDiffOn_pressureGradient hU hr
+  have hTL := htime.sub hlap
+  have hTLP := hTL.add hgrad
+  have hs₁ := hDu.clm_apply hw
+  have hTLP₁ := hTLP.add hs₁
+  have hs₂ := hDw.clm_apply hu
   have hlinear := ((hwflat.temporalDerivative hU hl hw).sub
     (hwflat.spatialLaplacian hU hl hw) hU hl htime hlap).add
-      (hrflat.pressureGradient hU hl hr) hU hl (htime.sub hlap) hgrad
-  have hfirst := hlinear.add hcross₁ hU hl ((htime.sub hlap).add hgrad) (hDu.clm_apply hw)
-  have hsecond := hfirst.add hcross₂ hU hl
-    (((htime.sub hlap).add hgrad).add (hDu.clm_apply hw)) (hDw.clm_apply hu)
-  have hall := hsecond.add hself hU hl
-    ((((htime.sub hlap).add hgrad).add (hDu.clm_apply hw)).add (hDw.clm_apply hu))
-    (hDw.clm_apply hw)
+      (hrflat.pressureGradient hU hl hr) hU hl hTL hgrad
+  have hfirst := hlinear.add hcross₁ hU hl hTLP hs₁
+  have hsecond := hfirst.add hcross₂ hU hl hTLP₁ hs₂
+  have hall := hsecond.add hself hU hl (hTLP₁.add hs₂) (hDw.clm_apply hw)
   apply hall.congr_on hU hl
   intro z hz
   exact (residual_add_sub_on hU hu hw hp hr hz).symm
@@ -667,19 +673,20 @@ theorem norm_iteratedFDeriv_spatialCurl_le {U : Set SpaceTime} {A : VelocityFiel
 
 /-- Time jet, given by `ContinuousLinearMap.apply ℝ Space (1, 0)`. -/
 def timeJet : (SpaceTime →L[ℝ] Space) →L[ℝ] Space :=
-  ContinuousLinearMap.apply ℝ Space (1, 0)
+  ContinuousLinearMap.apply ℝ Space (E := SpaceTime) (1, 0)
 
 /-- Laplace jet as an element of `(SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) →L[ℝ] Space`. -/
 def laplaceJet : (SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) →L[ℝ] Space :=
   ∑ i : Fin 3,
-    (ContinuousLinearMap.apply ℝ Space (0, coordinateVector i)).comp
-      (ContinuousLinearMap.apply ℝ (SpaceTime →L[ℝ] Space) (0, coordinateVector i))
+    (ContinuousLinearMap.apply ℝ Space (E := ℝ × Space) (0, coordinateVector i)).comp
+      (ContinuousLinearMap.apply ℝ (SpaceTime →L[ℝ] Space) (E := SpaceTime)
+        (0, coordinateVector i))
 
 /-- Pressure jet as an element of `(SpaceTime →L[ℝ] ℝ) →L[ℝ] Space`. -/
 def pressureJet : (SpaceTime →L[ℝ] ℝ) →L[ℝ] Space :=
   ∑ i : Fin 3,
     ((ContinuousLinearMap.id ℝ ℝ).smulRight (coordinateVector i)).comp
-      (ContinuousLinearMap.apply ℝ ℝ (0, coordinateVector i))
+      (ContinuousLinearMap.apply ℝ ℝ (E := SpaceTime) (0, coordinateVector i))
 
 @[simp] theorem laplaceJet_apply (L : SpaceTime →L[ℝ] SpaceTime →L[ℝ] Space) :
     laplaceJet L = ∑ i : Fin 3, L (0, coordinateVector i) (0, coordinateVector i) := by
@@ -694,6 +701,8 @@ theorem spatialLaplacian_eq_full {U : Set SpaceTime} {w : VelocityField}
     spatialLaplacian w z.1 z.2 = laplaceJet (fderiv ℝ (fderiv ℝ w) z) := by
   rw [laplaceJet_apply]
   unfold spatialLaplacian
+  have hDz := (((hw.fderiv_of_isOpen (m := ∞) hU (by simp)).contDiffAt
+    (hU.mem_nhds hz)).differentiableAt (by simp)).hasFDerivAt
   apply Finset.sum_congr rfl
   intro i _
   have heq : (fun y : SpaceTime => spatialDerivative w y.1 y.2 (coordinateVector i))
@@ -702,16 +711,9 @@ theorem spatialLaplacian_eq_full {U : Set SpaceTime} {w : VelocityField}
     unfold spatialDerivative
     rw [space_fderiv_eq_full ((hw.contDiffAt (hU.mem_nhds hy)).differentiableAt (by simp))]
     rfl
-  have hD : ContDiffOn ℝ ∞ (fderiv ℝ w) U := hw.fderiv_of_isOpen hU (by simp)
-  have hfirst : HasFDerivAt (fun y : SpaceTime => fderiv ℝ w y (0, coordinateVector i))
-      ((ContinuousLinearMap.apply ℝ Space (0, coordinateVector i)).comp
-        (fderiv ℝ (fderiv ℝ w) z)) z := by
-    let ev : (SpaceTime →L[ℝ] Space) →L[ℝ] Space :=
-      ContinuousLinearMap.apply ℝ Space (0, coordinateVector i)
-    change HasFDerivAt (ev ∘ fderiv ℝ w) (ev.comp (fderiv ℝ (fderiv ℝ w) z)) z
-    exact ev.hasFDerivAt.comp z
-      ((hD.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)).hasFDerivAt
-  have hslice := hfirst.comp z.2 (hasFDerivAt_prodMk_right (𝕜 := ℝ) z.1 z.2)
+  have hslice := ((ContinuousLinearMap.apply ℝ Space (E := SpaceTime)
+    (0, coordinateVector i)).hasFDerivAt.comp z hDz).comp (f := fun y : Space => (z.1, y)) z.2
+    (hasFDerivAt_prodMk_right (𝕜 := ℝ) z.1 z.2)
   rw [ResidualRegularity.space_fderiv_congr heq]
   simpa only [Function.comp_def, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.apply_apply, ContinuousLinearMap.inr_apply] using
@@ -739,14 +741,16 @@ theorem residualDifference_eq_jetExpression {U : Set SpaceTime}
     (hp : ContDiffOn ℝ ∞ p U) (hr : ContDiffOn ℝ ∞ r U) :
     EqOn (residualDifference u w p r) (residualJetExpression u w r) U := by
   intro z hz
-  unfold residualDifference residualJetExpression
-  rw [residual_add_sub_on hU hu hw hp hr hz,
-    temporalDerivative_eq_full ((hw.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)),
-    spatialLaplacian_eq_full hU hw hz, pressureGradient_eq_full hU hr hz]
-  unfold spatialDerivative
-  rw [space_fderiv_eq_full ((hu.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)),
-    space_fderiv_eq_full ((hw.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp))]
-  rfl
+  have hwz := (hw.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp)
+  have ht : temporalDerivative w z.1 z.2 = timeJet (fderiv ℝ w z) :=
+    temporalDerivative_eq_full hwz
+  have hsu : spatialDerivative u z.1 z.2 = spaceRestriction Space (fderiv ℝ u z) :=
+    space_fderiv_eq_full ((hu.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp))
+  have hsw : spatialDerivative w z.1 z.2 = spaceRestriction Space (fderiv ℝ w z) :=
+    space_fderiv_eq_full hwz
+  refine (residual_add_sub_on hU hu hw hp hr hz).trans ?_
+  unfold residualJetExpression
+  simp only [ht, spatialLaplacian_eq_full hU hw hz, pressureGradient_eq_full hU hr hz, hsu, hsw]
 
 /-- Quantitative fixed-order stability, with only pointwise hypotheses on the
 actual jets. The background needs `m+1` derivatives, the velocity perturbation
@@ -772,64 +776,44 @@ theorem residualDifference_jet_bound {U : Set SpaceTime}
   let C₁ : VelocityField := fun y => spaceRestriction Space (fderiv ℝ u y) (w y)
   let C₂ : VelocityField := fun y => spaceRestriction Space (fderiv ℝ w y) (u y)
   let C₃ : VelocityField := fun y => spaceRestriction Space (fderiv ℝ w y) (w y)
-  have hDu : ContDiffOn ℝ ∞ (fderiv ℝ u) U := hu.fderiv_of_isOpen hU (by simp)
-  have hDw : ContDiffOn ℝ ∞ (fderiv ℝ w) U := hw.fderiv_of_isOpen hU (by simp)
-  have hDDw : ContDiffOn ℝ ∞ (fderiv ℝ (fderiv ℝ w)) U :=
-    hDw.fderiv_of_isOpen hU (by simp)
-  have hDr : ContDiffOn ℝ ∞ (fderiv ℝ r) U := hr.fderiv_of_isOpen hU (by simp)
-  have hTs : ContDiffOn ℝ ∞ T U := hDw.continuousLinearMap_comp timeJet
-  have hLs : ContDiffOn ℝ ∞ L U := hDDw.continuousLinearMap_comp laplaceJet
-  have hRs : ContDiffOn ℝ ∞ R U := hDr.continuousLinearMap_comp pressureJet
+  have hDu := hu.fderiv_of_isOpen (m := ∞) hU (by simp)
+  have hDw := hw.fderiv_of_isOpen (m := ∞) hU (by simp)
+  have hDDw := hDw.fderiv_of_isOpen (m := ∞) hU (by simp)
+  have hDr := hr.fderiv_of_isOpen (m := ∞) hU (by simp)
+  have hTs : ContDiffOn ℝ ∞ T U := timeJet.contDiff.comp_contDiffOn hDw
+  have hLs : ContDiffOn ℝ ∞ L U := laplaceJet.contDiff.comp_contDiffOn hDDw
+  have hRs : ContDiffOn ℝ ∞ R U := pressureJet.contDiff.comp_contDiffOn hDr
   have hC₁s : ContDiffOn ℝ ∞ C₁ U :=
     (hDu.continuousLinearMap_comp (spaceRestriction Space)).clm_apply hw
-  have hC₂s : ContDiffOn ℝ ∞ C₂ U :=
-    (hDw.continuousLinearMap_comp (spaceRestriction Space)).clm_apply hu
-  have hC₃s : ContDiffOn ℝ ∞ C₃ U :=
-    (hDw.continuousLinearMap_comp (spaceRestriction Space)).clm_apply hw
-  have hT : ‖iteratedFDeriv ℝ m T z‖ ≤ ‖timeJet‖ * W := by
-    apply (norm_jet_linear_map timeJet hU hDw hz m).trans
-    apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-    rw [norm_iteratedFDeriv_fderiv]
-    exact hwBound (m + 1) (by omega)
-  have hL : ‖iteratedFDeriv ℝ m L z‖ ≤ ‖laplaceJet‖ * W := by
-    apply (norm_jet_linear_map laplaceJet hU hDDw hz m).trans
-    apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-    rw [norm_iteratedFDeriv_fderiv, norm_iteratedFDeriv_fderiv]
-    exact hwBound (m + 1 + 1) (by omega)
-  have hR : ‖iteratedFDeriv ℝ m R z‖ ≤ ‖pressureJet‖ * P := by
-    apply (norm_jet_linear_map pressureJet hU hDr hz m).trans
-    apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-    rw [norm_iteratedFDeriv_fderiv]
-    exact hrBound (m + 1) le_rfl
+  have hDwS := hDw.continuousLinearMap_comp (spaceRestriction Space)
+  have hC₂s : ContDiffOn ℝ ∞ C₂ U := hDwS.clm_apply hu
+  have hC₃s : ContDiffOn ℝ ∞ C₃ U := hDwS.clm_apply hw
+  have hT := (norm_jet_linear_map_fderiv timeJet hU hw hz m).trans
+    (mul_le_mul_of_nonneg_left (hwBound (m + 1) (by omega)) (norm_nonneg _))
+  have hL := (norm_jet_linear_map_fderiv laplaceJet hU hDw hz m).trans
+    (mul_le_mul_of_nonneg_left (norm_iteratedFDeriv_fderiv.trans_le
+      (hwBound (m + 1 + 1) (by omega))) (norm_nonneg _))
+  have hR := (norm_jet_linear_map_fderiv pressureJet hU hr hz m).trans
+    (mul_le_mul_of_nonneg_left (hrBound (m + 1) le_rfl) (norm_nonneg _))
   have hu₀ : ∀ k : ℕ, k ≤ m → ‖iteratedFDeriv ℝ k u z‖ ≤ A :=
     fun k hk => huBound k (by omega)
   have hw₀ : ∀ k : ℕ, k ≤ m → ‖iteratedFDeriv ℝ k w z‖ ≤ W :=
     fun k hk => hwBound k (by omega)
-  have hu₁ : ∀ k : ℕ, k ≤ m → ‖iteratedFDeriv ℝ k (fderiv ℝ u) z‖ ≤ A := by
-    intro k hk
-    rw [norm_iteratedFDeriv_fderiv]
-    exact huBound (k + 1) (by omega)
-  have hw₁ : ∀ k : ℕ, k ≤ m → ‖iteratedFDeriv ℝ k (fderiv ℝ w) z‖ ≤ W := by
-    intro k hk
-    rw [norm_iteratedFDeriv_fderiv]
-    exact hwBound (k + 1) (by omega)
-  have hC₁ : ‖iteratedFDeriv ℝ m C₁ z‖ ≤
-      ‖spaceRestriction Space‖ * (2 : ℝ) ^ m * A * W :=
-    norm_jet_bilinear_bound (spaceRestriction Space) hU hDu hw hz m hu₁ hw₀
-  have hC₂ : ‖iteratedFDeriv ℝ m C₂ z‖ ≤
-      ‖spaceRestriction Space‖ * (2 : ℝ) ^ m * W * A :=
-    norm_jet_bilinear_bound (spaceRestriction Space) hU hDw hu hz m hw₁ hu₀
-  have hC₃ : ‖iteratedFDeriv ℝ m C₃ z‖ ≤
-      ‖spaceRestriction Space‖ * (2 : ℝ) ^ m * W * W :=
-    norm_jet_bilinear_bound (spaceRestriction Space) hU hDw hw hz m hw₁ hw₀
+  have hu₁ := fun (k : ℕ) (hk : k ≤ m) =>
+    norm_iteratedFDeriv_fderiv.trans_le (huBound (k + 1) (by omega))
+  have hw₁ := fun (k : ℕ) (hk : k ≤ m) =>
+    norm_iteratedFDeriv_fderiv.trans_le (hwBound (k + 1) (by omega))
+  have hC₁ := norm_jet_bilinear_bound (spaceRestriction Space) hU hDu hw hz m hu₁ hw₀
+  have hC₂ := norm_jet_bilinear_bound (spaceRestriction Space) hU hDw hu hz m hw₁ hu₀
+  have hC₃ := norm_jet_bilinear_bound (spaceRestriction Space) hU hDw hw hz m hw₁ hw₀
+  have hTLs := hTs.sub hLs
+  have hTLRs := hTLs.add hRs
+  have hTLR₁s := hTLRs.add hC₁s
   have hTL := (norm_jet_sub_le hU hTs hLs hz m).trans (add_le_add hT hL)
-  have hTLR := (norm_jet_add_le hU (hTs.sub hLs) hRs hz m).trans (add_le_add hTL hR)
-  have h₁ := (norm_jet_add_le hU ((hTs.sub hLs).add hRs) hC₁s hz m).trans
-    (add_le_add hTLR hC₁)
-  have h₂ := (norm_jet_add_le hU (((hTs.sub hLs).add hRs).add hC₁s) hC₂s hz m).trans
-    (add_le_add h₁ hC₂)
-  have h₃ := (norm_jet_add_le hU ((((hTs.sub hLs).add hRs).add hC₁s).add hC₂s) hC₃s hz m).trans
-    (add_le_add h₂ hC₃)
+  have hTLR := (norm_jet_add_le hU hTLs hRs hz m).trans (add_le_add hTL hR)
+  have h₁ := (norm_jet_add_le hU hTLRs hC₁s hz m).trans (add_le_add hTLR hC₁)
+  have h₂ := (norm_jet_add_le hU hTLR₁s hC₂s hz m).trans (add_le_add h₁ hC₂)
+  have h₃ := (norm_jet_add_le hU (hTLR₁s.add hC₂s) hC₃s hz m).trans (add_le_add h₂ hC₃)
   rw [iteratedFDeriv_eqOn hU (residualDifference_eq_jetExpression hU hu hw hp hr) m hz]
   exact h₃
 

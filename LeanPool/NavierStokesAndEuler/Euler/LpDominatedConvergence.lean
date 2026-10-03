@@ -10,6 +10,7 @@ import Mathlib.MeasureTheory.Integral.DominatedConvergence
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-! Dominated convergence in genuine L², also for Banach-valued representatives. -/
 

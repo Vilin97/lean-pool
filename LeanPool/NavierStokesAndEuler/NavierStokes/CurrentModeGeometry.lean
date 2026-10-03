@@ -273,13 +273,13 @@ theorem chartInner_lt_chartOuter : chartInner < chartOuter := by
   have ha := PrimaryTargetBounds.leftRadius_pos ActualPrimary.nominal
   have hab := PrimaryTargetBounds.radii_ordered ActualPrimary.nominal
   dsimp [chartInner, chartOuter]
-  linarith
+  linarith only [ha, hab]
 
 theorem band_q_comparison (n : ℕ) {w : SpaceTime}
     (hw : w ∈ ValidDyadicBandCover.band ActualPrimary.h n) :
     PhysicalWaveSum.physicalQ ActualPrimary.h w / 2 ≤ ChartScales.Q n ∧
       ChartScales.Q n ≤ 2 * PhysicalWaveSum.physicalQ ActualPrimary.h w := by
-  constructor <;> linarith [hw.2.1, hw.2.2]
+  constructor <;> linarith only [hw, hw.2.1, hw.2.2]
 
 /-- The annulus is derived from the actual physical ratio, independently
 of any field support or coherent-family assumption. -/
@@ -307,9 +307,11 @@ theorem scaledRadial_mem_annulus (n : ℕ) {w : SpaceTime}
   have ha := PrimaryTargetBounds.leftRadius_pos ActualPrimary.nominal
   have hb := PrimaryTargetBounds.rightRadius_pos ActualPrimary.nominal
   have hlow : PrimaryTargetBounds.leftRadius ActualPrimary.nominal / 2 ≤
-      (PhysicalMeanJetBounds.graph ActualPrimary.h n 0 w).1 := by nlinarith [hlen.1]
+      (PhysicalMeanJetBounds.graph ActualPrimary.h n 0 w).1 := by nlinarith only [hloR, hlen, ha,
+          hlen.1]
   have hupp : (PhysicalMeanJetBounds.graph ActualPrimary.h n 0 w).1 ≤
-      2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal := by nlinarith [hlen.2]
+      2 * PrimaryTargetBounds.rightRadius ActualPrimary.nominal := by nlinarith only [hhiR, hlen,
+          hb, hlen.2]
   rw [PhysicalMeanJetBounds.graph_radius] at hlow hupp
   refine ⟨?_, ?_⟩
   · simpa only [chartOuter, Metric.mem_closedBall, dist_zero_right] using

@@ -9,6 +9,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TimeLpMultiplier
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteMetricEnergy
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-! Actual finite weighted forcing norms in the Bochner time space. -/
 
@@ -46,18 +47,22 @@ theorem familyNorm_lipschitz : LipschitzWith ‖(familyHilbertMap : (I → H) �
 
 /-- The actual scalar finite-family norm represented in Bochner L² time. -/
 def familyNormTime (T : ℝ) (u : TimeLp T (I → H)) : TimeLp T ℝ :=
-  familyNorm_lipschitz.compLp (by simp [familyNorm, familySquaredNorm]) u
+  (familyNorm_lipschitz (I := I) (H := H)).compLp (by simp only [familyNorm, familySquaredNorm,
+      Pi.zero_apply, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      Finset.sum_const_zero, Real.sqrt_zero]) u
 
 /-- This scalar Bochner element is the literal family forcing norm almost everywhere. -/
 theorem familyNormTime_ae (T : ℝ) (u : TimeLp T (I → H)) :
     (familyNormTime T u : ℝ → ℝ) =ᵐ[timeMeasure T] fun t => familyNorm (u t) :=
-  familyNorm_lipschitz.coeFn_compLp (by simp [familyNorm, familySquaredNorm]) u
+  (familyNorm_lipschitz (I := I) (H := H)).coeFn_compLp
+    (by simp only [familyNorm, familySquaredNorm, Pi.zero_apply, norm_zero, ne_eq,
+        OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, Finset.sum_const_zero, Real.sqrt_zero]) u
 
 /-- Strong L²-time forcing convergence gives strong convergence of its actual finite-family norm. -/
 theorem familyNormTime_tendsto (T : ℝ) (u : ℕ → TimeLp T (I → H)) (v : TimeLp T (I → H))
     (hu : Filter.Tendsto u Filter.atTop (𝓝 v)) :
     Filter.Tendsto (fun n => familyNormTime T (u n)) Filter.atTop (𝓝 (familyNormTime T v)) :=
-  (familyNorm_lipschitz.continuous_compLp (by
+  ((familyNorm_lipschitz (I := I) (H := H)).continuous_compLp (by
       simp [familyNorm, familySquaredNorm])).continuousAt.tendsto.comp hu
 
 /-- Weighted time integrals of actual family forcing norms pass through strong L² approximations. -/
@@ -72,7 +77,7 @@ theorem integral_familyNorm_tendsto (T : ℝ) (a : TimeLp T ℝ)
     apply integral_congr_ae
     filter_upwards [familyNormTime_ae T f] with t ht
     rw [ht]
-    simp [RCLike.inner_apply, mul_comm]
+    simp only [RCLike.inner_apply, conj_trivial, mul_comm]
   have h : Filter.Tendsto (fun n => ⟪a, familyNormTime T (u n)⟫_ℝ) Filter.atTop (𝓝 ⟪a,
       familyNormTime T v⟫_ℝ) :=
     Filter.Tendsto.inner tendsto_const_nhds (familyNormTime_tendsto T u v hu)

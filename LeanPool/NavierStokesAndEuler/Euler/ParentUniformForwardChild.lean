@@ -65,14 +65,16 @@ theorem forward_uniform_child :
           (A.transverseData m hm R S hS) rfl δ hδ ξ hs α
           (A.sourceAgreement m hm R S hS H) (truncation k) hn k hk.four Q t (I.normalized t)) x -
           (α*deriv (profile δ) (k*⟪m,I.normalized t x⟫_ℝ)) •
-            rankOne ℝ (canonicalVelocity (A.transverseData m hm R S hS) ξ t (I.normalized t x))
+            rankOne ℝ (E := Space) (F := Space)
+              (canonicalVelocity (A.transverseData m hm R S hS) ξ t (I.normalized t x))
               ((A.transverseData m hm R S hS).normal.field t (I.normalized t x))‖ ≤ k^(-(1/4 : ℝ)) ∧
         ‖fderiv ℝ (gradient (forwardInitializedExactPhysicalPressure (A.meanData H)
           (A.transverseData m hm R S hS) rfl δ hδ ξ hs α
           (A.sourceAgreement m hm R S hS H) (truncation k) hn k hk.four Q t (I.normalized t))) x -
           (EulerPacketForwardShear.pressureCoefficient (A.transverseData m hm R S hS) ξ α t
             (I.normalized t x)*deriv (profile δ) (k*⟪m,I.normalized t x⟫_ℝ)) •
-              rankOne ℝ ((A.transverseData m hm R S hS).normal.field t (I.normalized t x))
+              rankOne ℝ (E := Space) (F := Space)
+                ((A.transverseData m hm R S hS).normal.field t (I.normalized t x))
                 ((A.transverseData m hm R S hS).normal.field t (I.normalized t x))‖ ≤ k^(-(1/4 :
                     ℝ))) ∧
       (∀ (t : Icc (0 : ℝ) A.T) (x : Space),

@@ -97,9 +97,19 @@ theorem transport_bound (hT : D.T ≤ 1) :
       D.frameLower⁻¹*‖solenoidalFrame D.T D.opF₁‖)*D.T+D.frameLower⁻¹*‖solenoidalFrame D.T D.opF‖)
           ≤ _
   unfold transportEnvelope
+  have h₁ := mul_le_mul (mul_le_mul (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hc hi 2)
+      zero_le_two) (pow_le_pow_left₀ (norm_nonneg _) hQ 2) (sq_nonneg _)
+      (mul_nonneg zero_le_two (sq_nonneg _))) hQ₁ (norm_nonneg _)
+    (mul_nonneg (mul_nonneg zero_le_two (sq_nonneg _)) (sq_nonneg _))
+  have h₀ : 0 ≤ 2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁ :=
+    add_nonneg (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two (sq_nonneg _)) (sq_nonneg _)) hC₁)
+      (mul_nonneg hi0 hC₁)
   calc
     _ ≤ 1+((2*(gramInverseEnvelope C)^2*C^2*C₁+gramInverseEnvelope C*C₁)*1 +
-        gramInverseEnvelope C*C) := by gcongr
+        gramInverseEnvelope C*C) :=
+      add_le_add le_rfl (add_le_add
+        (mul_le_mul (add_le_add h₁ (mul_le_mul hi hQ₁ (norm_nonneg _) hi0)) hT hT0 h₀)
+        (mul_le_mul hi hQ (norm_nonneg _) hi0))
     _ = _ := by ring
 
 include hC hC₁ hdet hF hF₁ in

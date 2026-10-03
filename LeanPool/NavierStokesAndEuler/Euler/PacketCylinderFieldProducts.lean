@@ -103,12 +103,14 @@ def multiply (G : Field P T raw) (A : C(Icc (0 : ℝ) T, Space →ᵇ Space →L
     (coef : EulerPacketPointJets.Domain → Space →L[ℝ] Space)
     (hcoef : ∀ (t : Icc (0 : ℝ) T) x θ, coef (t, (x, θ)) = A t x) :
     Field P T (fun z => coef z (raw z)) :=
-  ofLifted (fullMultiplierMap P A G.path) (product_orbit_contDiff P A hA G.path G.orbit)
+  ofLifted (fullMultiplierMap (K := Icc (0 : ℝ) T) (E := Space) (F := Space) P A G.path)
+    (product_orbit_contDiff P A hA G.path G.orbit)
     (fun t x => A t x.1 (pointField P G.path G.orbit t x))
     (fun t => ((A t).continuous.comp continuous_fst).clm_apply
       (smoothField_continuous P _ (pointField_smooth P G.path G.orbit t)))
     (fun t => by
-      filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (A t)) (G.path t),
+      filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P)
+          (fieldLift (W := Space →L[ℝ] Space) P (A t)) (G.path t),
         pointField_ae P G.path G.orbit t] with x hM hG
       exact hM.trans (congrArg (A t x.1) hG))
     (fun t x θ => by rw [hcoef,G.raw_eq])

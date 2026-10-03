@@ -46,22 +46,23 @@ variable (P : ℝ) [Fact (0 < P)] {U : Type*}
   (J : U →L[ℝ] Space) (L : Space →L[ℝ] U)
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
   (p : C(K, CylinderL2 P U))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := U) P a p))
 
 /-- Point field, given by `L (EulerCylinderSmoothOrbit.pointField P (pathMap P J p)
 (pathMap_orbit_contDiff P J p hp) t x)`. -/
 def pointField (t : K) (x : LiftDomain P) : U :=
-  L (EulerCylinderSmoothOrbit.pointField P (pathMap P J p) (pathMap_orbit_contDiff P J p hp) t x)
+  L (EulerCylinderSmoothOrbit.pointField P (pathMap (K := K) (E := U) (F := Space) P J p)
+    (pathMap_orbit_contDiff P J p hp) t x)
 
 theorem pointField_joint_continuous :
     Continuous (fun z : K × LiftDomain P => pointField P J L p hp z.1 z.2) :=
   L.continuous.comp (EulerCylinderSmoothOrbit.pointField_joint_continuous P
-    (pathMap P J p) (pathMap_orbit_contDiff P J p hp))
+    (pathMap (K := K) (E := U) (F := Space) P J p) (pathMap_orbit_contDiff P J p hp))
 
 theorem pointField_smooth (t : K) (x : LiftDomain P) :
     ContDiff ℝ ∞ (localFieldLift P (pointField P J L p hp t) x) :=
   L.contDiff.comp (EulerCylinderSmoothOrbit.pointField_smooth P
-    (pathMap P J p) (pathMap_orbit_contDiff P J p hp) t x)
+    (pathMap (K := K) (E := U) (F := Space) P J p) (pathMap_orbit_contDiff P J p hp) t x)
 
 theorem pointField_continuous (t : K) : Continuous (pointField P J L p hp t) :=
   smoothField_continuous P _ (pointField_smooth P J L p hp t)
@@ -70,14 +71,14 @@ theorem pointField_continuous (t : K) : Continuous (pointField P J L p hp t) :=
 def pointPath (x : LiftDomain P) : C(K,U) :=
   ⟨fun t => pointField P J L p hp t x,
     L.continuous.comp ((EulerSobolevPointEvaluation.pointEvaluation P x).continuous.comp
-      (EulerCylinderSmoothOrbit.sobolevPath P 3 (pathMap P J p)
+      (EulerCylinderSmoothOrbit.sobolevPath P 3 (pathMap (K := K) (E := U) (F := Space) P J p)
         (pathMap_orbit_contDiff P J p hp)).continuous)⟩
 
 theorem pointField_ae (hL : ∀ v : U, L (J v) = v) (t : K) :
     p t =ᵐ[liftMeasure P] pointField P J L p hp t := by
   filter_upwards [map_ae P J (p t),EulerCylinderSmoothOrbit.pointField_ae P
-    (pathMap P J p) (pathMap_orbit_contDiff P J p hp) t] with x hm he
-  change (map P J (p t)) x = _ at he
+    (pathMap (K := K) (E := U) (F := Space) P J p) (pathMap_orbit_contDiff P J p hp) t] with x hm he
+  change (map (E := U) (F := Space) P J (p t)) x = _ at he
   change p t x = L _
   rw [← he,hm,hL]
 
@@ -91,8 +92,8 @@ section Time
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (p q : C(Icc (0 : ℝ) T, CylinderL2 P U))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a p))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a q))
   (hd : ∀ t : Icc (0 : ℝ) T,
     HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
 
@@ -101,13 +102,14 @@ theorem pointPath_hasDerivWithinAt (x : LiftDomain P) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (pointPath P J L p hp x))
       (pointPath P J L q hq x t) (Icc (0 : ℝ) T) t := by
   have hdJ (s : Icc (0 : ℝ) T) :
-      HasDerivWithinAt (extendPath T hT (pathMap P J p)) (pathMap P J q s)
-        (Icc (0 : ℝ) T) s :=
+      HasDerivWithinAt (extendPath T hT (pathMap (K := Icc (0 : ℝ) T) (E := U) (F := Space) P J p))
+        (pathMap (K := Icc (0 : ℝ) T) (E := U) (F := Space) P J q s) (Icc (0 : ℝ) T) s :=
     (map P J).hasFDerivAt.comp_hasDerivWithinAt (s : ℝ) (hd s)
   exact L.hasFDerivAt.comp_hasDerivWithinAt (t : ℝ)
     (EulerCylinderSmoothOrbit.pointField_hasDerivWithinAt P T hT
-      (pathMap P J p) (pathMap P J q) (pathMap_orbit_contDiff P J p hp)
-      (pathMap_orbit_contDiff P J q hq) hdJ t x)
+      (pathMap (K := Icc (0 : ℝ) T) (E := U) (F := Space) P J p)
+      (pathMap (K := Icc (0 : ℝ) T) (E := U) (F := Space) P J q)
+      (pathMap_orbit_contDiff P J p hp) (pathMap_orbit_contDiff P J q hq) hdJ t x)
 
 end Time
 end EulerCylinderRetractRepresentative
@@ -136,14 +138,16 @@ variable (P : ℝ) [Fact (0 < P)] {V : Type*}
   (T : ℝ) (hT : 0 ≤ T)
 
 theorem integral_translate (p : C(Icc (0 : ℝ) T, CylinderL2 P V)) (a : LiftTangent) :
-    integral T hT (pathTranslate P a p) = pathTranslate P a (integral T hT p) := by
+    integral (E := CylinderL2 P V) T hT (pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a p) =
+      pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a (integral (E := CylinderL2 P V) T hT p) := by
   apply ContinuousMap.ext
   intro t
-  exact (translate P a).intervalIntegral_comp_comm (extendPath T hT p)
+  exact (translate (V := V) P a).intervalIntegral_comp_comm (extendPath T hT p)
 
 theorem integral_orbit_contDiff (p : C(Icc (0 : ℝ) T, CylinderL2 P V))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (integral T hT p)) := by
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a p)) :
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a (integral (E := CylinderL2 P V) T hT p)) := by
   have hh := (integral (E := CylinderL2 P V) T hT).contDiff.comp hp
   convert hh using 1
   funext a
@@ -151,12 +155,12 @@ theorem integral_orbit_contDiff (p : C(Icc (0 : ℝ) T, CylinderL2 P V))
 
 theorem orbit_contDiff_of_derivative
     (p q : C(Icc (0 : ℝ) T, CylinderL2 P V))
-    (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+    (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a q))
     (hd : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT p) (q t) (Icc (0 : ℝ) T) t)
     (hzero : p ⟨0,le_rfl,hT⟩ = 0) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p) := by
-  have he : p = integral T hT q := by
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a p) := by
+  have he : p = integral (E := CylinderL2 P V) T hT q := by
     apply ContinuousMap.ext
     intro t
     have hh := eq_initial_add_integral T hT q (extendPath T hT p) hd t
@@ -191,11 +195,12 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U : Type*}
   (hQ : ContDiff ℝ ∞ (translateCoefficientPath D.Q))
   (hQ₁ : ContDiff ℝ ∞ (translateCoefficientPath D.Q₁))
   (hH : ContDiff ℝ ∞ (translateCoefficientPath D.H))
-  (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y))
+  (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Y))
 
 include hQ hQ₁ hH hY in
 theorem endpointDisplacement_orbit_contDiff :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (D.endpointDisplacement P Y)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a (D.endpointDisplacement P Y)) :=
   EulerCylinderPathIntegral.orbit_contDiff_of_derivative P T D.time_pos.le
     (D.endpointDisplacement P Y) (D.endpointCoordinate P Y)
     (D.endpointCoordinate_orbit_contDiff P hQ hQ₁ hH Y hY)
@@ -262,7 +267,7 @@ theorem endpointPointDisplacement_initial (x : LiftDomain P) :
     (D.endpointDisplacement_orbit_contDiff P hQ hQ₁ hH Y hY) hL
     ⟨0,le_rfl,D.time_pos.le⟩ (fun _ => (0 : U)) continuous_const
     (by rw [D.endpointDisplacement_initial P Y]; exact Lp.coeFn_zero U 2 (liftMeasure P))
-  exact congrFun he x
+  apply congrFun he x
 
 include hL in
 theorem endpointPointDisplacement_terminal (f : LiftDomain P → U) (hf : Continuous f)
@@ -272,18 +277,19 @@ theorem endpointPointDisplacement_terminal (f : LiftDomain P → U) (hf : Contin
     (D.endpointDisplacement_orbit_contDiff P hQ hQ₁ hH Y hY) hL
     ⟨T,D.time_pos.le,le_rfl⟩ f hf
     (by rw [D.endpointDisplacement_terminal P Y]; exact hrep)
-  exact congrFun he x
+  apply congrFun he x
 
 include hL in
 theorem endpointPoint_projected_equation (x : LiftDomain P) (t : Icc (0 : ℝ) T) :
     gram (D.Q t x.1) (D.endpointPointAcceleration P J L hQ hQ₁ hH Y hY x t) =
-      (D.Q t x.1).adjoint ((-2 : ℝ) • D.Q₁ t x.1
+      adjoint (𝕜 := ℝ) (E := U) (F := Space) (D.Q t x.1) ((-2 : ℝ) • D.Q₁ t x.1
         (D.endpointPointCoordinate P J L hQ hQ₁ hH Y hY x t)) := by
   have hcQ : Continuous (fun x : LiftDomain P => D.Q t x.1) :=
     (D.Q t).continuous.comp continuous_fst
   have hcQ₁ : Continuous (fun x : LiftDomain P => D.Q₁ t x.1) :=
     (D.Q₁ t).continuous.comp continuous_fst
-  have hcAdj : Continuous (fun x : LiftDomain P => (D.Q t x.1).adjoint) :=
+  have hcAdj : Continuous (fun x : LiftDomain P =>
+      adjoint (𝕜 := ℝ) (E := U) (F := Space) (D.Q t x.1)) :=
     (realAdjoint (U := U) (E := Space)).continuous.comp hcQ
   have hcv := pointField_continuous P J L (D.endpointCoordinate P Y)
     (D.endpointCoordinate_orbit_contDiff P hQ hQ₁ hH Y hY) t
@@ -291,7 +297,7 @@ theorem endpointPoint_projected_equation (x : LiftDomain P) (t : Icc (0 : ℝ) T
     (D.endpointAcceleration_orbit_contDiff P hQ hQ₁ hH Y hY) t
   have he : (fun x : LiftDomain P =>
       gram (D.Q t x.1) (D.endpointPointAcceleration P J L hQ hQ₁ hH Y hY x t)) =ᵐ[liftMeasure P]
-      (fun x => (D.Q t x.1).adjoint ((-2 : ℝ) • D.Q₁ t x.1
+      (fun x => adjoint (𝕜 := ℝ) (E := U) (F := Space) (D.Q t x.1) ((-2 : ℝ) • D.Q₁ t x.1
         (D.endpointPointCoordinate P J L hQ hQ₁ hH Y hY x t))) := by
     filter_upwards [D.endpoint_coordinate_equation_ae P Y t,
       D.endpointPointCoordinate_ae P J L hQ hQ₁ hH Y hY hL t,

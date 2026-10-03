@@ -12,6 +12,7 @@ public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.MeasureTheory.Integral.Prod
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Kinetic action bounds for flow escape
@@ -23,6 +24,10 @@ or its derivatives is used in the escape estimate.
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 
 noncomputable section
@@ -42,7 +47,7 @@ theorem norm_integral_sq_le_action
     ‖∫ t, V t ∂μ‖ ^ 2 ≤ μ.real univ * (∫ t, ‖V t‖ ^ 2 ∂μ) := by
   have hp : (2 : ℝ).HolderConjugate 2 := by norm_num [Real.holderConjugate_iff]
   have hn : MemLp (fun t => ‖V t‖) (ENNReal.ofReal (2 : ℝ)) μ := by
-    simpa using hV.norm
+    simpa only [ENNReal.ofReal_ofNat] using hV.norm
   have ho : MemLp (fun _ : α => (1 : ℝ)) (ENNReal.ofReal (2 : ℝ)) μ := memLp_const 1
   have h := integral_mul_le_Lp_mul_Lq_of_nonneg hp
     (Eventually.of_forall (fun t => norm_nonneg (V t)))
@@ -92,7 +97,7 @@ theorem curve_escape_sq_le_action
     (hV.mono hsub) (fun t ht => hderiv t ⟨ht.1, ht.2.trans_le hs.2⟩)
   have hdist : R - K ≤ ‖X s - X 0‖ := by
     have hh := norm_sub_norm_le (X s) (X 0)
-    linarith
+    linarith only [hstart, hescape, hh]
   have hsq := pow_le_pow_left₀ (sub_nonneg.mpr hKR) hdist 2
   have hi : IntegrableOn (fun t => ‖V t‖ ^ 2) (Icc 0 T) :=
     (hV.norm.pow 2).integrableOn_Icc
@@ -102,7 +107,7 @@ theorem curve_escape_sq_le_action
       (Eventually.of_forall (fun t => sq_nonneg ‖V t‖)) hi
   calc
     (R - K) ^ 2 ≤ ‖X s - X 0‖ ^ 2 := hsq
-    _ ≤ s * (∫ t in Icc 0 s, ‖V t‖ ^ 2) := by simpa using hd
+    _ ≤ s * (∫ t in Icc 0 s, ‖V t‖ ^ 2) := by simpa only [sub_zero] using hd
     _ ≤ T * (∫ t in Icc 0 T, ‖V t‖ ^ 2) :=
       mul_le_mul hs.2 hi_mono (integral_nonneg (fun t => sq_nonneg ‖V t‖)) hT
 
@@ -161,7 +166,8 @@ theorem escape_measure_le_of_action
     (haenergy : (∫ x, action x ∂μ) ≤ T * energy)
     (hescape : ∀ x ∈ S, (R - K) ^ 2 ≤ T * action x) :
     μ.real S ≤ energy * T ^ 2 / (R - K) ^ 2 := by
-  have : IsFiniteMeasure (μ.restrict S) := ⟨by simpa using hfinite.lt_top⟩
+  have : IsFiniteMeasure (μ.restrict S) := ⟨by simpa only [MeasurableSet.univ,
+      Measure.restrict_apply, univ_inter] using hfinite.lt_top⟩
   have hb : (R - K) ^ 2 * μ.real S ≤ T * (∫ x, action x ∂μ) := by
     calc
       (R - K) ^ 2 * μ.real S = ∫ _ in S, (R - K) ^ 2 ∂μ := by
@@ -176,7 +182,7 @@ theorem escape_measure_le_of_action
       _ = T * (∫ x, action x ∂μ) := integral_const_mul _ _
   apply (le_div_iff₀ (sq_pos_of_pos (sub_pos.mpr hKR))).mpr
   have hc := mul_le_mul_of_nonneg_left haenergy hT
-  nlinarith
+  nlinarith only [hb, hc]
 
 /-- A finite-energy measure-preserving flow can carry at most
 `energy * T^2 / (R-K)^2` measure of points from radius `K` to radius `R`.

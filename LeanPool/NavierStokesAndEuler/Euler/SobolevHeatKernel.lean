@@ -49,7 +49,7 @@ theorem heatOperator_joint_continuous (q : ℕ) :
   intro ε hε
   obtain ⟨δ, hδ, hd⟩ := (Metric.continuousAt_iff.mp (heatOperator_continuous period
       p.2).continuousAt)
-    (ε / 2) (by linarith)
+    (ε / 2) (by linarith only [hε])
   refine ⟨min δ (ε / 2), lt_min hδ (by linarith), ?_⟩
   intro z hz
   have ht : dist z.1 p.1 < δ := (show dist z.1 p.1 ≤ dist z p from le_max_left _ _).trans_lt
@@ -147,9 +147,9 @@ theorem heatKernel_bound (q : ℕ) (ν : ℝ) (hν : 0 < ν) (t : ℝ) (ht : 0 <
       unfold parabolicConstant
       have hm := gaussianAbsMoment_nonneg 1
       positivity
-    linarith
+    linarith only [this]
   · unfold parabolicKernelBound
-    linarith
+    linarith only
 
 /-- The scalar heat majorant is genuinely integrable at time zero. -/
 theorem parabolicKernelBound_integrable (ν T : ℝ) (hT : 0 ≤ T) :

@@ -12,6 +12,7 @@ public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
 public import Mathlib.Analysis.InnerProductSpace.Basic
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Gevrey Functions
@@ -38,15 +39,17 @@ theorem product_bound (f g : E → ℝ) (hf : ContDiff ℝ ∞ f) (hg : ContDiff
     (fun k => ‖iteratedFDeriv ℝ k f x‖) (fun k => ‖iteratedFDeriv ℝ k g x‖)
     (fun k => by simpa only [abs_norm] using hb₁ k x)
     (fun k => by simpa only [abs_norm] using hb₂ k x) n
-  exact (norm_iteratedFDeriv_mul_le hf hg x (by simp)).trans
-    ((le_abs_self _).trans (by simpa using hp))
+  exact (norm_iteratedFDeriv_mul_le hf hg x (by simp only [WithTop.le_coe_top, ne_eq,
+      WithTop.natCast_ne_top, not_false_eq_true])).trans
+    ((le_abs_self _).trans (by simpa only [add_zero] using hp))
 
 theorem linear_composition_bound (f : ℝ → ℝ) (hf : ContDiff ℝ ∞ f)
     (L : E →L[ℝ] ℝ) (R A C : ℝ) (hR : 0 ≤ R) (hA : 0 ≤ A) (_hC : 0 ≤ C)
     (hL : ‖L‖ ≤ C) (hb : ∀ n x, |iteratedDeriv n f x| ≤ A * majorant R 0 n)
     (n : ℕ) (x : E) :
     ‖iteratedFDeriv ℝ n (f ∘ L) x‖ ≤ A * majorant (R * C) 0 n := by
-  rw [L.iteratedFDeriv_comp_right hf x (by simp)]
+  rw [L.iteratedFDeriv_comp_right hf x (by simp only [WithTop.le_coe_top, ne_eq,
+      WithTop.natCast_ne_top, not_false_eq_true])]
   have hnorm := (iteratedFDeriv ℝ n f (L x)).norm_compContinuousLinearMap_le (fun _ => L)
   simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin,
     norm_iteratedFDeriv_eq_norm_iteratedDeriv, Real.norm_eq_abs] at hnorm
@@ -55,7 +58,7 @@ theorem linear_composition_bound (f : ℝ → ℝ) (hf : ContDiff ℝ ∞ f)
     _ ≤ (A * majorant R 0 n) * C ^ n :=
       mul_le_mul (hb n (L x)) (pow_le_pow_left₀ (norm_nonneg _) hL n)
         (pow_nonneg (norm_nonneg _) n) (mul_nonneg hA (majorant_nonneg R hR 0 n))
-    _ = A * majorant (R * C) 0 n := by simp [majorant, mul_pow]; ring
+    _ = A * majorant (R * C) 0 n := by simp only [majorant, add_zero, mul_pow]; ring
 
 theorem affine_composition_bound (f : ℝ → ℝ) (hf : ContDiff ℝ ∞ f)
     (L : E →L[ℝ] ℝ) (a R A C : ℝ) (hR : 0 ≤ R) (hA : 0 ≤ A) (hC : 0 ≤ C)
@@ -77,8 +80,11 @@ theorem finite_product_bound {ι : Type*} (u : Finset ι)
   induction u using Finset.induction_on generalizing n x with
   | empty =>
     cases n with
-    | zero => simp [majorant]
-    | succ n => simp [iteratedFDeriv_succ_const, majorant_nonneg R hR]
+    | zero => simp only [Finset.prod_empty, norm_iteratedFDeriv_zero, norm_one, Finset.card_empty,
+        pow_zero, majorant, add_zero, Nat.factorial_zero, Nat.cast_one, one_pow, mul_one,
+        Std.le_refl]
+    | succ n => simp only [Finset.prod_empty, iteratedFDeriv_succ_const, Pi.zero_apply, norm_zero,
+        Finset.card_empty, pow_zero, one_mul, majorant_nonneg R hR]
   | @insert i u hi ih =>
     have hfu : ∀ j ∈ u, ContDiff ℝ ∞ (f j) := fun j hj => hf j (Finset.mem_insert_of_mem hj)
     have hbu : ∀ j ∈ u, ∀ n x, ‖iteratedFDeriv ℝ n (f j) x‖ ≤ A * majorant R 0 n :=
@@ -92,6 +98,6 @@ theorem finite_product_bound {ι : Type*} (u : Finset ι)
       (hf i (Finset.mem_insert_self _ _)) (contDiff_prod hfu)
       R A ((3 * A) ^ u.card) hR hA (by positivity)
       (hb i (Finset.mem_insert_self _ _)) (fun k y => ih hfu hbu k y) n x
-    simpa [pow_succ, mul_assoc, mul_left_comm, mul_comm] using hp
+    simpa only [mul_comm, pow_succ, mul_assoc, mul_left_comm, ge_iff_le] using hp
 
 end EulerGevreyFunctions

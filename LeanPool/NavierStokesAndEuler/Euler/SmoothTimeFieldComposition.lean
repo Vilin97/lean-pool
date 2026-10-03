@@ -12,6 +12,7 @@ import Mathlib.Analysis.Calculus.MeanValue
 public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
 public import Mathlib.Topology.ContinuousMap.Bounded.Normed
 public import LeanPool.NavierStokesAndEuler.Euler.SmoothTimeField
+public import LeanPool.NavierStokesAndEuler.ForMathlib.BoundedContinuousFunctionShortcuts
 
 /-! Composition with identity plus a bounded smooth displacement preserves
 the actual continuous-time bounded spatial jets. The finite Faà di Bruno
@@ -187,8 +188,6 @@ def multilinearAlgebra (L : ContinuousMultilinearMap ℝ V W) :
   · intro f i a b
     apply BoundedContinuousFunction.ext
     intro x
-    change L (fun j => Function.update f i (a+b) j x) =
-      L (fun j => Function.update f i a j x) + L (fun j => Function.update f i b j x)
     have he (c : α →ᵇ V i) :
         (fun j => Function.update f i c j x) =
           Function.update (fun j => f j x) i (c x) := by
@@ -196,13 +195,11 @@ def multilinearAlgebra (L : ContinuousMultilinearMap ℝ V W) :
       by_cases hj : j = i
       · subst j; simp
       · simp [hj]
-    simp only [he, BoundedContinuousFunction.add_apply]
+    simp only [BoundedContinuousFunction.add_apply, multilinearValue_apply, he]
     exact L.map_update_add _ _ _ _
   · intro f i r a
     apply BoundedContinuousFunction.ext
     intro x
-    change L (fun j => Function.update f i (r • a) j x) =
-      r • L (fun j => Function.update f i a j x)
     have he (c : α →ᵇ V i) :
         (fun j => Function.update f i c j x) =
           Function.update (fun j => f j x) i (c x) := by
@@ -210,7 +207,7 @@ def multilinearAlgebra (L : ContinuousMultilinearMap ℝ V W) :
       by_cases hj : j = i
       · subst j; simp
       · simp [hj]
-    simp only [he, BoundedContinuousFunction.smul_apply]
+    simp only [BoundedContinuousFunction.smul_apply, multilinearValue_apply, he]
     exact L.map_update_smul _ _ _ _
 
 /-- Multilinear map, given by `(multilinearAlgebra L).mkContinuous ‖L‖ (multilinearValue_norm

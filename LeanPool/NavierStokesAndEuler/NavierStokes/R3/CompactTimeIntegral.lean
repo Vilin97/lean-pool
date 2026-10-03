@@ -129,8 +129,9 @@ theorem hasDerivAt_time_of_contDiffOn {F : ℝ × Space → E} {a b t : ℝ}
     hF.mono (Set.prod_mono Ioo_subset_Icc_self (Subset.refl _))
   have hdiff : DifferentiableAt ℝ F (t, x) :=
     (hF'.differentiableOn (by norm_num) _ hmem).differentiableAt (hopen.mem_nhds hmem)
-  simpa only [Function.comp_def, id_eq] using hdiff.hasFDerivAt.comp_hasDerivAt t
-    ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
+  simpa only [Function.comp_def, id_eq] using
+    hdiff.hasFDerivAt.comp_hasDerivAt (F := ℝ × Space) (f := fun r => (id r, x)) t
+      ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
 
 /-- The time component of the full derivative is jointly continuous in the
 interior of the time slab. -/

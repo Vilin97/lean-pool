@@ -213,7 +213,7 @@ theorem mixedBoundaryOperator_iteratedFDeriv_le (χ ψ : Cutoff) (n : ℕ) (a : 
       (cutoffCurl_contDiff χ) (weakPotential_contDiff ψ) a (n := n) (by simp)
       (by
         convert ContinuousLinearMap.norm_compL_le ℝ L2 homogeneousSpace L2 using 1)
-  exact h
+  apply h
 
 /-- Factorial estimates follow from the genuine operator family, at every order and parameter. -/
 theorem mixedBoundaryOperator_gevrey (χ ψ : Cutoff) (Rχ Rψ Rc Cχ Cψ : ℝ)
@@ -455,6 +455,14 @@ theorem forcingAmplitude_nonneg (T CF CF₁ Cf : ℝ)
     (hT : 0 ≤ T) (hCF : 0 ≤ CF) (hCF₁ : 0 ≤ CF₁) (hCf : 0 ≤ Cf) :
     0 ≤ forcingAmplitude T CF CF₁ Cf := by unfold forcingAmplitude; positivity
 
+theorem contDiff_operatorAdjoint {P U E : Type*}
+    [NormedAddCommGroup P] [NormedSpace ℝ P]
+    [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {n : ℕ∞ω} {A : P → U →L[ℝ] E} (hA : ContDiff ℝ n A) :
+    ContDiff ℝ n (fun x => adjoint (𝕜 := ℝ) (E := U) (F := E) (A x)) :=
+  (realAdjoint (U := U) (E := E)).contDiff.comp hA
+
 variable (T : ℝ) (hT : 0 ≤ T)
   (F F₁ H : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2)) (M0 A : L2 →L[ℝ] L2) (L c : ℝ)
   (hc : 0 < c)
@@ -491,7 +499,8 @@ theorem solution_translation_gevrey
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (fun a : Space => timeSolenoidalTranslation T a
       (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
-        (-(fixedMeanPrimitive T hT F F₁).adjoint f))) x‖ ≤ majorant R (d+1) n := by
+        (-adjoint (𝕜 := ℝ) (F := TimeLp T L2) (fixedMeanPrimitive T hT F F₁) f))) x‖ ≤
+      majorant R (d+1) n := by
   have hRcR : Rc ≤ R := (radius_bounds hRc hM hR).2
   have hR0 : 0 ≤ R := hRc.trans hRcR
   have hFbr (k a) : ‖iteratedFDeriv ℝ k (fun b : Space => translatePath T b F) a‖ ≤ CF*majorant R 0
@@ -508,10 +517,7 @@ theorem solution_translation_gevrey
   have hJ : ContDiff ℝ ∞ (fun a : Space => translatedMeanPrimitive T hT a F F₁) :=
     contDiff_fixedMeanPrimitive T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
         hF hF₁
-  have hG : ContDiff ℝ ∞ (fun a : Space =>
-      -(translatedMeanPrimitive T hT a F F₁).adjoint (timeTranslation T a f)) :=
-    (((realAdjoint (U := TimeLp T solenoidalSpace) (E := TimeLp T L2)).contDiff.comp hJ).clm_apply
-        hf).neg
+  have hG := ((contDiff_operatorAdjoint hJ).clm_apply hf).neg
   have hOb (j a) : ‖iteratedFDeriv ℝ (j+1)
       (fun b : Space => translatedMeanOperator T hT b F F₁ H M0 A L) a‖ ≤
       operatorAmplitude T CF CF₁ CH CM CA L*(Rc^(j+1)*((j+1).factorial : ℝ)^2) := by
@@ -520,27 +526,19 @@ theorem solution_translation_gevrey
       (fun a => translateOperator a M0) (fun a => translateOperator a A) L hF hF₁ hH hM0 hA
       Rc CF CF₁ CH CM CA hRc hCF hCF₁ hCH hCM hCA hFb hF₁b hHb hMb hAb (j+1) a
     simpa only [translatedMeanOperator, operatorAmplitude, majorant, Nat.add_zero] using h
-  have hGb (k a) : ‖iteratedFDeriv ℝ k (fun b : Space =>
-      -(translatedMeanPrimitive T hT b F F₁).adjoint (timeTranslation T b f)) a‖ ≤
-      forcingAmplitude T CF CF₁ Cf*majorant R d k :=
+  have hGb (k a) :=
     fixedMeanForcing_bound T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
       (fun a => timeTranslation T a f) hF hF₁ hf R CF CF₁ Cf hR0 hCF hCF₁ hCf d hFbr hF₁br hfb k a
   have hout := coerciveSolution_gevrey_amplitudes
     (fun a : Space => translatedMeanOperator T hT a F F₁ H M0 A L) (fun _ => c) (fun _ => hc)
-    (fun a => translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive)
-    (fun a : Space => -(translatedMeanPrimitive T hT a F F₁).adjoint (timeTranslation T a f)) hO hG
+    (fun a => translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive) _ hO hG
     c⁻¹ (operatorAmplitude T CF CF₁ CH CM CA L) (forcingAmplitude T CF CF₁ Cf) M Rc R
     (operatorAmplitude_nonneg T CF CF₁ CH CM CA L hT hCH hCM hCA)
     (forcingAmplitude_nonneg T CF CF₁ Cf hT hCF hCF₁ hCf) hM hMC hMD hRc hR (fun _ => le_rfl)
     hOb d hGb n x
-  have heq : (fun a : Space => translatedMeanSolver T hT F F₁ H M0 A L c hc hcoercive a
-      (timeTranslation T a f)) =
-      (fun a : Space => timeSolenoidalTranslation T a
-        (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
-          (-(fixedMeanPrimitive T hT F F₁).adjoint f))) :=
-    funext (fun a => translatedMeanSolver_covariance T hT F F₁ H M0 A L c hc hcoercive a f)
   exact (congrArg (fun g : Space → TimeLp T solenoidalSpace => ‖iteratedFDeriv ℝ n g x‖)
-      heq.symm).trans_le hout
+    (funext fun a =>
+      translatedMeanSolver_covariance T hT F F₁ H M0 A L c hc hcoercive a f).symm).trans_le hout
 
 end EulerMeanTranslatedGevrey
 
@@ -618,11 +616,12 @@ theorem forcingOperator_bound {P : Type*} [NormedAddCommGroup P] [NormedSpace �
     (hFb : ∀ n x, ‖iteratedFDeriv ℝ n F x‖ ≤ CF * majorant Rc 0 n)
     (hF₁b : ∀ n x, ‖iteratedFDeriv ℝ n F₁ x‖ ≤ CF₁ * majorant Rc 0 n)
     (n : ℕ) (x : P) :
-    ‖iteratedFDeriv ℝ n (fun y => -(fixedMeanPrimitive T hT (F y) (F₁ y)).adjoint) x‖ ≤
+    ‖iteratedFDeriv ℝ n (fun y => -adjoint (𝕜 := ℝ) (F := TimeLp T L2)
+      (fixedMeanPrimitive T hT (F y) (F₁ y))) x‖ ≤
       (T*(T*CF₁+CF))*majorant Rc 0 n := by
   have hD := contDiff_fixedMeanDerivative T hT F F₁ hF hF₁
   have hJ := contDiff_fixedMeanPrimitive T hT F F₁ hF hF₁
-  have hD0 : 0 ≤ T*CF₁+CF := by positivity
+  have hD0 : 0 ≤ T*CF₁+CF := add_nonneg (mul_nonneg hT hCF₁) hCF
   have hJb (k : ℕ) (y : P) :
       ‖iteratedFDeriv ℝ k (fun z => fixedMeanPrimitive T hT (F z) (F₁ z)) y‖ ≤
         (T*(T*CF₁+CF))*majorant Rc 0 k := by
@@ -632,10 +631,11 @@ theorem forcingOperator_bound {P : Type*} [NormedAddCommGroup P] [NormedSpace �
     exact hb.trans (mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_right (primitive_norm_le_time (E := L2) T hT) hD0)
       (majorant_nonneg Rc hRc 0 k))
-  exact neg_bound (fun y => (fixedMeanPrimitive T hT (F y) (F₁ y)).adjoint)
+  exact neg_bound (fun y => adjoint (𝕜 := ℝ) (E := TimeLp T solenoidalSpace)
+      (F := TimeLp T L2) (fixedMeanPrimitive T hT (F y) (F₁ y)))
     Rc (T*(T*CF₁+CF)) 0
     (adjoint_bound (fun y => fixedMeanPrimitive T hT (F y) (F₁ y)) hJ
-      Rc (T*(T*CF₁+CF)) hRc (by positivity) 0 hJb) n x
+      Rc (T*(T*CF₁+CF)) hRc (mul_nonneg hT hD0) 0 hJb) n x
 
 variable {ι : Type*} [Fintype ι]
   (directions : ι → Space) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
@@ -679,12 +679,11 @@ theorem solution_translation_block_gevrey
     (n : ℕ) (x : Space) :
     block directions q (fun a : Space => timeSolenoidalTranslation T a
       (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
-        (-(fixedMeanPrimitive T hT F F₁).adjoint f))) n x ≤ majorant R (d+1) n := by
+        (-adjoint (𝕜 := ℝ) (F := TimeLp T L2) (fixedMeanPrimitive T hT F F₁) f))) n x ≤
+      majorant R (d+1) n := by
   let O := fun a : Space => translatedMeanOperator T hT a F F₁ H M0 A L
-  let J := fun a : Space => -(translatedMeanPrimitive T hT a F F₁).adjoint
-  let u := fun a : Space => timeSolenoidalTranslation T a
-    (coerciveInverse (fixedMeanOperator T hT F F₁ H M0 A L) c hc hcoercive
-      (-(fixedMeanPrimitive T hT F F₁).adjoint f))
+  let J := fun a : Space => -adjoint (𝕜 := ℝ) (E := TimeLp T solenoidalSpace)
+    (F := TimeLp T L2) (translatedMeanPrimitive T hT a F F₁)
   let g := fun a : Space => J a (timeTranslation T a f)
   have hO : ContDiff ℝ ∞ O :=
     contDiff_fixedMeanOperator T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
@@ -694,17 +693,13 @@ theorem solution_translation_block_gevrey
   have hJ0 : ContDiff ℝ ∞ (fun a : Space => translatedMeanPrimitive T hT a F F₁) :=
     contDiff_fixedMeanPrimitive T hT (fun a => translatePath T a F) (fun a => translatePath T a F₁)
         hF hF₁
-  have hJ : ContDiff ℝ ∞ J :=
-    ((realAdjoint (U := TimeLp T solenoidalSpace) (E := TimeLp T L2)).contDiff.comp hJ0).neg
-  have hu : ContDiff ℝ ∞ u := solution_translation_contDiff T hT F F₁ H M0 A L c hc hcoercive f hO
-      hJ0 hf
+  have hJ : ContDiff ℝ ∞ J := (contDiff_operatorAdjoint hJ0).neg
+  have hu := solution_translation_contDiff T hT F F₁ H M0 A L c hc hcoercive f hO hJ0 hf
   have hg : ContDiff ℝ ∞ g := hJ.clm_apply hf
-  have heq (a : Space) : O a (u a) = g a := by
-    dsimp only [u]
-    exact (congrArg (O a)
-      (translatedMeanSolver_covariance T hT F F₁ H M0 A L c hc hcoercive a f).symm).trans
-        (operator_inverse_apply (O a) c hc
-          (translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive) _)
+  have heq (a : Space) := (congrArg (O a)
+    (translatedMeanSolver_covariance T hT F F₁ H M0 A L c hc hcoercive a f).symm).trans
+      (operator_inverse_apply (O a) c hc
+        (translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive) (g a))
   have hOb (k a) : ‖iteratedFDeriv ℝ k O a‖ ≤ operatorAmplitude T CF CF₁ CH CM CA L*majorant Rc 0 k
       :=
     fixedMeanOperator_bound T hT (fun a => translatePath T a F)
@@ -717,21 +712,20 @@ theorem solution_translation_block_gevrey
   have hO0 := operatorAmplitude_nonneg T CF CF₁ CH CM CA L hT hCH hCM hCA
   have hOA0 : 0 ≤ operatorBlockAmplitude ι q T Rc CF CF₁ CH CM CA L :=
     sobolevCoefficientAmplitude_nonneg q Rc _ hRc hO0
+  have hT0 : 0 ≤ T*(T*CF₁+CF) := mul_nonneg hT (add_nonneg (mul_nonneg hT hCF₁) hCF)
   have hJA0 : 0 ≤ sobolevCoefficientAmplitude ι q Rc (T*(T*CF₁+CF)) :=
-    sobolevCoefficientAmplitude_nonneg q Rc _ hRc (by positivity)
-  have hD0 : 0 ≤ forcingBlockAmplitude ι q T Rc CF CF₁ Cf := by
-    unfold forcingBlockAmplitude
-    positivity
+    sobolevCoefficientAmplitude_nonneg q Rc _ hRc hT0
+  have hD0 : 0 ≤ forcingBlockAmplitude ι q T Rc CF CF₁ Cf :=
+    mul_nonneg (mul_nonneg (by norm_num) hJA0) hCf
   have hr₀ : 0 ≤ sobolevCoefficientRadius ι Rc := sobolevCoefficientRadius_nonneg Rc hRc
   have hrR : sobolevCoefficientRadius ι Rc ≤ R := (radius_bounds hr₀ hM hR).2
   have hbO (k a) := coefficientBlock_of_tensor_bound directions hd q O hO Rc _ hRc hO0 hOb k a
-  have hbJ (k a) := coefficientBlock_of_tensor_bound directions hd q J hJ Rc _ hRc
-    (show 0 ≤ T*(T*CF₁+CF) by positivity) hJb k a
+  have hbJ (k a) := coefficientBlock_of_tensor_bound directions hd q J hJ Rc _ hRc hT0 hJb k a
   have hgb (k a) : block directions q g k a ≤ forcingBlockAmplitude ι q T Rc CF CF₁ Cf*majorant R d
       k :=
     block_clm_apply_gevrey directions q J (fun a => timeTranslation T a f) hJ hf
       (sobolevCoefficientRadius ι Rc) R _ Cf hr₀ hrR hJA0 hCf hbJ d hfb k a
-  apply block_inverse_gevrey directions q O u g hO hu hg heq
+  apply block_inverse_gevrey directions q O _ g hO hu hg heq
     (translatedMeanInverse T hT F F₁ H M0 A L c hc hcoercive)
     (fun a v => inverse_operator_apply (O a) c hc
       (translatedMeanOperator_coercive T hT a F F₁ H M0 A L c hcoercive) v)
@@ -865,11 +859,11 @@ theorem sourceCoordinateSolver_translation_gevrey
         simpa only [translateOperator_boundary] using h).trans
     exact mul_le_mul_of_nonneg_left (majorant_radius_mono 1024 Rc (by norm_num) hRc 0 k)
       scaledBoundaryOperatorAmplitude_nonneg
-  exact solution_translation_gevrey T hT (operatorPath T F.field) (operatorPath T F₁.field)
+  have hco := sourceFixedForm_coercive T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r hBe hBc hL hr hrquarter
+    hext hcore hInv hF K hK hF0 hH hsmall
+  apply solution_translation_gevrey T hT (operatorPath T F.field) (operatorPath T F₁.field)
     (operatorPath T H.field) (multiplier M0.field) (boundaryOperator (scaledCutoff ℓ hℓ)) L
-    (sourceFixedCoercivity T F F₁ FInv) (sourceFixedCoercivity_pos T hT F F₁ FInv)
-    (sourceFixedForm_coercive T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r hBe hBc hL hr hrquarter
-      hext hcore hInv hF K hK hF0 hH hsmall)
+    (sourceFixedCoercivity T F F₁ FInv) (sourceFixedCoercivity_pos T hT F F₁ FInv) hco
     hFr hF₁r hHr hMr hAr f hf Rc R M CF CF₁ CH CM scaledBoundaryOperatorAmplitude Cf
     hRc0 hCF hCF₁ hCH hCM scaledBoundaryOperatorAmplitude_nonneg hCf hM hMC hMD hR
     (translatedPath_bound T F Rc CF hRc0 hCF hFb)
@@ -988,12 +982,12 @@ theorem sourceCoordinateSolver_translation_block_gevrey
         simpa only [translateOperator_boundary] using h).trans
     exact mul_le_mul_of_nonneg_left (majorant_radius_mono 1024 Rc (by norm_num) hRc 0 k)
       scaledBoundaryOperatorAmplitude_nonneg
-  exact solution_translation_block_gevrey directions hd q T hT (operatorPath T F.field)
+  have hco := sourceFixedForm_coercive T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r hBe hBc hL hr hrquarter
+    hext hcore hInv hF K hK hF0 hH hsmall
+  apply solution_translation_block_gevrey directions hd q T hT (operatorPath T F.field)
       (operatorPath T F₁.field)
     (operatorPath T H.field) (multiplier M0.field) (boundaryOperator (scaledCutoff ℓ hℓ)) L
-    (sourceFixedCoercivity T F F₁ FInv) (sourceFixedCoercivity_pos T hT F F₁ FInv)
-    (sourceFixedForm_coercive T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r hBe hBc hL hr hrquarter
-      hext hcore hInv hF K hK hF0 hH hsmall)
+    (sourceFixedCoercivity T F F₁ FInv) (sourceFixedCoercivity_pos T hT F F₁ FInv) hco
     hFr hF₁r hHr hMr hAr f hf Rc R M CF CF₁ CH CM scaledBoundaryOperatorAmplitude Cf
     hRc0 hCF hCF₁ hCH hCM scaledBoundaryOperatorAmplitude_nonneg hCf hM hMC hMD hR
     (translatedPath_bound T F Rc CF hRc0 hCF hFb)
@@ -1308,18 +1302,17 @@ theorem meanAcceleration_translation_block_gevrey
     block directions q (fun b : Space =>
       timeSolenoidalTranslation T b (meanAcceleration T hT F F₁ c hc hLower v f)) n a ≤
         majorant R (d+1) n := by
-  let Q := fun b : Space => solenoidalFrame T (translatePath T b F)
-  let Q₁ := fun b : Space => solenoidalFrame T (translatePath T b F₁)
-  have hQ : ContDiff ℝ ∞ Q := contDiff_solenoidalFrame T (fun b => translatePath T b F) hF
-  have hQ₁ : ContDiff ℝ ∞ Q₁ := contDiff_solenoidalFrame T (fun b => translatePath T b F₁) hF₁
-  have hbQ : ∀ k b, ‖iteratedFDeriv ℝ k Q b‖ ≤ CF*majorant Rc 0 k :=
-    solenoidalFrame_bound T (fun b => translatePath T b F) hF Rc CF hRc hCF 0 hFb
-  have hbQ₁ : ∀ k b, ‖iteratedFDeriv ℝ k Q₁ b‖ ≤ CF₁*majorant Rc 0 k :=
-    solenoidalFrame_bound T (fun b => translatePath T b F₁) hF₁ Rc CF₁ hRc hCF₁ 0 hF₁b
-  have hs := solution_block_bound directions hd q T hT Q Q₁ c hc
+  have hs := solution_block_bound directions hd q T hT
+    (fun b : Space => solenoidalFrame T (translatePath T b F))
+    (fun b : Space => solenoidalFrame T (translatePath T b F₁)) c hc
     (translatedFrame_lower T F c hLower) (fun b => timeTranslation T b f)
-    (fun b => timeSolenoidalTranslation T b v) hQ hQ₁ hf hv
-    Rc R CF CF₁ Cf Cv hRc hRcR hCF hCF₁ hCf hCv hstrong hbQ hbQ₁ d hfb hvb n a
+    (fun b => timeSolenoidalTranslation T b v)
+    (contDiff_solenoidalFrame T (fun b => translatePath T b F) hF)
+    (contDiff_solenoidalFrame T (fun b => translatePath T b F₁) hF₁) hf hv
+    Rc R CF CF₁ Cf Cv hRc hRcR hCF hCF₁ hCf hCv hstrong
+    (solenoidalFrame_bound T (fun b => translatePath T b F) hF Rc CF hRc hCF 0 hFb)
+    (solenoidalFrame_bound T (fun b => translatePath T b F₁) hF₁ Rc CF₁ hRc hCF₁ 0 hF₁b)
+    d hfb hvb n a
   exact (congrArg (fun g : Space → TimeLp T solenoidalSpace => block directions q g n a)
     (meanAcceleration_orbit_eq T hT F F₁ c hc hLower v f)).trans_le hs
 
@@ -2076,7 +2069,7 @@ theorem normalized_bounds (directions : ι → Space) (hd : ∀ i, ‖directions
     D.T D.T_pos.le D.ℓ D.ℓ_pos D.ℓ_le_one D.F D.F₁ D.H D.M0 D.opInv
     D.Be D.Bc D.L D.r D.Be_nonneg D.Bc_nonneg D.L_lower D.r_nonneg D.r_le_quarter
     D.exterior_lower D.core_lower D.opInv_left D.opF_time D.opInv_right
-    D.K D.K_nonneg D.opInv_initial D.curvature_upper D.small G.lp G.solution G.lp_orbit
+    D.K D.K_nonneg D.opInv_initial D.curvature_upper D.small G.lp (G.solution :) G.lp_orbit
     E.Rc R E.M E.CF E.CF₁ E.CH E.CM E.Cf E.radius_lower E.CF_nonneg E.CF₁_nonneg
     E.CH_nonneg E.CM_nonneg E.Cf_nonneg E.inverse_cost_lower E.operator_budget E.forcing_budget
     E.radius_budget E.frame_bound E.frame_derivative_bound E.curvature_bound E.initial_strain_bound
@@ -2086,13 +2079,13 @@ theorem normalized_bounds (directions : ι → Space) (hd : ∀ i, ‖directions
     D.T D.T_pos.le D.ℓ D.ℓ_pos D.ℓ_le_one D.F D.F₁ D.H D.M0 D.opInv
     D.Be D.Bc D.L D.r D.Be_nonneg D.Bc_nonneg D.L_lower D.r_nonneg D.r_le_quarter
     D.exterior_lower D.core_lower D.opInv_left D.opF_time D.opInv_right
-    D.K D.K_nonneg D.opInv_initial D.curvature_upper D.small G.lp G.solution G.lp_orbit
+    D.K D.K_nonneg D.opInv_initial D.curvature_upper D.small G.lp (G.solution :) G.lp_orbit
     E.Rc R E.M E.CF E.CF₁ E.CH E.CM E.Cf E.radius_lower E.CF_nonneg E.CF₁_nonneg
     E.CH_nonneg E.CM_nonneg E.Cf_nonneg E.inverse_cost_lower E.operator_budget E.forcing_budget
     E.radius_budget E.frame_bound E.frame_derivative_bound E.curvature_bound E.initial_strain_bound
     d hfb E.acceleration_budget E.continuous_acceleration_budget D.T_pos
     G.path G.path_orbit hfCb
-  exact ⟨ht.1, ht.2.1, hp.2⟩
+  apply And.intro ht.1 (And.intro ht.2.1 hp.2)
 
 end SobolevData
 end EulerMeanPacketProvider
@@ -2505,7 +2498,7 @@ theorem spatialEmbeddingPath_norm : ‖spatialEmbeddingPath P T‖ ≤ sqrt P :=
     (mul_le_mul_of_nonneg_left (p.norm_coe_le_norm t) (sqrt_nonneg P))
 
 theorem pathMean_spatialEmbeddingPath (p : C(Icc (0 : ℝ) T, L2)) :
-    pathMean P (spatialEmbeddingPath P T p) = p := by
+    pathMean (K := Icc (0 : ℝ) T) (V := Vector3) P (spatialEmbeddingPath P T p) = p := by
   apply ContinuousMap.ext
   intro t
   exact mean_embedding P (p t)
@@ -2514,11 +2507,13 @@ theorem spatialEmbeddingPath_block_le (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (q n : ℕ) (a : LiftTangent) :
     block standardDirection q
-      (fun b : LiftTangent => pathTranslate P b (spatialEmbeddingPath P T p)) n a ≤
+      (fun b : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P b
+        (spatialEmbeddingPath P T p)) n a ≤
       sqrt P*block spatialDirection q (fun b : Space => pathTranslation T b p) n a.1 := by
   let f := fun b : Space => pathTranslation T b p
   let fstMap : LiftTangent →L[ℝ] Space := fst ℝ Space ℝ
-  have he : (fun b : LiftTangent => pathTranslate P b (spatialEmbeddingPath P T p)) =
+  have he : (fun b : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P b
+      (spatialEmbeddingPath P T p)) =
       (spatialEmbeddingPath P T) ∘ (f ∘ fstMap) :=
     funext (fun b => spatialEmbeddingPath_translation P T p b)
   refine (congrArg (fun g : LiftTangent → C(Icc (0 : ℝ) T,LiftL2 P) =>
@@ -2535,13 +2530,18 @@ theorem ordinaryPath_block_le (p : C(Icc (0 : ℝ) T, L2))
     (q n : ℕ) (a : Space) :
     block spatialDirection q (fun b : Space => pathTranslation T b p) n a ≤
       (P⁻¹*sqrt P)*block standardDirection q
-        (fun b : LiftTangent => pathTranslate P b (spatialEmbeddingPath P T p)) n (a,0) := by
+        (fun b : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P b
+          (spatialEmbeddingPath P T p)) n (a,0) := by
   let f := fun b : Space => pathTranslation T b p
   let fstMap : LiftTangent →L[ℝ] Space := fst ℝ Space ℝ
-  let g := fun b : LiftTangent => pathTranslate P b (spatialEmbeddingPath P T p)
-  have he : (fun b : LiftTangent => pathMean P (g b)) = f ∘ fstMap := by
+  let g := fun b : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P b
+    (spatialEmbeddingPath P T p)
+  have he : (fun b : LiftTangent => pathMean (K := Icc (0 : ℝ) T) (V := Vector3) P (g b)) =
+      f ∘ fstMap := by
     funext b
-    change pathMean P (pathTranslate P b (spatialEmbeddingPath P T p)) = f (fstMap b)
+    change pathMean (K := Icc (0 : ℝ) T) (V := Vector3) P
+      (pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P b (spatialEmbeddingPath P T p)) =
+        f (fstMap b)
     rw [spatialEmbeddingPath_translation, pathMean_spatialEmbeddingPath]
     rfl
   have hh := pathMean_block_bound P standardDirection q g (spatialEmbeddingPath_orbit P T p hp) n
@@ -2553,7 +2553,8 @@ theorem ordinaryPath_majorant (p : C(Icc (0 : ℝ) T, L2))
     (hp : ContDiff ℝ ∞ (fun a : Space => pathTranslation T a p))
     (q : ℕ) (R A : ℝ) (d : ℕ)
     (hb : ∀ n, block standardDirection q
-      (fun b : LiftTangent => pathTranslate P b (spatialEmbeddingPath P T p)) n 0 ≤ A*majorant R d
+      (fun b : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P b
+        (spatialEmbeddingPath P T p)) n 0 ≤ A*majorant R d
           n)
     (n : ℕ) (a : Space) :
     block spatialDirection q (fun b : Space => pathTranslation T b p) n a ≤
@@ -2570,7 +2571,8 @@ theorem spatialEmbeddingPath_majorant (p : C(Icc (0 : ℝ) T, L2))
     (hb : ∀ n a, block spatialDirection q (fun b : Space => pathTranslation T b p) n a ≤
       A*majorant R d n) (n : ℕ) :
     block standardDirection q
-      (fun b : LiftTangent => pathTranslate P b (spatialEmbeddingPath P T p)) n 0 ≤
+      (fun b : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P b
+        (spatialEmbeddingPath P T p)) n 0 ≤
       (sqrt P*A)*majorant R d n := by
   exact (spatialEmbeddingPath_block_le P T p hp q n 0).trans
     ((mul_le_mul_of_nonneg_left (hb n 0) (sqrt_nonneg P)).trans_eq (by ring))
@@ -2700,7 +2702,8 @@ def pressureGradientCylinderField : EulerPacketCylinderField.Field P D.T (pressu
   (D.frameCoefficient.adjoint.multiply (G.pressureForceCylinderField P)).congr (by
     intro t x θ
     change pressureGradient G.scalar (t,(x,θ)) =
-      (D.F.field (D.clamp t) x).adjoint (G.pressureForce (t,(x,θ)))
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field (D.clamp t) x)
+        (G.pressureForce (t,(x,θ)))
     rw [Data.clamp_coe]
     change (toDual ℝ Space).symm ((pressureJet G.scalar (t,(x,θ))).2.comp spatialInjection) = _
     rw [pressureJet_spatial_derivative G.scalar t x θ

@@ -41,7 +41,7 @@ variable (period : ℝ) [Fact (0 < period)]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (S : Set Space) (hS : MeasurableSet S) (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] E))
-  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
+  (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ (2 : ℕ) ≤ ‖Q.field t x v‖ ^ (2 : ℕ))
   (f : C(Icc (0 : ℝ) T, Supported period E S hS)) (a₀ : Supported period U S hS)
 
 /-- Cache the standard `NormedAddCommGroup (Supported period U S hS)` instance to shorten
@@ -67,7 +67,8 @@ def coordinates : C(Icc (0 : ℝ) T,Supported period U S hS) :=
 
 /-- Its actual ordinary right side. -/
 def coordinateDerivative : C(Icc (0 : ℝ) T,Supported period U S hS) :=
-  supportedMultiplierMap period S hS (sourceGenerator Q Q₁ c hc hQ)
+  supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := U) (F := U) period S hS
+      (sourceGenerator Q Q₁ c hc hQ)
     (coordinates period S hS T hT Q Q₁ c hc hQ f a₀) + projectedForcing period S hS Q c hc hQ f
 
 /-- The physical transverse velocity A=Q a. -/
@@ -76,9 +77,10 @@ def velocity : C(Icc (0 : ℝ) T,Supported period E S hS) :=
 
 /-- Its literal product-rule expression, proved below to be the time derivative. -/
 def velocityDerivative : C(Icc (0 : ℝ) T,Supported period E S hS) :=
-  supportedMultiplierMap period S hS Q₁.field (coordinates period S hS T hT Q Q₁ c hc hQ f a₀) +
-    supportedMultiplierMap period S hS Q.field (coordinateDerivative period S hS T hT Q Q₁ c hc hQ
-        f a₀)
+  supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := U) (F := E) period S hS Q₁.field
+      (coordinates period S hS T hT Q Q₁ c hc hQ f a₀) +
+    supportedMultiplierMap (K := Icc (0 : ℝ) T) (E := U) (F := E) period S hS Q.field
+      (coordinateDerivative period S hS T hT Q Q₁ c hc hQ f a₀)
 
 @[simp] theorem coordinates_initial :
     coordinates period S hS T hT Q Q₁ c hc hQ f a₀ ⟨0,le_rfl,hT⟩ = a₀ :=
@@ -86,19 +88,19 @@ def velocityDerivative : C(Icc (0 : ℝ) T,Supported period E S hS) :=
 
 /-- The coordinate equation has its true derivative on the closed time interval. -/
 theorem coordinates_hasDerivWithinAt (t : Icc (0 : ℝ) T) :
-    HasDerivWithinAt (extendPath T hT (coordinates period S hS T hT Q Q₁ c hc hQ f a₀))
+    HasDerivWithinAt (extendPath T hT (coordinates (U := U) period S hS T hT Q Q₁ c hc hQ f a₀))
       (coordinateDerivative period S hS T hT Q Q₁ c hc hQ f a₀ t) (Icc (0 : ℝ) T) t := by
   have hd := (evolution period T hT Q Q₁ c hc hQ S hS).solution_derivative
     (projectedForcing period S hS Q c hc hQ f) a₀ t
   have hB := congrArg (fun A => A t)
     (supportedPath_eq_square period S hS T (sourceGenerator Q Q₁ c hc hQ))
-  change supportedOperatorMap period S hS (sourceGenerator Q Q₁ c hc hQ t) =
+  change supportedOperatorMap (E := U) (F := U) period S hS (sourceGenerator Q Q₁ c hc hQ t) =
     liftedOperatorPath period S hS T (sourceGenerator Q Q₁ c hc hQ) t at hB
   change HasDerivWithinAt _
     (liftedOperatorPath period S hS T (sourceGenerator Q Q₁ c hc hQ) t
       (coordinates period S hS T hT Q Q₁ c hc hQ f a₀ t) +
       projectedForcing period S hS Q c hc hQ f t) (Icc (0 : ℝ) T) t at hd
-  rw [← hB] at hd
+  simp only [← hB] at hd
   apply hd.congr_of_mem _ t.property
   intro s hs
   simp only [extendPath,projIcc_of_mem hT hs]
@@ -110,49 +112,52 @@ theorem velocity_hasDerivWithinAt
       HasDerivWithinAt (fun s => extendPath T hT Q.field s x)
         (extendPath T hT Q₁.field t x) (Icc (0 : ℝ) T) t)
     (t : Icc (0 : ℝ) T) :
-    HasDerivWithinAt (extendPath T hT (velocity period S hS T hT Q Q₁ c hc hQ f a₀))
+    HasDerivWithinAt (extendPath T hT (velocity (E := E) period S hS T hT Q Q₁ c hc hQ f a₀))
       (velocityDerivative period S hS T hT Q Q₁ c hc hQ f a₀ t) (Icc (0 : ℝ) T) t :=
   supportedProduct_hasDerivWithinAt period S hS T hT Q.field Q₁.field hQt
     (coordinates period S hS T hT Q Q₁ c hc hQ f a₀)
     (coordinateDerivative period S hS T hT Q Q₁ c hc hQ f a₀)
     (coordinates_hasDerivWithinAt period S hS T hT Q Q₁ c hc hQ f a₀) t
 
+/-- The pointwise algebra of the projected source equation: the Gram operator undoes the
+Gram inverse in the generator and in the projected forcing. -/
+theorem gram_generator_forcing_apply (A A₁ : U →L[ℝ] E) (r : ℝ) (hr : 0 < r)
+    (hA : ∀ v, r * ‖v‖ ^ (2 : ℕ) ≤ ‖A v‖ ^ (2 : ℕ)) (w : U) (y : E) :
+    gram A ((-2 : ℝ) • gramInverse A r hr hA
+        (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := U) (F := E) A (A₁ w)) +
+      gramInverse A r hr hA (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := U) (F := E) A y)) =
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := U) (F := E) A (y - (2 : ℝ) • A₁ w) := by
+  simp only [map_smul, map_sub, gram_inverse_apply, neg_smul, neg_add_eq_sub]
+
 /-- The genuine L² representatives satisfy the projected source equation (12). -/
 theorem coordinate_equation_ae (t : Icc (0 : ℝ) T) :
     ∀ᵐ x ∂liftMeasure period,
       gram (Q.field t x.1) ((coordinateDerivative period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2
           period U) x) =
-        (Q.field t x.1).adjoint ((f t : CylinderL2 period E) x - (2 : ℝ) •
+        ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := U) (F := E) (Q.field t x.1)
+          ((f t : CylinderL2 period E) x - (2 : ℝ) •
           Q₁.field t x.1 ((coordinates period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 period U)
               x)) := by
   let u := coordinates period S hS T hT Q Q₁ c hc hQ f a₀ t
   let B := sourceGenerator Q Q₁ c hc hQ t
   let P := sourceForcing Q c hc hQ t
-  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure period) (fieldLift period B) (u :
-      CylinderL2 period U),
-    EulerLpOperatorField.full_ae (liftMeasure period) (fieldLift period P) (f t : CylinderL2 period
-        E),
-    Lp.coeFn_add (fullOperatorMap period B (u : CylinderL2 period U))
-      (fullOperatorMap period P (f t : CylinderL2 period E))] with x hB hP hs
-  change gram (Q.field t x.1)
-      ((fullOperatorMap period B (u : CylinderL2 period U) +
-        fullOperatorMap period P (f t : CylinderL2 period E)) x) = _
-  rw [hs]
-  simp only [Pi.add_apply,fullOperatorMap_apply]
-  rw [hB,hP]
-  change gram (Q.field t x.1) ((-2 : ℝ) • gramInverse (Q.field t x.1) c hc (hQ t x.1)
-      ((Q.field t x.1).adjoint (Q₁.field t x.1 ((u : CylinderL2 period U) x))) +
-    gramInverse (Q.field t x.1) c hc (hQ t x.1) ((Q.field t x.1).adjoint ((f t : CylinderL2 period
-        E) x))) = _
-  rw [map_add,map_smul,gram_inverse_apply,gram_inverse_apply,map_sub,map_smul]
-  module
+  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure period)
+      (fieldLift (W := U →L[ℝ] U) period B) (u : CylinderL2 period U),
+    EulerLpOperatorField.full_ae (liftMeasure period)
+      (fieldLift (W := E →L[ℝ] U) period P) (f t : CylinderL2 period E),
+    Lp.coeFn_add (fullOperatorMap (E := U) (F := U) period B (u : CylinderL2 period U))
+      (fullOperatorMap (E := E) (F := U) period P (f t : CylinderL2 period E))] with x hB hP hs
+  have key := gram_generator_forcing_apply (Q.field t x.1) (Q₁.field t x.1) c hc (hQ t x.1)
+    ((u : CylinderL2 period U) x) ((f t : CylinderL2 period E) x)
+  apply (congrArg (gram (Q.field t x.1)) (hs.trans (congrArg₂ (· + ·) hB hP))).trans key
 
 /-- The physical velocity's representative is exactly Q times the solved coordinate. -/
 theorem velocity_ae (t : Icc (0 : ℝ) T) :
     (velocity period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 period E) =ᵐ[liftMeasure period]
       fun x => Q.field t x.1 ((coordinates period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 period
           U) x) :=
-  EulerLpOperatorField.full_ae (liftMeasure period) (fieldLift period (Q.field t)) _
+  EulerLpOperatorField.full_ae (liftMeasure period)
+    (fieldLift (W := U →L[ℝ] E) period (Q.field t)) _
 
 theorem velocityDerivative_ae (t : Icc (0 : ℝ) T) :
     (velocityDerivative period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 period E) =ᵐ[liftMeasure
@@ -163,12 +168,13 @@ theorem velocityDerivative_ae (t : Icc (0 : ℝ) T) :
             period U) x) := by
   let u := coordinates period S hS T hT Q Q₁ c hc hQ f a₀ t
   let a := coordinateDerivative period S hS T hT Q Q₁ c hc hQ f a₀ t
-  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure period) (fieldLift period (Q₁.field t))
-      (u : CylinderL2 period U),
-    EulerLpOperatorField.full_ae (liftMeasure period) (fieldLift period (Q.field t)) (a :
-        CylinderL2 period U),
-    Lp.coeFn_add (fullOperatorMap period (Q₁.field t) (u : CylinderL2 period U))
-      (fullOperatorMap period (Q.field t) (a : CylinderL2 period U))] with x h₁ h₂ hs
+  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure period)
+      (fieldLift (W := U →L[ℝ] E) period (Q₁.field t)) (u : CylinderL2 period U),
+    EulerLpOperatorField.full_ae (liftMeasure period)
+      (fieldLift (W := U →L[ℝ] E) period (Q.field t)) (a : CylinderL2 period U),
+    Lp.coeFn_add (fullOperatorMap (E := U) (F := E) period (Q₁.field t) (u : CylinderL2 period U))
+      (fullOperatorMap (E := U) (F := E) period (Q.field t) (a : CylinderL2 period U))]
+    with x h₁ h₂ hs
   exact hs.trans (congrArg₂ (·+·) h₁ h₂)
 
 /-- Equation (11)'s literal normal residual follows from the actual coordinate solve. -/
@@ -184,11 +190,11 @@ theorem velocity_balance_ae
         M t x.1 ((velocity period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 period E) x) +
         ((⟪m t x.1,(f t : CylinderL2 period E) x⟫_ℝ - 2*⟪m t x.1,
           M t x.1 ((velocity period S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 period E) x)⟫_ℝ) /
-            ‖m t x.1‖^2) • m t x.1 = (f t : CylinderL2 period E) x := by
+            ‖m t x.1‖ ^ (2 : ℕ)) • m t x.1 = (f t : CylinderL2 period E) x := by
   filter_upwards [coordinate_equation_ae period S hS T hT Q Q₁ c hc hQ f a₀ t,
     velocity_ae period S hS T hT Q Q₁ c hc hQ f a₀ t,
     velocityDerivative_ae period S hS T hT Q Q₁ c hc hQ f a₀ t] with x he hv hd
-  rw [hv,hd]
+  simp only [hv, hd]
   exact physical_velocity_balance (Q.field t x.1) (Q₁.field t x.1) (M t x.1) (m t x.1)
     (hm t x.1) (hTangent t x.1) (hRange t x.1) (hFlow t x.1) _ _ _ he
 

@@ -10,6 +10,8 @@ public import Mathlib.MeasureTheory.Function.L2Space
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
 
 /-!
 An actual L² realization of the lifted pressure-gradient space on R³ × (R / period Z).
@@ -34,6 +36,11 @@ abbrev Vector3 := EuclideanSpace ℝ (Fin 3)
 abbrev LiftDomain (period : ℝ) := Vector3 × AddCircle period
 /-- The four dimensional real covering space of the cylinder. -/
 abbrev LiftTangent := Vector3 × ℝ
+
+real_normed_space_shortcut_instances LiftTangent : LiftTangent
+
+/-- Shortcut for the finite dimensionality of the covering space. -/
+instance LiftTangent.instFiniteDimensional : FiniteDimensional ℝ LiftTangent := inferInstance
 
 variable (period : ℝ) [Fact (0 < period)]
 

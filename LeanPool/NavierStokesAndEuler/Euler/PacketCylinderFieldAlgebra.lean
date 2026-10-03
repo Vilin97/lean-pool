@@ -27,7 +27,8 @@ variable {P T : ℝ} [Fact (0 < P)] {raw raw' : VectorField}
 
 /-- Recover a raw witness from an actual continuous representative of its L² path. -/
 def ofLifted (p : C(Icc (0 : ℝ) T, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a p))
     (f : Icc (0 : ℝ) T → LiftDomain P → Space) (hc : ∀ t, Continuous (f t))
     (hrep : ∀ t, (p t : LiftDomain P → Space) =ᵐ[liftMeasure P] f t)
     (he : ∀ (t : Icc (0 : ℝ) T) x θ, raw (t,(x,θ)) = f t (x,(θ : AddCircle P))) :

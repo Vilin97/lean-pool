@@ -63,17 +63,18 @@ theorem directions_radial (c : CorrectionState.Context D) (n : ℕ) :
     (directions c).radialField n =
       HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).radial := by
   funext p
-  simp [directions, LinearWaveBounds.GraphDirections.radialField,
-    HarmonicResidual.liftDirection, HarmonicResidual.contextFrame, smul_smul]
+  simp only [LinearWaveBounds.GraphDirections.radialField, directions, Prod.smul_mk, smul_eq_mul,
+      mul_zero, smul_smul, Prod.mk_add_mk, add_zero, HarmonicResidual.liftDirection,
+      HarmonicResidual.contextFrame]
 
 theorem directions_axial (s : StripData D) (c : CorrectionState.Context D)
     (hε : s.epsilon = c.operators.epsilon) (n : ℕ) :
     (directions c).axialField (HarmonicWaveInteraction.productStrip s) n =
       HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).axial := by
   funext p
-  simp [directions, LinearWaveBounds.GraphDirections.axialField,
-    HarmonicResidual.liftDirection, HarmonicResidual.contextFrame,
-    HarmonicWaveInteraction.productStrip, HarmonicWaveInteraction.pullbackStrip, hε]
+  simp only [LinearWaveBounds.GraphDirections.axialField, HarmonicWaveInteraction.productStrip,
+      HarmonicWaveInteraction.pullbackStrip, hε, directions, Prod.smul_mk, smul_eq_mul, mul_zero,
+      HarmonicResidual.liftDirection, HarmonicResidual.contextFrame]
 
 theorem directions_time (s : StripData D) (c : CorrectionState.Context D)
     (hε : s.epsilon = c.operators.epsilon) (n : ℕ) :
@@ -81,9 +82,10 @@ theorem directions_time (s : StripData D) (c : CorrectionState.Context D)
       ((directions c).fastField n) (fun _ => (directions c).slow) =
         HarmonicResidual.liftDirection (HarmonicResidual.contextFrame c n).time := by
   funext p
-  simp [directions, LinearWaveBounds.GraphDirections.fastField, LinearWaveResidual.timeDirection,
-    HarmonicResidual.liftDirection, HarmonicResidual.contextFrame,
-    HarmonicWaveInteraction.productStrip, HarmonicWaveInteraction.pullbackStrip, hε]
+  simp only [LinearWaveResidual.timeDirection, LinearWaveBounds.GraphDirections.fastField,
+      directions, Prod.smul_mk, smul_eq_mul, mul_zero, HarmonicWaveInteraction.productStrip,
+      HarmonicWaveInteraction.pullbackStrip, hε, Prod.mk_sub_mk, sub_self,
+      HarmonicResidual.liftDirection, HarmonicResidual.contextFrame]
 
 /-- Matching concerns primitive fields, never a residual or a residual bound. -/
 structure Matches (s : StripData D) (c : CorrectionState.Context D)
@@ -108,7 +110,7 @@ structure AngularData (a : LinearWaveBounds.WaveCoefficients (D × ℝ))
 theorem invariant_fst {E : Type} (f : D → E) :
     Invariant ((0 : D), 1) (fun p : D × ℝ => f p.1) := by
   intro p t
-  simp
+  simp only [Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, Prod.fst_add, add_zero]
 
 theorem directions_radial_invariant (c : CorrectionState.Context D) (n : ℕ) :
     Invariant ((0 : D), 1) ((directions c).radialField n) := by
@@ -120,7 +122,7 @@ theorem AngularData.corrected_amplitude {a : LinearWaveBounds.WaveCoefficients (
     (c : CorrectionState.Context D) (n : ℕ) :
     Invariant ((0 : D), 1)
       ((a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ).amplitude n) :=
-  corrected_amplitude_invariant ψ ha.radius (directions_radial_invariant c)
+  corrected_amplitude_invariant (d := directions c) ψ ha.radius (directions_radial_invariant c)
     (fun _ => Invariant.const _) ha.phase ha.amplitude ha.cutoff n
 
 theorem AngularData.corrected_pressure {a : LinearWaveBounds.WaveCoefficients (D × ℝ)}
@@ -128,7 +130,7 @@ theorem AngularData.corrected_pressure {a : LinearWaveBounds.WaveCoefficients (D
     (c : CorrectionState.Context D) (n : ℕ) :
     Invariant ((0 : D), 1)
       ((a.corrected (HarmonicWaveInteraction.productStrip s) (directions c) ψ).pressure n) :=
-  corrected_pressure_invariant ψ ha.pressure ha.cutoff n
+  corrected_pressure_invariant (d := directions c) ψ ha.pressure ha.cutoff n
 
 section InvariantOperators
 
@@ -281,7 +283,7 @@ theorem corrected_bounds : LinearWaveBounds.InputBounds (HarmonicWaveInteraction
   obtain ⟨b, M, hb, hlo, hhi⟩ := h.normal_bounds
   have hc := (h.coefficients.with_cutoff h.cutoff).curlCorrection_class h.matching.radius
     h.normal_jets hb hlo hhi h.inverse_frequency
-  exact (h.coefficients.with_cutoff h.cutoff).add_curl_amplitude (by linarith [h.loss_le])
+  exact (h.coefficients.with_cutoff h.cutoff).add_curl_amplitude (by linarith only [h, h.loss_le])
     (fun i => CurlClassBounds.class_component hc i)
 
 theorem good_class : WaveClass (HarmonicWaveInteraction.productStrip s) (fun n p => P n p.1)
@@ -323,7 +325,7 @@ theorem normal_ne (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
   intro hn
   have := hlo n p hp
   rw [hn, norm_zero] at this
-  linarith
+  linarith only [hb, this]
 
 theorem corrected_divergence (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
     cylindricalDivergence (a.radius n) ((directions c).radialField n)
@@ -350,8 +352,8 @@ theorem linear_identity (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) :
     (fun i => CurlClassBounds.class_component hf i) n hp
   have hcut := LinearWaveBounds.principal_cutoff h.coefficients ψ 0 n hp
     (((h.cutoff.smooth n).contDiffAt
-      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-          simp))
+      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   have hzero : ψ n p • a.principal (HarmonicWaveInteraction.productStrip s) (directions c) n p = 0
       := by
     by_cases hψ : ψ n p = 0
@@ -409,7 +411,8 @@ theorem linearResidual_realProjection {X : Type} [NormedAddCommGroup X] [NormedS
   have h1 := LinearWaveResidual.realMap_linearResidual Complex.reCLM ε R Vt hU hVr hVθ hVz
     (fun j => realProjection.contDiff.comp_contDiffOn (hv j)) hB
     (realProjection.differentiableAt.comp x hp) hx
-  exact (congrFun h1 i).trans (by simpa using (congrFun h0 i).symm)
+  exact (congrFun h1 i).trans (by simpa only [comp_apply, realProjection_apply, Complex.reCLM_apply,
+      Complex.ofReal_re] using (congrFun h0 i).symm)
 
 theorem pair_field_of_invariant {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
     {f : X × ℝ → ℂ} {Φ : X × ℝ → ℝ} (k : ℝ) (kp : ℤ)
@@ -608,7 +611,9 @@ theorem linear_field_re (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) (i : Fi
         LinearWaveResidual.realLift (fun y j => (HarmonicResidual.contextBase c n y.1 j).re) := by
     funext y j
     rw [HarmonicResidual.vectorField_constantVector]
-    fin_cases j <;> simp [HarmonicResidual.contextBase, LinearWaveResidual.realLift]
+    fin_cases j <;> simp only [HarmonicResidual.contextBase, Fin.zero_eta, Fin.isValue,
+        Matrix.cons_val_zero, LinearWaveResidual.realLift, Complex.ofReal_re, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   rw [hv, hpr, hbase] at he
   have hd := linearResidual_realProjection
     (HarmonicWaveInteraction.productStrip s).isOpen_domain (c.operators.epsilon n)
@@ -621,16 +626,18 @@ theorem linear_field_re (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain) (i : Fi
     (h.raw_velocity_smooth n)
     (fun j => (((Complex.reCLM.contDiff.comp_contDiffOn
       ((h.base_smooth n j).comp contDiffOn_fst (fun _ hx => hx))).contDiffAt
-        ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-            simp)))
+        ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt
+            (WithTop.coe_ne_zero.2 ENat.top_ne_zero)))
     (((h.raw_pressure_smooth n).contDiffAt
-      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-          simp)) hp i
+      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hp i
   have hbase' : LinearWaveResidual.realLift (fun (y : D × ℝ) j => (HarmonicResidual.contextBase c n
       y.1 j).re) =
       fun y => HarmonicResidual.contextBase c n y.1 := by
     funext y j
-    fin_cases j <;> simp [HarmonicResidual.contextBase, LinearWaveResidual.realLift]
+    fin_cases j <;> simp only [LinearWaveResidual.realLift, HarmonicResidual.contextBase,
+        Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, Complex.ofReal_re, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   rw [hbase'] at he hd
   rw [linearCoefficients,
     primary_amplitude_real (s := s) (c := c) (a := a) (ψ := ψ) (kp := kp) n,
@@ -668,8 +675,8 @@ theorem full_primary_divergence (n : ℕ) (p : D × ℝ) (hp : p.1 ∈ s.domain)
     rfl
   rw [he, divergence_map realProjection _ _ _ _ (fun i =>
     ((h.raw_velocity_smooth n i).contDiffAt
-      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt (by
-          simp))]
+      ((HarmonicWaveInteraction.productStrip s).isOpen_domain.mem_nhds hp)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))]
   have hd := h.corrected_divergence n p hp
   rw [h.matching.radius, directions_radial, directions_axial s c h.matching.epsilon] at hd
   change cylindricalDivergence _ _ HarmonicResidual.angularDirection _ _ p = 0 at hd
@@ -725,9 +732,9 @@ theorem initial_residual_class (u : CorrectionState.State D)
       (gaussianCoefficients c a ψ) A).WaveBounds s P (7 / 10) := by
   intro i j hj
   have hl := (h.linear_good_class j i).mono_exponent (show (7 / 10 : ℝ) ≤ 1 - 3 * κ by
-      linarith [h.loss_le])
+      linarith only [h, h.loss_le])
   have hc (m : ℤ) := (h.convection_class m i).mono_exponent
-    (show (7 / 10 : ℝ) ≤ 1 - κ by linarith [h.loss_le])
+    (show (7 / 10 : ℝ) ≤ 1 - κ by linarith only [h, h.loss_le])
   have hcr := HarmonicMeanInteraction.realCoefficient_class
     (fun n => HarmonicResidual.transport (HarmonicResidual.contextFrame c n)
       (a.frequency n) (fun y => a.phase n (y, 0)) (kp n)
@@ -738,7 +745,9 @@ theorem initial_residual_class (u : CorrectionState.State D)
   intro n x hx
   have hz : HarmonicResidual.stateMean u n = 0 := by
     funext y k
-    fin_cases k <;> simp [HarmonicResidual.stateMean, hmean]
+    fin_cases k <;> simp only [HarmonicResidual.stateMean, hmean, Pi.zero_apply,
+        Complex.ofReal_zero, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   change _ = HarmonicResidual.nonconstant
     ((HarmonicResidual.ofBlock (primaryBlock s c a ψ kp) (gaussianCoefficients c a ψ) A
         n).residualCoefficients
@@ -769,7 +778,8 @@ theorem initial_residual_class_of_zero_mode (u : CorrectionState.State D)
   apply h.initial_residual_class u hmean A
   intro n i j hj
   rw [HarmonicResidual.band_zero_eq_constant (hA n i)]
-  simp [constantCoefficient, hj]
+  simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true,
+      Finsupp.single_eq_of_ne]
 
 omit h in
 theorem initial_residual_band (u : CorrectionState.State D)
@@ -1041,12 +1051,12 @@ theorem polynomial_comp_with_edges
   have hg0 := s.growth_nonneg n x
   have hg1 := s.one_le_growth n x
   have hD : 1 ≤ (B + 1) * s.growth n x ^ k :=
-    one_le_mul_of_one_le_of_one_le (by linarith) (one_le_pow₀ hg1)
+    one_le_mul_of_one_le_of_one_le (by linarith only [hB]) (one_le_pow₀ hg1)
   have hinner (a : ℕ) (haN : a ≤ N) :
       ‖iteratedFDeriv ℝ a (c n) x‖ ≤ (B + 1) * s.growth n x ^ k := by
     have hh := hb n x hx a haN
     simp only [majorant, Real.rpow_zero, mul_one] at hh
-    exact hh.trans (mul_le_mul_of_nonneg_right (by linarith) (pow_nonneg hg0 _))
+    exact hh.trans (mul_le_mul_of_nonneg_right (by linarith only) (pow_nonneg hg0 _))
   have houter (a : ℕ) (haN : a ≤ N) :
       ‖iteratedFDeriv ℝ a (f n) (c n x)‖ ≤ A * s.growth n x ^ m := by
     have hh := ha n a haN _ (hmap n hx)
@@ -1073,7 +1083,7 @@ theorem polynomial_comp_with_edges
   · rw [iteratedFDerivWithin_of_isOpen a (U.isOpen n) (hmap n hx)]
     exact houter a (haj.trans hj)
   · rw [iteratedFDerivWithin_of_isOpen a s.isOpen_domain hx]
-    exact (hinner a (haj.trans hj)).trans (by simpa using pow_le_pow_right₀ hD ha1)
+    exact (hinner a (haj.trans hj)).trans (by simpa only [pow_one] using pow_le_pow_right₀ hD ha1)
 
 /-- The actual affine clock has polynomial jets from its value and linear
 coefficient bounds.  This supplies the slot-coordinate class in either
@@ -1148,11 +1158,9 @@ theorem defect_formula (P : PrimaryPulseBounds.PhaseConstruction U)
         (PhaseCalculus.slowZ (P.phase.F n) (χ n x).1)
         (PhaseCalculus.slowZ (P.phase.G n) (χ n x).1) := by
   have hF := ((P.baseF.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-      (by
-      simp)
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hG := ((P.baseG.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-      (by
-      simp)
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hm := material_pullback (χ n) (s.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
     (b n) (P.phase.F n) (P.phase.G n) (d.radialField n) (fun _ => d.angular)
     (d.axialField s n) (d.fastField n) (fun _ => d.slow)
@@ -1380,14 +1388,15 @@ theorem timeCoefficient_uniform (h : ℝ) (hh : 0 ≤ h) :
   by_cases hn : n < 4
   · have hs := Finset.single_le_sum (fun i (_ : i ∈ Finset.range 4) =>
       norm_nonneg (ChartScales.timeCoefficient h i)) (Finset.mem_range.mpr hn)
-    exact hs.trans (by dsimp [C]; linarith)
+    exact hs.trans (by dsimp only [Real.norm_eq_abs, C]; linarith only)
   · have hSn : 1 ≤ ChartScales.S n := by
       have hn' : (4 : ℝ) ≤ n := by exact_mod_cast (le_of_not_gt hn)
-      dsimp [ChartScales.S]
-      nlinarith
+      dsimp only [ChartScales.S]
+      nlinarith only [hn']
     have ht := (ChartScales.timeCoefficient_bounds h hh (le_of_not_gt hn)).2
     rw [Real.norm_eq_abs, abs_of_pos (ChartScales.timeCoefficient_pos h n)]
-    exact ht.trans ((one_div_le_one_div_of_le zero_lt_one hSn).trans (by simpa using hC))
+    exact ht.trans ((one_div_le_one_div_of_le zero_lt_one hSn).trans (by simpa only [ne_eq,
+        one_ne_zero, not_false_eq_true, div_self] using hC))
 
 theorem radialCoefficient_uniform (h : ℝ) (hh : 0 ≤ h) :
     ∃ C : ℝ, 1 ≤ C ∧ ∀ n, ‖ChartScales.radialCoefficient h n‖ ≤
@@ -1403,12 +1412,12 @@ theorem radialCoefficient_uniform (h : ℝ) (hh : 0 ≤ h) :
   by_cases hn : n < 4
   · have hs := Finset.single_le_sum (fun i (_ : i ∈ Finset.range 4) =>
       norm_nonneg (ChartScales.radialCoefficient h i)) (Finset.mem_range.mpr hn)
-    exact (hs.trans (by dsimp [C]; linarith)).trans
+    exact (hs.trans (by dsimp only [Real.norm_eq_abs, C]; linarith only)).trans
       (le_mul_of_one_le_right (zero_le_one.trans hC) (hpow n))
   · have hSn : 1 ≤ ChartScales.S n := by
       have hn' : (4 : ℝ) ≤ n := by exact_mod_cast (le_of_not_gt hn)
-      dsimp [ChartScales.S]
-      nlinarith
+      dsimp only [ChartScales.S]
+      nlinarith only [hn']
     have ht : ChartScales.timeCoefficient h n ≤ 1 :=
       ((ChartScales.timeCoefficient_bounds h hh (le_of_not_gt hn)).2).trans
         (by simpa using one_div_le_one_div_of_le zero_lt_one hSn)
@@ -1444,7 +1453,7 @@ theorem positive_radial_unweighted {s : StripData Point} {a b : ℝ} (ha : 0 < a
       (fun x _ => TerminalEdgeFactor.positiveExtension_pos ha x)
   apply MeanIncrementBounds.class_congr (radial_unweighted hr hext)
   intro n x hx
-  dsimp [ext]
+  dsimp only [comp_apply, ext]
   rw [TerminalEdgeFactor.positiveExtension_eq ha (hr x hx).1]
 
 theorem movingStrip_radial_bounds {h : ℝ} (hh : 0 ≤ h)
@@ -1492,7 +1501,7 @@ theorem operator_bounds {h : ℝ} (hh : 0 ≤ h) (U : LocalSignedRequest.SlowReg
     exact (mul_le_mul (WeightedRadialPrimitive.edge_le_one hcL.le _)
       (WeightedRadialPrimitive.edge_le_one hcR.le _) (FlatCutoff.edge_nonneg _ _)
           zero_le_one).trans_eq (by
-          simp)
+          simp only [mul_one])
 
 end OperatorBounds
 
@@ -1543,13 +1552,13 @@ theorem nativeStrip_active (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     Real.sq_sqrt (mul_nonneg (by norm_num) (NominalConeAssembly.activeLeft_pos W).le)
   have hb : (PrimaryTargetBounds.rightRadius W)^2 = 2 * NominalConeAssembly.activeRight W :=
     Real.sq_sqrt (mul_nonneg (by norm_num) (LeadingStressWeights.activeRight_pos W).le)
-  have hls := sq_lt_sq' (by linarith [PrimaryTargetBounds.leftRadius_pos W]) hr.1
-  have hrs := sq_lt_sq' (by linarith [PrimaryTargetBounds.rightRadius_pos W]) hr.2
+  have hls := sq_lt_sq' (by linarith only [hpos, PrimaryTargetBounds.leftRadius_pos W]) hr.1
+  have hrs := sq_lt_sq' (by linarith only [hpos, PrimaryTargetBounds.rightRadius_pos W]) hr.2
   have heta := BaseChartJets.normalizedCoordinates_eta F.data.h_pos F.data.h_lt_half
     (p := slowCoordinates x) hT
   refine ⟨⟨?_, ?_⟩, ?_⟩
-  · nlinarith
-  · nlinarith
+  · nlinarith only [he, ha, hls]
+  · nlinarith only [he, hb, hrs]
   · exact ⟨(abs_lt.mp heta).1.le, (abs_lt.mp heta).2.le⟩
 
 theorem nativeStrip_weight (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
@@ -1563,8 +1572,10 @@ theorem nativeStrip_weight (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
 /-- Insert zero auxiliary variables, retaining the explicit coordinate order. -/
 noncomputable def insertSlow : Slow →L[ℝ] Point where
   toFun p := (p.1, ((p.2.2, p.2.1), 0))
-  map_add' _ _ := by ext <;> simp
-  map_smul' _ _ := by ext <;> simp
+  map_add' _ _ := by ext <;> simp only [Prod.fst_add, Prod.mk_add_mk, add_zero, Prod.snd_add,
+      Prod.fst_zero, Prod.snd_zero]
+  map_smul' _ _ := by ext <;> simp only [Prod.smul_fst, smul_eq_mul, RingHom.id_apply, Prod.smul_mk,
+      smul_zero, Prod.smul_snd, Prod.fst_zero, Prod.snd_zero]
   cont := continuous_fst.prodMk ((continuous_snd.snd.prodMk continuous_snd.fst).prodMk
       continuous_const)
 
@@ -1607,7 +1618,7 @@ theorem geometryRadius_pos (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
         (PrimaryTargetBounds.leftRadius_pos W)
 
 theorem geometryUpper_pos (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
-    0 < geometryUpper U := by dsimp [geometryUpper]; linarith [le_max_left (1 : ℝ) U.qhi]
+    0 < geometryUpper U := by dsimp only [geometryUpper]; linarith only [le_max_left (1 : ℝ) U.qhi]
 
 theorem one_le_geometryBound (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) :
     1 ≤ geometryBound W U := le_max_left _ _
@@ -1633,7 +1644,7 @@ theorem native_geometry (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (ι :
     have hqM := hq.2.trans (le_max_right (1 : ℝ) U.qhi)
     rw [BaseChartJets.normalizedCoordinates_eq] at hqp hqM
     have hD : 0 ≤ CoordinateAlgebra.D F.data.h := by
-      unfold CoordinateAlgebra.D; linarith [F.data.h_lt_half]
+      unfold CoordinateAlgebra.D; linarith only [F.data.h_lt_half]
     have heta := BaseChartJets.normalizedCoordinates_eta F.data.h_pos F.data.h_lt_half ht
     rw [BaseChartJets.normalizedCoordinates_eq] at heta
     change |p.2.1 / SimilarityHomogeneity.chartQ F.data.h p ^ ((1-2*F.data.h)/2)| < 1 at heta
@@ -1644,14 +1655,14 @@ theorem native_geometry (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (ι :
     have hz : |p.2.1| ≤ (max 1 U.qhi) ^ CoordinateAlgebra.D F.data.h :=
       heta.le.trans (Real.rpow_le_rpow hqp.le hqM hD)
     have hspec := SimilarityCoordinates.coordinateQ_spec (show 0 < 2*F.data.h by
-        linarith [F.data.h_pos])
-      (show 2*F.data.h < 1 by linarith [F.data.h_lt_half]) (p := (p.2.2,p.2.1)) ht
+        linarith only [F.data.h_pos])
+      (show 2*F.data.h < 1 by linarith only [F.data.h_lt_half]) (p := (p.2.2,p.2.1)) ht
     have htq : p.2.2 ≤ SimilarityHomogeneity.chartQ F.data.h p := by
       have hn := mul_nonneg (sq_nonneg p.2.1) (Real.rpow_nonneg hspec.1.le (2*F.data.h))
       change p.2.2 ≤ SimilarityCoordinates.coordinateQ (2*F.data.h) (p.2.2,p.2.1)
       have he := hspec.2
-      dsimp [SimilarityCoordinates.forwardScalar] at he
-      linarith
+      dsimp only [SimilarityCoordinates.forwardScalar] at he
+      linarith only [hn, he]
     have hR := (hr hp).2.trans (mul_le_mul_of_nonneg_right
       (Real.sqrt_le_sqrt (le_max_right (1 : ℝ) U.qhi)) (PrimaryTargetBounds.rightRadius_pos W).le)
     change max |p.1| (max |p.2.1| |p.2.2|) ≤ geometryBound W U
@@ -1661,8 +1672,8 @@ theorem native_geometry (U : LocalSignedRequest.SlowRegion (2 * F.data.h)) (ι :
   · intro i p hp
     have hq := hqm hp
     exact ⟨by
-        linarith [U.qlo_pos, hq.1], by
-            dsimp [geometryUpper]; linarith [hq.2, le_max_right (1 : ℝ) U.qhi]⟩
+        linarith only [hq, U.qlo_pos, hq.1], by
+            dsimp only [geometryUpper]; linarith only [hq, hq.2, le_max_right (1 : ℝ) U.qhi]⟩
   · intro i p hp
     exact (nativeStrip_active W U hp).1
 
@@ -1919,8 +1930,9 @@ theorem rawStress_zero_near_axis (n : ℕ) {x : Point} (hT : 0 < x.2.1.1) (hR : 
     (p := slowCoordinates x) hT).comp x slowCoordinates.contDiff.contDiffAt
   have hzero : (BaseChartJets.normalizedCoordinates F.data.h (slowCoordinates x)).2.1 = 0 := by
     rw [BaseChartJets.normalizedCoordinates_eq]
-    simp [SimilarityHomogeneity.chartX, SimilarityCoordinates.coordinateX,
-      slowCoordinates_apply, hR]
+    simp only [SimilarityHomogeneity.chartX, SimilarityCoordinates.coordinateX,
+        slowCoordinates_apply, hR, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+        zero_div, Prod.mk.eta]
   have hx : (BaseChartJets.normalizedCoordinates F.data.h (slowCoordinates x)).2.1 <
       NominalConeAssembly.activeLeft W := by rw [hzero]; exact NominalConeAssembly.activeLeft_pos W
   filter_upwards [(isOpen_lt continuous_const continuous_snd.fst.fst).mem_nhds hT,
@@ -1988,8 +2000,8 @@ theorem virtualStress_support (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
   have hrad : PrimaryTargetBounds.profileRadius F.data.h (slowCoordinates x) ∈
       Icc (PrimaryTargetBounds.leftRadius W) (PrimaryTargetBounds.rightRadius W) := by
     constructor
-    · nlinarith [PrimaryTargetBounds.leftRadius_pos W, hX.1]
-    · nlinarith [PrimaryTargetBounds.rightRadius_pos W, hX.2]
+    · nlinarith only [he, ha, hX, hpos, PrimaryTargetBounds.leftRadius_pos W, hX.1]
+    · nlinarith only [he, hb, hX, hpos, PrimaryTargetBounds.rightRadius_pos W, hX.2]
   change x.1 / Real.sqrt (MeanRankUpdate.chartQ (2 * F.data.h) x) ∈ _
   rw [← PrimaryTargetBounds.meanPoint_scalar (F := F) x]
   exact hrad

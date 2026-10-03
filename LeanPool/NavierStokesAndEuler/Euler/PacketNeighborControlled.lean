@@ -40,25 +40,26 @@ open Set EulerPacketRay EulerPacketBridge EulerPacketPerturbation
 theorem velocity_difference_bound
     {σ Θ T e : ℝ} {F F₁ G G₁ Z Z₁ U U₁ V V₁ : ℝ → ℝ}
     (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
-    (hT0 : 0 ≤ T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40 * e * Θ ^ 21 ≤ 1)
+    (hT0 : 0 ≤ T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40 * e * Θ ^ (21 : ℕ) ≤ 1)
     (hF : ∀ t, 0 ≤ t → HasDerivAt F (F₁ t) t)
     (hG : ∀ t, 0 ≤ t → HasDerivAt G (G₁ t) t)
-    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
-    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * G₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * G t) t)
+    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * F₁ s)
+      (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * F t) t)
+    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * G₁ s)
+      (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * G t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hU : ∀ t ∈ Icc 0 T, HasDerivAt U (U₁ t) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivAt V (V₁ t) t)
     (hU₁c : ContinuousOn U₁ (Icc 0 T)) (hV₁c : ContinuousOn V₁ (Icc 0 T))
     (hZ : ∀ t ∈ Icc 0 T, HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
+    (hfluxZ : ∀ t ∈ Icc 0 T,
+      HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * Z₁ s)
+        (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * Z t) t)
     (herror : ∀ t ∈ Icc 0 T,
-      |U₁ t - idealVelocityFirst (σ ^ 2) t (U t) (V t)| + |V₁ t + U t| ≤
-        (e * Θ ^ 12) * (|U t| + |V t|)) :
+      |U₁ t - idealVelocityFirst (σ ^ (2 : ℕ)) t (U t) (V t)| + |V₁ t + U t| ≤
+        (e * Θ ^ (12 : ℕ)) * (|U t| + |V t|)) :
     ∀ t ∈ Icc 0 T, |V t-Z t|+|U t+Z₁ t| ≤
-      20*Θ^8*F t*(|V 0-Z 0|+|U 0+Z₁ 0|)+800*e*Θ^29*F t*(|V 0|+|U 0|) := by
+      20*Θ ^ (8 : ℕ)*F t*(|V 0-Z 0|+|U 0+Z₁ 0|)+800*e*Θ ^ (29 : ℕ)*F t*(|V 0|+|U 0|) := by
   let f : ℝ → ℝ := fun t => V₁ t+U t
   let g : ℝ → ℝ := fun t => -U₁ t+idealVelocityFirst (σ^2) t (U t) (V t)
   have hUc : ContinuousOn U (Icc 0 T) := fun t ht => (hU t ht).continuousAt.continuousWithinAt
@@ -80,9 +81,10 @@ theorem velocity_difference_bound
     rw [hg, abs_neg]
     dsimp [f]
     linarith only [herror t ht]
-  have hδ : 0 ≤ e*Θ^12 := by positivity
+  have hδ : 0 ≤ e*Θ^12 := mul_nonneg he (pow_nonneg (zero_le_one.trans hΘ) 12)
   have hs : 20*Θ^8*(e*Θ^12)*(T-0) ≤ 1/2 := by
-    have hm := mul_le_mul_of_nonneg_left hT (show 0 ≤ 20*e*Θ^20 by positivity)
+    have hm := mul_le_mul_of_nonneg_left hT (show 0 ≤ 20*e*Θ^20 from
+      mul_nonneg (mul_nonneg (by norm_num) he) (pow_nonneg (zero_le_one.trans hΘ) 20))
     linarith only [hsmall, hm]
   have hh := equation30_perturbed_difference_bound hσ hσsmall hΘ (by norm_num : (0:ℝ) ≤ 0)
     hT0 hT hδ hs hF hG hfluxF hfluxG hF0 hF₁0 hG₁0 hY hfluxY hZ hfluxZ hfc hgc hforcing
@@ -96,25 +98,26 @@ theorem velocity_difference_bound
 theorem velocity_difference_bound_within
     {σ Θ T e : ℝ} {F F₁ G G₁ Z Z₁ U U₁ V V₁ : ℝ → ℝ}
     (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
-    (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40 * e * Θ ^ 21 ≤ 1)
+    (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hsmall : 40 * e * Θ ^ (21 : ℕ) ≤ 1)
     (hF : ∀ t, 0 ≤ t → HasDerivAt F (F₁ t) t)
     (hG : ∀ t, 0 ≤ t → HasDerivAt G (G₁ t) t)
-    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
-    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * G₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * G t) t)
+    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * F₁ s)
+      (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * F t) t)
+    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * G₁ s)
+      (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * G t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hU : ∀ t ∈ Icc 0 T, HasDerivWithinAt U (U₁ t) (Icc 0 T) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivWithinAt V (V₁ t) (Icc 0 T) t)
     (hU₁c : ContinuousOn U₁ (Icc 0 T)) (hV₁c : ContinuousOn V₁ (Icc 0 T))
     (hZ : ∀ t ∈ Icc 0 T, HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
+    (hfluxZ : ∀ t ∈ Icc 0 T,
+      HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * Z₁ s)
+        (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * Z t) t)
     (herror : ∀ t ∈ Icc 0 T,
-      |U₁ t - idealVelocityFirst (σ ^ 2) t (U t) (V t)| + |V₁ t + U t| ≤
-        (e * Θ ^ 12) * (|U t| + |V t|)) :
+      |U₁ t - idealVelocityFirst (σ ^ (2 : ℕ)) t (U t) (V t)| + |V₁ t + U t| ≤
+        (e * Θ ^ (12 : ℕ)) * (|U t| + |V t|)) :
     ∀ t ∈ Icc 0 T, |V t-Z t|+|U t+Z₁ t| ≤
-      20*Θ^8*F t*(|V 0-Z 0|+|U 0+Z₁ 0|)+800*e*Θ^29*F t*(|V 0|+|U 0|) := by
+      20*Θ ^ (8 : ℕ)*F t*(|V 0-Z 0|+|U 0+Z₁ 0|)+800*e*Θ ^ (29 : ℕ)*F t*(|V 0|+|U 0|) := by
   obtain ⟨U', hUeq, hU'⟩ := exists_extension hT0 hU
   obtain ⟨V', hVeq, hV'⟩ := exists_extension hT0 hV
   have he' : ∀ t ∈ Icc 0 T,
@@ -134,8 +137,9 @@ theorem neighbor_initial_error_bound
     {Θ e η lam Ft u₀ v₀ L : ℝ}
     (hΘ : 1 ≤ Θ) (he : 0 ≤ e) (hlam : 0 ≤ lam) (hFt : 0 ≤ Ft)
     (hi : |v₀ - 1| + |u₀ + lam| ≤ η)
-    (hb : L ≤ 20 * Θ ^ 8 * Ft * (|v₀ - 1| + |u₀ + lam|) + 800 * e * Θ ^ 29 * Ft * (|v₀| + |u₀|)) :
-    L ≤ (20*η*Θ^8+800*e*Θ^29*(1+lam+η))*Ft := by
+    (hb : L ≤ 20 * Θ ^ (8 : ℕ) * Ft * (|v₀ - 1| + |u₀ + lam|) +
+      800 * e * Θ ^ (29 : ℕ) * Ft * (|v₀| + |u₀|)) :
+    L ≤ (20*η*Θ ^ (8 : ℕ)+800*e*Θ ^ (29 : ℕ)*(1+lam+η))*Ft := by
   have hv := abs_add_le (v₀-1) 1
   have hu := abs_add_le (u₀+lam) (-lam)
   simp only [sub_add_cancel, abs_one, add_neg_cancel_right, abs_neg, abs_of_nonneg hlam] at hv hu
@@ -163,7 +167,7 @@ open Set Real EulerPacketRay EulerPacketBridge EulerPacketGrowth
 theorem ray_controlled_velocity_error_within
     {β Θ T e ε : ℝ} {R A C : ℝ → Fin 3 → Fin 3 → ℝ} {P Q N : ℝ → ℝ}
     (hβ : 0 ≤ β) (hβupper : β ≤ 1) (hΘ : 1 ≤ Θ) (hT0 : 0 < T) (hT : T ≤ Θ)
-    (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e) (hsmall : 10000 * e * Θ ^ 5 ≤ 1)
+    (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e) (hsmall : 10000 * e * Θ ^ (5 : ℕ) ≤ 1)
     (hRc : ∀ i j, ContinuousOn (fun t => R t i j) (Icc 0 T))
     (hP : ∀ t ∈ Icc 0 T, HasDerivWithinAt P
       (R t 0 0 * P t + R t 0 1 * Q t + R t 0 2 * N t) (Icc 0 T) t)
@@ -178,11 +182,11 @@ theorem ray_controlled_velocity_error_within
       |C t 1 j - idealUnprojectedEntry 1 j| ≤ 5 * e)
     (hinitial : norm3 (P 0) (Q 0) (N 0 - 1) ≤ e) :
     ∀ t ∈ Icc 0 T,
-      (norm3 (P t-β*t^2) (Q t+2*β*t) (N t-1) ≤ 800*e*Θ^5 ∧ 1/2 ≤ N t) ∧
+      (norm3 (P t-β*t ^ (2 : ℕ)) (Q t+2*β*t) (N t-1) ≤ 800*e*Θ ^ (5 : ℕ) ∧ 1/2 ≤ N t) ∧
       ∀ U V : ℝ,
         |velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) U V-idealVelocityFirst β t U V| +
           |velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) U V+U| ≤
-            200000*e*Θ^12*(|U|+|V|) := by
+            200000*e*Θ ^ (12 : ℕ)*(|U|+|V|) := by
   have hΘ0 : 0 ≤ Θ := by linarith only [hΘ]
   have hs : 400*(4*e)*Θ^5 ≤ 1 := by linarith only [hsmall, mul_nonneg he (pow_nonneg hΘ0 5)]
   have hi : norm3 (P 0) (Q 0) (N 0-1) ≤ 4*e := hinitial.trans (by linarith only [he])
@@ -223,13 +227,13 @@ theorem controlled_neighbor_relative_error_within
     {R A C : ℝ → Fin 3 → Fin 3 → ℝ}
     (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
     (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e)
-    (hlam : 0 ≤ lam) (hsmall : 8000000 * e * Θ ^ 21 ≤ 1)
+    (hlam : 0 ≤ lam) (hsmall : 8000000 * e * Θ ^ (21 : ℕ) ≤ 1)
     (hF : ∀ t, 0 ≤ t → HasDerivAt F (F₁ t) t)
     (hG : ∀ t, 0 ≤ t → HasDerivAt G (G₁ t) t)
-    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * F₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * F t) t)
-    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * G₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * G t) t)
+    (hfluxF : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * F₁ s)
+      (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * F t) t)
+    (hfluxG : ∀ t, 0 ≤ t → HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * G₁ s)
+      (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * G t) t)
     (hF0 : F 0 = 1) (hF₁0 : F₁ 0 = 0) (hG₁0 : G₁ 0 = 1)
     (hRc : ∀ i j, ContinuousOn (fun t => R t i j) (Icc 0 T))
     (hAc : ∀ i j, ContinuousOn (fun t => A t i j) (Icc 0 T))
@@ -244,21 +248,22 @@ theorem controlled_neighbor_relative_error_within
       (velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivWithinAt V
       (velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
-    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j - idealRayEntry (σ ^ 2) i j| ≤ 4 * e)
-    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealVelocityEntry (σ ^ 2) i j| ≤ 3 * e)
+    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j - idealRayEntry (σ ^ (2 : ℕ)) i j| ≤ 4 * e)
+    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealVelocityEntry (σ ^ (2 : ℕ)) i j| ≤ 3 * e)
     (hCclose : ∀ t ∈ Icc 0 T, ∀ j,
       |C t 0 j - idealUnprojectedEntry 0 j| ≤ 5 * e ∧
       |C t 1 j - idealUnprojectedEntry 1 j| ≤ 5 * e)
     (hZ : ∀ t ∈ Icc 0 T, HasDerivAt Z (Z₁ t) t)
-    (hfluxZ : ∀ t ∈ Icc 0 T, HasDerivAt (fun s => (1 + (σ ^ 2 * s ^ 2) ^ 2) * Z₁ s)
-      (2 * (1 - σ ^ 2 * (σ ^ 2 * t ^ 2)) * Z t) t)
+    (hfluxZ : ∀ t ∈ Icc 0 T,
+      HasDerivAt (fun s => (1 + (σ ^ (2 : ℕ) * s ^ (2 : ℕ)) ^ (2 : ℕ)) * Z₁ s)
+        (2 * (1 - σ ^ (2 : ℕ) * (σ ^ (2 : ℕ) * t ^ (2 : ℕ))) * Z t) t)
     (hrayInitial : norm3 (P 0) (Q 0) (N 0 - 1) ≤ e)
     (hvelocityInitial : |V 0 - 1| + |U 0 + lam| ≤ e)
     (hZ0 : Z 0 = 1) (hZ₁0 : Z₁ 0 = lam) :
     ∀ t ∈ Icc 0 T,
-      |V t-Z t|+|U t+Z₁ t| ≤ 400000000*e*Θ^29*(1+lam)*F t := by
+      |V t-Z t|+|U t+Z₁ t| ≤ 400000000*e*Θ ^ (29 : ℕ)*(1+lam)*F t := by
   have hΘ0 : 0 ≤ Θ := by linarith only [hΘ]
-  have hσ2 : σ^2 ≤ 1 := by nlinarith only [hσ, hσsmall]
+  have hσ2 : σ^2 ≤ 1 := pow_le_one₀ hσ.le (by linarith only [hσsmall])
   have hgeom : 10000*e*Θ^5 ≤ 1 := by
     have hh := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 5 ≤ 21)) he
     linarith only [hsmall, hh, mul_nonneg he (pow_nonneg hΘ0 21)]
@@ -278,13 +283,13 @@ theorem controlled_neighbor_relative_error_within
   obtain ⟨hU₁c, hV₁c⟩ := continuousOn_velocity_rhs (ε := ε) hAc hCc hPc hQc hNc hUc hVc hNne
   have hs : 40*(200000*e)*Θ^21 ≤ 1 := by linarith only [hsmall]
   have herror := velocity_difference_bound_within hσ hσsmall hΘ hT0 hT
-    (show 0 ≤ 200000*e by positivity) hs hF hG hfluxF hfluxG hF0 hF₁0 hG₁0
+    (mul_nonneg (by norm_num) he) hs hF hG hfluxF hfluxG hF0 hF₁0 hG₁0
     hU hV hU₁c hV₁c hZ hfluxZ (fun t ht => (hcontrol t ht).2 (U t) (V t))
   have hcoef : 20*e*Θ^8+800*(200000*e)*Θ^29*(1+lam+e) ≤ 400000000*e*Θ^29*(1+lam) := by
     have h1 := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 8 ≤ 29))
-      (show 0 ≤ 20*e by positivity)
+      (show 0 ≤ 20*e from mul_nonneg (by norm_num) he)
     have h2 := mul_le_mul_of_nonneg_left (show 1+lam+e ≤ 2*(1+lam) by linarith only [he1, hlam])
-      (show 0 ≤ 160000000*e*Θ^29 by positivity)
+      (show 0 ≤ 160000000*e*Θ^29 from mul_nonneg (mul_nonneg (by norm_num) he) (pow_nonneg hΘ0 29))
     linarith only [h1, h2, mul_nonneg (mul_nonneg he (pow_nonneg hΘ0 29)) hlam,
       mul_nonneg he (pow_nonneg hΘ0 29)]
   intro t ht
@@ -292,8 +297,8 @@ theorem controlled_neighbor_relative_error_within
     (by rw [hF₁0]) t ht.1).le
   have hh := herror t ht
   rw [hZ0, hZ₁0] at hh
-  have hb := neighbor_initial_error_bound hΘ (show 0 ≤ 200000*e by
-      positivity) hlam hFp hvelocityInitial hh
+  have hb := neighbor_initial_error_bound hΘ (mul_nonneg (by norm_num) he) hlam hFp
+    hvelocityInitial hh
   exact hb.trans (mul_le_mul_of_nonneg_right hcoef hFp)
 
 /-- Neighbor stability constant, given by `1000000000*exp 6`. -/
@@ -308,7 +313,7 @@ theorem controlled_neighbor_stage_references_within
     {σ Θ T e ε lam : ℝ} {U V P Q N : ℝ → ℝ} {R A C : ℝ → Fin 3 → Fin 3 → ℝ}
     (hσ : 0 < σ) (hσsmall : σ ≤ 1 / 4) (hΘ : 1 ≤ Θ)
     (hT0 : 0 < T) (hT : T ≤ Θ) (he : 0 ≤ e) (hε : 0 ≤ ε) (hεe : ε ≤ e)
-    (hlam : 0 ≤ lam) (hsmall : 1000000 * neighborStabilityConstant * e * Θ ^ 40 ≤ 1)
+    (hlam : 0 ≤ lam) (hsmall : 1000000 * neighborStabilityConstant * e * Θ ^ (40 : ℕ) ≤ 1)
     (hRc : ∀ i j, ContinuousOn (fun t => R t i j) (Icc 0 T))
     (hAc : ∀ i j, ContinuousOn (fun t => A t i j) (Icc 0 T))
     (hCc : ∀ i j, ContinuousOn (fun t => C t i j) (Icc 0 T))
@@ -322,8 +327,8 @@ theorem controlled_neighbor_stage_references_within
       (velocityFirstRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
     (hV : ∀ t ∈ Icc 0 T, HasDerivWithinAt V
       (velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) (U t) (V t)) (Icc 0 T) t)
-    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j - idealRayEntry (σ ^ 2) i j| ≤ 4 * e)
-    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealVelocityEntry (σ ^ 2) i j| ≤ 3 * e)
+    (hRclose : ∀ t ∈ Icc 0 T, ∀ i j, |R t i j - idealRayEntry (σ ^ (2 : ℕ)) i j| ≤ 4 * e)
+    (hAclose : ∀ t ∈ Icc 0 T, ∀ i j, |A t i j - idealVelocityEntry (σ ^ (2 : ℕ)) i j| ≤ 3 * e)
     (hCclose : ∀ t ∈ Icc 0 T, ∀ j,
       |C t 0 j - idealUnprojectedEntry 0 j| ≤ 5 * e ∧
       |C t 1 j - idealUnprojectedEntry 1 j| ≤ 5 * e)
@@ -332,14 +337,14 @@ theorem controlled_neighbor_stage_references_within
     ∃ F F₁ Z Z₁ : ℝ → ℝ,
       F 0 = 1 ∧ F₁ 0 = 0 ∧ Z 0 = 1 ∧ Z₁ 0 = lam ∧
       (∀ t, HasDerivAt F (F₁ t) t) ∧ (∀ t, HasDerivAt Z (Z₁ t) t) ∧
-      (∀ t, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*F₁ s)
-        (2*(1-σ^2*(σ^2*t^2))*F t) t) ∧
-      (∀ t, HasDerivAt (fun s => (1+(σ^2*s^2)^2)*Z₁ s)
-        (2*(1-σ^2*(σ^2*t^2))*Z t) t) ∧
-      (∀ t ∈ Icc 0 T, |V t-Z t|+|U t+Z₁ t| ≤ 400000000*e*Θ^29*(1+lam)*F t) ∧
-      (∀ t ∈ Icc 1 T, 0 < V t ∧ |V t/Z t-1| ≤ neighborStabilityConstant*e*Θ^29 ∧
-        |U t/V t+Z₁ t/Z t| ≤ 10*(neighborStabilityConstant*e*Θ^29)) := by
-  have hσ2 : σ^2 ≤ 1 := by nlinarith only [hσ, hσsmall]
+      (∀ t, HasDerivAt (fun s => (1+(σ ^ (2 : ℕ)*s ^ (2 : ℕ)) ^ (2 : ℕ))*F₁ s)
+        (2*(1-σ ^ (2 : ℕ)*(σ ^ (2 : ℕ)*t ^ (2 : ℕ)))*F t) t) ∧
+      (∀ t, HasDerivAt (fun s => (1+(σ ^ (2 : ℕ)*s ^ (2 : ℕ)) ^ (2 : ℕ))*Z₁ s)
+        (2*(1-σ ^ (2 : ℕ)*(σ ^ (2 : ℕ)*t ^ (2 : ℕ)))*Z t) t) ∧
+      (∀ t ∈ Icc 0 T, |V t-Z t|+|U t+Z₁ t| ≤ 400000000*e*Θ ^ (29 : ℕ)*(1+lam)*F t) ∧
+      (∀ t ∈ Icc 1 T, 0 < V t ∧ |V t/Z t-1| ≤ neighborStabilityConstant*e*Θ ^ (29 : ℕ) ∧
+        |U t/V t+Z₁ t/Z t| ≤ 10*(neighborStabilityConstant*e*Θ ^ (29 : ℕ))) := by
+  have hσ2 : σ^2 ≤ 1 := pow_le_one₀ hσ.le (by linarith only [hσsmall])
   obtain ⟨F, F₁, G, G₁, hF0, hF₁0, _, hG₁0, hF, hG, hfluxF, hfluxG⟩ :=
     equation30_exists_fundamental_system (sq_nonneg σ) hσ2
   obtain ⟨Z, Z₁, hZ0, hZ₁0, hZ, hfluxZ⟩ := equation30_exists_global (sq_nonneg σ) hσ2 1 lam
@@ -357,11 +362,12 @@ theorem controlled_neighbor_stage_references_within
   refine ⟨F, F₁, Z, Z₁, hF0, hF₁0, hZ0, hZ₁0, hF, hZ, hfluxF, hfluxZ, herror, ?_⟩
   intro t ht
   let δ := 400000000*e*Θ^29
-  have hδ : 0 ≤ δ := by dsimp [δ]; positivity
+  have hδ : 0 ≤ δ := mul_nonneg (mul_nonneg (by norm_num) he) (pow_nonneg hΘ0 29)
   have hs : 4*exp 6*δ ≤ 1 := by
     have hm := mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 29 ≤ 40))
-      (show 0 ≤ neighborStabilityConstant*e by positivity [neighborStabilityConstant])
-    have hn : 0 ≤ neighborStabilityConstant*e*Θ^40 := by positivity [neighborStabilityConstant]
+      (mul_nonneg ((by norm_num : (0 : ℝ) ≤ 1000000000).trans hK) he)
+    have hn : 0 ≤ neighborStabilityConstant*e*Θ^40 :=
+      mul_nonneg (mul_nonneg ((by norm_num : (0 : ℝ) ≤ 1000000000).trans hK) he) (pow_nonneg hΘ0 40)
     dsimp [δ]
     unfold neighborStabilityConstant at hm hn hsmall
     linarith only [hm, hn, hsmall]

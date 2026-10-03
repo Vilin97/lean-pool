@@ -101,17 +101,13 @@ theorem coefficientJet_boundLevel_le_words (s n : ℕ) (t : K) :
       simp only [coefficientJet,boundLevel,smoothCoefficient]
       exact A.norm_coe_le_norm t
     | succ n =>
-      rw [wordSum_succ coefficientDirections (translateCoefficientPath A) hA n 0]
+      rw [wordSum_succ coefficientDirections _ hA n 0]
       rw [coefficientJet, boundLevel.eq_def]
       apply sum_le_sum
       intro i _
-      have hh := ih (orbitDerivativePath A (coefficientDirections i))
-        (orbitDerivativePath_orbit A hA (coefficientDirections i)) n
-      have he : translateCoefficientPath (orbitDerivativePath A (coefficientDirections i)) =
-          directional coefficientDirections (translateCoefficientPath A) i :=
-        funext (orbitDerivativePath_translation A hA (coefficientDirections i))
-      rw [he] at hh
-      exact hh
+      have hh := ih _ (orbitDerivativePath_orbit A hA (coefficientDirections i)) n
+      exact hh.trans_eq (congrArg (fun F => wordSum coefficientDirections F n 0)
+        (funext (orbitDerivativePath_translation A hA (coefficientDirections i))))
 
 theorem coefficientJet_boundLevel_le_tensor (s n : ℕ) (t : K) :
     boundLevel P (coefficientJet P A hA s t) n ≤
@@ -450,7 +446,7 @@ private theorem series_radius_small (ρ Rc M B : ℝ) (hρ : 0 ≤ ρ) (hB : 0 �
   have hp : 0 ≤ ρ*Rc := mul_nonneg hρ hR
   have hm := mul_le_mul_of_nonneg_right hM hp
   have hb := mul_le_mul_of_nonneg_left hBR hρ
-  nlinarith
+  linarith only [hb, hm, hg]
 
 variable (D : EulerTransversePacketProvider.Data U) (P : ℝ) [Fact (0 < P)]
   (R C0 C1 CI : ℝ) (hR : 0 ≤ R) (hC0 : 0 ≤ C0) (hC1 : 0 ≤ C1) (hCI : 0 ≤ CI)

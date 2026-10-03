@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 public import Mathlib.Analysis.Distribution.DerivNotation
 import Mathlib.Analysis.Distribution.SchwartzSpace.Deriv
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 Directional differentiation bundled with Schwartz regularity. The underlying functions

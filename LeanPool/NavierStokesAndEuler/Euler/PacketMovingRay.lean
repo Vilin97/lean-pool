@@ -53,9 +53,9 @@ def movingRay (m v r : ℝ → Space) (t : ℝ) (i : Fin 3) : ℝ :=
 matrix already derived from the older primary ODE. -/
 theorem movingRay_hasDerivAt (B M : Space →L[ℝ] Space)
     {m v r : ℝ → Space} {t : ℝ}
-    (hm : HasDerivAt m (-B.adjoint (m t)) t)
+    (hm : HasDerivAt m (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) B (m t)) t)
     (hv : HasDerivAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) t)
-    (hr : HasDerivAt r (-M.adjoint (r t)) t)
+    (hr : HasDerivAt r (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) M (r t)) t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i : Fin 3) :
     HasDerivAt (fun s => movingRay m v r s i)
       (-(∑ j : Fin 3, (frameMatrix M (unit (m t)) (unit (v t)) j i -
@@ -69,9 +69,9 @@ theorem movingRay_hasDerivAt (B M : Space →L[ℝ] Space)
 /-- The same physical coordinate equation holds with one-sided endpoint derivatives. -/
 theorem movingRay_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     {m v r : ℝ → Space} {t : ℝ} {S : Set ℝ}
-    (hm : HasDerivWithinAt m (-B.adjoint (m t)) S t)
+    (hm : HasDerivWithinAt m (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) B (m t)) S t)
     (hv : HasDerivWithinAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
-    (hr : HasDerivWithinAt r (-M.adjoint (r t)) S t)
+    (hr : HasDerivWithinAt r (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) M (r t)) S t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i : Fin 3) :
     HasDerivWithinAt (fun s => movingRay m v r s i)
       (-(∑ j : Fin 3, (frameMatrix M (unit (m t)) (unit (v t)) j i -

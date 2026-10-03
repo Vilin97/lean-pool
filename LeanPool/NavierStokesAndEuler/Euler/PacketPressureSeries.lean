@@ -50,7 +50,7 @@ theorem goodCost_le_spec (J : ℕ) (hJ : 3 ≤ J) (CM : ℝ) (hCM : 0 ≤ CM)
   have hm := monomialCost_nonneg J 1 5 3 1 2 1 0 0 x n zero_le_one hx
   calc
     _ ≤ (1+2*CM*goodRatio)*monomialCost J 1 5 3 1 2 1 0 0 x n := by
-      apply mul_le_mul (by linarith) h hg
+      apply mul_le_mul (by linarith only) h hg
       positivity [goodRatio_pos]
     _ = _ := by
       simp only [goodCostSpec,CostSpec.cost,monomialCost,pow_zero,mul_one,one_mul]

@@ -76,7 +76,7 @@ theorem field_jet_bound (D : CoherentFamily h degree N Δ U E)
   have hq := physicalQ_pos hh hh1 hw
   by_cases hts : w ∈ tsupport D.field
   · obtain ⟨n, hn, hqn, hnq, hu, he⟩ := exists_field_germ D hh hh1 hU hcover hw hsmall
-    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hq, hqn]
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     rw [iteratedFDeriv_eq_of_eventuallyEq he m]
     apply hb n (hN.trans hn) (D.gap n) (D.gap_le n hn) w hann ht
@@ -99,7 +99,7 @@ theorem field_smoothAt (D : CoherentFamily h degree N Δ U E)
   · obtain ⟨n, hn, hqn, hnq, hu, he⟩ := exists_field_germ D hh hh1 hU hcover hw hsmall
     have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by
       have := physicalQ_pos hh hh1 hw
-      linarith
+      linarith only [hqn, hnq]
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     have hnative := (hsm n hn).contDiffAt ((PhysicalMeanDomain.slowDomain_open hU).mem_nhds hu)
     have hc := (hnative.comp w (graph_smoothAt (div_pos ha (by norm_num : (0 : ℝ) < 4)) h n
@@ -134,7 +134,7 @@ theorem angularField_jet_bound (D : CoherentFamily h degree N Δ U ℝ)
   have hq := physicalQ_pos hh hh1 hw
   by_cases hts : w ∈ tsupport D.field
   · obtain ⟨n, hn, hqn, hnq, hu, he⟩ := exists_angularField_germ D hh hh1 hU hcover hw hsmall
-    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hq, hqn]
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     rw [iteratedFDeriv_eq_of_eventuallyEq he m]
     apply hb n (hN.trans hn) (D.gap n) (D.gap_le n hn) w hann ht
@@ -158,7 +158,7 @@ theorem angularField_smoothAt (D : CoherentFamily h degree N Δ U ℝ)
   · obtain ⟨n, hn, hqn, hnq, hu, _⟩ := exists_field_germ D hh hh1 hU hcover hw hsmall
     have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by
       have := physicalQ_pos hh hh1 hw
-      linarith
+      linarith only [hqn, hnq]
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     have haxis := PhysicalGraphBounds.scaledRadial_ne_zero
       (PhysicalGraphBounds.annulus_axisFree (div_pos ha (by norm_num : (0 : ℝ) < 4)) hann)

@@ -60,13 +60,12 @@ theorem freeU_contDiff (F : Profile) : ContDiff ℝ ∞ (freeU F) := by
     unfold FiveProfileMoments.u FiveProfileMoments.correction
     apply ContDiff.sum
     intro i _
-    exact ((contDiff_apply ℝ ℝ i).comp contDiff_fst.snd.fst).mul
-      ((FiveProfileMoments.bump_contDiff NominalProfile.resetPatch.leftHalf i).comp
-          contDiff_snd.fst.exp)
-  exact ((contDiff_const.mul contDiff_snd.snd).add
-    ((contDiff_const.sub (OutgoingSchedule.sigma_contDiff.comp
-      (contDiff_snd.fst.add contDiff_const))).mul contDiff_fst.fst)).add
-    (((NominalProfile.idealAmplitude_smooth F).comp contDiff_snd.snd).mul hb)
+    have hi := FiveProfileMoments.bump_contDiff NominalProfile.resetPatch.leftHalf i
+    fun_prop
+  have hs := OutgoingSchedule.sigma_contDiff
+  have hI := NominalProfile.idealAmplitude_smooth F
+  unfold freeU
+  fun_prop
 
 theorem freeE_contDiff (F : Profile) : ContDiff ℝ ∞ (freeE F) := by
   have hb : ContDiff ℝ ∞ (fun z : Raw =>
@@ -239,7 +238,7 @@ theorem radialJet_hasDerivAt {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f)
     (v : Control) (p : Point) :
     HasDerivAt (fun y => value f (v, (y, p.2))) (radialJet f (v, p)) p.1 := by
   have hg : HasDerivAt (fun y => (v.1, (y, p.2)) : ℝ → Raw) (0, (1, 0)) p.1 :=
-    (hasDerivAt_const _ _).prodMk ((hasDerivAt_id _).prodMk (hasDerivAt_const _ _))
+    (hasDerivAt_const _ _).prodMk ((hasDerivAt_id p.1).prodMk (hasDerivAt_const _ _))
   exact (hf.differentiable (by simp) _).hasFDerivAt.comp_hasDerivAt _ hg
 
 theorem parameterJet_hasDerivAt {f : Raw → ℝ} (hf : ContDiff ℝ ∞ f)
@@ -518,7 +517,7 @@ theorem prefix_difference {f g : ℝ → ℝ} {a b : ℝ} (ha : 0 ≤ a) (hab : 
   have hgs := NominalProfile.prefix_integral_split ha hab hg
   have hi : Ioc a b ⊆ Ioc (0 : ℝ) b := fun _ hx => ⟨ha.trans_lt hx.1, hx.2⟩
   rw [integral_sub (hf.mono_set hi) (hg.mono_set hi)]
-  linarith
+  linarith only [hmatch, hfs, hgs]
 
 theorem normalized_density_integrable {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (hsep : c.separation ≤ Real.exp (-8))
@@ -573,7 +572,7 @@ theorem actual_moments {F : Profile} {A : NominalProfile.AxisStage F}
   rw [he, ← intervalIntegral.integral_symm] at hd
   have hf := freeRows_sub_logRows F (dataParameter c p.2, p) i
   dsimp only at hf
-  linarith
+  linarith only [hd, hf]
 
 open StressAlgebra
 
@@ -766,7 +765,7 @@ theorem zero_projection_lower (F : Profile) (hh : F.data.h ≤ 1 / 100)
     exact OutgoingEntranceCone.idealAngularLag_lower F.data.h_pos.le hh (abs_le.mpr hp.2)
   have hL := OutgoingEntranceCone.natural_L_bounds F.data.h_pos.le hh (abs_le.mpr hp.2)
   rw [familyProjection_zero F hy]
-  apply (le_div_iff₀ (by linarith : 0 < NaturalAxisData.L F.data.h p.2)).mpr
+  apply (le_div_iff₀ (by linarith only [hL] : 0 < NaturalAxisData.L F.data.h p.2)).mpr
   calc
     Real.exp (-8) * NaturalAxisData.L F.data.h p.2 ≤ Real.exp (-8) := by
       simpa only [mul_one] using mul_le_mul_of_nonneg_left hL.2 (Real.exp_pos (-8)).le
@@ -813,7 +812,7 @@ theorem observations_contDiffOn (F : Profile) : ContDiffOn ℝ ∞ (observations
 theorem model_estimate (F : Profile) :
     ∃ r L : ℝ, 0 < r ∧ 0 ≤ L ∧ ∀ v : Control, ‖v‖ ≤ r → ∀ p ∈ window,
       (v, p) ∈ regular F ∧ ‖observations F (v, p) - observations F (0, p)‖ ≤ L * ‖v‖ := by
-  apply HeatSwitchCone.compact_control_estimate (isCompact_Icc.prod isCompact_Icc)
+  apply HeatSwitchCone.compact_control_estimate (B := Point) (isCompact_Icc.prod isCompact_Icc)
     ((convex_Icc _ _).prod (convex_Icc _ _)) (regular_isOpen F)
   · rintro ⟨v, p⟩ ⟨hv, hp⟩
     have hv' : v = 0 := hv
@@ -831,13 +830,13 @@ theorem model_margins (F : Profile) (hh : F.data.h ≤ 1 / 100) :
   let m := min (1 / 5 : ℝ) (Real.exp (-8) / 2)
   have hm : 0 < m := lt_min (by norm_num) (by positivity)
   let delta := min r (m / (L + 1))
-  have hdelta : 0 < delta := lt_min hr (div_pos hm (by linarith))
+  have hdelta : 0 < delta := lt_min hr (div_pos hm (by linarith only [hL]))
   refine ⟨delta, hdelta, ?_⟩
   intro v hv p hp
   have he := (hb v (hv.trans (min_le_left _ _)) p hp).2
   have hn : L * ‖v‖ ≤ m := by
-    have hd := (le_div_iff₀ (by linarith : 0 < L + 1)).mp (hv.trans (min_le_right _ _))
-    linarith [norm_nonneg v]
+    have hd := (le_div_iff₀ (by linarith only [hL] : 0 < L + 1)).mp (hv.trans (min_le_right _ _))
+    linarith only [hd, norm_nonneg v]
   have hcomp (i : Fin 22) : |observations F (v, p) i - observations F (0, p) i| ≤ m := by
     have hi := norm_le_pi_norm (observations F (v, p) - observations F (0, p)) i
     exact hi.trans (he.trans hn)
@@ -850,9 +849,9 @@ theorem model_margins (F : Profile) (hh : F.data.h ≤ 1 / 100) :
   have hm1 : m ≤ 1 / 5 := min_le_left _ _
   have hm2 : m ≤ Real.exp (-8) / 2 := min_le_right _ _
   refine ⟨?_, ?_, ?_⟩
-  · linarith [(abs_le.mp ha).1]
-  · linarith [(abs_le.mp hs).2]
-  · linarith [(abs_le.mp hproj).1, zero_projection_lower F hh hp]
+  · linarith only [hm1, ha, (abs_le.mp ha).1]
+  · linarith only [hm1, hs, (abs_le.mp hs).2]
+  · linarith only [hm2, hproj, hh, hp, (abs_le.mp hproj).1, zero_projection_lower F hh hp]
 
 /-- Chart, given by `(R * Real.exp p.1, p.2)`. -/
 noncomputable def chart (R : ℝ) (p : Point) : Point := (R * Real.exp p.1, p.2)
@@ -1038,7 +1037,7 @@ theorem physical_transport {F : Profile} {A : NominalProfile.AxisStage F}
   apply (eq_div_iff (Real.exp_ne_zero p.1)).mpr
   apply (mul_left_cancel₀ c.radius_pos.ne')
   dsimp only [chart]
-  linarith [hw]
+  linarith only [hsep, hw]
 
 theorem physical_lags {F : Profile} {A : NominalProfile.AxisStage F}
     (c : NominalProfile.Controls A) (hsep : c.separation ≤ Real.exp (-8))
@@ -1181,8 +1180,10 @@ theorem physical_log_shears {D : ProfileHistories.RadialDomain}
       ActivationContinuation.shearB P (chart R p) =
         -2 * deriv (fun y => P.U (R * Real.exp y, p.2)) p.1 / P.E (chart R p) := by
   have hc := (Real.hasDerivAt_exp p.1).const_mul R
-  have hfd := (ProfileHistories.radialPartial_hasDerivAt D P.f_smooth hp).comp p.1 hc
-  have hud := (ProfileHistories.radialPartial_hasDerivAt D P.U_smooth hp).comp p.1 hc
+  have hfd := (ProfileHistories.radialPartial_hasDerivAt D P.f_smooth hp).comp
+    (h := fun y => R * Real.exp y) p.1 hc
+  have hud := (ProfileHistories.radialPartial_hasDerivAt D P.U_smooth hp).comp
+    (h := fun y => R * Real.exp y) p.1 hc
   have hr := (((hasDerivAt_id p.1).div_const 2).exp).const_mul (Real.sqrt (2 * R))
   dsimp only [chart, Function.comp_def, id_eq] at hfd hud hr
   have he : (fun y => P.E (R * Real.exp y, p.2)) =
@@ -1341,13 +1342,13 @@ theorem exists_repair_cone_log (F : Profile) :
         (ActivationContinuation.shearB (c.profiles hsep) (chart c.radius p)) := by
       rw [physical_projection c hsep hp.1 heta hs]
       have hl := mul_le_mul_of_nonneg_left hb.2.2 c.radius_pos.le
-      linarith
+      linarith only [hfloor, hl]
     refine ⟨?_, hproj, ConeAlgebra.relaxed_cone_of_le_two hproj (hspeed.trans (by norm_num))⟩
     rw [ha]
     exact lt_of_lt_of_le (by norm_num : (0 : ℝ) < 3 / 5) hb.1
   · refine ⟨1, 1, zero_lt_one, zero_lt_one, ?_⟩
     intro A
-    exact False.elim (hh (by linarith [A.small.h_le]))
+    exact False.elim (hh (by linarith only [hh, A.small.h_le]))
 
 /-- Actual relaxed cone on the complete closed physical restore/repair
 annulus, with a tolerance and radius floor depending only on `F`. -/
@@ -1367,9 +1368,9 @@ theorem exists_repair_cone (F : Profile) :
   have hx : 0 < p.1 := (mul_pos c.radius_pos (Real.exp_pos (-8))).trans_le hp.1
   have hxR : 0 < p.1 / c.radius := div_pos hx c.radius_pos
   have hlo : Real.exp (-8) ≤ p.1 / c.radius :=
-    (le_div_iff₀ c.radius_pos).mpr (by linarith [hp.1])
+    (le_div_iff₀ c.radius_pos).mpr (by linarith only [hp, hp.1])
   have hhi : p.1 / c.radius ≤ Real.exp (-5) :=
-    (div_le_iff₀ c.radius_pos).mpr (by linarith [hp.2])
+    (div_le_iff₀ c.radius_pos).mpr (by linarith only [hp, hp.2])
   have hy : Real.log (p.1 / c.radius) ∈ Icc (-8) (-5) := by
     constructor
     · simpa only [Real.log_exp] using Real.log_le_log (Real.exp_pos (-8)) hlo

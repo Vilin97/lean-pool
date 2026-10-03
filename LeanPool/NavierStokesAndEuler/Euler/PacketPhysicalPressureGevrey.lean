@@ -36,7 +36,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 /-- Graph pressure force, given by `κ • (D.FInv.field t x).adjoint (physicalField P k D.m₀ (e t)
 x)`. -/
 def graphPressureForce (t : Icc (0 : ℝ) D.T) (x : Space) : Space :=
-  κ • (D.FInv.field t x).adjoint (physicalField P k D.m₀ (e t) x)
+  κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x)
+    (physicalField P k D.m₀ (e t) x)
 
 include he in
 theorem graphPressureForce_contDiff (t : Icc (0 : ℝ) D.T) :
@@ -53,7 +54,8 @@ variable (R C A S : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hA : 0 ≤ A) (hS : 0 �
 
 include hR hC hdet hF in
 theorem inverseTranspose_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
-    ‖iteratedFDeriv ℝ n (fun y => (D.FInv.field t y).adjoint) x‖ ≤
+    ‖iteratedFDeriv ℝ n (fun y => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (D.FInv.field t y)) x‖ ≤
       (9*C^2)*majorant R 0 n :=
   adjoint_bound (D.FInv.field t) (D.FInv.smooth t) R (9*C^2) hR (by positivity) 0
     (fun j y => coefficientInverse_bound D.F D.FInv.field hdet D.inverse_left R C hR hC hF j t y) n
@@ -65,7 +67,8 @@ theorem graphPressureForce_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) 
       (|κ| *27*C^2*A)*majorant (R+frequencyFactor k D.m₀*S) 0 n := by
   let Rg := R+frequencyFactor k D.m₀*S
   have hRg : 0 ≤ Rg := add_nonneg hR (mul_nonneg (frequencyFactor_nonneg k D.m₀) hS)
-  have hFR : ∀ n x, ‖iteratedFDeriv ℝ n (fun y => (D.FInv.field t y).adjoint) x‖ ≤
+  have hFR : ∀ n x, ‖iteratedFDeriv ℝ n (fun y =>
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t y)) x‖ ≤
       (9*C^2)*majorant Rg 0 n := fun n x => (inverseTranspose_gevrey D R C hR hC hdet hF n t
           x).trans
     (mul_le_mul_of_nonneg_left (majorant_radius_mono R Rg hR
@@ -75,14 +78,16 @@ theorem graphPressureForce_gevrey (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) 
     (physicalField_gevrey P k D.m₀ (e t) (he t) A S (fun n x => hb n t x) n x).trans
       (mul_le_mul_of_nonneg_left (majorant_radius_mono (frequencyFactor k D.m₀*S) Rg
         (mul_nonneg (frequencyFactor_nonneg k D.m₀) hS) (le_add_of_nonneg_left hR) 0 n) hA)
-  have hI : ContDiff ℝ ∞ (fun y => (D.FInv.field t y).adjoint) :=
-    (realAdjoint (U := Space) (E := Space)).contDiff.comp (D.FInv.smooth t)
-  have hprod := clm_apply_bound (fun y => (D.FInv.field t y).adjoint) (physicalField P k D.m₀ (e t))
+  have hI := (realAdjoint (U := Space) (E := Space)).contDiff.comp (D.FInv.smooth t)
+  have hprod := clm_apply_bound (fun y =>
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t y))
+    (physicalField P k D.m₀ (e t))
     hI (physicalField_contDiff P k D.m₀ (e t) (he t)) Rg (9*C^2) A hRg (by
         positivity) hA 0 0 hFR heR n x
-  change ‖iteratedFDeriv ℝ n (fun y => κ • ((D.FInv.field t y).adjoint
-    (physicalField P k D.m₀ (e t) y))) x‖ ≤ _
-  rw [iteratedFDeriv_const_smul_apply'
+  change ‖iteratedFDeriv ℝ n (fun y => κ •
+    ((realAdjoint (U := Space) (E := Space) ∘ D.FInv.field t) y
+      (physicalField P k D.m₀ (e t) y))) x‖ ≤ _
+  simp only [iteratedFDeriv_const_smul_apply'
     ((hI.clm_apply (physicalField_contDiff P k D.m₀ (e t) (he t))).contDiffAt.of_le
       (by simp : (n : ℕ∞ω) ≤ ∞)),norm_smul,Real.norm_eq_abs]
   exact (mul_le_mul_of_nonneg_left hprod (abs_nonneg κ)).trans_eq (by

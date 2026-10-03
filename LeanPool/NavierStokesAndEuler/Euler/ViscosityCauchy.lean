@@ -67,16 +67,15 @@ theorem correction_viscosity_pointwise {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 
   have hEc : Continuous E := (hKc.clm_apply hec).inner (𝕜 := ℝ) hec
   have hKv (t : Icc (0 : ℝ) T) : K t.val=(B.metric t).operator := by
     simp only [K,projIcc_of_mem hT t.property]
-  have hev (t : Icc (0 : ℝ) T) : e t.val=value period (u t-v t) := by
-    change value period (u (projIcc 0 T hT t.val))-value period (v (projIcc 0 T hT t.val))=_
-    rw [projIcc_of_mem hT t.property]
-    rfl
+  have hev (t : Icc (0 : ℝ) T) : e t.val=value period (u t-v t) :=
+    congrArg (fun s => value period (u s)-value period (v s)) (projIcc_val hT t)
   have hzero : E 0 ≤ 0 := by
     have hu0 := hu ⟨0,le_rfl,hT⟩
     have hv0 := hv ⟨0,le_rfl,hT⟩
     simp only [quadraticDuhamel,mul_zero,Real.toNNReal_zero,heatOperator_zero,
       intervalIntegral.integral_same,add_zero] at hu0 hv0
-    have he0 : e 0=0 := by rw [hev ⟨0,le_rfl,hT⟩,hu0,hv0,sub_self]; rfl
+    have he0 : e 0=0 := (hev ⟨0,le_rfl,hT⟩).trans
+      (congrArg (value period) (sub_eq_zero.mpr (hu0.trans hv0.symm)))
     simp only [E,he0,map_zero,inner_zero_left,le_refl]
   have hder (t : ℝ) (ht : t ∈ Ioo 0 T) : HasDerivAt E (deriv E t) t := by
     let τ : Icc (0 : ℝ) T := ⟨t,ht.1.le,ht.2.le⟩
@@ -106,11 +105,11 @@ theorem correction_viscosity_pointwise {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 
     (defectConstant B.bound R*|ν-μ|^2) T (B.growth_nonneg period R hR)
     (mul_nonneg (sq_nonneg _) (sq_nonneg _)) hT hEc.continuousOn hzero hder hineq
   intro t
-  have hc : B.c^2*‖value period (u t-v t)‖^2 ≤ E t.val := by
-    change _ ≤ ⟪K t.val (e t.val),e t.val⟫_ℝ
-    rw [hKv t,hev t]
-    exact coefficientOperator_coercive (B.metric t).coefficient (B.metric t).measurable
-      (B.metric t).bound (B.metric t).norm_bound (B.c^2) (B.coercive t) _
+  have hc : B.c^2*‖value period (u t-v t)‖^2 ≤ E t.val :=
+    (coefficientOperator_coercive (B.metric t).coefficient (B.metric t).measurable
+      (B.metric t).bound (B.metric t).norm_bound (B.c^2) (B.coercive t) _).trans_eq
+      (congrArg₂ (fun (A : LiftL2 period →L[ℝ] LiftL2 period) x => ⟪A x,x⟫_ℝ)
+        (hKv t) (hev t)).symm
   let P := defectConstant B.bound R*T*Real.exp (B.growth period R*T)
   have hP : 0 ≤ P := mul_nonneg (mul_nonneg (sq_nonneg _) hT) (Real.exp_pos _).le
   have hsqrt := Real.sq_sqrt hP
@@ -118,10 +117,12 @@ theorem correction_viscosity_pointwise {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 
   have hn : B.c*‖value period (u t-v t)‖ ≤ Real.sqrt P*|ν-μ| := by
     have hleft := mul_nonneg B.c_pos.le (norm_nonneg (value period (u t-v t)))
     have hright := mul_nonneg (Real.sqrt_nonneg P) (abs_nonneg (ν-μ))
-    nlinarith
+    have hsq : P*|ν-μ|^2 = (Real.sqrt P*|ν-μ|)^2 :=
+      (congrArg (· * |ν-μ|^2) hsqrt.symm).trans (mul_pow _ _ 2).symm
+    exact (sq_le_sq₀ hleft hright).mp (((mul_pow _ _ 2).trans_le (hc.trans heB)).trans_eq hsq)
   change ‖value period (u t-v t)‖ ≤ B.comparisonConstant period R*|ν-μ|
   have hdiv : ‖value period (u t-v t)‖ ≤ (Real.sqrt P*|ν-μ|)/B.c :=
-    (le_div_iff₀ B.c_pos).mpr (by nlinarith only [hn])
+    (le_div_iff₀ B.c_pos).mpr ((mul_comm _ _).trans_le hn)
   exact hdiv.trans_eq (by unfold StabilityBudget.comparisonConstant; dsimp [P]; ring)
 
 end EulerCorrectionViscosityStability
@@ -147,14 +148,14 @@ theorem cauchySeq_of_norm_le {X : Type*} [NormedAddCommGroup X]
     (hbound : ∀ m n, ‖u m - u n‖ ≤ C * |a m - a n|) : CauchySeq u := by
   apply Metric.cauchySeq_iff.mpr
   intro ε hε
-  have hd : 0 < ε/(C+1) := div_pos hε (by linarith)
+  have hd : 0 < ε/(C+1) := div_pos hε (by linarith only [hC])
   obtain ⟨N,hN⟩ := Metric.cauchySeq_iff.mp ha (ε/(C+1)) hd
   refine ⟨N,fun m hm n hn => ?_⟩
   rw [dist_eq_norm]
   have hdist : |a m-a n| < ε/(C+1) := by simpa only [Real.dist_eq] using hN m hm n hn
   have h := mul_le_mul_of_nonneg_left hdist.le hC
   have hlast : C*(ε/(C+1)) < ε := by
-    have hh : C/(C+1) < 1 := (div_lt_one (by linarith : 0 < C+1)).mpr (by linarith)
+    have hh : C/(C+1) < 1 := (div_lt_one (by linarith : 0 < C+1)).mpr (by linarith only)
     have hm := mul_lt_mul_of_pos_right hh hε
     calc
       C*(ε/(C+1)) = (C/(C+1))*ε := by ring

@@ -34,7 +34,8 @@ open ProblemStatement Comparison
 theorem norm_rieszSymbol_le (i j : Fin 3) (ξ : Space) :
     ‖rieszSymbol i j ξ‖ ≤ 1 := by
   by_cases hξ : ξ = 0
-  · simp [hξ, rieszSymbol]
+  · simp only [rieszSymbol, hξ, PiLp.zero_apply, mul_zero, neg_zero, norm_zero, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, div_zero, zero_le_one]
   have hpos : 0 < ‖ξ‖ ^ 2 := pow_pos (norm_pos_iff.mpr hξ) _
   rw [rieszSymbol, norm_div, norm_neg, norm_mul,
     Real.norm_of_nonneg (sq_nonneg ‖ξ‖)]
@@ -58,12 +59,13 @@ theorem measurable_rieszSymbol (i j : Fin 3) : Measurable (rieszSymbol i j) := b
 
 @[simp] theorem rieszSymbol_neg (i j : Fin 3) (ξ : Space) :
     rieszSymbol i j (-ξ) = rieszSymbol i j ξ := by
-  simp [rieszSymbol]
+  simp only [rieszSymbol, PiLp.neg_apply, mul_neg, neg_mul, neg_neg, norm_neg]
 
 theorem rieszSymbol_mul_norm_sq (i j : Fin 3) (ξ : Space) :
     rieszSymbol i j ξ * ‖ξ‖ ^ 2 = -(ξ i * ξ j) := by
   by_cases hξ : ξ = 0
-  · simp [hξ, rieszSymbol]
+  · simp only [rieszSymbol, hξ, PiLp.zero_apply, mul_zero, neg_zero, norm_zero, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, div_zero]
   · exact div_mul_cancel₀ _ (ne_of_gt (pow_pos (norm_pos_iff.mpr hξ) 2))
 
 theorem measurable_rieszMultiplier (i j : Fin 3) (ψ : ComplexTest) :

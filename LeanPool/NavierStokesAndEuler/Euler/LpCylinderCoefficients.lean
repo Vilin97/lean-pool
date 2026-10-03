@@ -80,7 +80,7 @@ local instance instLpCylinderCoefficients8 : NormedRing (Supported period V S hS
 def liftedOperator (A : Space →ᵇ V →L[ℝ] V) : Supported period V S hS →L[ℝ] Supported period V S hS
     :=
   operator (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
-      (fieldLift period A)
+      (fieldLift (W := V →L[ℝ] V) period A)
 
 omit [CompleteSpace V] in
 /-- Mixed translation intertwines the actual spatial multiplication operators. -/
@@ -93,20 +93,18 @@ theorem operator_intertwines (Ω : Set Space) (hΩ : MeasurableSet Ω)
           := by
   apply Subtype.ext
   apply Lp.ext
-  filter_upwards [full_ae (liftMeasure period) (fieldLift period (translated A a.1))
-      (translate period a (u : CylinderL2 period V)),
+  filter_upwards [full_ae (liftMeasure period)
+      (fieldLift (W := V →L[ℝ] V) period (translated A a.1))
+      (translate (V := V) period a (u : CylinderL2 period V)),
     translate_ae period a (u : CylinderL2 period V),
-    translate_ae period a (full (liftMeasure period) (fieldLift period A) (u : CylinderL2 period
-        V)),
+    translate_ae period a (full (liftMeasure period) (fieldLift (W := V →L[ℝ] V) period A)
+      (u : CylinderL2 period V)),
     (measurePreserving_translation period (coveringMap period a)).quasiMeasurePreserving.ae
-      (full_ae (liftMeasure period) (fieldLift period A) (u : CylinderL2 period V))]
+      (full_ae (liftMeasure period) (fieldLift (W := V →L[ℝ] V) period A)
+        (u : CylinderL2 period V))]
     with x hl hu hr hA
-  change (full (liftMeasure period) (fieldLift period (translated A a.1))
-    (translate period a (u : CylinderL2 period V))) x =
-      (translate period a (full (liftMeasure period) (fieldLift period A) (u : CylinderL2 period
-          V))) x
-  rw [hl,hu,hr,hA]
-  rfl
+  exact hl.trans ((congrArg (fieldLift (W := V →L[ℝ] V) period (translated A a.1) x) hu).trans
+    (hA.symm.trans hr.symm))
 
 variable (T : ℝ)
 
@@ -114,7 +112,7 @@ variable (T : ℝ)
 def liftedOperatorPath (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V)) :
     C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS) :=
   operatorPath (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS) T
-    (fieldPathLift period A)
+    (fieldPathLift (K := Icc (0 : ℝ) T) (W := V →L[ℝ] V) period A)
 
 omit [CompleteSpace V] in
 /-- Pointwise operator lifting does not enlarge the uniform coefficient norm. -/
@@ -124,7 +122,7 @@ theorem liftedOperatorPath_norm (A : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ]
   intro t
   exact (operator_norm_le (liftMeasure period) (spatialSet period S) (spatialSet_measurable period
       S hS)
-    (fieldLift period (A t)) ‖A t‖ (norm_nonneg _)
+    (fieldLift (W := V →L[ℝ] V) period (A t)) ‖A t‖ (norm_nonneg _)
     (fun x _ => (A t).norm_coe_le_norm x.1)).trans (A.norm_coe_le_norm t)
 
 /-- The literal linear map underlying coefficient-path lifting. -/
@@ -136,19 +134,23 @@ def liftedOperatorPathLinear : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →
     intro t
     exact operator_add (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
         hS)
-      (fieldLift period (A t)) (fieldLift period (D t))
+      (fieldLift (W := V →L[ℝ] V) period (A t)) (fieldLift (W := V →L[ℝ] V) period (D t))
   map_smul' r A := by
     apply ContinuousMap.ext
     intro t
     exact operator_smul (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
         hS)
-      r (fieldLift period (A t))
+      r (fieldLift (W := V →L[ℝ] V) period (A t))
 
 /-- Lifting spatial coefficient paths to actual cylinder operators is a linear contraction. -/
 def liftedOperatorPathMap : C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) →L[ℝ]
     C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS) :=
-  (liftedOperatorPathLinear period S hS T).mkContinuous 1 (fun A => by
-    change ‖liftedOperatorPath period S hS T A‖ ≤ 1*‖A‖
+  -- The domain norm instance is given through the cached ring instance, as inferred before;
+  -- naming it spares a costly unification with the coefficient type still unknown.
+  @LinearMap.mkContinuous _ _ C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V) _ _ _
+    (@ContinuousMap.instSeminormedAddCommGroup _ _ _ _ (instLpCylinderCoefficients2
+      (V := V)).toNonUnitalNormedRing.toNonUnitalSeminormedRing.toSeminormedAddCommGroup)
+    _ _ _ _ (liftedOperatorPathLinear (V := V) period S hS T) 1 (fun A => by
     exact (liftedOperatorPath_norm period S hS T A).trans_eq (one_mul ‖A‖).symm)
 
 omit [CompleteSpace V] in
@@ -160,19 +162,16 @@ omit [CompleteSpace V] in
 theorem liftedOperatorPathMap_norm : ‖liftedOperatorPathMap (V := V) period S hS T‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
   intro A
-  change ‖liftedOperatorPath period S hS T A‖ ≤ 1*‖A‖
   exact (liftedOperatorPath_norm period S hS T A).trans_eq (one_mul ‖A‖).symm
 
 omit [CompleteSpace V] in
 /-- The actual cylinder coefficient varies smoothly with all four covering parameters. -/
 theorem mixedOperator_contDiff (B : SmoothCoefficientPath (Icc (0 : ℝ) T) (V →L[ℝ] V)) :
     ContDiff ℝ ∞ (fun a : LiftTangent => liftedOperatorPath period S hS T
-      (translateCoefficientPath B.field a.1)) := by
-  exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
-    (E := C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V))
-    (F := C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS))
-    (liftedOperatorPathMap period S hS T)).comp
-      (B.translation_contDiff.comp (ContinuousLinearMap.fst ℝ Space ℝ).contDiff)
+      (translateCoefficientPath B.field a.1)) :=
+  (B.translation_contDiff.comp
+    (ContinuousLinearMap.fst ℝ Space ℝ).contDiff).continuousLinearMap_comp
+      (liftedOperatorPathMap (V := V) period S hS T)
 
 omit [CompleteSpace V] in
 /-- Mixed coefficient jets obey the original spatial tensor bound, with constant one. -/
@@ -184,24 +183,17 @@ theorem mixedOperator_bound (B : SmoothCoefficientPath (Icc (0 : ℝ) T) (V →L
       (translateCoefficientPath B.field b.1)) a‖ ≤ C := by
   let f : Space → C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V) := translateCoefficientPath B.field
   have hf : ContDiff ℝ ∞ f := B.translation_contDiff
-  have hright : ‖iteratedFDeriv ℝ n (f ∘ ContinuousLinearMap.fst ℝ Space ℝ) a‖ ≤ C := by
-    rw [(ContinuousLinearMap.fst ℝ Space ℝ).iteratedFDeriv_comp_right hf a (by simp)]
-    apply (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans
-    calc
-      _ ≤ ‖iteratedFDeriv ℝ n f a.1‖ * ∏ _i : Fin n, (1 : ℝ) := by
-        apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
-        exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun _ _ =>
-            ContinuousLinearMap.norm_fst_le ℝ Space ℝ)
-      _ ≤ C := by
-          simpa only [Finset.prod_const_one, mul_one] using B.norm_iteratedFDeriv_translation_le n
-              C hC hb a.1
+  have hright := (congrArg norm ((ContinuousLinearMap.fst ℝ Space ℝ).iteratedFDeriv_comp_right
+    hf a (i := n) (by simp))).trans_le
+    ((ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans
+      ((mul_le_of_le_one_right (norm_nonneg _) (Finset.prod_le_one₀ (fun _ _ => norm_nonneg _)
+        fun _ _ => ContinuousLinearMap.norm_fst_le ℝ Space ℝ)).trans
+        (B.norm_iteratedFDeriv_translation_le n C hC hb a.1)))
   have hleft := ContinuousLinearMap.norm_iteratedFDeriv_comp_left (𝕜 := ℝ) (E := LiftTangent)
-    (F := C(Icc (0 : ℝ) T,Space →ᵇ V →L[ℝ] V))
-    (G := C(Icc (0 : ℝ) T,Supported period V S hS →L[ℝ] Supported period V S hS))
-    (liftedOperatorPathMap period S hS T)
+    (liftedOperatorPathMap (V := V) period S hS T)
     ((hf.comp (ContinuousLinearMap.fst ℝ Space ℝ).contDiff).contDiffAt (x := a)) (n := n) (by simp)
   exact hleft.trans ((mul_le_mul_of_nonneg_right (liftedOperatorPathMap_norm period S hS T)
-    (norm_nonneg _)).trans (by simpa only [one_mul] using hright))
+    (norm_nonneg _)).trans ((one_mul _).trans_le hright))
 
 variable (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
 
@@ -209,9 +201,9 @@ variable (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
 def constructedEvolution : Evolution T hT (liftedOperatorPath (V := V) period S hS T B) :=
   liftEvolution (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
       hS) T hT
-    (fieldPathLift period B)
-    (fieldPathLift period (fundamentalPath T hT B).forward)
-    (fieldPathLift period (fundamentalPath T hT B).backward)
+    (fieldPathLift (K := Icc (0 : ℝ) T) (W := V →L[ℝ] V) period B)
+    (fieldPathLift (K := Icc (0 : ℝ) T) (W := V →L[ℝ] V) period (fundamentalPath T hT B).forward)
+    (fieldPathLift (K := Icc (0 : ℝ) T) (W := V →L[ℝ] V) period (fundamentalPath T hT B).backward)
     (fun t x _ => congrArg (fun A : Space →ᵇ V →L[ℝ] V => A x.1)
       ((fundamentalPath T hT B).forward_backward t))
     (fun t x _ => congrArg (fun A : Space →ᵇ V →L[ℝ] V => A x.1)
@@ -226,14 +218,8 @@ theorem constructedEvolution_propagator_norm
           t/g s)
     (t s : Icc (0 : ℝ) T) (hst : s ≤ t) :
     ‖(constructedEvolution period S hS T hT B).propagator t s‖ ≤ C*g t/g s := by
-  change ‖(operator (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
-      (fieldLift period ((fundamentalPath T hT B).forward t))).comp
-    (operator (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S hS)
-      (fieldLift period ((fundamentalPath T hT B).backward s)))‖ ≤ _
-  rw [← operator_mul]
-  exact operator_norm_le (liftMeasure period) (spatialSet period S) (spatialSet_measurable period S
-      hS)
-    _ (C*g t/g s) (div_nonneg (mul_nonneg hC (hg t).le) (hg s).le)
-    (fun x hx => hprop t s hst x.1 hx)
+  refine liftEvolution_propagator_norm (liftMeasure period) (spatialSet period S)
+    (spatialSet_measurable period S hS) T hT _ _ _ _ _ _ g hg C hC ?_ t s hst
+  exact fun t s hst x hx => hprop t s hst x.1 hx
 
 end EulerLpCylinderCoefficients

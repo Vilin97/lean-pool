@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Strong measurability using second countability of the source. -/
 

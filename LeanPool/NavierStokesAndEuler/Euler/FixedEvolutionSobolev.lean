@@ -54,7 +54,7 @@ theorem weak_radius_bounds (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₀ C₁ C
     1 ≤ R ∧ sobolevCoefficientRadius ι Rc ≤ R := by
   have hM := blockCost_one_le ι q T Rc C₀ C₁ CH c Cf hT hRc hC₀ hC₁ hCH hCf
   have hRc0 := sobolevCoefficientRadius_nonneg (ι := ι) Rc hRc
-  constructor <;> nlinarith
+  constructor <;> nlinarith only [hR, hM, hRc0]
 
 variable {X U E ι : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
@@ -96,7 +96,7 @@ theorem accelerationLp_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ �
       hbQ hbQ₁ hbH hRweak f hf d hfb k y
   have hbf (k y) : block directions q f k y ≤ Cf*majorant R (d+1) k :=
     (hfb k y).trans (mul_le_mul_of_nonneg_left (majorant_mono_shift R hR1 d (d+1) k (by omega)) hCf)
-  exact solution_block_bound directions hdir q T hT Q Q₁ c hc hLower f v hQ hQ₁ hf hv
+  apply solution_block_bound directions hdir q T hT Q Q₁ c hc hLower f v hQ hQ₁ hf hv
     Rc R C₀ C₁ Cf 1 hRc hRcR hC₀ hC₁ hCf zero_le_one hRstrong hbQ hbQ₁ (d+1) hbf hbv n x
 
 /-- The actual H¹ representative has a uniform-time block estimate with
@@ -136,7 +136,7 @@ theorem continuousVelocity_block_gevrey (hTpos : 0 < T) (hT1 : T ≤ 1)
     (hfb : ∀ n x, block directions q f n x ≤ Cf * majorant R d n) (n : ℕ) (x : X) :
     block directions q (fun y => velocityPath T hT (Q y) (Q₁ y) (H y) c hc (hLower y) (hd y)
       K hK (hPotential y) hsmall (pathLp T hT (f y))) n x ≤ traceCost T*majorant R (d+2) n := by
-  have hsqrt : Real.sqrt T ≤ 1 := by simpa using Real.sqrt_le_sqrt hT1
+  have hsqrt : Real.sqrt T ≤ 1 := (Real.sqrt_le_sqrt hT1).trans_eq Real.sqrt_one
   have hn : ‖pathLpOperator (E := E) T hT‖ ≤ 1 :=
     (EulerMeanTimeContinuousTranslation.pathLpOperator_norm_sqrt T hT).trans hsqrt
   let flp := fun y => pathLp T hT (f y)
@@ -145,7 +145,7 @@ theorem continuousVelocity_block_gevrey (hTpos : 0 < T) (hT1 : T ≤ 1)
     (block_comp_clm_le directions q (pathLpOperator (E := E) T hT) f hf k y).trans
       ((mul_le_mul_of_nonneg_right hn (block_nonneg directions q f k y)).trans
         (by simpa only [one_mul] using hfb k y))
-  exact velocityPath_block_gevrey directions hdir q T hT Q Q₁ H c hc hLower hd K hK hPotential
+  apply velocityPath_block_gevrey directions hdir q T hT Q Q₁ H c hc hLower hd K hK hPotential
       hsmall
     hQ hQ₁ hH Rc C₀ C₁ CH Cf R hRc hC₀ hC₁ hCH hCf hbQ hbQ₁ hbH hRweak hRstrong hTpos flp hflp d hb
         n x

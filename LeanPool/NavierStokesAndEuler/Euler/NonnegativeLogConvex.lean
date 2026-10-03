@@ -32,7 +32,7 @@ theorem cross (a d : ℕ) : x (a+1)*x (a+d) ≤ x a*x (a+d+1) := by
     · have hz' : x (a+d+1)=0 := by
         have h := hc (a+d)
         rw [hz,zero_mul] at h
-        nlinarith [hx (a+d+1)]
+        nlinarith only [hx, h, hx (a+d+1)]
       simpa only [Nat.add_succ,hz',mul_zero] using
         mul_nonneg (hx a) (hx (a+d+2))
     · have hp : 0 < x (a+d) := lt_of_le_of_ne (hx (a+d)) (Ne.symm hz)

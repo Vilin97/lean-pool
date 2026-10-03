@@ -264,9 +264,7 @@ theorem weightedCommutator_drift_bound {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : 
   intro n
   obtain ⟨f,hf,hfs,hfL⟩ := smoothApprox_representative_all period n u
   obtain ⟨g,hg,hgs,hgL⟩ := smoothApprox_representative_all period n v
-  change weightedCommutatorNorm period hs N hN ρ L hL (U n) (V n) ≤
-    productConstant period 3 * ρ⁻¹ * weightedDriftNorm period 6 N ρ (velocityMap L) (U n) *
-        weightedLoss period 6 N ρ (V n)
+  dsimp only [Function.comp_apply]
   rw [weightedDriftNorm_eq_classical period 6 N (by omega) ρ (velocityMap L) (U n) f hf hfs]
   exact weightedCommutator_drift_smooth period hs N hN ρ hρ L hL (U n) (V n) f g hf hg hfs hgs hfL
       hgL
@@ -318,10 +316,7 @@ theorem transportPressure_shifted_drift {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoef
   intro n
   obtain ⟨f,hf,hfs,hfL⟩ := smoothApprox_representative_all period n u
   obtain ⟨g,hg,hgs,hgL⟩ := smoothApprox_representative_all period n v
-  change shiftedPressureNorm period N ρ (transportPressure period hs K κ m c hc hpos L hL (U n) (V
-      n)) ≤
-    (4*M*productConstant period 3) * weightedDriftNorm period 6 (N+1) ρ (velocityMap L) (U n) *
-        weightedLoss period 6 (N+1) ρ (V n)
+  dsimp only [Function.comp_apply]
   rw [weightedDriftNorm_eq_classical period 6 (N+1) (by omega) ρ (velocityMap L) (U n) f hf hfs]
   exact transportPressure_shifted_drift_smooth period hs K κ m c hc hpos N hN ρ Rc M hρ hRc hM
       hbase hsmall hcoeff
@@ -373,7 +368,7 @@ theorem nonlinear_externalPressure_bound {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoe
     externalPressureNorm period K (N+1) ρ (transportPressure period hs K κ m c hc hpos L hL u v) ≤
       (8*Rc*M*productConstant period 3)*weightedDriftNorm period 6 (N+1) ρ (velocityMap L)
           u*weightedLoss period 6 (N+1) ρ v := by
-  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith [mul_nonneg hρ.le hRc]
+  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith only [hM, hsmall, mul_nonneg hρ.le hRc]
   have hcN : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc^l*(l.factorial : ℝ)^2 :=
     fun l hl hn => hcoeff l hl (by omega)
   have hp := transportPressure_shifted_drift period hs K κ m c hc hpos N (by
@@ -470,7 +465,7 @@ theorem correctionForcing_bound {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient 
   change externalPressureNorm period K N ρ p0 + basePressureNorm period K0 N hN ρ p0 ≤ _ at hp0
   change externalPressureNorm period K N ρ p1 ≤ _ at hp1e
   change basePressureNorm period K0 N hN ρ p1 ≤ _ at hp1b
-  nlinarith only [h, hp0, hp1e, hp1b]
+  linarith only [h, hp0, hp1e, hp1b]
 
 /-- Uniform fixed-base constants preserve the separate drift norm. -/
 theorem correctionForcing_uniform_bound {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
@@ -495,10 +490,10 @@ theorem correctionForcing_uniform_bound {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoef
         transportConstant period B M*weightedNorm period 6 N ρ u*weightedNorm period 6 N ρ v +
         (productConstant period 3*ρ⁻¹+8*Rc*M*productConstant period 3)*weightedDriftNorm period 6 N
             ρ (velocityMap L) u*weightedLoss period 6 N ρ v := by
-  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith [mul_nonneg hρ.le hRc]
+  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith only [hM, hsmall, mul_nonneg hρ.le hRc]
   have hw := weightedCoefficient_uniform period K N ρ Rc B hρ hRc hhalf hB hcoeff
   have hb := baseCoefficientSum_le period K0 B hB0
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := zero_le_one.trans hM
   have hsf : 1+2*M*(weightedCoefficient period K 6 N ρ+448*baseCoefficientSum period K0) ≤
       sourceConstant B M := by
     have h := add_le_add (le_refl (1 : ℝ)) (mul_le_mul_of_nonneg_left
@@ -646,14 +641,15 @@ theorem correctionForcing_polynomial {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoeffic
     simpa only [lossConstant] using drift_loss_absorption (productConstant period 3) M Rc ρ B0
       (weightedNorm period 6 N ρ e) (weightedLoss period 6 N ρ e)
       (weightedDriftNorm period 6 N ρ (velocityMap L) (z+e))
-      (productConstant_nonneg period 3) (by linarith) hRc hρ hB0
+      (productConstant_nonneg period 3) (by linarith only [hM]) hRc hρ hB0
       (weightedNorm_nonneg period 6 N ρ hρ e) (weightedLoss_nonneg period 6 N ρ hρ e) hD
   have h := hraw.trans (add_le_add (le_refl _) hloss)
   exact polynomial_assembly (sourceConstant B M) (transportConstant period B M)
     (lossConstant period M*(ρ⁻¹+Rc)) Z0 B0 (productConstant period 3) B1 A0 A2 R
     (weightedNorm period 6 N ρ e) (weightedLoss period 6 N ρ e) (weightedNorm period 6 N ρ (z+e))
     (weightedNorm period 6 N ρ f) _
-    (sourceConstant_nonneg hB (by linarith)) (transportConstant_nonneg period hB (by linarith))
+    (sourceConstant_nonneg hB (by linarith)) (transportConstant_nonneg period hB (by linarith only [
+        hM]))
     (weightedNorm_nonneg period 6 N ρ hρ e) hv hf h
 
 end EulerDriftNonlinearEstimate
@@ -724,7 +720,7 @@ theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient
   have h := EulerDriftNonlinearEstimate.correctionForcing_polynomial period hs KG KG0 κ m c hc hpos
       N hN ρ Rc M B hρ hRc hM hB
     hbase5 hbase6 hsmall hcoeff hG hG0 L hL C0 K0 C K z e r Z0 B0 B1 A0 A2 R hA2 hz hb hdz hC0 hC hr
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := zero_le_one.trans hM
   have hP := productConstant_nonneg period 3
   have hz0 : 0 ≤ Z0 := (weightedNorm_nonneg period 6 N ρ hρ z).trans hz
   have hb0 : 0 ≤ B0 := (weightedDriftNorm_nonneg period 6 N ρ hρ (velocityMap L) z).trans hb
@@ -736,9 +732,11 @@ theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient
   have hlf := lossConstant_nonneg period hM0
   have hlin : 0 ≤ sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
       3*Z0) +
-      transportConstant period B M*Z0 := by positivity
-  have hquad : 0 ≤ sourceConstant B M*A2*productConstant period 3+transportConstant period B M := by
-      positivity
+      transportConstant period B M*Z0 :=
+    add_nonneg (mul_nonneg hsf (add_nonneg (add_nonneg (mul_nonneg hP hb1) ha0)
+      (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two hA2) hP) hz0))) (mul_nonneg htf hz0)
+  have hquad : 0 ≤ sourceConstant B M*A2*productConstant period 3+transportConstant period B M :=
+    add_nonneg (mul_nonneg (mul_nonneg hsf hA2) hP) htf
   have hconv := metric_polynomial_conversion (sourceConstant B M)
     (sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
         3*Z0)+transportConstant period B M*Z0)
@@ -753,10 +751,12 @@ theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient
     (energyNorm_nonneg period N (by omega : N+6 ≤ s+1) ρ hρ KM e)
     (weightedNorm_le_energy period N (by omega : N+6 ≤ s+1) ρ hρ KM e cM hcM hKM)
     (weightedLoss_le_energy period N (by omega : N+6 ≤ s+1) ρ hρ KM e cM hcM hKM) h
-  simpa only [EulerDriftEnergyConstants.forcingPolynomial,
-    EulerNonlinearEnergyConstants.linearCoefficient,
-        EulerNonlinearEnergyConstants.quadraticCoefficient,
-    EulerNonlinearEnergyConstants.lossCoefficient, mul_assoc, mul_left_comm, mul_comm] using hconv
+  refine hconv.trans_eq ?_
+  unfold EulerDriftEnergyConstants.forcingPolynomial
+    EulerNonlinearEnergyConstants.linearCoefficient
+    EulerNonlinearEnergyConstants.quadraticCoefficient
+    EulerNonlinearEnergyConstants.lossCoefficient
+  rw [mul_right_comm (lossConstant period M)]
 
 end EulerDriftMetricForcing
 
@@ -797,8 +797,11 @@ def forcingMajorant {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
     S.full.residual K.c S.full.Rc (R t) (X t) (Y t), ?_⟩
   have hi : Continuous (fun t => (R t)⁻¹) :=
     R.continuous.inv₀ (fun t => (S.full.radius_pos t).ne')
+  have hX := X.continuous
   unfold EulerDriftEnergyConstants.forcingPolynomial
-  fun_prop
+  exact ((continuous_const.add (continuous_const.mul hX)).add (continuous_const.mul (hX.pow 2))).add
+    (((continuous_const.mul (hi.add continuous_const)).mul (continuous_const.add hX)).mul
+      Y.continuous)
 
 /-- The genuine scalar majorant retains full velocity only in terms with no derivative loss. -/
 def correctionRhs {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
@@ -905,11 +908,13 @@ theorem correctionArray_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
     (S.full.linear τ) (S.full.quadratic τ) (S.full.residual_bound τ)
     (K.operatorPath period τ) K.c K.c_pos (K.operator_coercive period τ)
   have hv : value period V = value period (e τ) := congrArg (value period) hV
-  rw [energyNorm_of_value_eq period N (by omega) hN (R τ) (K.operatorPath period τ) V (e τ) hv,
-    energyLoss_of_value_eq period N (by omega) hN (R τ) (K.operatorPath period τ) V (e τ) hv] at h
+  have hn := energyNorm_of_value_eq period N (by omega) hN (R τ) (K.operatorPath period τ)
+    V (e τ) hv
+  have hl := energyLoss_of_value_eq period N (by omega) hN (R τ) (K.operatorPath period τ)
+    V (e τ) hv
   simpa only [correctionArray, lowerOrderPath, orderZeroPath, ContinuousMap.coe_mk,
     CoefficientPath.operatorPath, EulerGevreyPressureTransport.transportPressure, hV,
-    forcingMajorant, energyPath_apply, lossPath_apply] using h
+    forcingMajorant, energyPath_apply, lossPath_apply, hn, hl] using h
 
 /-- The full Bochner forcing inherits the drift bound from the actual spatial fields. -/
 theorem weightedCorrectionForcing_bound {q : ℕ} {T : ℝ} {hq : 6 ≤ q + 1}
@@ -1118,12 +1123,8 @@ theorem correction_mild_bootstrap {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤
       (loss_nonneg period S.full hN K e τ) S.full.residual_pos.le
       (add_nonneg (inv_nonneg.mpr (S.full.radius_pos τ).le) S.full.Rc_nonneg) S.drift_nonneg
     have hh := h.trans h'
-    change A (projIcc 0 T hT t) ≤ C*(X (projIcc 0 T hT t) +
-      (X (projIcc 0 T hT t))^2+S.full.residual) +
-      ((-2*C*(S.drift+Δ))/(ρ0-2*C*(S.drift+Δ)*t)+C*((ρ0-2*C*(S.drift+Δ)*t)⁻¹+S.full.Rc) *
-        (S.drift+X (projIcc 0 T hT t)))*Y (projIcc 0 T hT t)
-    rw [projIcc_of_mem hT ⟨ht.1,ht.2.le⟩]
-    simpa only [hR τ,hRdot τ] using hh
+    have hp : projIcc 0 T hT t = τ := projIcc_of_mem hT ⟨ht.1,ht.2.le⟩
+    simpa only [extendPath, hp, hR τ, hRdot τ] using hh
   have hclosed := close_integral_energy_estimate (extendPath T hT X) (extendPath T hT A)
       (extendPath T hT Y)
     C S.drift Δ S.full.residual ρ0 T S.full.Rc hCp S.drift_nonneg hΔ hΔ1 S.full.residual_pos hρ0 hT

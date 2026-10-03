@@ -66,8 +66,8 @@ theorem partial_mul {f g : Space → ℝ} (hf : ContDiff ℝ ∞ f)
     spatialPartial i (fun y => f y * g y) x =
       f x * spatialPartial i g x + g x * spatialPartial i f x := by
   unfold spatialPartial
-  rw [fderiv_fun_mul (hf.differentiable (by simp) x)
-    (hg.differentiable (by simp) x)]
+  rw [fderiv_fun_mul (hf.differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x)
+    (hg.differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x)]
   rfl
 
 theorem partial_sub {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -76,8 +76,8 @@ theorem partial_sub {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     spatialPartial i (fun y => f y - g y) x =
       spatialPartial i f x - spatialPartial i g x := by
   unfold spatialPartial
-  rw [fderiv_fun_sub (hf.differentiable (by simp) x)
-    (hg.differentiable (by simp) x)]
+  rw [fderiv_fun_sub (hf.differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x)
+    (hg.differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x)]
   rfl
 
 theorem partial_component {f : Space → Space} (hf : ContDiff ℝ ∞ f)
@@ -90,7 +90,8 @@ theorem pressureGradient_component (p : PressureField) (t : ℝ)
     pressureGradient p t x k = spatialPartial k (fun y => p (t, y)) x := by
   change (EuclideanSpace.proj k : Space →L[ℝ] ℝ)
     (∑ i : Fin 3, spatialPartial i (fun y => p (t, y)) x • coordinateVector i) = _
-  simp [map_sum, coordinateVector]
+  simp only [coordinateVector, map_sum, map_smul, PiLp.proj_apply, PiLp.single_apply, smul_eq_mul,
+      mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
 
 theorem spatialLaplacian_component {u : VelocityField} {t : ℝ}
     (hu : ContDiff ℝ ∞ (fun x : Space => u (t, x))) (x : Space) (k : Fin 3) :
@@ -145,7 +146,7 @@ theorem tensorDiff_divergence {u v : VelocityField} {t : ℝ}
     ((component_contDiff hv k).mul (component_contDiff hv _))]
   rw [Finset.sum_sub_distrib, outerProduct_divergence hu,
     outerProduct_divergence hv, hdivu, hdivv]
-  simp
+  simp only [mul_zero, zero_add]
 
 /-- The exact conservative equation for a difference of smooth solutions
 having the same viscosity-one residual. -/
@@ -319,25 +320,28 @@ theorem partial_partial_eq_fderiv {f : Space → ℝ} (hf : ContDiff ℝ ∞ f)
     (i j : Fin 3) (x : Space) :
     spatialPartial i (spatialPartial j f) x =
       fderiv ℝ (fderiv ℝ f) x (coordinateVector i) (coordinateVector j) := by
-  have hdf := (hf.fderiv_right infty_add_one_le).differentiable (by simp) x
+  have hdf := (hf.fderiv_right infty_add_one_le).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x
   change fderiv ℝ (fun y => fderiv ℝ f y (coordinateVector j)) x (coordinateVector i) = _
   rw [fderiv_clm_apply hdf (differentiableAt_const (coordinateVector j))]
-  simp
+  simp only [fderiv_fun_const, Pi.zero_apply, ContinuousLinearMap.comp_zero, zero_add,
+      ContinuousLinearMap.flip_apply]
 
 theorem partial_comm {f : Space → ℝ} (hf : ContDiff ℝ ∞ f)
     (i j : Fin 3) (x : Space) :
     spatialPartial i (spatialPartial j f) x =
       spatialPartial j (spatialPartial i f) x := by
   rw [partial_partial_eq_fderiv hf, partial_partial_eq_fderiv hf]
-  exact ((hf.of_le (nat_le_infty 2)).contDiffAt.isSymmSndFDerivAt (by simp)) _ _
+  exact ((hf.of_le (nat_le_infty 2)).contDiffAt.isSymmSndFDerivAt (by simp only [
+      minSmoothness_of_isRCLikeNormedField, Nat.cast_ofNat, Std.le_refl])) _ _
 
 theorem partial_sum {f : Fin 3 → Space → ℝ}
     (hf : ∀ i, ContDiff ℝ ∞ (f i)) (k : Fin 3) (x : Space) :
     spatialPartial k (fun y => ∑ i : Fin 3, f i y) x =
       ∑ i : Fin 3, spatialPartial k (f i) x := by
   unfold spatialPartial
-  rw [fderiv_fun_sum (fun i _ => (hf i).differentiable (by simp) x)]
-  simp
+  rw [fderiv_fun_sum (fun i _ => (hf i).differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x)]
+  simp only [sum_apply]
 
 theorem partial_scalarLaplacian {f : Space → ℝ} (hf : ContDiff ℝ ∞ f)
     (k : Fin 3) (x : Space) :

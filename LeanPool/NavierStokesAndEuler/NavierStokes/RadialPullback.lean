@@ -93,7 +93,7 @@ theorem edge_mono {c : ℝ} (hc : 0 ≤ c) : Monotone (edge c) := by
     have hy0 : 0 < y := lt_of_lt_of_le hx0 hxy
     rw [edge_of_pos c hx0, edge_of_pos c hy0]
     apply Real.exp_le_exp.mpr
-    have hsq : x ^ 2 ≤ y ^ 2 := by nlinarith
+    have hsq : x ^ 2 ≤ y ^ 2 := by nlinarith only [hxy, hx]
     have hd := div_le_div_of_nonneg_left hc (sq_pos_of_pos hx0) hsq
     simpa only [neg_div] using neg_le_neg hd
 
@@ -144,7 +144,7 @@ theorem single_primitive_uniform {c : ℝ} (hc : 0 < c) (m : ℕ) {R : ℝ} (hR 
 
 theorem delta_left_half {L x : ℝ} (hx : x ≤ L / 2) : delta L x = min 1 x := by
   unfold delta
-  rw [min_eq_left (by linarith : x ≤ L - x)]
+  rw [min_eq_left (by linarith only [hx] : x ≤ L - x)]
 
 /-- The two-edge weight on the left half is controlled by two integrable
 single-edge weights. This includes all powers of the clipped edge distance. -/
@@ -174,10 +174,10 @@ independent of the variable tending to the left endpoint. -/
 theorem left_single_le_weight {cL cR L x : ℝ} (hcR : 0 ≤ cR)
     (m : ℕ) (hx : 0 < x) (hxL : x ≤ L / 2) :
     singleWeight cL m x ≤ (edge cR (L / 2))⁻¹ * weight cL cR L m x := by
-  have hL : 0 < L := by linarith
-  have hxi : x ∈ Ioo 0 L := ⟨hx, by linarith⟩
+  have hL : 0 < L := by linarith only [hx, hxL]
+  have hxi : x ∈ Ioo 0 L := ⟨hx, by linarith only [hx, hxL]⟩
   have hδ : 0 < delta L x := delta_pos hxi
-  have he : edge cR (L / 2) ≤ edge cR (L - x) := edge_mono hcR (by linarith)
+  have he : edge cR (L / 2) ≤ edge cR (L - x) := edge_mono hcR (by linarith only [hxL])
   have hem : 0 < edge cR (L / 2) := edge_pos cR (half_pos hL)
   have hp : singleWeight cL m x ≤ edge cL x / delta L x ^ m :=
     div_le_div_of_nonneg_left (edge_nonneg cL x) (pow_pos hδ m)
@@ -196,7 +196,7 @@ theorem left_single_le_weight {cL cR L x : ℝ} (hcR : 0 ≤ cR)
 theorem left_base_le_weight {cL cR L x : ℝ} (hcR : 0 ≤ cR)
     (m : ℕ) (hx : 0 < x) (hxL : x ≤ L / 2) :
     singleWeight cL 0 x ≤ (edge cR (L / 2))⁻¹ * weight cL cR L m x := by
-  have hxi : x ∈ Ioo 0 L := ⟨hx, by linarith⟩
+  have hxi : x ∈ Ioo 0 L := ⟨hx, by linarith only [hx, hxL]⟩
   have h0 := left_single_le_weight (cL := cL) hcR 0 hx hxL
   have hw : weight cL cR L 0 x ≤ weight cL cR L m x := by
     simpa only [weight, pow_zero, div_one] using zeta_le_weight cL cR m hxi
@@ -216,7 +216,7 @@ theorem weight_le_wholeMajorant {cL cR L x : ℝ} (hcL : 0 ≤ cL) (hcR : 0 ≤ 
       (le_add_of_nonneg_right (add_nonneg (singleWeight_nonneg cR 0 _)
         (singleWeight_nonneg cR m _)))
   · have hr := weight_le_left_majorant (cL := cR) hcL m (sub_pos.mpr hx.2)
-      (show L - x ≤ L / 2 by linarith)
+      (show L - x ≤ L / 2 by linarith only [hh])
     rw [weight_reflect] at hr
     exact hr.trans (le_add_of_nonneg_left
       (add_nonneg (singleWeight_nonneg cL 0 _) (singleWeight_nonneg cL m _)))
@@ -245,11 +245,11 @@ theorem middle_weight_lower_bound {cL cR L ρ : ℝ}
   obtain ⟨d, hd, hb⟩ := UniformCone.positive_uniform_margin isCompact_Icc
     (zeta_continuous hcL hcR L).continuousOn
     (fun x (hx : x ∈ Icc ρ (L - ρ)) => zeta_pos cL cR
-      (show x ∈ Ioo 0 L from ⟨lt_of_lt_of_le hρ hx.1, by linarith [hx.2]⟩))
+      (show x ∈ Ioo 0 L from ⟨lt_of_lt_of_le hρ hx.1, by linarith only [hρ, hx, hx.2]⟩))
   refine ⟨d, hd, ?_⟩
   intro m x hx
   exact (hb x hx).trans (zeta_le_weight cL cR m
-    ⟨lt_of_lt_of_le hρ hx.1, by linarith [hx.2]⟩)
+    ⟨lt_of_lt_of_le hρ hx.1, by linarith only [hρ, hx, hx.2]⟩)
 
 section Integrals
 
@@ -277,7 +277,7 @@ theorem left_primitive_uniform
   have hbound : ∀ᵐ s ∂volume.restrict (uIoc 0 x), ‖f s‖ ≤ g s := by
     rw [uIoc_of_le hx.le]
     filter_upwards [ae_restrict_mem measurableSet_Ioc] with s hs
-    have hsL : s < L := by linarith [hs.2]
+    have hsL : s < L := by linarith only [hx, hxL, hs, hs.2]
     exact (hf s ⟨hs.1, hsL⟩).trans (mul_le_mul_of_nonneg_left
       (weight_le_left_majorant hcR.le m hs.1 (hs.2.trans hxL)) hA)
   have hi := intervalIntegral.norm_integral_le_abs_of_norm_le hbound (hgc.intervalIntegrable 0 x)
@@ -311,9 +311,9 @@ theorem right_primitive_uniform
   have hg : ∀ s ∈ Ioo (0 : ℝ) L,
       ‖f (L - s)‖ ≤ A * weight cR cL L m s := by
     intro s hs
-    have h := hf (L - s) ⟨sub_pos.mpr hs.2, by linarith [hs.1]⟩
+    have h := hf (L - s) ⟨sub_pos.mpr hs.2, by linarith only [hs, hs.1]⟩
     simpa only [weight_reflect] using h
-  have h := hb (fun s => f (L - s)) A hA hg (L - x) (sub_pos.mpr hx) (by linarith)
+  have h := hb (fun s => f (L - s)) A hA hg (L - x) (sub_pos.mpr hx) (by linarith only [hxL])
   simpa only [intervalIntegral.integral_comp_sub_left, sub_sub_cancel, sub_zero,
     weight_reflect] using h
 
@@ -338,7 +338,7 @@ theorem interval_primitive_uniform
   rw [Real.volume_real_Ioo_of_le hab] at hi
   calc
     _ ≤ (A * D) * (b - a) := hi
-    _ ≤ (A * D) * L := mul_le_mul_of_nonneg_left (by linarith) (mul_nonneg hA hD)
+    _ ≤ (A * D) * L := mul_le_mul_of_nonneg_left (by linarith only [ha, hbL]) (mul_nonneg hA hD)
     _ = (D * L) * A := by ring
 
 /-- Compact primitive, given by `intervalIntegral f 0 x volume - χ x • intervalIntegral f 0 L
@@ -366,9 +366,9 @@ theorem compact_primitive_uniform
   let KM : ℝ := 2 * D / d
   have hKM : 0 ≤ KM := div_nonneg (by positivity) hd.le
   let K : ℝ := KL + KR + KM
-  have hKKL : KL ≤ K := by dsimp [K]; linarith
-  have hKKR : KR ≤ K := by dsimp [K]; linarith
-  have hKKM : KM ≤ K := by dsimp [K]; linarith
+  have hKKL : KL ≤ K := by dsimp [K]; linarith only [hKR, hKM]
+  have hKKR : KR ≤ K := by dsimp [K]; linarith only [hKL, hKM]
+  have hKKM : KM ≤ K := by dsimp [K]; linarith only [hKL, hKR]
   refine ⟨K, le_trans hKL hKKL, ?_⟩
   intro f hfc A hA hf x hx
   have hw := (weight_pos cL cR m hx).le
@@ -382,7 +382,7 @@ theorem compact_primitive_uniform
         rw [intervalIntegral.integral_interval_sub_left (hfc.intervalIntegrable 0 x)
           (hfc.intervalIntegrable 0 L), intervalIntegral.integral_symm]
       rw [heq, norm_neg]
-      exact (hbR f A hA hf x (by linarith) hx.2).trans
+      exact (hbR f A hA hf x (by linarith only [hl, hr]) hx.2).trans
         (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hKKR hA) hw)
     · have hxd : d ≤ weight cL cR L m x := hbd m x ⟨le_of_not_ge hl, le_of_not_ge hr⟩
       have hp := hbD f A hA hf 0 x le_rfl hx.1.le hx.2.le
@@ -397,7 +397,9 @@ theorem compact_primitive_uniform
           _ = 2 * D * A := by ring
       have hm : 2 * D * A ≤ KM * A * weight cL cR L m x := by
         calc
-          _ = KM * A * d := by dsimp [KM]; field_simp
+          _ = KM * A * d := by
+            dsimp only [KM]
+            rw [div_mul_eq_mul_div, div_mul_cancel₀ _ hd.ne']
           _ ≤ KM * A * weight cL cR L m x := mul_le_mul_of_nonneg_left hxd (mul_nonneg hKM hA)
       exact (hn.trans hm).trans
         (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hKKM hA) hw)
@@ -467,7 +469,7 @@ theorem expCoordinate_mem {a b s : ℝ} (ha : 0 < a) (hab : a < b)
     simpa only [logLength, Real.exp_log (div_pos hb ha)] using h
   constructor
   · unfold expCoordinate
-    nlinarith
+    nlinarith only [ha, hlo]
   · unfold expCoordinate
     have h := (lt_div_iff₀ ha).mp hhi
     simpa only [mul_comm] using h
@@ -561,7 +563,7 @@ theorem log_interval_primitive_uniform
   calc
     _ ≤ (A * D) * (r - l) := hi
     _ ≤ (A * D) * (b - a) :=
-      mul_le_mul_of_nonneg_left (by linarith) (mul_nonneg hA hD)
+      mul_le_mul_of_nonneg_left (by linarith only [hal, hrb]) (mul_nonneg hA hD)
     _ = (D * (b - a)) * A := by ring
 
 /-- Log compact primitive, given by `intervalIntegral f a X volume - χ (logPosition a X) •
@@ -641,7 +643,7 @@ theorem exists_log_plateau_width
       d = expCoordinate a (logPosition a d) := (expCoordinate_logPosition ha (ha.trans (hac.trans
           hcd))).symm
       _ ≤ expCoordinate a s :=
-        mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr (by linarith)) ha.le
+        mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr (by linarith only [hρd, hs])) ha.le
 
 /-- The cutoff can be specified directly in the physical radial coordinate.
 No logarithmic cutoff regularity or assumed inverse bound is required. -/
@@ -748,7 +750,7 @@ theorem canonical_transport_compact_uniform
           K * A * logWeight cL cR a b m z.1 := by
   apply transport_compact_primitive_uniform ha
     (c := (2 * a + b) / 3) (d := (a + 2 * b) / 3)
-    (by linarith) (by linarith) (by linarith) hcL hcR m
+    (by linarith only [hab]) (by linarith only [hab]) (by linarith only [hab]) hcL hcR m
   · intro X
     have h := TransportPrimitive.cutoff_mem_Icc ((2 * a + b) / 3) ((a + 2 * b) / 3) X
     exact (abs_of_nonneg h.1).le.trans h.2
@@ -946,9 +948,9 @@ theorem transport_compact_finiteJets_uniform
   let KM := D * (1 + (2 : ℝ) ^ m * B) / d₀
   have hKM : 0 ≤ KM := div_nonneg (mul_nonneg hD (by positivity)) hd₀.le
   let K := L + R + KM
-  have hLK : L ≤ K := by dsimp [K]; linarith
-  have hRK : R ≤ K := by dsimp [K]; linarith
-  have hMK : KM ≤ K := by dsimp [K]; linarith
+  have hLK : L ≤ K := by dsimp only [K]; linarith only [hR, hKM]
+  have hRK : R ≤ K := by dsimp only [K]; linarith only [hL, hKM]
+  have hMK : KM ≤ K := by dsimp only [K]; linarith only [hL, hR]
   refine ⟨K, hL.trans hLK, ?_⟩
   intro M v f hf hs A hA hsource z hz j hj
   let j' : Fin (m + 1) := ⟨j, Nat.lt_succ_of_le hj⟩
@@ -964,20 +966,22 @@ theorem transport_compact_finiteJets_uniform
   have hw : 0 ≤ logWeight cL cR a b p z.1 :=
     (weight_pos cL cR p (logPosition_mem ha hz)).le
   by_cases hzl : logPosition a z.1 ≤ ρ / 2
-  · rw [compact_jet_eq_past_on_left ha hl z (ha.trans hz.1) (by linarith) j,
-      TransportPrimitive.iteratedFDeriv_pastIntegral hf hs]
+  · rw [compact_jet_eq_past_on_left ha hl z (ha.trans hz.1)
+      (by linarith only [hzl, hρ]) j, TransportPrimitive.iteratedFDeriv_pastIntegral hf hs]
     have h := hbL j' M v (iteratedFDeriv ℝ j f)
       (TransportPrimitive.iteratedFDeriv_contDiff hf j).continuous
-      (TransportPrimitive.iteratedFDeriv_supported hs j) A hA (hsource j hj) z hz (by linarith)
+      (TransportPrimitive.iteratedFDeriv_supported hs j) A hA (hsource j hj) z hz
+      (by linarith only [hzl, hρL, hρ])
     exact h.trans (mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_right ((hLL j').trans hLK) hA) hw)
   · by_cases hzr : logLength a b - ρ / 2 ≤ logPosition a z.1
-    · rw [compact_jet_eq_neg_future_on_right ha hf.continuous hs hr z (ha.trans hz.1) (by
-        linarith) j,
+    · rw [compact_jet_eq_neg_future_on_right ha hf.continuous hs hr z (ha.trans hz.1)
+        (by linarith only [hzr, hρ]) j,
         norm_neg, TransportPrimitive.iteratedFDeriv_futureIntegral hf hs]
       have h := hbR j' M v (iteratedFDeriv ℝ j f)
         (TransportPrimitive.iteratedFDeriv_contDiff hf j).continuous
-        (TransportPrimitive.iteratedFDeriv_supported hs j) A hA (hsource j hj) z hz (by linarith)
+        (TransportPrimitive.iteratedFDeriv_supported hs j) A hA (hsource j hj) z hz
+        (by linarith only [hzr, hρL, hρ])
       exact h.trans (mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_right ((hRR j').trans hRK) hA) hw)
     · have hwm : d₀ ≤ logWeight cL cR a b p z.1 :=
@@ -1012,7 +1016,9 @@ theorem transport_compact_finiteJets_uniform
               (mul_le_mul_of_nonneg_right (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hj) hB)
               (mul_nonneg hD hA)) _
         _ = (D * (1 + (2 : ℝ) ^ m * B)) * A := by ring
-        _ = KM * A * d₀ := by dsimp [KM]; field_simp
+        _ = KM * A * d₀ := by
+          dsimp only [KM]
+          rw [div_mul_eq_mul_div, div_mul_cancel₀ _ hd₀.ne']
         _ ≤ KM * A * logWeight cL cR a b p z.1 :=
           mul_le_mul_of_nonneg_left hwm (mul_nonneg hKM hA)
         _ ≤ K * A * logWeight cL cR a b p z.1 :=
@@ -1031,7 +1037,7 @@ theorem canonical_transport_finiteJets_uniform
           K * A * logWeight cL cR a b p z.1 := by
   exact transport_compact_finiteJets_uniform (E := E) (V := V) ha
     (c := (2 * a + b) / 3) (d := (a + 2 * b) / 3)
-    (by linarith) (by linarith) (by linarith) hcL hcR p m
+    (by linarith only [hab]) (by linarith only [hab]) (by linarith only [hab]) hcL hcR p m
     (TransportPrimitive.interiorCutoff a b) (TransportPrimitive.interiorCutoff_contDiff a b)
     (fun X hX => TransportPrimitive.interiorCutoff_zero hab hX)
     (fun X hX => TransportPrimitive.interiorCutoff_one hab hX)
@@ -1182,7 +1188,7 @@ theorem positiveRadius_eq_left {ℓ x : ℝ} (hℓ : 0 < ℓ) (hx : x ≤ ℓ) :
 
 theorem positiveRadius_eq_self {ℓ x : ℝ} (hℓ : 0 < ℓ) (hx : 2 * ℓ ≤ x) :
     positiveRadius ℓ x = x := by
-  have ht : 1 ≤ (x - ℓ) / ℓ := (one_le_div hℓ).mpr (by linarith)
+  have ht : 1 ≤ (x - ℓ) / ℓ := (one_le_div hℓ).mpr (by linarith only [hx])
   simp only [positiveRadius, Real.smoothTransition.one_of_one_le ht, mul_one]
   ring
 
@@ -1193,7 +1199,7 @@ theorem positiveRadius_pos {ℓ : ℝ} (hℓ : 0 < ℓ) (x : ℝ) : 0 < positive
   · have hprod : 0 ≤ (x - ℓ) * Real.smoothTransition ((x - ℓ) / ℓ) :=
       mul_nonneg (sub_nonneg.mpr (le_of_not_ge hx)) (Real.smoothTransition.nonneg _)
     unfold positiveRadius
-    linarith
+    linarith only [hℓ, hprod]
 
 theorem positiveRadius_le_max {ℓ : ℝ} (hℓ : 0 < ℓ) (x : ℝ) :
     positiveRadius ℓ x ≤ max ℓ x := by
@@ -1204,7 +1210,7 @@ theorem positiveRadius_le_max {ℓ : ℝ} (hℓ : 0 < ℓ) (x : ℝ) :
     have hm := mul_le_mul_of_nonneg_left (Real.smoothTransition.le_one ((x - ℓ) / ℓ))
       (sub_nonneg.mpr hxl)
     unfold positiveRadius
-    linarith
+    linarith only [hm]
 
 theorem positiveRadius_lt {ℓ x t : ℝ} (hℓ : 0 < ℓ) (hℓt : ℓ < t) (hxt : x < t) :
     positiveRadius ℓ x < t :=
@@ -1239,12 +1245,12 @@ theorem radialJacobian_pos {d R : ℝ} (hd : 0 < d) (hR : 0 < R) :
 
 theorem powerChart_eq {a R : ℝ} (ha : 0 < a) (hR : a / 2 ≤ R) (d : ℝ) :
     powerChart d a R = R ^ d := by
-  rw [powerChart, positiveRadius_eq_self (by positivity) (by linarith)]
+  rw [powerChart, positiveRadius_eq_self (by positivity) (by linarith only [hR])]
 
 theorem inverseChart_eq {a U : ℝ} (ha : 0 < a) (d : ℝ) (hU : a ^ d / 2 ≤ U) :
     inverseChart d a U = U ^ d⁻¹ := by
   rw [inverseChart, positiveRadius_eq_self
-    (div_pos (Real.rpow_pos_of_pos ha d) (by norm_num)) (by linarith)]
+    (div_pos (Real.rpow_pos_of_pos ha d) (by norm_num)) (by linarith only [hU])]
 
 theorem inverseChart_power {a R d : ℝ} (ha : 0 < a) (hd : 0 < d) (hR : a ≤ R) :
     inverseChart d a (R ^ d) = R := by
@@ -1259,7 +1265,7 @@ theorem powerChart_inverse {a U d : ℝ} (ha : 0 < a) (hd : 0 < d) (hU : a ^ d �
   have hR : a ≤ U ^ d⁻¹ := by
     have h := Real.rpow_le_rpow haU.le hU (inv_pos.mpr hd).le
     simpa only [Real.rpow_rpow_inv ha.le hd.ne'] using h
-  rw [inverseChart_eq ha d (by linarith), powerChart_eq ha (by linarith) d,
+  rw [inverseChart_eq ha d (by linarith), powerChart_eq ha (by linarith only [ha, hR]) d,
     Real.rpow_inv_rpow hUp.le hd.ne']
 
 theorem inverseChart_rpow {a U d : ℝ} (ha : 0 < a) (hd : 0 < d) (hU : a ^ d ≤ U) :
@@ -1270,38 +1276,38 @@ theorem inverseChart_rpow {a U d : ℝ} (ha : 0 < a) (hd : 0 < d) (hU : a ^ d �
 theorem powerChart_lt_left {a R d : ℝ} (ha : 0 < a) (hd : 0 < d) (hR : R < a) :
     powerChart d a R < a ^ d :=
   Real.rpow_lt_rpow (positiveRadius_pos (by positivity) R).le
-    (positiveRadius_lt (by positivity) (by linarith) hR) hd
+    (positiveRadius_lt (by positivity) (by linarith only [ha]) hR) hd
 
 theorem inverseChart_lt_left {a U d : ℝ} (ha : 0 < a) (hd : 0 < d) (hU : U < a ^ d) :
     inverseChart d a U < a := by
   have hp : 0 < a ^ d := Real.rpow_pos_of_pos ha d
   have h := Real.rpow_lt_rpow (positiveRadius_pos (by positivity : 0 < a ^ d / 4) U).le
-    (positiveRadius_lt (by positivity : 0 < a ^ d / 4) (by linarith) hU) (inv_pos.mpr hd)
+    (positiveRadius_lt (by positivity : 0 < a ^ d / 4) (by linarith only [hp]) hU) (inv_pos.mpr hd)
   simpa only [inverseChart, Real.rpow_rpow_inv ha.le hd.ne'] using h
 
 theorem powerChart_gt_right {a b R d : ℝ} (ha : 0 < a) (hab : a < b)
     (hd : 0 < d) (hR : b < R) : b ^ d < powerChart d a R := by
-  rw [powerChart_eq ha (by linarith) d]
+  rw [powerChart_eq ha (by linarith only [ha, hab, hR]) d]
   exact Real.rpow_lt_rpow (ha.trans hab).le hR hd
 
 theorem inverseChart_gt_right {a b U d : ℝ} (ha : 0 < a) (hab : a < b)
     (hd : 0 < d) (hU : b ^ d < U) : b < inverseChart d a U := by
   have haU : 0 < a ^ d := Real.rpow_pos_of_pos ha d
   have habU : a ^ d < b ^ d := Real.rpow_lt_rpow ha.le hab hd
-  rw [inverseChart_eq ha d (by linarith)]
+  rw [inverseChart_eq ha d (by linarith only [hU, haU, habU])]
   have h := Real.rpow_lt_rpow (Real.rpow_pos_of_pos (ha.trans hab) d).le hU (inv_pos.mpr hd)
   simpa only [Real.rpow_rpow_inv (ha.trans hab).le hd.ne'] using h
 
 theorem powerChart_mem {a b R d : ℝ} (ha : 0 < a) (hd : 0 < d) (hR : R ∈ Ioo a b) :
     powerChart d a R ∈ Ioo (a ^ d) (b ^ d) := by
-  rw [powerChart_eq ha (by linarith [hR.1]) d]
+  rw [powerChart_eq ha (by linarith only [ha, hR, hR.1]) d]
   exact ⟨Real.rpow_lt_rpow ha.le hR.1 hd, Real.rpow_lt_rpow (ha.trans hR.1).le hR.2 hd⟩
 
 theorem inverseChart_mem {a b U d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d)
     (hU : U ∈ Ioo (a ^ d) (b ^ d)) : inverseChart d a U ∈ Ioo a b := by
   have haU : 0 < a ^ d := Real.rpow_pos_of_pos ha d
   have hbU : 0 < b ^ d := Real.rpow_pos_of_pos (ha.trans hab) d
-  rw [inverseChart_eq ha d (by linarith [hU.1])]
+  rw [inverseChart_eq ha d (by linarith only [haU, hU, hU.1])]
   constructor
   · have h := Real.rpow_lt_rpow haU.le hU.1 (inv_pos.mpr hd)
     simpa only [Real.rpow_rpow_inv ha.le hd.ne'] using h
@@ -1379,7 +1385,7 @@ theorem normalizeSource_eq_formula {a b d U : ℝ} (ha : 0 < a) (hab : a < b)
   have haU := Real.rpow_pos_of_pos ha d
   by_cases hUa : a ^ d ≤ U
   · simp only [normalizeSource, sourceMultiplier, liftChart,
-      inverseChart_eq ha d (show a ^ d / 2 ≤ U by linarith)]
+      inverseChart_eq ha d (show a ^ d / 2 ≤ U by linarith only [hU, hUa])]
   · have hsmall : U < a ^ d := lt_of_not_ge hUa
     have hR : U ^ d⁻¹ < a := by
       have h := Real.rpow_lt_rpow hU.le hsmall (inv_pos.mpr hd)
@@ -1522,7 +1528,7 @@ theorem physicalCompact_eq_radialIntegral {a b d : ℝ}
   have hF := (normalizeSource_contDiff ha hd hg).continuous
   have hS := normalizeSource_supported ha hab hd hs
   change TransportPrimitive.compactIntegral _ _ _ _ (powerChart d a z.1, z.2) = _
-  rw [powerChart_eq ha (by linarith) d, TransportPrimitive.compactIntegral,
+  rw [powerChart_eq ha (by linarith only [ha, hz]) d, TransportPrimitive.compactIntegral,
     TransportPrimitive.pastIntegral_eq_radialInterval hF hS,
     TransportPrimitive.totalIntegral_eq_radialInterval hF hS]
   simp only [normalized_radial_integral ha hd hz hg, normalized_radial_integral ha hd hab.le hg]
@@ -1571,23 +1577,23 @@ theorem physicalGraphDeriv_physicalCompact [CompleteSpace V] {a b d : ℝ}
   have hχ := TransportPrimitive.interiorCutoff_contDiff (a ^ d) (b ^ d)
   have hF := TransportPrimitive.compactIntegral_contDiff (M := M) (v := v) hχ hnf hns
   unfold physicalCompact
-  rw [physicalGraphDeriv_pullback ha v z (by linarith)
+  rw [physicalGraphDeriv_pullback ha v z (by linarith only [ha, hz])
     (hF.differentiable (by simp) _), TransportPrimitive.transport_compactIntegral hχ hnf hns]
-  simp only [physicalAlias, liftChart, powerChart_eq ha (by linarith : a / 2 ≤ z.1) d,
+  simp only [physicalAlias, liftChart, powerChart_eq ha (by linarith only [ha, hz] : a / 2 ≤ z.1) d,
     normalizeSource_at_power ha hd hz, smul_sub, smul_smul,
     mul_inv_cancel₀ (radialJacobian_pos hd (ha.trans_le hz)).ne', one_smul]
 
 theorem deriv_interiorCutoff_zero_left {a b U : ℝ} (hab : a < b) (hU : U ≤ a) :
     deriv (TransportPrimitive.interiorCutoff a b) U = 0 := by
   have hgerm : TransportPrimitive.interiorCutoff a b =ᶠ[𝓝 U] (fun _ => 0) := by
-    filter_upwards [Iio_mem_nhds (show U < (2 * a + b) / 3 by linarith)] with x hx
+    filter_upwards [Iio_mem_nhds (show U < (2 * a + b) / 3 by linarith only [hab, hU])] with x hx
     exact TransportPrimitive.interiorCutoff_zero hab hx.le
   exact ((hasDerivAt_const U (0 : ℝ)).congr_of_eventuallyEq hgerm).deriv
 
 theorem deriv_interiorCutoff_zero_right {a b U : ℝ} (hab : a < b) (hU : b ≤ U) :
     deriv (TransportPrimitive.interiorCutoff a b) U = 0 := by
   have hgerm : TransportPrimitive.interiorCutoff a b =ᶠ[𝓝 U] (fun _ => 1) := by
-    filter_upwards [Ioi_mem_nhds (show (a + 2 * b) / 3 < U by linarith)] with x hx
+    filter_upwards [Ioi_mem_nhds (show (a + 2 * b) / 3 < U by linarith only [hab, hU])] with x hx
     exact TransportPrimitive.interiorCutoff_one hab hx.le
   exact ((hasDerivAt_const U (1 : ℝ)).congr_of_eventuallyEq hgerm).deriv
 
@@ -1609,7 +1615,7 @@ theorem physicalCutoff_zero_left {a b d R : ℝ} (ha : 0 < a) (hab : a < b) (hd 
     (hR : R < a) : physicalCutoff d a b R = 0 := by
   have habU : a ^ d < b ^ d := Real.rpow_lt_rpow ha.le hab hd
   have hpow := powerChart_lt_left ha hd hR
-  exact TransportPrimitive.interiorCutoff_zero habU (by linarith)
+  exact TransportPrimitive.interiorCutoff_zero habU (by linarith only [habU, hpow])
 
 theorem deriv_physicalCutoff_zero_left {a b d R : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d)
     (hR : R < a) : deriv (physicalCutoff d a b) R = 0 := by
@@ -1625,7 +1631,7 @@ theorem physicalAlias_eq_cutoff_derivative_global {a b d M : ℝ}
           := by
   by_cases hz : a / 2 < z.1
   · exact physicalAlias_eq_cutoff_derivative ha v g z hz
-  · have hza : z.1 < a := by linarith
+  · have hza : z.1 < a := by linarith only [ha, hz]
     rw [TransportPrimitive.radial_zero_of_lt (physicalAlias_supported ha hab hd M v g) hza,
       deriv_physicalCutoff_zero_left ha hab hd hza, zero_smul]
 
@@ -1685,7 +1691,7 @@ theorem delta_scale_lower {d L x : ℝ} (hd : 0 < d) (hx : x ∈ Ioo 0 L) :
   · apply le_min
     · exact mul_le_mul (min_le_right _ _) (delta_le_left L x) hδ hd.le
     · have h := mul_le_mul (min_le_right (1 : ℝ) d) (delta_le_right L x) hδ hd.le
-      linarith
+      linarith only [h]
 
 theorem delta_scale_reverse_lower {d L x : ℝ} (hd : 0 < d) (hx : x ∈ Ioo 0 L) :
     min 1 d⁻¹ * delta (d * L) (d * x) ≤ delta L x := by
@@ -1966,7 +1972,7 @@ theorem physicalCompact_finiteJets_uniform {a b d cL cR : ℝ}
   change ‖iteratedFDeriv ℝ j (physicalCompact d a b M v g) z‖ ≤
     KP * (KT * (KN * A) * logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (powerChart d a
         z.1)) at hp
-  rw [powerChart_eq ha (show a / 2 ≤ z.1 by linarith [hz.1]) d] at hp
+  rw [powerChart_eq ha (show a / 2 ≤ z.1 by linarith only [ha, hz, hz.1]) d] at hp
   have hw := logWeight_power_forward ha hd hz cL cR p
   calc
     _ ≤ KP * (KT * (KN * A) * logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (z.1 ^ d)) := hp

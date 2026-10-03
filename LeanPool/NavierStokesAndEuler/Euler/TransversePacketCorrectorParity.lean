@@ -98,7 +98,8 @@ include hInv hA hper hmean hodd in
 theorem rawPotential_even (x : Space) (θ : ℝ) :
     D.rawPotential P A (t,(-x,-θ)) = D.rawPotential P A (t,(x,θ)) := by
   have hn (y : Space) : D.normal.field (D.clamp t) (-y) = D.normal.field (D.clamp t) y := by
-    change (D.FInv.field (D.clamp t) (-y)).adjoint D.m₀ = (D.FInv.field (D.clamp t) y).adjoint D.m₀
+    change adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field (D.clamp t) (-y)) D.m₀ =
+      adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field (D.clamp t) y) D.m₀
     rw [hInv]
   exact potential_joint_even P (Fact.out : 0 < P).ne'
     (fun y => D.normal.field (D.clamp t) y) (fun y θ => A (t,(y,θ))) hn

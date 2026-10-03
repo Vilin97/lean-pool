@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 import LeanPool.NavierStokesAndEuler.NavierStokes.MomentRepair
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Smooth dependence of quadratic moment repair
@@ -83,7 +84,7 @@ theorem forward_hasFDerivAt (B : E ≃L[ℝ] E) (A : E →L[ℝ] E →L[ℝ] E) 
   apply Prod.ext
   · rfl
   · change B z.2 = B z.2 + z.1.1 0 + ((A 0) z.2 + (A z.2 + z.1.2 0) 0)
-    simp only [map_zero, zero_apply, add_zero]
+    simp only [ContinuousLinearMap.map_zero, zero_apply, add_zero]
 
 /-- A common open neighborhood supports an analytic solution in all coefficients and the debt. -/
 theorem exists_local_analytic_solver [CompleteSpace E]
@@ -91,7 +92,7 @@ theorem exists_local_analytic_solver [CompleteSpace E]
     ∃ (g : RepairData E → E) (U : Set (RepairData E)),
       IsOpen U ∧ base B A ∈ U ∧ ContDiffOn ℝ ⊤ g U ∧ g (base B A) = 0 ∧
       ∀ z ∈ U, z.1.1 (g z) + z.1.2 (g z) (g z) = z.2 := by
-  have hF : ContDiffAt ℝ ⊤ forward (base B A) := forward_contDiff.contDiffAt
+  have hF : ContDiffAt ℝ ⊤ forward (base B A) := (forward_contDiff (E := E)).contDiffAt
   have hDF := forward_hasFDerivAt B A
   let inv : RepairData E → RepairData E := hF.localInverse hDF (by simp)
   have hcont : ContDiffAt ℝ ⊤ inv (base B A) := by
@@ -99,9 +100,7 @@ theorem exists_local_analytic_solver [CompleteSpace E]
   have hinv0 : inv (base B A) = base B A := by
     simpa only [forward_base] using hF.localInverse_apply_image hDF (by simp)
   have hinv : ∀ᶠ z in 𝓝 (base B A), forward (inv z) = z := by
-    have h := HasStrictFDerivAt.eventually_right_inverse
-      (f' := (ContinuousLinearEquiv.refl ℝ (QuadraticCoefficients E)).prodCongr B)
-      (hF.hasStrictFDerivAt' hDF (by simp))
+    have h := HasStrictFDerivAt.eventually_right_inverse (hF.hasStrictFDerivAt' hDF (by simp))
     change ∀ᶠ z in 𝓝 (forward (base B A)), forward (inv z) = z at h
     simpa only [forward_base] using h
   have hsm := hcont.eventually (by simp)
@@ -139,9 +138,8 @@ theorem solution_norm_bound (B₀ : E ≃L[ℝ] E) (B : E →L[ℝ] E)
       _ ≤ δ * ‖c‖ + K * r * ‖c‖ := add_le_add hlin hquad
       _ = _ := by ring
   have hid : B₀ c = d - ((B - B₀.toContinuousLinearMap) c + A c c) := by
-    rw [← heq, sub_apply]
-    change B₀ c = (B c + A c c) - (B c - B₀ c + A c c)
-    abel
+    rw [← heq, sub_apply, ContinuousLinearEquiv.coe_coe, add_sub_add_right_eq_sub,
+      sub_sub_cancel]
   have hbound : ‖c‖ ≤ β * ‖d‖ + (1 / 2 : ℝ) * ‖c‖ := by
     calc
       ‖c‖ = ‖B₀.symm (B₀ c)‖ := by rw [B₀.symm_apply_apply]
@@ -154,7 +152,7 @@ theorem solution_norm_bound (B₀ : E ≃L[ℝ] E) (B : E →L[ℝ] E)
       _ = β * ‖d‖ + (β * (δ + K * r)) * ‖c‖ := by ring
       _ ≤ β * ‖d‖ + (1 / 2 : ℝ) * ‖c‖ :=
         add_le_add_right (mul_le_mul_of_nonneg_right hsmall (norm_nonneg c)) _
-  linarith
+  linarith only [hbound]
 
 /-- The analytic solver has a uniform linear-in-debt bound on one common open neighborhood. -/
 theorem exists_local_bounded_analytic_solver [CompleteSpace E]
@@ -168,10 +166,11 @@ theorem exists_local_bounded_analytic_solver [CompleteSpace E]
   let K : ℝ := ‖A₀‖ + 1
   let δ : ℝ := 1 / (4 * β)
   let r : ℝ := 1 / (4 * β * K)
-  have hβ : 0 < β := by change 0 < ‖B₀.symm.toContinuousLinearMap‖ + 1; positivity
-  have hK : 0 < K := by change 0 < ‖A₀‖ + 1; positivity
-  have hδ : 0 < δ := by change 0 < 1 / (4 * β); positivity
-  have hr : 0 < r := by change 0 < 1 / (4 * β * K); positivity
+  have hβ : 0 < β := add_pos_of_nonneg_of_pos (norm_nonneg _) one_pos
+  have hK : 0 < K := add_pos_of_nonneg_of_pos (norm_nonneg _) one_pos
+  have h4 : (0 : ℝ) < 4 := by norm_num
+  have hδ : 0 < δ := div_pos one_pos (mul_pos h4 hβ)
+  have hr : 0 < r := div_pos one_pos (mul_pos (mul_pos h4 hβ) hK)
   have hsmall : β * (δ + K * r) ≤ 1 / 2 := by
     change β * (1 / (4 * β) + K * (1 / (4 * β * K))) ≤ 1 / 2
     apply le_of_eq
@@ -193,7 +192,7 @@ theorem exists_local_bounded_analytic_solver [CompleteSpace E]
   have hAcont : ContinuousAt (fun z : RepairData E => ‖z.1.2‖) (base B₀ A₀) :=
     (hAnorm.comp hAproj).continuousAt
   have hAsmall : ∀ᶠ z in 𝓝 (base B₀ A₀), ‖z.1.2‖ < K :=
-    hAcont.eventually (eventually_lt_nhds (by change ‖A₀‖ < ‖A₀‖ + 1; linarith))
+    hAcont.eventually (eventually_lt_nhds (lt_add_one ‖A₀‖))
   have hall : ∀ᶠ z in 𝓝 (base B₀ A₀), z ∈ U ∧
       ‖z.1.1 - B₀.toContinuousLinearMap‖ < δ ∧ ‖z.1.2‖ < K ∧ ‖g z‖ < r := by
     filter_upwards [hUopen.mem_nhds hUbase, hBsmall, hAsmall, hgsmall] with z hz hB hA hgz
@@ -208,8 +207,7 @@ theorem exists_local_bounded_analytic_solver [CompleteSpace E]
   · intro x
     apply (B₀.symm.toContinuousLinearMap.le_opNorm x).trans
     apply mul_le_mul_of_nonneg_right _ (norm_nonneg x)
-    change ‖B₀.symm.toContinuousLinearMap‖ ≤ ‖B₀.symm.toContinuousLinearMap‖ + 1
-    linarith
+    exact le_add_of_nonneg_right zero_le_one
   · exact hs.2.1.le
   · exact hs.2.2.1.le
   · exact hs.2.2.2.le
@@ -309,27 +307,26 @@ theorem compact_uniform_small_correction [CompleteSpace E]
   obtain ⟨β, K, hβ, hK, hbound⟩ := compact_inverse_quadratic_bounds S hS B A hB hA hinv
   let r : ℝ := 1 / (4 * β * K)
   let ε : ℝ := r / (2 * β)
-  have hr : 0 < r := by change 0 < 1 / (4 * β * K); positivity
-  have hε : 0 < ε := by change 0 < r / (2 * β); positivity
-  have hsmall : 4 * β * K * r ≤ 1 := by
-    change 4 * β * K * (1 / (4 * β * K)) ≤ 1
-    apply le_of_eq
-    field_simp
+  have h4 : 0 < 4 * β * K := mul_pos (mul_pos four_pos hβ) hK
+  have h2 : 0 < 2 * β := mul_pos two_pos hβ
+  have hr : 0 < r := div_pos one_pos h4
+  have hε : 0 < ε := div_pos hr h2
+  have hsmall : 4 * β * K * r ≤ 1 := (mul_one_div_cancel h4.ne').le
   refine ⟨β, ε, hβ, hε, ?_⟩
   intro p hp d hd
   have hradius : 2 * β * ‖d‖ ≤ r := by
     calc
-      _ ≤ 2 * β * ε := mul_le_mul_of_nonneg_left hd (by positivity)
-      _ = r := by change 2 * β * (r / (2 * β)) = r; field_simp
+      _ ≤ 2 * β * ε := mul_le_mul_of_nonneg_left hd h2.le
+      _ = r := mul_div_cancel₀ r h2.ne'
   have hsmall' : 4 * β * K * (2 * β * ‖d‖) ≤ 1 :=
-    (mul_le_mul_of_nonneg_left hradius (by positivity)).trans hsmall
+    (mul_le_mul_of_nonneg_left hradius h4.le).trans hsmall
   obtain ⟨e, he⟩ := hinv p hp
   have heinv : ‖e.symm.toContinuousLinearMap‖ ≤ β := by
     have h := (hbound p hp).1
     rwa [← he, ContinuousLinearMap.inverse_equiv] at h
   have hsolve : ∃! c : E, ‖c‖ ≤ 2 * β * ‖d‖ ∧ e c + A p c c = d := by
     apply MomentRepair.exists_unique_small_correction e (fun c => A p c c) d β K
-      (2 * β * ‖d‖) hβ.le hK.le (by positivity)
+      (2 * β * ‖d‖) hβ.le hK.le (mul_nonneg h2.le (norm_nonneg d))
     · intro x
       exact (e.symm.toContinuousLinearMap.le_opNorm x).trans
         (mul_le_mul_of_nonneg_right heinv (norm_nonneg x))

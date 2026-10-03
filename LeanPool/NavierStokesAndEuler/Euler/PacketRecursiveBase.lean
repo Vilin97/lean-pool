@@ -31,14 +31,14 @@ theorem assembledJets_zero (O : Operators) (N : ℕ) (a : ℕ → Profile) (ha :
   unfold assembledJets
   apply assemble_zero
   rw [ha]
-  simp [EulerPacketPointJets.slicedJet_zero']
+  simp only [zero_high, slicedJet_zero', zero_mean, add_zero]
 
 theorem pressureJets_zero (N : ℕ) (a : ℕ → Profile) (ha : a 0 = 0) (z : Domain) :
     pressureJets N a z 0=0 := by
   unfold pressureJets
   apply assemble_zero
   rw [ha]
-  simp [pressureJet_zero]
+  simp only [zero_meanPressure, pressureJet_zero]
 
 theorem recursiveGrade_zero (O : Operators) (primary : Profile) (N : ℕ) (z : Domain)
     (hqθ : ∀ i ≤ N, fastPressure (O.normal z) (pressureJet (profiles O primary i).meanPressure
@@ -49,7 +49,7 @@ theorem recursiveGrade_zero (O : Operators) (primary : Profile) (N : ℕ) (z : D
   have hp : fastPressure (O.normal z) (pressureJets N (profiles O primary) z 1)=0 := by
     unfold pressureJets
     rw [assembled_fast_pressure N 0 (Nat.zero_le N) _ _ _ hqθ]
-    simp [pressureJet_zero]
+    simp only [profiles_zero, zero_highPressure, pressureJet_zero, map_zero]
   exact coefficient_zero_grade N _ _ _ _ _ _ _ hv (by rw [hq, map_zero]) hp
 
 theorem nonlinearGrade_one (M : ℕ) (hM : 2 ≤ M) (FInv : Space →L[ℝ] Space) (m : Space)
@@ -58,7 +58,8 @@ theorem nonlinearGrade_one (M : ℕ) (hM : 2 ≤ M) (FInv : Space →L[ℝ] Spac
   unfold nonlinearGrade
   rw [convolution_eq_range M 1 (by omega), convolution_eq_range M 2 hM]
   have hfast := fastAdvection_tangent_left m (u 1) (u 1) htan
-  simp [sum_range_succ, hu0, hfast, map_zero, LinearMap.zero_apply]
+  simp only [Nat.reduceAdd, sum_range_succ, range_one, sum_singleton, hu0, map_zero, tsub_zero,
+      LinearMap.zero_apply, tsub_self, add_zero, Nat.add_one_sub_one, hfast]
 
 theorem recursiveGrade_one (O : Operators) (A : VectorField) (π : ScalarField)
     (N : ℕ) (hN : 1 ≤ N) (z : Domain)
@@ -70,10 +71,10 @@ theorem recursiveGrade_one (O : Operators) (A : VectorField) (π : ScalarField)
     recursiveGrade O N (profiles O (primaryProfile O A π)) z 1=0 := by
   let a := profiles O (primaryProfile O A π)
   have ha : a 0=0 := profiles_zero O _
-  have hmean : (a 1).mean=0 := by simp [a, primaryProfile]
+  have hmean : (a 1).mean=0 := by simp only [primaryProfile, profiles_one, a]
   have hu1 : assembledJets O N a z 1=slicedJet O.interval A z := by
     rw [assembledJets_eq_velocityJet O N a ha z 1 hN, velocityJet_primary O a ha hmean z]
-    simp [a, primaryProfile]
+    simp only [primaryProfile, profiles_one, a]
   have hnl : nonlinearGrade (N+1) 1 (O.inverseFrame z) (O.normal z) (assembledJets O N a z)=0 :=
     nonlinearGrade_one (N+1) (by omega) _ _ _ (assembledJets_zero O N a ha z)
       (by rw [hu1]; exact htan)

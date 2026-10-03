@@ -163,11 +163,10 @@ noncomputable def extendedJets (f : E × ℝ → F) (p : E × ℝ) :
 theorem iteratedFDeriv_hasFDerivAt {f : E × ℝ → F} {p : E × ℝ}
     (hf : ContDiffAt ℝ ∞ f p) (n : ℕ) :
     HasFDerivAt (iteratedFDeriv ℝ n f) (iteratedFDeriv ℝ (n + 1) f p).curryLeft p := by
-  have hi : ContDiffAt ℝ 1 (iteratedFDeriv ℝ n f) p :=
-    hf.iteratedFDeriv_right (by exact_mod_cast (le_top : 1 + (n : ℕ∞) ≤ ⊤))
-  have hd := (hi.differentiableAt (by simp)).hasFDerivAt
-  rw [fderiv_iteratedFDeriv] at hd
-  exact hd
+  have hi := hf.iteratedFDeriv_right (m := 1) (i := n)
+    (by exact_mod_cast (le_top : 1 + (n : ℕ∞) ≤ ⊤))
+  exact (hi.differentiableAt (by simp)).hasFDerivAt.congr_fderiv
+    (congrFun fderiv_iteratedFDeriv p)
 
 /-- The derivative recurrence holds for the extended tensors on both sides
 and at the edge. The edge case comes from the proved small-o bound. -/
@@ -176,15 +175,14 @@ theorem extendedJets_hasFDerivAt {c : ℝ} (hc : 0 < c)
     (hf : ContDiffOn ℝ ∞ f (U ×ˢ Ioi 0)) (hB : LocalGaussianJets c U f)
     (n : ℕ) {p : E × ℝ} (hp : p ∈ U ×ˢ (univ : Set ℝ)) :
     HasFDerivAt (fun q => extendedJets f q n) (extendedJets f p (n + 1)).curryLeft p := by
-  change HasFDerivAt (zeroExtension (iteratedFDeriv ℝ n f))
-    (zeroExtension (iteratedFDeriv ℝ (n + 1) f) p).curryLeft p
+  simp only [extendedJets]
   rcases lt_trichotomy p.2 0 with hneg | heq | hpos
   · rw [zeroExtension_of_nonpos _ hneg.le]
-    convert! (hasFDerivAt_const (0 : (E × ℝ)[×n]→L[ℝ] F) p).congr_of_eventuallyEq
-      (zeroExtension_germ_neg _ hneg) using 1
+    exact ((hasFDerivAt_const (0 : (E × ℝ)[×n]→L[ℝ] F) p).congr_of_eventuallyEq
+      (zeroExtension_germ_neg _ hneg)).congr_fderiv rfl
   · have hp₀ : p = (p.1, 0) := Prod.ext rfl heq
     rw [hp₀, zeroExtension_edge]
-    convert! hasFDerivAt_zeroExtension_edge hc hU (hB n) hp.1 using 1
+    exact (hasFDerivAt_zeroExtension_edge hc hU (hB n) hp.1).congr_fderiv rfl
   · rw [zeroExtension_of_pos _ hpos]
     have hfp := hf.contDiffAt ((hU.prod isOpen_Ioi).mem_nhds ⟨hp.1, hpos⟩)
     exact (iteratedFDeriv_hasFDerivAt hfp n).congr_of_eventuallyEq
@@ -702,17 +700,16 @@ theorem envelope_bounds {w g r : E → ℝ} {x : E} (hw : 0 < w x) (hg : 0 < g x
       (∀ i ≤ n, ‖iteratedFDeriv ℝ i g x‖ ≤ w x * envelope w g r n x) ∧
       (∀ i ≤ n, ‖iteratedFDeriv ℝ i r x‖ ≤ w x * envelope w g r n x) := by
   have hterm (i : ℕ) : 0 ≤ ‖iteratedFDeriv ℝ i g x‖ / w x +
-      ‖iteratedFDeriv ℝ i r x‖ / w x := by positivity
+      ‖iteratedFDeriv ℝ i r x‖ / w x :=
+    add_nonneg (div_nonneg (norm_nonneg _) hw.le) (div_nonneg (norm_nonneg _) hw.le)
   have hsum : 0 ≤ ∑ i ∈ Finset.range (n + 1),
       (‖iteratedFDeriv ℝ i g x‖ / w x + ‖iteratedFDeriv ℝ i r x‖ / w x) :=
     Finset.sum_nonneg (fun i _ => hterm i)
-  have hB : 1 ≤ envelope w g r n x := by
-    dsimp only [envelope]
-    have hfrac : 0 ≤ w x / g x := (div_pos hw hg).le
-    linarith
-  have hlow : w x / g x ≤ envelope w g r n x := by
-    dsimp only [envelope]
-    linarith
+  have hfrac : 0 ≤ w x / g x := (div_pos hw hg).le
+  have hB : 1 ≤ envelope w g r n x :=
+    (le_add_of_nonneg_right hfrac).trans (le_add_of_nonneg_right hsum)
+  have hlow : w x / g x ≤ envelope w g r n x :=
+    (le_add_of_nonneg_left zero_le_one).trans (le_add_of_nonneg_right hsum)
   have hlow' : w x / envelope w g r n x ≤ g x := by
     apply (div_le_iff₀ (zero_lt_one.trans_le hB)).2
     simpa only [mul_comm] using (div_le_iff₀ hg).mp hlow
@@ -722,17 +719,15 @@ theorem envelope_bounds {w g r : E → ℝ} {x : E} (hw : 0 < w x) (hg : 0 < g x
     have ht := Finset.single_le_sum
       (f := fun i => ‖iteratedFDeriv ℝ i g x‖ / w x + ‖iteratedFDeriv ℝ i r x‖ / w x)
       (fun i _ => hterm i) (Finset.mem_range.mpr (Nat.lt_succ_of_le hin))
-    dsimp only [envelope]
-    have hlo : 0 ≤ w x / g x := (div_pos hw hg).le
-    linarith
+    exact ht.trans (le_add_of_nonneg_left (add_nonneg zero_le_one hfrac))
   refine ⟨hB, hlow', ?_, ?_⟩
   · intro i hin
-    have hnonneg : 0 ≤ ‖iteratedFDeriv ℝ i r x‖ / w x := by positivity
-    have h : ‖iteratedFDeriv ℝ i g x‖ / w x ≤ envelope w g r n x := by linarith [hi i hin]
+    have h : ‖iteratedFDeriv ℝ i g x‖ / w x ≤ envelope w g r n x :=
+      (le_add_of_nonneg_right (div_nonneg (norm_nonneg _) hw.le)).trans (hi i hin)
     simpa only [mul_comm] using (div_le_iff₀ hw).mp h
   · intro i hin
-    have hnonneg : 0 ≤ ‖iteratedFDeriv ℝ i g x‖ / w x := by positivity
-    have h : ‖iteratedFDeriv ℝ i r x‖ / w x ≤ envelope w g r n x := by linarith [hi i hin]
+    have h : ‖iteratedFDeriv ℝ i r x‖ / w x ≤ envelope w g r n x :=
+      (le_add_of_nonneg_left (div_nonneg (norm_nonneg _) hw.le)).trans (hi i hin)
     simpa only [mul_comm] using (div_le_iff₀ hw).mp h
 
 theorem envelope_polyBound {s : Set E} {S T w g r : E → ℝ}

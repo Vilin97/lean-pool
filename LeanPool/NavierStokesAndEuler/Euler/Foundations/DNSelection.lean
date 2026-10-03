@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.InnerProductSpace.Positive
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Quantitative endpoint selection in the activation step, equations (26)–(27). -/
 
@@ -48,53 +49,49 @@ theorem select_endpoint
       -8 * (C + 1) ≤ (a - cpp) * yp + (b - cpq) * yq ∧
       (a - cpp) * yp + (b - cpq) * yq ≤ 0 ∧
       |yp| + |yq| ≤ 8 * (C + 1) := by
+  have hC1 : 0 ≤ C + 1 := by linarith only [hC]
   have hεsmall : ε ≤ 1 / 16 := by
-    linarith [mul_nonneg (show 0 ≤ C by linarith) hε]
-  have hu : 0 < a - cpp := by linarith
+    linarith only [hsmall, mul_nonneg (zero_le_one.trans hC) hε]
+  have hu : 0 < a - cpp := by linarith only [ha, hpp]
   have huC : a - cpp ≤ C + ε := by
-    have := (abs_le.mp hppε).1
-    linarith
+    linarith only [(abs_le.mp hppε).1, haC]
   rcases le_or_gt b (1 / 2) with hb | hb
   · let D := 1 + cqp - b
     have hD : 1 / 3 ≤ D := by
-      have := (abs_le.mp hqp).1
-      dsimp [D]
-      linarith
-    have hDpos : 0 < D := by linarith
+      dsimp only [D]
+      linarith only [(abs_le.mp hqp).1, hεsmall, hb]
+    have hDpos : 0 < D := by linarith only [hD]
     have hDne : D ≠ 0 := ne_of_gt hDpos
     have hquot : (a - cpp) / D ≤ 8 * (C + 1) := by
       apply (div_le_iff₀ hDpos).2
-      linarith [mul_nonneg (show 0 ≤ C + 1 by linarith)
-        (show 0 ≤ D - 1 / 3 by linarith)]
-    have hinv : 1 / D ≤ 3 := (div_le_iff₀ hDpos).2 (by linarith)
+      linarith only [huC, hεsmall, hC, mul_nonneg hC1 (sub_nonneg.mpr hD)]
+    have hinv : 1 / D ≤ 3 := (div_le_iff₀ hDpos).2 (by linarith only [hD])
+    have heq : (a - cpp) * (-1 / D) + (b - cpq) * 0 = -((a - cpp) / D) := by ring
     refine ⟨-1 / D, 0, ?_, ?_, ?_, ?_⟩
-    · have heq : b - 1 - cqp = -D := by dsimp [D]; ring
-      rw [heq, mul_zero, add_zero]
-      field_simp
-    · have heq : (a - cpp) * (-1 / D) + (b - cpq) * 0 = -(a - cpp) / D := by ring
-      rw [heq, neg_div]
-      linarith
-    · have heq : (a - cpp) * (-1 / D) + (b - cpq) * 0 = -((a - cpp) / D) := by ring
-      rw [heq]
+    · have hbD : b - 1 - cqp = -D := by dsimp only [D]; ring
+      rw [hbD, mul_zero, add_zero, neg_div, neg_mul_neg, mul_one_div_cancel hDne]
+    · rw [heq]
+      linarith only [hquot]
+    · rw [heq]
       exact neg_nonpos.mpr (div_nonneg hu.le hDpos.le)
     · simp only [abs_zero, add_zero, abs_div, abs_neg, abs_one, abs_of_pos hDpos]
-      linarith
+      linarith only [hinv, hC]
   · let Δ := (a - cpp) * (d - cqq) - (b - 1 - cqp) * (b - cpq)
-    have hbpos : 0 ≤ b := by linarith
+    have hbpos : 0 ≤ b := by linarith only [hb]
     have hb_bound : b ≤ C := (abs_le.mp hbC).2
     have hud : b ^ 2 ≤ (a - cpp) * d := by
-      linarith [mul_nonneg (show 0 ≤ -cpp by linarith) hd]
+      linarith only [had, mul_nonneg (neg_nonneg.mpr hpp.le) hd]
     have hucqq : (a - cpp) * cqq ≤ (C + ε) * ε :=
       (mul_le_mul_of_nonneg_left (abs_le.mp hqq).2 hu.le).trans
         (mul_le_mul_of_nonneg_right huC hε)
     have hbpq : -(C * ε) ≤ b * cpq := by
       have h₁ := mul_le_mul_of_nonneg_left (abs_le.mp hpq).1 hbpos
       have h₂ := mul_le_mul_of_nonneg_right hb_bound hε
-      linarith
+      linarith only [h₁, h₂]
     have hbqp : -(C * ε) ≤ b * cqp := by
       have h₁ := mul_le_mul_of_nonneg_left (abs_le.mp hqp).1 hbpos
       have h₂ := mul_le_mul_of_nonneg_right hb_bound hε
-      linarith
+      linarith only [h₁, h₂]
     have hprod : cqp * cpq ≤ ε ^ 2 := by
       calc
         cqp * cpq ≤ |cqp * cpq| := le_abs_self _
@@ -103,10 +100,12 @@ theorem select_endpoint
         _ = ε ^ 2 := by ring
     have hΔ : 1 / 4 ≤ Δ := by
       have hpq_upper := (abs_le.mp hpq).2
-      have hεsq : ε ^ 2 ≤ ε := by nlinarith
-      dsimp [Δ]
-      linarith
-    have hΔpos : 0 < Δ := by linarith
+      have hεsq : ε ^ 2 ≤ ε := by
+        rw [pow_two]
+        exact mul_le_of_le_one_left hε (hεsmall.trans (by norm_num))
+      dsimp only [Δ]
+      linarith only [hud, hucqq, hbpq, hbqp, hprod, hpq_upper, hεsq, hb, hsmall]
+    have hΔpos : 0 < Δ := by linarith only [hΔ]
     have hΔne : Δ ≠ 0 := ne_of_gt hΔpos
     have hnum : |b - cpq| ≤ C + ε :=
       (abs_sub b cpq).trans (add_le_add hbC hpq)
@@ -114,19 +113,16 @@ theorem select_endpoint
     have hnorm : |-(b - cpq) / Δ| + |(a - cpp) / Δ| ≤ 8 * (C + 1) := by
       rw [abs_div, abs_div, abs_neg, abs_of_pos hΔpos, ← add_div]
       apply (div_le_iff₀ hΔpos).2
-      linarith [mul_nonneg (show 0 ≤ C + 1 by linarith)
-        (show 0 ≤ Δ - 1 / 4 by linarith)]
+      linarith only [hnum, huabs, hεsmall, mul_nonneg hC1 (sub_nonneg.mpr hΔ)]
+    have heq : (a - cpp) * (-(b - cpq) / Δ) +
+        (b - cpq) * ((a - cpp) / Δ) = 0 := by ring
     refine ⟨-(b - cpq) / Δ, (a - cpp) / Δ, ?_, ?_, ?_, hnorm⟩
-    · field_simp [hΔne]
-      dsimp [Δ]
+    · rw [mul_div_assoc', mul_div_assoc', ← add_div, div_eq_one_iff_eq hΔne]
+      dsimp only [Δ]
       ring
-    · have heq : (a - cpp) * (-(b - cpq) / Δ) +
-          (b - cpq) * ((a - cpp) / Δ) = 0 := by ring
-      rw [heq]
-      linarith
-    · have heq : (a - cpp) * (-(b - cpq) / Δ) +
-          (b - cpq) * ((a - cpp) / Δ) = 0 := by ring
-      rw [heq]
+    · rw [heq]
+      linarith only [hC]
+    · rw [heq]
 
 /-- The endpoint choice at an arbitrary positive shear scale `h`. -/
 theorem select_endpoint_scaled

@@ -112,7 +112,7 @@ theorem pressureL2_resolvent_apply (A B : SmoothCoefficient period) (κ : ℝ) (
     change gradientProjection period κ m (A.operator
       (A.pressure κ m c hc hA f - B.pressure κ m d hd hB f)) =
       gradientProjection period κ m ((B.operator - A.operator) (B.pressure κ m d hd hB f))
-    rw [map_sub, map_sub, sub_apply, map_sub, hPA, hPB]
+    simp only [map_sub, sub_apply, hPA, hPB]
 
 /-- The genuine Sobolev pressure inverses obey the exact resolvent identity on every forcing. -/
 theorem pressure_resolvent_apply {q : ℕ} {A B : SmoothCoefficient period}
@@ -127,11 +127,8 @@ theorem pressure_resolvent_apply {q : ℕ} {A B : SmoothCoefficient period}
         ((coefficientSobolevOperator period KB - coefficientSobolevOperator period KA)
           (pressureSobolevOperator period KB κ m d hd hB u)) := by
   apply value_injective period
-  rw [value_sub, pressureSobolevOperator_value period KA κ m c hc hA u,
-    pressureSobolevOperator_value period KB κ m d hd hB u,
-    pressureSobolevOperator_value period KA κ m c hc hA,
-    coefficientDifference_value period KA KB,
-    pressureSobolevOperator_value period KB κ m d hd hB u]
+  simp only [value_sub, pressureSobolevOperator_value period KA κ m c hc hA,
+    pressureSobolevOperator_value period KB κ m d hd hB, coefficientDifference_value period KA KB]
   exact pressureL2_resolvent_apply period A B κ m c d hc hd hA hB (value period u)
 
 /-- The genuine pressure resolvent identity as an equality of Sobolev continuous linear maps. -/

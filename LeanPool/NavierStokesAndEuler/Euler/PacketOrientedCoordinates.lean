@@ -32,7 +32,7 @@ theorem frameVector_coordinates (p q x : Space)
     frameVector p q (frameCoordinates p q x) = x := by
   have h := (frameBasis p q hp hq hpq).sum_repr' x
   simp only [frameBasis_apply, Fin.sum_univ_three] at h
-  dsimp [frame] at h
+  dsimp only [Fin.isValue, frame, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val] at h
   exact h
 
 theorem cross_add_left (x y z : Space) : cross (x+y) z = cross x z+cross y z := by
@@ -71,15 +71,17 @@ theorem cross_frameVector (p q : Space) (X Y : Fin 3 → ℝ)
     rw [EulerPacketCrossProduct.cross_cross, hqp, hq2, zero_smul, one_smul, zero_sub, neg_neg]
   have hnp : cross (cross p q) p = q := by rw [cross_swap p (cross p q), hpn, neg_neg]
   have hnq : cross (cross p q) q = -p := by rw [cross_swap q (cross p q), hqn]
-  simp [frameVector, _root_.cross_apply, cross_add_left, cross_add_right, cross_smul_left,
-      cross_smul_right,
-    cross_same, hpn, hqn, hnp, hnq, cross_swap p q]
+  simp only [frameVector, Fin.isValue, cross_add_right, cross_smul_right, cross_add_left,
+      cross_smul_left, cross_same, smul_zero, cross_swap p q, smul_neg, zero_add, hnp, smul_add,
+      add_zero, hnq, hpn, hqn, cross_apply, Nat.succ_eq_add_one, Nat.reduceAdd,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val]
   module
 
 theorem frameVector_inner (p q z : Space) (X : Fin 3 → ℝ) :
     ⟪frameVector p q X,z⟫_ℝ =
       X 0*frameCoordinates p q z 0+X 1*frameCoordinates p q z 1+X 2*frameCoordinates p q z 2 := by
-  dsimp [frameVector, frameCoordinates, frame]
+  dsimp only [frameVector, Fin.isValue, frameCoordinates, frame, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val]
   simp only [inner_add_left, real_inner_smul_left]
 
 /-- Cross-product and orientation errors cannot be hidden in a coordinate

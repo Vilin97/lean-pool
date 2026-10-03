@@ -105,7 +105,7 @@ theorem tail_grade_coarse_bound
   have hA : 0 ≤ (1+18*((N+2 : ℕ) : ℝ)^2)*BC.termCost*S.H0^(2*n+2) :=
     mul_nonneg (mul_nonneg (by positivity) BC.termCost_nonneg) (pow_nonneg S.H0_pos.le _)
   have hc := h.coarse_grade hR hA N n hN hn' le_rfl
-  exact hc.mono_amplitude (by linarith)
+  exact hc.mono_amplitude (by linarith only [hR])
     (tailBase_absorption R S.H0 BC.termCost BC.termCost_nonneg N n)
 
 theorem tail_sum_bound
@@ -117,7 +117,7 @@ theorem tail_sum_bound
       (2*tailBase R S.H0 BC.termCost N*(κ*tailBase R S.H0 BC.termCost N)^(N+1)) 0 :=
   (prefixThrough hT G).tailSum_bound_of_grades C hT
     (G N le_rfl).correctorDerivative (G N le_rfl).corrector_time (G N le_rfl).pressure ha
-    6 (4*R) κ (tailBase R S.H0 BC.termCost N) (by linarith) hκ
+    6 (4*R) κ (tailBase R S.H0 BC.termCost N) (by linarith only [hR]) hκ
     (tailBase_nonneg R S.H0 BC.termCost BC.termCost_nonneg N) hsmall
     (fun n hn hn' => tail_grade_coarse_bound hT G BC hG hN hR hRc ha hb n hn hn')
 
@@ -130,13 +130,13 @@ theorem normalized_tail_bound
     (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     ((C.inverse.multiply (tailSumField hT G C ha k⁻¹)).smul k).WordBound 6 (4*R)
       (Real.exp (-(7/10)*X*Real.log k)) 0 := by
-  have hk0 : 0 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
   have hsmall : k⁻¹*tailBase R S.H0 BC.termCost N ≤ 1/2 := by
     simpa only [div_eq_mul_inv,mul_comm] using
       EulerPacketTailBound.grade_ratio_le_half k (tailBase R S.H0 BC.termCost N) hk hbase
   have hsum := tail_sum_bound hT G BC hG hN hR hRc ha hb k⁻¹ (inv_nonneg.mpr hk0) hsmall
   exact BC.normalized_tail_exponential (tailSumField hT G C ha k⁻¹) N hsum
-    (hRc.trans (by linarith)) (by linarith) hk
+    (hRc.trans (by linarith only [hR])) (by linarith only [hR]) hk
     (tailBase_nonneg R S.H0 BC.termCost BC.termCost_nonneg N) hbase hcoef hX hNX
 
 end EulerPacketCylinderField.ProfileRegularity

@@ -108,7 +108,7 @@ theorem exists_comparable_band (N : ℕ) {q : ℝ} (hq : 0 < q) (hsmall : q ≤ 
   · have hh := (lt_div_iff₀ hQN).mp hlo
     rw [pow_succ] at hh
     rw [Q_add, Q_eq_half_pow k]
-    nlinarith
+    nlinarith only [hh]
 
 /-! ## The local, nonoscillatory graph estimate -/
 
@@ -164,7 +164,8 @@ theorem bandField_jet_bound {h a b : ℝ}
         C * q ^ (gain - loss degree m) := by
   obtain ⟨B, hB, hBj⟩ := PhysicalClassBounds.cylindricalMap_positiveJets (b := b) ha m
   let A' : ℝ := (m.factorial : ℝ) * A * B ^ m
-  have hA' : 0 ≤ A' := by dsimp [A']; positivity
+  have hA' : 0 ≤ A' :=
+    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hA) (pow_nonneg (zero_le_one.trans hB) m)
   obtain ⟨C, hC, hb⟩ := common_stripped_physical_bound_local (E := E) (b := b)
     hh hh1 ha Δ m (gain - degree) e A' hA'
   refine ⟨C, hC, ?_⟩
@@ -186,7 +187,8 @@ theorem bandField_jet_bound {h a b : ℝ}
   have hbound := hb n hn d hd w hann ht q hq hlo hhi u hu
   have hqN := ChartScales.Q_pos n
   have hSN := ChartScales.S_pos (show 1 ≤ n by omega)
-  have hab : 0 ≤ A * ChartScales.Q n ^ gain * ChartScales.S n ^ e := by positivity
+  have hab : 0 ≤ A * ChartScales.Q n ^ gain * ChartScales.S n ^ e :=
+    mul_nonneg (mul_nonneg hA (Real.rpow_nonneg hqN.le _)) (Real.rpow_nonneg hSN.le _)
   have hFjet : ∀ i ≤ m, ‖iteratedFDeriv ℝ i F (graph h n d w)‖ ≤
       A * ChartScales.Q n ^ gain * ChartScales.S n ^ e := by
     intro i hi
@@ -203,9 +205,7 @@ theorem bandField_jet_bound {h a b : ℝ}
       (F ∘ PhysicalClassBounds.cylindricalMap) x) (commonLift h n d w)‖ ≤ _
     rw [iteratedFDeriv_const_smul_apply' (hnear.of_le
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl i)),
-      norm_smul (ChartScales.Q n ^ (-degree))
-        (iteratedFDeriv ℝ i (F ∘ PhysicalClassBounds.cylindricalMap) (commonLift h n d w)),
-      Real.norm_of_nonneg (Real.rpow_pos_of_pos hqN (-degree)).le]
+      norm_smul_of_nonneg (Real.rpow_pos_of_pos hqN (-degree)).le]
     calc
       _ ≤ ChartScales.Q n ^ (-degree) * ((m.factorial : ℝ) *
           (A * ChartScales.Q n ^ gain * ChartScales.S n ^ e) * B ^ m) :=
@@ -268,21 +268,21 @@ theorem graph_slow_normalized {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hq := physicalQ_pos hh hh1 hw
   constructor
   · apply (lt_div_iff₀ hQ).mpr
-    nlinarith
+    nlinarith only [hhi, hq]
   · apply (div_lt_iff₀ hQ).mpr
-    nlinarith
+    nlinarith only [hlo, hQ]
 
 theorem graph_length_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (n d : ℕ)
     {w : SpaceTime} (hw : w ∈ preterminal) :
     0 < VariableGaugeMean.qLength (2 * h) (graph h n d w).2.1 :=
-  VariableGaugeMean.qLength_pos (by linarith) (by linarith) (graph_time_pos h n d hw)
+  VariableGaugeMean.qLength_pos (by linarith) (by linarith only [hh1]) (graph_time_pos h n d hw)
 
 theorem graph_length_continuousAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (n d : ℕ)
     {w : SpaceTime} (hw : w ∈ preterminal) :
     ContinuousAt (fun z => VariableGaugeMean.qLength (2 * h) (graph h n d z).2.1) w := by
   have he : ContDiffAt ℝ ∞ (VariableGaugeMean.qLength (2 * h)) (graph h n d w).2.1 :=
-    (VariableGaugeMean.qLength_contDiffOn (by linarith : 0 < 2 * h)
-    (by linarith : 2 * h < 1)).contDiffAt
+    (VariableGaugeMean.qLength_contDiffOn (by linarith only [hh] : 0 < 2 * h)
+    (by linarith only [hh1] : 2 * h < 1)).contDiffAt
       ((isOpen_lt continuous_const continuous_fst).mem_nhds (graph_time_pos h n d hw))
   have ht : Tendsto (fun z : SpaceTime => (graph h n d z).2.1) (𝓝 w)
       (𝓝 (graph h n d w).2.1) := (graph_slow_continuous h n d).continuousAt
@@ -297,10 +297,10 @@ theorem graph_length_bounds {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (n d : ℕ)
   have hq := physicalQ_pos hh hh1 hw
   have hlow : (1 / 4 : ℝ) ≤ physicalQ h w / ChartScales.Q n := by
     apply (le_div_iff₀ hQ).mpr
-    nlinarith
+    nlinarith only [hhi, hq]
   have hhigh : physicalQ h w / ChartScales.Q n ≤ (4 : ℝ) := by
     apply (div_le_iff₀ hQ).mpr
-    nlinarith
+    nlinarith only [hlo, hQ]
   change 1 / 2 ≤ Real.sqrt (SimilarityCoordinates.coordinateQ (2 * h) (graph h n d w).2.1) ∧ _
   rw [graph_q_eq hh hh1 n d hw]
   constructor
@@ -395,8 +395,10 @@ theorem CoherentFamily.annulus_on_tsupport (D : CoherentFamily h degree N Δ U E
   have hlen := graph_length_bounds hh hh1 n (D.gap n) hw hlo hhi
   have hloR := (le_div_iff₀ hell).mp hratio.1
   have hhiR := (div_le_iff₀ hell).mp hratio.2
-  have haR : a / 2 ≤ (graph h n (D.gap n) w).1 := by nlinarith [hlen.1]
-  have hbR : (graph h n (D.gap n) w).1 ≤ 2 * b := by nlinarith [hlen.2]
+  have haR : a / 2 ≤ (graph h n (D.gap n) w).1 := by
+    linarith only [hloR, mul_le_mul_of_nonneg_left hlen.1 ha.le]
+  have hbR : (graph h n (D.gap n) w).1 ≤ 2 * b := by
+    linarith only [hhiR, mul_le_mul_of_nonneg_left hlen.2 (ha.trans hab).le]
   rw [graph_radius] at haR hbR
   refine ⟨?_, ?_⟩
   · simpa only [Metric.mem_closedBall, dist_zero_right] using
@@ -429,7 +431,7 @@ theorem CoherentFamily.field_jet_bound (D : CoherentFamily h degree N Δ U E)
   have hq := physicalQ_pos hh hh1 hw
   by_cases hts : w ∈ tsupport D.field
   · obtain ⟨n, hn, hqn, hnq⟩ := exists_comparable_band N hq hsmall
-    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hq, hqn]
     have hu := hcover (graph_slow_normalized hh hh1 n (D.gap n) hw hlo hnq.le)
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     rw [iteratedFDeriv_eq_of_eventuallyEq (D.field_germ hU n hn hw hu) m]
@@ -451,7 +453,7 @@ theorem CoherentFamily.field_smoothAt (D : CoherentFamily h degree N Δ U E)
   classical
   by_cases hts : w ∈ tsupport D.field
   · obtain ⟨n, hn, hqn, hnq⟩ := exists_comparable_band N (physicalQ_pos hh hh1 hw) hsmall
-    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hqn, hnq]
     have hu := hcover (graph_slow_normalized hh hh1 n (D.gap n) hw hlo hnq.le)
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     have hnative := (hsm n hn).contDiffAt ((PhysicalMeanDomain.slowDomain_open hU).mem_nhds hu)
@@ -650,7 +652,9 @@ theorem bandAngularField_jet_bound {h a b : ℝ}
   obtain ⟨B, hB, hBj⟩ := PhysicalClassBounds.cylindricalMap_positiveJets (b := b) ha m
   obtain ⟨V, hV, hVj⟩ := angularVector_lift_jet_bound (b := b) ha m
   let A' : ℝ := (2 : ℝ) ^ m * ((m.factorial : ℝ) * A * B ^ m) * V
-  have hA' : 0 ≤ A' := by dsimp [A']; positivity
+  have hA' : 0 ≤ A' := mul_nonneg (mul_nonneg (pow_nonneg zero_le_two m)
+    (mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hA) (pow_nonneg (zero_le_one.trans hB) m)))
+    (zero_le_one.trans hV)
   obtain ⟨C, hC, hb⟩ := common_stripped_physical_bound_local (E := Space) (b := b)
     hh hh1 ha Δ m (gain - degree) e A' hA'
   refine ⟨C, hC, ?_⟩
@@ -681,7 +685,8 @@ theorem bandAngularField_jet_bound {h a b : ℝ}
   have hbound := hb n hn d hd w hann ht q hq hlo hhi u hu
   have hqN := ChartScales.Q_pos n
   have hSN := ChartScales.S_pos (show 1 ≤ n by omega)
-  have hab : 0 ≤ A * ChartScales.Q n ^ gain * ChartScales.S n ^ e := by positivity
+  have hab : 0 ≤ A * ChartScales.Q n ^ gain * ChartScales.S n ^ e :=
+    mul_nonneg (mul_nonneg hA (Real.rpow_nonneg hqN.le _)) (Real.rpow_nonneg hSN.le _)
   have hFjet : ∀ i ≤ m, ‖iteratedFDeriv ℝ i F (graph h n d w)‖ ≤
       A * ChartScales.Q n ^ gain * ChartScales.S n ^ e := by
     intro i hi
@@ -698,12 +703,10 @@ theorem bandAngularField_jet_bound {h a b : ℝ}
       (commonLift h n d w)‖ ≤ _
     rw [iteratedFDeriv_const_smul_apply' (hnear.of_le
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl i)),
-      norm_smul (ChartScales.Q n ^ (-degree)) (iteratedFDeriv ℝ i v (commonLift h n d w)),
-      Real.norm_of_nonneg (Real.rpow_pos_of_pos hqN (-degree)).le]
+      norm_smul_of_nonneg (Real.rpow_pos_of_pos hqN (-degree)).le]
     have hprod := smul_jet_bound (PhysicalClassBounds.cylindricalDomain_open a b)
       hg (angularVector_lift_smooth ha) hx hi
-      (by positivity : 0 ≤ (m.factorial : ℝ) *
-        (A * ChartScales.Q n ^ gain * ChartScales.S n ^ e) * B ^ m)
+      (mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hab) (pow_nonneg (zero_le_one.trans hB) m))
       (zero_le_one.trans hV) hcomp (hVj _ hx)
     calc
       _ ≤ ChartScales.Q n ^ (-degree) * ((2 : ℝ) ^ m * ((m.factorial : ℝ) *
@@ -763,7 +766,7 @@ theorem CoherentFamily.angularField_jet_bound (D : CoherentFamily h degree N Δ 
   have hq := physicalQ_pos hh hh1 hw
   by_cases hts : w ∈ tsupport D.field
   · obtain ⟨n, hn, hqn, hnq⟩ := exists_comparable_band N hq hsmall
-    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hq, hqn]
     have hu := hcover (graph_slow_normalized hh hh1 n (D.gap n) hw hlo hnq.le)
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     rw [iteratedFDeriv_eq_of_eventuallyEq (D.angularField_germ hU n hn hw hu) m]
@@ -786,7 +789,7 @@ theorem CoherentFamily.angularField_smoothAt (D : CoherentFamily h degree N Δ U
   classical
   by_cases hts : w ∈ tsupport D.field
   · obtain ⟨n, hn, hqn, hnq⟩ := exists_comparable_band N (physicalQ_pos hh hh1 hw) hsmall
-    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+    have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hqn, hnq]
     have hu := hcover (graph_slow_normalized hh hh1 n (D.gap n) hw hlo hnq.le)
     have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn hw hu hlo hnq.le hts
     have haxis := PhysicalGraphBounds.scaledRadial_ne_zero

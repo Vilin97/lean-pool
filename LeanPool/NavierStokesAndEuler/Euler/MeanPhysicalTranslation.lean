@@ -112,17 +112,14 @@ theorem frameApply_translation_gevrey (F : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
       timeTranslation T b (timeMultiplier T hT (solenoidalFrame T F) v)) a‖ ≤
         (3*CF*Cv)*majorant R d n := by
   let Q := fun b : Space => solenoidalFrame T (translatePath T b F)
-  have hQ : ContDiff ℝ ∞ Q := contDiff_solenoidalFrame T (fun b => translatePath T b F) hF
-  have hbQ : ∀ k b, ‖iteratedFDeriv ℝ k Q b‖ ≤ CF*majorant R 0 k :=
-    solenoidalFrame_bound T (fun b => translatePath T b F) hF R CF hR hCF 0 hFb
-  have hp := clm_apply_bound (fun b => timeMultiplier T hT (Q b))
+  have hQ := contDiff_solenoidalFrame T (fun b => translatePath T b F) hF
+  have hbQ := solenoidalFrame_bound T (fun b => translatePath T b F) hF R CF hR hCF 0 hFb
+  have hp := clm_apply_bound (fun b => timeMultiplier (E := solenoidalSpace) (F := L2) T hT (Q b))
     (fun b => timeSolenoidalTranslation T b v) (contDiff_timeMultiplier T hT Q hQ) hv
     R CF Cv hR hCF hCv 0 d (timeMultiplier_bound T hT Q hQ R CF hR hCF 0 hbQ) hvb n a
-  have hp' : ‖iteratedFDeriv ℝ n (fun b : Space =>
-      timeMultiplier T hT (Q b) (timeSolenoidalTranslation T b v)) a‖ ≤
-      (3*CF*Cv)*majorant R d n := by simpa only [Nat.zero_add] using hp
+  simp only [Nat.zero_add] at hp
   exact (congrArg (fun g : Space → TimeLp T L2 => ‖iteratedFDeriv ℝ n g a‖)
-    (frameApply_orbit_eq T hT F v)).trans_le hp'
+    (frameApply_orbit_eq T hT F v)).trans_le hp
 
 end EulerMeanPhysicalTranslation
 

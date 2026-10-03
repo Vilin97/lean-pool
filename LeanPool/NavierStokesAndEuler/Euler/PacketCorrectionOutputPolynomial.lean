@@ -122,7 +122,7 @@ theorem output_components (X : ℝ) (hX : 0 ≤ X) :
   have h2 : 0 ≤ 2*X*sourceEnvelope P X := by positivity
   have h3 : 0 ≤ (1+2*X*(448*X+1))*sourceEnvelope P X := by positivity
   unfold outputEnvelope
-  exact ⟨by linarith,by linarith,by linarith,by linarith⟩
+  exact ⟨by linarith,by linarith only [h2, h3],by linarith only [hb, h3],by linarith only [hb, h2]⟩
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (Kc : CorrectionCoefficientBudget D P)
@@ -165,7 +165,7 @@ theorem correction_output_bound (R H C X : ℝ) (hR : 0 ≤ R) (hH : 0 ≤ H) (h
     simp only [initialRadius,one_div,inv_inv]
     unfold inverseRadiusEnvelope
     have hp := mul_le_mul hM hRc Kc.Rc_nonneg hX
-    nlinarith
+    linarith only [hp, hRX, hRc]
   have hiX : 0 ≤ inverseRadiusEnvelope X := by unfold inverseRadiusEnvelope; positivity
   have hder : 12*velocity R H C*(4*R) ≤ 48*velocity X X X*X := by
     calc
@@ -178,7 +178,18 @@ theorem correction_output_bound (R H C X : ℝ) (hR : 0 ≤ R) (hH : 0 ≤ H) (h
   have hP := productConstant_nonneg P 3
   have hs : correctionSourceCost D P Kc R H C ≤ sourceEnvelope P X := by
     unfold correctionSourceCost sourceEnvelope sourceBound
-    gcongr
+    have h2v : 2*velocity R H C ≤ 2*velocity X X X := mul_le_mul_of_nonneg_left hv zero_le_two
+    refine add_le_add (add_le_add (add_le_add ?_ le_rfl) ?_) ?_
+    · exact mul_le_mul (mul_le_mul_of_nonneg_left (add_le_add h2v hb) hP) hde
+        (mul_nonneg (div_nonneg (by norm_num) hρ.le) hb0)
+        (mul_nonneg hP (add_nonneg (mul_nonneg zero_le_two hvX) hbX))
+    · exact mul_le_mul (add_le_add (add_le_add (mul_le_mul_of_nonneg_left hder hP) hA0)
+        (mul_le_mul (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hA2 zero_le_two) hP)
+          h2v (mul_nonneg zero_le_two hv0) (mul_nonneg (mul_nonneg zero_le_two hX) hP))) hb hb0
+        (add_nonneg (add_nonneg (mul_nonneg hP (mul_nonneg (mul_nonneg (by norm_num) hvX) hX)) hX)
+          (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two hX) hP) (mul_nonneg zero_le_two hvX)))
+    · exact mul_le_mul (mul_le_mul_of_nonneg_right hA2 hP) (pow_le_pow_left₀ hb0 hb 2)
+        (sq_nonneg _) (mul_nonneg hX hP)
   have hs0 := correctionSourceCost_nonneg P D Kc R H C hR hC
   have hsX : 0 ≤ sourceEnvelope P X := hs0.trans hs
   have hm0 := zero_le_one.trans Kc.M_one_le
@@ -191,11 +202,15 @@ theorem correction_output_bound (R H C X : ℝ) (hR : 0 ≤ R) (hH : 0 ≤ H) (h
     positivity [Kc.B_nonneg]
   obtain ⟨_,hbo,hpo,hto⟩ := output_components P X hX
   refine ⟨hb0,hp0,ht0,hb.trans hbo,?_,?_⟩
-  · apply le_trans _ hpo
+  · refine le_trans ?_ hpo
     unfold correctionPressureCost
-    gcongr
-  · apply le_trans _ hto
+    exact mul_le_mul (mul_le_mul_of_nonneg_left hM zero_le_two) hs hs0 (mul_nonneg zero_le_two hX)
+  · refine le_trans ?_ hto
     unfold correctionTimeCost
-    gcongr
+    exact mul_le_mul (add_le_add le_rfl (mul_le_mul (mul_le_mul_of_nonneg_left hM zero_le_two)
+      (add_le_add (mul_le_mul_of_nonneg_left hB (by norm_num)) le_rfl)
+      (add_nonneg (mul_nonneg (by norm_num) hB0) zero_le_one) (mul_nonneg zero_le_two hX))) hs hs0
+      (add_nonneg zero_le_one (mul_nonneg (mul_nonneg zero_le_two hX)
+        (add_nonneg (mul_nonneg (by norm_num) hX) zero_le_one)))
 
 end EulerPacketCorrectionOutput

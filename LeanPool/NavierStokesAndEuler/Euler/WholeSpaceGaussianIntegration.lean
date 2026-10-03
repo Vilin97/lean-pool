@@ -89,16 +89,15 @@ theorem directional_fderiv (f : Space → V) (hf : ContDiff ℝ ∞ f) (a x b : 
 theorem directional_fderiv_bound (f : Space → V) (hf : ContDiff ℝ ∞ f)
     (C₂ : ℝ) (h₂ : ∀ x, ‖fderiv ℝ (fderiv ℝ f) x‖ ≤ C₂) (a x : Space) :
     ‖fderiv ℝ (fun y => fderiv ℝ f y a) x‖ ≤ C₂*‖a‖ := by
-  have hC₂ : 0 ≤ C₂ := (norm_nonneg (fderiv ℝ (fderiv ℝ f) x)).trans (h₂ x)
+  have hC₂ : 0 ≤ C₂ := (norm_nonneg _).trans (h₂ x)
   apply opNorm_le_bound _ (mul_nonneg hC₂ (norm_nonneg a))
   intro b
   rw [directional_fderiv f hf a x b]
   calc
     _ ≤ ‖fderiv ℝ (fderiv ℝ f) x b‖*‖a‖ := le_opNorm _ _
-    _ ≤ (C₂*‖b‖)*‖a‖ := by
-      gcongr
-      exact (le_opNorm _ _).trans (mul_le_mul_of_nonneg_right (h₂ x) (norm_nonneg b))
-    _ = _ := by ring
+    _ ≤ (C₂*‖b‖)*‖a‖ := mul_le_mul_of_nonneg_right
+      ((le_opNorm _ _).trans (mul_le_mul_of_nonneg_right (h₂ x) (norm_nonneg b))) (norm_nonneg a)
+    _ = _ := mul_right_comm _ _ _
 
 /-- Both spatial derivatives are transferred to the actual Gaussian kernel. -/
 theorem average_second_identity {t : ℝ} (ht : 0 < t)

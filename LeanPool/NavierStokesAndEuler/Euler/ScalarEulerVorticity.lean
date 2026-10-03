@@ -113,8 +113,8 @@ theorem vectorCurl_convection (u : Space → Space) (hu : ContDiff ℝ ∞ u) (x
   rw [hconvpart, hconvpart]
   simp only [vectorCurl, curl_apply]
   fin_cases i <;>
-    norm_num [Fin.sum_univ_three, Fin.add_def] <;>
-    simp only [hcomm01, hcomm02, hcomm12] <;> ring!
+    simp only [Fin.sum_univ_three, Fin.reduceFinMk, Fin.reduceAdd, Fin.isValue] <;>
+    simp only [hcomm01, hcomm02, hcomm12] <;> ring
 
 /-- The form of curl transport used for incompressible Euler. -/
 theorem vectorCurl_convection_of_divergence_zero (u : Space → Space)
@@ -217,14 +217,14 @@ theorem linearODE_eq_zero (w : ℝ → E) (B : ℝ → E →L[ℝ] E) (T : ℝ)
             (norm_nonneg _))
       have hi := (real_inner_le_norm (w r) (B r (w r))).trans
         (mul_le_mul_of_nonneg_left hnorm (norm_nonneg _))
-      nlinarith
+      linarith only [hi]
   have hqt : q t ≤ 0 := by
     have hz : (0 : ℝ) ∈ Icc 0 T := ⟨le_rfl, ht.1.trans ht.2⟩
     simpa only [q, hzero, norm_zero, zero_pow (by norm_num : 2 ≠ 0), mul_zero] using
       hanti hz ht ht.1
   have hsq : ‖w t‖ ^ 2 ≤ 0 := by
     exact nonpos_of_mul_nonpos_right hqt (Real.exp_pos _)
-  have hn : ‖w t‖ = 0 := by nlinarith [norm_nonneg (w t)]
+  have hn : ‖w t‖ = 0 := (pow_eq_zero_iff two_ne_zero).mp (le_antisymm hsq (sq_nonneg _))
   exact norm_eq_zero.mp hn
 
 /-- A field satisfying the stretching equation along a genuine trajectory
@@ -247,7 +247,7 @@ theorem transport_eq_zero_along_trajectory
   · exact hω.comp (continuousOn_id.prodMk hX) (fun r hr => ⟨hr, mem_univ _⟩)
   · exact hB
   · intro r hr
-    have h := (hωdiff r hr).hasFDerivAt.comp_hasDerivAt r
+    have h := (hωdiff r hr).hasFDerivAt.comp_hasDerivAt (F := ℝ × E) r
       ((hasDerivAt_id r).prodMk (hXderiv r hr))
     simpa only [Function.comp_def, id_eq, hmaterial r hr] using h
   · exact hzero

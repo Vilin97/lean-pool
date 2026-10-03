@@ -146,8 +146,9 @@ theorem real_vectorMode {X : Type*} (κ : ℝ) (Φ : X → ℝ) (a : X → Vecto
     (x : X) (i : Fin 3) :
     (vectorMode κ Φ (fun z j => (a z j : ℂ)) x i).re =
       a x i * Real.cos (κ * Φ x) := by
-  simp [vectorMode, mode, carrier, phaseFactor, Complex.exp_re,
-    Complex.mul_re, Complex.mul_im]
+  simp only [vectorMode, mode, carrier, phaseFactor, Complex.mul_re, Complex.ofReal_re,
+      Complex.exp_re, Complex.I_re, mul_zero, Complex.ofReal_im, Complex.I_im, mul_one, sub_self,
+      zero_mul, Complex.mul_im, add_zero, Real.exp_zero, zero_add, one_mul, sub_zero]
 
 theorem slotVelocity_formula {U : UnsignedLabel} (P : PairData sys U)
     (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) (outer ε : ℝ) (T : Vec2)
@@ -181,7 +182,7 @@ theorem slotVelocity_mask_zero {U : UnsignedLabel} (P : PairData sys U)
     (j : Fin 2) (Y : Plane) (θ : ℝ) :
     slotVelocity P hdet outer ε T q x j Y θ = 0 := by
   funext i
-  simp [slotVelocity_formula, amplitude, hm]
+  simp only [slotVelocity_formula, amplitude, hm, mul_zero, zero_mul, Pi.zero_apply]
 
 /-- The same finite set of signed labels works for all auxiliary points
 and all angles at a positive physical point. -/
@@ -298,7 +299,7 @@ theorem periodize_smul_of_injective_support {S : Set Plane}
     intro z hz
     apply hψ
     intro he
-    exact hz (by simp [he])
+    exact hz (by simp only [he, zero_smul])
   by_cases hactive : ∃ k : TorusInverse.Frequency, ψ (TorusAverages.latticePoint k + Y) ≠ 0
   · obtain ⟨k, hk⟩ := hactive
     rw [TorusAverages.periodize_eq_native_copy hS hψ (hψ hk),
@@ -306,7 +307,7 @@ theorem periodize_smul_of_injective_support {S : Set Plane}
       TorusAverages.periodize_eq_native_copy hS hprod (hψ hk)]
   · have hz : ∀ k : TorusInverse.Frequency, ψ (TorusAverages.latticePoint k + Y) = 0 := by
       simpa only [not_exists, not_not] using hactive
-    simp [TorusAverages.periodize, hz]
+    simp only [TorusAverages.periodize, hz, tsum_zero, zero_smul]
 
 /-- Primitive local factorization suffices to identify the coefficient
 after applying its single cutoff. This is not an assumed covariance or
@@ -418,8 +419,9 @@ theorem correctedVelocity_split (a : WaveCoefficients X) (s : StripData X)
     (d : GraphDirections X) (ψ : ℕ → X → ℝ) (n : ℕ) (x : X) :
     correctedVelocity a s d ψ n x = cutoffVelocity a ψ n x + curlVelocity a s d ψ n x := by
   funext i
-  simp [correctedVelocity, cutoffVelocity, curlVelocity, WaveCoefficients.corrected,
-    WaveCoefficients.addAmplitude, vectorMode, mode, add_mul]
+  simp only [correctedVelocity, vectorMode, mode, WaveCoefficients.corrected,
+      WaveCoefficients.addAmplitude, Pi.add_apply, add_mul, Complex.add_re, Complex.mul_re,
+      cutoffVelocity, curlVelocity]
 
 omit [NormedAddCommGroup X] [NormedSpace ℝ X] in
 theorem cutoffVelocity_identification (a : WaveCoefficients X) (ψ : ℕ → X → ℝ)
@@ -557,7 +559,10 @@ noncomputable def sourceMatrix : Mat2 :=
     (fun j _ => A.length j) () A.point
 
 theorem sourceMatrix_eq : A.sourceMatrix = A.pairData.matrix := by
-  exact primaryCovariance_eq_canonicalPairMatrix _ _ _ _ _ () A.domain A.point A.point_mem
+  exact primaryCovariance_eq_canonicalPairMatrix
+    (fun j (_ : Unit) => nativePrefactor vr vt sys.radius * A.stretch j * A.length j)
+    (fun j _ => A.frame j) (fun j _ => A.lam j) (fun j _ => A.rate j)
+    (fun j _ => A.length j) () A.domain A.point A.point_mem
     A.length_pos A.coefficient_continuous A.kinematics vr vt sys.radius A.stretch
     (fun _ => rfl)
 
@@ -619,9 +624,9 @@ private theorem periodize_scaled_real_vector {f : Plane → Vector}
     apply tsum_eq_sum
     intro k hk
     funext j
-    simp [hs Y le_rfl k hk]
+    simp only [hs Y le_rfl k hk, Pi.zero_apply, mul_zero, Complex.ofReal_zero]
   rw [hreal, hcomplex]
-  simp [Finset.sum_apply, Finset.mul_sum]
+  simp only [Complex.ofReal_mul, Finset.sum_apply, Finset.mul_sum, Complex.ofReal_sum]
 
 namespace SourcePair
 
@@ -654,7 +659,7 @@ theorem actualVelocity_eq (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0)
   apply mode_identification 1 (slotPhase A.pairData j)
     (fun z => A.actualAmplitude hdet outer ε T q x j z.1) (Y, θ)
   · exact A.actualAmplitude_eq hdet outer ε T q x j Y
-  · simp
+  · simp only [one_mul]
 
 end SourcePair
 
@@ -783,7 +788,8 @@ private noncomputable def latticeCover (k : TorusInverse.Frequency) : TorusInver
 private theorem covering_add_lattice (Y : Plane) (k : TorusInverse.Frequency) :
     TorusAverages.covering (Y + TorusAverages.latticePoint k) =
       TorusAverages.covering Y + TorusAverages.latticePoint (latticeCover k) := by
-  ext <;> simp [TorusAverages.covering, TorusAverages.latticePoint, latticeCover] <;> ring
+  ext <;> simp only [TorusAverages.covering, TorusAverages.latticePoint, Prod.fst_add, Prod.snd_add,
+      latticeCover, Int.cast_add, Int.cast_mul, Int.cast_ofNat, Prod.mk_add_mk] <;> ring
 
 private theorem covering_iterate_add_lattice (n : ℕ) (Y : Plane) (k : TorusInverse.Frequency) :
     TorusAverages.covering^[n] (Y + TorusAverages.latticePoint k) =

@@ -318,7 +318,7 @@ theorem fastTime (ho : OperatorBounds s o κ) {f : Field D} (hf : MeanClass s α
 
 theorem time (ho : OperatorBounds s o κ) {f : Field D} (hf : MeanClass s α f) :
     MeanClass s α (o.time f) :=
-  ((ho.slowTime hf).mono_exponent (by linarith)).add (ho.fastTime hf)
+  ((ho.slowTime hf).mono_exponent (by linarith only)).add (ho.fastTime hf)
 
 theorem inv_mul (ho : OperatorBounds s o κ) {f : Field D} (hf : MeanClass s α f) :
     MeanClass s α (o.invRadius * f) := by
@@ -335,12 +335,12 @@ theorem viscosity (ho : OperatorBounds s o κ) {f : Field D} (hf : MeanClass s �
     convert! ho.dr (ho.dr hf) using 1
     ring
   have hr : MeanClass s (α - 2 * κ) (o.invRadius * o.dr f) :=
-    (ho.inv_mul (ho.dr hf)).mono_exponent (by linarith [ho.kappa_nonneg])
+    (ho.inv_mul (ho.dr hf)).mono_exponent (by linarith only [ho, ho.kappa_nonneg])
   have hzz : MeanClass s (α - 2 * κ) (o.dz (o.dz f)) :=
-    (ho.dz (ho.dz hf)).mono_exponent (by linarith [ho.kappa_nonneg])
+    (ho.dz (ho.dz hf)).mono_exponent (by linarith only [ho, ho.kappa_nonneg])
   have hc : MeanClass s (α - 2 * κ) (c • (o.invRadius * (o.invRadius * f))) :=
     (Class.smul (ho.inv_mul (ho.inv_mul hf)) c).mono_exponent
-      (by linarith [ho.kappa_nonneg])
+      (by linarith only [ho, ho.kappa_nonneg])
   have hb := (Class.sub ((hrr.add hr).add hzz) hc).band_smul ho.epsilon
   convert! hb using 1
   ring
@@ -472,15 +472,15 @@ variable {s : StripData D} {o : Operators D} {κ H : ℝ} {b m h : Triple D}
 include ho hb hm hh hH in
 theorem deltaThetaRadial_mem : MeanClass s (H + 1) (deltaThetaRadial b m h) := by
   have h1 := (Class.coefficient_mul hb.radial hh.angular).mono_exponent (show H + 1 ≤ 1 + H by
-      linarith)
+      linarith only)
   have h2 := (Class.mul_coefficient hh.radial hb.angular).mono_exponent (show H + 1 ≤ (H + 1) + 0 by
       simp)
   have h3 := (Class.product hm.radial hh.angular ho.weight_le_one).mono_exponent
-    (show H + 1 ≤ 19 / 10 + H by linarith)
+    (show H + 1 ≤ 19 / 10 + H by linarith only)
   have h4 := (Class.product hh.radial hm.angular ho.weight_le_one).mono_exponent
-    (show H + 1 ≤ (H + 1) + 9 / 10 by linarith)
+    (show H + 1 ≤ (H + 1) + 9 / 10 by linarith only)
   have h5 := (Class.product hh.radial hh.angular ho.weight_le_one).mono_exponent
-    (show H + 1 ≤ (H + 1) + H by linarith)
+    (show H + 1 ≤ (H + 1) + H by linarith only [hH])
   exact (((h1.add h2).add h3).add h4).add h5
 
 include ho hb hm hh hH in
@@ -488,25 +488,25 @@ theorem deltaThetaAxial_mem : MeanClass s H (deltaThetaAxial b m h) := by
   have h1 := (Class.coefficient_mul hb.axial hh.angular).mono_exponent (show H ≤ 0 + H by simp)
   have h2 := (Class.coefficient_mul hb.angular hh.axial).mono_exponent (show H ≤ 0 + H by simp)
   have h3 := (Class.product hm.axial hh.angular ho.weight_le_one).mono_exponent
-    (show H ≤ 9 / 10 + H by linarith)
+    (show H ≤ 9 / 10 + H by linarith only)
   have h4 := (Class.product hh.axial hm.angular ho.weight_le_one).mono_exponent
-    (show H ≤ H + 9 / 10 by linarith)
+    (show H ≤ H + 9 / 10 by linarith only)
   have h5 := (Class.product hh.axial hh.angular ho.weight_le_one).mono_exponent
-    (show H ≤ H + H by linarith)
+    (show H ≤ H + H by linarith only [hH])
   exact (((h1.add h2).add h3).add h4).add h5
 
 include ho hb hm hh hH in
 theorem deltaAxialRadial_mem : MeanClass s (H + 1) (deltaAxialRadial b m h) := by
   have h1 := (Class.coefficient_mul hb.radial hh.axial).mono_exponent (show H + 1 ≤ 1 + H by
-      linarith)
+      linarith only)
   have h2 := (Class.mul_coefficient hh.radial hb.axial).mono_exponent (show H + 1 ≤ (H + 1) + 0 by
       simp)
   have h3 := (Class.product hm.radial hh.axial ho.weight_le_one).mono_exponent
-    (show H + 1 ≤ 19 / 10 + H by linarith)
+    (show H + 1 ≤ 19 / 10 + H by linarith only)
   have h4 := (Class.product hh.radial hm.axial ho.weight_le_one).mono_exponent
-    (show H + 1 ≤ (H + 1) + 9 / 10 by linarith)
+    (show H + 1 ≤ (H + 1) + 9 / 10 by linarith only)
   have h5 := (Class.product hh.radial hh.axial ho.weight_le_one).mono_exponent
-    (show H + 1 ≤ (H + 1) + H by linarith)
+    (show H + 1 ≤ (H + 1) + H by linarith only [hH])
   exact (((h1.add h2).add h3).add h4).add h5
 
 include ho hb hm hh hH in
@@ -514,27 +514,27 @@ theorem deltaAxialAxial_mem : MeanClass s H (deltaAxialAxial b m h) := by
   have h1 := Class.smul ((Class.coefficient_mul hb.axial hh.axial).mono_exponent
     (show H ≤ 0 + H by simp)) 2
   have h2 := Class.smul ((Class.product hm.axial hh.axial ho.weight_le_one).mono_exponent
-    (show H ≤ 9 / 10 + H by linarith)) 2
+    (show H ≤ 9 / 10 + H by linarith only)) 2
   have h3 := (Class.product hh.axial hh.axial ho.weight_le_one).mono_exponent
-    (show H ≤ H + H by linarith)
+    (show H ≤ H + H by linarith only [hH])
   exact (h1.add h2).add h3
 
 include ho hb hm hh hH in
 theorem deltaRadialRadial_mem : MeanClass s (H + 2) (deltaRadialRadial b m h) := by
   have h1 := Class.smul ((Class.coefficient_mul hb.radial hh.radial).mono_exponent
-    (show H + 2 ≤ 1 + (H + 1) by linarith)) 2
+    (show H + 2 ≤ 1 + (H + 1) by linarith only)) 2
   have h2 := Class.smul ((Class.product hm.radial hh.radial ho.weight_le_one).mono_exponent
-    (show H + 2 ≤ 19 / 10 + (H + 1) by linarith)) 2
+    (show H + 2 ≤ 19 / 10 + (H + 1) by linarith only)) 2
   have h3 := (Class.product hh.radial hh.radial ho.weight_le_one).mono_exponent
-    (show H + 2 ≤ (H + 1) + (H + 1) by linarith)
+    (show H + 2 ≤ (H + 1) + (H + 1) by linarith only [hH])
   exact (h1.add h2).add h3
 
 include ho hm hh hH in
 theorem radialAngularRemainder_mem : MeanClass s (H + 9 / 10) (radialAngularRemainder m h) := by
   have h1 := Class.smul ((Class.product hm.angular hh.angular ho.weight_le_one).mono_exponent
-    (show H + 9 / 10 ≤ 9 / 10 + H by linarith)) 2
+    (show H + 9 / 10 ≤ 9 / 10 + H by linarith only)) 2
   have h2 := (Class.product hh.angular hh.angular ho.weight_le_one).mono_exponent
-    (show H + 9 / 10 ≤ H + H by linarith)
+    (show H + 9 / 10 ≤ H + H by linarith only [hH])
   exact h1.add h2
 
 include ho hb hh in
@@ -549,36 +549,36 @@ the stronger defect exponent. This includes fast time on the radial stream. -/
 theorem radialRemainder_mem :
     MeanClass s (H + 9 / 10 - 2 * κ) (radialRemainder o b m h) := by
   have h1 := (ho.time hh.radial).mono_exponent
-    (show H + 9 / 10 - 2 * κ ≤ H + 1 by linarith [ho.kappa_nonneg])
+    (show H + 9 / 10 - 2 * κ ≤ H + 1 by linarith only [ho, ho.kappa_nonneg])
   have h2 := (ho.radialDiv (deltaRadialRadial_mem ho hb hm hh hH) 1).mono_exponent
-    (show H + 9 / 10 - 2 * κ ≤ (H + 2) - κ by linarith [ho.kappa_nonneg])
+    (show H + 9 / 10 - 2 * κ ≤ (H + 2) - κ by linarith only [ho, ho.kappa_nonneg])
   have h3 := (ho.dz (deltaAxialRadial_mem ho hb hm hh hH)).mono_exponent
-    (show H + 9 / 10 - 2 * κ ≤ (H + 1) + 1 by linarith [ho.kappa_nonneg])
+    (show H + 9 / 10 - 2 * κ ≤ (H + 1) + 1 by linarith only [ho, ho.kappa_nonneg])
   have h4 := (ho.inv_mul (radialAngularRemainder_mem ho hm hh hH)).mono_exponent
-    (show H + 9 / 10 - 2 * κ ≤ H + 9 / 10 by linarith [ho.kappa_nonneg])
+    (show H + 9 / 10 - 2 * κ ≤ H + 9 / 10 by linarith only [ho, ho.kappa_nonneg])
   have h5 := (ho.viscosity hh.radial 1).mono_exponent
-    (show H + 9 / 10 - 2 * κ ≤ (H + 1) + 1 - 2 * κ by linarith)
+    (show H + 9 / 10 - 2 * κ ≤ (H + 1) + 1 - 2 * κ by linarith only)
   exact ((Class.sub (Class.sub (Class.neg h1) h2) h3).add h4).add h5
 
 include ho hb hm hh hH in
 theorem thetaRemainder_mem : MeanClass s (H + 1 - 2 * κ) (thetaRemainder o b m h) := by
   have h1 := (ho.slowTime hh.angular).mono_exponent
-    (show H + 1 - 2 * κ ≤ H + 1 by linarith [ho.kappa_nonneg])
+    (show H + 1 - 2 * κ ≤ H + 1 by linarith only [ho, ho.kappa_nonneg])
   have h2 := (ho.radialDiv (deltaThetaRadial_mem ho hb hm hh hH) 2).mono_exponent
-    (show H + 1 - 2 * κ ≤ (H + 1) - κ by linarith [ho.kappa_nonneg])
+    (show H + 1 - 2 * κ ≤ (H + 1) - κ by linarith only [ho, ho.kappa_nonneg])
   have h3 := (ho.dz (deltaThetaAxial_mem ho hb hm hh hH)).mono_exponent
-    (show H + 1 - 2 * κ ≤ H + 1 by linarith [ho.kappa_nonneg])
+    (show H + 1 - 2 * κ ≤ H + 1 by linarith only [ho, ho.kappa_nonneg])
   exact Class.sub ((h1.add h2).add h3) (ho.viscosity hh.angular 1)
 
 include ho hb hm hh hH in
 theorem axialRemainder_mem {δp : Field D} (hp : MeanClass s H δp) :
     MeanClass s (H + 1 - 2 * κ) (axialRemainder o b m h δp) := by
   have h1 := (ho.slowTime hh.axial).mono_exponent
-    (show H + 1 - 2 * κ ≤ H + 1 by linarith [ho.kappa_nonneg])
+    (show H + 1 - 2 * κ ≤ H + 1 by linarith only [ho, ho.kappa_nonneg])
   have h2 := (ho.radialDiv (deltaAxialRadial_mem ho hb hm hh hH) 1).mono_exponent
-    (show H + 1 - 2 * κ ≤ (H + 1) - κ by linarith [ho.kappa_nonneg])
+    (show H + 1 - 2 * κ ≤ (H + 1) - κ by linarith only [ho, ho.kappa_nonneg])
   have h3 := (ho.dz ((deltaAxialAxial_mem ho hb hm hh hH).add hp)).mono_exponent
-    (show H + 1 - 2 * κ ≤ H + 1 by linarith [ho.kappa_nonneg])
+    (show H + 1 - 2 * κ ≤ H + 1 by linarith only [ho, ho.kappa_nonneg])
   exact Class.sub ((h1.add h2).add h3) (ho.viscosity hh.axial 0)
 
 end Bounds
@@ -782,7 +782,7 @@ end ExactChanges
 theorem cumulative_updated {s : StripData D} {H : ℝ} {m h : Triple D}
     (hm : CumulativeBounds s m) (hh : IncrementBounds s H h) (hH : 9 / 10 ≤ H) :
     CumulativeBounds s (updated m h) :=
-  ⟨hm.radial.add (hh.radial.mono_exponent (by linarith)),
+  ⟨hm.radial.add (hh.radial.mono_exponent (by linarith only [hH])),
     hm.angular.add (hh.angular.mono_exponent hH),
     hm.axial.add (hh.axial.mono_exponent hH)⟩
 
@@ -802,7 +802,7 @@ theorem thetaResidual_change_sub_fast_mem (T : Field D) :
   have he := thetaResidual_change s.isOpen_domain o (ho.radialProfile.smooth 0)
     hb.smooth hm.smooth hh.smooth W hW T n hx
   simp only [Pi.sub_apply, Pi.add_apply] at he ⊢
-  linarith
+  linarith only [he]
 
 include ho hb hm hh hH hW in
 theorem axialResidual_change_sub_fast_mem (p δp T : Field D)
@@ -815,7 +815,7 @@ theorem axialResidual_change_sub_fast_mem (p δp T : Field D)
   have he := axialResidual_change s.isOpen_domain o (ho.radialProfile.smooth 0)
     hb.smooth hm.smooth hh.smooth W hW p δp T hp hδp.smooth n hx
   simp only [Pi.sub_apply, Pi.add_apply] at he ⊢
-  linarith
+  linarith only [he]
 
 include ho hb hm hh hH hW in
 /-- The actual radial source change retains the leading centrifugal term. -/
@@ -827,13 +827,13 @@ theorem gr_change_sub_leading_mem :
   have he := gr_change s.isOpen_domain o (ho.radialProfile.smooth 0)
     hb.smooth hm.smooth hh.smooth W hW n hx
   simp only [Pi.sub_apply, Pi.add_apply] at he ⊢
-  linarith
+  linarith only [he]
 
 include ho hb hm hh hH hW in
 theorem gr_change_mem (hκ : 2 * κ ≤ 9 / 10) :
     MeanClass s H (gr o b (updated m h) W - gr o b m W) := by
   apply class_congr ((leadingRadial_mem ho hb hh).add
-    ((radialRemainder_mem ho hb hm hh hH).mono_exponent (by linarith)))
+    ((radialRemainder_mem ho hb hm hh hH).mono_exponent (by linarith only [hκ])))
   exact gr_change s.isOpen_domain o (ho.radialProfile.smooth 0)
     hb.smooth hm.smooth hh.smooth W hW
 
@@ -939,14 +939,14 @@ theorem rho_meanClass
     (hS : ∀ n, 1 ≤ S n) :
     MeanClass (logStripData a b cL cR ha hcL hcR ε S hε hεone hS) 0
       (fun _ (x : ℝ × P) => PressureStream.rho a b hab x.1) := by
-  apply interior_cutoff_meanClass ha (show a < (3 * a + b) / 4 by linarith)
-    (show (a + 3 * b) / 4 < b by linarith) hcL hcR ε S hε hεone hS
+  apply interior_cutoff_meanClass ha (show a < (3 * a + b) / 4 by linarith only [hab])
+    (show (a + 3 * b) / 4 < b by linarith only [hab]) hcL hcR ε S hε hεone hS
     _ (PressureStream.rho_contDiff a b hab)
   intro x hx
   rw [PressureStream.rho, ContDiffBump.support_normed_eq] at hx
   change dist x ((a + b) / 2) < (b - a) / 4 at hx
   rw [Real.dist_eq, abs_lt] at hx
-  constructor <;> linarith [hx.1, hx.2]
+  constructor <;> linarith only [hx, hx.1, hx.2]
 
 theorem pressureMass_sub {a b : ℝ} {f g : PressureStream.Lift P → ℝ}
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g)

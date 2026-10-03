@@ -94,16 +94,19 @@ theorem pressureResidual_ae :
 transformation. This follows from the proved projected equation. -/
 theorem pressureResidual_gradient_ae :
     ∀ᵐ t ∂timeMeasure T,
-      (extendPath T hT F t).adjoint (s.pressureResidual t) ∈ gradientSpace := by
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2)
+        (extendPath (Y := L2 →L[ℝ] L2) T hT F t) (s.pressureResidual t) ∈ gradientSpace := by
   filter_upwards [s.pressureResidual_ae, s.equation] with t hp he
   apply (solenoidalProjection_eq_zero_iff _).1
   have hb : f t - extendPath T hT F t (s.acceleration t : L2) -
       (2 : ℝ) • extendPath T hT F₁ t (s.velocity t : L2) =
       (f t - (2 : ℝ) • extendPath T hT F₁ t (s.velocity t : L2)) -
         extendPath T hT F t (s.acceleration t : L2) := by abel
-  have hh := congrArg (fun x : L2 => solenoidalProjection ((F (projIcc 0 T hT t)).adjoint x))
+  have hh := congrArg (fun x : L2 => solenoidalProjection
+      (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2) (F (projIcc 0 T hT t)) x))
     (hp.trans hb)
-  have hl := (solenoidalProjection.comp (F (projIcc 0 T hT t)).adjoint).map_sub
+  have hl := (solenoidalProjection.comp (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2)
+      (F (projIcc 0 T hT t)))).map_sub
     (f t - (2 : ℝ) • extendPath T hT F₁ t (s.velocity t : L2))
     (extendPath T hT F t (s.acceleration t : L2))
   exact hh.trans (hl.trans (sub_eq_zero.mpr he.symm))

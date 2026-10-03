@@ -77,7 +77,7 @@ theorem primitive_contDiff {c : ℝ} (hc : 0 < c) (j : ℕ)
     exact integrand_contDiff hc j hb
 
 @[simp] theorem primitive_zero (c : ℝ) (j : ℕ) (b : ℝ → ℝ) :
-    primitive c j b 0 = 0 := by simp [primitive]
+    primitive c j b 0 = 0 := by simp only [primitive, intervalIntegral.integral_same]
 
 theorem primitive_of_nonpos (c : ℝ) (j : ℕ) (b : ℝ → ℝ)
     {x : ℝ} (hx : x ≤ 0) : primitive c j b x = 0 := by
@@ -87,7 +87,7 @@ theorem primitive_of_nonpos (c : ℝ) (j : ℕ) (b : ℝ → ℝ)
       apply intervalIntegral.integral_congr
       intro u hu
       have hu0 : u ≤ 0 := (uIcc_of_ge hx ▸ hu).2
-      simp [integrand, edge_of_nonpos c hu0]
+      simp only [integrand, edge_of_nonpos c hu0, zero_div, zero_mul]
     _ = 0 := intervalIntegral.integral_zero
 
 /-- Smoothness and equality to zero on a closed half-line imply that every
@@ -128,14 +128,16 @@ theorem edge_hasDerivAt {c : ℝ} (hc : 0 < c) (x : ℝ) :
   have h := polynomialEdge_hasDerivAt hc (1 : ℝ[X]) x
   rw [polynomialEdge_one] at h
   convert! h using 1
-  simp [polynomialEdge, derivativePolynomial, div_eq_mul_inv, inv_pow]
+  simp only [div_eq_mul_inv, polynomialEdge, derivativePolynomial, map_mul, mul_one, derivative_one,
+      mul_zero, sub_zero, eval_mul, eval_C, eval_pow, eval_X, inv_pow]
   ring
 
 theorem scale_contDiff {c : ℝ} (hc : 0 < c) (j : ℕ) {n : ℕ∞} :
     ContDiff ℝ n (scale c j) :=
   (edge_div_pow_contDiff hc j).mul (contDiff_id.pow 3)
 
-@[simp] theorem scale_zero (c : ℝ) (j : ℕ) : scale c j 0 = 0 := by simp [scale]
+@[simp] theorem scale_zero (c : ℝ) (j : ℕ) : scale c j 0 = 0 := by simp only [scale, edge_zero,
+    zero_div, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, mul_zero]
 
 theorem scale_hasDerivAt {c : ℝ} (hc : 0 < c) (j : ℕ) (x : ℝ) :
     HasDerivAt (scale c j)
@@ -145,13 +147,15 @@ theorem scale_hasDerivAt {c : ℝ} (hc : 0 < c) (j : ℕ) (x : ℝ) :
   · subst x
     have h := (((edge_div_pow_contDiff hc j : ContDiff ℝ ∞ _).differentiable
       (by simp) 0).hasDerivAt).fun_mul ((hasDerivAt_id (0 : ℝ)).fun_pow 3)
-    simpa [scale] using h
+    simpa only [edge_zero, zero_div, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+        mul_zero, add_zero, zero_mul, id_eq, Nat.cast_ofNat, Nat.add_one_sub_one, mul_one] using h
   · have h := (((edge_hasDerivAt hc x).fun_div ((hasDerivAt_id x).fun_pow j)
       (pow_ne_zero j hx)).fun_mul ((hasDerivAt_id x).fun_pow 3))
     simp only [id_eq] at h
     convert! h using 1
     cases j with
-    | zero => simp; field_simp
+    | zero => simp only [pow_zero, div_one, CharP.cast_eq_zero, sub_zero, mul_one, zero_tsub,
+        mul_zero, one_pow, Nat.cast_ofNat, Nat.add_one_sub_one]; field_simp
     | succ j =>
       simp only [Nat.add_sub_cancel, Nat.cast_add, Nat.cast_one,
         Nat.cast_ofNat, mul_one, pow_succ]
@@ -178,7 +182,7 @@ theorem primitive_sourceCoefficient {c : ℝ} (hc : 0 < c) (j : ℕ)
       (integrand c j (sourceCoefficient c j a) u) u := by
     intro u
     convert! (scale_hasDerivAt hc j u).mul
-      ((ha.differentiable (by simp) u).hasDerivAt) using 1
+      ((ha.differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) u).hasDerivAt) using 1
     simp only [integrand, sourceCoefficient, scale]
     ring
   have hcont := integrand_continuous hc j (sourceCoefficient_contDiff c j ha).continuous
@@ -273,10 +277,11 @@ theorem normalizedPrimitive_continuousWithinAt_zero {c : ℝ} (hc : 0 < c) (j : 
     ContinuousWithinAt (normalizedPrimitive c j b) (Ici 0) 0 := by
   apply continuousWithinAt_Ioi_iff_Ici.mp
   change Tendsto (normalizedPrimitive c j b) (𝓝[>] 0) (𝓝 (normalizedPrimitive c j b 0))
-  rw [show normalizedPrimitive c j b 0 = b 0 / (2 * c) by simp [normalizedPrimitive]]
+  rw [show normalizedPrimitive c j b 0 = b 0 / (2 * c) by simp only [normalizedPrimitive,
+      ↓reduceIte]]
   refine (primitive_normalized_tendsto hc j hb).congr' ?_
   filter_upwards [self_mem_nhdsWithin] with x hx
-  simp [normalizedPrimitive, (show 0 < x from hx).ne']
+  simp only [normalizedPrimitive, (show 0 < x from hx).ne', ↓reduceIte]
 
 /-- The actual integral factors on the closed positive half-line, with the
 factor proved continuous at zero above. No smoothness conclusion is inferred
@@ -286,7 +291,7 @@ theorem normalizedPrimitive_factorization (c : ℝ) (j : ℕ) (b : ℝ → ℝ)
     primitive c j b x = scale c j x * normalizedPrimitive c j b x := by
   rcases eq_or_lt_of_le hx with hzero | hpos
   · subst x
-    simp
+    simp only [primitive_zero, scale_zero, zero_mul]
   · have hs : scale c j x ≠ 0 := (scale_pos c j hpos).ne'
     simp only [normalizedPrimitive, ite_eq_right hpos.ne']
     field_simp
@@ -309,7 +314,7 @@ theorem primitive_div_pow_tendsto_zero {c : ℝ} (hc : 0 < c) (j : ℕ)
     simpa only [primitive_zero] using
       ((primitive_hasDerivAt hc j hb 0).continuousAt.tendsto.mono_left nhdsWithin_le_nhds)
   cases loss with
-  | zero => simpa using hF
+  | zero => simpa only [pow_zero, div_one] using hF
   | succ n =>
     have hn : (n + 1 : ℝ) ≠ 0 := by positivity
     have hG : Tendsto (fun x : ℝ => x ^ (n + 1)) (𝓝[>] 0) (𝓝 0) := by
@@ -323,11 +328,10 @@ theorem primitive_div_pow_tendsto_zero {c : ℝ} (hc : 0 < c) (j : ℕ)
         (fun x => integrand c j b x / ((n + 1 : ℝ) * x ^ n)) (𝓝[>] 0) (𝓝 0) := by
       have hlim := hE.mul hB
       simp only [zero_mul] at hlim
-      refine hlim.congr' ?_
-      filter_upwards [self_mem_nhdsWithin] with x hx
-      dsimp [integrand]
-      rw [pow_add]
-      field_simp
+      refine hlim.congr' (Eventually.of_forall fun x => ?_)
+      dsimp only [integrand]
+      simp only [div_eq_mul_inv, mul_inv]
+      ring
     refine HasDerivAt.lhopital_zero_nhdsGT
       (Eventually.of_forall fun x => primitive_hasDerivAt hc j hb x)
       (Eventually.of_forall fun x => ?_)

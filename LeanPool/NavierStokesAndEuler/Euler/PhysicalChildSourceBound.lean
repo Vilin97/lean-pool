@@ -177,21 +177,21 @@ theorem amplitude_le_power (k : ℝ) (hk1 : 1 ≤ k)
     unfold amplitude secondAmplitude firstAmplitude
     ring
   calc
-    G.amplitude ≤ (2+45*embeddingCost)*k^5 := by rw [he]; nlinarith [hs]
+    G.amplitude ≤ (2+45*embeddingCost)*k^5 := by rw [he]; nlinarith only [hK, hM, hk15, h3, h5, hs]
     _ ≤ k*k^5 := mul_le_mul_of_nonneg_right hbig (pow_nonneg hk0 5)
     _ = k^6 := by ring
 
 theorem radius_le_power (k : ℝ) (hk : 69 ≤ k)
     (hK : G.K ≤ k) (hM : G.amp ≤ k) (hR : G.rad ≤ k ^ 2) : G.radius ≤ k^5 := by
-  have hk0 : 0 ≤ k := by linarith
-  have hk1 : 1 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
+  have hk1 : 1 ≤ k := by linarith only [hk]
   have hk2 : (1 : ℝ) ≤ k^2 := one_le_pow₀ hk1
-  have hrad : 1+G.rad ≤ 2*k^2 := by linarith
-  have hamp : 1+G.amp ≤ 2*k := by linarith
+  have hrad : 1+G.rad ≤ 2*k^2 := by linarith only [hR, hk2]
+  have hamp : 1+G.amp ≤ 2*k := by linarith only [hk, hM]
   have h16 : 16*G.K ≤ 16*k := mul_le_mul_of_nonneg_left hK (by norm_num)
   have hm := mul_le_mul hamp h16 (mul_nonneg (by
       norm_num) G.K_nonneg) (mul_nonneg (by norm_num) hk0)
-  have hinner : (1+G.amp)*(16*G.K)+2 ≤ 34*k^2 := by nlinarith [hm]
+  have hinner : (1+G.amp)*(16*G.K)+2 ≤ 34*k^2 := by nlinarith only [hk2, hm]
   have hinner0 : 0 ≤ (1+G.amp)*(16*G.K)+2 := by
     have := G.amp_nonneg
     have := G.K_nonneg
@@ -200,7 +200,7 @@ theorem radius_le_power (k : ℝ) (hk : 69 ≤ k)
   have hk24 : k^2 ≤ k^4 := pow_le_pow_right₀ hk1 (by omega)
   have hsum := add_le_add hprod (hR.trans hk24)
   calc
-    G.radius ≤ 69*k^4 := by unfold radius compositionRadius; nlinarith [hsum]
+    G.radius ≤ 69*k^4 := by unfold radius compositionRadius; nlinarith only [hR, hprod, hk24, hsum]
     _ ≤ k*k^4 := mul_le_mul_of_nonneg_right hk (pow_nonneg hk0 4)
     _ = k^5 := by ring
 
@@ -215,8 +215,8 @@ theorem source_physical_label_bound (q : ℕ) (k : ℝ) (hk : 69 ≤ k)
         (k^(10*(q+2)))^(n+1)*(n.factorial : ℝ)^2 :=
   source_triple_classical_bound q G.childDisplacement G.childVelocity G.childAcceleration k
       G.amplitude G.radius
-    (by linarith) hcost G.amplitude_nonneg G.radius_nonneg
-    (G.amplitude_le_power k (by linarith) hbig hK hM) (G.radius_le_power k hk hK hM hR)
+    (by linarith only [hk]) hcost G.amplitude_nonneg G.radius_nonneg
+    (G.amplitude_le_power k (by linarith only [hk]) hbig hK hM) (G.radius_le_power k hk hK hM hR)
     G.childDisplacement_bound G.childVelocity_bound G.childAcceleration_bound n
 
 end EulerChildParticleFieldBounds.Data
@@ -297,7 +297,7 @@ theorem exists_source_child_fields (q : ℕ) (hk : 69 ≤ k) (hKk : K ≤ k)
         classicalBlockSize direction q (E t).childAcceleration.toLp (E
             t).childAcceleration.translation_contDiff n ≤
           (k^(10*(q+2)))^(n+1)*(n.factorial : ℝ)^2) := by
-  have hk1 : 1 ≤ k := by linarith
+  have hk1 : 1 ≤ k := by linarith only [hk]
   let E := data G k m hgraph ell hell D V W K hK hD hV hW k (k^2) hk1 (one_le_pow₀ hk1)
     (fun t => (hb t).1) (fun t => (hb t).2.1) (fun t => (hb t).2.2.1)
     (fun t => (hb t).2.2.2.1) (fun t => (hb t).2.2.2.2)
@@ -345,18 +345,18 @@ theorem inputExponent_le_quarter (ε : ℝ) : inputExponent ε ≤ 1/4 := min_le
 theorem six_inputExponent_le (ε : ℝ) : 6*inputExponent ε ≤ ε := by
   have h := min_le_left (ε/6) (1/4 : ℝ)
   dsimp [inputExponent]
-  linarith
+  linarith only [h]
 
 private theorem flow_radius_polynomial (B R T w : ℝ)
     (hB : 0 ≤ B) (hR : 0 ≤ R) (hT : 0 ≤ T) (hw : 71 ≤ w)
     (hRw : R ≤ w) (hTw : T ≤ w) (hsmall : B * w ≤ 1) :
     1+flowRadius B R T R ≤ w^3 ∧ 1+flowRadius B R T (6*R) ≤ w^3 := by
-  have hw0 : 0 ≤ w := by linarith
+  have hw0 : 0 ≤ w := by linarith only [hw]
   have hBT : B*T ≤ 1 := (mul_le_mul_of_nonneg_left hTw hB).trans hsmall
-  have hleft : 4*R+1 ≤ 5*w := by linarith
+  have hleft : 4*R+1 ≤ 5*w := by linarith only [hw, hRw]
   have hright : (1+B*T)*(6*R)+2 ≤ 14*w := by
     have h := mul_le_mul_of_nonneg_right (show 1+B*T ≤ 2 by linarith) (by positivity : 0 ≤ 6*R)
-    linarith
+    linarith only [hw, hRw, h]
   have hlarge : flowRadius B R T (6*R) ≤ 70*w^2 := by
     have h := mul_le_mul hleft hright (by
         positivity : 0 ≤ (1+B*T)*(6*R)+2) (by positivity : 0 ≤ 5*w)
@@ -364,12 +364,12 @@ private theorem flow_radius_polynomial (B R T w : ℝ)
   have hsmallR : flowRadius B R T R ≤ flowRadius B R T (6*R) := by
     unfold flowRadius
     gcongr
-    linarith
-  have hsq : 1 ≤ w^2 := by nlinarith
+    linarith only [hR]
+  have hsq : 1 ≤ w^2 := by nlinarith only [hw]
   have h71 : 71*w^2 ≤ w^3 := by
     have h := mul_le_mul_of_nonneg_right hw (sq_nonneg w)
-    linarith
-  have hb : 1+flowRadius B R T (6*R) ≤ w^3 := by linarith
+    linarith only [h]
+  have hb : 1+flowRadius B R T (6*R) ≤ w^3 := by linarith only [hlarge, hsq, h71]
   exact ⟨(add_le_add le_rfl hsmallR).trans hb,hb⟩
 
 private theorem physical_polynomial_bounds (K B R T C1 k ell w : ℝ)
@@ -382,42 +382,50 @@ private theorem physical_polynomial_bounds (K B R T C1 k ell w : ℝ)
     K*(C1+3*B^2*R)*(1+flowRadius B R T (6*R)) ≤ w^6 ∧
     ell⁻¹*(4*flowRadius B R T R*(1+k)) ≤ ell⁻¹*k*w^4 ∧
     ell⁻¹*(4*flowRadius B R T (6*R)*(1+k)) ≤ ell⁻¹*k*w^4 := by
-  have hw0 : 0 ≤ w := by linarith
+  have hw0 : 0 ≤ w := by linarith only [hw]
   have hB1 : B ≤ 1 := by
-    have h := mul_le_mul_of_nonneg_left (show 1 ≤ w by linarith) hB
-    linarith
+    have h := mul_le_mul_of_nonneg_left (show 1 ≤ w by linarith only [hw]) hB
+    linarith only [hsmall, h]
   have hBT : 0 ≤ T*B := mul_nonneg hT hB
   obtain ⟨hv,ha⟩ := flow_radius_polynomial B R T w hB hR hT hw hRw hTw hsmall
   have hVr : 0 ≤ flowRadius B R T R := by unfold flowRadius; positivity
   have hAr : 0 ≤ flowRadius B R T (6*R) := by unfold flowRadius; positivity
+  have hV1 : 0 ≤ 1+flowRadius B R T R := add_nonneg zero_le_one hVr
   have hd : K*(T*B)*(1+flowRadius B R T R) ≤ B*w^5 := by
     calc
-      _ ≤ w*(w*B)*w^3 := by gcongr
+      _ ≤ w*(w*B)*w^3 := mul_le_mul (mul_le_mul hKw (mul_le_mul_of_nonneg_right hTw hB) hBT hw0)
+          hv hV1 (mul_nonneg hw0 (mul_nonneg hw0 hB))
       _ = _ := by ring
   have hvb : K*B*(1+flowRadius B R T R) ≤ B*w^5 := by
     calc
-      _ ≤ w*B*w^3 := by gcongr
-      _ ≤ (w*B*w^3)*w := le_mul_of_one_le_right (by positivity) (by linarith)
+      _ ≤ w*B*w^3 := mul_le_mul (mul_le_mul_of_nonneg_right hKw hB) hv hV1 (mul_nonneg hw0 hB)
+      _ ≤ (w*B*w^3)*w := le_mul_of_one_le_right (by positivity) (by linarith only [hw])
       _ = _ := by ring
-  have hb2 : B^2 ≤ 1 := by nlinarith
+  have hb2 : B^2 ≤ 1 := pow_le_one₀ hB hB1
   have hac : C1+3*B^2*R ≤ 4*w := by
     have h := mul_le_mul_of_nonneg_right hb2 hR
-    linarith
+    linarith only [hRw, hCw, h]
   have hab : K*(C1+3*B^2*R)*(1+flowRadius B R T (6*R)) ≤ w^6 := by
+    have hC0 : 0 ≤ C1+3*B^2*R :=
+      add_nonneg hC1 (mul_nonneg (mul_nonneg (by norm_num) (sq_nonneg B)) hR)
     calc
-      _ ≤ w*(4*w)*w^3 := by gcongr
+      _ ≤ w*(4*w)*w^3 := mul_le_mul (mul_le_mul hKw hac hC0 hw0) ha (add_nonneg zero_le_one hAr)
+          (mul_nonneg hw0 (by linarith only [hw0]))
       _ = 4*w^5 := by ring
-      _ ≤ w*w^5 := mul_le_mul_of_nonneg_right (by linarith) (pow_nonneg hw0 5)
+      _ ≤ w*w^5 := mul_le_mul_of_nonneg_right (by linarith only [hw]) (pow_nonneg hw0 5)
       _ = _ := by ring
   have hradius (r : ℝ) (hr : 0 ≤ r) (hrw : 1+r ≤ w^3) :
       ell⁻¹*(4*r*(1+k)) ≤ ell⁻¹*k*w^4 := by
-    have hk0 : 0 ≤ k := by linarith
+    have hk0 : 0 ≤ k := by linarith only [hk]
     have hi : 0 ≤ ell⁻¹ := inv_nonneg.mpr hell.le
-    have hrw' : r ≤ w^3 := by linarith
+    have hrw' : r ≤ w^3 := by linarith only [hrw]
+    have hw3 : 0 ≤ w^3 := pow_nonneg hw0 3
     calc
-      _ ≤ ell⁻¹*(4*w^3*(2*k)) := by gcongr; linarith
+      _ ≤ ell⁻¹*(4*w^3*(2*k)) := mul_le_mul_of_nonneg_left (mul_le_mul (by linarith only [hrw'])
+          (by linarith only [hk]) (by linarith only [hk0]) (by linarith only [hw3])) hi
       _ = ell⁻¹*k*(8*w^3) := by ring
-      _ ≤ ell⁻¹*k*(w*w^3) := by gcongr; linarith
+      _ ≤ ell⁻¹*k*(w*w^3) := mul_le_mul_of_nonneg_left
+          (mul_le_mul_of_nonneg_right (by linarith only [hw]) hw3) (mul_nonneg hi hk0)
       _ = _ := by ring
   exact ⟨hd,hvb,hab,hradius _ hVr hv,hradius _ hAr ha⟩
 
@@ -433,7 +441,7 @@ theorem physical_bounds_of_power (ε η K k B R T C1 ell : ℝ)
     K*(C1+3*B^2*R)*(1+flowRadius B R T (6*R)) ≤ k^ε ∧
     ell⁻¹*(4*flowRadius B R T R*(1+k)) ≤ ell⁻¹*k^(1+ε) ∧
     ell⁻¹*(4*flowRadius B R T (6*R)*(1+k)) ≤ ell⁻¹*k^(1+ε) := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hη, _hηq, hk]
   have hw0 : 0 ≤ k^η := Real.rpow_nonneg hk0.le _
   have hBw : B*k^η ≤ 1 := by
     have hp : 0 < k^(1/2-η) := Real.rpow_pos_of_pos hk0 _
@@ -449,19 +457,19 @@ theorem physical_bounds_of_power (ε η K k B R T C1 ell : ℝ)
     hK hB hR hT hC1 hk hell hw hKw hRw hTw hCw hBw
   have h6 : (k^η)^6 ≤ k^ε := by
     rw [← Real.rpow_mul_natCast hk0.le]
-    exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; linarith)
+    exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; linarith only [hηε])
   have hdisp : B*(k^η)^5 ≤ k^(-(1/2 : ℝ)+ε) := by
     calc
       _ ≤ (2*k^(-(1/2 : ℝ)))*(k^η)^5 :=
         mul_le_mul_of_nonneg_right hsmall (pow_nonneg hw0 5)
-      _ ≤ (k^η*k^(-(1/2 : ℝ)))*(k^η)^5 := by gcongr; linarith
+      _ ≤ (k^η*k^(-(1/2 : ℝ)))*(k^η)^5 := by gcongr; linarith only [hη, _hηq, hw]
       _ = k^(-(1/2 : ℝ))*(k^η)^6 := by ring
       _ ≤ k^(-(1/2 : ℝ))*k^ε := mul_le_mul_of_nonneg_left h6 (Real.rpow_nonneg hk0.le _)
       _ = _ := (Real.rpow_add hk0 _ _).symm
   have hrad : ell⁻¹*k*(k^η)^4 ≤ ell⁻¹*k^(1+ε) := by
     have h4 : (k^η)^4 ≤ k^ε := by
       rw [← Real.rpow_mul_natCast hk0.le]
-      exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; linarith)
+      exact Real.rpow_le_rpow_of_exponent_le hk (by norm_num; linarith only [hη, hηε])
     calc
       _ ≤ ell⁻¹*k*k^ε := mul_le_mul_of_nonneg_left h4 (by positivity)
       _ = ell⁻¹*(k^(1 : ℝ)*k^ε) := by rw [Real.rpow_one]; ring
@@ -480,7 +488,7 @@ theorem physical_bounds_eventually (ε K : ℝ) (hε : 0 < ε) (hK : 0 ≤ K) :
       ell⁻¹*(4*flowRadius B R T (6*R)*(1+k)) ≤ ell⁻¹*k^(1+ε) := by
   have hη := inputExponent_pos ε hε
   have hηq := inputExponent_le_quarter ε
-  have hroot : 0 < 1/2-inputExponent ε := by linarith
+  have hroot : 0 < 1/2-inputExponent ε := by linarith only [hη, hηq]
   filter_upwards [eventually_ge_atTop (1 : ℝ),
     (_root_.tendsto_rpow_atTop hη).eventually_ge_atTop 71,
     (_root_.tendsto_rpow_atTop hη).eventually_ge_atTop K,
@@ -592,7 +600,7 @@ theorem physical_bounds_of_costs (K B R T C1 k ell : ℝ)
     ell⁻¹*(4*flowRadius B R T (6*R)*(1+k)) ≤ ell⁻¹*k^(5/4 : ℝ) := by
   have hs := smallPower_le_power k (1/24) hk (by norm_num [theta])
   have hr : 2 ≤ k^(1/2-(1/24 : ℝ)) :=
-    (show 2 ≤ k^(1/4 : ℝ) by linarith).trans
+    (show 2 ≤ k^(1/4 : ℝ) by linarith only [hroot]).trans
       (Real.rpow_le_rpow_of_exponent_le hk (by norm_num))
   simpa only [show -(1/2 : ℝ)+1/4=-(1/4) by norm_num,
     show (1 : ℝ)+1/4=5/4 by norm_num] using
@@ -638,20 +646,24 @@ theorem data_field_bounds_explicit (G : Data P T) (k : ℝ)
   have ht0 := G.time_nonneg
   have hac0 := G.accelerationAmplitude_nonneg
   have hg0 := graphFactor_nonneg k m
+  have hi0 : 0 ≤ ell⁻¹ := inv_nonneg.mpr hell.le
+  have hvr0 : 0 ≤ ell⁻¹*(4*G.velocityRadius*graphFactor k m) :=
+    mul_nonneg hi0 (mul_nonneg (mul_nonneg zero_le_four hv0) hg0)
   refine ⟨?_,?_,?_⟩
   · apply (G.displacementField_bound k m ell hell hell1 t).mono
-    · positivity
-    · positivity
+    · exact mul_nonneg (mul_nonneg (Real.sqrt_nonneg _) (mul_nonneg ht0 hc0))
+        (add_nonneg zero_le_one hv0)
+    · exact hvr0
     · simpa only [hC,hvr] using hn.1
     · simpa only [hvr,hgf] using hn.2.2.2.1
   · apply (G.velocityField_bound k m ell hell hell1 t).mono
-    · positivity
-    · positivity
+    · exact mul_nonneg (mul_nonneg (Real.sqrt_nonneg _) hc0) (add_nonneg zero_le_one hv0)
+    · exact hvr0
     · simpa only [hC,hvr] using hn.2.1
     · simpa only [hvr,hgf] using hn.2.2.2.1
   · apply (G.accelerationField_bound k m ell hell hell1 t).mono
-    · positivity
-    · positivity
+    · exact mul_nonneg (mul_nonneg (Real.sqrt_nonneg _) hac0) (add_nonneg zero_le_one ha0)
+    · exact mul_nonneg hi0 (mul_nonneg (mul_nonneg zero_le_four ha0) hg0)
     · simpa only [haa,har] using hn.2.2.1
     · simpa only [har,hgf] using hn.2.2.2.2
 
@@ -676,14 +688,16 @@ theorem data_sup_bounds_explicit (G : Data P T) (k : ℝ)
   have hg0 := graphFactor_nonneg k m
   have hdisp : G.B*T ≤ k^(-(1/4 : ℝ)) := by
     apply (show G.B*T ≤ T*G.B*(1+flowRadius G.B G.R T G.R) by
-      linarith [mul_nonneg (mul_nonneg hB0 hT0) hf0]).trans
+      linarith only [mul_nonneg (mul_nonneg hB0 hT0) hf0]).trans
     simpa only [one_mul] using hn.1
   have hvel : G.B ≤ k^(-(1/4 : ℝ)) := by
-    apply (show G.B ≤ G.B*(1+flowRadius G.B G.R T G.R) by linarith [mul_nonneg hB0 hf0]).trans
+    apply (show G.B ≤ G.B*(1+flowRadius G.B G.R T G.R) by
+      linarith only [mul_nonneg hB0 hf0]).trans
     simpa only [one_mul] using hn.2.1
   have hRflow : G.R ≤ flowRadius G.B G.R T G.R := by
-    have hleft : (1 : ℝ) ≤ 4*G.R+1 := by linarith
-    have hright : G.R ≤ (1+G.B*T)*G.R+2 := by linarith [mul_nonneg (mul_nonneg hB0 hT0) hR0]
+    have hleft : (1 : ℝ) ≤ 4*G.R+1 := by linarith only [hR0]
+    have hright : G.R ≤ (1+G.B*T)*G.R+2 := by
+      linarith only [mul_nonneg (mul_nonneg hB0 hT0) hR0]
     have h := mul_le_mul hleft hright hR0 (by positivity : 0 ≤ 4*G.R+1)
     simpa only [one_mul,flowRadius] using h
   constructor
@@ -696,7 +710,7 @@ theorem data_sup_bounds_explicit (G : Data P T) (k : ℝ)
     rw [hgf]
     apply le_trans _ hrad
     gcongr
-    linarith
+    linarith only [hf0]
 
 end EulerPhysicalGraphFlowBounds
 
@@ -734,16 +748,19 @@ theorem normalized_approximation_bound (Rc C : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤
     (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) :
     ((K.multiply G).smul k).WordBound 6 R
       ((3*sobolevCoefficientAmplitude (Fin 4) 6 Rc C)*(C₁+C₂+1)) 0 := by
-  have hk0 : 0 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
   have hi : 0 ≤ k⁻¹ := inv_nonneg.mpr hk0
-  have hA : 0 ≤ k⁻¹*C₁+(k⁻¹)^2*C₂+2*B*(k⁻¹*B)^3 := by positivity
+  have hA : 0 ≤ k⁻¹*C₁+(k⁻¹)^2*C₂+2*B*(k⁻¹*B)^3 :=
+    add_nonneg (add_nonneg (mul_nonneg hi hC₁) (mul_nonneg (pow_nonneg hi 2) hC₂))
+      (mul_nonneg (mul_nonneg zero_le_two hB0) (pow_nonneg (mul_nonneg hi hB0) 3))
   have h := (hG.multiply K Rc C hRc hC hA hKR hK).smul k
   rw [abs_of_nonneg hk0] at h
   have hc : 0 ≤ 3*sobolevCoefficientAmplitude (Fin 4) 6 Rc C :=
     mul_nonneg (by norm_num) (sobolevCoefficientAmplitude_nonneg 6 Rc C hRc hC)
-  have hb4 := fourth_power_le_frequency k B (by linarith) hB0 hB
-  have hs := mul_le_mul_of_nonneg_left (normalized_low_high_le k B C₁ C₂ (by linarith) hC₂ hb4) hc
-  exact h.mono_amplitude hR (by simpa only [mul_assoc,mul_left_comm,mul_comm] using hs)
+  have hb4 := fourth_power_le_frequency k B (by linarith only [hk]) hB0 hB
+  have hs := mul_le_mul_of_nonneg_left
+    (normalized_low_high_le k B C₁ C₂ (by linarith only [hk]) hC₂ hb4) hc
+  exact h.mono_amplitude hR ((mul_left_comm _ _ _).trans_le hs)
 
 end EulerPacketCylinderField.MatrixCoefficient
 

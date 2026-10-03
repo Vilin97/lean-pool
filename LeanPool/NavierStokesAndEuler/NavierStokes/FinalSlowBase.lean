@@ -187,7 +187,7 @@ variable {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     (houter : s.B = nominalOuterRadius W)
 
 include hd hbase in
-theorem realized_zero_fields {p : Inner} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
+theorem realized_zero_fields {p : SlowBorelBase.Inner} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     d.phi 0 p = W.axis.normalization * Q.f p ∧ d.axial 0 p = Q.U p ∧
       d.pressure 0 p = Q.pressure p := by
   refine ⟨?_, ?_, ?_⟩
@@ -208,7 +208,7 @@ theorem realized_zero_fields {p : Inner} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     exact baseFields_pressure (modifiedDomain W Q M) W.axis.normalization Q M.halfPlane hX
 
 include hd houter in
-theorem realized_positive_exterior {n : ℕ} (hn : 0 < n) {p : Inner}
+theorem realized_positive_exterior {n : ℕ} (hn : 0 < n) {p : SlowBorelBase.Inner}
     (hX : nominalOuterX W ≤ p.1) :
     d.phi n p = 0 ∧ d.axial n p = 0 ∧ d.pressure n p = 0 := by
   have hx : s.B ^ 2 / 2 ≤ p.1 := by rwa [houter, nominalOuterRadius_square]
@@ -219,7 +219,7 @@ theorem realized_positive_exterior {n : ℕ} (hn : 0 < n) {p : Inner}
 
 include hd hbase houter
 
-theorem realized_axial_zero_all (n : ℕ) {p : Inner}
+theorem realized_axial_zero_all (n : ℕ) {p : SlowBorelBase.Inner}
     (hX : nominalOuterX W ≤ p.1) (heta : |p.2| ≤ 1) : d.axial n p = 0 := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · rw [(realized_zero_fields W Q M hd hbase ((nominalOuterX_pos W).le.trans hX) heta).2.1]
@@ -227,7 +227,7 @@ theorem realized_axial_zero_all (n : ℕ) {p : Inner}
       (nominal_exterior_base W hX heta).1
   · exact (realized_positive_exterior W Q M hd houter hn hX).2.1
 
-theorem realized_primitive_zero_all (n : ℕ) {p : Inner}
+theorem realized_primitive_zero_all (n : ℕ) {p : SlowBorelBase.Inner}
     (hX : nominalOuterX W ≤ p.1) (heta : |p.2| ≤ 1) :
     ProfileHistories.primitive (d.axial n) p = 0 := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
@@ -269,10 +269,12 @@ theorem realized_angular_pure_heat {p : PhysicalPoint}
   have hx : nominalOuterX W ≤ X F.data.h p := (nominalExteriorRadius_ge_outer W).trans hp.2.le
   have hx0 : 0 ≤ X F.data.h p := (nominalOuterX_pos W).le.trans hx
   have he := physical_eta_mem F.data.h_pos F.data.h_lt_half hp.1
-  have hc := (realized_zero_fields W Q M hd hbase (p := inner F.data.h p) hx0 (abs_le.mpr he)).1
-  have hn := (nominalCoefficients_zero_fields W (p := inner F.data.h p) hx0 (abs_le.mpr he)).1
+  have hc := (realized_zero_fields W Q M hd hbase (p := SimilarityProfile.inner F.data.h p) hx0
+    (abs_le.mpr he)).1
+  have hn := (nominalCoefficients_zero_fields W (p := SimilarityProfile.inner F.data.h p) hx0
+    (abs_le.mpr he)).1
   have hf := (modified_fields_after W Q M hx (M.contains he)).1
-  change Q.f (inner F.data.h p) = W.f (inner F.data.h p) at hf
+  change Q.f (SimilarityProfile.inner F.data.h p) = W.f (SimilarityProfile.inner F.data.h p) at hf
   have hsame : leadingAngular F.data.h W.axis.normalization d p =
       leadingAngular F.data.h W.axis.normalization (nominalCoefficients W) p := by
     unfold leadingAngular pullback
@@ -286,10 +288,13 @@ theorem realized_pressure_pure_heat (henergy : RestoredSquaredSwirl W Q (S := S)
   have hx : nominalOuterX W ≤ X F.data.h p := (nominalExteriorRadius_ge_outer W).trans hp.2.le
   have hx0 : 0 ≤ X F.data.h p := (nominalOuterX_pos W).le.trans hx
   have he := physical_eta_mem F.data.h_pos F.data.h_lt_half hp.1
-  have hc := (realized_zero_fields W Q M hd hbase (p := inner F.data.h p) hx0 (abs_le.mpr he)).2.2
-  have hn := (nominalCoefficients_zero_fields W (p := inner F.data.h p) hx0 (abs_le.mpr he)).2.2
+  have hc := (realized_zero_fields W Q M hd hbase (p := SimilarityProfile.inner F.data.h p) hx0
+    (abs_le.mpr he)).2.2
+  have hn := (nominalCoefficients_zero_fields W (p := SimilarityProfile.inner F.data.h p) hx0
+    (abs_le.mpr he)).2.2
   have hpq := modified_pressure_after W Q M henergy hx (M.contains he)
-  change Q.pressure (inner F.data.h p) = W.Pi (inner F.data.h p) at hpq
+  change Q.pressure (SimilarityProfile.inner F.data.h p) =
+    W.Pi (SimilarityProfile.inner F.data.h p) at hpq
   have hsame : leadingPressure F.data.h d p = leadingPressure F.data.h (nominalCoefficients W) p :=
       by
     unfold leadingPressure pullback
@@ -447,15 +452,16 @@ theorem exists_terminal_exterior_neighborhood {h R : ℝ}
       (isOpen_lt (continuous_const.sub continuous_fst) hfcont)
   have hxU : (1, x) ∈ U := by
     constructor
-    · linarith
-    · simpa [SimilarityCoordinates.forwardScalar, hx] using hb
+    · linarith only [hs]
+    · simpa only [sub_self, SimilarityCoordinates.forwardScalar, Fin.isValue, hx, ne_eq,
+        OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_mul, sub_zero] using hb
   refine ⟨U, hU, hxU, ?_, ?_⟩
   · intro z hz
     exact (half_pos hs).trans hz.1
   · intro z hz ht
     have hq : 0 < q h (AxisymmetricFields.profilePoint z.1 z.2) := q_pos hh hh1 ht
     have hqb : q h (AxisymmetricFields.profilePoint z.1 z.2) < b :=
-      coordinateQ_lt_of_forward_lt (by linarith) (by linarith) hb (sub_pos.mpr ht) hz.2
+      coordinateQ_lt_of_forward_lt (by linarith) (by linarith only [hh1]) hb (sub_pos.mpr ht) hz.2
     have hbeq : b * (2 * (R + 1)) = AxisymmetricFields.radialEnergy x :=
       div_mul_cancel₀ _ (by positivity)
     refine ⟨ht, ?_⟩
@@ -464,7 +470,7 @@ theorem exists_terminal_exterior_neighborhood {h R : ℝ}
     calc
       R * q h (AxisymmetricFields.profilePoint z.1 z.2) ≤ R * b :=
         mul_le_mul_of_nonneg_left hqb.le hR
-      _ < AxisymmetricFields.radialEnergy x / 2 := by nlinarith
+      _ < AxisymmetricFields.radialEnergy x / 2 := by nlinarith only [hq, hqb, hbeq]
       _ < AxisymmetricFields.radialEnergy z.2 := hz.1
 
 /-- The incoming field is retained at every past time; the actual heat
@@ -598,15 +604,16 @@ noncomputable def logRight : ℝ := Real.log (NominalConeAssembly.activeRight W)
 
 /-- Annulus, given by `Ioo (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight
 W) ×ˢ Icc (-1 : ℝ) 1`. -/
-noncomputable def annulus : Set Inner :=
+noncomputable def annulus : Set SlowBorelBase.Inner :=
   Ioo (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W) ×ˢ Icc (-1 : ℝ) 1
 
 /-- Weight, given by `BaseResidual.activeZeta (edgeExponent W) (logLeft W) (logRight W)`. -/
-noncomputable def weight : Inner → ℝ :=
+noncomputable def weight : SlowBorelBase.Inner → ℝ :=
   BaseResidual.activeZeta (edgeExponent W) (logLeft W) (logRight W)
 
 /-- Edge distance, given by `BaseResidual.activeDelta (logLeft W) (logRight W)`. -/
-noncomputable def edgeDistance : Inner → ℝ := BaseResidual.activeDelta (logLeft W) (logRight W)
+noncomputable def edgeDistance : SlowBorelBase.Inner → ℝ :=
+  BaseResidual.activeDelta (logLeft W) (logRight W)
 
 /-- Box radius, given by `max upper (NominalConeAssembly.activeRight W)`. -/
 noncomputable def boxRadius (upper : ℝ) : ℝ := max upper (NominalConeAssembly.activeRight W)
@@ -686,21 +693,23 @@ theorem stressZeroCore : BaseResidual.StressZeroCore (coefficients H v)
   EntranceAlignedBase.modulated_stressZeroCore H v
 
 /-- The literal stress of the same finite modulated profile. -/
-noncomputable def leadingStress : Inner → Inner := LeadingStressWeights.stress v.profiles F.data.h
+noncomputable def leadingStress : SlowBorelBase.Inner → SlowBorelBase.Inner :=
+  LeadingStressWeights.stress v.profiles F.data.h
 
-theorem leadingStress_smoothAt {p : Inner} (hX : 0 < p.1) (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
+theorem leadingStress_smoothAt {p : SlowBorelBase.Inner} (hX : 0 < p.1)
+    (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
     ContDiffAt ℝ ∞ (leadingStress v) p :=
   LeadingStressWeights.stress_contDiffAt v.profiles F.data.h
     (ld.domain_nonnegative hX.le (ld.parameters_contains heta)) hX (v.positive_f hX heta).ne'
     (NaturalAxisData.L_pos W.axis.small heta).ne'
 
-theorem leading_stress_eq {p : Inner} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
+theorem leading_stress_eq {p : SlowBorelBase.Inner} (hX : 0 ≤ p.1) (heta : |p.2| ≤ 1) :
     BaseResidual.stressPair (coefficients H v) 0 p = leadingStress v p :=
   EntranceAlignedBase.modulated_leading_pair_eq H v hX heta
 
 /-- Equality of full derivative tensors holds at both closed parameter
 endpoints as well as in the interior. No ambient endpoint germ is assumed. -/
-theorem leading_stress_jets (m : ℕ) {p : Inner} (hX : 0 < p.1)
+theorem leading_stress_jets (m : ℕ) {p : SlowBorelBase.Inner} (hX : 0 < p.1)
     (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
     iteratedFDeriv ℝ m (BaseResidual.stressPair (coefficients H v) 0) p =
       iteratedFDeriv ℝ m (leadingStress v) p := by
@@ -734,8 +743,8 @@ theorem leading_lowerBound (hcone : LeadingStressWeights.FullTrueCone v) :
     Real.exp_log hx, Prod.mk.eta] at he ⊢
   exact he
 
-theorem leading_ne_zero (hcone : LeadingStressWeights.FullTrueCone v) {p : Inner} (hp : p ∈ annulus
-    W) :
+theorem leading_ne_zero (hcone : LeadingStressWeights.FullTrueCone v) {p : SlowBorelBase.Inner}
+    (hp : p ∈ annulus W) :
     leadingStress v p ≠ 0 :=
   LeadingStressWeights.stress_ne_zero v hcone hp.1.1 hp.1.2 hp.2
 
@@ -878,7 +887,7 @@ noncomputable def error (upper : ℝ) (B : ℕ) : ProblemStatement.SpaceTime →
 
 /-- Normalized stress, given by `BaseResidual.normalizedTensor (scales H v upper B) F.data.h
 (coefficients H v)`. -/
-noncomputable def normalizedStress (upper : ℝ) (B : ℕ) : Chart → Inner :=
+noncomputable def normalizedStress (upper : ℝ) (B : ℕ) : Chart → SlowBorelBase.Inner :=
   BaseResidual.normalizedTensor (scales H v upper B) F.data.h (coefficients H v)
 
 theorem normalizedStress_smoothAt (upper : ℝ) (B : ℕ) {y : Chart} (hy : 0 < y.1) :
@@ -990,7 +999,7 @@ theorem weighted_jets (upper : ℝ) (B m : ℕ) :
 /-- The weighted difference can use the literal leading stress even at
 the parameter endpoints. Its ambient tensors agree by continuity. -/
 theorem stress_difference_jets_eq (upper : ℝ) (B m : ℕ) {q : ℝ} (hq : 0 < q)
-    {w : Inner} (hX : 0 < w.1) (heta : w.2 ∈ Icc (-1 : ℝ) 1) :
+    {w : SlowBorelBase.Inner} (hX : 0 < w.1) (heta : w.2 ∈ Icc (-1 : ℝ) 1) :
     blownJet m (fun y => normalizedStress H v upper B y -
       BaseResidual.stressPair (coefficients H v) 0 y.2) (q, w) =
     blownJet m (fun y => normalizedStress H v upper B y - leadingStress v y.2) (q, w) := by
@@ -1041,13 +1050,13 @@ theorem physical_stress_eq_normalized (upper : ℝ) (B : ℕ) {p : Chart} (hp : 
       F.data.h_lt_half
     W.axis.normalization (coefficients H v) hp
 
-theorem coefficient_stress_zero_left (n : ℕ) {p : Inner} (hp : p.1 ≤ NominalConeAssembly.activeLeft
-    W) :
+theorem coefficient_stress_zero_left (n : ℕ) {p : SlowBorelBase.Inner}
+    (hp : p.1 ≤ NominalConeAssembly.activeLeft W) :
     (coefficients H v).stressTheta n p = 0 ∧ (coefficients H v).stressAxial n p = 0 :=
   EntranceAlignedBase.aligned_stress_zero_left W H v.profiles v.finiteModification ld.after_initial
       n hp
 
-theorem coefficient_stress_zero_right (n : ℕ) {p : Inner}
+theorem coefficient_stress_zero_right (n : ℕ) {p : SlowBorelBase.Inner}
     (hp : NominalConeAssembly.activeRight W ≤ p.1) (heta : p.2 ∈ Icc (-1 : ℝ) 1) :
     (coefficients H v).stressTheta n p = 0 ∧ (coefficients H v).stressAxial n p = 0 :=
   EntranceAlignedBase.modulated_stress_zero_right H v n hp heta
@@ -1074,13 +1083,13 @@ theorem positive_support_gap :
     NominalConeAssembly.activeLeft W < EntranceAlignedBase.zeroEnd W H ld.modulation.left :=
   (EntranceAlignedBase.window_order W H ld.after_initial).1
 
-theorem normalizedStress_zero_left (upper : ℝ) (B : ℕ) (q : ℝ) {w : Inner}
+theorem normalizedStress_zero_left (upper : ℝ) (B : ℕ) (q : ℝ) {w : SlowBorelBase.Inner}
     (hw : w.1 ≤ NominalConeAssembly.activeLeft W) : normalizedStress H v upper B (q, w) = 0 :=
   BaseResidual.slowSum_zero_of_all (scales H v upper B) F.data.h q
     (fun n => Prod.ext (coefficient_stress_zero_left H v n hw).1 (coefficient_stress_zero_left H v
         n hw).2)
 
-theorem normalizedStress_zero_outside (upper : ℝ) (B : ℕ) (q : ℝ) {w : Inner}
+theorem normalizedStress_zero_outside (upper : ℝ) (B : ℕ) (q : ℝ) {w : SlowBorelBase.Inner}
     (hw : w.1 ∉ Icc (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W))
     (heta : w.2 ∈ Icc (-1 : ℝ) 1) : normalizedStress H v upper B (q, w) = 0 :=
   EntranceAlignedBase.modulated_normalizedTensor_zero H v (scales H v upper B) q hw heta
@@ -1105,7 +1114,7 @@ theorem stressForce_zero_right (upper : ℝ) (B : ℕ) {z : ProblemStatement.Spa
   let p := AxisymmetricFields.profilePoint z.1 z.2
   let theta := baseStressTheta (scales H v upper B) F.data.h W.axis.normalization (coefficients H v)
   let axial := baseStressAxial (scales H v upper B) F.data.h W.axis.normalization (coefficients H v)
-  let O : Set Inner := Ioi (NominalConeAssembly.activeRight W) ×ˢ univ
+  let O : Set SlowBorelBase.Inner := Ioi (NominalConeAssembly.activeRight W) ×ˢ univ
   have hp : p ∈ SimilarityProfile.physicalDomain F.data.h O := ⟨ht, hX, mem_univ _⟩
   have htheta : theta =ᶠ[𝓝 p] fun _ => 0 := by
     filter_upwards [(SimilarityProfile.isOpen_physicalDomain F.data.h_pos F.data.h_lt_half
@@ -1118,9 +1127,11 @@ theorem stressForce_zero_right (upper : ℝ) (B : ℕ) {z : ProblemStatement.Spa
   have ht0 := htheta.self_of_nhds
   have ha0 := haxial.self_of_nhds
   have htd : SimilarityProfile.partialS theta p = 0 := by
-    simp [SimilarityProfile.partialS, htheta.fderiv_eq]
+    simp only [SimilarityProfile.partialS, htheta.fderiv_eq, fderiv_fun_const, Pi.zero_apply,
+        _root_.zero_apply]
   have had : SimilarityProfile.partialS axial p = 0 := by
-    simp [SimilarityProfile.partialS, haxial.fderiv_eq]
+    simp only [SimilarityProfile.partialS, haxial.fderiv_eq, fderiv_fun_const, Pi.zero_apply,
+        _root_.zero_apply]
   change BaseResidual.stressForce theta axial z = 0
   simp only [BaseResidual.stressForce, SlowResidualMatching.tangentialStressForce,
     LeadingStress.radialDivergence]
@@ -1128,16 +1139,17 @@ theorem stressForce_zero_right (upper : ℝ) (B : ℕ) {z : ProblemStatement.Spa
     (_ * (Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS theta p + 2 * theta p / _))
     (_ * (Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS theta p + 2 * theta p / _))
     (-(Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS axial p + 1 * axial p / _)) = _
-  simp [ht0, ha0, htd, had, AxisymmetricResidual.pack]
+  simp only [AxisymmetricResidual.pack, Fin.isValue, Nat.ofNat_nonneg, Real.sqrt_mul, htd, mul_zero,
+      ht0, zero_div, add_zero, zero_smul, had, ha0, neg_zero]
 
 theorem stressForce_exterior_germ (upper : ℝ) (B : ℕ) {z : ProblemStatement.SpaceTime}
     (ht : z.1 < 1) (hX : NominalConeAssembly.activeRight W < (cartesianChart F.data.h z).2.1) :
     stressForce H v upper B =ᶠ[𝓝 z] fun _ => 0 := by
-  have hO : IsOpen {w : Inner | NominalConeAssembly.activeRight W < w.1} :=
+  have hO : IsOpen {w : SlowBorelBase.Inner | NominalConeAssembly.activeRight W < w.1} :=
     isOpen_lt continuous_const continuous_fst
   filter_upwards [(BaseResidual.chartedDomain_isOpen F.data.h_pos F.data.h_lt_half hO).mem_nhds
-    (show z ∈ BaseResidual.chartedDomain F.data.h {w : Inner | NominalConeAssembly.activeRight W <
-        w.1}
+    (show z ∈ BaseResidual.chartedDomain F.data.h
+        {w : SlowBorelBase.Inner | NominalConeAssembly.activeRight W < w.1}
       from ⟨ht, hX⟩)] with y hy
   exact stressForce_zero_right H v upper B hy.1 hy.2
 
@@ -1291,7 +1303,7 @@ theorem exists_final_base (upper : ℝ) (B : ℕ) :
         SlowStressSupport.radialSupport (Icc (-1 : ℝ) 1)
           (NominalConeAssembly.activeLeft W) (NominalConeAssembly.activeRight W)
           ((coefficients H v).stressAxial n)) ∧
-      (∀ p : Inner, 0 ≤ p.1 → |p.2| ≤ 1 →
+      (∀ p : SlowBorelBase.Inner, 0 ≤ p.1 → |p.2| ≤ 1 →
         BaseResidual.stressPair (coefficients H v) 0 p = leadingStress v p) ∧
       velocity H v upper B = SpatialCurl.spatialCurl (vectorPotential H v upper B) ∧
       ContDiffOn ℝ ∞ (vectorPotential H v upper B) BaseResidual.past ∧

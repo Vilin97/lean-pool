@@ -108,8 +108,10 @@ theorem translateCoefficientPath_taylor (A : C(K, Space →ᵇ V))
     (hDA : ∀ t x, DA t x = fderiv ℝ (A t : Space → V) x)
     (M : ℝ) (hM : 0 ≤ M)
     (h₂ : ∀ t x, ‖fderiv ℝ (fderiv ℝ (A t : Space → V)) x‖ ≤ M) (a b : Space) :
-    ‖translateCoefficientPath A b - translateCoefficientPath A a -
-      pathDerivativeMap (translateCoefficientPath DA a) (b-a)‖ ≤ M * ‖b-a‖^2 := by
+    ‖translateCoefficientPath (K := K) (V := V) A b -
+      translateCoefficientPath (K := K) (V := V) A a -
+      pathDerivativeMap (K := K) (V := V)
+        (translateCoefficientPath (K := K) (V := Space →L[ℝ] V) DA a) (b-a)‖ ≤ M * ‖b-a‖^2 := by
   apply (ContinuousMap.norm_le _ (mul_nonneg hM (sq_nonneg _))).2
   intro t
   exact translated_taylor_bound (A t) (DA t) (hA t) (hDA t) M hM (h₂ t) a b
@@ -121,8 +123,9 @@ theorem translateCoefficientPath_hasFDerivAt (A : C(K, Space →ᵇ V))
     (hDA : ∀ t x, DA t x = fderiv ℝ (A t : Space → V) x)
     (M : ℝ) (hM : 0 ≤ M)
     (h₂ : ∀ t x, ‖fderiv ℝ (fderiv ℝ (A t : Space → V)) x‖ ≤ M) (a : Space) :
-    HasFDerivAt (translateCoefficientPath A)
-      (pathDerivativeMap (translateCoefficientPath DA a)) a := by
+    HasFDerivAt (translateCoefficientPath (K := K) (V := V) A)
+      (pathDerivativeMap (K := K) (V := V)
+        (translateCoefficientPath (K := K) (V := Space →L[ℝ] V) DA a)) a := by
   apply hasFDerivAt_iff_tendsto.mpr
   apply squeeze_zero (fun b => mul_nonneg (inv_nonneg.mpr (norm_nonneg _)) (norm_nonneg _))
     (g := fun b : Space => M * ‖b-a‖)
@@ -147,7 +150,8 @@ local instance instMeanCoefficientPath6 : NormedSpace ℝ Field := inferInstance
 
 /-- Translated path: an abbreviation for `translateCoefficientPath A a`. -/
 abbrev translatedPath (T : ℝ) (A : C(Icc (0 : ℝ) T, Field)) (a : Space) :
-    C(Icc (0 : ℝ) T, Field) := translateCoefficientPath A a
+    C(Icc (0 : ℝ) T, Field) :=
+  translateCoefficientPath (K := Icc (0 : ℝ) T) (V := Space →L[ℝ] Space) A a
 
 @[simp] theorem translatedPath_apply (T : ℝ) (A : C(Icc (0 : ℝ) T, Field))
     (a : Space) (t : Icc (0 : ℝ) T) (x : Space) : translatedPath T A a t x = A t (x+a) := rfl

@@ -329,7 +329,7 @@ private theorem gluedDirection_left_germ {J : Set ℝ} {a b cL cR : ℝ}
     gluedDirection a b S FL.coefficient FR.coefficient =ᶠ[𝓝[J ×ˢ Icc a b] (eta, a)]
       (fun q => PrimaryRepresentatives.normalDirection (FL.coefficient (q.1, q.2 - a))) := by
   have hw : ∀ᶠ q : ℝ × ℝ in 𝓝 (eta, a), q.2 < a + FL.width :=
-    continuous_snd.continuousAt.eventually (Iio_mem_nhds (by linarith [FL.width_pos]))
+    continuous_snd.continuousAt.eventually (Iio_mem_nhds (by linarith only [FL.width_pos]))
   have hb : ∀ᶠ q : ℝ × ℝ in 𝓝 (eta, a), q.2 < b :=
     continuous_snd.continuousAt.eventually (Iio_mem_nhds hab)
   filter_upwards [self_mem_nhdsWithin, hw.filter_mono nhdsWithin_le_nhds,
@@ -338,7 +338,7 @@ private theorem gluedDirection_left_germ {J : Set ℝ} {a b cL cR : ℝ}
   · simp only [gluedDirection, ite_eq_left hqa]
   · simp only [gluedDirection, ite_eq_right hqa, ite_eq_right (not_le.mpr hqb)]
     have hx : 0 < q.2 - a := sub_pos.mpr (lt_of_not_ge hqa)
-    have he := FL.identity q.1 hq.1 (q.2 - a) hx (by linarith)
+    have he := FL.identity q.1 hq.1 (q.2 - a) hx (by linarith only [hqw])
     simp only [ActiveAnnulusWeight.leftChart] at he
     rw [show a + (q.2 - a) = q.2 by ring] at he
     change S q = _ at he
@@ -352,7 +352,7 @@ private theorem gluedDirection_right_germ {J : Set ℝ} {a b cL cR : ℝ}
     gluedDirection a b S FL.coefficient FR.coefficient =ᶠ[𝓝[J ×ˢ Icc a b] (eta, b)]
       (fun q => PrimaryRepresentatives.normalDirection (FR.coefficient (q.1, b - q.2))) := by
   have hw : ∀ᶠ q : ℝ × ℝ in 𝓝 (eta, b), b - FR.width < q.2 :=
-    continuous_snd.continuousAt.eventually (Ioi_mem_nhds (by linarith [FR.width_pos]))
+    continuous_snd.continuousAt.eventually (Ioi_mem_nhds (by linarith only [FR.width_pos]))
   have ha : ∀ᶠ q : ℝ × ℝ in 𝓝 (eta, b), a < q.2 :=
     continuous_snd.continuousAt.eventually (Ioi_mem_nhds hab)
   filter_upwards [self_mem_nhdsWithin, hw.filter_mono nhdsWithin_le_nhds,
@@ -362,7 +362,7 @@ private theorem gluedDirection_right_germ {J : Set ℝ} {a b cL cR : ℝ}
   · simp only [ite_eq_left hqb]
   · simp only [ite_eq_right hqb]
     have hx : 0 < b - q.2 := sub_pos.mpr (lt_of_not_ge hqb)
-    have he := FR.identity q.1 hq.1 (b - q.2) hx (by linarith)
+    have he := FR.identity q.1 hq.1 (b - q.2) hx (by linarith only [hqw])
     simp only [ActiveAnnulusWeight.rightChart] at he
     rw [show b - (b - q.2) = q.2 by ring] at he
     change S q = _ at he
@@ -429,7 +429,7 @@ private theorem referenceCone_of_speed {F a c : ℝ} (hF : 0 < F) (ha : 0 < a)
   have he : a * (a * (1 + (c / a) ^ 2)) = a ^ 2 + c ^ 2 := by
     field_simp
   have hm := mul_lt_mul_of_pos_left hv ha
-  nlinarith
+  nlinarith only [he, hm]
 
 private theorem normalized_target_of_tilt {F a c : ℝ} (hF : 0 < F) (ha : 0 < a)
     (hv : 2 < a * (1 + (c / a) ^ 2)) (B : ℝ × ℝ) (hB : 0 < B.1)

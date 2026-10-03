@@ -117,9 +117,9 @@ theorem rawSource_smallerRadius_bound (S : SpatialBudget period hq D P R)
     (D.linear.coefficient t) (D.linear.jet t) (fun i => (D.quadratic i).coefficient t)
     (fun i => (D.quadratic i).jet t) (D.approximation t) e (D.residual t)
     S.B0 S.B1 S.A0 S.A2 S.residual S.A2_nonneg hz hdz hl hc hf
-  have hlin : 0 ≤ productConstant period 3*S.B1+S.A0+2*S.A2*productConstant period 3*S.B0 := by
-    have := S.B1_nonneg; have := S.A0_nonneg; have := S.A2_nonneg; have := S.B0_nonneg
-    positivity
+  have hlin : 0 ≤ productConstant period 3*S.B1+S.A0+2*S.A2*productConstant period 3*S.B0 :=
+    add_nonneg (add_nonneg (mul_nonneg hP0 S.B1_nonneg) S.A0_nonneg)
+      (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two S.A2_nonneg) hP0) S.B0_nonneg)
   have ho' := ho.trans (add_le_add (add_le_add le_rfl (mul_le_mul_of_nonneg_left he hlin))
     (mul_le_mul_of_nonneg_left (sq_le_sq₀ (weightedNorm_nonneg period 6 N r hr e) hE0 |>.mpr he)
       (mul_nonneg S.A2_nonneg hP0)))
@@ -158,7 +158,7 @@ theorem metric_smallerRadius_bound (S : SpatialBudget period hq D P R)
   have hsmall : 4*S.M*(r*S.Rc) ≤ 1 :=
     (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hrR S.Rc_nonneg) (by positivity)).trans
       (S.radius_small t)
-  have hhalf : r*S.Rc ≤ 1/2 := by nlinarith [S.M_one_le]
+  have hhalf : r*S.Rc ≤ 1/2 := by nlinarith only [hq, hsmall, hM, S.M_one_le]
   exact weightedCoefficient_uniform period (D.metric.jet t) N r S.Rc S.B hr S.Rc_nonneg hhalf
     (S.metric_base t) (fun l hl hlN => S.metric_derivatives t l hl (hlN.trans hNP))
 

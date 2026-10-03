@@ -56,13 +56,17 @@ theorem forcing_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i
     (n : ℕ) (x : P) :
     block directions q (forcing T hT Q Q₁ f v) n x ≤
       accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv*majorant R d n :=
-  block_acceleration_forcing_of_tensor directions hd q
-    (fun y => (timeMultiplier T hT (Q y)).adjoint)
-    (fun y => timeMultiplier T hT (Q₁ y)) f v
-    ((realAdjoint (U := TimeLp T U) (E := TimeLp T E)).contDiff.comp
+  block_acceleration_forcing_of_tensor (E := TimeLp T E) (F := TimeLp T U) (G := TimeLp T U)
+    directions hd q
+    (fun y => adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E)
+      (timeMultiplier (E := U) (F := E) T hT (Q y)))
+    (fun y => timeMultiplier (E := U) (F := E) T hT (Q₁ y)) f v
+    ((ContinuousLinearMap.contDiff (𝕜 := ℝ) (E := TimeLp T U →L[ℝ] TimeLp T E)
+      (F := TimeLp T E →L[ℝ] TimeLp T U) (realAdjoint (U := TimeLp T U) (E := TimeLp T E))).comp
       (contDiff_timeMultiplier T hT Q hQ))
     (contDiff_timeMultiplier T hT Q₁ hQ₁) hf hv Rc R C₀ C₁ Cf Cv hRc hRcR hC₀ hC₁ hCf hCv
-    (adjoint_bound (fun y => timeMultiplier T hT (Q y)) (contDiff_timeMultiplier T hT Q hQ)
+    (adjoint_bound (U := TimeLp T U) (E := TimeLp T E)
+      (fun y => timeMultiplier (E := U) (F := E) T hT (Q y)) (contDiff_timeMultiplier T hT Q hQ)
       Rc C₀ hRc hC₀ 0 (timeMultiplier_bound T hT Q hQ Rc C₀ hRc hC₀ 0 hbQ))
     (timeMultiplier_bound T hT Q₁ hQ₁ Rc C₁ hRc hC₁ 0 hbQ₁) d hbf hbv n x
 
@@ -141,11 +145,14 @@ theorem forcing_block_bound (directions : ι → P) (hd : ∀ i, ‖directions i
     block directions q (forcing Q Q₁ f v) n x ≤
       accelerationBlockAmplitude ι q Rc C₀ C₁ Cf Cv*majorant R d n := by
   have hAdj := contDiff_adjoint Q hQ
-  exact block_acceleration_forcing_of_tensor directions hd q
-    (fun y => multiplier (adjointMap (Q y))) (fun y => multiplier (Q₁ y)) f v
-    (contDiff_multiplier (fun y => adjointMap (Q y)) hAdj)
+  exact block_acceleration_forcing_of_tensor (E := C(Icc (0 : ℝ) T, E))
+    (F := C(Icc (0 : ℝ) T, U)) (G := C(Icc (0 : ℝ) T, U)) directions hd q
+    (fun y => multiplier (adjointMap (K := Icc (0 : ℝ) T) (U := U) (E := E) (Q y)))
+    (fun y => multiplier (K := Icc (0 : ℝ) T) (E := U) (F := E) (Q₁ y)) f v
+    (contDiff_multiplier (fun y => adjointMap (K := Icc (0 : ℝ) T) (U := U) (E := E) (Q y)) hAdj)
     (contDiff_multiplier Q₁ hQ₁) hf hv Rc R C₀ C₁ Cf Cv hRc hRcR hC₀ hC₁ hCf hCv
-    (multiplier_bound (fun y => adjointMap (Q y)) hAdj Rc C₀ hRc hC₀ 0
+    (multiplier_bound (fun y => adjointMap (K := Icc (0 : ℝ) T) (U := U) (E := E) (Q y)) hAdj
+      Rc C₀ hRc hC₀ 0
       (EulerContinuousPathComposition.adjoint_bound Q hQ Rc C₀ hRc hC₀ 0 hbQ))
     (multiplier_bound Q₁ hQ₁ Rc C₁ hRc hC₁ 0 hbQ₁) d hbf hbv n x
 

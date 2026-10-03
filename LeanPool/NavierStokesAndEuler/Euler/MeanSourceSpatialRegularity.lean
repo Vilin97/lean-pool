@@ -116,6 +116,11 @@ open MeasureTheory Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit Eu
   EulerMeanGramTranslation EulerMeanAccelerationGevrey EulerTimeLp EulerVolterraConvolution
 open scoped NNReal ContDiff
 
+private theorem translatePath_operatorPath_contDiff (T : ℝ)
+    (A : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)) :
+    ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T A.field)) := by
+  simpa only [translatePath_operatorPath] using operatorPathTranslation_contDiff T A
+
 variable (T : ℝ) (hT : 0 ≤ T) (ℓ : ℝ) (hℓ : 0 < ℓ)
   (F F₁ H : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
   (M0 : BoundedSmoothField (Space →L[ℝ] Space)) (FInv : C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
@@ -175,10 +180,8 @@ uniformly coercive translated Gram solve. -/
 theorem acceleration_translation_contDiff
     (hf : ContDiff ℝ ∞ (fun a : Space => timeTranslation T a f)) :
     ContDiff ℝ ∞ (fun a : Space => timeSolenoidalTranslation T a s.acceleration) := by
-  have hFr : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F.field)) := by
-    simpa only [translatePath_operatorPath] using operatorPathTranslation_contDiff T F
-  have hF₁r : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F₁.field)) := by
-    simpa only [translatePath_operatorPath] using operatorPathTranslation_contDiff T F₁
+  have hFr := translatePath_operatorPath_contDiff T F
+  have hF₁r := translatePath_operatorPath_contDiff T F₁
   have hv := velocity_translation_contDiff T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r
     hBe hBc hL hr hrquarter hext hcore hInv hF hRight K hK hF0 hH hsmall f s hf
   have heq := s.acceleration_eq_meanAcceleration (meanFrameCoercivity T FInv)
@@ -197,10 +200,8 @@ theorem physical_translation_contDiff
     ContDiff ℝ ∞ (fun a : Space => timeTranslation T a s.velocityField) ∧
       ContDiff ℝ ∞ (fun a : Space => timeTranslation T a s.velocityDerivative) ∧
       ContDiff ℝ ∞ (fun a : Space => timeTranslation T a s.pressureResidual) := by
-  have hFr : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F.field)) := by
-    simpa only [translatePath_operatorPath] using operatorPathTranslation_contDiff T F
-  have hF₁r : ContDiff ℝ ∞ (fun a : Space => translatePath T a (operatorPath T F₁.field)) := by
-    simpa only [translatePath_operatorPath] using operatorPathTranslation_contDiff T F₁
+  have hFr := translatePath_operatorPath_contDiff T F
+  have hF₁r := translatePath_operatorPath_contDiff T F₁
   have hv := velocity_translation_contDiff T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r
     hBe hBc hL hr hrquarter hext hcore hInv hF hRight K hK hF0 hH hsmall f s hf
   have ha := acceleration_translation_contDiff T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r

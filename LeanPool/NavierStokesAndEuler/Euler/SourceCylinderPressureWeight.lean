@@ -42,10 +42,10 @@ theorem sourceResidual_weight :
       weight g (sourceResidual P M m cm hcm hm f v) := by
   apply ContinuousMap.ext
   intro t
-  change fullOperatorMap P (normalFunctional m cm hcm hm t)
-      (g t • f t - (2 : ℝ) • fullOperatorMap P (M.field t) (g t • v t)) =
-    g t • fullOperatorMap P (normalFunctional m cm hcm hm t)
-      (f t - (2 : ℝ) • fullOperatorMap P (M.field t) (v t))
+  change fullOperatorMap (E := Space) (F := ℝ) P (normalFunctional m cm hcm hm t)
+      (g t • f t - (2 : ℝ) • fullOperatorMap (E := Space) (F := Space) P (M.field t) (g t • v t)) =
+    g t • fullOperatorMap (E := Space) (F := ℝ) P (normalFunctional m cm hcm hm t)
+      (f t - (2 : ℝ) • fullOperatorMap (E := Space) (F := Space) P (M.field t) (v t))
   simp only [map_sub, map_smul, smul_sub, smul_smul]
   rw [mul_comm (2 : ℝ) (g t)]
 
@@ -81,25 +81,32 @@ variable (P : ℝ) [Fact (0 < P)]
 /-- The bounded pressure used in the coefficient estimate is exactly the PDE pressure. -/
 theorem pressurePath_eq_sourcePressure :
     pressurePath P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm =
-      sourcePressure P M m cm hcm hm (includePath P S hS f)
-        (includePath P S hS (velocity P S hS T hT Q Q₁ c hc hQ f a₀)) := rfl
+      sourcePressure P M m cm hcm hm (includePath (K := Icc (0 : ℝ) T) (V := Space) P S hS f)
+        (includePath (K := Icc (0 : ℝ) T) (V := Space) P S hS
+          (velocity P S hS T hT Q Q₁ c hc hQ f a₀)) := rfl
 
 variable (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t)
 
 /-- The actual pressure path divided by g, written in terms of the normalized
 physical forcing and the already constructed normalized physical velocity. -/
 def normalizedPressure : C(Icc (0 : ℝ) T,CylinderL2 P ℝ) :=
-  sourcePressure P M m cm hcm hm (includePath P S hS f)
-    (includePath P S hS (normalizedVelocity P T hT S hS Q Q₁ c hc hQ g hg f a₀))
+  sourcePressure P M m cm hcm hm (includePath (K := Icc (0 : ℝ) T) (V := Space) P S hS f)
+    (includePath (K := Icc (0 : ℝ) T) (V := Space) P S hS
+      (normalizedVelocity P T hT S hS Q Q₁ c hc hQ g hg f a₀))
 
 theorem pressurePath_weight_eq :
     pressurePath P S hS T hT Q Q₁ c hc hQ (weight g f) a₀ M m cm hcm hm =
       weight g (normalizedPressure P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm g hg) := by
-  rw [pressurePath_eq_sourcePressure, velocity_weight_eq, include_weight, include_weight]
-  exact sourcePressure_weight P M m cm hcm hm g _ _
+  rw [pressurePath_eq_sourcePressure]
+  exact (congrArg₂ (sourcePressure P M m cm hcm hm) (include_weight P S hS g f)
+    ((congrArg (includePath (K := Icc (0 : ℝ) T) (V := Space) P S hS)
+      (velocity_weight_eq P S hS T hT Q Q₁ c hc hQ g hg f a₀)).trans
+        (include_weight P S hS g _))).trans
+    (sourcePressure_weight P M m cm hcm hm g _ _)
 
 theorem normalized_full_pressure_eq :
-    normalize g hg (pressurePath P S hS T hT Q Q₁ c hc hQ (weight g f) a₀ M m cm hcm hm) =
+    EulerContinuousTimeWeight.normalize g hg (pressurePath P S hS T hT Q Q₁ c hc hQ
+        (weight g f) a₀ M m cm hcm hm) =
       normalizedPressure P S hS T hT Q Q₁ c hc hQ f a₀ M m cm hcm hm g hg := by
   rw [pressurePath_weight_eq, normalize_weight]
 

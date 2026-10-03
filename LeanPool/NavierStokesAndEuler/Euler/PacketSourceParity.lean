@@ -45,7 +45,7 @@ variable {P : ℝ} [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hDM : ∀ t x, D.M.field t (-x) = D.M.field t x)
-  (hI : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
+  (hI : reflection (V := U) P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
   {p : ℕ} {a : ℕ → Profile}
 
 include hT I C hmean hhigh hcorrector E eM hSym hF hDM hI in
@@ -150,7 +150,7 @@ variable {P : ℝ} [Fact (0 < P)] (M : EulerMeanPacketProvider.Data)
   (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hDM : ∀ t x, D.M.field t (-x) = D.M.field t x)
-  (hI : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
+  (hI : reflection (V := U) P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
   (primary : Profile) (hprimary : ProfileRegularity P M.T M.T_pos.le D.support primary)
   (hprimaryParity : ProfileParity M.T primary)
 
@@ -206,9 +206,9 @@ theorem sourceProfiles_parity (hT : M.T = D.T)
     (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
     (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
     (hDM : ∀ t x, D.M.field t (-x) = D.M.field t x)
-    (hI : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
-    (hIprimary : reflection P (Iprimary.value : CylinderL2 P U) = -(Iprimary.value : CylinderL2 P
-        U))
+    (hI : reflection (V := U) P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
+    (hIprimary : reflection (V := U) P (Iprimary.value : CylinderL2 P U) =
+      -(Iprimary.value : CylinderL2 P U))
     (p : ℕ) : ProfileParity M.T (sourceProfiles P M D I Iprimary p) :=
   profiles_parity M D hT I (sourceCoefficientData P M D I hT) rfl rfl rfl
     (sourceCoefficientEven P M D I hF hDM) eM hSym hF hDM hI
@@ -223,9 +223,9 @@ theorem sourceProfiles_time_derivatives_odd (hT : M.T = D.T)
     (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
     (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
     (hDM : ∀ t x, D.M.field t (-x) = D.M.field t x)
-    (hI : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
-    (hIprimary : reflection P (Iprimary.value : CylinderL2 P U) = -(Iprimary.value : CylinderL2 P
-        U))
+    (hI : reflection (V := U) P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
+    (hIprimary : reflection (V := U) P (Iprimary.value : CylinderL2 P U) =
+      -(Iprimary.value : CylinderL2 P U))
     (p : ℕ) :
     let G := sourceProfileWitness P M D hT I Iprimary p
     JointOdd M.T G.highT ∧ JointOdd M.T G.meanT ∧ JointOdd M.T G.correctorT := by

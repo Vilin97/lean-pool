@@ -138,12 +138,11 @@ theorem finite_exists {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget per
     (B.growth_bound q hq) B.delta_pos B.delta_le_one B.radius_pos (B.decay q hq)
     (B.scale q hq) (B.small q hq) (B.radius_eq q hq)
     (fun t => by simpa only [Data.atOrder, A.approximation.value_eq] using B.divergence t)
-  rw [A.lower_twice period q] at h
   obtain ⟨e, hi, hd, _, he, hp⟩ := h
   refine ⟨e, hi, hd, he, ?_⟩
   intro t ht
   have hs := hp t ht
-  rw [← CorrectionData.source_sobolev] at hs
+  rw [A.lower_twice period q, ← CorrectionData.source_sobolev] at hs
   exact (valueOperator period q).hasFDerivAt.comp_hasDerivAt t hs
 
 /-- The genuine finite solution chosen from the proved drift-aware construction. -/

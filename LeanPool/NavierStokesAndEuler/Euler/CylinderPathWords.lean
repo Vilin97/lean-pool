@@ -34,10 +34,11 @@ variable (P : ℝ) [Fact (0 < P)]
 
 /-- The actual uniform-time derivative word, evaluated at the untranslated path. -/
 def wordPath (p : C(K, LiftL2 P)) {n : ℕ} (w : Fin n → Fin 4) : C(K,LiftL2 P) :=
-  wordDerivative standardDirection (fun a : LiftTangent => pathTranslate P a p) w 0
+  wordDerivative standardDirection
+    (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p) w 0
 
 variable (p : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
 
 include hp in
 theorem wordPath_apply {n : ℕ} (w : Fin n → Fin 4) (t : K) :
@@ -46,8 +47,9 @@ theorem wordPath_apply {n : ℕ} (w : Fin n → Fin 4) (t : K) :
 
 include hp in
 theorem wordPath_translation {n : ℕ} (w : Fin n → Fin 4) (a : LiftTangent) :
-    pathTranslate P a (wordPath P p w) =
-      wordDerivative standardDirection (fun b : LiftTangent => pathTranslate P b p) w a := by
+    pathTranslate (K := K) (V := Vector3) P a (wordPath P p w) =
+      wordDerivative standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) w a := by
   apply ContinuousMap.ext
   intro t
   rw [pathTranslate_apply, wordPath_apply P p hp,
@@ -58,9 +60,11 @@ theorem wordPath_translation {n : ℕ} (w : Fin n → Fin 4) (a : LiftTangent) :
 
 include hp in
 theorem wordPath_orbit {n : ℕ} (w : Fin n → Fin 4) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (wordPath P p w)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (wordPath P p w)) := by
   simpa only [wordPath_translation P p hp] using
-    wordDerivative_contDiff standardDirection (fun a : LiftTangent => pathTranslate P a p) hp w
+    wordDerivative_contDiff standardDirection
+      (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p) hp w
 
 theorem wordPath_ae {n : ℕ} (w : Fin n → Fin 4) (t : K) :
     (wordPath P p w t : LiftDomain P → Space) =ᵐ[liftMeasure P]
@@ -90,17 +94,19 @@ def derivativePath (i : Fin 4) : C(K,LiftL2 P) := wordPath P p (fun _ : Fin 1 =>
 
 include hp in
 theorem derivativePath_translation (i : Fin 4) (a : LiftTangent) :
-    pathTranslate P a (derivativePath P p i) =
-      directional standardDirection (fun b : LiftTangent => pathTranslate P b p) i a := by
+    pathTranslate (K := K) (V := Vector3) P a (derivativePath P p i) =
+      directional standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) i a := by
   rw [derivativePath, wordPath_translation P p hp]
-  change iteratedFDeriv ℝ 1 (fun b : LiftTangent => pathTranslate P b p) a
+  change iteratedFDeriv ℝ 1 (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) a
     (fun _ : Fin 1 => standardDirection i) = _
   rw [iteratedFDeriv_one_apply]
   rfl
 
 include hp in
 theorem derivativePath_orbit (i : Fin 4) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (derivativePath P p i)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (derivativePath P p i)) :=
   wordPath_orbit P p hp (fun _ : Fin 1 => i)
 
 theorem pointField_derivativePath (i : Fin 4) (t : K) (x : LiftDomain P) :
@@ -111,33 +117,44 @@ theorem pointField_derivativePath (i : Fin 4) (t : K) (x : LiftDomain P) :
 include hp in
 /-- Differentiation uses one external word, with no dimension-dependent radius loss. -/
 theorem derivativePath_block_bound (i : Fin 4) (q n : ℕ) (a : LiftTangent) :
-    block standardDirection q (fun b : LiftTangent => pathTranslate P b (derivativePath P p i)) n a
+    block standardDirection q (fun b : LiftTangent =>
+        pathTranslate (K := K) (V := Vector3) P b (derivativePath P p i)) n a
         ≤
-      block standardDirection q (fun b : LiftTangent => pathTranslate P b p) (n+1) a := by
-  have he : (fun b : LiftTangent => pathTranslate P b (derivativePath P p i)) =
-      directional standardDirection (fun b : LiftTangent => pathTranslate P b p) i :=
+      block standardDirection q
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) (n+1) a := by
+  have he : (fun b : LiftTangent =>
+        pathTranslate (K := K) (V := Vector3) P b (derivativePath P p i)) =
+      directional standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) i :=
     funext (derivativePath_translation P p hp i)
-  rw [he, block_succ standardDirection q (fun b : LiftTangent => pathTranslate P b p) hp]
+  rw [he, block_succ standardDirection q
+    (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) hp]
   exact Finset.single_le_sum
     (f := fun j : Fin 4 => block standardDirection q
-      (directional standardDirection (fun b : LiftTangent => pathTranslate P b p) j) n a)
+      (directional standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) j) n a)
     (fun j _ => block_nonneg standardDirection q
-      (directional standardDirection (fun b : LiftTangent => pathTranslate P b p) j) n a)
+      (directional standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) j) n a)
     (Finset.mem_univ i)
 
 include hp in
 theorem derivativePath_majorant (i : Fin 4) (q : ℕ) (R D : ℝ) (d : ℕ)
-    (hb : ∀ n, block standardDirection q (fun a : LiftTangent => pathTranslate P a p) n 0 ≤
+    (hb : ∀ n, block standardDirection q
+      (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p) n 0 ≤
       D*majorant R d n) (n : ℕ) :
-    block standardDirection q (fun a : LiftTangent => pathTranslate P a (derivativePath P p i)) n 0
+    block standardDirection q (fun a : LiftTangent =>
+        pathTranslate (K := K) (V := Vector3) P a (derivativePath P p i)) n 0
         ≤
       D*majorant R (d+1) n := by
   have h := (derivativePath_block_bound P p hp i q n 0).trans (hb (n+1))
   simpa only [majorant, show n+1+d=n+(d+1) by omega] using h
 
 variable (T : ℝ) (hT : 0 ≤ T) (u f : C(Icc (0 : ℝ) T, LiftL2 P))
-  (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a u))
-  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
+  (hu : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a u))
+  (hf : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT u) (f t) (Icc (0 : ℝ) T) t)
 
 include hu hf hd in

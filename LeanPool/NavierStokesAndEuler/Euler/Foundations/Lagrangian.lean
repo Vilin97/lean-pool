@@ -11,6 +11,7 @@ public import Mathlib.Analysis.Calculus.Gradient.Basic
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Prod
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Lagrangian
@@ -97,7 +98,8 @@ theorem derivative_pullback_inverse (f X : E → E) (F : E ≃L[ℝ] E) (x : E)
 
 theorem gradient_pullback (f : E → ℝ) (X : E → E) (F : E →L[ℝ] E) (x : E)
     (hX : HasFDerivAt X F x) (hf : DifferentiableAt ℝ f (X x)) :
-    gradient (f ∘ X) x = F.adjoint (gradient f (X x)) := by
+    gradient (f ∘ X) x =
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := E) (F := E) F (gradient f (X x)) := by
   apply ext_inner_right ℝ
   intro v
   rw [inner_gradient_left, ContinuousLinearMap.adjoint_inner_left, inner_gradient_left,
@@ -107,7 +109,8 @@ theorem gradient_pullback (f : E → ℝ) (X : E → E) (F : E →L[ℝ] E) (x :
 theorem gradient_pullback_inverse (f : E → ℝ) (X : E → E) (F : E ≃L[ℝ] E) (x : E)
     (hX : HasFDerivAt X F.toContinuousLinearMap x)
     (hf : DifferentiableAt ℝ f (X x)) :
-    gradient f (X x) = F.symm.toContinuousLinearMap.adjoint (gradient (f ∘ X) x) := by
+    gradient f (X x) = ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := E) (F := E)
+      F.symm.toContinuousLinearMap (gradient (f ∘ X) x) := by
   apply ext_inner_right ℝ
   intro v
   rw [ContinuousLinearMap.adjoint_inner_left, gradient_pullback f X _ x hX hf,

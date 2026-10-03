@@ -42,14 +42,13 @@ theorem initial_frame_derivative_norm :
   have h0 := frameAmplitude_nonneg L.K
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
-      unfold frameDifferenceCost; positivity)
+  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _
+    (mul_nonneg (mul_nonneg h0 h1) hell.le)
   intro t x
   have h := coefficient_derivative_bound m R G.frame.toSmoothCoefficientPath 1
     (frameAmplitude L.K*majorant L.scaledRadius 0 1) (L.frame_scaled_bound 1)
     (initialInclusion G.T τ hτT.le t) x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  exact h.trans_eq (L.scaled_first_majorant _)
 
 omit [CompleteSpace U] in
 theorem initial_first_derivative_norm :
@@ -58,14 +57,18 @@ theorem initial_first_derivative_norm :
   have h0 := gradientAmplitude_nonneg L.K
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
-      unfold firstDifferenceCost; positivity)
+  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _
+    (mul_nonneg (mul_nonneg h0 h1) hell.le)
   intro t x
   have h := coefficient_derivative_bound m R G.first.toSmoothCoefficientPath 1
     (gradientAmplitude L.K*majorant L.scaledRadius 0 1) (L.first_scaled_bound 1)
     (initialInclusion G.T τ hτT.le t) x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  exact h.trans_eq (L.scaled_first_majorant _)
+
+theorem smoothCoefficientPath_comp_field_apply {K L V : Type*} [TopologicalSpace K]
+    [CompactSpace K] [TopologicalSpace L] [CompactSpace L] [NormedAddCommGroup V]
+    [NormedSpace ℝ V] (A : SmoothCoefficientPath K V) (φ : C(L, K)) (t : L) :
+    (A.comp φ).field t = A.field (φ t) := rfl
 
 omit [CompleteSpace U] in
 theorem initial_curvature_derivative_norm :
@@ -74,12 +77,15 @@ theorem initial_curvature_derivative_norm :
   have h0 := gradientAmplitude_nonneg L.K
   have h1 := coefficientRadius_nonneg L.K
   have hell := G.ell_pos
-  apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
-      unfold strainDifferenceCost; positivity)
-  intro t x
-  have h := L.curvature_scaled_bound 1 (initialInclusion G.T τ hτT.le t) x
-  rw [L.scaled_first_majorant] at h
-  exact h
+  have key : ‖(G.curvature.toSmoothCoefficientPath.comp
+      (initialInclusion G.T τ hτT.le)).derivative.field‖ ≤ L.strainDifferenceCost*G.ell := by
+    apply SmoothCoefficientPath.derivative_norm_le_of_bound _ _ (by
+        unfold strainDifferenceCost; positivity)
+    intro t x
+    have h := L.curvature_scaled_bound 1 (initialInclusion G.T τ hτT.le t) x
+    rw [smoothCoefficientPath_comp_field_apply, SmoothTimeField.toSmoothCoefficientPath_field]
+    exact h.trans_eq (L.scaled_first_majorant _)
+  exact key
 
 /-- The coefficient of the label scale in the actual history difference
 bound.  All zeroth norms belong to the restricted source coefficients. -/
@@ -95,6 +101,7 @@ omit [CompleteSpace U] in
 theorem initial_history_derivative_scale :
     historyLabelDifferenceCost (G.historyOn H m hm R S hS τ hτ hτT) ≤
       L.initialHistoryDifferenceScaleCost m hm R S hS H τ hτ hτT*G.ell := by
+  unfold initialHistoryDifferenceScaleCost historyLabelDifferenceCost
   apply historyDifferenceCost_le_scale
   · exact hτ.le
   · exact ((G.transverseData m hm R S hS).initial τ hτ hτT.le).frameLower_pos.le

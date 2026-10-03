@@ -105,19 +105,20 @@ theorem expSum_coefficients_zero :
       let g : ℝ → ℝ := expSum (fun j => a j - a 0) c
       have hgzero : ∀ j, g (x j) = 0 := by
         intro j
-        dsimp [g]
+        dsimp only [g]
         rw [expSum_shift, hz, zero_mul]
       have hgderiv : ∀ t, HasDerivAt g (expSum a' d t) t := by
         intro t
         convert! expSum_hasDerivAt (fun j => a j - a 0) c t using 1
-        simp [expSum, Fin.sum_univ_succ, a', d]
+        simp only [expSum, Fin.sum_univ_succ, sub_self, mul_zero, zero_mul, Real.exp_zero, mul_one,
+            zero_add, d, a']
       obtain ⟨y, hy, _, hyzero⟩ := exists_ordered_derivative_zeros g (expSum a' d)
         hgderiv x hx hgzero
       have ha' : Function.Injective a' := by
         intro i j hij
         have hij' : a i.succ = a j.succ := by
-          dsimp [a'] at hij
-          linarith
+          dsimp only [a'] at hij
+          linarith only [hij]
         exact Fin.succ_inj.mp (ha hij')
       have hd : d = 0 := ih a' d y ha' hy hyzero
       have htail : ∀ j : Fin n, c j.succ = 0 := by
@@ -130,7 +131,8 @@ theorem expSum_coefficients_zero :
         exact Fin.succ_ne_zero j hindex
       have hhead : c 0 = 0 := by
         have h := hz 0
-        simpa [expSum, Fin.sum_univ_succ, htail, Real.exp_ne_zero] using h
+        simpa only [expSum, Fin.sum_univ_succ, htail, zero_mul, Finset.sum_const_zero, add_zero,
+            mul_eq_zero, Real.exp_ne_zero, or_false] using h
       ext j
       exact Fin.cases hhead htail j
 
@@ -182,13 +184,17 @@ theorem exists_zero_of_setIntegral_eq_zero
     intro h
     exact hmass (Measure.restrict_eq_zero.mp h)
   have hint : Integrable f (μ.restrict (Set.Icc l u)) := hf.integrableOn_Icc
-  have hnull : (μ.restrict (Set.Icc l u)) (Set.Icc l u)ᶜ = 0 := by simp
+  have hnull : (μ.restrict (Set.Icc l u)) (Set.Icc l u)ᶜ = 0 := by simp only [
+      MeasurableSet.compl_iff, measurableSet_Icc, Measure.restrict_apply, Set.compl_inter_self,
+      measure_empty]
   have havg : ⨍ t in Set.Icc l u, f t ∂μ = 0 := by
     rw [average_eq, hzero, smul_zero]
   obtain ⟨x, hx, hfx⟩ := exists_notMem_null_le_average hμ hint hnull
   obtain ⟨y, hy, hfy⟩ := exists_notMem_null_average_le hμ hint hnull
-  have hx' : x ∈ Set.Icc l u := by simpa using hx
-  have hy' : y ∈ Set.Icc l u := by simpa using hy
+  have hx' : x ∈ Set.Icc l u := by simpa only [Set.mem_Icc, Set.mem_compl_iff, not_and, not_le,
+      not_imp, not_lt] using hx
+  have hy' : y ∈ Set.Icc l u := by simpa only [Set.mem_Icc, Set.mem_compl_iff, not_and, not_le,
+      not_imp, not_lt] using hy
   rw [havg] at hfx hfy
   exact isPreconnected_Icc.intermediate_value hx' hy' hf ⟨hfx, hfy⟩
 
@@ -298,7 +304,7 @@ theorem bumpMomentMatrix_det_ne_zero {n : ℕ} (a l u : Fin n → ℝ)
       (∫ t in Set.Icc (l j) (u j), f t ∂μ j) =
         ∫ t in Set.Icc (l j) (u j), β j t * f t := by
     intro j f
-    dsimp [μ]
+    dsimp only [μ]
     rw [setIntegral_withDensity_eq_setIntegral_toReal_smul
       (hcont j).measurable.ennreal_ofReal
       (Filter.Eventually.of_forall fun t => ENNReal.ofReal_lt_top) f measurableSet_Icc]
@@ -314,7 +320,7 @@ theorem bumpMomentMatrix_det_ne_zero {n : ℕ} (a l u : Fin n → ℝ)
     obtain ⟨t, ht⟩ := hnonzero j
     have hpos : 0 < ∫ t, β j t := (hcont j).integral_pos_of_hasCompactSupport_nonneg_nonzero
       (hcompact j) (hnonneg j) ht
-    linarith
+    linarith only [heq, hpos]
   have hmatrix : bumpMomentMatrix a β = intervalMomentMatrix a l u μ := by
     ext i j
     change (∫ t, t ^ a i * β j t) = ∫ t in Set.Icc (l j) (u j), t ^ a i ∂μ j
@@ -362,7 +368,7 @@ theorem bump_le_one (l u t : ℝ) : bump l u t ≤ 1 :=
 
 theorem bump_at_center (l u : ℝ) : bump l u ((l + u) / 2) = 1 := by
   apply SmoothCutoffs.cutoff_one_of_abs_le
-  simp
+  simp only [sub_self, zero_div, abs_zero, one_div, inv_nonneg, Nat.ofNat_nonneg]
 
 theorem bump_support_subset (l u : ℝ) (hlu : l < u) :
     support (bump l u) ⊆ Icc (innerLower l u) (innerUpper l u) := by
@@ -370,10 +376,10 @@ theorem bump_support_subset (l u : ℝ) (hlu : l < u) :
   have hs : (t - (l + u) / 2) / ((u - l) / 4) ∈ Ioo (-1 : ℝ) 1 := by
     rw [← SmoothCutoffs.cutoff_support]
     exact ht
-  have hr : 0 < (u - l) / 4 := by linarith
+  have hr : 0 < (u - l) / 4 := by linarith only [hlu]
   have hlo := (lt_div_iff₀ hr).mp hs.1
   have hup := (div_lt_iff₀ hr).mp hs.2
-  constructor <;> dsimp [innerLower, innerUpper] <;> linarith
+  constructor <;> dsimp only [innerLower, innerUpper] <;> linarith only [hlo, hup]
 
 theorem bump_tsupport_subset (l u : ℝ) (hlu : l < u) :
     tsupport (bump l u) ⊆ Icc (innerLower l u) (innerUpper l u) :=
@@ -386,8 +392,8 @@ theorem bump_hasCompactSupport (l u : ℝ) (hlu : l < u) :
 theorem innerInterval_subset_open (l u : ℝ) (hlu : l < u) :
     Icc (innerLower l u) (innerUpper l u) ⊆ Ioo l u := by
   intro t ht
-  dsimp [innerLower, innerUpper] at ht
-  constructor <;> linarith [ht.1, ht.2]
+  dsimp only [innerLower, innerUpper] at ht
+  constructor <;> linarith only [hlu, ht, ht.1, ht.2]
 
 theorem bump_tsupport_subset_open (l u : ℝ) (hlu : l < u) :
     tsupport (bump l u) ⊆ Ioo l u :=
@@ -421,11 +427,11 @@ theorem matrix_det_ne_zero (a l u : Fin n → ℝ) (ha : Injective a)
     (fun j => innerLower (l j) (u j)) (fun j => innerUpper (l j) (u j))
     (fun j => bump (l j) (u j)) ha
   · intro j
-    dsimp [innerLower]
-    linarith [hl j, hlu j]
+    dsimp only [innerLower]
+    linarith only [hl, hlu, hl j, hlu j]
   · intro i j hij
-    dsimp [innerLower, innerUpper]
-    linarith [hlu i, hlu j, hsep i j hij]
+    dsimp only [innerUpper, innerLower]
+    linarith only [hlu, hsep, hij, hlu i, hlu j, hsep i j hij]
   · intro j
     exact (bump_contDiff _ _).continuous
   · exact fun j t => bump_nonneg _ _ t
@@ -477,14 +483,14 @@ theorem integrable_power_mul_bump (p l u : ℝ) (hl : 0 < l) (hlu : l < u) :
     intro t ht
     apply bump_support_subset l u hlu
     intro hb
-    exact ht (by simp [hb])
+    exact ht (by simp only [hb, mul_zero])
   apply (integrableOn_iff_integrable_of_support_subset hs).mp
   apply ContinuousOn.integrableOn_Icc
   apply ContinuousOn.mul _ (bump_contDiff l u).continuous.continuousOn
   apply continuousOn_id.rpow_const
   intro t ht
   apply Or.inl
-  have hlo : 0 < innerLower l u := by dsimp [innerLower]; linarith
+  have hlo : 0 < innerLower l u := by dsimp only [innerLower]; linarith only [hl, hlu]
   exact ne_of_gt (lt_of_lt_of_le hlo ht.1)
 
 /-- The prescribed moments hold as exact ordinary Lebesgue integral identities. -/
@@ -559,7 +565,8 @@ theorem repair_eq_sum_coordinate (a l u d : Fin n → ℝ) :
     repair a l u d = fun t => ∑ j, d j * repair a l u (Pi.single j 1) t := by
   have hdecomp : (∑ j, d j • (Pi.single j (1 : ℝ) : Fin n → ℝ)) = d := by
     ext k
-    simp [Finset.sum_apply, Pi.smul_apply, Pi.single_apply]
+    simp only [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one,
+        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
   have h := congrArg (repairLinearMap a l u) hdecomp
   rw [map_sum] at h
   simp only [map_smul] at h
@@ -601,7 +608,7 @@ theorem smooth_compact_derivative_bound (f : ℝ → ℝ) (hf : ContDiff ℝ ∞
   have hcompact : ∀ j, HasCompactSupport (iteratedDeriv j f) := by
     intro j
     induction j with
-    | zero => simpa using hc
+    | zero => simpa only [iteratedDeriv_zero] using hc
     | succ j ih =>
         rw [iteratedDeriv_succ]
         exact ih.deriv

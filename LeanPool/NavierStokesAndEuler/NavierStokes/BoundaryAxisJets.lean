@@ -398,7 +398,7 @@ theorem radialPartial_holomorphic {U : Set ℂ} (hU : IsOpen U) {F : ℝ × ℂ 
         hval, Q, w'] using hb
     rw [dist_eq_norm]
     apply hn.trans_lt
-    simpa only [dist_eq_norm, norm_sub_rev] using ht
+    rwa [norm_sub_rev, ← dist_eq_norm]
   have hQ : ∀ᶠ t in 𝓝[≠] (0 : ℝ), DifferentiableOn ℂ (Q t) (ball z σ) := by
     apply Filter.Eventually.of_forall
     intro t

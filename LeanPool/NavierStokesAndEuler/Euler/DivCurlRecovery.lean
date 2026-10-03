@@ -24,6 +24,10 @@ the velocity are globally square integrable.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -117,7 +121,7 @@ theorem gradient_energy_recovery (M : ℝ)
     have hc : HasCompactSupport (fun x => ‖gradient (cutoff n * h) x‖ ^ 2) :=
       (compactSupport_gradient ((cutoff_compact n).mul_right (f' := h))).comp_left
         (g := fun v : Space => ‖v‖ ^ 2) (by simp)
-    exact ((contDiff_gradient ((cutoff_smooth n).mul hh)).continuous.norm.pow
+    exact ((contDiff_gradient ((cutoff_smooth n).mul hh)).continuous.norm.fun_pow
         2).integrable_of_hasCompactSupport hc
   have hFbound (n : ℕ) : (∫ x, F n x) ≤ M ^ 2 * (∫ x, h x ^ 2) +
       ∫ x, |h x * Δ h x| := by
@@ -127,7 +131,7 @@ theorem gradient_energy_recovery (M : ℝ)
       have hc : HasCompactSupport (fun x => cutoff n x ^ 2 * (h x * Δ h x)) :=
         ((cutoff_compact n).comp_left (g := fun s : ℝ => s ^ 2) (by simp)).mul_right
           (f' := fun x => h x * Δ h x)
-      exact (((cutoff_smooth n).continuous.pow 2).mul
+      exact (((cutoff_smooth n).continuous.fun_pow 2).mul
         (hh.continuous.mul (scalar_laplacian_smooth h
             hh).continuous)).integrable_of_hasCompactSupport hc
     have hc : (∫ x, h x ^ 2 * ‖gradient (cutoff n) x‖ ^ 2) ≤
@@ -143,13 +147,13 @@ theorem gradient_energy_recovery (M : ℝ)
       apply integral_mono hsource.neg hs
       intro x
       have hη := cutoff_bounds n x
-      have hη2 : cutoff n x ^ 2 ≤ 1 := by nlinarith
+      have hη2 : cutoff n x ^ 2 ≤ 1 := pow_le_one₀ hη.1 hη.2
       have hz := sq_nonneg (cutoff n x)
       have ha := neg_le_abs (h x * Δ h x)
       calc
         -(cutoff n x ^ 2 * (h x * Δ h x)) = cutoff n x ^ 2 * (-(h x * Δ h x)) := by ring
         _ ≤ cutoff n x ^ 2 * |h x * Δ h x| := mul_le_mul_of_nonneg_left ha hz
-        _ ≤ |h x * Δ h x| := by nlinarith [abs_nonneg (h x * Δ h x)]
+        _ ≤ |h x * Δ h x| := mul_le_of_le_one_left (abs_nonneg _) hη2
     change (∫ x, ‖gradient (cutoff n * h) x‖ ^ 2) ≤ _
     rw [localized_dirichlet_identity (cutoff n) h (cutoff_compact n) (cutoff_smooth n) hh]
     linarith
@@ -164,7 +168,7 @@ theorem gradient_energy_recovery (M : ℝ)
   have hfatou := integrable_and_integral_le_of_nonnegative_limit volume F (fun x => ‖gradient h x‖
       ^ 2)
     (M ^ 2 * (∫ x, h x ^ 2) + ∫ x, |h x * Δ h x|) hF
-    ((contDiff_gradient hh).continuous.norm.pow 2).aestronglyMeasurable
+    ((contDiff_gradient hh).continuous.norm.fun_pow 2).aestronglyMeasurable
     (fun n x => sq_nonneg _) (fun x => sq_nonneg _) hlim hFbound
   exact ⟨(memLp_two_iff_integrable_sq_norm
     (contDiff_gradient hh).continuous.aestronglyMeasurable).mpr hfatou.1, hfatou.2⟩

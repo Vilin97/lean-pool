@@ -14,10 +14,15 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Finite sums of genuine Hilbert metric energies, with viscosity and explicit norm comparison. -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 
 noncomputable section
@@ -105,7 +110,7 @@ theorem familyMetricNorm_lower (K : H →L[ℝ] H) (v : ι → H) (c : ℝ) (hc 
   have hE := sqrt_nonneg (familyEnergy K v)
   have hN := mul_nonneg hc (familyNorm_nonneg v)
   change c * familyNorm v ≤ √(familyEnergy K v)
-  nlinarith
+  nlinarith only [hl, hsq, hn, hE]
 
 /-- The upper metric comparison is independent of the number of external derivatives. -/
 theorem familyMetricNorm_upper (K : H →L[ℝ] H) (v : ι → H) :
@@ -144,13 +149,13 @@ theorem family_energy_derivative_bound (K K' : H →L[ℝ] H)
     have hb := energy_derivative_bound K K' (e i) (transport i) (forcing i) B hB (ht i)
     have hh := mul_le_mul_of_nonneg_left (hheat i) (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hν)
     rw [inner_add_right, real_inner_smul_right]
-    linarith
+    linarith only [hb, hh]
   have hs := Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset ι)) => hcomp i)
   simp only [Finset.sum_add_distrib, ← Finset.mul_sum] at hs
   have hcs := mul_le_mul_of_nonneg_left (family_cauchy_schwarz e forcing)
     (show 0 ≤ 2 * ‖K‖ by positivity)
   change _ ≤ _ * familySquaredNorm e + _ at hs
-  exact hs.trans (by dsimp [familySquaredNorm]; linarith)
+  exact hs.trans (by dsimp [familySquaredNorm]; linarith only [hcs])
 
 /-- Regularized root energy for a finite family, with constants independent of its cardinality. -/
 theorem family_regularized_energy_evolution (K : ℝ → H →L[ℝ] H) (e : ι → ℝ → H)
@@ -172,25 +177,28 @@ theorem family_regularized_energy_evolution (K : ℝ → H →L[ℝ] H) (e : ι 
   have hcoer := familyEnergy_coercive (K t) v c hcoercive
   have hq : 0 ≤ familyEnergy (K t) v :=
     (mul_nonneg (sq_nonneg c) (familySquaredNorm_nonneg v)).trans hcoer
-  have hE : 0 < E := sqrt_pos.mpr (by nlinarith)
-  have hE2 : E ^ 2 = familyEnergy (K t) v + δ ^ 2 := sq_sqrt (by nlinarith)
+  have hqδ : 0 < familyEnergy (K t) v + δ ^ 2 := add_pos_of_nonneg_of_pos hq (pow_pos hδ 2)
+  have hE : 0 < E := sqrt_pos.mpr hqδ
+  have hE2 : E ^ 2 = familyEnergy (K t) v + δ ^ 2 := sq_sqrt hqδ.le
   have hN2 := familyNorm_sq v
   have hN : familyNorm v ≤ E / c := by
     apply (le_div_iff₀ hc).mpr
-    nlinarith [familyNorm_nonneg v]
+    apply Real.le_sqrt_of_sq_le
+    have h : (familyNorm v * c) ^ 2 = c ^ 2 * familySquaredNorm v := by rw [← hN2]; ring
+    linarith only [h, hcoer, sq_nonneg δ]
   have hN2bound : familySquaredNorm v ≤ E ^ 2 / c ^ 2 := by
     rw [← hN2, ← div_pow]
     exact pow_le_pow_left₀ (familyNorm_nonneg v) hN 2
   have hdiff := family_energy_hasDerivAt K e t ν K' e' transport pressure forcing lap hK he hsym
       heq hp
-  have hroot := HasDerivAt.sqrt (hdiff.add_const (δ ^ 2))
-    (by nlinarith : familyEnergy (K t) v + δ ^ 2 ≠ 0)
+  have hroot := HasDerivAt.sqrt (hdiff.add_const (δ ^ 2)) hqδ.ne'
   rw [hroot.deriv]
   change _ / (2 * E) ≤ _
-  apply (div_le_iff₀ (by positivity : 0 < 2 * E)).mpr
+  apply (div_le_iff₀ (mul_pos two_pos hE)).mpr
   have hb := family_energy_derivative_bound (K t) K' v transport forcing lap B C ν hB hν ht hheat
   have h1 := mul_le_mul_of_nonneg_left hN2bound
-    (show 0 ≤ ‖K'‖ + 2 * B + 2 * ν * C by positivity)
+    (add_nonneg (add_nonneg (norm_nonneg K') (mul_nonneg zero_le_two hB))
+      (mul_nonneg (mul_nonneg zero_le_two hν) hC))
   have h2 := mul_le_mul_of_nonneg_left hN
     (mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) (norm_nonneg (K t)))
       (familyNorm_nonneg forcing))
@@ -198,7 +206,7 @@ theorem family_regularized_energy_evolution (K : ℝ → H →L[ℝ] H) (e : ι 
     _ ≤ (‖K'‖ + 2 * B + 2 * ν * C) * familySquaredNorm v +
         2 * ‖K t‖ * familyNorm v * familyNorm forcing := hb
     _ ≤ (‖K'‖ + 2 * B + 2 * ν * C) * (E ^ 2 / c ^ 2) +
-        2 * ‖K t‖ * (E / c) * familyNorm forcing := by linarith
-    _ = _ := by dsimp [E, v]; field_simp
+        2 * ‖K t‖ * (E / c) * familyNorm forcing := by linarith only [h1, h2]
+    _ = _ := by dsimp only [E, v]; ring
 
 end EulerFiniteMetricEnergy

@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Calculus.Gradient.Basic
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.MeasureTheory.Integral.CurveIntegral.Poincare
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Graph Pullback

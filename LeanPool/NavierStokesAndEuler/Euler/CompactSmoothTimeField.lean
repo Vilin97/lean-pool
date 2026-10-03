@@ -122,7 +122,7 @@ def ofCompactSupportJets (u : A × E → V) (hu : Continuous u)
   field := EulerComparator.compactSupportBoundedPath u hu K hK hsupp
   smooth := hsmooth
   jet n := EulerComparator.compactSupportBoundedPath _ (hjet n) K hK
-    (fun t => (tsupport_iteratedFDeriv_subset n).trans (hsupp t))
+    (fun t => (tsupport_iteratedFDeriv_subset (𝕜 := ℝ) (f := fun x => u (t, x)) n).trans (hsupp t))
   jet_eq _ _ _ := rfl
 
 @[simp] theorem ofCompactSupportJets_apply (u : A × E → V) (hu : Continuous u)

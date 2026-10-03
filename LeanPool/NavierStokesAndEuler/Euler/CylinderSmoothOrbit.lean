@@ -40,26 +40,29 @@ variable (period : ℝ) [Fact (0 < period)]
 
 /-- Smoothness of the actual full mixed L² translation orbit. -/
 abbrev SmoothOrbit (u : LiftL2 period) : Prop :=
-  ContDiff ℝ ∞ (fun a : LiftTangent => translate period a u)
+  ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := Vector3) period a u)
 
 /-- The actual L² derivative in a covering-space direction. -/
 def orbitDerivative (u : LiftL2 period) (v : LiftTangent) : LiftL2 period :=
-  fderiv ℝ (fun a : LiftTangent => translate period a u) 0 v
+  fderiv ℝ (fun a : LiftTangent => translate (V := Vector3) period a u) 0 v
 
 /-- An actual orbit derivative transforms by actual cylinder translation. -/
 theorem orbitDerivative_translation (u : LiftL2 period) (hu : SmoothOrbit period u)
     (v a : LiftTangent) :
-    translate period a (orbitDerivative period u v) =
-      fderiv ℝ (fun b : LiftTangent => translate period b u) a v := by
-  have h := EulerIsometricAction.hasFDerivAt_all (translate period) (translate_add period) u
-    (fderiv ℝ (fun b : LiftTangent => translate period b u) 0)
+    translate (V := Vector3) period a (orbitDerivative period u v) =
+      fderiv ℝ (fun b : LiftTangent => translate (V := Vector3) period b u) a v := by
+  have h := EulerIsometricAction.hasFDerivAt_all (translate (V := Vector3) period)
+    (translate_add (V := Vector3) period) u
+    (fderiv ℝ (fun b : LiftTangent => translate (V := Vector3) period b u) 0)
     ((hu.differentiable (by simp) (0 : LiftTangent)).hasFDerivAt) a
   exact (congrArg (fun D : LiftTangent →L[ℝ] LiftL2 period => D v) h.fderiv).symm
 
 theorem orbitDerivative_smooth (u : LiftL2 period) (hu : SmoothOrbit period u) (v : LiftTangent) :
     SmoothOrbit period (orbitDerivative period u v) := by
-  have he : (fun a : LiftTangent => translate period a (orbitDerivative period u v)) =
-      fun a : LiftTangent => fderiv ℝ (fun b : LiftTangent => translate period b u) a v :=
+  have he : (fun a : LiftTangent =>
+      translate (V := Vector3) period a (orbitDerivative period u v)) =
+      fun a : LiftTangent =>
+        fderiv ℝ (fun b : LiftTangent => translate (V := Vector3) period b u) a v :=
     funext (fun a => orbitDerivative_translation period u hu v a)
   change ContDiff ℝ ∞ _
   rw [he]
@@ -91,7 +94,8 @@ def spatialJet (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) :
 /-- The exact fixed-Hq jet sum equals the full mixed word base norm, with no dimension factor. -/
 theorem spatialJet_norm (q : ℕ) (u : LiftL2 period) (hu : SmoothOrbit period u) :
     (spatialJet period q u hu).sobolevNorm =
-      baseSize standardDirection q (fun a : LiftTangent => translate period a u) 0 := by
+      baseSize standardDirection q
+        (fun a : LiftTangent => translate (V := Vector3) period a u) 0 := by
   induction q generalizing u with
   | zero => simp only [spatialJet,SpatialJet.sobolevNorm,baseSize_zero,translate_zero]
   | succ q ih =>

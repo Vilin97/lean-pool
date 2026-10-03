@@ -112,20 +112,20 @@ theorem inverse_majorant_dominates (q : ℕ) {L : ℝ} (hL : 1 ≤ L) :
   have hp : 1 ≤ L ^ q := one_le_pow₀ hL
   have hstep : L ≤ L ^ (q + 1) := by
     rw [pow_succ]
-    simpa only [one_mul] using mul_le_mul_of_nonneg_right hp (by linarith : 0 ≤ L)
+    simpa only [one_mul] using mul_le_mul_of_nonneg_right hp (by linarith only [hL] : 0 ≤ L)
   calc
     _ = (9 : ℝ) ^ (q + 1) * L := by rw [pow_succ]; ring
     _ ≤ (9 : ℝ) ^ (q + 1) * L ^ (q + 1) :=
       mul_le_mul_of_nonneg_left hstep (by positivity)
     _ = (9 * L) ^ (q + 1) := (mul_pow ..).symm
-    _ ≤ _ := pow_le_pow_right₀ (by linarith) (succ_le_three_pow q)
+    _ ≤ _ := pow_le_pow_right₀ (by linarith only [hL]) (succ_le_three_pow q)
 
 /-- One stage of the explicit polynomial inverse bound. -/
 theorem inverse_majorant_step {L B M : ℝ} (hL : 1 ≤ L) (hB : L ≤ B) (hM : 9 * B ≤ M) :
     L + 4 * (M * (1 + B * M)) ≤ M ^ 3 := by
-  have hM9 : 9 ≤ M := by linarith
-  have hM0 : 0 ≤ M := by linarith
-  have hLleM : L ≤ M := by linarith
+  have hM9 : 9 ≤ M := by linarith only [hL, hB, hM]
+  have hM0 : 0 ≤ M := by linarith only [hL, hB, hM]
+  have hLleM : L ≤ M := by linarith only [hL, hB, hM]
   have hM2 : 81 ≤ M ^ 2 := by nlinarith only [hM9]
   have hcube := mul_le_mul_of_nonneg_right hM2 hM0
   have hprod := mul_le_mul_of_nonneg_right hM (sq_nonneg M)
@@ -144,7 +144,7 @@ theorem pressureConstant_polynomial {q : ℕ} {A : SmoothCoefficient period}
   | zero =>
     cases K
     simp only [EulerSpatialSobolevInverse.CoefficientJet.pressureConstant, pow_zero, pow_one]
-    linarith
+    linarith only [hL, hcL]
   | succ q ih =>
     cases K with
     | succ dA lower hd =>
@@ -157,15 +157,15 @@ theorem pressureConstant_polynomial {q : ℕ} {A : SmoothCoefficient period}
         exact hcoeff r (by omega)
       have hbase : K.truncate.pressureConstant c ≤ M := ih K.truncate ht
       have hchild : ∀ i, (lower i).productConstant ≤ B :=
-        fun i => productConstant_polynomial (lower i) L (by linarith)
+        fun i => productConstant_polynomial (lower i) L (by linarith only [hL])
           (coefficient_child_levels dA lower hd L hcoeff i)
       have hB : L ≤ B := by
         simpa only [one_mul] using mul_le_mul_of_nonneg_right
-          (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 9)) (by linarith : 0 ≤ L)
+          (one_le_pow₀ (by norm_num : (1 : ℝ) ≤ 9)) (by linarith only [hL] : 0 ≤ L)
       have hM : 9 * B ≤ M := inverse_majorant_dominates q hL
       have hM0 : 0 ≤ M := by dsimp [M]; positivity
       have hbase0 : 0 ≤ K.truncate.pressureConstant c := K.truncate.pressureConstant_nonneg c hc
-      have hB0 : 0 ≤ B := by linarith
+      have hB0 : 0 ≤ B := by linarith only [hL, hB]
       have hterm : ∀ i, K.truncate.pressureConstant c *
           (1 + (lower i).productConstant * K.truncate.pressureConstant c) ≤ M * (1 + B * M) := by
         intro i
@@ -207,6 +207,6 @@ theorem pressure_shifted_Hq_polynomial_bound {s q : ℕ} {A : SmoothCoefficient 
     rw [coefficient_restrict_level period K hq hr]
     exact hbasecoeff r hr
   exact pressure_shifted_Hq_bound K J κ m c hc hpos N hN hq ρ Rc ((9 * L) ^ (3 ^ q))
-    hρ hRc (one_le_pow₀ (by linarith)) hbase hsmall hcoeff
+    hρ hRc (one_le_pow₀ (by linarith only [hL])) hbase hsmall hcoeff
 
 end EulerH6Pressure

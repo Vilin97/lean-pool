@@ -99,7 +99,7 @@ theorem forwardInitializedResidual_normalized_bound (Cagree : SourceCoefficientA
     (hcoef : BC.multiplierCost ≤ k ^ (1 / 100 : ℝ)) (hX : 6 ≤ X) (hNX : X - 1 ≤ (N : ℝ)) :
     (((sourceCoefficientData period M D (InitialData.zero period D) hTime).inverse.multiply
       (forwardInitializedResidualField M D hTime δ hδ ξ hs α Cagree N hN k⁻¹
-        (inv_ne_zero (by linarith)))).smul k).WordBound
+        (inv_ne_zero (by linarith only [hk])))).smul k).WordBound
           6 (4*L.R) (Real.exp (-(7/10)*X*Real.log k)) 0 :=
   forwardResidual_normalized_bound period M D hTime (initialData D δ hδ (α • ξ) hs)
     L NB W LM WM BC hRc hcost S α hα hgrowth
@@ -140,7 +140,7 @@ def forwardInitializedNormalizedResidualField (Cagree : SourceCoefficientAgreeme
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :=
   (((sourceCoefficientData period M D (InitialData.zero period D) hTime).inverse.multiply
     (forwardInitializedResidualField M D hTime δ hδ ξ hs α Cagree N hN k⁻¹
-      (inv_ne_zero (by linarith)))).smul k).changeTime hTime
+      (inv_ne_zero (by linarith only [hk])))).smul k).changeTime hTime
 
 /-- Forward initialized correction data, constructed using
 `EulerPacketCorrectionCoefficients.correctionDataOfFields`. -/
@@ -148,8 +148,8 @@ def forwardInitializedCorrectionData (Cagree : SourceCoefficientAgreement M D)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     EulerAllOrderCorrectionData.Data period D.T :=
   EulerPacketCorrectionCoefficients.correctionDataOfFields D period k⁻¹
-    (by rw [abs_of_pos (inv_pos.mpr (by linarith : 0 < k))]
-        exact inv_le_one_of_one_le₀ (by linarith))
+    (by rw [abs_of_pos (inv_pos.mpr (by linarith only [hk] : 0 < k))]
+        exact inv_le_one_of_one_le₀ (by linarith only [hk]))
     (forwardInitializedNormalizedField M D hTime δ hδ ξ hs α N k)
     (forwardInitializedNormalizedResidualField M D hTime δ hδ ξ hs α Cagree N hN k hk)
 

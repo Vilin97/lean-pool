@@ -94,11 +94,13 @@ theorem joinedMeanPullback_divergence (hmean : primary.mean = 0)
     simp only [joinedSourceProfiles,profiles_zero]
     change divergence (fun y : Space => (joinedSourceOperators P M D τ hτ hτT B).inverseFrame
         (t,(y,0)) 0) x = 0
-    simp [divergence]
+    simp only [divergence, map_zero, fderiv_fun_const, Pi.zero_apply,
+        ContinuousLinearMap.toLinearMap_zero]
   by_cases hp1 : p = 1
   · subst p
     simp only [joinedSourceProfiles,profiles_one,hmean,Pi.zero_apply]
-    simp [divergence]
+    simp only [divergence, map_zero, fderiv_fun_const, Pi.zero_apply,
+        ContinuousLinearMap.toLinearMap_zero]
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (joinedSourceOperators P M D τ hτ hτT B) p

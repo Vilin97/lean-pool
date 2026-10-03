@@ -8,6 +8,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonSetup
 import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # Real-valued whole-space `Lᵖ` norms

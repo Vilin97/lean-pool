@@ -53,7 +53,7 @@ def forwardChild
     (forwardInitializedNormalizedField (A.meanData H) (A.transverseData m hm J support hSupport)
       rfl δ hδ ξ hs α N k) rfl
     (S.odd.forwardCorrectionParity H m hm J support hSupport hSym δ hδ ξ hs α N hN k hk)
-    G hG k (mul_inv_cancel₀ (by linarith : k ≠ 0)) hgraph nextEll hnext hnext1 labels
+    G hG k (mul_inv_cancel₀ (by linarith only [hk] : k ≠ 0)) hgraph nextEll hnext hnext1 labels
 
 /-- Joined child, constructed using `S.packetChild`. -/
 def joinedChild (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
@@ -78,6 +78,6 @@ def joinedChild (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
       rfl τ hτ hτT (A.historyOn H m hm J support hSupport τ hτ hτT) δ hδ ξ hs α N k) rfl
     (S.odd.joinedCorrectionParity H m hm J support hSupport hSym δ hδ ξ hs α
       τ hτ hτT N hN k hk)
-    G hG k (mul_inv_cancel₀ (by linarith : k ≠ 0)) hgraph nextEll hnext hnext1 labels
+    G hG k (mul_inv_cancel₀ (by linarith only [hk] : k ≠ 0)) hgraph nextEll hnext hnext1 labels
 
 end EulerParentPacketFrames.SmoothState

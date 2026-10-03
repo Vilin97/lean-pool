@@ -12,6 +12,7 @@ public import Mathlib.Analysis.Complex.Exponential
 public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.InnerProductSpace.Basic
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Energy Bootstrap
@@ -35,10 +36,10 @@ theorem radius_bounds (C B Δ ρ₀ S R₀ : ℝ) (hC : 0 ≤ C) (hB : 0 ≤ B)
   have hl := mul_le_mul_of_nonneg_left ht.2 (show 0 ≤ 2 * C * (B + Δ) by positivity)
   have hn := mul_nonneg (show 0 ≤ 2 * C * (B + Δ) by positivity) ht.1
   constructor
-  · linarith
+  · linarith only [hdecay, hl]
   constructor
-  · linarith
-  · nlinarith
+  · linarith only [hρ, hdecay, hl]
+  · nlinarith only [hscale, hR, hn]
 
 theorem shrinking_radius_cancels_loss (C B Δ ρ R₀ X : ℝ)
     (hC : 0 ≤ C) (hB : 0 ≤ B) (hΔ : 0 ≤ Δ) (hρ : 0 < ρ)
@@ -46,7 +47,7 @@ theorem shrinking_radius_cancels_loss (C B Δ ρ R₀ X : ℝ)
     (-2 * C * (B + Δ)) / ρ + C * (ρ⁻¹ + R₀) * (B + X) ≤ 0 := by
   have hinv : R₀ ≤ ρ⁻¹ := by
     rw [inv_eq_one_div]
-    exact (le_div_iff₀ hρ).2 (by linarith)
+    exact (le_div_iff₀ hρ).2 (by linarith only [hscale])
   have hp : C * (ρ⁻¹ + R₀) * (B + X) ≤ C * (ρ⁻¹ + R₀) * (B + Δ) := by
     gcongr
   have hq : C * (ρ⁻¹ + R₀) * (B + Δ) ≤ 2 * C * (B + Δ) / ρ := by
@@ -55,7 +56,7 @@ theorem shrinking_radius_cancels_loss (C B Δ ρ R₀ X : ℝ)
       _ = _ := by ring
   have hneg : (-2 * C * (B + Δ)) / ρ = -(2 * C * (B + Δ) / ρ) := by ring
   rw [hneg]
-  linarith
+  linarith only [hp, hq]
 
 /-- The shrinking-radius energy inequality closes without assuming the bootstrap conclusion. -/
 theorem close_energy_estimate
@@ -87,7 +88,7 @@ theorem close_energy_estimate
   have hFbase (t : ℝ) (ht : 0 ≤ t) : 2 * r ≤ F t := by
     have he : 1 ≤ exp (3 * C * t) := one_le_exp_iff.mpr (by positivity)
     dsimp [F]
-    nlinarith
+    exact le_mul_of_one_le_right (by linarith only [hr]) he
   have hbound : ∀ t ∈ Icc 0 S, X t ≤ F t := by
     apply image_le_of_deriv_right_lt_deriv_boundary hcont
       (fun t ht => (hder t ht).hasDerivWithinAt)
@@ -97,18 +98,20 @@ theorem close_energy_estimate
       have htc : t ∈ Icc 0 S := ⟨ht.1, ht.2.le⟩
       have hrad := radius_bounds C B Δ ρ₀ S R₀ hC.le hB hΔ.le hρ hS hR hdecay hscale t htc
       have hloss := shrinking_radius_cancels_loss C B Δ _ R₀ (X t)
-        hC.le hB hΔ.le hrad.2.1 hR hrad.2.2 (by rw [hXF]; linarith [hFle t htc])
+        hC.le hB hΔ.le hrad.2.1 hR hrad.2.2 (by rw [hXF]; linarith only [hΔ, hFle, htc, hFle t htc])
       have hlossY := mul_nonpos_of_nonpos_of_nonneg hloss (hY t ht)
       have hmain := hineq t ht
       have hFt := hFp t
       have hFΔ := hFle t htc
       have hFr := hFbase t ht.1
       rw [hXF] at hmain hlossY
-      have hFsq : (F t) ^ 2 ≤ F t := by nlinarith
+      have hFsq : (F t) ^ 2 ≤ F t := by
+        rw [sq]
+        exact mul_le_of_le_one_right hFt.le (by linarith only [hFΔ, hΔ1])
       have hCsq := mul_le_mul_of_nonneg_left hFsq hC.le
       have hCr := mul_le_mul_of_nonneg_left hFr hC.le
       have hpos := mul_pos hC hFt
-      linarith
+      linarith only [hlossY, hmain, hCsq, hCr, hpos]
   intro t ht
   exact ⟨hbound t ht, (hbound t ht).trans (hFle t ht)⟩
 
@@ -123,11 +126,11 @@ theorem quadratic_stability (X X' : ℝ → ℝ) (C ε S : ℝ)
   have hρ : 0 < 4 * C * S + 1 := by positivity
   have h := close_energy_estimate X X' (fun _ => 0) C 0 1 ε (4 * C * S + 1) S 0
     hC (by norm_num) (by norm_num) (by norm_num) hε hρ hS (by norm_num)
-    (by linarith) (by simp) hsmall hcont (by linarith) hder
+    (by linarith only) (by simp) hsmall hcont (by linarith only [hε, hinit]) hder
     (fun _ _ => le_rfl) (fun t ht => by
       have hi := hineq t ht
       simp only [mul_zero, add_zero]
-      nlinarith)
+      nlinarith only [hi, hC, hε])
   intro t ht
   exact (h t ht).1.trans (by gcongr; exact ht.2)
 

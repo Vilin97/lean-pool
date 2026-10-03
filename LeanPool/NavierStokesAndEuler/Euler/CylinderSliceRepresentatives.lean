@@ -27,8 +27,8 @@ variable (P : ℝ) [Fact (0 < P)]
   [TopologicalSpace L] [CompactSpace L]
 
 theorem pointField_eq_of_slice_eq (p : C(K, LiftL2 P)) (q : C(L, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p))
-    (hq : ContDiff ℝ ∞ (fun a => pathTranslate P a q))
+    (hp : ContDiff ℝ ∞ (fun a => pathTranslate (K := K) (V := Vector3) P a p))
+    (hq : ContDiff ℝ ∞ (fun a => pathTranslate (K := L) (V := Vector3) P a q))
     (t : K) (s : L) (he : p t = q s) : pointField P p hp t = pointField P q hq s := by
   have h := pointField_ae P p hp t
   rw [he] at h
@@ -37,8 +37,8 @@ theorem pointField_eq_of_slice_eq (p : C(K, LiftL2 P)) (q : C(L, LiftL2 P))
     (smoothField_continuous P _ (pointField_smooth P q hq s))
 
 theorem scalarPointField_eq_of_slice_eq (p : C(K, CylinderL2 P ℝ)) (q : C(L, CylinderL2 P ℝ))
-    (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p))
-    (hq : ContDiff ℝ ∞ (fun a => pathTranslate P a q))
+    (hp : ContDiff ℝ ∞ (fun a => pathTranslate (K := K) (V := ℝ) P a p))
+    (hq : ContDiff ℝ ∞ (fun a => pathTranslate (K := L) (V := ℝ) P a q))
     (t : K) (s : L) (he : p t = q s) : scalarPointField P p hp t = scalarPointField P q hq s := by
   have h := scalarPointField_ae P p hp t
   rw [he] at h

@@ -45,7 +45,8 @@ theorem gramSolution_contDiff (T : ℝ) (hT : 0 ≤ T)
     (c : ℝ) (hc : 0 < c) (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
     (f : P → TimeLp T U) {n : ℕ∞ω} (hQ : ContDiff ℝ n Q) (hf : ContDiff ℝ n f) :
     ContDiff ℝ n (fun x => gramSolver T hT (Q x) c hc (hLower x) (f x)) :=
-  contDiff_coerciveSolution_variable (fun x => gramOperator T hT (Q x)) (fun _ => c)
+  contDiff_coerciveSolution_variable (fun x => gramOperator (U := U) (E := E) T hT (Q x))
+    (fun _ => c)
     (fun _ => hc) (fun x => gramOperator_coercive T hT (Q x) c (hLower x)) f
     (gramOperator_contDiff T hT Q hQ) hf
 
@@ -64,21 +65,21 @@ theorem gramSolution_gevrey (T : ℝ) (hT : 0 ≤ T)
     ‖iteratedFDeriv ℝ n (fun y => gramSolver T hT (Q y) c hc (hLower y) (f y)) x‖ ≤
       majorant R (d+1) n := by
   have hci : 0 ≤ c⁻¹ := inv_nonneg.mpr hc.le
-  have hM : 1 ≤ gramCost c C D := by
-    unfold gramCost
-    have : 0 ≤ c⁻¹*(3*C^2+D+1) := by positivity
-    linarith
+  have hC2 : 0 ≤ 3*C^2 := mul_nonneg (by norm_num) (sq_nonneg C)
+  have hM : 1 ≤ gramCost c C D :=
+    le_add_of_nonneg_right (mul_nonneg hci (add_nonneg (add_nonneg hC2 hD) zero_le_one))
   have hMC : c⁻¹*(3*C^2) ≤ gramCost c C D := by
     unfold gramCost
-    nlinarith
+    linarith only [mul_nonneg hci (add_nonneg hD zero_le_one)]
   have hMD : c⁻¹*D ≤ gramCost c C D := by
     unfold gramCost
-    nlinarith [sq_nonneg C]
+    linarith only [mul_nonneg hci (add_nonneg hC2 zero_le_one)]
   have hb (j : ℕ) (y : P) :
       ‖iteratedFDeriv ℝ (j+1) (fun z => gramOperator T hT (Q z)) y‖ ≤
         (3*C^2)*(Rc^(j+1)*((j+1).factorial : ℝ)^2) := by
     simpa only [majorant, Nat.add_zero] using gramOperator_bound T hT Q hQ Rc C hRc hC hbQ (j+1) y
-  exact coerciveSolution_gevrey_amplitudes (fun y => gramOperator T hT (Q y)) (fun _ => c)
+  exact coerciveSolution_gevrey_amplitudes (fun y => gramOperator (U := U) (E := E) T hT (Q y))
+    (fun _ => c)
     (fun _ => hc) (fun y => gramOperator_coercive T hT (Q y) c (hLower y)) f
     (gramOperator_contDiff T hT Q hQ) hf c⁻¹ (3*C^2) D (gramCost c C D) Rc R
     (by positivity) hD hM hMC hMD hRc hR (fun _ => le_rfl) hb d hbf n x

@@ -122,7 +122,9 @@ theorem pressureTerm_axisFactor (N : ℕ) (h C : ℝ)
       2 * w.1 * regularPressureTerm N h C phi u beta i w := by
   cases i with
   | inl i =>
-    have hi' : i ∈ transportIndices N := by simpa [pressureIndices] using hi
+    have hi' : i ∈ transportIndices N := by simpa only [pressureIndices, Finset.mem_union,
+        Finset.mem_image, Sum.inl.injEq, exists_eq_right, reduceCtorEq, and_false, exists_const,
+        or_false] using hi
     cases i with
     | none =>
       change -Z2 h (0 + slowOrder h N) (AxisSourceRegularity.axisFactor (beta N)) w = _
@@ -219,7 +221,9 @@ theorem regularPressureTerm_smoothOn {O : Set InnerPoint} (hO : IsOpen O)
     fun j hj => (hu j hj).contDiffAt (hO.mem_nhds hw)
   cases i with
   | inl i =>
-    have hi' : i ∈ transportIndices N := by simpa [pressureIndices] using hi
+    have hi' : i ∈ transportIndices N := by simpa only [pressureIndices, Finset.mem_union,
+        Finset.mem_image, Sum.inl.injEq, exists_eq_right, reduceCtorEq, and_false, exists_const,
+        or_false] using hi
     cases i with
     | none =>
       exact (AxisSourceRegularity.Z2_smooth h (slowOrder h N - 1)
@@ -229,7 +233,9 @@ theorem regularPressureTerm_smoothOn {O : Set InnerPoint} (hO : IsOpen O)
       exact (regularRadialKernel_smoothAt h beta u ij.1 ij.2 (hba ij.1 hiN)
         (hba ij.2 hjN) (hua ij.1 hiN) (hL w hw)).div contDiffAt_const (by norm_num)
   | inr i =>
-    have hi' : i ∈ transportIndices N := by simpa [pressureIndices] using hi
+    have hi' : i ∈ transportIndices N := by simpa only [pressureIndices, Finset.mem_union,
+        Finset.mem_image, reduceCtorEq, and_false, exists_const, Sum.inr.injEq, exists_eq_right,
+        false_or] using hi
     cases i with
     | none =>
       exact (AxisSourceRegularity.omegaDivX_smooth h u beta N w hua hba (hL w hw)).div
@@ -273,10 +279,14 @@ theorem pressureTerm_congr_germ (N : ℕ) (h C : ℝ)
     pressureTerm N h C f i w = pressureTerm N h C g i w := by
   cases i with
   | inl i =>
-    have hi' : i ∈ transportIndices N := by simpa [pressureIndices] using hi
+    have hi' : i ∈ transportIndices N := by simpa only [pressureIndices, Finset.mem_union,
+        Finset.mem_image, Sum.inl.injEq, exists_eq_right, reduceCtorEq, and_false, exists_const,
+        or_false] using hi
     exact transportTerm_congr_germ N h 0 (-(1 / 2)) hv hu hv hi'
   | inr i =>
-    have hi' : i ∈ transportIndices N := by simpa [pressureIndices] using hi
+    have hi' : i ∈ transportIndices N := by simpa only [pressureIndices, Finset.mem_union,
+        Finset.mem_image, reduceCtorEq, and_false, exists_const, Sum.inr.injEq, exists_eq_right,
+        false_or] using hi
     cases i with
     | none => exact omegaCoefficient_congr_germ h N hv hu
     | some ij =>
@@ -420,13 +430,13 @@ theorem radial_power_lower {h : ℝ} (hh : 0 ≤ h) (N : ℕ)
     2 * (N : ℝ) * h - 2 ≤ pressurePower N h i - 1 := by
   have hb := (common_tail_power_lower hh N).1
   have hp := pressurePower_lower hh N hi
-  linarith
+  linarith only [hb, hp]
 
 /-! ## Actual smoothness through `X = 0` and even radial pullbacks -/
 
 theorem radiusPoint_contDiff : ContDiff ℝ ∞ radiusPoint := by
   change ContDiff ℝ ∞ (fun w : InnerPoint => (w.1 ^ 2 / 2, w.2))
-  exact ((contDiff_fst.pow 2).div_const 2).prodMk contDiff_snd
+  exact (((contDiff_fst (𝕜 := ℝ) (E := ℝ) (F := ℝ)).pow 2).div_const 2).prodMk contDiff_snd
 
 theorem toRadius_smoothOn {O : Set InnerPoint} {f : InnerProfile}
     (hf : ContDiffOn ℝ ∞ f O) :
@@ -435,7 +445,7 @@ theorem toRadius_smoothOn {O : Set InnerPoint} {f : InnerProfile}
 
 theorem toRadius_even (f : InnerProfile) (R η : ℝ) :
     toRadius f (-R, η) = toRadius f (R, η) := by
-  simp [toRadius, radiusPoint]
+  simp only [toRadius, radiusPoint, even_two, Even.neg_pow]
 
 theorem regularTransportTerm_right_smoothOn {O : Set InnerPoint} (hO : IsOpen O)
     (N : ℕ) (h e α : ℝ) (beta u f : ℕ → InnerProfile)
@@ -511,16 +521,16 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 /-- Zero positive-order coefficient values are preserved by the actual sum,
 irrespective of the cutoff schedule. -/
 theorem slowSum_eq_leading_of_positive_zero (a : ℕ → ℕ) (h q : ℝ)
-    {f : ℕ → Inner → V} {w : Inner} (hz : ∀ j, 0 < j → f j w = 0) :
+    {f : ℕ → SlowBorelBase.Inner → V} {w : SlowBorelBase.Inner} (hz : ∀ j, 0 < j → f j w = 0) :
     slowSum a h f (q, w) = f 0 w := by
   have hs : ∀ j, slowStage a h f j (q, w) = 0 := by
     intro j
     by_cases hj : j = 0
-    · subst j; simp
+    · subst j; simp only [slowStage_zero, Pi.zero_apply]
     · rw [slowStage_eq hj]
-      simp [powerStage, powerCoefficient, hz j (Nat.pos_of_ne_zero hj)]
+      simp only [powerStage, powerCoefficient, hz j (Nat.pos_of_ne_zero hj), smul_zero]
   change f 0 w + ∑' j, slowStage a h f j (q, w) = f 0 w
-  simp [hs]
+  simp only [hs, tsum_zero, add_zero]
 
 /-- At the spatial origin the physical similarity coordinates have their
 exact values; this is not an asymptotic coordinate comparison. -/
@@ -544,13 +554,15 @@ theorem baseVelocity_at_origin {a : ℕ → ℕ} (ha : StrictMono a) {h : ℝ}
         ProblemStatement.coordinateVector 2 := by
   have hp : (AxisymmetricFields.profilePoint t (0 : ProblemStatement.Space)).1 < 1 := ht
   have hH := (physicalProfile_smoothAt ha hh hh1
-    (bundleComponent_smooth hd C 0) (-CoordinateAlgebra.A h) hp).differentiableAt (by simp)
+    (bundleComponent_smooth hd C 0) (-CoordinateAlgebra.A h) hp).differentiableAt (by simp only [
+        ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   have hK := (physicalProfile_smoothAt ha hh hh1
     (bundleComponent_smooth hd C 1) (1 / 2 - CoordinateAlgebra.A h) hp).differentiableAt (by simp)
   change AxisymmetricFields.velocity (streamFactor a h C d) (swirlPotential a h C d)
     (t, 0) = _
   unfold streamFactor swirlPotential
-  rw [AxisymmetricFields.velocity_on_axis _ _ t 0 hH hK (by simp) (by simp)]
+  rw [AxisymmetricFields.velocity_on_axis _ _ t 0 hH hK (by simp) (by simp only [Fin.isValue,
+      PiLp.zero_apply])]
   change (physicalProfile a h (-CoordinateAlgebra.A h) (bundleComponent C d 0)
     (t, (0, 0))) • _ = _
   unfold physicalProfile
@@ -583,7 +595,7 @@ theorem baseVelocity_axis_tendsto_atTop {a : ℕ → ℕ} (ha : StrictMono a) {h
     (hd : SmoothCoefficients d) (C : ℝ)
     (hz : ∀ j, 0 < j → d.axial j (0, 0) = 0) (h0 : 0 < d.axial 0 (0, 0)) :
     Tendsto (fun t : ℝ => ‖baseVelocity a h C d (t, 0)‖) (𝓝[<] 1) atTop := by
-  have hA : 0 < CoordinateAlgebra.A h := by dsimp [CoordinateAlgebra.A]; linarith
+  have hA : 0 < CoordinateAlgebra.A h := by dsimp [CoordinateAlgebra.A]; linarith only [hh, hh1]
   have ht := (BlowupImplication.negative_power_tendsto_atTop hA
     (BlowupImplication.remaining_time_tendsto 1)).atTop_mul_pos h0 tendsto_const_nhds
   apply ht.congr'
@@ -606,22 +618,22 @@ open PhysicalCoordinateBounds
 
 /-- The homogeneous lift is defined before solving the implicit coordinate
 equation. This makes its degree an exact scaling identity. -/
-noncomputable def monomialLift (a b : ℝ) (f : Inner → ℝ) (y : Chart) : ℝ :=
+noncomputable def monomialLift (a b : ℝ) (f : SlowBorelBase.Inner → ℝ) (y : Chart) : ℝ :=
   powerLift b y * f (xLift y, etaLift a y)
 
-theorem monomialLift_smooth {f : Inner → ℝ} (hf : ContDiff ℝ ∞ f) (a b : ℝ) :
+theorem monomialLift_smooth {f : SlowBorelBase.Inner → ℝ} (hf : ContDiff ℝ ∞ f) (a b : ℝ) :
     ContDiffOn ℝ ∞ (monomialLift a b f) positiveTime := by
   exact (powerLift_contDiffOn b).mul
     (hf.comp_contDiffOn (xLift_contDiffOn.prodMk (etaLift_contDiffOn a)))
 
-theorem monomialLift_homogeneous (a b : ℝ) (f : Inner → ℝ) {r : ℝ} (hr : 0 < r)
+theorem monomialLift_homogeneous (a b : ℝ) (f : SlowBorelBase.Inner → ℝ) {r : ℝ} (hr : 0 < r)
     {y : Chart} (hy : y ∈ positiveTime) :
     monomialLift a b f (dilation a r y) = r ^ b * monomialLift a b f y := by
   simp only [monomialLift, powerLift_homogeneous a b hr hy,
     xLift_homogeneous a hr hy, etaLift_homogeneous a hr hy, Real.rpow_zero, one_mul]
   ring
 
-theorem pullback_eq_homogeneous (h b : ℝ) (f : Inner → ℝ) :
+theorem pullback_eq_homogeneous (h b : ℝ) (f : SlowBorelBase.Inner → ℝ) :
     SimilarityProfile.pullback h b f =
       (monomialLift (2 * h) b f ∘ inverseCoordinates (2 * h)) ∘ timeShift := by
   rfl
@@ -629,13 +641,13 @@ theorem pullback_eq_homogeneous (h b : ℝ) (f : Inner → ℝ) :
 /-- Every smooth inner monomial has actual physical jets with a loss of one
 power per derivative. The constant is derived by compactness and scaling. -/
 theorem physical_monomial_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {f : Inner → ℝ} (hf : ContDiff ℝ ∞ f) (b lo hi qbig : ℝ) (m : ℕ) :
+    {f : SlowBorelBase.Inner → ℝ} (hf : ContDiff ℝ ∞ f) (b lo hi qbig : ℝ) (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ p : Chart, p.1 < 1 → (physicalChart h p).1 ≤ qbig →
       (physicalChart h p).2.1 ∈ Icc lo hi →
       ‖iteratedFDeriv ℝ m (SimilarityProfile.pullback h b f) p‖ ≤
         C * (physicalChart h p).1 ^ (b - m) := by
   obtain ⟨C, hC, hb⟩ := homogeneous_derivative_bound
-    (a := 2 * h) (by linarith) (by linarith) (monomialLift_smooth hf (2 * h) b)
+    (a := 2 * h) (by linarith only [hh]) (by linarith only [hh1]) (monomialLift_smooth hf (2 * h) b)
     (fun _ hr _ hy => monomialLift_homogeneous (2 * h) b f hr hy) lo hi qbig m
   refine ⟨C, hC, fun p hp hq hX => ?_⟩
   rw [pullback_eq_homogeneous, norm_iteratedFDeriv_timeShift]
@@ -643,11 +655,11 @@ theorem physical_monomial_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 /-- A local smooth coefficient has a genuine smooth extension on a
 neighborhood of a compact set. This is used only to estimate its local jets. -/
-theorem exists_local_coefficient_extension {U K : Set Inner} (hU : IsOpen U)
-    (hK : IsCompact K) (hKU : K ⊆ U) {f : Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) :
-    ∃ F : Inner → ℝ, ContDiff ℝ ∞ F ∧ ∀ w ∈ K, f =ᶠ[𝓝 w] F := by
+theorem exists_local_coefficient_extension {U K : Set SlowBorelBase.Inner} (hU : IsOpen U)
+    (hK : IsCompact K) (hKU : K ⊆ U) {f : SlowBorelBase.Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) :
+    ∃ F : SlowBorelBase.Inner → ℝ, ContDiff ℝ ∞ F ∧ ∀ w ∈ K, f =ᶠ[𝓝 w] F := by
   obtain ⟨χ⟩ := ParametricModulation.exists_compactCutoff K U hK hU hKU
-  let F : Inner → ℝ := fun w => χ.value w * f w
+  let F : SlowBorelBase.Inner → ℝ := fun w => χ.value w * f w
   have hF : ContDiff ℝ ∞ F := by
     apply contDiff_iff_contDiffAt.mpr
     intro w
@@ -655,17 +667,17 @@ theorem exists_local_coefficient_extension {U K : Set Inner} (hU : IsOpen U)
     · exact χ.smooth.contDiffAt.mul (hf.contDiffAt (hU.mem_nhds hw))
     · have he : F =ᶠ[𝓝 w] (fun _ => 0) := by
         filter_upwards [χ.zero_near w hw] with v hv
-        simp [F, hv]
+        simp only [hv, zero_mul, F]
       exact contDiffAt_const.congr_of_eventuallyEq he
   refine ⟨F, hF, fun w hw => ?_⟩
   filter_upwards [χ.open_neighborhood.mem_nhds (χ.contains hw)] with v hv
-  simp [F, χ.one_on v hv]
+  simp only [χ.one_on v hv, one_mul, F]
 
 /-- Local coefficient regularity suffices for the physical estimate. All
 coefficients with `1/X` or `1/L` may therefore stay on their true domain. -/
 theorem physical_monomial_bound_on {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {U K : Set Inner} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
-    {f : Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) (b lo hi qbig : ℝ) (m : ℕ) :
+    {U K : Set SlowBorelBase.Inner} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
+    {f : SlowBorelBase.Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) (b lo hi qbig : ℝ) (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ p : Chart, p.1 < 1 → (physicalChart h p).1 ≤ qbig →
       (physicalChart h p).2.1 ∈ Icc lo hi → (physicalChart h p).2 ∈ K →
       ‖iteratedFDeriv ℝ m (SimilarityProfile.pullback h b f) p‖ ≤
@@ -691,18 +703,19 @@ open ProblemStatement
 
 /-- Cartesian monomial, given by `SimilarityProfile.pullback h b f
 (AxisymmetricFields.profilePoint z.1 z.2)`. -/
-noncomputable def cartesianMonomial (h b : ℝ) (f : Inner → ℝ) (z : SpaceTime) : ℝ :=
+noncomputable def cartesianMonomial (h b : ℝ) (f : SlowBorelBase.Inner → ℝ) (z : SpaceTime) : ℝ :=
   SimilarityProfile.pullback h b f (AxisymmetricFields.profilePoint z.1 z.2)
 
 theorem cartesianMonomial_smoothAt {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {f : Inner → ℝ} {z : SpaceTime} (ht : z.1 < 1)
+    {f : SlowBorelBase.Inner → ℝ} {z : SpaceTime} (ht : z.1 < 1)
     (hf : ContDiffAt ℝ ∞ f (cartesianChart h z).2) :
     ContDiffAt ℝ ∞ (cartesianMonomial h b f) z :=
-  (SimilarityProfile.pullback_smoothAt hh hh1 ht hf).comp z
+  (SimilarityProfile.pullback_smoothAt (p := AxisymmetricFields.profilePoint z.1 z.2)
+    hh hh1 ht hf).comp z
     AxisymmetricFields.contDiff_profilePoint.contDiffAt
 
 theorem physical_monomial_finite_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {f : Inner → ℝ} (hf : ContDiff ℝ ∞ f) (b lo hi : ℝ) (M : ℕ) :
+    {f : SlowBorelBase.Inner → ℝ} (hf : ContDiff ℝ ∞ f) (b lo hi : ℝ) (M : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ p : Chart, p.1 < 1 → (physicalChart h p).1 ≤ 1 →
       (physicalChart h p).2.1 ∈ Icc lo hi → ∀ m ≤ M,
       ‖iteratedFDeriv ℝ m (SimilarityProfile.pullback h b f) p‖ ≤
@@ -711,14 +724,14 @@ theorem physical_monomial_finite_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   choose A hA hAb using fun m => physical_monomial_bound hh hh1 hf b lo hi 1 m
   let C := 1 + ∑ i ∈ Finset.range (M + 1), A i
   have hC : 0 < C := by
-    dsimp [C]
+    dsimp only [C]
     exact add_pos_of_pos_of_nonneg zero_lt_one (Finset.sum_nonneg (fun i _ => (hA i).le))
   refine ⟨C, hC, fun p hp hq hX m hm => ?_⟩
   have hAm : A m ≤ C := by
     have hs := Finset.single_le_sum (fun i (_ : i ∈ Finset.range (M + 1)) => (hA i).le)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hm))
-    dsimp [C]
-    linarith
+    dsimp only [C]
+    linarith only [hh, hh1, hs]
   have hqm := Real.rpow_le_rpow_of_exponent_ge (physicalChart_positive hh hh1 hp) hq
     (show b - (M : ℝ) ≤ b - m by exact sub_le_sub_left (by exact_mod_cast hm) b)
   exact (hAb m p hp hq hX).trans (mul_le_mul hAm hqm
@@ -727,7 +740,7 @@ theorem physical_monomial_finite_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 /-- On a fixed compact Cartesian set, polynomial reconstruction from squared
 radius adds a constant but no further loss of powers. -/
 theorem cartesian_monomial_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {f : Inner → ℝ} (hf : ContDiff ℝ ∞ f) (b lo hi : ℝ)
+    {f : SlowBorelBase.Inner → ℝ} (hf : ContDiff ℝ ∞ f) (b lo hi : ℝ)
     {K : Set SpaceTime} (hK : IsCompact K) (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ z ∈ K, z.1 < 1 → (cartesianChart h z).1 ≤ 1 →
       (cartesianChart h z).2.1 ∈ Icc lo hi →
@@ -758,8 +771,8 @@ theorem cartesian_monomial_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   exact hc.trans_eq (by ring)
 
 theorem cartesian_monomial_bound_on {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {U K : Set Inner} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
-    {f : Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) (b lo hi : ℝ)
+    {U K : Set SlowBorelBase.Inner} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
+    {f : SlowBorelBase.Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) (b lo hi : ℝ)
     {B : Set SpaceTime} (hB : IsCompact B) (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ z ∈ B, z.1 < 1 → (cartesianChart h z).1 ≤ 1 →
       (cartesianChart h z).2.1 ∈ Icc lo hi → (cartesianChart h z).2 ∈ K →
@@ -791,8 +804,8 @@ theorem norm_jet_sum_le {D V : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D]
 /-- A finite family of genuine local coefficient functions yields the
 expected power bound for every actual Cartesian jet of its sum. -/
 theorem cartesian_finite_monomials_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {U K : Set Inner} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
-    {ι : Type*} [Fintype ι] (f : ι → Inner → ℝ) (hf : ∀ i, ContDiffOn ℝ ∞ (f i) U)
+    {U K : Set SlowBorelBase.Inner} (hU : IsOpen U) (hK : IsCompact K) (hKU : K ⊆ U)
+    {ι : Type*} [Fintype ι] (f : ι → SlowBorelBase.Inner → ℝ) (hf : ∀ i, ContDiffOn ℝ ∞ (f i) U)
     (b : ι → ℝ) (bmin lo hi : ℝ) (hmin : ∀ i, bmin ≤ b i)
     {B : Set SpaceTime} (hB : IsCompact B) (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ z ∈ B, z.1 < 1 → (cartesianChart h z).1 ≤ 1 →
@@ -816,7 +829,7 @@ theorem cartesian_finite_monomials_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2
       exact (hAb i z hz ht hq hX hw).trans (mul_le_mul_of_nonneg_left
         (Real.rpow_le_rpow_of_exponent_ge hqp hq (sub_le_sub_right (hmin i) _)) (hA i).le)
     _ = (∑ i, A i) * (cartesianChart h z).1 ^ (bmin - m) := by rw [Finset.sum_mul]
-    _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith) (Real.rpow_nonneg hqp.le _)
+    _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith only [hh, hh1]) (Real.rpow_nonneg hqp.le _)
 
 end CartesianMonomials
 
@@ -848,7 +861,7 @@ theorem PhysicalApproach.positive_small {l : Filter SpaceTime} {h lo hi : ℝ}
 
 theorem cartesian_fixed_prefix_bound {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {f : ℕ → Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (lo hi b : ℝ)
+    {f : ℕ → SlowBorelBase.Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (lo hi b : ℝ)
     (ha : AdmissibleScales h f (innerBox lo hi) a)
     {K : Set SpaceTime} (hK : IsCompact K) (J m : ℕ) (hm : m ≤ J + 3) :
     ∃ δ C : ℝ, 0 < δ ∧ 0 < C ∧ ∀ z ∈ K, z.1 < 1 →
@@ -887,7 +900,7 @@ theorem cartesian_prefix_finiteJetRate
     {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     {l : Filter SpaceTime} {a : ℕ → ℕ} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {f : ℕ → Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (b : ℝ)
+    {f : ℕ → SlowBorelBase.Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (b : ℝ)
     (ha : AdmissibleScales h f (innerBox lo hi) a)
     (J M : ℕ) (hM : M ≤ J + 3) :
     FiniteJetRate l (fun z => (cartesianChart h z).1)
@@ -905,7 +918,7 @@ theorem cartesian_prefix_finiteJetRate
     exact hb z hz ht hq hX
   apply hr.weaken (A.positive_small hh hh1)
   have hmR : (m : ℝ) ≤ M := by exact_mod_cast hm
-  linarith
+  linarith only [hmR]
 
 end FixedPrefixRates
 
@@ -979,16 +992,18 @@ theorem finiteRate_bilinear {l : Filter D} {q : D → ℝ} {f : D → E} {g : D 
     FiniteJetRate l q (fun x => L (f x) (g x)) M (r + s) := by
   obtain ⟨A, hA, ha⟩ := hf
   obtain ⟨B, hB, hb⟩ := hg
-  refine ⟨‖L‖ * (2 : ℝ) ^ M * A * B, by positivity, ?_⟩
+  refine ⟨‖L‖ * (2 : ℝ) ^ M * A * B,
+    mul_nonneg (mul_nonneg (mul_nonneg (norm_nonneg L) (pow_nonneg zero_le_two M)) hA) hB, ?_⟩
   filter_upwards [hlU, hq, ha, hb] with x hx hqx hax hbx
   intro m hm
   calc
     _ ≤ ‖L‖ * (2 : ℝ) ^ m * (A * q x ^ r) * (B * q x ^ s) :=
       ResidualStability.norm_jet_bilinear_bound L hU hsf hsg hx m
         (fun k hk => hax k (hk.trans hm)) (fun k hk => hbx k (hk.trans hm))
-    _ ≤ ‖L‖ * (2 : ℝ) ^ M * (A * q x ^ r) * (B * q x ^ s) := by
-      gcongr
-      norm_num
+    _ ≤ ‖L‖ * (2 : ℝ) ^ M * (A * q x ^ r) * (B * q x ^ s) :=
+      mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_left (pow_le_pow_right₀ one_le_two hm) (norm_nonneg L))
+        (mul_nonneg hA (Real.rpow_nonneg hqx.le r))) (mul_nonneg hB (Real.rpow_nonneg hqx.le s))
     _ = (‖L‖ * (2 : ℝ) ^ M * A * B) * q x ^ (r + s) := by
       rw [Real.rpow_add hqx]
       ring
@@ -1123,7 +1138,7 @@ noncomputable def prefixPressure (J : ℕ) (h C : ℝ) (d : Coefficients) : Pres
   cartesianUncutPrefix h (-2 * CoordinateAlgebra.A h) (bundleComponent C d 2) J
 
 theorem cartesianProfile_smooth {a : ℕ → ℕ} (ha : StrictMono a) {h b : ℝ}
-    (hh : 0 < h) (hh1 : h < 1 / 2) {f : ℕ → Inner → ℝ}
+    (hh : 0 < h) (hh1 : h < 1 / 2) {f : ℕ → SlowBorelBase.Inner → ℝ}
     (hf : ∀ j, ContDiff ℝ ∞ (f j)) : ContDiffOn ℝ ∞ (cartesianProfile a h b f) past := by
   intro z hz
   exact ((physicalProfile_smoothAt ha hh hh1 hf b
@@ -1131,7 +1146,7 @@ theorem cartesianProfile_smooth {a : ℕ → ℕ} (ha : StrictMono a) {h b : ℝ
     AxisymmetricFields.contDiff_profilePoint.contDiffAt).contDiffWithinAt
 
 theorem cartesianUncutPrefix_smooth {h b : ℝ}
-    (hh : 0 < h) (hh1 : h < 1 / 2) {f : ℕ → Inner → ℝ}
+    (hh : 0 < h) (hh1 : h < 1 / 2) {f : ℕ → SlowBorelBase.Inner → ℝ}
     (hf : ∀ j, ContDiff ℝ ∞ (f j)) (J : ℕ) :
     ContDiffOn ℝ ∞ (cartesianUncutPrefix h b f J) past := by
   intro z hz
@@ -1186,7 +1201,7 @@ theorem potential_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo h
   have hr := potentialFromScalars_rate past_isOpen hp (hq.mono (fun _ hz => hz.1))
     A.compact A.in_carrier hHs hKs hH
     (finiteRate_weaken hK hq (show h * (J + 1) + -CoordinateAlgebra.A h - 2 * M ≤
-      h * (J + 1) + (1 / 2 - CoordinateAlgebra.A h) - 2 * M by linarith))
+      h * (J + 1) + (1 / 2 - CoordinateAlgebra.A h) - 2 * M by linear_combination))
   have he : (fun z => summedPotential a h C d z - prefixPotential J h C d z) =
       potentialFromScalars
         (fun z => cartesianProfile a h (-CoordinateAlgebra.A h) (bundleComponent C d 0) z -
@@ -1228,12 +1243,14 @@ theorem spatialCurl_finiteRate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
     (hF.fderiv_of_isOpen hU (by simp)) (SpatialCurl.curlLinear.comp (spaceRestriction Space))
   apply finiteRate_congr_on hd hU hlU
   intro z hz
-  exact (spatialCurl_eq_full ((hF.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp))).symm
+  exact (spatialCurl_eq_full ((hF.contDiffAt (hU.mem_nhds hz)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))).symm
 
 theorem prefixVelocity_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {d : Coefficients} (hd : SmoothCoefficients d) (J : ℕ) (C : ℝ) :
     ContDiffOn ℝ ∞ (prefixVelocity J h C d) past :=
-  SpatialCurl.contDiffOn_spatialCurl (prefixPotential_smooth hh hh1 hd J C) (by simp)
+  SpatialCurl.contDiffOn_spatialCurl (prefixPotential_smooth hh hh1 hd J C) (by simp only [
+      ENat.coe_top_add_one, Std.le_refl])
 
 theorem velocity_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
@@ -1251,8 +1268,10 @@ theorem velocity_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi
   simp only [Nat.cast_add, Nat.cast_one] at hr
   apply finiteRate_congr_on hr past_isOpen hp
   intro z hz
-  exact spatialCurl_sub ((hs.contDiffAt (past_isOpen.mem_nhds hz)).differentiableAt (by simp))
-    ((hJ.contDiffAt (past_isOpen.mem_nhds hz)).differentiableAt (by simp))
+  exact spatialCurl_sub ((hs.contDiffAt (past_isOpen.mem_nhds hz)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
+    ((hJ.contDiffAt (past_isOpen.mem_nhds hz)).differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
 
 theorem pressure_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
@@ -1273,7 +1292,7 @@ section PrefixGrowth
 open ProblemStatement DiagonalResidual SlowExpansionResidual
 
 theorem cartesianUncutPrefix_eq_sum {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    (b : ℝ) (f : ℕ → Inner → ℝ) (J : ℕ) {z : SpaceTime} (ht : z.1 < 1) :
+    (b : ℝ) (f : ℕ → SlowBorelBase.Inner → ℝ) (J : ℕ) {z : SpaceTime} (ht : z.1 < 1) :
     cartesianUncutPrefix h b f J z =
       ∑ i : Fin (J + 1), cartesianMonomial h (b + slowOrder h i) (f i) z := by
   unfold cartesianUncutPrefix
@@ -1282,7 +1301,7 @@ theorem cartesianUncutPrefix_eq_sum {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 theorem cartesian_prefix_growth {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {f : ℕ → Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (b : ℝ) (J M : ℕ) :
+    {f : ℕ → SlowBorelBase.Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (b : ℝ) (J M : ℕ) :
     FiniteJetRate l (fun z => (cartesianChart h z).1) (cartesianUncutPrefix h b f J)
       M (b - M) := by
   have hq := A.positive_small hh hh1
@@ -1319,7 +1338,7 @@ theorem prefixPotential_growth {l : Filter SpaceTime} {h C lo hi : ℝ}
     (cartesianUncutPrefix_smooth (b := -CoordinateAlgebra.A h) hh hh1 (bundleComponent_smooth hd C
         0) J)
     (cartesianUncutPrefix_smooth (b := 1 / 2 - CoordinateAlgebra.A h) hh hh1
-      (bundleComponent_smooth hd C 1) J) hrH (finiteRate_weaken hrK hq (by linarith))
+      (bundleComponent_smooth hd C 1) J) hrH (finiteRate_weaken hrK hq (by linear_combination))
   simp only [prefixPotential, potential_eq_scalars] at hr ⊢
   exact hr
 
@@ -1361,7 +1380,7 @@ theorem cartesianDerivative_smooth {F : Chart → ℝ} (hF : ContDiffOn ℝ ∞ 
 before the polynomial Cartesian coordinate map is applied. -/
 theorem derivative_fixed_prefix_bound {a : ℕ → ℕ} {h : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2)
-    {f : ℕ → Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (lo hi b : ℝ)
+    {f : ℕ → SlowBorelBase.Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (lo hi b : ℝ)
     (ha : AdmissibleScales h f (innerBox lo hi) a)
     {K : Set SpaceTime} (hK : IsCompact K) (v : Chart) (J m : ℕ) (hm : m + 1 ≤ J + 3) :
     ∃ δ C : ℝ, 0 < δ ∧ 0 < C ∧ ∀ z ∈ K, z.1 < 1 →
@@ -1374,11 +1393,12 @@ theorem derivative_fixed_prefix_bound {a : ℕ → ℕ} {h : ℝ}
   let G : SpaceTime → Chart := fun z => AxisymmetricFields.profilePoint z.1 z.2
   have hG : ContDiff ℝ ∞ G := AxisymmetricFields.contDiff_profilePoint
   obtain ⟨D, hD, hDb⟩ := compact_map_finite_bound hG hK m
-  let L := ContinuousLinearMap.apply ℝ ℝ v
+  let L := ContinuousLinearMap.apply ℝ ℝ (E := Chart) v
   let B := 1 + ‖L‖ * C
-  have hB : 0 < B := by dsimp [B]; positivity
+  have hB : 0 < B := add_pos_of_pos_of_nonneg zero_lt_one (mul_nonneg (norm_nonneg L) hC.le)
   have hDpos : 0 < D := lt_of_lt_of_le zero_lt_one hD
-  refine ⟨δ, (m.factorial : ℝ) * B * D ^ m, hδ, by positivity, ?_⟩
+  refine ⟨δ, (m.factorial : ℝ) * B * D ^ m, hδ,
+    mul_pos (mul_pos (Nat.cast_pos.mpr m.factorial_pos) hB) (pow_pos hDpos m), ?_⟩
   intro z hz ht hq hX
   let F : Chart → ℝ := fun p => physicalProfile a h b f p - physicalUncutPrefix h b f J p
   have hF : ContDiffOn ℝ ∞ F profilePast := by
@@ -1410,7 +1430,7 @@ theorem derivative_fixed_prefix_bound {a : ℕ → ℕ} {h : ℝ}
 
 theorem derivative_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {f : ℕ → Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (b : ℝ)
+    {f : ℕ → SlowBorelBase.Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (b : ℝ)
     (ha : AdmissibleScales h f (innerBox lo hi) a)
     (v : Chart) (J M : ℕ) (hM : M + 1 ≤ J + 3) :
     FiniteJetRate l (fun z => (cartesianChart h z).1)
@@ -1429,7 +1449,7 @@ theorem derivative_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h lo hi
     exact hb z hz ht hsmall hX
   apply hr.weaken hq
   have hmR : (m : ℝ) ≤ M := by exact_mod_cast hm
-  linarith
+  linarith only [hmR]
 
 end ProfileDerivatives
 
@@ -1461,8 +1481,8 @@ theorem PhysicalApproach.in_annularPast {l : Filter SpaceTime} {h lo hi : ℝ}
 
 theorem monomial_finiteRate_on {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {U : Set Inner} (hU : IsOpen U) (hKU : innerBox lo hi ⊆ U)
-    {f : Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) (b : ℝ) (M : ℕ) :
+    {U : Set SlowBorelBase.Inner} (hU : IsOpen U) (hKU : innerBox lo hi ⊆ U)
+    {f : SlowBorelBase.Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) (b : ℝ) (M : ℕ) :
     FiniteJetRate l (fun z => (cartesianChart h z).1) (cartesianMonomial h b f) M (b - M) := by
   have hq := A.positive_small hh hh1
   apply finiteJetRate_of_jetRate (hq.mono (fun _ hz => hz.1))
@@ -1506,10 +1526,10 @@ theorem radialPower_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi) (hlo : 0 < lo)
     (c : ℝ) (M : ℕ) :
     FiniteJetRate l (fun z => (cartesianChart h z).1) (radialPower c) M (c - M) := by
-  let U : Set Inner := {w | 0 < w.1}
+  let U : Set SlowBorelBase.Inner := {w | 0 < w.1}
   have hU : IsOpen U := isOpen_lt continuous_const continuous_fst
   have hKU : innerBox lo hi ⊆ U := fun w hw => hlo.trans_le hw.1.1
-  have hf : ContDiffOn ℝ ∞ (fun w : Inner => (2 * w.1) ^ c) U := by
+  have hf : ContDiffOn ℝ ∞ (fun w : SlowBorelBase.Inner => (2 * w.1) ^ c) U := by
     intro w hw
     have hwpos : 0 < w.1 := hw
     exact ((contDiffAt_const.mul contDiffAt_fst).rpow_const_of_ne
@@ -1571,7 +1591,11 @@ theorem stressForce_eq_scalars (theta axial : Chart → ℝ) {z : SpaceTime}
       AxisymmetricResidual.pack, AxisymmetricFields.profilePoint, coordinateVector,
       PiLp.single_apply, PiLp.add_apply, PiLp.smul_apply,
       smul_eq_mul, Fin.zero_eta, Fin.isValue, ↓reduceIte, one_mul, mul_one]
-  all_goals norm_num [Fin.ext_iff]
+  all_goals simp only [Fin.isValue, Nat.ofNat_nonneg, Real.sqrt_mul, zero_ne_one, one_ne_zero,
+    ↓reduceIte, mul_zero, add_zero, zero_add, mul_one, neg_add_rev, Fin.ext_iff, Nat.reduceAdd,
+    Fin.coe_ofNat_eq_mod, Nat.zero_mod, Nat.one_mod, Nat.mod_succ, OfNat.zero_ne_ofNat,
+    OfNat.one_ne_ofNat, OfNat.ofNat_ne_zero, OfNat.ofNat_ne_one, Fin.mk_one, Fin.reduceFinMk,
+    one_div, neg_mul, mul_neg, neg_neg]
   all_goals dsimp only [r] at hr hr2 ⊢
   all_goals simp only [Real.sqrt_mul (show (0 : ℝ) ≤ 2 by norm_num)] at hr hr2 ⊢
   all_goals field_simp [hr]
@@ -1603,7 +1627,13 @@ theorem stressForce_sub {theta axial theta' axial' : Chart → ℝ} {z : SpaceTi
     LeadingStress.radialDivergence, SimilarityProfile.partialS,
     fderiv_fun_sub ht ht', fderiv_fun_sub ha ha', sub_apply]
   ext i
-  fin_cases i <;> simp [AxisymmetricResidual.pack, coordinateVector] <;> ring
+  fin_cases i <;>
+    simp only [AxisymmetricResidual.pack, Fin.isValue, Nat.ofNat_nonneg, Real.sqrt_mul,
+      coordinateVector, one_mul, neg_add_rev, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk,
+      PiLp.add_apply, PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq,
+      zero_ne_one, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero,
+      zero_add, Fin.reduceEq, PiLp.sub_apply] <;>
+    ring
 
 theorem scalarConst_rate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
     {F : SpaceTime → ℝ} {U : Set SpaceTime} {M : ℕ} {r : ℝ}
@@ -1636,9 +1666,9 @@ theorem stressForce_rate {l : Filter SpaceTime} {h lo hi : ℝ}
   have hads := (cartesianDerivative_smooth ha (0, (1, 0))).mono annularPast_subset
   have hr0 := radialPower_rate hh hh1 A hlo (-1) M
   have hrp := finiteRate_weaken (radialPower_rate hh hh1 A hlo (1 / 2) M) hq
-    (show -1 - (M : ℝ) ≤ 1 / 2 - M by linarith)
+    (sub_le_sub_right (by norm_num : (-1 : ℝ) ≤ 1 / 2) _)
   have hrn := finiteRate_weaken (radialPower_rate hh hh1 A hlo (-(1 / 2)) M) hq
-    (show -1 - (M : ℝ) ≤ -(1 / 2) - M by linarith)
+    (sub_le_sub_right (by norm_num : (-1 : ℝ) ≤ -(1 / 2)) _)
   have hpt := finiteRate_bilinear hr0 htv hU hlU hq0 (radialPower_smooth (-1)) hts
     (ContinuousLinearMap.mul ℝ ℝ)
   have hpa := finiteRate_bilinear hrp had hU hlU hq0 (radialPower_smooth (1 / 2)) hads
@@ -1648,8 +1678,8 @@ theorem stressForce_rate {l : Filter SpaceTime} {h lo hi : ℝ}
   have hexp : -1 - (M : ℝ) + r = r - 1 - M := by ring
   rw [hexp] at hpt hpa hqa
   have hpt2 := scalarConst_rate hpt hU hlU ((radialPower_smooth (-1)).mul hts) 2
-  have hdt := finiteRate_weaken htd hq (show r - 1 - M ≤ r by
-    have := Nat.cast_nonneg (α := ℝ) M; linarith)
+  have hdt := finiteRate_weaken htd hq
+    ((sub_le_self _ (Nat.cast_nonneg M)).trans (sub_le_self r zero_le_one))
   have hs0 := scalarConst_rate (finiteRate_add hdt hpt2 hU hlU htds
     (contDiffOn_const.mul ((radialPower_smooth (-1)).mul hts))) hU hlU
     (htds.add (contDiffOn_const.mul ((radialPower_smooth (-1)).mul hts))) (-2)
@@ -1702,7 +1732,7 @@ noncomputable def prefixStressForce (J : ℕ) (h C : ℝ) (d : Coefficients) : V
   stressForce (prefixStressTheta J h C d) (prefixStressAxial J h C d)
 
 theorem prefixProfile_smooth {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {f : ℕ → Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (J : ℕ) :
+    {f : ℕ → SlowBorelBase.Inner → ℝ} (hf : ∀ j, ContDiff ℝ ∞ (f j)) (J : ℕ) :
     ContDiffOn ℝ ∞ (physicalUncutPrefix h b f J) profilePast :=
   fun _p hp => (physicalUncutPrefix_smoothAt hh hh1 hf b J hp.1).contDiffWithinAt
 
@@ -1749,21 +1779,26 @@ theorem stress_prefix_rate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi :
   have hz1 := derivative_prefix_rate hh hh1 A (bundleComponent_smooth hd C 4) b
     (admissible_component hd ha 4) (0, (1, 0)) J M hM
   have hr := stressForce_rate hh hh1 A hlo hts hzs M (h * (J + 1) + b - 2 * (M + 1))
-    (finiteRate_weaken ht0 hq (by linarith)) (finiteRate_weaken hz0 hq (by linarith)) ht1 hz1
+    (finiteRate_weaken ht0 hq (by linear_combination))
+    (finiteRate_weaken hz0 hq (by linear_combination)) ht1 hz1
   have he : h * (J + 1) + b - 2 * ((M : ℝ) + 1) - 1 - M =
-      h * (J + 1) - CoordinateAlgebra.A h - 1 / 2 - 3 * (M + 1) := by dsimp [b]; ring
+      h * (J + 1) - CoordinateAlgebra.A h - 1 / 2 - 3 * (M + 1) := by dsimp only [b]; ring
   rw [he] at hr
   apply finiteRate_congr_on hr annularPast_isOpen (A.in_annularPast hh hh1 hlo)
   intro z hz
   apply stressForce_sub
   · exact (physicalProfile_smoothAt ha.strictMono hh hh1 (bundleComponent_smooth hd C 3) b
-      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp)
+      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp only [ne_eq,
+          WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   · exact (physicalProfile_smoothAt ha.strictMono hh hh1 (bundleComponent_smooth hd C 4) b
-      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp)
+      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp only [ne_eq,
+          WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   · exact (physicalUncutPrefix_smoothAt hh hh1 (bundleComponent_smooth hd C 3) b J
-      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp)
+      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp only [ne_eq,
+          WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   · exact (physicalUncutPrefix_smoothAt hh hh1 (bundleComponent_smooth hd C 4) b J
-      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp)
+      (p := AxisymmetricFields.profilePoint z.1 z.2) hz.1).differentiableAt (by simp only [ne_eq,
+          WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
 
 end StressPrefix
 
@@ -1772,23 +1807,24 @@ section FiniteTailRates
 open ProblemStatement DiagonalResidual SlowExpansionResidual SlowResidualMatching
 
 /-- Charted domain, given by `{z | z.1 < 1 ∧ (cartesianChart h z).2 ∈ U}`. -/
-noncomputable def chartedDomain (h : ℝ) (U : Set Inner) : Set SpaceTime :=
+noncomputable def chartedDomain (h : ℝ) (U : Set SlowBorelBase.Inner) : Set SpaceTime :=
   {z | z.1 < 1 ∧ (cartesianChart h z).2 ∈ U}
 
 theorem chartedDomain_isOpen {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {U : Set Inner} (hU : IsOpen U) : IsOpen (chartedDomain h U) :=
+    {U : Set SlowBorelBase.Inner} (hU : IsOpen U) : IsOpen (chartedDomain h U) :=
   (SimilarityProfile.isOpen_physicalDomain hh hh1 hU).preimage
     (AxisymmetricFields.contDiff_profilePoint (n := ∞)).continuous
 
 theorem PhysicalApproach.in_chartedDomain {l : Filter SpaceTime} {h lo hi : ℝ}
     (A : PhysicalApproach l h lo hi) (hh : 0 < h) (hh1 : h < 1 / 2)
-    {U : Set Inner} (hU : innerBox lo hi ⊆ U) :
+    {U : Set SlowBorelBase.Inner} (hU : innerBox lo hi ⊆ U) :
     ∀ᶠ z in l, z ∈ chartedDomain h U := by
   filter_upwards [A.past, A.radial] with z ht hX
   exact ⟨ht, hU (physicalChart_inner_mem hh hh1 ht hX)⟩
 
 theorem monomial_smoothOn {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {U : Set Inner} (hU : IsOpen U) {f : Inner → ℝ} (hf : ContDiffOn ℝ ∞ f U) :
+    {U : Set SlowBorelBase.Inner} (hU : IsOpen U) {f : SlowBorelBase.Inner → ℝ}
+    (hf : ContDiffOn ℝ ∞ f U) :
     ContDiffOn ℝ ∞ (cartesianMonomial h b f) (chartedDomain h U) := by
   intro z hz
   exact (cartesianMonomial_smoothAt hh hh1 hz.1
@@ -1796,8 +1832,8 @@ theorem monomial_smoothOn {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 theorem finset_monomial_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {U : Set Inner} (hU : IsOpen U) (hKU : innerBox lo hi ⊆ U)
-    {ι : Type*} (s : Finset ι) (f : ι → Inner → ℝ) (b : ι → ℝ) (bmin : ℝ)
+    {U : Set SlowBorelBase.Inner} (hU : IsOpen U) (hKU : innerBox lo hi ⊆ U)
+    {ι : Type*} (s : Finset ι) (f : ι → SlowBorelBase.Inner → ℝ) (b : ι → ℝ) (bmin : ℝ)
     (hf : ∀ i ∈ s, ContDiffOn ℝ ∞ (f i) U) (hmin : ∀ i ∈ s, bmin ≤ b i) (M : ℕ) :
     FiniteJetRate l (fun z => (cartesianChart h z).1)
       (fun z => ∑ i ∈ s, cartesianMonomial h (b i) (f i) z) M (bmin - M) := by
@@ -1846,8 +1882,13 @@ theorem assembleComponents_eq_pack (R A Z : SpaceTime → ℝ) (z : SpaceTime) :
       AxisymmetricResidual.pack (z.2 0 * R z - z.2 1 * A z)
         (z.2 1 * R z + z.2 0 * A z) (Z z) := by
   ext i
-  fin_cases i <;> simp [assembleComponents, radialVector, angularVector,
-    AxisymmetricResidual.pack, coordinateVector] <;> ring
+  fin_cases i <;>
+    simp only [assembleComponents, radialVector, Fin.isValue, coordinateVector, smul_add,
+      angularVector, neg_smul, smul_neg, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk,
+      PiLp.add_apply, PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq,
+      zero_ne_one, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero,
+      zero_add, PiLp.neg_apply, neg_zero, Fin.reduceEq, AxisymmetricResidual.pack] <;>
+    ring
 
 theorem assembleComponents_rate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
     {U B : Set SpaceTime} (hU : IsOpen U) (hlU : ∀ᶠ z in l, z ∈ U)
@@ -1870,7 +1911,7 @@ theorem assembleComponents_rate {l : Filter SpaceTime} {q : SpaceTime → ℝ}
 /-- Transport tail field, given by `transportTail N (cartesianChart h z).1 h e α v u f
 (cartesianChart h z).2`. -/
 noncomputable def transportTailField (N : ℕ) (h e α : ℝ)
-    (v u f : ℕ → Inner → ℝ) (z : SpaceTime) : ℝ :=
+    (v u f : ℕ → SlowBorelBase.Inner → ℝ) (z : SpaceTime) : ℝ :=
   transportTail N (cartesianChart h z).1 h e α v u f (cartesianChart h z).2
 
 /-- Radial tail field, given by `pressureTail N (cartesianChart h z).1 h C f (cartesianChart h
@@ -1879,7 +1920,7 @@ noncomputable def radialTailField (N : ℕ) (h C : ℝ) (f : SlowProfiles) (z : 
   pressureTail N (cartesianChart h z).1 h C f (cartesianChart h z).2 /
     (2 * AxisymmetricFields.radialEnergy z.2)
 
-theorem transportTailField_eq (N : ℕ) (h e α : ℝ) (v u f : ℕ → Inner → ℝ) :
+theorem transportTailField_eq (N : ℕ) (h e α : ℝ) (v u f : ℕ → SlowBorelBase.Inner → ℝ) :
     transportTailField N h e α v u f =
       (fun z => ∑ i ∈ transportIndices N,
         cartesianMonomial h (transportPower N h e i) (transportTerm N h e α v u f i) z) := by
@@ -1888,7 +1929,8 @@ theorem transportTailField_eq (N : ℕ) (h e α : ℝ) (v u f : ℕ → Inner �
       z).2
 
 theorem transportTailField_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (e α : ℝ) (v u f : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (e α : ℝ)
+    (v u f : ℕ → SlowBorelBase.Inner → ℝ)
     (hv : ∀ j ≤ N, ContDiffOn ℝ ∞ (v j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (u j) O)
     (hf : ∀ j ≤ N, ContDiffOn ℝ ∞ (f j) O)
@@ -1900,8 +1942,8 @@ theorem transportTailField_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 theorem transportTailField_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {O : Set Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
-    (N : ℕ) (e α : ℝ) (v u f : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
+    (N : ℕ) (e α : ℝ) (v u f : ℕ → SlowBorelBase.Inner → ℝ)
     (hv : ∀ j ≤ N, ContDiffOn ℝ ∞ (v j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (u j) O)
     (hf : ∀ j ≤ N, ContDiffOn ℝ ∞ (f j) O)
@@ -1932,7 +1974,7 @@ theorem radialTailExpression_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   (radialTail_eq_finite_monomials hh hh1 N C f hz.1 hz.2).symm
 
 theorem radialTailExpression_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ) (f : SlowProfiles)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ) (f : SlowProfiles)
     (hv : ∀ j ≤ N, ContDiffOn ℝ ∞ (f.flux j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (f.axial j) O)
     (hf : ∀ j ≤ N, ContDiffOn ℝ ∞ (f.phi j) O)
@@ -1946,7 +1988,7 @@ theorem radialTailExpression_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 theorem radialTailExpression_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {O : Set Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
     (N : ℕ) (C : ℝ) (f : SlowProfiles)
     (hv : ∀ j ≤ N, ContDiffOn ℝ ∞ (f.flux j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (f.axial j) O)
@@ -1962,14 +2004,14 @@ theorem radialTailExpression_rate {l : Filter SpaceTime} {h lo hi : ℝ}
       (contDiffOn_const.mul contDiffOn_fst) (fun w hw => mul_ne_zero (by norm_num) (hX w hw))
   · intro i hi
     have hp := pressurePower_lower hh.le N hi
-    linarith
+    linarith only [hp]
 
 /-- The actual finite residual left by the recurrence has arbitrary
 increasing order as the truncation index increases. Its rate is derived
 from the explicit omitted monomials, not supplied as a hypothesis. -/
 theorem truncationResidual_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi) (hlo : 0 < lo)
-    {O : Set Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
     (N : ℕ) (C : ℝ) (f : SlowProfiles)
     (hv : ∀ j ≤ N, ContDiffOn ℝ ∞ (f.flux j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (f.axial j) O)
@@ -2061,7 +2103,7 @@ theorem baseResidual_jetRate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi) (hlo : 0 < lo)
     {d : Coefficients} (hd : SmoothCoefficients d)
     (ha : AdmissibleScales h (coefficientBundle C d) (innerBox lo hi) a)
-    (f : SlowProfiles) {O : Set Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
+    (f : SlowProfiles) {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
     (hv : ∀ j, ContDiffOn ℝ ∞ (f.flux j) O)
     (hu : ∀ j, ContDiffOn ℝ ∞ (f.axial j) O)
     (hf : ∀ j, ContDiffOn ℝ ∞ (f.phi j) O)
@@ -2069,9 +2111,9 @@ theorem baseResidual_jetRate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi
     (hfinite : FiniteIdentities h C d f) (m : ℕ) (n : ℝ) (hn : 0 ≤ n) :
     JetRate l (fun z => (cartesianChart h z).1) (baseResidual a h C d) m n := by
   let b : ℝ := CoordinateAlgebra.A h + m + 2
-  have hA : 0 < CoordinateAlgebra.A h := by unfold CoordinateAlgebra.A; linarith
+  have hA : 0 < CoordinateAlgebra.A h := add_pos one_half_pos hh
   have hm : (0 : ℝ) ≤ m := Nat.cast_nonneg m
-  have hb : 0 ≤ b := by dsimp [b]; positivity
+  have hb : 0 ≤ b := add_nonneg (add_nonneg hA.le hm) zero_le_two
   obtain ⟨N, hN⟩ := exists_nat_ge ((n + b + 2 * CoordinateAlgebra.A h + 6 * m + 12) / h)
   let J := max (m + 2) N
   have hJ : m + 2 ≤ J := le_max_left _ _
@@ -2090,35 +2132,35 @@ theorem baseResidual_jetRate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi
   have hbg : FiniteJetRate l (fun z => (cartesianChart h z).1) (prefixVelocity J h C d)
       (m + 1) (-b) := by
     convert! prefixVelocity_growth (C := C) hh hh1 A hd J (m + 1) using 1
-    dsimp [b]
+    dsimp only [b]
     push_cast
     ring
   have hvel : FiniteJetRate l (fun z => (cartesianChart h z).1)
       (fun z => baseVelocity a h C d z - prefixVelocity J h C d z) (m + 2) (n + b) := by
     apply finiteRate_weaken (velocity_prefix_rate hh hh1 A hd ha J (m + 2) (by omega)) hq
     push_cast
-    linarith
+    linear_combination hgain + hA.le + 4 * hm
   have hpres : FiniteJetRate l (fun z => (cartesianChart h z).1)
       (fun z => basePressure a h C d z - prefixPressure J h C d z) (m + 1) (n + b) := by
     apply finiteRate_weaken (pressure_prefix_rate hh hh1 A hd ha J (m + 1) (by omega)) hq
     push_cast
-    linarith
+    linear_combination hgain + 4 * hm
   have hstress : JetRate l (fun z => (cartesianChart h z).1)
       (fun z => baseStressForce a h C d z - prefixStressForce J h C d z) m n := by
     apply (finiteRate_at (stress_prefix_rate hh hh1 A hlo hd ha J m (by omega)) le_rfl).weaken hq
-    dsimp [b] at hgain
-    linarith
+    dsimp only [b] at hgain
+    linear_combination hgain + 2 * hA.le + 4 * hm
   have htail : JetRate l (fun z => (cartesianChart h z).1)
       (fun z => truncationResidual J h C f z.1 z.2) m n := by
     apply (finiteRate_at (truncationResidual_rate hh hh1 A hlo hO hKO J C f
       (fun j _ => hv j) (fun j _ => hu j) (fun j _ => hf j) hX hL m) le_rfl).weaken hq
-    dsimp [b] at hgain
-    linarith
+    dsimp only [b] at hgain
+    linear_combination 2 * hgain + hn + 6 * hA.le + 13 * hm + 2 * hh1.le
   let EJ : SpaceTime → Space := fun z =>
     navierStokesResidual (prefixVelocity J h C d) (prefixPressure J h C d) z.1 z.2 -
       prefixStressForce J h C d z
   have hEJ : JetRate l (fun z => (cartesianChart h z).1) EJ m n :=
-    htail.congr_on hU hlU (fun z hz => by dsimp [EJ]; rw [hfinite J z hz]; abel)
+    htail.congr_on hU hlU (fun z hz => by dsimp only [EJ]; rw [hfinite J z hz]; abel)
   have hEJs : ContDiffOn ℝ ∞ EJ annularPast :=
     (ResidualRegularity.contDiffOn_residual hU huJs hpJs).sub htJ
   let Df := residualDifference (prefixVelocity J h C d)
@@ -2128,8 +2170,8 @@ theorem baseResidual_jetRate {l : Filter SpaceTime} {a : ℕ → ℕ} {h C lo hi
     residualDifference_jetRate hU hlU hq huJs (hus.sub huJs) hpJs (hps.sub hpJs)
       m hb hn hbg hvel hpres
   have hDfs : ContDiffOn ℝ ∞ Df annularPast :=
-    (ResidualRegularity.contDiffOn_residual hU (huJs.add (hus.sub huJs))
-      (hpJs.add (hps.sub hpJs))).sub (ResidualRegularity.contDiffOn_residual hU huJs hpJs)
+    ((ResidualRegularity.contDiffOn_residual hU (huJs.add (hus.sub huJs))
+      (hpJs.add (hps.sub hpJs))).sub (ResidualRegularity.contDiffOn_residual hU huJs hpJs) :)
   have hsum := (hEJ.add hDf hU hlU hEJs hDfs).add (jetRate_neg hstress) hU hlU
     (hEJs.add hDfs) (htS.sub htJ).neg
   have hvelsum : (fun z => prefixVelocity J h C d z +
@@ -2153,7 +2195,7 @@ theorem baseResidual_allJetsFlat {l : Filter SpaceTime} {a : ℕ → ℕ} {h C l
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi) (hlo : 0 < lo)
     {d : Coefficients} (hd : SmoothCoefficients d)
     (ha : AdmissibleScales h (coefficientBundle C d) (innerBox lo hi) a)
-    (f : SlowProfiles) {O : Set Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
+    (f : SlowProfiles) {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
     (hv : ∀ j, ContDiffOn ℝ ∞ (f.flux j) O)
     (hu : ∀ j, ContDiffOn ℝ ∞ (f.axial j) O)
     (hf : ∀ j, ContDiffOn ℝ ∞ (f.phi j) O)
@@ -2175,11 +2217,13 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Polynomial losses in the two logarithmic edge distances are allowed.
 The estimate is on the full derivative tensor, including mixed derivatives. -/
-def PolynomialEdgeJets (W : Set Inner) (zeta delta : Inner → ℝ) (f : Inner → V) : Prop :=
+def PolynomialEdgeJets (W : Set SlowBorelBase.Inner) (zeta delta : SlowBorelBase.Inner → ℝ)
+    (f : SlowBorelBase.Inner → V) : Prop :=
   ∀ m : ℕ, ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, ∀ w ∈ W,
     ‖iteratedFDeriv ℝ m f w‖ ≤ C * zeta w * (delta w)⁻¹ ^ N
 
-theorem PolynomialEdgeJets.finite {W : Set Inner} {zeta delta : Inner → ℝ} {f : Inner → V}
+theorem PolynomialEdgeJets.finite {W : Set SlowBorelBase.Inner}
+    {zeta delta : SlowBorelBase.Inner → ℝ} {f : SlowBorelBase.Inner → V}
     (hf : PolynomialEdgeJets W zeta delta f) (hz : ∀ w ∈ W, 0 ≤ zeta w)
     (hd : ∀ w ∈ W, 0 < delta w ∧ delta w ≤ 1) (M : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∃ N : ℕ, ∀ w ∈ W, ∀ m ≤ M,
@@ -2194,8 +2238,8 @@ theorem PolynomialEdgeJets.finite {W : Set Inner} {zeta delta : Inner → ℝ} {
   have hAm : A m ≤ C := by
     have hs := Finset.single_le_sum (fun i (_ : i ∈ Finset.range (M + 1)) => (hA i).le)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hm))
-    dsimp [C]
-    linarith
+    dsimp only [C]
+    linarith only [hs]
   have hNm : N m ≤ J := Finset.single_le_sum (fun i (_ : i ∈ Finset.range (M + 1)) =>
     Nat.zero_le (N i)) (Finset.mem_range.mpr (Nat.lt_succ_of_le hm))
   have hinv : 1 ≤ (delta w)⁻¹ := (one_le_inv₀ (hd w hw).1).mpr (hd w hw).2
@@ -2203,10 +2247,10 @@ theorem PolynomialEdgeJets.finite {W : Set Inner} {zeta delta : Inner → ℝ} {
     (mul_le_mul_of_nonneg_right hAm (hz w hw)) (pow_le_pow_right₀ hinv hNm)
     (by positivity) (mul_nonneg hC.le (hz w hw)))
 
-theorem innerLift_blown_le {f : Inner → V} (hf : ContDiff ℝ ∞ f)
-    (q : ℝ) (w : Inner) (m : ℕ) :
+theorem innerLift_blown_le {f : SlowBorelBase.Inner → V} (hf : ContDiff ℝ ∞ f)
+    (q : ℝ) (w : SlowBorelBase.Inner) (m : ℕ) :
     ‖blownJet m (fun y : Chart => f y.2) (q, w)‖ ≤ ‖iteratedFDeriv ℝ m f w‖ := by
-  let L : Chart →L[ℝ] Inner := ContinuousLinearMap.snd ℝ ℝ Inner
+  let L : Chart →L[ℝ] SlowBorelBase.Inner := ContinuousLinearMap.snd ℝ ℝ SlowBorelBase.Inner
   change ‖iteratedFDeriv ℝ m (f ∘ L) (1, w)‖ ≤ _
   rw [L.iteratedFDeriv_comp_right hf (1, w) (nat_le_infty m)]
   have hL : ‖L‖ ≤ 1 := by
@@ -2226,7 +2270,7 @@ theorem positiveScale_isOpen : IsOpen positiveScale := isOpen_lt continuous_cons
 
 theorem blown_product_bound {F : Chart → ℝ} {G : Chart → V}
     (hF : ContDiffOn ℝ ∞ F positiveScale) (hG : ContDiffOn ℝ ∞ G positiveScale)
-    {q : ℝ} (hq : 0 < q) (w : Inner) (m : ℕ) {A B : ℝ}
+    {q : ℝ} (hq : 0 < q) (w : SlowBorelBase.Inner) (m : ℕ) {A B : ℝ}
     (hA : ∀ k ≤ m, ‖blownJet k F (q, w)‖ ≤ A)
     (hB : ∀ k ≤ m, ‖blownJet k G (q, w)‖ ≤ B) :
     ‖blownJet m (fun y => F y • G y) (q, w)‖ ≤
@@ -2239,8 +2283,8 @@ theorem blown_product_bound {F : Chart → ℝ} {G : Chart → V}
     positiveScale_isOpen hFc hGc (show (1, w) ∈ positiveScale by norm_num [positiveScale]) m hA hB
 
 theorem slowSum_zero_leading_finite_bound {a : ℕ → ℕ} {h : ℝ}
-    (hh : 0 < h) {f : ℕ → Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j))
-    {K : Set Inner} (hK : IsCompact K) (ha : AdmissibleScales h f K a)
+    (hh : 0 < h) {f : ℕ → SlowBorelBase.Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j))
+    {K : Set SlowBorelBase.Inner} (hK : IsCompact K) (ha : AdmissibleScales h f K a)
     (hzero : f 0 = 0) (M : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ q : ℝ, 0 < q → q ≤ 1 → ∀ w ∈ K, ∀ m ≤ M,
       ‖blownJet m (slowSum a h f) (q, w)‖ ≤ C * q ^ (2 * h) := by
@@ -2255,8 +2299,8 @@ theorem slowSum_zero_leading_finite_bound {a : ℕ → ℕ} {h : ℝ}
   have hAm : A m ≤ C := by
     have hs := Finset.single_le_sum (fun i (_ : i ∈ Finset.range (M + 1)) => (hA i).le)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hm))
-    dsimp [C]
-    linarith
+    dsimp only [C]
+    linarith only [hs]
   exact (hAb m q hq hq1 w hw).trans
     (mul_le_mul_of_nonneg_right hAm (Real.rpow_nonneg hq.le _))
 
@@ -2264,13 +2308,13 @@ theorem slowSum_zero_leading_finite_bound {a : ℕ → ℕ} {h : ℝ}
 noncomputable def firstCutoff (a : ℕ → ℕ) (h : ℝ) : Chart → ℝ :=
   powerStage (a 1) (2 * h) (fun _ => 1)
 
-theorem firstCutoff_finite_bound (a : ℕ → ℕ) (h : ℝ) {K : Set Inner}
+theorem firstCutoff_finite_bound (a : ℕ → ℕ) (h : ℝ) {K : Set SlowBorelBase.Inner}
     (hK : IsCompact K) (M : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ q : ℝ, 0 < q → ∀ w ∈ K, ∀ m ≤ M,
       ‖blownJet m (firstCutoff a h) (q, w)‖ ≤ C * q ^ (2 * h) := by
   classical
   have hb (m : ℕ) := exists_stage_blown_power_bound
-    (f := fun _ (_ : Inner) => (1 : ℝ)) (fun _ => contDiff_const) hK a h 1 m
+    (f := fun _ (_ : SlowBorelBase.Inner) => (1 : ℝ)) (fun _ => contDiff_const) hK a h 1 m
   simp only [slowStage_eq (by norm_num : (1 : ℕ) ≠ 0), Nat.cast_one, mul_one] at hb
   choose A hA hAb using hb
   let C := 1 + ∑ i ∈ Finset.range (M + 1), A i
@@ -2280,8 +2324,8 @@ theorem firstCutoff_finite_bound (a : ℕ → ℕ) (h : ℝ) {K : Set Inner}
   have hAm : A m ≤ C := by
     have hs := Finset.single_le_sum (fun i (_ : i ∈ Finset.range (M + 1)) => (hA i).le)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hm))
-    dsimp [C]
-    linarith
+    dsimp only [C]
+    linarith only [hs]
   exact (hAb m q hq w hw).trans (mul_le_mul_of_nonneg_right hAm (Real.rpow_nonneg hq.le _))
 
 end EdgeJetTools
@@ -2291,9 +2335,10 @@ section WeightedSum
 variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 theorem slowSum_split_first {a : ℕ → ℕ} (ha : StrictMono a) (h : ℝ)
-    (f g : ℕ → Inner → V) (zeta : Inner → ℝ) (hg0 : g 0 = 0) (hg1 : g 1 = 0)
-    {O : Set Inner} (hfg : ∀ j, 2 ≤ j → ∀ w ∈ O, f j w = zeta w • g j w)
-    {q : ℝ} (hq : 0 < q) {w : Inner} (hw : w ∈ O) :
+    (f g : ℕ → SlowBorelBase.Inner → V) (zeta : SlowBorelBase.Inner → ℝ)
+    (hg0 : g 0 = 0) (hg1 : g 1 = 0)
+    {O : Set SlowBorelBase.Inner} (hfg : ∀ j, 2 ≤ j → ∀ w ∈ O, f j w = zeta w • g j w)
+    {q : ℝ} (hq : 0 < q) {w : SlowBorelBase.Inner} (hw : w ∈ O) :
     slowSum a h f (q, w) - f 0 w =
       firstCutoff a h (q, w) • f 1 w + zeta w • slowSum a h g (q, w) := by
   have hsG : Summable (fun j => slowStage a h g j (q, w)) :=
@@ -2303,17 +2348,18 @@ theorem slowSum_split_first {a : ℕ → ℕ} (ha : StrictMono a) (h : ℝ)
     apply summable_of_ne_finset_zero (s := {1})
     intro j hj
     simp only [Finset.mem_singleton] at hj
-    simp [hj]
+    simp only [hj, ↓reduceIte]
   have he (j : ℕ) : slowStage a h f j (q, w) =
       (if j = 1 then firstCutoff a h (q, w) • f 1 w else 0) +
         zeta w • slowStage a h g j (q, w) := by
     by_cases hj0 : j = 0
     · subst j
-      simp
+      simp only [slowStage_zero, Pi.zero_apply, zero_ne_one, ↓reduceIte, smul_zero, add_zero]
     by_cases hj1 : j = 1
     · subst j
-      simp [slowStage_eq (by norm_num : (1 : ℕ) ≠ 0), hg1,
-        firstCutoff, powerStage, powerCoefficient, smul_smul]
+      simp only [slowStage_eq (by norm_num : (1 : ℕ) ≠ 0), powerStage, powerCoefficient,
+          Nat.cast_one, mul_one, smul_smul, ↓reduceIte, firstCutoff, smul_eq_mul, hg1,
+          Pi.zero_apply, smul_zero, add_zero]
     · rw [slowStage_eq hj0, slowStage_eq hj0, ite_eq_right hj1, zero_add]
       simp only [powerStage, powerCoefficient, hfg j (by omega) w hw, smul_smul]
       congr 1
@@ -2323,11 +2369,11 @@ theorem slowSum_split_first {a : ℕ → ℕ} (ha : StrictMono a) (h : ℝ)
       (g 0 w + ∑' j, slowStage a h g j (q, w))
   rw [hg0, Pi.zero_apply, zero_add, tsum_congr he, hs1.tsum_add (hsG.const_smul (zeta w)),
     hsG.tsum_const_smul]
-  simp
+  simp only [tsum_ite_eq, add_sub_cancel_left]
 
 theorem blown_add_bound {F G : Chart → V}
     (hF : ContDiffOn ℝ ∞ F positiveScale) (hG : ContDiffOn ℝ ∞ G positiveScale)
-    {q : ℝ} (hq : 0 < q) (w : Inner) (m : ℕ) :
+    {q : ℝ} (hq : 0 < q) (w : SlowBorelBase.Inner) (m : ℕ) :
     ‖blownJet m (fun y => F y + G y) (q, w)‖ ≤
       ‖blownJet m F (q, w)‖ + ‖blownJet m G (q, w)‖ := by
   have hm : MapsTo (scaleMap q) positiveScale positiveScale := fun y hy => mul_pos hq hy
@@ -2339,10 +2385,10 @@ theorem blown_add_bound {F G : Chart → V}
 uses polynomial edge bounds; higher coefficients use their genuine smooth
 quotients by the flat weight and the explicitly chosen cutoff schedule. -/
 theorem weighted_slowSum_bound {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h)
-    {f g : ℕ → Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j))
-    (hg : ∀ j, ContDiff ℝ ∞ (g j)) {K W O : Set Inner}
+    {f g : ℕ → SlowBorelBase.Inner → V} (hf : ∀ j, ContDiff ℝ ∞ (f j))
+    (hg : ∀ j, ContDiff ℝ ∞ (g j)) {K W O : Set SlowBorelBase.Inner}
     (hK : IsCompact K) (hWK : W ⊆ K) (hO : IsOpen O) (hWO : W ⊆ O)
-    {zeta delta : Inner → ℝ} (hzs : ContDiff ℝ ∞ zeta)
+    {zeta delta : SlowBorelBase.Inner → ℝ} (hzs : ContDiff ℝ ∞ zeta)
     (hz : ∀ w ∈ W, 0 ≤ zeta w) (hd : ∀ w ∈ W, 0 < delta w ∧ delta w ≤ 1)
     (hfirst : PolynomialEdgeJets W zeta delta (f 1))
     (hweight : PolynomialEdgeJets W zeta delta zeta)
@@ -2358,13 +2404,14 @@ theorem weighted_slowSum_bound {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h)
   obtain ⟨Cz, hCz, Nz, hzb⟩ := hweight.finite hz hd m
   let L := ContinuousLinearMap.lsmul ℝ ℝ (E := V)
   let B := ‖L‖ * 2 ^ m * (Cs * C1 + Cz * Cg)
-  have hB : 0 ≤ B := by dsimp [B]; positivity
-  refine ⟨B + 1, by positivity, N1 + Nz, fun q hq hq1 w hw => ?_⟩
+  have hB : 0 ≤ B := mul_nonneg (mul_nonneg (norm_nonneg _) (pow_nonneg zero_le_two m))
+    (add_nonneg (mul_nonneg hCs.le hC1.le) (mul_nonneg hCz.le hCg.le))
+  refine ⟨B + 1, add_pos_of_nonneg_of_pos hB one_pos, N1 + Nz, fun q hq hq1 w hw => ?_⟩
   let D := (delta w)⁻¹ ^ (N1 + Nz)
   have hdw := hd w hw
   have hdp : 0 < delta w := hdw.1
   have hzw := hz w hw
-  have hD : 0 ≤ D := by dsimp [D]; positivity
+  have hD : 0 ≤ D := pow_nonneg (inv_nonneg.mpr hdp.le) _
   have hi : 1 ≤ (delta w)⁻¹ := (one_le_inv₀ (hd w hw).1).mpr (hd w hw).2
   have hN1 : (delta w)⁻¹ ^ N1 ≤ D := pow_le_pow_right₀ hi (Nat.le_add_right _ _)
   have hNz : (delta w)⁻¹ ^ Nz ≤ D := pow_le_pow_right₀ hi (Nat.le_add_left _ _)
@@ -2406,16 +2453,16 @@ theorem weighted_slowSum_bound {a : ℕ → ℕ} {h : ℝ} (hh : 0 < h)
         simpa only [scaleMap_apply, mul_one] using hec) m).self_of_nhds
   rw [hj]
   have hpow : q ^ (2 * h) ≤ q ^ h :=
-    Real.rpow_le_rpow_of_exponent_ge hq hq1 (by linarith)
+    Real.rpow_le_rpow_of_exponent_ge hq hq1 (by linarith only [hh])
   calc
     _ ≤ ‖blownJet m F (q, w)‖ + ‖blownJet m G (q, w)‖ := blown_add_bound hF hG hq w m
     _ ≤ ‖L‖ * 2 ^ m * (Cs * q ^ (2 * h)) * (C1 * zeta w * D) +
         ‖L‖ * 2 ^ m * (Cz * zeta w * D) * (Cg * q ^ (2 * h)) := add_le_add hFbound hGbound
-    _ = B * q ^ (2 * h) * zeta w * D := by dsimp [B]; ring
+    _ = B * q ^ (2 * h) * zeta w * D := by dsimp only [B]; ring
     _ ≤ (B + 1) * q ^ h * zeta w * D := by
       exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_right (mul_le_mul (by linarith) hpow
-          (Real.rpow_nonneg hq.le _) (by positivity)) hzw) hD
+        (mul_le_mul_of_nonneg_right (mul_le_mul (le_add_of_nonneg_right zero_le_one) hpow
+          (Real.rpow_nonneg hq.le _) (add_nonneg hB zero_le_one)) hzw) hD
     _ = _ := rfl
 
 end WeightedSum
@@ -2423,57 +2470,64 @@ end WeightedSum
 section WeightedTensor
 
 /-- Both independent slots of the virtual tangential tensor. -/
-noncomputable def stressPair (d : Coefficients) (j : ℕ) (w : Inner) : Inner :=
+noncomputable def stressPair (d : Coefficients) (j : ℕ) (w : SlowBorelBase.Inner) :
+    SlowBorelBase.Inner :=
   (d.stressTheta j w, d.stressAxial j w)
 
 theorem stressPair_smooth {d : Coefficients} (hd : SmoothCoefficients d) (j : ℕ) :
     ContDiff ℝ ∞ (stressPair d j) := (hd.stressTheta j).prodMk (hd.stressAxial j)
 
 /-- Higher stress quotient, with branches according to `j ≤ 1`. -/
-noncomputable def higherStressQuotient (d : Coefficients) (zeta : Inner → ℝ)
-    (j : ℕ) (w : Inner) : Inner :=
+noncomputable def higherStressQuotient (d : Coefficients) (zeta : SlowBorelBase.Inner → ℝ)
+    (j : ℕ) (w : SlowBorelBase.Inner) : SlowBorelBase.Inner :=
   if j ≤ 1 then 0 else (zeta w)⁻¹ • stressPair d j w
 
-@[simp] theorem higherStressQuotient_zero (d : Coefficients) (zeta : Inner → ℝ) :
-    higherStressQuotient d zeta 0 = 0 := by funext w; simp [higherStressQuotient]
+@[simp] theorem higherStressQuotient_zero (d : Coefficients) (zeta : SlowBorelBase.Inner → ℝ) :
+    higherStressQuotient d zeta 0 = 0 := by funext w; simp only [higherStressQuotient, zero_le,
+        ↓reduceIte, Pi.zero_apply]
 
-@[simp] theorem higherStressQuotient_one (d : Coefficients) (zeta : Inner → ℝ) :
-    higherStressQuotient d zeta 1 = 0 := by funext w; simp [higherStressQuotient]
+@[simp] theorem higherStressQuotient_one (d : Coefficients) (zeta : SlowBorelBase.Inner → ℝ) :
+    higherStressQuotient d zeta 1 = 0 := by funext w; simp only [higherStressQuotient, Std.le_refl,
+        ↓reduceIte, Pi.zero_apply]
 
-theorem higherStressQuotient_factor (d : Coefficients) (zeta : Inner → ℝ)
-    {j : ℕ} (hj : 2 ≤ j) {w : Inner} (hz : zeta w ≠ 0) :
+theorem higherStressQuotient_factor (d : Coefficients) (zeta : SlowBorelBase.Inner → ℝ)
+    {j : ℕ} (hj : 2 ≤ j) {w : SlowBorelBase.Inner} (hz : zeta w ≠ 0) :
     stressPair d j w = zeta w • higherStressQuotient d zeta j w := by
-  simp [higherStressQuotient, show ¬j ≤ 1 by omega, smul_smul, hz]
+  simp only [higherStressQuotient, show ¬j ≤ 1 by omega, ↓reduceIte, smul_smul, ne_eq, hz,
+      not_false_eq_true, mul_inv_cancel₀, one_smul]
 
 /-- A common enlarged bundle controls the actual base fields and the
 higher-order stress quotients by the same cutoff sequence. -/
-noncomputable def weightedBundle (C : ℝ) (d : Coefficients) (zeta : Inner → ℝ)
-    (j : ℕ) (w : Inner) : Bundle × Inner :=
+noncomputable def weightedBundle (C : ℝ) (d : Coefficients) (zeta : SlowBorelBase.Inner → ℝ)
+    (j : ℕ) (w : SlowBorelBase.Inner) : Bundle × SlowBorelBase.Inner :=
   (coefficientBundle C d j w, higherStressQuotient d zeta j w)
 
 theorem weightedBundle_smooth {d : Coefficients} (hd : SmoothCoefficients d)
-    {zeta : Inner → ℝ} (hq : ∀ j, ContDiff ℝ ∞ (higherStressQuotient d zeta j))
+    {zeta : SlowBorelBase.Inner → ℝ} (hq : ∀ j, ContDiff ℝ ∞ (higherStressQuotient d zeta j))
     (C : ℝ) (j : ℕ) : ContDiff ℝ ∞ (weightedBundle C d zeta j) :=
   (coefficientBundle_smooth hd C j).prodMk (hq j)
 
 theorem weightedBundle_base_scales {a : ℕ → ℕ} {h C : ℝ} {d : Coefficients}
-    (hd : SmoothCoefficients d) {zeta : Inner → ℝ}
-    (hq : ∀ j, ContDiff ℝ ∞ (higherStressQuotient d zeta j)) {K : Set Inner}
+    (hd : SmoothCoefficients d) {zeta : SlowBorelBase.Inner → ℝ}
+    (hq : ∀ j, ContDiff ℝ ∞ (higherStressQuotient d zeta j)) {K : Set SlowBorelBase.Inner}
     (ha : AdmissibleScales h (weightedBundle C d zeta) K a) :
     AdmissibleScales h (coefficientBundle C d) K a := by
-  exact ha.map (weightedBundle_smooth hd hq C) (ContinuousLinearMap.fst ℝ Bundle Inner)
+  exact ha.map (weightedBundle_smooth hd hq C)
+    (ContinuousLinearMap.fst ℝ Bundle SlowBorelBase.Inner)
     (ContinuousLinearMap.norm_fst_le _ _ _)
 
 theorem weightedBundle_quotient_scales {a : ℕ → ℕ} {h C : ℝ} {d : Coefficients}
-    (hd : SmoothCoefficients d) {zeta : Inner → ℝ}
-    (hq : ∀ j, ContDiff ℝ ∞ (higherStressQuotient d zeta j)) {K : Set Inner}
+    (hd : SmoothCoefficients d) {zeta : SlowBorelBase.Inner → ℝ}
+    (hq : ∀ j, ContDiff ℝ ∞ (higherStressQuotient d zeta j)) {K : Set SlowBorelBase.Inner}
     (ha : AdmissibleScales h (weightedBundle C d zeta) K a) :
     AdmissibleScales h (higherStressQuotient d zeta) K a := by
-  exact ha.map (weightedBundle_smooth hd hq C) (ContinuousLinearMap.snd ℝ Bundle Inner)
+  exact ha.map (weightedBundle_smooth hd hq C)
+    (ContinuousLinearMap.snd ℝ Bundle SlowBorelBase.Inner)
     (ContinuousLinearMap.norm_snd_le _ _ _)
 
 /-- Normalized tensor, given by `slowSum a h (stressPair d)`. -/
-noncomputable def normalizedTensor (a : ℕ → ℕ) (h : ℝ) (d : Coefficients) : Chart → Inner :=
+noncomputable def normalizedTensor (a : ℕ → ℕ) (h : ℝ) (d : Coefficients) :
+    Chart → SlowBorelBase.Inner :=
   slowSum a h (stressPair d)
 
 theorem normalizedTensor_components {a : ℕ → ℕ} (ha : StrictMono a) (h : ℝ)
@@ -2497,9 +2551,9 @@ theorem physicalTensor_eq_normalized {a : ℕ → ℕ} (ha : StrictMono a) {h : 
 /-- The full normalized two-slot tensor differs from its leading value by
 O(q^h), with the allowed polynomial losses at both flat edges. -/
 theorem normalizedTensor_weighted_bound {a : ℕ → ℕ} {h C : ℝ} (hh : 0 < h)
-    {d : Coefficients} (hd : SmoothCoefficients d) {K W O : Set Inner}
+    {d : Coefficients} (hd : SmoothCoefficients d) {K W O : Set SlowBorelBase.Inner}
     (hK : IsCompact K) (hWK : W ⊆ K) (hO : IsOpen O) (hWO : W ⊆ O)
-    {zeta delta : Inner → ℝ} (hzs : ContDiff ℝ ∞ zeta)
+    {zeta delta : SlowBorelBase.Inner → ℝ} (hzs : ContDiff ℝ ∞ zeta)
     (hz : ∀ w ∈ O, 0 < zeta w) (hdelta : ∀ w ∈ W, 0 < delta w ∧ delta w ≤ 1)
     (hfirst : PolynomialEdgeJets W zeta delta (stressPair d 1))
     (hweight : PolynomialEdgeJets W zeta delta zeta)
@@ -2517,9 +2571,9 @@ theorem normalizedTensor_weighted_bound {a : ℕ → ℕ} {h C : ℝ} (hh : 0 < 
 /-- The common schedule is constructed from coefficient smoothness. The
 weighted estimate is an output, not part of the admissibility assumptions. -/
 theorem exists_weighted_base_scales {h : ℝ} (hh : 0 < h) (C : ℝ)
-    {d : Coefficients} (hd : SmoothCoefficients d) {K W O : Set Inner}
+    {d : Coefficients} (hd : SmoothCoefficients d) {K W O : Set SlowBorelBase.Inner}
     (hK : IsCompact K) (hWK : W ⊆ K) (hO : IsOpen O) (hWO : W ⊆ O)
-    {zeta delta : Inner → ℝ} (hzs : ContDiff ℝ ∞ zeta)
+    {zeta delta : SlowBorelBase.Inner → ℝ} (hzs : ContDiff ℝ ∞ zeta)
     (hz : ∀ w ∈ O, 0 < zeta w) (hdelta : ∀ w ∈ W, 0 < delta w ∧ delta w ≤ 1)
     (hfirst : PolynomialEdgeJets W zeta delta (stressPair d 1))
     (hweight : PolynomialEdgeJets W zeta delta zeta)
@@ -2539,7 +2593,7 @@ section ConcreteWeight
 open ActiveAnnulusWeight
 
 /-- Log weight profile, given by `weight c a b w.2`. -/
-noncomputable def logWeightProfile (c a b : ℝ) (w : Inner) : ℝ := weight c a b w.2
+noncomputable def logWeightProfile (c a b : ℝ) (w : SlowBorelBase.Inner) : ℝ := weight c a b w.2
 
 /-- Weight left factor, bundling `coefficient`, `order`, `width`, `width_pos` and the required
 compatibility proofs. -/
@@ -2557,7 +2611,7 @@ noncomputable def weightLeftFactor {a b c : ℝ} (hab : a < b) (_hc : 0 < c) (K 
   boundary_ne_zero := by
     intro p _
     have hp : 0 < FlatCutoff.edge 4 (b - a - (0 : ℝ)) := by
-      simpa using (FlatCutoff.edge_pos 4 (sub_pos.mpr hab))
+      simpa only [sub_zero] using (FlatCutoff.edge_pos 4 (sub_pos.mpr hab))
     exact hp.ne'
   identity := by
     intro p hp x hx hxw
@@ -2579,7 +2633,7 @@ noncomputable def weightRightFactor {a b c : ℝ} (hab : a < b) (hc : 0 < c) (K 
   boundary_ne_zero := by
     intro p _
     have hp : 0 < FlatCutoff.edge c (b - a - (0 : ℝ)) := by
-      simpa using (FlatCutoff.edge_pos c (sub_pos.mpr hab))
+      simpa only [sub_zero] using (FlatCutoff.edge_pos c (sub_pos.mpr hab))
     exact hp.ne'
   identity := by
     intro p hp x hx hxw
@@ -2588,24 +2642,25 @@ noncomputable def weightRightFactor {a b c : ℝ} (hab : a < b) (hc : 0 < c) (K 
     ring
 
 /-- Swap inner, bundling `toLinearEquiv`, `norm_map`. -/
-noncomputable def swapInner : Inner ≃ₗᵢ[ℝ] Inner where
+noncomputable def swapInner : SlowBorelBase.Inner ≃ₗᵢ[ℝ] SlowBorelBase.Inner where
   toLinearEquiv := LinearEquiv.prodComm ℝ ℝ ℝ
   norm_map' := by intro w; exact max_comm _ _
 
 /-- Active window, given by `Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1`. -/
-noncomputable def activeWindow (a b : ℝ) : Set Inner :=
+noncomputable def activeWindow (a b : ℝ) : Set SlowBorelBase.Inner :=
   Ioo (Real.exp a) (Real.exp b) ×ˢ Icc (-1) 1
 
 /-- Active zeta, given by `radialWeight c a b w.1`. -/
-noncomputable def activeZeta (c a b : ℝ) (w : Inner) : ℝ := radialWeight c a b w.1
+noncomputable def activeZeta (c a b : ℝ) (w : SlowBorelBase.Inner) : ℝ := radialWeight c a b w.1
 
 /-- Active delta, given by `edgeDistance a b (Real.log w.1)`. -/
-noncomputable def activeDelta (a b : ℝ) (w : Inner) : ℝ := edgeDistance a b (Real.log w.1)
+noncomputable def activeDelta (a b : ℝ) (w : SlowBorelBase.Inner) : ℝ :=
+  edgeDistance a b (Real.log w.1)
 
 theorem activeZeta_smooth {c : ℝ} (hc : 0 < c) (a b : ℝ) :
     ContDiff ℝ ∞ (activeZeta c a b) := (radialWeight_smooth hc a b).comp contDiff_fst
 
-theorem activeDelta_bounds {a b : ℝ} {w : Inner} (hw : w ∈ activeWindow a b) :
+theorem activeDelta_bounds {a b : ℝ} {w : SlowBorelBase.Inner} (hw : w ∈ activeWindow a b) :
     0 < activeDelta a b w ∧ activeDelta a b w ≤ 1 := by
   have hX := (Real.exp_pos a).trans hw.1.1
   exact ⟨edgeDistance_pos ⟨(Real.lt_log_iff_exp_lt hX).mpr hw.1.1,
@@ -2625,8 +2680,9 @@ theorem activeZeta_edgeJets {a b c : ℝ} (hab : a < b) (hc : 0 < c) :
   have hX := (Real.exp_pos a).trans hw.1.1
   have he : activeZeta c a b =ᶠ[𝓝 w] (radialPullback (logWeightProfile c a b) ∘ swapInner) := by
     filter_upwards [continuousAt_fst.eventually (Ioi_mem_nhds hX)] with y hy
-    simp [activeZeta, radialWeight, hy, radialPullback, logChart, logWeightProfile,
-      swapInner]
+    simp only [activeZeta, radialWeight, hy, ↓reduceIte, swapInner, LinearIsometryEquiv.coe_mk,
+        comp_apply, radialPullback, logWeightProfile, logChart, LinearEquiv.prodComm_apply,
+        Prod.fst_swap, Prod.snd_swap]
   rw [(SolenoidalDiagonal.iteratedFDeriv_eventuallyEq he m).self_of_nhds,
     swapInner.norm_iteratedFDeriv_comp_right]
   have hbound := hb w.2 hw.2 w.1 hw.1
@@ -2645,27 +2701,29 @@ def StressZeroCore (d : Coefficients) (r : ℝ) : Prop :=
     d.stressTheta j (X, eta) = 0 ∧ d.stressAxial j (X, eta) = 0
 
 theorem slowSum_zero_of_all {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    (a : ℕ → ℕ) (h q : ℝ) {f : ℕ → Inner → V} {w : Inner}
+    (a : ℕ → ℕ) (h q : ℝ) {f : ℕ → SlowBorelBase.Inner → V} {w : SlowBorelBase.Inner}
     (hf : ∀ j, f j w = 0) : slowSum a h f (q, w) = 0 := by
   rw [slowSum_eq_leading_of_positive_zero a h q (fun j _ => hf j), hf 0]
 
 theorem physicalProfile_zero_of_all {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    (a : ℕ → ℕ) (h b : ℝ) {f : ℕ → Inner → V} {p : Chart}
+    (a : ℕ → ℕ) (h b : ℝ) {f : ℕ → SlowBorelBase.Inner → V} {p : Chart}
     (hf : ∀ j, f j (physicalChart h p).2 = 0) : physicalProfile a h b f p = 0 := by
   unfold physicalProfile
   rw [show slowSum a h f (physicalChart h p) = 0 from slowSum_zero_of_all a h _ hf]
   exact smul_zero _
 
 theorem physicalUncutPrefix_zero_of_all {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    (h b : ℝ) {f : ℕ → Inner → V} (J : ℕ) {p : Chart}
+    (h b : ℝ) {f : ℕ → SlowBorelBase.Inner → V} (J : ℕ) {p : Chart}
     (hf : ∀ j, f j (physicalChart h p).2 = 0) : physicalUncutPrefix h b f J p = 0 := by
   simp only [physicalChart_eq] at hf
-  simp [physicalUncutPrefix, uncutPrefix_eq_sum, powerCoefficient, hf]
+  simp only [physicalUncutPrefix, physicalChart_eq, uncutPrefix_eq_sum, powerCoefficient, hf,
+      smul_zero, Finset.sum_const_zero]
 
 theorem stressForce_zero_at_axis (theta axial : Chart → ℝ) {z : SpaceTime}
     (hs : AxisymmetricFields.radialEnergy z.2 = 0) : stressForce theta axial z = 0 := by
-  simp [stressForce, SlowResidualMatching.tangentialStressForce, LeadingStress.radialDivergence,
-    AxisymmetricFields.profilePoint, hs, AxisymmetricResidual.pack]
+  simp only [stressForce, SlowResidualMatching.tangentialStressForce, AxisymmetricResidual.pack,
+      Fin.isValue, hs, mul_zero, Real.sqrt_zero, div_zero, LeadingStress.radialDivergence,
+      AxisymmetricFields.profilePoint, zero_mul, add_zero, zero_smul, one_mul, neg_zero]
 
 theorem stressForce_zero_core {h r : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {theta axial : Chart → ℝ}
@@ -2677,7 +2735,7 @@ theorem stressForce_zero_core {h r : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   · let p := AxisymmetricFields.profilePoint z.1 z.2
     have hpX : 0 < (physicalChart h p).2.1 :=
       LeadingStress.inner_X_pos (p := p) hh hh1 ht hs
-    let O : Set Inner := Ioo 0 r ×ˢ univ
+    let O : Set SlowBorelBase.Inner := Ioo 0 r ×ˢ univ
     have hO : IsOpen O := isOpen_Ioo.prod isOpen_univ
     have hp : p ∈ SimilarityProfile.physicalDomain h O := ⟨ht, ⟨⟨hpX, hX⟩, mem_univ _⟩⟩
     have htheta0 : theta =ᶠ[𝓝 p] (fun _ => 0) := by
@@ -2689,16 +2747,19 @@ theorem stressForce_zero_core {h r : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     have ht0 := htheta0.self_of_nhds
     have ha0 := haxial0.self_of_nhds
     have htd : SimilarityProfile.partialS theta p = 0 := by
-      simp [SimilarityProfile.partialS, htheta0.fderiv_eq]
+      simp only [SimilarityProfile.partialS, htheta0.fderiv_eq, fderiv_fun_const, Pi.zero_apply,
+          zero_apply]
     have had : SimilarityProfile.partialS axial p = 0 := by
-      simp [SimilarityProfile.partialS, haxial0.fderiv_eq]
+      simp only [SimilarityProfile.partialS, haxial0.fderiv_eq, fderiv_fun_const, Pi.zero_apply,
+          zero_apply]
     simp only [stressForce, SlowResidualMatching.tangentialStressForce,
         LeadingStress.radialDivergence]
     change AxisymmetricResidual.pack
       (_ * (Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS theta p + 2 * theta p / _))
       (_ * (Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS theta p + 2 * theta p / _))
       (-(Real.sqrt (2 * p.2.1) * SimilarityProfile.partialS axial p + 1 * axial p / _)) = _
-    simp [ht0, ha0, htd, had, AxisymmetricResidual.pack]
+    simp only [AxisymmetricResidual.pack, Fin.isValue, Nat.ofNat_nonneg, Real.sqrt_mul, htd,
+        mul_zero, ht0, zero_div, add_zero, zero_smul, had, ha0, neg_zero]
   · exact stressForce_zero_at_axis _ _ (le_antisymm (le_of_not_gt hs)
       (AxisymmetricFields.radialEnergy_nonneg z.2))
 
@@ -2708,7 +2769,7 @@ theorem stressForce_core_germ {h r : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (haxial : ∀ p : Chart, p.1 < 1 → (physicalChart h p).2.1 ∈ Ioo 0 r → axial p = 0)
     {z : SpaceTime} (ht : z.1 < 1) (hX : (cartesianChart h z).2.1 < r) :
     stressForce theta axial =ᶠ[𝓝 z] (fun _ => 0) := by
-  have hO : IsOpen {w : Inner | w.1 < r} := isOpen_lt continuous_fst continuous_const
+  have hO : IsOpen {w : SlowBorelBase.Inner | w.1 < r} := isOpen_lt continuous_fst continuous_const
   filter_upwards [(chartedDomain_isOpen hh hh1 hO).mem_nhds ⟨ht, hX⟩] with y hy
   exact stressForce_zero_core hh hh1 htheta haxial hy.1 hy.2
 
@@ -2784,7 +2845,7 @@ section AxisRateExtension
 open ProblemStatement DiagonalResidual
 
 theorem admissible_mono {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    {a : ℕ → ℕ} {h : ℝ} {f : ℕ → Inner → V} {K K' : Set Inner}
+    {a : ℕ → ℕ} {h : ℝ} {f : ℕ → SlowBorelBase.Inner → V} {K K' : Set SlowBorelBase.Inner}
     (ha : AdmissibleScales h f K a) (hK : K' ⊆ K) : AdmissibleScales h f K' a := by
   exact ⟨ha.positive, ha.doubling, ha.strictMono,
     fun j hj m hm q hq hq1 w hw => ha.ordinary j hj m hm q hq hq1 w (hK hw),
@@ -2829,14 +2890,14 @@ theorem stress_prefix_rate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C hi
       exact ⟨hzs, hz.2⟩
     scale := A.scale.mono_left inf_le_left }
   have ha' : AdmissibleScales h (coefficientBundle C d) (innerBox (r / 2) hi) a :=
-    admissible_mono ha (fun w hw => ⟨⟨(by linarith : (0 : ℝ) ≤ r / 2).trans hw.1.1, hw.1.2⟩, hw.2⟩)
+    admissible_mono ha (fun w hw => ⟨⟨(half_pos hr).le.trans hw.1.1, hw.1.2⟩, hw.2⟩)
   have hb := stress_prefix_rate hh hh1 A' (by positivity) hd ha' J M hM
   apply finiteRate_extend_zero hb ((A.positive_small hh hh1).mono (fun _ hz => hz.1))
   filter_upwards [A.past] with z ht
   intro hz
   have hx : (cartesianChart h z).2.1 < r := by
     have hnot : ¬r / 2 ≤ (cartesianChart h z).2.1 := hz
-    linarith [lt_of_not_ge hnot]
+    linarith only [hr, hnot, lt_of_not_ge hnot]
   have hb0 := baseStressForce_core_germ (C := C) hh hh1 a hc ht hx
   have hj0 := prefixStressForce_core_germ (C := C) hh hh1 J hc ht hx
   filter_upwards [hb0, hj0] with y hy hy'
@@ -2853,18 +2914,16 @@ theorem eqOn_of_off_axis {V : Type} [NormedAddCommGroup V]
   · exact he z hz hs
   have hs0 : AxisymmetricFields.radialEnergy z.2 = 0 :=
     le_antisymm (le_of_not_gt hs) (AxisymmetricFields.radialEnergy_nonneg z.2)
-  have hx0 : z.2 0 = 0 := by
-    apply sq_eq_zero_iff.mp
+  have hsum : z.2 0 ^ 2 + z.2 1 ^ 2 = 0 := by
     unfold AxisymmetricFields.radialEnergy at hs0
-    linarith [sq_nonneg (z.2 0), sq_nonneg (z.2 1)]
-  have hx1 : z.2 1 = 0 := by
-    apply sq_eq_zero_iff.mp
-    unfold AxisymmetricFields.radialEnergy at hs0
-    linarith [sq_nonneg (z.2 0), sq_nonneg (z.2 1)]
+    exact (div_eq_zero_iff.mp hs0).resolve_right two_ne_zero
+  have hx := (add_eq_zero_iff_of_nonneg (sq_nonneg _) (sq_nonneg _)).mp hsum
+  have hx0 : z.2 0 = 0 := sq_eq_zero_iff.mp hx.1
+  have hx1 : z.2 1 = 0 := sq_eq_zero_iff.mp hx.2
   let gamma : ℝ → SpaceTime := fun t => (z.1, z.2 + t • coordinateVector 0)
   have hgamma : Continuous gamma := continuous_const.prodMk (continuous_const.add
       (continuous_id.smul continuous_const))
-  have hg0 : gamma 0 = z := by simp [gamma]
+  have hg0 : gamma 0 = z := by simp only [Fin.isValue, zero_smul, add_zero, Prod.mk.eta, gamma]
   have hlim : Tendsto gamma (𝓝[>] 0) (𝓝 z) := by
     simpa only [← hg0] using (hgamma.tendsto 0).mono_left nhdsWithin_le_nhds
   have hpos : ∀ t : ℝ, 0 < t → 0 < AxisymmetricFields.radialEnergy (gamma t).2 := by
@@ -2888,20 +2947,20 @@ open ProblemStatement DiagonalResidual SlowExpansionResidual SlowResidualMatchin
 
 /-- The regular descriptors are actual finite sums of physical monomials. -/
 noncomputable def regularTransportField (N : ℕ) (h e α : ℝ)
-    (beta u f : ℕ → Inner → ℝ) (z : SpaceTime) : ℝ :=
+    (beta u f : ℕ → SlowBorelBase.Inner → ℝ) (z : SpaceTime) : ℝ :=
   ∑ i ∈ transportIndices N,
     cartesianMonomial h (transportPower N h e i) (regularTransportTerm N h e α beta u f i) z
 
 /-- Regular radial field, given by `∑ i ∈ pressureIndices N, cartesianMonomial h (pressurePower
 N h i - 1) (regularPressureTerm N h C phi u beta i) z`. -/
 noncomputable def regularRadialField (N : ℕ) (h C : ℝ)
-    (phi u beta : ℕ → Inner → ℝ) (z : SpaceTime) : ℝ :=
+    (phi u beta : ℕ → SlowBorelBase.Inner → ℝ) (z : SpaceTime) : ℝ :=
   ∑ i ∈ pressureIndices N,
     cartesianMonomial h (pressurePower N h i - 1) (regularPressureTerm N h C phi u beta i) z
 
 /-- Regular truncation, constructed using `assembleComponents`. -/
 noncomputable def regularTruncation (N : ℕ) (h C : ℝ)
-    (phi u beta : ℕ → Inner → ℝ) : SpaceTime → Space :=
+    (phi u beta : ℕ → SlowBorelBase.Inner → ℝ) : SpaceTime → Space :=
   assembleComponents (regularRadialField N h C phi u beta)
     (fun z => C⁻¹ * regularTransportField N h (angularExponent h) 1 beta u phi z)
     (regularTransportField N h (axialExponent h) 0 beta u u)
@@ -2913,7 +2972,8 @@ theorem assembleComponents_smooth {U : Set SpaceTime} {R A Z : SpaceTime → ℝ
     (hA.smul angularVector_smooth.contDiffOn)).add (hZ.smul contDiffOn_const)
 
 theorem regularTransportField_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (e α : ℝ) (beta u f : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (e α : ℝ)
+    (beta u f : ℕ → SlowBorelBase.Inner → ℝ)
     (hb : ∀ j ≤ N, ContDiffOn ℝ ∞ (beta j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (u j) O)
     (hf : ∀ j ≤ N, ContDiffOn ℝ ∞ (f j) O)
@@ -2923,7 +2983,8 @@ theorem regularTransportField_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (regularTransportTerm_smoothOn hO N h e α beta u f hb hu hf hL hi))
 
 theorem regularRadialField_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ) (phi u beta : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
+    (phi u beta : ℕ → SlowBorelBase.Inner → ℝ)
     (hp : ∀ j ≤ N, ContDiffOn ℝ ∞ (phi j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (u j) O)
     (hb : ∀ j ≤ N, ContDiffOn ℝ ∞ (beta j) O)
@@ -2933,7 +2994,8 @@ theorem regularRadialField_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (regularPressureTerm_smoothOn hO N h C phi u beta hp hu hb hL hi))
 
 theorem regularTruncation_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ) (phi u beta : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
+    (phi u beta : ℕ → SlowBorelBase.Inner → ℝ)
     (hp : ∀ j ≤ N, ContDiffOn ℝ ∞ (phi j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (u j) O)
     (hb : ∀ j ≤ N, ContDiffOn ℝ ∞ (beta j) O)
@@ -2947,8 +3009,8 @@ theorem regularTruncation_smooth {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 for all physical derivatives on compact sets meeting the axis. -/
 theorem regularTruncation_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi)
-    {O : Set Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
-    (N : ℕ) (C : ℝ) (phi u beta : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
+    (N : ℕ) (C : ℝ) (phi u beta : ℕ → SlowBorelBase.Inner → ℝ)
     (hp : ∀ j ≤ N, ContDiffOn ℝ ∞ (phi j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (u j) O)
     (hb : ∀ j ≤ N, ContDiffOn ℝ ∞ (beta j) O)
@@ -2983,8 +3045,8 @@ theorem regularTruncation_rate {l : Filter SpaceTime} {h lo hi : ℝ}
     (scalarConst_rate hF hW hlW hFs C⁻¹) hZ
 
 theorem regularTransportField_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (e α : ℝ)
-    {v u f beta u' f' : ℕ → Inner → ℝ}
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (e α : ℝ)
+    {v u f beta u' f' : ℕ → SlowBorelBase.Inner → ℝ}
     (hv : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → v j w = w.1 * beta j w)
     (hu : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → u j w = u' j w)
     (hf : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → f j w = f' j w)
@@ -3000,8 +3062,8 @@ theorem regularTransportField_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
         hi).symm
 
 theorem regularRadialField_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
-    {f : SlowProfiles} {phi u beta : ℕ → Inner → ℝ}
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
+    {f : SlowProfiles} {phi u beta : ℕ → SlowBorelBase.Inner → ℝ}
     (hv : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → f.flux j w = w.1 * beta j w)
     (hu : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → f.axial j w = u j w)
     (hp : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → f.phi j w = phi j w)
@@ -3019,8 +3081,8 @@ theorem regularRadialField_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
         hi).symm
 
 theorem regularTruncation_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    {O : Set Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
-    {f : SlowProfiles} {phi u beta : ℕ → Inner → ℝ}
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (N : ℕ) (C : ℝ)
+    {f : SlowProfiles} {phi u beta : ℕ → SlowBorelBase.Inner → ℝ}
     (hv : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → f.flux j w = w.1 * beta j w)
     (hu : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → f.axial j w = u j w)
     (hp : ∀ j ≤ N, ∀ w ∈ O, 0 ≤ w.1 → f.phi j w = phi j w)
@@ -3040,8 +3102,8 @@ theorem finite_error_rate {l : Filter SpaceTime} {h C lo hi r : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (A : PhysicalApproach l h lo hi) (hr : 0 < r)
     {d : Coefficients} (hd : SmoothCoefficients d) (hc : StressZeroCore d r)
     (f : SlowProfiles) (hfinite : FiniteIdentities h C d f)
-    {O : Set Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
-    (N : ℕ) (phi u beta : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox lo hi ⊆ O)
+    (N : ℕ) (phi u beta : ℕ → SlowBorelBase.Inner → ℝ)
     (hp : ∀ j ≤ N, ContDiffOn ℝ ∞ (phi j) O)
     (hu : ∀ j ≤ N, ContDiffOn ℝ ∞ (u j) O)
     (hb : ∀ j ≤ N, ContDiffOn ℝ ∞ (beta j) O)
@@ -3078,8 +3140,8 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
     {d : Coefficients} (hd : SmoothCoefficients d) (hc : StressZeroCore d r)
     (ha : AdmissibleScales h (coefficientBundle C d) (innerBox 0 hi) a)
     (f : SlowProfiles) (hfinite : FiniteIdentities h C d f)
-    {O : Set Inner} (hO : IsOpen O) (hKO : innerBox 0 hi ⊆ O)
-    (phi u beta : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox 0 hi ⊆ O)
+    (phi u beta : ℕ → SlowBorelBase.Inner → ℝ)
     (hp : ∀ j, ContDiffOn ℝ ∞ (phi j) O)
     (hu : ∀ j, ContDiffOn ℝ ∞ (u j) O)
     (hb : ∀ j, ContDiffOn ℝ ∞ (beta j) O)
@@ -3090,9 +3152,9 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
     (m : ℕ) (n : ℝ) (hn : 0 ≤ n) :
     JetRate l (fun z => (cartesianChart h z).1) (baseResidual a h C d) m n := by
   let b : ℝ := CoordinateAlgebra.A h + m + 2
-  have hA : 0 < CoordinateAlgebra.A h := by unfold CoordinateAlgebra.A; linarith
+  have hA : 0 < CoordinateAlgebra.A h := add_pos one_half_pos hh
   have hm : (0 : ℝ) ≤ m := Nat.cast_nonneg m
-  have hb0 : 0 ≤ b := by dsimp [b]; positivity
+  have hb0 : 0 ≤ b := add_nonneg (add_nonneg hA.le hm) zero_le_two
   obtain ⟨N, hN⟩ := exists_nat_ge ((n + b + 2 * CoordinateAlgebra.A h + 6 * m + 12) / h)
   let J := max (m + 2) N
   have hJ : m + 2 ≤ J := le_max_left _ _
@@ -3111,25 +3173,25 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
   have hbg : FiniteJetRate l (fun z => (cartesianChart h z).1) (prefixVelocity J h C d)
       (m + 1) (-b) := by
     convert! prefixVelocity_growth (C := C) hh hh1 A hd J (m + 1) using 1
-    dsimp [b]
+    dsimp only [b]
     push_cast
     ring
   have hvel : FiniteJetRate l (fun z => (cartesianChart h z).1)
       (fun z => baseVelocity a h C d z - prefixVelocity J h C d z) (m + 2) (n + b) := by
     apply finiteRate_weaken (velocity_prefix_rate hh hh1 A hd ha J (m + 2) (by omega)) hq
     push_cast
-    linarith
+    linear_combination hgain + hA.le + 4 * hm
   have hpres : FiniteJetRate l (fun z => (cartesianChart h z).1)
       (fun z => basePressure a h C d z - prefixPressure J h C d z) (m + 1) (n + b) := by
     apply finiteRate_weaken (pressure_prefix_rate hh hh1 A hd ha J (m + 1) (by omega)) hq
     push_cast
-    linarith
+    linear_combination hgain + 4 * hm
   have hstress : JetRate l (fun z => (cartesianChart h z).1)
       (fun z => baseStressForce a h C d z - prefixStressForce J h C d z) m n := by
     apply (finiteRate_at (stress_prefix_rate_axis hh hh1 A hr hd hc ha J m (by
         omega)) le_rfl).weaken hq
-    dsimp [b] at hgain
-    linarith
+    dsimp only [b] at hgain
+    linear_combination hgain + 2 * hA.le + 4 * hm
   let EJ : SpaceTime → Space := fun z =>
     navierStokesResidual (prefixVelocity J h C d) (prefixPressure J h C d) z.1 z.2 -
       prefixStressForce J h C d z
@@ -3137,8 +3199,8 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
     apply (finiteRate_at (finite_error_rate hh hh1 A hr hd hc f hfinite hO hKO J phi u beta
       (fun j _ => hp j) (fun j _ => hu j) (fun j _ => hb j)
       (fun j _ => hv j) (fun j _ => heu j) (fun j _ => hep j) hL m) le_rfl).weaken hq
-    dsimp [b] at hgain
-    linarith
+    dsimp only [b] at hgain
+    linear_combination 2 * hgain + hn + 6 * hA.le + 13 * hm + 2 * hh1.le
   have hEJs : ContDiffOn ℝ ∞ EJ past :=
     (ResidualRegularity.contDiffOn_residual hU huJs hpJs).sub htJ
   let Df := residualDifference (prefixVelocity J h C d)
@@ -3148,8 +3210,8 @@ theorem baseResidual_jetRate_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {h C 
     residualDifference_jetRate hU hlU hq huJs (hus.sub huJs) hpJs (hps.sub hpJs)
       m hb0 hn hbg hvel hpres
   have hDfs : ContDiffOn ℝ ∞ Df past :=
-    (ResidualRegularity.contDiffOn_residual hU (huJs.add (hus.sub huJs))
-      (hpJs.add (hps.sub hpJs))).sub (ResidualRegularity.contDiffOn_residual hU huJs hpJs)
+    ((ResidualRegularity.contDiffOn_residual hU (huJs.add (hus.sub huJs))
+      (hpJs.add (hps.sub hpJs))).sub (ResidualRegularity.contDiffOn_residual hU huJs hpJs) :)
   have hsum := (hEJ.add hDf hU hlU hEJs hDfs).add (jetRate_neg hstress) hU hlU
     (hEJs.add hDfs) (htS.sub htJ).neg
   have hvelsum : (fun z => prefixVelocity J h C d z +
@@ -3172,8 +3234,8 @@ theorem baseResidual_allJetsFlat_axis {l : Filter SpaceTime} {a : ℕ → ℕ} {
     {d : Coefficients} (hd : SmoothCoefficients d) (hc : StressZeroCore d r)
     (ha : AdmissibleScales h (coefficientBundle C d) (innerBox 0 hi) a)
     (f : SlowProfiles) (hfinite : FiniteIdentities h C d f)
-    {O : Set Inner} (hO : IsOpen O) (hKO : innerBox 0 hi ⊆ O)
-    (phi u beta : ℕ → Inner → ℝ)
+    {O : Set SlowBorelBase.Inner} (hO : IsOpen O) (hKO : innerBox 0 hi ⊆ O)
+    (phi u beta : ℕ → SlowBorelBase.Inner → ℝ)
     (hp : ∀ j, ContDiffOn ℝ ∞ (phi j) O)
     (hu : ∀ j, ContDiffOn ℝ ∞ (u j) O)
     (hb : ∀ j, ContDiffOn ℝ ∞ (beta j) O)
@@ -3210,7 +3272,7 @@ theorem higherStressQuotient_smooth_of_support {d : Coefficients} (hd : SmoothCo
     simp only [ite_eq_left hj]
     exact contDiff_const
   obtain ⟨a, b, hab, ht, hz⟩ := hs j (by omega)
-  have hq (f : Inner → ℝ) (hf : ContDiff ℝ ∞ f)
+  have hq (f : SlowBorelBase.Inner → ℝ) (hf : ContDiff ℝ ∞ f)
       (hfS : SlowStressSupport.radialSupport univ a b f) :
       ContDiff ℝ ∞ (fun w => f w / activeZeta c left right w) := by
     have h := SlowStressSupport.interior_quotient_smooth isOpen_univ hf.contDiffOn hfS hab
@@ -3226,11 +3288,13 @@ theorem higherStressQuotient_smooth_of_support {d : Coefficients} (hd : SmoothCo
     div_eq_mul_inv, mul_comm] using htq.prodMk hzq
 
 theorem compact_weighted_jet_bound {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    {f : Inner → V} (hf : ContDiff ℝ ∞ f) {zeta : Inner → ℝ} (hz : Continuous zeta)
-    {K : Set Inner} (hK : IsCompact K) (hp : ∀ w ∈ K, 0 < zeta w) (m : ℕ) :
+    {f : SlowBorelBase.Inner → V} (hf : ContDiff ℝ ∞ f) {zeta : SlowBorelBase.Inner → ℝ}
+    (hz : Continuous zeta)
+    {K : Set SlowBorelBase.Inner} (hK : IsCompact K) (hp : ∀ w ∈ K, 0 < zeta w) (m : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ w ∈ K, ‖iteratedFDeriv ℝ m f w‖ ≤ C * zeta w := by
   have hj : Continuous (iteratedFDeriv ℝ m f) :=
-    (hf.iteratedFDeriv_right (m := 0) (by simpa only [zero_add] using nat_le_infty m)).continuous
+    (hf.iteratedFDeriv_right (m := 0) (i := m)
+      (by simpa only [zero_add] using nat_le_infty m)).continuous
   have hc : ContinuousOn (fun w => ‖iteratedFDeriv ℝ m f w‖ / zeta w) K :=
     hj.norm.continuousOn.div hz.continuousOn (fun w hw => (hp w hw).ne')
   obtain ⟨B, hB⟩ := hK.exists_bound_of_continuousOn hc
@@ -3239,24 +3303,24 @@ theorem compact_weighted_jet_bound {V : Type} [NormedAddCommGroup V] [NormedSpac
     simpa only [Real.norm_eq_abs, abs_of_nonneg (div_nonneg (norm_nonneg _) (hp w hw).le)]
       using hB w hw
   exact ((div_le_iff₀ (hp w hw)).mp he).trans
-    (mul_le_mul_of_nonneg_right (by linarith [le_max_left B 0]) (hp w hw).le)
+    (mul_le_mul_of_nonneg_right (by linarith only [le_max_left B 0]) (hp w hw).le)
 
 /-- Outer window, given by `Ico cut (Real.exp right) ×ˢ Icc (-1) 1`. -/
-noncomputable def outerWindow (cut right : ℝ) : Set Inner :=
+noncomputable def outerWindow (cut right : ℝ) : Set SlowBorelBase.Inner :=
   Ico cut (Real.exp right) ×ˢ Icc (-1) 1
 
 /-- Compact middle-region bounds and actual zero germs at the inner edge
 extend an outer collar estimate to the entire active annulus. -/
 theorem edgeJets_of_outer_collar {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    {f : Inner → V} (hf : ContDiff ℝ ∞ f) {c left right inner cut : ℝ}
+    {f : SlowBorelBase.Inner → V} (hf : ContDiff ℝ ∞ f) {c left right inner cut : ℝ}
     (hc : 0 < c) (hl : Real.exp left < inner) (_hi : inner ≤ cut) (hr : cut < Real.exp right)
-    (hzero : ∀ w : Inner, w.1 < inner → f w = 0)
+    (hzero : ∀ w : SlowBorelBase.Inner, w.1 < inner → f w = 0)
     (ho : PolynomialEdgeJets (outerWindow cut right) (activeZeta c left right)
       (activeDelta left right) f) :
     PolynomialEdgeJets (activeWindow left right) (activeZeta c left right)
       (activeDelta left right) f := by
   intro m
-  let K : Set Inner := Icc inner cut ×ˢ Icc (-1) 1
+  let K : Set SlowBorelBase.Inner := Icc inner cut ×ˢ Icc (-1) 1
   have hKW : K ⊆ activeWindow left right := fun _ hw =>
     ⟨⟨hl.trans_le hw.1.1, hw.1.2.trans_lt hr⟩, hw.2⟩
   obtain ⟨A, hA, hAb⟩ := compact_weighted_jet_bound hf
@@ -3280,33 +3344,33 @@ theorem edgeJets_of_outer_collar {V : Type} [NormedAddCommGroup V] [NormedSpace 
     calc
       _ ≤ A * activeZeta c left right w := hb
       _ ≤ (A + B) * activeZeta c left right w :=
-        mul_le_mul_of_nonneg_right (by linarith) hz.le
+        mul_le_mul_of_nonneg_right (by linarith only [hB]) hz.le
       _ ≤ (A + B) * activeZeta c left right w * (activeDelta left right w)⁻¹ ^ N :=
         le_mul_of_one_le_right (mul_nonneg (add_pos hA hB).le hz.le) hN
   · exact (hBb w ⟨⟨(lt_of_not_ge hwc).le, hw.1.2⟩, hw.2⟩).trans
       (mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_right (by linarith) hz.le)
+        (mul_le_mul_of_nonneg_right (by linarith only [hA]) hz.le)
         (pow_nonneg (inv_nonneg.mpr hdelta.1.le) _))
 
-theorem terminal_zeta_eq {c left y0 : ℝ} {w : Inner} (hw : 0 < w.1) :
+theorem terminal_zeta_eq {c left y0 : ℝ} {w : SlowBorelBase.Inner} (hw : 0 < w.1) :
     SlowFirstOrderEdge.zeta c (Real.exp left) y0 w.1 = activeZeta c left (y0 + 3) w := by
-  simp [SlowFirstOrderEdge.zeta, activeZeta, radialWeight, hw, weight,
-    Real.log_div hw.ne' (Real.exp_ne_zero left), Real.log_exp]
+  simp only [SlowFirstOrderEdge.zeta, Real.log_div hw.ne' (Real.exp_ne_zero left), Real.log_exp,
+      activeZeta, radialWeight, hw, ↓reduceIte, weight]
 
-theorem terminal_delta_eq {left y0 : ℝ} {w : Inner} (hw : 0 < w.1) :
+theorem terminal_delta_eq {left y0 : ℝ} {w : SlowBorelBase.Inner} (hw : 0 < w.1) :
     SlowFirstOrderEdge.edgeDistance (Real.exp left) y0 w.1 = activeDelta left (y0 + 3) w := by
-  simp [SlowFirstOrderEdge.edgeDistance, activeDelta, edgeDistance,
-    Real.log_div hw.ne' (Real.exp_ne_zero left), Real.log_exp]
+  simp only [SlowFirstOrderEdge.edgeDistance, Real.log_div hw.ne' (Real.exp_ne_zero left),
+      Real.log_exp, activeDelta, edgeDistance]
 
 /-- Stress slot injection, given by `(ContinuousLinearMap.id ℝ ℝ).prod 0`. -/
-noncomputable def stressSlotInjection : ℝ →L[ℝ] Inner :=
+noncomputable def stressSlotInjection : ℝ →L[ℝ] SlowBorelBase.Inner :=
   (ContinuousLinearMap.id ℝ ℝ).prod 0
 
 /-- The first-order collar bound is imported from the actual backward
 viscous stress primitive. Only its equality with the coefficient is supplied. -/
 theorem firstOrder_pair_outer_edgeJets (C : ℝ) (d : OutgoingTail.TailData)
     (y0 : ℝ) {c left width : ℝ} (hc : 0 < c) (hw : 0 < width)
-    (hl : left < y0 + 3 - width) {F : Inner → Inner}
+    (hl : left < y0 + 3 - width) {F : SlowBorelBase.Inner → SlowBorelBase.Inner}
     (he : ∀ w ∈ outerWindow (Real.exp (y0 + 3 - width)) (y0 + 3),
       F =ᶠ[𝓝 w] (fun v => (SlowFirstOrderEdge.stressX C d y0 v, 0))) :
     PolynomialEdgeJets (outerWindow (Real.exp (y0 + 3 - width)) (y0 + 3))
@@ -3319,7 +3383,7 @@ theorem firstOrder_pair_outer_edgeJets (C : ℝ) (d : OutgoingTail.TailData)
   have hb := hBb w.1 hwW.1 w.2 hwW.2
   rw [terminal_zeta_eq hX, terminal_delta_eq hX, div_eq_mul_inv, ← inv_pow] at hb
   have hs := SlowFirstOrderEdge.stressX_contDiffOn C d y0
-  have hO : IsOpen {v : Inner | 0 < v.1} := isOpen_lt continuous_const continuous_fst
+  have hO : IsOpen {v : SlowBorelBase.Inner | 0 < v.1} := isOpen_lt continuous_const continuous_fst
   have hj := ResidualStability.norm_jet_linear_map stressSlotInjection hO hs hX m
   rw [(SolenoidalDiagonal.iteratedFDeriv_eventuallyEq (he w hwW) m).self_of_nhds]
   change ‖iteratedFDeriv ℝ m (fun v => stressSlotInjection (SlowFirstOrderEdge.stressX C d y0 v))
@@ -3336,7 +3400,7 @@ theorem firstOrder_pair_outer_edgeJets (C : ℝ) (d : OutgoingTail.TailData)
       mul_le_mul_of_nonneg_left hb (norm_nonneg _)
     _ ≤ (‖stressSlotInjection‖ + 1) * (B * activeZeta c left (y0 + 3) w * (activeDelta left (y0 +
         3) w)⁻¹ ^ N) :=
-      mul_le_mul_of_nonneg_right (by linarith) (mul_nonneg (mul_nonneg hB.le hz) hd)
+      mul_le_mul_of_nonneg_right (by linarith only) (mul_nonneg (mul_nonneg hB.le hz) hd)
     _ = _ := by ring
 
 /-- A common scale sequence with the full weighted tensor estimate,
@@ -3347,10 +3411,11 @@ theorem exists_weighted_base_scales_from_primitives {h : ℝ} (hh : 0 < h) (C : 
     (y0 : ℝ) {c left width inner : ℝ} (hc : 0 < c) (hw : 0 < width)
     (hl : Real.exp left < inner) (hi : inner ≤ Real.exp (y0 + 3 - width))
     (hs : HigherInteriorSupport d left (y0 + 3))
-    (hz : ∀ w : Inner, w.1 < inner → stressPair d 1 w = 0)
+    (hz : ∀ w : SlowBorelBase.Inner, w.1 < inner → stressPair d 1 w = 0)
     (he : ∀ w ∈ outerWindow (Real.exp (y0 + 3 - width)) (y0 + 3),
       stressPair d 1 =ᶠ[𝓝 w] (fun v => (SlowFirstOrderEdge.stressX C tail y0 v, 0)))
-    {K : Set Inner} (hK : IsCompact K) (hWK : activeWindow left (y0 + 3) ⊆ K) (B : ℕ) :
+    {K : Set SlowBorelBase.Inner} (hK : IsCompact K)
+    (hWK : activeWindow left (y0 + 3) ⊆ K) (B : ℕ) :
     ∃ a : ℕ → ℕ, B ≤ a 0 ∧ AdmissibleScales h (coefficientBundle C d) K a ∧
       ∀ m : ℕ, ∃ D : ℝ, 0 < D ∧ ∃ N : ℕ, ∀ q : ℝ, 0 < q → q ≤ 1 →
         ∀ w ∈ activeWindow left (y0 + 3),
@@ -3358,10 +3423,10 @@ theorem exists_weighted_base_scales_from_primitives {h : ℝ} (hh : 0 < h) (C : 
             D * q ^ h * activeZeta c left (y0 + 3) w * (activeDelta left (y0 + 3) w)⁻¹ ^ N := by
   have hlog : left < y0 + 3 - width := Real.exp_lt_exp.mp (hl.trans_le hi)
   have hright : Real.exp (y0 + 3 - width) < Real.exp (y0 + 3) :=
-    Real.exp_lt_exp.mpr (by linarith)
+    Real.exp_lt_exp.mpr (by linarith only [hw])
   have hfirst := edgeJets_of_outer_collar (stressPair_smooth hd 1) hc hl hi hright hz
     (firstOrder_pair_outer_edgeJets C tail y0 hc hw hlog he)
-  let O : Set Inner := Ioo (Real.exp left) (Real.exp (y0 + 3)) ×ˢ univ
+  let O : Set SlowBorelBase.Inner := Ioo (Real.exp left) (Real.exp (y0 + 3)) ×ˢ univ
   have hO : IsOpen O := isOpen_Ioo.prod isOpen_univ
   have hWO : activeWindow left (y0 + 3) ⊆ O := fun _ hw => ⟨hw.1, mem_univ _⟩
   exact exists_weighted_base_scales hh C hd hK hWK hO hWO

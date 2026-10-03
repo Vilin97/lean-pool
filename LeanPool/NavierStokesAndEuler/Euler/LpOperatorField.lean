@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedSubspace
 public import Mathlib.Topology.ContinuousMap.Bounded.Normed
 public import Mathlib.Analysis.Normed.Operator.NormedSpace
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+public import LeanPool.NavierStokesAndEuler.ForMathlib.BoundedContinuousFunctionShortcuts
 
 /-!
 # Rectangular coefficient fields acting on actual spatial L²
@@ -64,6 +65,7 @@ theorem apply_memLp (A : α →ᵇ (E →L[ℝ] F)) (u : Lp E 2 μ) :
     MemLp (fun x => A x (u x)) 2 μ := by
   apply (Lp.memLp u).of_le_mul (c := ‖A‖)
   · exact (continuous_fst.clm_apply continuous_snd).comp_aestronglyMeasurable
+      (f := fun x => (A x, u x))
       (A.continuous.aestronglyMeasurable.prodMk (Lp.aestronglyMeasurable u))
   · exact Filter.Eventually.of_forall (fun x => ((A x).le_opNorm (u x)).trans
       (mul_le_mul_of_nonneg_right (A.norm_coe_le_norm x) (norm_nonneg _)))
@@ -139,15 +141,10 @@ def fullMap : (α →ᵇ (E →L[ℝ] F)) →L[ℝ] (Lp E 2 μ →L[ℝ] Lp F 2 
   cont := AddMonoidHomClass.continuous_of_bound
     ({ toFun := full μ, map_add' := full_add μ, map_smul' := full_smul μ } :
       (α →ᵇ (E →L[ℝ] F)) →ₗ[ℝ] (Lp E 2 μ →L[ℝ] Lp F 2 μ)) 1
-    (fun A => by
-      change ‖full μ A‖ ≤ (1 : ℝ)*‖A‖
-      simpa only [one_mul] using full_norm μ A)
+    (fun A => by exact (full_norm μ A).trans_eq (one_mul _).symm)
 
-theorem fullMap_norm : ‖fullMap (E := E) (F := F) μ‖ ≤ 1 := by
-  apply opNorm_le_bound _ zero_le_one
-  intro A
-  change ‖full μ A‖ ≤ (1 : ℝ)*‖A‖
-  simpa only [one_mul] using full_norm μ A
+theorem fullMap_norm : ‖fullMap (E := E) (F := F) μ‖ ≤ 1 :=
+  opNorm_le_bound _ zero_le_one fun A => (full_norm μ A).trans_eq (one_mul _).symm
 
 end EulerLpOperatorField
 

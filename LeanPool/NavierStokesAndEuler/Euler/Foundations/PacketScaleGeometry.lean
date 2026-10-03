@@ -11,6 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Packet Scale Geometry
@@ -35,7 +36,7 @@ theorem activation_time_bounds
     (hβx : 1 / 2 ≤ β * x ^ 2) (hβx₂ : β * x ^ 2 ≤ 2) :
     (3 * X * x / sqrt H) / 6 ≤ X / sqrt (β * a * H) ∧
       X / sqrt (β * a * H) ≤ 2 * (3 * X * x / sqrt H) / 3 := by
-  have ha₀ : 0 < a := by linarith
+  have ha₀ : 0 < a := one_half_pos.trans_le ha
   have hβ : 0 < β := by nlinarith only [hβx, sq_nonneg x]
   have hroot : 0 < sqrt (β * a * H) := sqrt_pos.2 (by positivity)
   have hrootH : 0 < sqrt H := sqrt_pos.2 hH
@@ -51,22 +52,25 @@ theorem activation_time_bounds
   have hlo : sqrt H ≤ 2 * x * sqrt (β * a * H) := by
     have hh := mul_le_mul_of_nonneg_right hprodLow hH.le
     have hhroot : 0 ≤ 2 * x * sqrt (β * a * H) := by positivity
-    nlinarith only [hh, hs, hsH, hhroot, hrootH]
+    refine le_of_pow_le_pow_left₀ two_ne_zero hhroot ?_
+    rw [mul_pow, hs, hsH]
+    linarith only [hh]
   have hup : x * sqrt (β * a * H) ≤ 2 * sqrt H := by
     have hh := mul_le_mul_of_nonneg_right hprodUp hH.le
-    have hhroot : 0 ≤ x * sqrt (β * a * H) := by positivity
-    nlinarith only [hh, hs, hsH, hhroot, hrootH]
+    refine le_of_pow_le_pow_left₀ two_ne_zero (mul_nonneg zero_le_two hrootH.le) ?_
+    rw [mul_pow, mul_pow, hs, hsH]
+    linarith only [hh]
   constructor
   · have hid : 3 * X * x / sqrt H / 6 = X * x / (2 * sqrt H) := by ring
     rw [hid]
     apply (div_le_div_iff₀ (by positivity) hroot).2
     have hh := mul_le_mul_of_nonneg_left hup hX
-    nlinarith only [hh]
+    linarith only [hh]
   · have hid : 2 * (3 * X * x / sqrt H) / 3 = 2 * X * x / sqrt H := by ring
     rw [hid]
     apply (div_le_div_iff₀ hroot hrootH).2
     have hh := mul_le_mul_of_nonneg_left hlo hX
-    nlinarith only [hh]
+    linarith only [hh]
 
 /-- A sufficiently small next time width makes the packet horizons nest. -/
 theorem nested_horizon_of_width_ratio

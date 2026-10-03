@@ -77,7 +77,8 @@ theorem forwardPacket_normal_bound (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 �
         ((a 1).high (t,(x,θ)))) = 0 := by
     intro t x θ
     have h := source_high_tangent P M D hTime (InitialData.zero P D) Y 1 t x θ
-    change inner ℝ ((D.FInv.field (D.clamp t) x).adjoint D.m₀) ((a 1).high (t,(x,θ))) = 0 at h
+    change inner ℝ (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (D.FInv.field (D.clamp t) x) D.m₀) ((a 1).high (t,(x,θ))) = 0 at h
     rw [ContinuousLinearMap.adjoint_inner_left] at h
     exact h
   have h := ProfileRegularity.normalizedNormal_bound M.T_pos G hG L.radius_one

@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.BoundedFieldCalculus
 public import LeanPool.NavierStokesAndEuler.Euler.LpOperatorField
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # Algebra and coercivity of actual full-space L² multipliers
@@ -42,15 +43,14 @@ variable [NormedAddCommGroup U] [NormedSpace ℝ U]
 
 /-- Multiplication by the actual product field is composition on L². -/
 theorem full_comp (A : α →ᵇ E →L[ℝ] F) (B : α →ᵇ U →L[ℝ] E) :
-    full μ (compositionMap A B) = (full μ A).comp (full μ B) := by
+    full μ (compositionMap (α := α) (U := U) (E := E) (F := F) A B) =
+      (full μ A).comp (full μ B) := by
   apply ContinuousLinearMap.ext
   intro u
   apply Lp.ext
-  filter_upwards [full_ae μ (compositionMap A B) u,
+  filter_upwards [full_ae μ (compositionMap (α := α) (U := U) (E := E) (F := F) A B) u,
     full_ae μ A (full μ B u),full_ae μ B u] with x hab ha hb
-  change full μ (compositionMap A B) u x = full μ A (full μ B u) x
-  rw [hab,ha,hb]
-  rfl
+  exact hab.trans (ha.trans (congrArg (A x) hb)).symm
 
 theorem full_neg (A : α →ᵇ E →L[ℝ] F) : full μ (-A) = -full μ A :=
   map_neg (fullMap μ) A
@@ -61,7 +61,7 @@ theorem full_eq_neg_comp (C : α →ᵇ U →L[ℝ] F)
     (A : α →ᵇ E →L[ℝ] F) (B : α →ᵇ U →L[ℝ] E)
     (hC : ∀ x u, C x u = -(A x (B x u))) :
     full μ C = -(full μ A).comp (full μ B) := by
-  have hc : C = -compositionMap A B := by
+  have hc : C = -compositionMap (α := α) (U := U) (E := E) (F := F) A B := by
     apply BoundedContinuousFunction.ext
     intro x
     apply ContinuousLinearMap.ext
@@ -97,8 +97,8 @@ theorem full_quadratic_upper (A : α →ᵇ E →L[ℝ] E) (C : ℝ)
     (hA : ∀ x v, ⟪A x v, v⟫_ℝ ≤ C * ‖v‖ ^ 2) (u : Lp E 2 μ) :
     ⟪full μ A u,u⟫_ℝ ≤ C*‖u‖^2 := by
   rw [← real_inner_self_eq_norm_sq,L2.inner_def,L2.inner_def,← integral_const_mul]
-  apply integral_mono_ae (L2.integrable_inner (full μ A u) u)
-    ((L2.integrable_inner u u).const_mul C)
+  apply integral_mono_ae (L2.integrable_inner (𝕜 := ℝ) (full μ A u) u)
+    ((L2.integrable_inner (𝕜 := ℝ) u u).const_mul C)
   filter_upwards [full_ae μ A u] with x hx
   rw [hx,real_inner_self_eq_norm_sq]
   exact hA x (u x)
@@ -121,15 +121,17 @@ variable [CompleteSpace E] [CompleteSpace F]
 
 /-- The L² adjoint is multiplication by the pointwise adjoint field. -/
 theorem full_adjoint (A : α →ᵇ E →L[ℝ] F) :
-    (full μ A).adjoint = full μ (adjointMap A) := by
+    adjoint (𝕜 := ℝ) (E := Lp E 2 μ) (F := Lp F 2 μ) (full μ A) =
+      full μ (adjointMap (α := α) (U := E) (E := F) A) := by
   apply ContinuousLinearMap.ext
   intro u
   apply ext_inner_right ℝ
   intro v
-  rw [adjoint_inner_left,L2.inner_def,L2.inner_def]
+  simp only [adjoint_inner_left, L2.inner_def]
   apply integral_congr_ae
-  filter_upwards [full_ae μ A v,full_ae μ (adjointMap A) u] with x ha hadj
-  rw [ha,hadj,adjointMap_apply,adjoint_inner_left]
+  filter_upwards [full_ae μ A v,
+    full_ae μ (adjointMap (α := α) (U := E) (E := F) A) u] with x ha hadj
+  simp only [ha, hadj, adjointMap_apply, adjoint_inner_left]
 
 end Hilbert
 
@@ -145,12 +147,13 @@ variable {α E : Type*} [MeasurableSpace α] (μ : Measure α)
 
 /-- The genuine measurable spatial cutoff is an orthogonal projection. -/
 theorem cutoffOperator_adjoint :
-    (cutoffOperator (V := E) μ S hS).adjoint = cutoffOperator μ S hS := by
+    adjoint (𝕜 := ℝ) (E := Lp E 2 μ) (F := Lp E 2 μ) (cutoffOperator (V := E) μ S hS) =
+      cutoffOperator μ S hS := by
   apply ContinuousLinearMap.ext
   intro u
   apply ext_inner_right ℝ
   intro v
-  rw [adjoint_inner_left,L2.inner_def,L2.inner_def]
+  simp only [adjoint_inner_left, L2.inner_def]
   apply integral_congr_ae
   filter_upwards [cutoff_ae μ S hS v,cutoff_ae μ S hS u] with x hv hu
   change ⟪u x,cutoff μ S hS v x⟫_ℝ = ⟪cutoff μ S hS u x,v x⟫_ℝ

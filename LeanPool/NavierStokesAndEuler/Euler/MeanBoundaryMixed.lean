@@ -156,7 +156,8 @@ theorem mixedBoundaryOperator_diagonal (χ : Cutoff) :
 theorem mixedBoundaryOperator_norm_le (χ ψ : Cutoff) :
     ‖mixedBoundaryOperator χ ψ‖ ≤ cutoffBound χ * cutoffBound ψ := by
   refine (ContinuousLinearMap.opNorm_comp_le _ _).trans ?_
-  change ‖cutoffCurl χ‖ * ‖(cutoffCurl ψ).adjoint‖ ≤ _
+  change ‖cutoffCurl χ‖ * ‖ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := homogeneousSpace) (F := L2)
+    (cutoffCurl ψ)‖ ≤ _
   rw [LinearIsometryEquiv.norm_map]
   exact mul_le_mul (cutoffCurl_norm_le χ) (cutoffCurl_norm_le ψ)
     (norm_nonneg (cutoffCurl ψ)) (cutoffBound_nonneg χ)
@@ -166,7 +167,8 @@ theorem mixedBoundaryOperator_pairing (χ ψ : Cutoff) (u v : L2) :
   (ContinuousLinearMap.adjoint_inner_right (cutoffCurl χ) (weakPotential ψ u) v).symm
 
 theorem mixedBoundaryOperator_adjoint (χ ψ : Cutoff) :
-    (mixedBoundaryOperator χ ψ).adjoint = mixedBoundaryOperator ψ χ := by
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2) (mixedBoundaryOperator χ ψ) =
+      mixedBoundaryOperator ψ χ := by
   simp only [mixedBoundaryOperator, weakPotential, ContinuousLinearMap.adjoint_comp,
     ContinuousLinearMap.adjoint_adjoint]
 

@@ -80,18 +80,18 @@ theorem cauchySeq_of_square_bound {E F : Type*} [NormedAddCommGroup E] [NormedAd
     (h : ∀ m n, ‖g m - g n‖ ^ 2 ≤ A * ‖f m - f n‖) : CauchySeq g := by
   apply Metric.cauchySeq_iff.mpr
   intro ε hε
-  have hd : 0 < ε^2/(A+1) := div_pos (sq_pos_of_pos hε) (by linarith)
+  have hd : 0 < ε^2/(A+1) := div_pos (sq_pos_of_pos hε) (by linarith only [hA])
   obtain ⟨N,hN⟩ := Metric.cauchySeq_iff.mp hf (ε^2/(A+1)) hd
   refine ⟨N,fun m hm n hn => ?_⟩
   have hs := h m n
   have hp := hN m hm n hn
   rw [dist_eq_norm] at hp ⊢
   have hsmall : (A+1)*‖f m-f n‖ < ε^2 := by
-    have hh := (lt_div_iff₀ (by linarith : 0 < A+1)).mp hp
+    have hh := (lt_div_iff₀ (by linarith only [hA] : 0 < A+1)).mp hp
     nlinarith only [hh]
   have hf0 := norm_nonneg (f m-f n)
   have hg0 := norm_nonneg (g m-g n)
-  nlinarith
+  nlinarith only [hs, hsmall, hf0, hε, hg0]
 
 /-- Linear interpolation bounds transfer to differences using only the two state bounds. -/
 private theorem clm_difference_square_bound {V W : Type*}

@@ -33,7 +33,7 @@ theorem diffusion_eq_ratio {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     ParametricHeatTail.diffusion (eta h p) = (1 - p.1) / q h p := by
   have hq := q_pos hh hh1 ht
   have he : 1 - p.1 = q h p * (1 - eta h p ^ 2) :=
-    SimilarityCoordinates.tau_coordinate_identity (by linarith) (by linarith)
+    SimilarityCoordinates.tau_coordinate_identity (by linarith only [hh]) (by linarith only [hh1])
       (p := (1 - p.1, p.2.2)) (sub_pos.mpr ht)
   apply (eq_div_iff hq.ne').2
   change (1 - eta h p ^ 2) * q h p = 1 - p.1
@@ -108,7 +108,7 @@ noncomputable def normalizedSection (x e : ℝ) : PhysicalPoint := (e ^ 2, (x, e
 
 theorem q_normalizedSection {h e : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (he : e ^ 2 < 1) (x : ℝ) : q h (normalizedSection x e) = 1 := by
-  apply (SimilarityCoordinates.eq_coordinateQ (by linarith) (by linarith)
+  apply (SimilarityCoordinates.eq_coordinateQ (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - e ^ 2, e)) (sub_pos.mpr he) (q := 1) (by norm_num) ?_).symm
   simp [SimilarityCoordinates.forwardScalar]
 

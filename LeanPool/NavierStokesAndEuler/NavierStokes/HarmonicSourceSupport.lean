@@ -81,7 +81,8 @@ theorem mul (hc : NonzeroSupported K c) (hd : NonzeroSupported K d) :
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem boundConstant (f : D → ℂ) : NonzeroSupported K (constantCoefficient f) := by
   intro j hj x hx
-  simp [constantCoefficient, hj]
+  simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true,
+      Finsupp.single_eq_of_ne, Pi.zero_apply]
 
 omit [NormedSpace ℝ D] in
 theorem coefficient_germ (hc : NonzeroSupported K c) (hK : IsClosed K)
@@ -252,7 +253,8 @@ theorem residualSource_outside (c : CorrectionState.Context D) (u : CorrectionSt
   · subst j
     rw [ParticularWaveAssembly.residualSource_zero]
     ext i
-    simp [excludedSource, HarmonicResidual.nonconstant]
+    simp only [Pi.zero_apply, excludedSource, nonconstant, AddMonoidAlgebra.coeff_erase,
+        Finsupp.erase_same, neg_zero, sub_self]
   · ext i
     rw [residualSource_apply_ne_zero c u b G A hj]
     have hn := ((nonlinear_ofBlock_supported hK c u b G A n hv hp i).realProjection) j hj x hx
@@ -280,7 +282,8 @@ theorem residualSource_support (c : CorrectionState.Context D) (u : CorrectionSt
   rw [residualSource_outside c u b G A hK n hv hp j hnot]
   ext i
   by_cases hj : j = 0
-  · simp [excludedSource, HarmonicResidual.nonconstant, hj]
+  · simp only [excludedSource, nonconstant, AddMonoidAlgebra.coeff_erase, hj, Finsupp.erase_same,
+      Pi.zero_apply, neg_zero, sub_self]
   · simp only [excludedSource, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
       Finsupp.erase_ne hj,
       (hG i).realProjection j hj x hnot, (hA i).realProjection j hj x hnot, neg_zero, sub_zero,
@@ -319,7 +322,8 @@ theorem residualSource_outside_of_real
   · subst j
     rw [ParticularWaveAssembly.residualSource_zero]
     ext i
-    simp [excludedSource, HarmonicResidual.nonconstant]
+    simp only [Pi.zero_apply, excludedSource, nonconstant, AddMonoidAlgebra.coeff_erase,
+        Finsupp.erase_same, neg_zero, sub_self]
   · ext i
     rw [residualSource_apply_ne_zero c u b G A hj]
     have hn := ((nonlinear_ofBlock_supported_of_real hK c u b G A n hv hp i).realProjection)
@@ -353,7 +357,8 @@ theorem residualSource_support_of_real
   rw [residualSource_outside_of_real c u b G A hK n hv hp j hnot]
   ext i
   by_cases hj : j = 0
-  · simp [excludedSource, HarmonicResidual.nonconstant, hj]
+  · simp only [excludedSource, nonconstant, AddMonoidAlgebra.coeff_erase, hj, Finsupp.erase_same,
+      Pi.zero_apply, neg_zero, sub_self]
   · simp only [excludedSource, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
       Finsupp.erase_ne hj,
       hG i j hj x hnot, hA i j hj x hnot, neg_zero, sub_zero, Pi.zero_apply]
@@ -366,7 +371,7 @@ theorem realCoefficient_eq_zero_of_field
     realCoefficients c j x = 0 := by
   rw [← extract_field (realCoefficients c) k Φ hkp j x]
   simp only [extract, field_realCoefficients, hf, Complex.ofReal_zero, zero_mul]
-  simp [HarmonicFields.angularMean]
+  simp only [angularMean, intervalIntegral.integral_zero, mul_zero]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 /-- Fourier uniqueness transfers support of the evaluated real field to
@@ -426,7 +431,8 @@ theorem residualSource_complementJets
   have hg (n : ℕ) (x : D) (hx : ∀ a, x ∉ K.carrier n a) :
       ParticularWaveAssembly.residualSource c u b G A j n =ᶠ[𝓝 x] excludedSource G A j n :=
     residualSource_complement_germ_of_real c u b G A
-      ((K.locallyFinite n).isClosed_iUnion (K.closed n)) n (hv n) (hp n) j (by simpa using hx)
+      ((K.locallyFinite n).isClosed_iUnion (K.closed n)) n (hv n) (hp n) j (by simpa only [
+          mem_iUnion, not_exists] using hx)
   constructor
   · intro n x hx hK
     exact ((he.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).congr_of_eventuallyEq
@@ -469,7 +475,8 @@ theorem mem_nativeUnion_iff (g : Geometry) (K : Set Plane) (z : P × Plane) :
     have he : coverPower g.gap z.2 - (g.center + g.basis (g.coordinates k z.2)) =
         latticePoint k := by
       rw [ParticularWaveAssembly.native_coordinate_image]
-      have hn : latticePoint (-k) = -latticePoint k := by ext <;> simp [latticePoint]
+      have hn : latticePoint (-k) = -latticePoint k := by ext <;> simp only [latticePoint,
+          Prod.fst_neg, Int.cast_neg, Prod.snd_neg, Prod.neg_mk]
       rw [hn]
       abel
     change (SlotGeometry.cover ^ g.gap) z.2 -
@@ -524,7 +531,8 @@ theorem transport_zero_of_product_germ (R : D → ℝ) (Vr Vθ Vz : D → D)
   classical
   by_cases hu : u x = 0
   · ext i
-    simp [LinearWaveResidual.transport, hu]
+    simp only [LinearWaveResidual.transport, Fin.isValue, hu, Pi.zero_apply, zero_mul, zero_div,
+        add_zero]
   · obtain ⟨i, hi⟩ : ∃ i, u x i ≠ 0 := by
       by_contra h
       push Not at h
@@ -540,7 +548,9 @@ theorem transport_zero_of_product_germ (R : D → ℝ) (Vr Vθ Vz : D → D)
       simp only [along, hej.fderiv_eq, fderiv_fun_const, Pi.zero_apply,
         _root_.zero_apply]
     ext j
-    fin_cases j <;> simp [LinearWaveResidual.transport, hv, hd, angularGenerator]
+    fin_cases j <;> simp only [LinearWaveResidual.transport, Fin.isValue, Fin.zero_eta, hd,
+        mul_zero, angularGenerator, hv, Pi.zero_apply, neg_zero, Matrix.cons_val_zero, add_zero,
+        Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
 
 theorem transport_sum_self_of_product_germs {ι : Type*} (s : Finset ι)
     (R : D → ℝ) (Vr Vθ Vz : D → D) (u : ι → D → ComplexVector) {x : D}
@@ -626,7 +636,8 @@ theorem supported_nonlinearResidual_sum (hU : IsOpen U)
   unfold Actual.nonlinearResidual
   rw [Actual.linearResidual_sum labels (liftDomain_open hU) ε R Vt hr hθ hz B _ p hcu hp hcx,
     transport_sum_self_of_product_germs labels R Vr Vθ Vz _ (fun l hl i =>
-      ((hcu l hl i).contDiffAt ((liftDomain_open hU).mem_nhds hcx)).differentiableAt (by simp)),
+      ((hcu l hl i).contDiffAt ((liftDomain_open hU).mem_nhds hcx)).differentiableAt (by simp only [
+          ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])),
     Finset.sum_add_distrib]
   intro l hl k hk hne
   exact supported_product_germ hU hs hs (hlevel l hl) (hlevel k hk)
@@ -761,7 +772,7 @@ theorem residualSource_zero_germ_on
   · exact residualSource_support_of_real c u b G A (hU.isClosed_compl.union (hK n)) n
       (fun i => (hs.velocity n i).enlarge) (hs.pressure n).enlarge
       (fun i => (hs.gaussian n i).enlarge) (fun i => (hs.aliasError n i).enlarge) j
-  · simpa using And.intro hx hn
+  · simpa only [mem_union, mem_compl_iff, not_or, not_not] using And.intro hx hn
 
 theorem zero_complementJets_of_germs
     {E I : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -776,7 +787,8 @@ theorem zero_complementJets_of_germs
     refine ⟨0, le_rfl, 0, ?_⟩
     intro n x hx hn j hj
     rw [PeriodizedWaveBounds.jets_eq_of_germ (hg n x hx hn) j]
-    simp [WeightedClasses.majorant]
+    simp only [iteratedFDeriv_fun_zero, Pi.zero_apply, norm_zero, WeightedClasses.majorant,
+        zero_mul, pow_zero, mul_one, Std.le_refl]
 
 theorem residualSource_zero_complementJets
     (c : CorrectionState.Context D) (u : CorrectionState.State D)
@@ -789,7 +801,8 @@ theorem residualSource_zero_complementJets
   apply zero_complementJets_of_germs
   intro n x hx hn
   exact residualSource_zero_germ_on c u b G A s.isOpen_domain
-    (fun n => (K.locallyFinite n).isClosed_iUnion (K.closed n)) hs j n hx (by simpa using hn)
+    (fun n => (K.locallyFinite n).isClosed_iUnion (K.closed n)) hs j n hx (by simpa only [
+        mem_iUnion, not_exists] using hn)
 
 /-- If an excluded nonzero tail is present outside the native cells, its
 actual class supplies the complement estimate.  The source is not replaced
@@ -809,7 +822,8 @@ theorem residualSource_complementJets_on
   have hg (n : ℕ) (x : D) (hx : x ∈ s.domain) (hn : ∀ a, x ∉ K.carrier n a) :
       ParticularWaveAssembly.residualSource c u b G A j n =ᶠ[𝓝 x] excludedSource G A j n :=
     residualSource_complement_germ_on c u b G A s.isOpen_domain
-      ((K.locallyFinite n).isClosed_iUnion (K.closed n)) n (hv n) (hp n) j hx (by simpa using hn)
+      ((K.locallyFinite n).isClosed_iUnion (K.closed n)) n (hv n) (hp n) j hx (by simpa only [
+          mem_iUnion, not_exists] using hn)
   constructor
   · intro n x hx hn
     exact ((he.smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).congr_of_eventuallyEq
@@ -960,7 +974,8 @@ theorem realCoefficient_eq_zero_of_field_constant
     funext θ
     rw [field_realCoefficients, hf θ, field_constant]
   · rw [extract_field _ _ _ hkp]
-    simp [constantCoefficient, hj]
+    simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true,
+        Finsupp.single_eq_of_ne, Pi.zero_apply]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 /-- Outside the slot, the real field may have any angularly constant

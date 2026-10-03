@@ -26,8 +26,9 @@ open Set EulerSmoothLimit EulerLiftedGradientSpace EulerPacketProfileRecursion
 variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField}
 
 @[simp] theorem highPart_path (G : Field P T raw) :
-    G.highPart.path = G.path-pathAverage P G.path := by
-  change G.path + -(pathAverage P G.path) = G.path-pathAverage P G.path
+    G.highPart.path = G.path-pathAverage (K := Icc (0 : ℝ) T) (V := Vector3) P G.path := by
+  change G.path + -(pathAverage (K := Icc (0 : ℝ) T) (V := Vector3) P G.path) =
+    G.path-pathAverage (K := Icc (0 : ℝ) T) (V := Vector3) P G.path
   rw [sub_eq_add_neg]
 
 theorem wordBound_of_zero (G : Field P T raw)

@@ -73,13 +73,15 @@ theorem WordBound.raw_graph_tensor_le (hG : G.WordBound q R A d) (hq : 3 ≤ q)
 theorem WordBound.raw_graph_norm_le (hG : G.WordBound q R A 0) (hq : 3 ≤ q)
     (t : Icc (0 : ℝ) T) (k : ℝ) (m : Space) (x : Space) :
     ‖raw (t,(x,k*inner ℝ m x))‖ ≤ sobolevEmbeddingConstant P 3*A := by
-  simpa [majorant] using hG.raw_graph_tensor_le hq t k m 0 x
+  simpa only [norm_iteratedFDeriv_zero, pow_zero, majorant, add_zero, Nat.factorial_zero,
+      Nat.cast_one, one_pow, mul_one, one_mul] using hG.raw_graph_tensor_le hq t k m 0 x
 
 theorem WordBound.raw_graph_fderiv_le (hG : G.WordBound q R A 0) (hq : 3 ≤ q)
     (t : Icc (0 : ℝ) T) (k : ℝ) (m : Space) (x : Space) :
     ‖fderiv ℝ (fun y : Space => raw (t,(y,k*inner ℝ m y))) x‖ ≤
       frequencyFactor k m*(sobolevEmbeddingConstant P 3*A*R) := by
-  simpa [majorant] using hG.raw_graph_tensor_le hq t k m 1 x
+  simpa only [norm_iteratedFDeriv_one, pow_one, majorant, add_zero, Nat.factorial_one, Nat.cast_one,
+      one_pow, mul_one] using hG.raw_graph_tensor_le hq t k m 1 x
 
 /-- Composing the real graph field with a differentiable inverse map
 preserves the amplitude and contributes its actual derivative norm. -/
@@ -88,7 +90,8 @@ theorem WordBound.raw_physical_fderiv_le (hG : G.WordBound q R A 0) (hq : 3 ≤ 
     (x : Space) (hY : DifferentiableAt ℝ Y x) :
     ‖fderiv ℝ (fun y : Space => raw (t,(Y y,k*inner ℝ m (Y y)))) x‖ ≤
       (frequencyFactor k m*(sobolevEmbeddingConstant P 3*A*R))*‖fderiv ℝ Y x‖ := by
-  have hg := (G.raw_graph_contDiff t k m).differentiable (by simp) (Y x)
+  have hg := (G.raw_graph_contDiff t k m).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) (Y x)
   change ‖fderiv ℝ ((fun y : Space => raw (t,(y,k*inner ℝ m y))) ∘ Y) x‖ ≤ _
   rw [fderiv_comp x hg hY]
   exact (ContinuousLinearMap.opNorm_comp_le _ _).trans

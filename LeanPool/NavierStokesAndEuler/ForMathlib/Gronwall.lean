@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.Complex.Exponential
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Scalar Gronwall estimates with interior derivatives

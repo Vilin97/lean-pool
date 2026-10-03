@@ -41,11 +41,12 @@ theorem word_zero {n : ℕ} (w : Fin n → Fin 4) :
     rw [iteratedFieldDerivative_succ, ih]
     ext x
     change fderiv ℝ (fun _ : LiftTangent => (0 : F)) 0 _ = 0
-    simp
+    simp only [fderiv_fun_const, Pi.zero_apply, zero_apply]
 
 @[simp] theorem wordSobolevNorm_zero_field (q n : ℕ) :
     wordSobolevNorm period q n (0 : LiftDomain period → F) = 0 := by
-  simp [wordSobolevNorm, liftSobolevNorm, word_zero]
+  simp only [wordSobolevNorm, liftSobolevNorm, word_zero, eLpNorm_zero, ENNReal.toReal_zero,
+      Finset.sum_const_zero]
 
 omit [Fact (0 < period)] in
 theorem smooth_sum {α : Type*} (s : Finset α) (f : α → LiftDomain period → F)
@@ -55,7 +56,7 @@ theorem smooth_sum {α : Type*} (s : Finset α) (f : α → LiftDomain period �
   have he : localFieldLift period (∑ i ∈ s, f i) x =
       fun y => ∑ i ∈ s, localFieldLift period (f i) x y := by
     funext y
-    simp [localFieldLift]
+    simp only [localFieldLift, Finset.sum_apply]
   rw [he]
   exact ContDiff.sum (fun i hi => hf i hi x)
 
@@ -67,7 +68,7 @@ theorem word_sum {α : Type*} (s : Finset α) (f : α → LiftDomain period → 
       ∑ i ∈ s, iteratedFieldDerivative period w (f i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simp [word_zero]
+  | empty => simp only [Finset.sum_empty, word_zero]
   | @insert a s ha ih =>
     rw [Finset.sum_insert ha, Finset.sum_insert ha,
       word_add period w (f a) (∑ i ∈ s, f i) (hf a (Finset.mem_insert_self ..))
@@ -92,7 +93,7 @@ theorem wordSobolevNorm_sum_le {α : Type*} (s : Finset α) (q n : ℕ)
     wordSobolevNorm period q n (∑ i ∈ s, f i) ≤ ∑ i ∈ s, wordSobolevNorm period q n (f i) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simp
+  | empty => simp only [Finset.sum_empty, wordSobolevNorm_zero_field, Std.le_refl]
   | @insert a s ha ih =>
     rw [Finset.sum_insert ha, Finset.sum_insert ha]
     exact (wordSobolevNorm_add_le period q n (f a) (∑ i ∈ s, f i)
@@ -234,6 +235,7 @@ theorem transport_shifted_weighted_bound (q N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
           (fun l => wordSobolevNorm_nonneg period 6 l b) (fun l => wordSobolevNorm_nonneg period 6
               l e))
         (productConstant_nonneg period q)
-      simpa only [mul_assoc, mul_left_comm, mul_comm] using h
+      refine h.trans_eq ?_
+      ring
 
 end EulerH6Nonlinear

@@ -35,7 +35,7 @@ omit [CompactSpace K] [NormedSpace ℝ E] in
 @[simp] theorem mapPath_apply {V W : Type u}
     [NormedAddCommGroup V] [NormedSpace ℝ V] [NormedAddCommGroup W] [NormedSpace ℝ W]
     (L : V →L[ℝ] W) (A : C(K, E →ᵇ V)) (t : K) (x : E) :
-    mapPath L A t x = L (A t x) := rfl
+    mapPath (K := K) (E := E) L A t x = L (A t x) := rfl
 
 section Constant
 
@@ -103,7 +103,7 @@ local instance instSmoothTimeFieldBilinear10 (n : ℕ) : NormedSpace ℝ (E →�
 /-- Bilinear path as an element of `C(K,E →ᵇ Z)`. -/
 def bilinearPath (B : V →L[ℝ] W →L[ℝ] Z)
     (A : SmoothTimeField K E V) (C : SmoothTimeField K E W) : C(K,E →ᵇ Z) :=
-  ⟨fun t => bilinearMap B (A.field t) (C.field t),
+  ⟨fun t => bilinearMap (α := E) B (A.field t) (C.field t),
     ((bilinearMap (α := E) B).continuous.comp A.field.continuous).clm_apply C.field.continuous⟩
 
 @[simp] theorem bilinearPath_apply (B : V →L[ℝ] W →L[ℝ] Z)
@@ -114,7 +114,7 @@ def bilinearPath (B : V →L[ℝ] W →L[ℝ] Z)
 Z).symm.toContinuousLinearEquiv.toContinuousLinearMap J`. -/
 def uncurryRightPath (n : ℕ) (J : C(K, E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] Z)))) :
     C(K,E →ᵇ (E [×(n+1)]→L[ℝ] Z)) :=
-  mapPath (continuousMultilinearCurryRightEquiv' ℝ n E
+  mapPath (K := K) (E := E) (continuousMultilinearCurryRightEquiv' ℝ n E
       Z).symm.toContinuousLinearEquiv.toContinuousLinearMap J
 
 omit [CompactSpace K] in
@@ -128,21 +128,17 @@ theorem exists_bilinear_jet (B : V →L[ℝ] W →L[ℝ] Z)
       J t x = iteratedFDeriv ℝ n (fun y => B (A.field t y) (C.field t y)) x := by
   induction n generalizing V W Z with
   | zero =>
-    refine ⟨mapPath (continuousMultilinearCurryFin0 ℝ E
+    refine ⟨mapPath (K := K) (E := E) (continuousMultilinearCurryFin0 ℝ E
         Z).symm.toContinuousLinearEquiv.toContinuousLinearMap
       (bilinearPath B A C), ?_⟩
     intro t x
     rfl
   | succ n ih =>
-    obtain ⟨J₁,hJ₁⟩ := ih (V := V) (W := E →L[ℝ] W) (Z := E →L[ℝ] Z)
+    have h₁ := ih (V := V) (W := E →L[ℝ] W) (Z := E →L[ℝ] Z)
       (B.precompR E) A C.derivative
-    obtain ⟨J₂,hJ₂⟩ := ih (V := E →L[ℝ] V) (W := W) (Z := E →L[ℝ] Z)
+    have h₂ := ih (V := E →L[ℝ] V) (W := W) (Z := E →L[ℝ] Z)
       (B.precompL E) A.derivative C
-    refine ⟨uncurryRightPath n (J₁+J₂), ?_⟩
-    intro t x
-    rw [uncurryRightPath_apply, ContinuousMap.add_apply, BoundedContinuousFunction.add_apply]
-    rw [hJ₁, hJ₂, iteratedFDeriv_succ_eq_comp_right]
-    apply congrArg (continuousMultilinearCurryRightEquiv' ℝ n E Z).symm
+    refine ⟨uncurryRightPath n (HAdd.hAdd h₁.choose h₂.choose), fun t x => ?_⟩
     have hd : fderiv ℝ (fun y => B (A.field t y) (C.field t y)) =
         fun y => B.precompR E (A.field t y) (C.derivative.field t y) +
           B.precompL E (A.derivative.field t y) (C.field t y) := by
@@ -150,14 +146,14 @@ theorem exists_bilinear_jet (B : V →L[ℝ] W →L[ℝ] Z)
       rw [B.fderiv_of_bilinear ((A.smooth t).differentiable (by simp) y)
         ((C.smooth t).differentiable (by simp) y)]
       simp only [derivative, derivativeField_eq]
-    rw [hd]
-    exact (fun_iteratedFDeriv_add_apply
-      ((((B.precompR E).contDiff.comp (A.smooth t)).clm_apply (C.derivative.smooth
-          t)).contDiffAt.of_le (by
-          simp))
-      ((((B.precompL E).contDiff.comp (A.derivative.smooth t)).clm_apply (C.smooth
-          t)).contDiffAt.of_le (by
-          simp))).symm
+    simp only [uncurryRightPath_apply, ContinuousMap.add_apply, BoundedContinuousFunction.add_apply,
+      h₁.choose_spec, h₂.choose_spec, iteratedFDeriv_succ_eq_comp_right, Function.comp_apply, hd]
+    refine congrArg _ ?_
+    refine (fun_iteratedFDeriv_add_apply ?_ ?_).symm
+    · exact (((B.precompR E).contDiff.comp (A.smooth t)).clm_apply
+        (C.derivative.smooth t)).contDiffAt.of_le (by simp)
+    · exact (((B.precompL E).contDiff.comp (A.derivative.smooth t)).clm_apply
+        (C.smooth t)).contDiffAt.of_le (by simp)
 
 /-- Bilinear, bundling `field`, `smooth`, `jet`, `jet_eq`. -/
 def bilinear (B : V →L[ℝ] W →L[ℝ] Z)

@@ -93,7 +93,7 @@ def integrator : Curve a b E →L[ℝ] Curve a b E :=
   } (b - a) (norm_integralPath_le hab)
 
 theorem integrator_apply (f : Curve a b E) (t : Icc a b) :
-    integrator hab f t = ∫ s in a..(t : ℝ), extend hab f s := rfl
+    integrator (E := E) hab f t = ∫ s in a..(t : ℝ), extend hab f s := rfl
 
 /-- Apply coefficient, given by `⟨fun t => A t (u t), A.continuous.clm_apply u.continuous⟩`. -/
 noncomputable def applyCoefficient (A : Coefficient a b E) (u : Curve a b E) : Curve a b E :=
@@ -129,7 +129,7 @@ def coefficientAction : Coefficient a b E →L[ℝ] Curve a b E →L[ℝ] Curve 
 
 omit [CompleteSpace E] in
 theorem coefficientAction_apply (A : Coefficient a b E) (u : Curve a b E) (t : Icc a b) :
-    coefficientAction (E := E) A u t = A t (u t) := rfl
+    coefficientAction (a := a) (b := b) (E := E) A u t = A t (u t) := rfl
 
 /-- Volterra, given by `((ContinuousLinearMap.compL ℝ (Curve a b E) (Curve a b E) (Curve a b E))
 (integrator hab)).comp (coefficientAction (E := E))`. -/
@@ -196,14 +196,14 @@ theorem id_sub_isInvertible (L : X →L[ℝ] X)
   have htrans (g : X) : ContractingWith K (fun x => g + L x)^[N] := by
     refine ⟨hK.1, LipschitzWith.of_dist_le_mul fun u w => ?_⟩
     simpa only [dist_eq_norm, affine_iterate_sub] using hK.2.dist_le_mul u w
-  have hsurj : Surjective (ContinuousLinearMap.id ℝ X - L) := by
+  have hsurj : Surjective (ContinuousLinearMap.id ℝ X - L : X →L[ℝ] X) := by
     intro g
     let x := (htrans g).fixedPoint (fun x => g + L x)^[N]
     have hf : g + L x = x := (htrans g).isFixedPt_fixedPoint_iterate.eq
     refine ⟨x, ?_⟩
     change x - L x = g
     exact sub_eq_iff_eq_add.mpr hf.symm
-  have hinj : Injective (ContinuousLinearMap.id ℝ X - L) := by
+  have hinj : Injective (ContinuousLinearMap.id ℝ X - L : X →L[ℝ] X) := by
     intro u w huv
     let g := (ContinuousLinearMap.id ℝ X - L) u
     have hu : IsFixedPt (fun x => g + L x) u := by
@@ -265,7 +265,7 @@ def constantCurve : E →L[ℝ] Curve a b E :=
 
 /-- Source, given by `constantCurve x₀ + integrator hab f`. -/
 def source (x₀ : E) (f : Curve a b E) : Curve a b E :=
-  constantCurve x₀ + integrator hab f
+  constantCurve (a := a) (b := b) (E := E) x₀ + integrator (E := E) hab f
 
 /-- The constructed solution as a continuous path, not an assumed solution family. -/
 def solution (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) : Curve a b E :=
@@ -276,14 +276,14 @@ theorem resolvent_equation (A : Coefficient a b E) (g : Curve a b E) :
   exact ((equationOperator_isInvertible hab A).inverse_apply_eq.mp rfl).symm
 
 theorem solution_integralEquation (A : Coefficient a b E) (x₀ : E) (f : Curve a b E) :
-    solution hab A x₀ f = constantCurve x₀ +
-      integrator hab (applyCoefficient A (solution hab A x₀ f) + f) := by
+    solution hab A x₀ f = constantCurve (a := a) (b := b) (E := E) x₀ +
+      integrator (E := E) hab (applyCoefficient A (solution hab A x₀ f) + f) := by
   have h := resolvent_equation hab A (source hab x₀ f)
   change solution hab A x₀ f - volterra (E := E) hab A (solution hab A x₀ f) =
     source hab x₀ f at h
   rw [map_add]
-  change solution hab A x₀ f = constantCurve x₀ +
-    (volterra (E := E) hab A (solution hab A x₀ f) + integrator hab f)
+  change solution hab A x₀ f = constantCurve (a := a) (b := b) (E := E) x₀ +
+    (volterra (E := E) hab A (solution hab A x₀ f) + integrator (E := E) hab f)
   rw [sub_eq_iff_eq_add] at h
   calc
     _ = source hab x₀ f + volterra (E := E) hab A (solution hab A x₀ f) := h
@@ -397,16 +397,14 @@ theorem parameter_derivative_eq_solution
     exact (hc.comp p hx₀).add (hi.comp p hf)
   have h := fderiv_resolvent_family hab A (fun q => source hab (x₀ q) (f q)) hA hs v
   calc
-    _ = resolvent hab (A p) (constantCurve (x₀' v) + integrator hab (f' v) +
+    _ = resolvent hab (A p) (constantCurve (a := a) (b := b) (E := E) (x₀' v) +
+        integrator (E := E) hab (f' v) +
         volterra (E := E) hab (A' v) (solution hab (A p) (x₀ p) (f p))) := h
     _ = _ := by
       unfold solution source
       apply congrArg (resolvent hab (A p))
-      rw [(integrator hab).map_add]
-      change _ = constantCurve (x₀' v) +
-        (volterra (E := E) hab (A' v) (resolvent hab (A p)
-          (constantCurve (x₀ p) + integrator hab (f p))) + integrator hab (f' v))
-      abel
+      exact (add_assoc _ _ _).trans
+        (congrArg _ ((add_comm _ _).trans ((integrator hab).map_add _ _).symm))
 
 theorem parameter_derivative_hasDerivWithinAt
     (A : P → Coefficient a b E) (x₀ : P → E) (f : P → Curve a b E)
@@ -425,7 +423,7 @@ theorem parameter_derivative_hasDerivWithinAt
 
 omit [CompleteSpace E] in
 theorem norm_constantCurve_le (x : E) :
-    ‖constantCurve (a := a) (b := b) x‖ ≤ ‖x‖ :=
+    ‖constantCurve (a := a) (b := b) (E := E) x‖ ≤ ‖x‖ :=
   (ContinuousMap.norm_le _ (norm_nonneg x)).mpr (fun _ => le_rfl)
 
 theorem norm_source_le (x₀ : E) (f : Curve a b E) :
@@ -461,7 +459,7 @@ theorem contDiff_solution_family (A : P → Coefficient a b E) (x₀ : P → E)
     (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (fun p => solution hab (A p) (x₀ p) (f p)) := by
   change ContDiff ℝ ∞ (fun p => resolvent hab (A p)
-    (constantCurve (a := a) (b := b) (x₀ p) + integrator hab (f p)))
+    (constantCurve (a := a) (b := b) (E := E) (x₀ p) + integrator (E := E) hab (f p)))
   exact ((contDiff_resolvent hab).comp hA).clm_apply
     (((constantCurve (E := E) (a := a) (b := b)).contDiff.comp hx₀).add
       ((integrator (E := E) hab).contDiff.comp hf))
@@ -472,7 +470,7 @@ theorem contDiffOn_solution_family {s : Set P}
     (hf : ContDiffOn ℝ ∞ f s) :
     ContDiffOn ℝ ∞ (fun p => solution hab (A p) (x₀ p) (f p)) s := by
   change ContDiffOn ℝ ∞ (fun p => resolvent hab (A p)
-    (constantCurve (a := a) (b := b) (x₀ p) + integrator hab (f p))) s
+    (constantCurve (a := a) (b := b) (E := E) (x₀ p) + integrator (E := E) hab (f p))) s
   exact ((contDiff_resolvent hab).comp_contDiffOn hA).clm_apply
     (((constantCurve (E := E) (a := a) (b := b)).contDiff.comp_contDiffOn hx₀).add
       ((integrator (E := E) hab).contDiff.comp_contDiffOn hf))

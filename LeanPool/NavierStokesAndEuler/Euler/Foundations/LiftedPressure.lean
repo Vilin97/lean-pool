@@ -35,7 +35,7 @@ theorem coefficientApply_memLp (A : α → V →L[ℝ] V) (hA : AEStronglyMeasur
     MemLp (fun x => A x (f x)) 2 μ := by
   apply (Lp.memLp f).of_le_mul (c := (C : ℝ))
   · exact (continuous_fst.clm_apply continuous_snd).comp_aestronglyMeasurable
-      (hA.prodMk (Lp.aestronglyMeasurable f))
+      (f := fun x => (A x, f x)) (hA.prodMk (Lp.aestronglyMeasurable f))
   · exact Filter.Eventually.of_forall fun x =>
       ((A x).le_opNorm (f x)).trans
         (mul_le_mul_of_nonneg_right (hbound x) (norm_nonneg _))

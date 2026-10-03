@@ -35,9 +35,10 @@ open scoped ContDiff
 variable (P : ℝ) [Fact (0 < P)]
 
 theorem embed_smooth (u : CylinderL2 P ℝ)
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a u)) : SmoothOrbit P (embed P u) := by
-  have he : (fun a : LiftTangent => translate P a (embed P u)) =
-      (fun a => embed P (translate P a u)) :=
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := ℝ) P a u)) :
+    SmoothOrbit P (embed P u) := by
+  have he : (fun a : LiftTangent => translate (V := Vector3) P a (embed P u)) =
+      (fun a => embed P (translate (V := ℝ) P a u)) :=
     funext (fun a => (map_translation P scalarEmbed a u).symm)
   change ContDiff ℝ ∞ _
   rw [he]
@@ -45,7 +46,7 @@ theorem embed_smooth (u : CylinderL2 P ℝ)
 
 /-- The vector H3 reconstruction theorem transfers to the actual scalar primitive. -/
 theorem primitive_ae_classical (u : CylinderL2 P ℝ)
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a u))
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := ℝ) P a u))
     (f q : LiftDomain P → ℝ) (hf : Continuous f)
     (hrep : (u : LiftDomain P → ℝ) =ᵐ[liftMeasure P] f)
     (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P))) = 0)
@@ -79,7 +80,7 @@ theorem primitive_ae_classical (u : CylinderL2 P ℝ)
 
 /-- The actual scalar primitive is exactly the descended normalized integral. -/
 theorem primitive_ae_constructed (u : CylinderL2 P ℝ)
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a u))
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := ℝ) P a u))
     (f : LiftDomain P → ℝ) (hf : Continuous f)
     (hrep : (u : LiftDomain P → ℝ) =ᵐ[liftMeasure P] f)
     (hmean : ∀ y, (∫ s in (0 : ℝ)..P, f (y,(s : AddCircle P))) = 0) :

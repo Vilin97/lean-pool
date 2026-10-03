@@ -169,11 +169,19 @@ theorem fieldDerivative_smul {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ
       (fun x => fieldDerivative period a f x • g x) + (fun x => f x • fieldDerivative period a g x)
           := by
   funext x
-  have h := (((hf x).differentiable (by simp)) 0).hasFDerivAt.smul
-    (((hg x).differentiable (by simp)) 0).hasFDerivAt
-  have he := congrArg (fun A : LiftTangent →L[ℝ] F => A a) h.fderiv
-  change fderiv ℝ (localFieldLift period f x • localFieldLift period g x) 0 a = _
-  simpa [fieldDerivative, localFieldLift, add_comm] using he
+  have h := ((((hf x).differentiable (by simp)) 0).hasFDerivAt.smul
+    (((hg x).differentiable (by simp)) 0).hasFDerivAt).fderiv
+  have hf0 : localFieldLift period f x 0 = f x := by
+    simp only [localFieldLift, Prod.fst_zero, Prod.snd_zero, AddCircle.coe_zero, add_zero,
+      Prod.mk.eta]
+  have hg0 : localFieldLift period g x 0 = g x := by
+    simp only [localFieldLift, Prod.fst_zero, Prod.snd_zero, AddCircle.coe_zero, add_zero,
+      Prod.mk.eta]
+  have hsmul : localFieldLift period (fun y => f y • g y) x =
+      localFieldLift period f x • localFieldLift period g x := rfl
+  simp only [fieldDerivative, hsmul, h, add_apply, smul_apply,
+    ContinuousLinearMap.smulRight_apply, hf0, hg0, Pi.add_apply]
+  exact add_comm _ _
 
 /-- All actual derivative words of a smooth H-infinity scalar-vector product lie in L². -/
 theorem product_all_memLp (q : ℕ) (f : LiftDomain period → ℝ) (g : LiftDomain period → Domain q)

@@ -101,7 +101,8 @@ theorem pointwise_time_derivative_of_classical
         (G ⟨t,ht.1.le,ht.2.le⟩).field x) t := by
   let s : Icc (0 : ℝ) T := ⟨t,ht.1.le,ht.2.le⟩
   have hu := (hdiff t ht x).hasFDerivAt
-  have hv := hu.comp_hasDerivAt t ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
+  have hv := hu.comp_hasDerivAt (F := ℝ × Space) (f := fun r => (id r, x)) t
+    ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
   have hs : (fun y => u (t,y))=(U s).field := funext (hmatch s)
   have hx : fderiv ℝ u (t,x) (0,(U s).field x) =
       fderiv ℝ (U s).field x ((U s).field x) := by

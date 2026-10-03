@@ -75,8 +75,8 @@ variable {X E F : Type*} [MeasurableSpace X]
 include hA hC in
 theorem apply_memLp (u : Lp E 2 μ) : MemLp (fun x => A x (u x)) 2 μ := by
   apply (Lp.memLp u).of_le_mul (c := C)
-  · exact (continuous_fst.clm_apply continuous_snd).comp_aestronglyMeasurable
-      (hA.prodMk (Lp.aestronglyMeasurable u))
+  · exact ((continuous_fst.clm_apply continuous_snd).comp_aestronglyMeasurable
+      (hA.prodMk (Lp.aestronglyMeasurable u)) :)
   · exact Eventually.of_forall (fun x => ((A x).le_opNorm (u x)).trans
       (mul_le_mul_of_nonneg_right (hC x) (norm_nonneg (u x))))
 
@@ -295,7 +295,8 @@ def partitionPath (c : OrderedFinpartition n) :
   continuous_toFun := operator_path_continuous volume (partitionBound D c) (partitionCoefficient Y
       c)
     (fun t => partitionCoefficient_aestronglyMeasurable Y hJ c t)
-    (fun _ => (partitionCoefficient_continuous Y hJ c).comp (continuous_id.prodMk continuous_const))
+    (fun _ => ((partitionCoefficient_continuous Y hJ c).comp
+      (continuous_id.prodMk continuous_const) :))
     (partitionCoefficient_bound Y D hD hB c) _ (pulledJetPath Y hmp u c.length).continuous
 
 theorem partitionPath_ae (g : K → Vector3 → Vector3)
@@ -439,9 +440,7 @@ theorem compositionTensorLp_norm_le :
         omega)).aestronglyMeasurable.norm hmp,
       eLpNorm_norm _ (hLp i (by omega)).aestronglyMeasurable]
   simp_rw [hc] at hB
-  have hAB : eLpNorm (iteratedFDeriv ℝ n (g ∘ f)) 2 volume ≤
-      (β : ℝ≥0∞)*∑ i : Fin (n+1), eLpNorm (iteratedFDeriv ℝ i.val g) 2 volume := by
-    exact hA.trans (mul_le_mul le_rfl hB (by positivity) (by positivity))
+  have hAB := hA.trans (mul_le_mul le_rfl hB (by positivity) (by positivity))
   have hfin : (β : ℝ≥0∞)*∑ i : Fin (n+1),
       eLpNorm (iteratedFDeriv ℝ i.val g) 2 volume ≠ ⊤ :=
     ENNReal.mul_ne_top ENNReal.coe_ne_top
@@ -892,7 +891,8 @@ def pressureForceTower : FieldTower P D.T :=
 theorem pressureForceTower_pointField (t : Icc (0 : ℝ) D.T)
     (x : EulerLiftedGradientSpace.LiftDomain P) :
     (pressureForceTower D P κ Z).pointField t x =
-      κ • (D.FInv.field t x.1).adjoint (Z.pointField t x) := by
+      κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (D.FInv.field t x.1) (Z.pointField t x) := by
   rw [pressureForceTower, FieldTower.smul_pointField, FieldTower.multiply_pointField]
   rfl
 
@@ -944,8 +944,8 @@ def pressureForceSmoothField (t : Icc (0 : ℝ) D.T) : SmoothL2Field Space :=
 
 theorem pressureForceSmoothField_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     (pressureForceSmoothField D P κ Z k X Y hX hYX hXY hY R C hR hC hdet hF t).field x =
-      κ • (D.FInv.field t (Y t x)).adjoint
-        (Z.pointField t (cylinderGraph P k D.m₀ (Y t x))) :=
+      κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (D.FInv.field t (Y t x)) (Z.pointField t (cylinderGraph P k D.m₀ (Y t x))) :=
   pressureForceTower_pointField D P κ Z t (cylinderGraph P k D.m₀ (Y t x))
 
 theorem pressureForceSmoothField_jetLp_continuous (n : ℕ) :
@@ -963,8 +963,8 @@ def pressureForceCoefficientPath : SmoothCoefficientPath (Icc (0 : ℝ) D.T) Spa
 
 theorem pressureForceCoefficientPath_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     (pressureForceCoefficientPath D P κ Z k X Y hX hYX hXY hY R C hR hC hdet hF).field t x =
-      κ • (D.FInv.field t (Y t x)).adjoint
-        (Z.pointField t (cylinderGraph P k D.m₀ (Y t x))) := by
+      κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (D.FInv.field t (Y t x)) (Z.pointField t (cylinderGraph P k D.m₀ (Y t x))) := by
   rw [pressureForceCoefficientPath, EulerPacketSourceVolumeSobolev.smoothCoefficientPath_apply,
     pressureForceTower_pointField]
   rfl
@@ -1067,6 +1067,15 @@ theorem forwardCorrectionParity (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k
     δ hδ ξ hs α (O.meanEvenData H) hSym O.frame_even O.strain_even
     (A.sourceAgreement m hm R S hS H) N hN k hk
 
+omit O hSym [CompleteSpace U] in
+theorem historyOn_field (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T) (t : Icc (0 : ℝ) τ) :
+    (A.historyOn H m hm R S hS τ hτ hτT).H.field t =
+      A.curvature.field (initialInclusion A.T τ hτT.le t) := by
+  dsimp only [Parent.historyOn, EulerTransversePacketProvider.HistoryData.initial,
+    Parent.historyData, Parent.transverseData_T, EulerMeanCoefficients.SmoothCoefficientPath.comp,
+    SmoothTimeField.toSmoothCoefficientPath, ContinuousMap.comp_apply]
+  rfl
+
 theorem joinedCorrectionParity (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     ParityData period
@@ -1078,7 +1087,8 @@ theorem joinedCorrectionParity (τ : ℝ) (hτ : 0 < τ) (hτT : τ < A.T)
     (O.meanEvenData H) hSym O.frame_even O.strain_even
     _ (A.sourceAgreement m hm R S hS H) N hN k hk
   intro t x
-  exact O.curvature_even (initialInclusion A.T τ hτT.le t) x
+  rw [historyOn_field H m hm R S hS τ hτ hτT t]
+  exact O.curvature_even _ x
 
 omit hSym [CompleteSpace U] in
 theorem childOfPacket {P : ℝ} [Fact (0 < P)] {C : EulerAllOrderCorrectionData.Data P A.T}
@@ -1163,7 +1173,8 @@ theorem packetVelocityField_apply (t : Icc (0 : ℝ) A.T) (x : Space) :
 
 theorem packetForceField_apply (t : Icc (0 : ℝ) A.T) (x : Space) :
     (L.packetForceField I m hm J support hSupport P κ Z k t).field x =
-      A.ell • (κ • (A.inverse.field t (A.ell⁻¹ • I.field t x)).adjoint
+      A.ell • (κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (A.inverse.field t (A.ell⁻¹ • I.field t x))
         (Z.pointField t (cylinderGraph P k m (A.ell⁻¹ • I.field t x)))) := by
   rw [packetForceField,scaleField_apply]
   erw [pressureForceSmoothField_apply,I.normalized_scaled]

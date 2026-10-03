@@ -81,7 +81,8 @@ theorem hasFDerivAt (E : X → H →L[ℝ] V) (C : ℝ) (hE : ∀ x, ‖E x‖ �
   apply hasFDerivAt_iff_isLittleO.mpr
   apply ((hfirst.add hsecond).add hthird).congr_left
   intro q
-  simp only [map_sub,map_smul,add_apply,comp_apply,toSpanSingleton_apply,coe_fst',coe_snd',smul_sub]
+  simp only [ContinuousLinearMap.map_sub, ContinuousLinearMap.map_smul, add_apply, comp_apply,
+    toSpanSingleton_apply, coe_fst', coe_snd', smul_sub]
   module
 
 end EulerBoundedEvaluation
@@ -164,9 +165,8 @@ theorem rawVelocity_hasFDerivAt (t : ℝ) (ht : t ∈ Ioo 0 T) (z : LiftTangent)
         extendPath T hT.le (S.velocity.realization 3) := by
       funext r
       exact S.velocity.restrict_realization (by omega : 3 ≤ 6) _
-    change HasDerivAt (fun r => restrictOperator P (by omega : 3 ≤ 6)
-      (extendPath T hT.le (S.velocity.realization 6) r)) u' t at h
-    rwa [he] at h
+    rw [← he]
+    apply h
   have hv : pointEvaluation P (coveringMap P z) u' =
       S.pointTimeDerivative ⟨t,ht.1.le,ht.2.le⟩ (coveringMap P z) := by
     have h := (pointEvaluation P (coveringMap P z)).hasFDerivAt.comp_hasDerivAt t hd

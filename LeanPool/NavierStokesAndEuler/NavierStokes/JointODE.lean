@@ -136,7 +136,8 @@ theorem reparamSolution_contDiffAt (U : Set P) (V : Set ℝ)
     (rescale a A) (fun q => x₀ q.1) (rescale a f)
     (rescale_contDiffOn A hA hmap) hinit (rescale_contDiffOn f hf hmap)
   have hev := (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
-    (ContinuousMap.evalCLM ℝ (⟨1, zero_le_one, le_rfl⟩ : Icc (0 : ℝ) 1))).comp_contDiffOn hpath
+    (ContinuousMap.evalCLM (M := E) ℝ
+      (⟨1, zero_le_one, le_rfl⟩ : Icc (0 : ℝ) 1))).comp_contDiffOn hpath
   exact (hev z hzQ').contDiffAt (hQ.mem_nhds hzQ')
 
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
@@ -156,7 +157,7 @@ theorem actualSolution_hasDerivAt (hab : a ≤ b) {U : Set P}
       (A (p, t) (actualSolution hab A x₀ f (p, t)) + f (p, t)) t := by
   have hAc := SmoothPathFamily.slice_continuous hA hp
   have hfc := SmoothPathFamily.slice_continuous hf hp
-  have hd := ParametricODE.solutionExtension_hasDerivAt hab
+  have hd := ParametricODE.solutionExtension_hasDerivAt (E := E) hab
     (SmoothPathFamily.pathFamily A p) (x₀ p) (SmoothPathFamily.pathFamily f p) ⟨t, ht⟩
   unfold actualSolution
   simpa only [SmoothPathFamily.pathFamily_apply A p hAc,
@@ -173,7 +174,7 @@ theorem reparamSolution_eq_actualSolution (hab : a ≤ b) {U : Set P}
   let B : ℝ → E →L[ℝ] E := fun s => rescale a A (z, s)
   let g : ℝ → E := fun s => rescale a f (z, s)
   let y : ℝ → E := ParametricODE.solutionExtension (a := 0) (b := 1) zero_le_one
-    (SmoothPathFamily.pathFamily (rescale a A) z) (x₀ z.1)
+    (SmoothPathFamily.pathFamily (E := E →L[ℝ] E) (rescale a A) z) (x₀ z.1)
     (SmoothPathFamily.pathFamily (rescale a f) z)
   let w : ℝ → E := fun s => actualSolution hab A x₀ f (z.1, affineTime a z.2 s)
   have hB : ContinuousOn B (Icc (0 : ℝ) 1) := rescale_slice_continuousOn A hA hz
@@ -183,7 +184,7 @@ theorem reparamSolution_eq_actualSolution (hab : a ≤ b) {U : Set P}
   have hy : ∀ s ∈ Icc (0 : ℝ) 1, HasDerivAt y (B s (y s) + g s) s := by
     intro s hs
     have hd := ParametricODE.solutionExtension_hasDerivAt (a := 0) (b := 1) zero_le_one
-      (SmoothPathFamily.pathFamily (rescale a A) z) (x₀ z.1)
+      (SmoothPathFamily.pathFamily (E := E →L[ℝ] E) (rescale a A) z) (x₀ z.1)
       (SmoothPathFamily.pathFamily (rescale a f) z) ⟨s, hs⟩
     simpa only [SmoothPathFamily.pathFamily_apply (rescale a A) z hBc,
       SmoothPathFamily.pathFamily_apply (rescale a f) z hgc] using hd
@@ -194,15 +195,9 @@ theorem reparamSolution_eq_actualSolution (hab : a ≤ b) {U : Set P}
     simpa only [w, B, g, rescale, timeMap, Function.comp_def,
       _root_.smul_apply, smul_add] using hd
   have hinit : y 0 = w 0 := by
-    change x₀ z.1 + (∫ s in (0 : ℝ)..0,
-      ParametricODE.extend zero_le_one
-        (ParametricODE.applyCoefficient (SmoothPathFamily.pathFamily (rescale a A) z)
-          (ParametricODE.solution zero_le_one
-            (SmoothPathFamily.pathFamily (rescale a A) z) (x₀ z.1)
-            (SmoothPathFamily.pathFamily (rescale a f) z)) +
-          SmoothPathFamily.pathFamily (rescale a f) z) s) = w 0
-    simp only [intervalIntegral.integral_same, add_zero, w, affineTime_zero,
-      actualSolution_initial]
+    simp only [w, affineTime_zero, actualSolution_initial]
+    exact (ParametricODE.solutionExtension_coe zero_le_one _ _ _ ⟨0, le_rfl, zero_le_one⟩).trans
+      (ParametricODE.solution_initial zero_le_one _ _ _)
   have heq := TangentODE.linear_solution_unique zero_le_one B g hB hy hw hinit
   have h1 := heq (show (1 : ℝ) ∈ Icc (0 : ℝ) 1 from ⟨zero_le_one, le_rfl⟩)
   have hy1 : y 1 = reparamSolution a A x₀ f z :=
@@ -218,7 +213,7 @@ theorem contDiffOn_solutionExtension_joint (hab : a ≤ b) (U : Set P) (V : Set 
     (hA : ContDiffOn ℝ ∞ A (U ×ˢ V)) (hx₀ : ContDiffOn ℝ ∞ x₀ U)
     (hf : ContDiffOn ℝ ∞ f (U ×ˢ V)) :
     ContDiffOn ℝ ∞
-      (fun z : P × ℝ => ParametricODE.solutionExtension hab
+      (fun z : P × ℝ => ParametricODE.solutionExtension (E := E) hab
         (SmoothPathFamily.pathFamily A z.1) (x₀ z.1)
         (SmoothPathFamily.pathFamily f z.1) z.2) (U ×ˢ Icc a b) := by
   have hs : ContDiffOn ℝ ∞ (reparamSolution a A x₀ f) (U ×ˢ Icc a b) :=
@@ -236,7 +231,7 @@ theorem contDiffOn_solutionExtension_joint_interior (hab : a ≤ b) (U : Set P) 
     (hA : ContDiffOn ℝ ∞ A (U ×ˢ V)) (hx₀ : ContDiffOn ℝ ∞ x₀ U)
     (hf : ContDiffOn ℝ ∞ f (U ×ˢ V)) :
     ContDiffOn ℝ ∞
-      (fun z : P × ℝ => ParametricODE.solutionExtension hab
+      (fun z : P × ℝ => ParametricODE.solutionExtension (E := E) hab
         (SmoothPathFamily.pathFamily A z.1) (x₀ z.1)
         (SmoothPathFamily.pathFamily f z.1) z.2) (U ×ˢ Ioo a b) :=
   (contDiffOn_solutionExtension_joint hab U V hU hV hI A x₀ f hA hx₀ hf).mono

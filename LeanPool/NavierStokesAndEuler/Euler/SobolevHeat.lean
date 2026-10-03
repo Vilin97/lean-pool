@@ -272,7 +272,7 @@ theorem heatGain_bound {q : ℕ} (v : ℝ≥0) (hv : 0 < v) (u : SobolevSpace pe
     (cylinderHeat_translation period v) u
   have hA : ‖cylinderHeat period v‖ ≤ 1 :=
     ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by
-        simpa using cylinderHeat_norm_le period v f)
+        simpa only [one_mul] using cylinderHeat_norm_le period v f)
   exact h.trans (mul_le_mul_of_nonneg_right (max_le_max hA le_rfl) (norm_nonneg u))
 
 /-- Truncating the gained derivative gives the ordinary Sobolev heat action. -/
@@ -295,7 +295,7 @@ theorem heatGain_continuous {q : ℕ} (u : SobolevSpace period q) :
   intro v
   let ε : ℝ≥0 := v.val / 2
   have hε : 0 < ε := div_pos v.property (by norm_num)
-  have hεv : ε < v.val := by dsimp [ε]; exact half_lt_self v.property
+  have hεv : ε < v.val := by dsimp only [ε]; exact half_lt_self v.property
   have hc : Continuous (fun w : {v : ℝ≥0 // 0 < v} =>
       heatGain period q ε hε (heatOperator period q (w.val - ε) u)) :=
     (heatGain period q ε hε).continuous.comp

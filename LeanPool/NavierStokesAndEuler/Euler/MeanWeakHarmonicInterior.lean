@@ -132,7 +132,7 @@ theorem scalarMollification_harmonic (φ : ContDiffBump (0 : Space))
   have hd := normed_reflected_support φ x hy
   have htriangle := dist_triangle y x (0 : Space)
   simp only [Metric.mem_ball, Metric.mem_closedBall, dist_zero_right] at hx hd htriangle ⊢
-  linarith
+  linarith only [hr, hx, hd, htriangle]
 
 theorem interiorMollifier_harmonic (f : Space → ℝ) (hf : MemLp f 2 volume)
     (hh : ScalarWeakHarmonicOn (Metric.ball (0 : Space) 1) f) (n : ℕ) :

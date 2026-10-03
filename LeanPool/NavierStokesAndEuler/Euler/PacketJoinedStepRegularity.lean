@@ -83,22 +83,26 @@ theorem correctorTimePath_supported (t : Icc (0 : ℝ) D.T) :
       (potentialTimePath_orbit τ hτ hτT B G) D.FInv.field D.support_compact.isClosed
       (potentialTimePath_supported τ hτ hτT B G) t
 
-theorem potentialPath_average_zero : pathAverage P (potentialPath τ hτ hτT B G) = 0 :=
+theorem potentialPath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (potentialPath τ hτ hτT B G) = 0 :=
   potentialPath_mean_zero P (velocityPath τ hτ hτT B G) D.potentialCoefficientPath
     (ContinuousMap.ext (velocityPath_mean_zero τ hτ hτT B G))
 
-theorem potentialTimePath_average_zero : pathAverage P (potentialTimePath τ hτ hτT B G) = 0 := by
+theorem potentialTimePath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (potentialTimePath τ hτ hτT B G) = 0 := by
   rw [potentialTimePath,EulerCylinderPotential.potentialDerivative,map_add,
     potentialPath_mean_zero P (velocityPath τ hτ hτT B G) D.potentialDerivative
       (ContinuousMap.ext (velocityPath_mean_zero τ hτ hτT B G)),
     potentialPath_mean_zero P (derivativePath τ hτ hτT B G) D.potentialCoefficientPath
       (ContinuousMap.ext (derivativePath_mean_zero τ hτ hτT B G)),add_zero]
 
-theorem correctorPath_average_zero : pathAverage P (correctorPath τ hτ hτT B G) = 0 :=
+theorem correctorPath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (correctorPath τ hτ hτT B G) = 0 :=
   slowCurl_mean_zero P (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G)
     D.FInv.field (potentialPath_average_zero τ hτ hτT B G)
 
-theorem correctorTimePath_average_zero : pathAverage P (correctorTimePath τ hτ hτT B G) = 0 := by
+theorem correctorTimePath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (correctorTimePath τ hτ hτT B G) = 0 := by
   rw [correctorTimePath,EulerCylinderSlowCurl.derivative,map_add,
     slowCurl_mean_zero P (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G)
       D.inverseDerivative (potentialPath_average_zero τ hτ hτT B G),

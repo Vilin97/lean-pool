@@ -74,7 +74,7 @@ theorem openCell_subset_box (n : ℕ) (k : SlotColoring.Grid) :
     · exact hp.1.1
     · exact hp.1.2.1
     · exact hp.1.2.2
-  exact abs_le.mpr ⟨by linarith [hj.1], by linarith [hj.2]⟩
+  exact abs_le.mpr ⟨by linarith only [hj, hj.1], by linarith only [hj, hj.2]⟩
 
 theorem openCell_subset_larger {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.Grid) :
     openCell n k ⊆ PositiveRepresentatives.positiveCell n k :=
@@ -92,7 +92,7 @@ theorem support_subset_openCell {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.Grid)
       PrimaryRepresentatives.position p j < SquaredPartition.nativeSpacing n * (k j : ℝ) +
         2 * SquaredPartition.nativeSpacing n := by
     have hj := abs_le.mp (hb j)
-    constructor <;> linarith [hj.1, hj.2]
+    constructor <;> linarith only [hs, hj, hj.1, hj.2]
   exact ⟨⟨hc 0, hc 1, hc 2⟩, hp.2⟩
 
 theorem representative_mem_openCell (K : Set Slow) (L : PositiveRepresentatives.ActiveLabel K) :
@@ -434,7 +434,7 @@ theorem radius_lower_of_majorant {lo M : ℝ} (hlo : 0 < lo) (hM : 1 ≤ M)
   have hs : 0 < Real.sqrt lo := Real.sqrt_pos.mpr hlo
   have hb := (div_le_iff₀ hs).mp hbound
   apply (div_le_iff₀ hM0).mpr
-  nlinarith
+  nlinarith only [hb]
 
 /-- The smooth summed base, its positive mask representatives, and the
 actual strict cone supply every datum used by the phase theorem.  The
@@ -773,15 +773,17 @@ theorem basisMatrix_det (K : Plane) (hK : ‖K‖ = 1) : (basisMatrix K).det = -
   simp only [basisMatrix, Matrix.det_fin_two, ite_true, show (1 : Fin 2) ≠ 0 by decide,
     ite_false]
   change -K 1 * K 1 - K 0 * K 0 = -1
-  nlinarith
+  nlinarith only [hs]
 
 theorem modelMatrix_column (c u : ℝ) (K : Plane) (i j : Fin 2) :
     modelMatrix c u K i j =
       c * Real.sqrt (1 + u ^ 2) * MovingFrameODE.quarterTurn K i - phaseSign j * u * K i := by
   fin_cases j <;>
-    simp [modelMatrix, basisMatrix, Matrix.mul_apply, Fin.sum_univ_two,
-      PulseCovariance.signedModel, PulseCovariance.modelDirection, PulseCovariance.signedSlopes,
-      PulseCovariance.radiusProfile, phaseSign] <;> ring
+    simp only [modelMatrix, Fin.zero_eta, Fin.isValue, Matrix.mul_apply, basisMatrix,
+        PulseCovariance.signedModel, PulseCovariance.modelDirection, PulseCovariance.radiusProfile,
+        PulseCovariance.signedSlopes, cons_val_zero, ite_mul, Fin.sum_univ_two, ↓reduceIte,
+        one_ne_zero, cons_val_one, cons_val_fin_one, mul_neg, phaseSign, one_mul, Fin.mk_one,
+        even_two, Even.neg_pow, neg_neg, neg_mul, sub_neg_eq_add] <;> ring
 
 theorem basisMatrix_target (K T : Plane) (hK : ‖K‖ = 1) :
     (basisMatrix K).mulVec (Covariance.target (modelNormal K T) (modelTransverse K T)) =
@@ -790,9 +792,13 @@ theorem basisMatrix_target (K T : Plane) (hK : ‖K‖ = 1) :
   rw [hK, one_pow] at hs
   ext i
   fin_cases i <;>
-    simp [basisMatrix, Covariance.target, modelNormal, modelTransverse, Matrix.mulVec,
-      dotProduct, Fin.sum_univ_two, PiLp.inner_apply, MovingFrameODE.quarterTurn] <;>
-    nlinarith [congrArg (fun x : ℝ => x * T 0) hs, congrArg (fun x : ℝ => x * T 1) hs]
+    simp only [mulVec, dotProduct, basisMatrix, Fin.isValue, MovingFrameODE.quarterTurn,
+      LinearMap.coe_toContinuousLinearMap', LinearMap.coe_mk, AddHom.coe_mk, Fin.zero_eta,
+      Fin.mk_one, cons_val_zero, cons_val_one, cons_val_fin_one, Covariance.target, modelNormal,
+      PiLp.inner_apply, RCLike.inner_apply, conj_trivial, Fin.sum_univ_two, neg_mul, neg_add_rev,
+      neg_neg, modelTransverse, ite_mul, ↓reduceIte, one_ne_zero]
+  · linear_combination (-T.ofLp 0) * hs
+  · linear_combination (-T.ofLp 1) * hs
 
 theorem weights_unique {H : Mat2} {T z : Vec2} (hd : H.det ≠ 0) (he : H.mulVec z = T) :
     SmoothCovariance.weights H T = z := by
@@ -823,7 +829,7 @@ theorem modelMatrix_strictCone {c u eta : ℝ} {K T : Plane}
     apply (div_lt_iff₀ hmp).mpr
     have hh := mul_pos heta hmp
     change |c * modelTransverse K T| < PrimaryRepresentatives.slopeRatio u * modelNormal K T
-    nlinarith
+    nlinarith only [hr, hh]
   have hbase := PulseCovariance.signedModel_strictCone hc hu (Covariance.cone_of_ratio hmp hratio)
   have hh := strictCone_mul_left (B := basisMatrix K) (by rw [basisMatrix_det K hK]; norm_num) hbase
   rwa [basisMatrix_target K T hK] at hh
@@ -885,7 +891,8 @@ noncomputable def modelVector (c s : ℝ) (K : Plane) : Plane :=
 theorem modelVector_column (c u : ℝ) (K : Plane) (j i : Fin 2) :
     modelVector c (phaseSign j * u) K i = modelMatrix c u K i j := by
   have hs : (phaseSign j * u) ^ 2 = u ^ 2 := by
-    fin_cases j <;> simp [phaseSign]
+    fin_cases j <;> simp only [phaseSign, Fin.zero_eta, Fin.isValue, ↓reduceIte, one_mul,
+        Fin.mk_one, one_ne_zero, neg_mul, even_two, Even.neg_pow]
   rw [modelMatrix_column]
   simp only [modelVector, PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, hs]
   ring
@@ -961,6 +968,10 @@ noncomputable def pulseRatio (d : PrimaryODE.FrameData Slow) (lam u L : ℝ) (p 
     PrimaryPulseBounds.normalizedPulse d lam u L (p, v/L) 2 /
       PrimaryPulseBounds.normalizedPulse d lam u L (p, v/L) 0]
 
+theorem combination_div_eq {R : ℝ} (hR : R ≠ 0) (a b c T e : ℝ) :
+    (-(a * R * b) + c * T * e) / R = -(a * b) + c * T / R * e := by
+  field_simp
+
 theorem pulseRatio_eq (d : PrimaryODE.FrameData Slow) (lam u : ℝ) {L : ℝ} (hL : 0 < L)
     {U : Set Slow} (hA : ContinuousOn (d.coefficient 1) (U ×ˢ Icc 0 L))
     {p : Slow} (hp : p ∈ U) {v : ℝ} (hv : v ∈ Icc 0 L)
@@ -978,10 +989,11 @@ theorem pulseRatio_eq (d : PrimaryODE.FrameData Slow) (lam u : ℝ) {L : ℝ} (h
   rw [hLv, PrimaryPulseBounds.fundamental_eq_primary hL U hA hp hv]
   ext i
   fin_cases i <;>
-    simp [PrimaryODE.FrameData.ambient, MovingFrameODE.tangent, MovingFrameODE.pack,
-      PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, PrimaryODE.radialPrimary,
-      PrimaryODE.transversePrimary] at * <;>
-    field_simp
+    simp only [PrimaryODE.radialPrimary, Fin.isValue, ne_eq, PrimaryODE.FrameData.ambient,
+      MovingFrameODE.tangent, MovingFrameODE.pack, neg_mul, neg_smul, PiLp.add_apply,
+      PiLp.neg_apply, PiLp.smul_apply, smul_eq_mul, cons_val_one, cons_val_zero, cons_val,
+      Fin.zero_eta, Fin.mk_one, cons_val_fin_one, PrimaryODE.transversePrimary] at hx ⊢ <;>
+    exact combination_div_eq hx _ _ _ _ _
 
 /-- Geometric ratio constant as an element of `ℝ`. -/
 noncomputable def geometricRatioConstant (M u : ℝ) : ℝ :=
@@ -1018,6 +1030,13 @@ theorem signedSlot_center {u L : ℝ} (hu : 0 ≤ u) (hL : 0 < L)
     field_simp; ring
   rw [he, abs_div, abs_mul, abs_mul, phaseSign_abs, one_mul, abs_of_nonneg hu,
     abs_of_pos hL]
+
+theorem pulseRatio_apply (d : PrimaryODE.FrameData Slow) (lam u L : ℝ) (p : Slow) (v : ℝ)
+    (k : Fin 2) :
+    pulseRatio d lam u L p v k =
+      PrimaryPulseBounds.normalizedPulse d lam u L (p, v / L) k.succ /
+        PrimaryPulseBounds.normalizedPulse d lam u L (p, v / L) 0 := by
+  fin_cases k <;> rfl
 
 section FamilyRatio
 
@@ -1063,7 +1082,7 @@ theorem primary_ratio_error (i : ι) {p : Slow} (hp : p ∈ D.carrier i)
   have herrors := error_constants_nonneg (u := u) hM
   have hprimary := PrimaryODE.primary_bounds hlength.le (a.frame i)
     (fun z => PrimaryPulseBounds.referenceP (a.lam i) u (a.length i) z.2)
-    hA hp hgap herrors.2.1 herrors.2.2 hS hcone (by simpa using hslotL)
+    hA hp hgap herrors.2.1 herrors.2.2 hS hcone (by simpa only [sub_zero] using hslotL)
     (ViscousPropagator.referenceViscosity (a.lam i) u (a.length i))
     (fun t ht => by rw [hc.eigenvalue t ht]; exact hg t ht)
     hc.errors hc.viscosity hP hPeq v hv
@@ -1077,7 +1096,9 @@ theorem primary_ratio_error (i : ι) {p : Slow} (hp : p ∈ D.carrier i)
   have hprof := reference_profile_bounds (one_div_pos.mpr (zero_lt_one.trans_le hM))
     (a.ratio_bound i).1 (a.ratio_bound i).2 (a.magnitude_bound hr hu.le huM hv')
   have hH : |PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v| ≤ eigenBound M :=
-    hprof.1.trans (by unfold eigenBound; nlinarith [show 0 ≤ M by linarith])
+    hprof.1.trans (by
+      unfold eigenBound
+      exact mul_le_mul_of_nonneg_left (by norm_num) (zero_le_one.trans hM))
   have hgeom := tangent_ratio_error hB (a.unit i) hsmall hnormal
     (r := PrimaryODE.transversePrimary hlength.le (a.frame i)
       (fun z => PrimaryPulseBounds.referenceP (a.lam i) u (a.length i) z.2) p v /
@@ -1119,19 +1140,20 @@ theorem primary_ratio_error (i : ι) {p : Slow} (hp : p ∈ D.carrier i)
           (phaseConstant M / D.scale i) / a.B i ≤ geometricRatioConstant M u / D.scale i := by
     calc
       _ ≤ (2*(1+3*M)+4*(3*M+eigenBound M)) * (phaseConstant M / D.scale i) / a.B i :=
-        div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_right (by linarith) hph) hB.le
+        div_le_div_of_nonneg_right
+          (mul_le_mul_of_nonneg_right (by linarith only [hs, hH]) hph) hB.le
       _ ≤ (2*(1+3*M)+4*(3*M+eigenBound M)) * (phaseConstant M / D.scale i) / normalLower M u :=
         div_le_div_of_nonneg_left (mul_nonneg hcoef hph) (normalLower_pos hM) hBmin
       _ = _ := by unfold geometricRatioConstant; ring
   have hconeNonneg : 0 ≤ GrowingMode.coneConstant gap (modalConstant M u) := by
     unfold GrowingMode.coneConstant
-    exact div_nonneg (mul_nonneg (by norm_num) (by linarith [herrors.2.1])) hgap.le
+    exact div_nonneg (mul_nonneg (by norm_num) (by linarith only [herrors.2.1])) hgap.le
   have hratiobound := hprimary.2.2.2
   change |PrimaryODE.transversePrimary _ _ _ _ _ / PrimaryODE.radialPrimary _ _ _ _ _ -
     PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v| ≤ _ at hratiobound
   have hratiobound' := hratiobound.trans (mul_le_mul_of_nonneg_right
     (show 4 * |PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v| ≤ 4 * eigenBound M by
-        linarith)
+        linarith only [hH])
     (div_nonneg hconeNonneg hS.le))
   exact (add_le_add hgeometric hratiobound').trans_eq (by unfold ratioConstant; ring)
 
@@ -1168,12 +1190,12 @@ theorem primary_center_error (i : ι) (j : Fin 2) (hsign : a.sigma i = phaseSign
     apply hmodel.trans
     calc
       _ ≤ (M+1) * (u*|v-a.length i/2|/a.length i) :=
-        mul_le_mul_of_nonneg_right (by linarith [(a.ratio_bound i).2]) (by positivity)
+        mul_le_mul_of_nonneg_right (by linarith only [(a.ratio_bound i).2]) (by positivity)
       _ = _ := by ring
   have hratioL : ratioConstant M u gap / D.scale i ≤
       ((2*r0*ChartScales.Tg) * ratioConstant M u gap) / a.length i := by
     apply (div_le_div_iff₀ hS hlength).mpr
-    nlinarith [mul_le_mul_of_nonneg_left hslotL (ratioConstant_nonneg (u := u) hM hgap)]
+    linarith only [mul_le_mul_of_nonneg_left hslotL (ratioConstant_nonneg (u := u) hM hgap)]
   have hcomponent := (PiLp.norm_apply_le
     (pulseRatio (a.frame i) (a.lam i) u (a.length i) p v -
       modelVector (a.c0 i) (phaseSign j*u) (a.K i)) k)
@@ -1183,8 +1205,7 @@ theorem primary_center_error (i : ι) (j : Fin 2) (hsign : a.sigma i = phaseSign
           (p,v / a.length i) k.succ /
         PrimaryPulseBounds.normalizedPulse (a.frame i) (a.lam i) u (a.length i)
           (p,v / a.length i) 0 - modelMatrix (a.c0 i) u (a.K i) k j := by
-    rw [PiLp.sub_apply, modelVector_column]
-    fin_cases k <;> rfl
+    rw [PiLp.sub_apply, modelVector_column, pulseRatio_apply]
   rw [he, Real.norm_eq_abs] at hcomponent
   exact hcomponent.trans (hbound.trans (add_le_add_left hratioL _))
 
@@ -1749,10 +1770,23 @@ theorem exists_actual_bounds (hcone : LeadingStressWeights.FullTrueCone v)
       mul_le_mul_of_nonneg_left (hcb p hp) (mul_nonneg hil.le (Real.sqrt_nonneg _))
     _ ≤ _ := hbound.weights j
 
+theorem primaryCovariance_comp_index {ι κ : Type*} {Q : Type} (e : κ → ι)
+    (pref : Fin 2 → ι → ℝ)
+    (d : Fin 2 → ι → PrimaryODE.FrameData Q) (lam u len : Fin 2 → ι → ℝ) (n : κ) (p : Q) :
+    PrimaryPulseBounds.primaryCovariance (fun c i => pref c (e i)) (fun c i => d c (e i))
+        (fun c i => lam c (e i)) (fun c i => u c (e i)) (fun c i => len c (e i)) n p =
+      PrimaryPulseBounds.primaryCovariance pref d lam u len (e n) p := rfl
+
 theorem restricted_covariance (vr vt : TorusInverse.Plane) (N : ℕ) (hN : a.N ≤ N)
     (L : Index W N) (p : Slow) :
     preparedCovariance H v (a.restrict N hN) vr vt L p =
-      preparedCovariance H v a vr vt (earlierIndex hN L) p := rfl
+      preparedCovariance H v a vr vt (earlierIndex hN L) p := by
+  unfold preparedCovariance familyCovariance
+  exact primaryCovariance_comp_index (earlierIndex hN)
+    (fun j i => PartitionedCovariance.nativePrefactor vr vt r0 *
+      ChartScales.timeCoefficient F.data.h ((family H v a j).band i) * (family H v a j).length i)
+    (fun j => (family H v a j).frame) (fun j => (family H v a j).lam) (fun _ _ => a.u)
+    (fun j => (family H v a j).length) L p
 
 /-- A single final band threshold suffices.  Restriction retains the
 original representative, carrier and phase on each surviving label. -/

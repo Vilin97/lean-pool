@@ -37,11 +37,11 @@ theorem normalized_approximation_bound {R k B C₁ C₂ : ℝ}
     (hk : 4 ≤ k) (hB0 : 0 ≤ B) (hB : B ≤ k ^ (1 / 100 : ℝ))
     (hC₁ : 0 ≤ C₁) (hC₂ : 0 ≤ C₂) :
     ((C.inverse.multiply G).smul k).WordBound 6 R (BC.multiplierCost*(C₁+C₂+1)) 0 := by
-  have hk0 : 0 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
   have hi : 0 ≤ k⁻¹ := inv_nonneg.mpr hk0
   have hA : 0 ≤ k⁻¹*C₁+(k⁻¹)^2*C₂+2*B*(k⁻¹*B)^3 := by positivity
   have h := BC.normalized_inverse_bound G hG hA hRc k hk0
-  have hb4 := fourth_power_le_frequency k B (by linarith) hB0 hB
+  have hb4 := fourth_power_le_frequency k B (by linarith only [hk]) hB0 hB
   have hs := mul_le_mul_of_nonneg_left (normalized_low_high_le k B C₁ C₂ (by linarith) hC₂ hb4)
     BC.multiplierCost_nonneg
   have he : k*BC.multiplierCost*(k⁻¹*C₁+(k⁻¹)^2*C₂+2*B*(k⁻¹*B)^3) =
@@ -79,13 +79,13 @@ theorem normalizedVelocity_bound (k : ℝ) (hk : 4 ≤ k)
     ((C.inverse.multiply (velocityField hT G k⁻¹)).smul k).WordBound 6 (4*R)
       (BC.multiplierCost*(fixedVelocityGradeCost R S.H0 1+fixedVelocityGradeCost R S.H0 2+1)) 0 :=
           by
-  have hk0 : 0 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
   have hsmall : k⁻¹*tailBase R S.H0 BC.termCost N ≤ 1/2 := by
     simpa only [div_eq_mul_inv,mul_comm] using
       EulerPacketTailBound.grade_ratio_le_half k (tailBase R S.H0 BC.termCost N) hk hbase
   have h := velocity_bound hT G hG hR ha hN BC.termCost BC.one_le_termCost
     k⁻¹ (inv_nonneg.mpr hk0) hsmall
-  exact BC.normalized_approximation_bound (velocityField hT G k⁻¹) h (by linarith)
+  exact BC.normalized_approximation_bound (velocityField hT G k⁻¹) h (by linarith only [hR])
     (hRc.trans (by linarith)) hk (tailBase_nonneg R S.H0 BC.termCost BC.termCost_nonneg N) hbase
     (fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 1)
     (fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 2)
@@ -97,13 +97,14 @@ theorem normalizedVelocityTimeTerm_bound (k : ℝ) (hk : 4 ≤ k)
     ((C.inverse.multiply (velocityDerivativeField hT G k⁻¹)).smul k).WordBound 6 (4*R)
       (BC.multiplierCost*(fixedVelocityGradeCost R S.H0 1+fixedVelocityGradeCost R S.H0 2+1)) 0 :=
           by
-  have hk0 : 0 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
   have hsmall : k⁻¹*tailBase R S.H0 BC.termCost N ≤ 1/2 := by
     simpa only [div_eq_mul_inv,mul_comm] using
       EulerPacketTailBound.grade_ratio_le_half k (tailBase R S.H0 BC.termCost N) hk hbase
   have h := velocityDerivative_bound hT G hG hR ha hN BC.termCost BC.one_le_termCost
     k⁻¹ (inv_nonneg.mpr hk0) hsmall
-  exact BC.normalized_approximation_bound (velocityDerivativeField hT G k⁻¹) h (by linarith)
+  exact BC.normalized_approximation_bound (velocityDerivativeField hT G k⁻¹) h (by linarith only [
+      hR])
     (hRc.trans (by linarith)) hk (tailBase_nonneg R S.H0 BC.termCost BC.termCost_nonneg N) hbase
     (fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 1)
     (fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 2)

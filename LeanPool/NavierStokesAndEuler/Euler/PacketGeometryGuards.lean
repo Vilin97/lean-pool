@@ -34,7 +34,8 @@ theorem physical_shear_motion_bound
     (hsmall : 16 * (ε * Θ * (4 * G) ^ 2 + d) ≤ 1)
     (hmap : MapsTo (physicalTime t₀ a ε) (Icc 0 Θ) S)
     (hBd : ∀ t ∈ S, HasDerivWithinAt B (B₁ t) S t)
-    (hmd : ∀ t ∈ S, HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
+    (hmd : ∀ t ∈ S, HasDerivWithinAt m
+      (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) (B t) (m t)) S t)
     (hvd : ∀ t ∈ S, HasDerivWithinAt v (-(B t) (v t) +
       (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hm0 : ∀ t ∈ S, m t ≠ 0) (hv0 : ∀ t ∈ S, v t ≠ 0)
@@ -54,17 +55,17 @@ theorem physical_shear_motion_bound
     frameMatrixRate (B (physicalTime t₀ a ε τ)) (B₁ (physicalTime t₀ a ε τ))
       (unit (m (physicalTime t₀ a ε τ))) (unit (v (physicalTime t₀ a ε τ))) i j*(ε/a)
   let H₁f : ℝ → ℝ := fun τ => -(Bf τ 0 0+Bf τ 1 1)*Hf τ*(ε/a)
-  have ha0 : 0 < a := by linarith
-  have hG0 : 0 ≤ G := by linarith
+  have ha0 : 0 < a := one_half_pos.trans_le ha
+  have hG0 : 0 ≤ G := zero_le_one.trans hG
   have hscale : |ε/a| ≤ 2*ε := by
     rw [abs_div, abs_of_pos hε, abs_of_pos ha0, div_le_iff₀ ha0]
-    nlinarith only [mul_nonneg hε.le (sub_nonneg.mpr ha)]
+    linarith only [mul_nonneg hε.le (sub_nonneg.mpr ha)]
   have hBF : ∀ τ ∈ Icc 0 Θ, ∀ i j, |Bf τ i j| ≤ 4*G := by
     intro τ hτ i j
     have ht := hmap hτ
     exact (frameMatrix_abs_le _ _ _ (unit_inner_self (hm0 _ ht))
       (unit_inner_self (hv0 _ ht)) (unit_inner_zero (hmv _ ht)) i j).trans
-      ((hB _ ht).trans (by linarith))
+      ((hB _ ht).trans (le_mul_of_one_le_left hG0 (by norm_num)))
   have hEF : ∀ τ ∈ Icc 0 Θ, ∀ i j, |Ef τ i j| ≤ d := by
     intro τ hτ i j
     have ht := hmap hτ
@@ -92,7 +93,7 @@ theorem physical_shear_motion_bound
     rw [abs_mul]
     calc
       _ ≤ (13*G^2)*(2*ε) := mul_le_mul hrate' hscale (abs_nonneg _) (by positivity)
-      _ ≤ 2*ε*(4*G)^2 := by nlinarith only [mul_nonneg hε.le (sq_nonneg G)]
+      _ ≤ 2*ε*(4*G)^2 := by linarith only [mul_nonneg hε.le (sq_nonneg G)]
   have hHF : ∀ τ ∈ Icc 0 Θ, HasDerivWithinAt Hf (H₁f τ) (Icc 0 Θ) τ := by
     intro τ hτ
     have ht := hmap hτ
@@ -110,10 +111,11 @@ theorem physical_shear_motion_bound
     dsimp [H₁f]
     rw [abs_mul]
     calc
-      _ ≤ (2*G*|Hf τ|)*(2*ε) := mul_le_mul hrate' hscale (abs_nonneg _) (by positivity)
+      _ ≤ (2*G*|Hf τ|)*(2*ε) := mul_le_mul hrate' hscale (abs_nonneg _)
+          (mul_nonneg (mul_nonneg zero_le_two hG0) (abs_nonneg _))
       _ ≤ (4*ε*(4*G))*|Hf τ| := by
-        nlinarith only [mul_nonneg (mul_nonneg hε.le hG0) (abs_nonneg (Hf τ))]
-  have herr := normalized_motion_errors_within ha hε hΘ (show 1 ≤ 4*G by linarith)
+        linarith only [mul_nonneg (mul_nonneg hε.le hG0) (abs_nonneg (Hf τ))]
+  have herr := normalized_motion_errors_within ha hε hΘ (show 1 ≤ 4*G by linarith only [hG])
     hd hsmall hBF hEF (fun τ hτ => hDF τ hτ 0 1) (fun τ hτ => hDF τ hτ 2 1)
     (fun τ hτ => hDFbound τ hτ 0 1) (fun τ hτ => hDFbound τ hτ 2 1)
     hHF hHFbound hb0 hk0 hh0

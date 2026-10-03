@@ -26,6 +26,10 @@ relevant; the auxiliary third row in the scalar estimate is filled explicitly.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 namespace EulerPacketMovingFrame
@@ -41,13 +45,13 @@ theorem velocityFirstRhs_firstTwoRows (A C : Fin 3 → Fin 3 → ℝ)
     (ε P Q N U V : ℝ) :
     velocityFirstRhs A (firstTwoRows C) ε P Q N U V =
       velocityFirstRhs A C ε P Q N U V := by
-  simp [velocityFirstRhs, firstTwoRows]
+  simp only [velocityFirstRhs, firstTwoRows, Fin.isValue, ↓reduceIte, neg_add_rev]
 
 theorem velocitySecondRhs_firstTwoRows (A C : Fin 3 → Fin 3 → ℝ)
     (ε P Q N U V : ℝ) :
     velocitySecondRhs A (firstTwoRows C) ε P Q N U V =
       velocitySecondRhs A C ε P Q N U V := by
-  simp [velocitySecondRhs, firstTwoRows]
+  simp only [velocitySecondRhs, firstTwoRows, Fin.isValue, one_ne_zero, ↓reduceIte, neg_add_rev]
 
 /-- The scalar error estimate needs no assumption on the physical third
 transport row. -/
@@ -69,9 +73,10 @@ theorem velocity_rhs_error_firstTwo
   have hC' : ∀ i j, |firstTwoRows C i j - idealUnprojectedEntry i j| ≤ 5 * e := by
     intro i j
     fin_cases i
-    · simpa [firstTwoRows] using (hC j).1
-    · simpa [firstTwoRows] using (hC j).2
-    · simpa [firstTwoRows, idealUnprojectedEntry] using (hC j).2
+    · simpa only [firstTwoRows, Fin.zero_eta, Fin.isValue, ↓reduceIte] using (hC j).1
+    · simpa only [firstTwoRows, Fin.mk_one, Fin.isValue, one_ne_zero, ↓reduceIte] using (hC j).2
+    · simpa only [firstTwoRows, Fin.reduceFinMk, Fin.isValue, Fin.reduceEq, ↓reduceIte,
+        idealUnprojectedEntry, one_ne_zero] using (hC j).2
   simpa only [velocityFirstRhs_firstTwoRows, velocitySecondRhs_firstTwoRows] using
     velocity_rhs_error hΘ he hε hεe hsmall hβ hA hC' hP₀ hQ₀ hP hQ hN
 
@@ -80,7 +85,9 @@ theorem scaledVelocity_firstTwo_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     {m v r w : ℝ → Space} {s₀ t₀ a ε τ : ℝ} {S U : Set ℝ}
     (ha : a ≠ 0) (hε : ε ≠ 0) (hs₀ : s₀ ≠ 0)
     (hmap : MapsTo (physicalTime t₀ a ε) U S)
-    (hm : HasDerivWithinAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
+    (hm : HasDerivWithinAt m
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B
+        (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
     (hv : HasDerivWithinAt v (-B (v (physicalTime t₀ a ε τ)) +
       (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
         ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
@@ -126,7 +133,7 @@ theorem velocity_scalar_flux_within
     ring
   apply (hD.hasDerivWithinAt.mul hU.neg).congr_deriv
   have hden : 1 + (β * t ^ 2) ^ 2 ≠ 0 := by positivity
-  dsimp [idealVelocityFirst]
+  dsimp only [Pi.neg_apply, idealVelocityFirst]
   field_simp
   ring
 

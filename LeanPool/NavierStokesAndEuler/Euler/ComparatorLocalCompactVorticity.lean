@@ -93,7 +93,7 @@ theorem velocity_eq_realField (s : ℝ) (hs : s ∈ Icc 0 T) (x : E) :
   simp only [SmoothTimeField.realField, EulerVolterraConvolution.extendPath,
     projIcc_of_mem hT hs,
     projIcc_of_mem zero_le_one (show T-s ∈ Icc (0 : ℝ) 1 from
-      ⟨sub_nonneg.mpr hs.2, by linarith [hs.1]⟩)]
+      ⟨sub_nonneg.mpr hs.2, by linarith only [hT1, hs, hs.1]⟩)]
   rfl
 
 @[simp] theorem homeomorph_apply (s : ℝ) (x : E) :
@@ -120,7 +120,7 @@ theorem velocity_joint_continuous :
 
 theorem curve_continuous (x : E) :
     Continuous (fun s => homeomorph A T hT hT1 s x) :=
-  (homeomorph_joint_continuous A T hT hT1).comp
+  (homeomorph_joint_continuous A T hT hT1).comp (f := fun s => (id s, x))
     (continuous_id.prodMk continuous_const)
 
 theorem speed_continuous (x : E) :
@@ -166,7 +166,7 @@ theorem endpointPath_hasDerivAt (a : E) (r : ℝ) (hr : r ∈ Ioo 0 T) :
   have hd := ((flowData A T hT hT1).flow_hasDerivAt T (T-r) a).scomp r
     ((hasDerivAt_const r T).sub (hasDerivAt_id r))
   have hv := velocity_eq_realField A T hT hT1 (T-r)
-    (show T-r ∈ Icc 0 T from ⟨by linarith [hr.2], by linarith [hr.1]⟩)
+    (show T-r ∈ Icc 0 T from ⟨by linarith only [hr, hr.2], by linarith only [hr, hr.1]⟩)
     (endpointPath A T hT hT1 a r)
   simp only [sub_sub_cancel] at hv
   change (flowData A T hT hT1).velocity (T-r)
@@ -267,7 +267,7 @@ open scoped ENNReal Topology
 
 namespace Euler.ComparatorBridge
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 private theorem positive_volume_set_of_nonzero_outside
     (w : ℝ³ → ℝ³) (hw : Continuous w) (B : ℝ) (x : ℝ³)
@@ -368,7 +368,7 @@ theorem measure_nonzero_outside_eq_zero
     apply ge_of_tendsto hlim
     filter_upwards [eventually_gt_atTop (0 : ℝ)] with r hr
     have hh := F.measure_nonzero_outside_le S hS hfinite K₀ (K₀ + r)
-      (by linarith) hSbound hSoutside hSnonzero
+      (by linarith only [hr]) hSbound hSoutside hSnonzero
     simpa only [add_sub_cancel_left] using hh
   exact le_antisymm hz measureReal_nonneg
 
@@ -382,7 +382,7 @@ theorem zero_outside (hw : Continuous w) (x : ℝ³) (hx : supportRadius < ‖x�
   have hz := F.measure_nonzero_outside_eq_zero S hS hfinite K₀
     (fun y hy => (hprops y hy).1) (fun y hy => (hprops y hy).2.1)
     (fun y hy => (hprops y hy).2.2)
-  linarith
+  linarith only [hpos, hz]
 
 /-- The transported field is supported in one fixed compact ball. -/
 theorem support_subset_closedBall (hw : Continuous w) :
@@ -477,7 +477,7 @@ theorem norm_lt_of_local_speed_bound (X : ℝ → E) (V : ℝ → E → E)
       _ ≤ ‖X s - X 0‖ + ‖X 0‖ := norm_add_le _ _
       _ ≤ M * s + A := add_le_add hdisplacement hinitial
   have hbudget : M * s ≤ M * δ := mul_le_mul_of_nonneg_left hsI.2 hM
-  nlinarith
+  nlinarith only [hsmall, hsbound, hnorm, hbudget]
 
 omit [NormedSpace ℝ E] in
 /-- Compactness supplies a common speed bound and positive time budget on a fixed ball. -/
@@ -500,13 +500,13 @@ theorem exists_local_speed_budget [ProperSpace E] (u : ℝ → E → E) {A B : �
         δ * M ≤ ((B - A) / (2 * M)) * M :=
           mul_le_mul_of_nonneg_right (min_le_right _ _) hM.le
         _ = (B - A) / 2 := by field_simp
-    linarith
+    linarith only [hAB, hb]
   refine ⟨δ, M, hδ, hδone, hM, hsmall, ?_⟩
   intro s hs x hx
   have hxball : x ∈ Metric.closedBall (0 : E) B := by
     simpa only [Metric.mem_closedBall, dist_zero_right] using hx
   have hc := hC (s, x) ⟨⟨hs.1, hs.2.trans hδone⟩, hxball⟩
-  have hCM : C ≤ M := (le_max_left C 0).trans (by dsimp [M]; linarith)
+  have hCM : C ≤ M := (le_max_left C 0).trans (by dsimp [M]; linarith only)
   exact hc.trans hCM
 
 end EulerComparatorLocalFlow
@@ -616,7 +616,7 @@ theorem exists_local_trapping_constants
       mul_le_mul_of_nonneg_right (min_le_right _ _) hM.le
     have he : (1 / (2 * M)) * M = 1 / 2 := by field_simp
     rw [he] at hm
-    linarith
+    linarith only [hm]
   refine ⟨A, M, δ, hA, hM, hδ, min_le_left _ _, hδM, hAbound, ?_⟩
   intro t ht x hx
   apply hMb (v x t)
@@ -644,7 +644,7 @@ def locallyTrappedBackwardFlows
     ComparatorBridge.BackwardVorticityFlows T F.energy (A + 1)
       (tsupport (vectorCurl u₀)) (vectorCurl u₀) (vectorCurl (v · T)) := by
   let ρ : ℝ → ℝ := fun R => max R (A + 2)
-  have hρ (R : ℝ) : 0 < ρ R := lt_of_lt_of_le (by linarith) (le_max_right _ _)
+  have hρ (R : ℝ) : 0 < ρ R := lt_of_lt_of_le (by linarith only [hA]) (le_max_right _ _)
   have hT1 : T ≤ 1 := hT.2.trans hδ1
   let C (R : ℝ) := F.coefficient (ρ R)
   let X (R s : ℝ) := ComparatorBridge.TruncatedBackwardFlow.homeomorph (C R) T hT.1 hT1 s
@@ -697,7 +697,7 @@ def locallyTrappedBackwardFlows
         rw [ComparatorBridge.TruncatedBackwardFlow.velocity_eq_realField
           (C R) T hT.1 hT1 s ⟨hs.1.le, hs.2.le⟩]
         rw [truncation_realField_agrees F (ρ R) (hρ R) (T - s)
-          ⟨sub_nonneg.mpr hs.2.le, by linarith [hs.1]⟩ (X R s x)
+          ⟨sub_nonneg.mpr hs.2.le, by linarith only [hT1, hs, hs.1]⟩ (X R s x)
           ((hstay s ⟨hs.1.le, hs.2.le⟩).trans_le (le_max_left _ _))]
       exact hv ▸ hd
     · simpa only [X, ComparatorBridge.TruncatedBackwardFlow.homeomorph_zero] using hnz
@@ -705,9 +705,9 @@ def locallyTrappedBackwardFlows
     let Z := ComparatorBridge.TruncatedBackwardFlow.endpointPath (C R) T hT.1 hT1 a
     have hsmall : T * M < (A + 1) - A := by
       have hm := mul_le_mul_of_nonneg_right hT.2 hM.le
-      linarith
+      linarith only [hδM, hm]
     have hz := EulerComparatorLocalFlow.norm_lt_of_local_speed_bound
-      Z ((C R).realField 1 zero_le_one) hM.le (by linarith : A < A + 1) hsmall
+      Z ((C R).realField 1 zero_le_one) hM.le (by linarith only : A < A + 1) hsmall
       (ComparatorBridge.TruncatedBackwardFlow.endpointPath_continuous (C R) T hT.1 hT1
           a).continuousOn
       (ComparatorBridge.TruncatedBackwardFlow.endpointPath_hasDerivAt (C R) T hT.1 hT1 a)
@@ -717,7 +717,7 @@ def locallyTrappedBackwardFlows
       (by
         intro r hr x hx
         rw [truncation_realField_agrees F (ρ R) (hρ R) r ⟨hr.1, hr.2.trans hT1⟩ x
-          (lt_of_le_of_lt hx (lt_of_lt_of_le (by linarith) (le_max_right _ _)))]
+          (lt_of_le_of_lt hx (lt_of_lt_of_le (by linarith only) (le_max_right _ _)))]
         exact hspeed r ⟨hr.1, hr.2.trans hT1⟩ x hx)
       T ⟨hT.1, le_rfl⟩
     simpa only [Z, X, ComparatorBridge.TruncatedBackwardFlow.endpointPath_end] using hz.le

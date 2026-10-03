@@ -75,7 +75,7 @@ theorem fastCoefficient_pos (h : ℝ) (index : ℕ → ℕ) (n : ℕ) : 0 < fast
 
 theorem radialFrequency_mono (h : ℝ) {i j : ℕ → ℕ} {n : ℕ} (hij : i n ≤ j n) :
     radialFrequency h i n ≤ radialFrequency h j n :=
-  mul_le_mul_of_nonneg_right (pow_le_pow_right₀ (by linarith [ChartScales.Lambda_two_lt]) hij)
+  mul_le_mul_of_nonneg_right (pow_le_pow_right₀ (by linarith only [ChartScales.Lambda_two_lt]) hij)
     (Real.rpow_nonneg (ChartScales.Q_pos n).le _)
 
 theorem fastCoefficient_mono (h : ℝ) {i j : ℕ → ℕ} {n : ℕ} (hij : i n ≤ j n) :
@@ -407,7 +407,7 @@ theorem pull_periodicOn (k : ℕ) {U : Set Plane} {f : Point → ℝ}
 theorem coverLift_norm_le {k K : ℕ} (hk : k ≤ K) :
     ‖(coverLift k : Point →L[ℝ] Point)‖ ≤ 1 + CommonCoverSolve.coveringBound K := by
   have hC : 1 ≤ 1 + CommonCoverSolve.coveringBound K := by
-    linarith [CommonCoverSolve.coveringBound_pos K]
+    linarith only [CommonCoverSolve.coveringBound_pos K]
   apply ContinuousLinearMap.opNorm_le_bound _ (zero_le_one.trans hC)
   intro x
   have hxx : ‖x‖ ≤ (1 + CommonCoverSolve.coveringBound K) * ‖x‖ :=
@@ -422,7 +422,7 @@ theorem coverLift_norm_le {k K : ℕ} (hk : k ≤ K) :
       mul_le_mul (CommonCoverSolve.coveringNorm_le_bound hk) ((norm_snd_le x.2).trans (norm_snd_le
           x))
         (norm_nonneg _) (CommonCoverSolve.coveringBound_pos K).le
-    _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg _)
+    _ ≤ _ := mul_le_mul_of_nonneg_right (by linarith only) (norm_nonneg _)
 
 end Cover
 
@@ -458,7 +458,7 @@ theorem class_pull {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
     MemClass (BaseContextAssembly.nativeStrip W U) w alpha (pull gap f) := by
   let s := BaseContextAssembly.nativeStrip W U
   have hc : 1 ≤ 1 + CommonCoverSolve.coveringBound K := by
-    linarith [CommonCoverSolve.coveringBound_pos K]
+    linarith only [CommonCoverSolve.coveringBound_pos K]
   have ht := CommonCoverClass.memClass_affine_transport s s (w := w) (v := w) (α := alpha) (f := f)
       hf id
     (fun n => (coverLift (gap n) : Point →L[ℝ] Point)) (fun _ => 0)

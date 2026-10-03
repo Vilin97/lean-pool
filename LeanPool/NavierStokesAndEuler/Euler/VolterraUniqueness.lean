@@ -52,7 +52,7 @@ theorem mild_solution_unique (a : C(Icc (0 : ℝ) T, X)) (F : Icc (0 : ℝ) T �
     exact (hz t).symm
   have h := picard_sub_bound T hT K k hK hk hk0 hbound a F hF R L hL hFL u v hu hv
   rw [hfix u hsolu, hfix v hsolv] at h
-  have hn : ‖u - v‖ = 0 := by nlinarith [norm_nonneg (u - v)]
+  have hn : ‖u - v‖ = 0 := by nlinarith only [h, hsmall, norm_nonneg (u - v)]
   exact sub_eq_zero.mp (norm_eq_zero.mp hn)
 
 /-- The actual Volterra integral vanishes at time zero, giving the prescribed initial trace. -/
@@ -101,7 +101,7 @@ theorem exists_positive_time_budget (ν M L margin Tmax : ℝ) (hmargin : 0 < ma
   obtain ⟨ε, hε, hball⟩ := Metric.mem_nhds_iff.mp he
   have hb : ε / 2 ∈ Metric.ball (0 : ℝ) ε := by
     rw [Metric.mem_ball, Real.dist_eq, sub_zero, abs_of_pos (by positivity : 0 < ε / 2)]
-    linarith
+    linarith only [hε]
   obtain ⟨ht, hm, hl⟩ := hball hb
   exact ⟨ε / 2, by positivity, ht.le, hm, hl⟩
 

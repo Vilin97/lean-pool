@@ -55,7 +55,10 @@ theorem partition_factorial_le {n : ℕ} (c : OrderedFinpartition n) :
   | zero =>
       have hc : c = default := Subsingleton.elim _ _
       subst c
-      simp [OrderedFinpartition.default_eq, factorialProduct]
+      simp only [OrderedFinpartition.default_eq, OrderedFinpartition.atomic_length,
+          Nat.factorial_zero, Nat.cast_one, factorialProduct, Fin.isEmpty_iff, Finset.univ_eq_empty,
+          OrderedFinpartition.atomic_partSize, Nat.factorial_one, Finset.prod_const_one, mul_one,
+          Std.le_refl]
   | succ n ih =>
       obtain ⟨⟨d,o⟩,rfl⟩ := (OrderedFinpartition.extendEquiv n).surjective c
       cases o with
@@ -72,7 +75,7 @@ theorem partition_factorial_le {n : ℕ} (c : OrderedFinpartition n) :
             _ ≤ ((n : ℝ)+1) * (n.factorial : ℝ) :=
               mul_le_mul hl (ih d)
                 (mul_nonneg (Nat.cast_nonneg _) (factorialProduct_nonneg d)) (by positivity)
-            _ = _ := by simp [Nat.factorial_succ]
+            _ = _ := by simp only [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
       | some i =>
           simp only [OrderedFinpartition.extendEquiv_apply,
             OrderedFinpartition.extend_some, OrderedFinpartition.extendMiddle_length,
@@ -85,13 +88,13 @@ theorem partition_factorial_le {n : ℕ} (c : OrderedFinpartition n) :
             _ ≤ ((n : ℝ)+1) * (n.factorial : ℝ) :=
               mul_le_mul hl (ih d)
                 (mul_nonneg (Nat.cast_nonneg _) (factorialProduct_nonneg d)) (by positivity)
-            _ = _ := by simp [Nat.factorial_succ]
+            _ = _ := by simp only [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one]
 
 theorem polynomial_iteratedDeriv (p : ℝ[X]) (n : ℕ) (x : ℝ) :
     iteratedDeriv n (fun y => p.eval y) x =
       (Polynomial.derivative^[n] p).eval x := by
   induction n generalizing x with
-  | zero => simp
+  | zero => simp only [iteratedDeriv_zero, Function.iterate_zero, id_eq]
   | succ n ih =>
       rw [iteratedDeriv_succ]
       have he : iteratedDeriv n (fun y => p.eval y) =
@@ -102,7 +105,7 @@ theorem polynomial_iteratedDeriv_zero (p : ℝ[X]) (n : ℕ) :
     iteratedDeriv n (fun y => p.eval y) 0 = (n.factorial : ℝ)*p.coeff n := by
   rw [polynomial_iteratedDeriv, ← Polynomial.coeff_zero_eq_eval_zero,
     Polynomial.coeff_iterate_derivative]
-  simp [Nat.descFactorial_self]
+  simp only [zero_add, Nat.descFactorial_self, nsmul_eq_mul]
 
 theorem polynomial_contDiff (p : ℝ[X]) :
     ContDiff ℝ ∞ (fun y : ℝ => p.eval y) := by
@@ -126,7 +129,7 @@ theorem comp_coefficient (p q : ℝ[X]) (hp : p.coeff 0 = 0) (n : ℕ) :
   have he : (fun y => (q.comp p).eval y) =
       (fun y => q.eval y) ∘ (fun y => p.eval y) := by
     funext y
-    simp
+    simp only [Polynomial.eval_comp, Function.comp_apply]
   rw [← he, hp0] at hc
   simpa only [polynomial_iteratedDeriv_zero] using hc
 
@@ -136,15 +139,17 @@ def jetPolynomial (N : ℕ) (a : ℕ → ℝ) : ℝ[X] :=
 
 theorem jetPolynomial_coeff (N : ℕ) (a : ℕ → ℝ) (j : ℕ) :
     (jetPolynomial N a).coeff j = if j ∈ Finset.Icc 1 N then a j else 0 := by
-  simp [jetPolynomial, Polynomial.coeff_monomial]
+  simp only [jetPolynomial, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial,
+      Finset.sum_ite_eq', Finset.mem_Icc]
 
 @[simp] theorem jetPolynomial_zero (N : ℕ) (a : ℕ → ℝ) :
     (jetPolynomial N a).coeff 0 = 0 := by
-  simp [jetPolynomial_coeff]
+  simp only [jetPolynomial_coeff, Finset.mem_Icc, nonpos_iff_eq_zero, one_ne_zero, zero_le,
+      and_true, ↓reduceIte]
 
 theorem jetPolynomial_coeff_of_mem (N : ℕ) (a : ℕ → ℝ) (j : ℕ)
     (hj : j ∈ Finset.Icc 1 N) : (jetPolynomial N a).coeff j = a j := by
-  simp [jetPolynomial_coeff, hj]
+  simp only [jetPolynomial_coeff, hj, ↓reduceIte]
 
 theorem jetPolynomial_eval (N : ℕ) (a : ℕ → ℝ) (x : ℝ) :
     (jetPolynomial N a).eval x = ∑ j ∈ Finset.Icc 1 N, a j*x^j := by
@@ -407,7 +412,7 @@ theorem continuous_barrier (f : ℝ → ℝ) (T B a : ℝ)
     have hh := hstep m hmI hbefore
     have hmB : B*m ≤ B*T := mul_le_mul_of_nonneg_left hmI.2 hB
     rw [hfm] at hh
-    linarith
+    linarith only [hBa, hh, hmB]
   intro t ht
   exact hstep t ht (fun s hs => (hstrict s ⟨hs.1,hs.2.trans ht.2⟩).le)
 
@@ -416,10 +421,10 @@ def rationalRate (B R a u : ℝ) : ℝ := B*(R*(a+u))/(1-R*(a+u))
 
 theorem rationalRate_le (B R a u : ℝ) (hB : 0 ≤ B)
     (hu : R * (a + u) ≤ 1 / 2) : rationalRate B R a u ≤ B := by
-  have hd : 0 < 1-R*(a+u) := by linarith
+  have hd : 0 < 1-R*(a+u) := by linarith only [hu]
   unfold rationalRate
   apply (div_le_iff₀ hd).2
-  linarith [mul_le_mul_of_nonneg_left hu hB]
+  linarith only [hu, hB, mul_le_mul_of_nonneg_left hu hB]
 
 /-- The nonlinear generating-sum inequality closes at BRT≤1/8.  The bound
 is linear in the velocity size B and time, with no exponential factor. -/
@@ -436,18 +441,18 @@ theorem rational_integral_bootstrap (f : ℝ → ℝ) (T B R : ℝ)
     by_contra h
     have hm := mul_le_mul_of_nonneg_left (le_of_not_gt h) hR.le
     rw [hRa] at hm
-    linarith
+    linarith only [hsmall, hm]
   have hb : ∀ t ∈ Icc 0 T, f t ≤ B*t := by
     apply continuous_barrier f T B ((4*R)⁻¹) hT hB ha hBT hf hf0
     intro t ht hbefore
     have hhalf : ∀ s ∈ Icc 0 t, R*((4*R)⁻¹+f s) ≤ 1/2 := by
       intro s hs
       have hm := mul_le_mul_of_nonneg_left (hbefore s hs) hR.le
-      linarith
+      linarith only [hRa, hm]
     have hden : ∀ s ∈ Icc 0 t, 1-R*((4*R)⁻¹+f s) ≠ 0 := by
       intro s hs
       have hh := hhalf s hs
-      linarith
+      linarith only [hh]
     have hrate : ContinuousOn (fun s => rationalRate B R ((4*R)⁻¹) (f s)) (Icc 0 t) := by
       have hf' := hf.mono (Icc_subset_Icc_right ht.2)
       unfold rationalRate
@@ -457,13 +462,14 @@ theorem rational_integral_bootstrap (f : ℝ → ℝ) (T B R : ℝ)
       hrate.intervalIntegrable_of_Icc ht.1
     have hm := intervalIntegral.integral_mono_on ht.1 hi intervalIntegrable_const
       (fun s hs => rationalRate_le B R ((4*R)⁻¹) (f s) hB (hhalf s hs))
-    have hc : (∫ s in (0 : ℝ)..t, B) = B*t := by simp [mul_comm]
+    have hc : (∫ s in (0 : ℝ)..t, B) = B*t := by simp only [intervalIntegral.integral_const,
+        sub_zero, smul_eq_mul, mul_comm]
     exact (hineq t ht hhalf).trans (hm.trans_eq hc)
   intro t ht
   refine ⟨hb t ht,?_⟩
   have hm := mul_le_mul_of_nonneg_left (hb t ht) hR.le
   have htB := mul_le_mul_of_nonneg_left ht.2 (mul_nonneg hB hR.le)
-  linarith
+  linarith only [hsmall, hRa, hm, htB]
 
 end EulerGevreyFlowBootstrap
 
@@ -523,7 +529,7 @@ theorem norm_iteratedFDeriv_id_le (n : ℕ) (hn : 0 < n) (x : E) :
       funext y
       exact fderiv_id
     rw [Nat.succ_eq_add_one, ite_eq_right hm1, ← norm_iteratedFDeriv_fderiv]
-    simp [hid, iteratedFDeriv_const_of_ne hm]
+    simp only [hid, iteratedFDeriv_const_of_ne hm, Pi.zero_apply, norm_zero, Std.le_refl]
 
 theorem derivativeSum_id_le (N : ℕ) (z : ℝ) (x : E) (hz : 0 ≤ z) :
     derivativeSum (id : E → E) N z x ≤ z := by
@@ -577,10 +583,10 @@ theorem derivativeSum_comp_le (f : E → F) (g : F → G) (N : ℕ)
 theorem rational_fraction_mono (B x y : ℝ) (hB : 0 ≤ B)
     (hxy : x ≤ y) (hy : y < 1) :
     B*x/(1-x) ≤ B*y/(1-y) := by
-  have hx : 0 < 1-x := by linarith
-  have hy' : 0 < 1-y := by linarith
+  have hx : 0 < 1-x := by linarith only [hxy, hy]
+  have hy' : 0 < 1-y := by linarith only [hy]
   apply (div_le_div_iff₀ hx hy').2
-  linarith [mul_le_mul_of_nonneg_left hxy hB]
+  linarith only [hxy, hB, mul_le_mul_of_nonneg_left hxy hB]
 
 /-- The identity part of a flow costs exactly z in its generating sum. -/
 theorem derivativeSum_comp_id_add_le (f : E → E) (g : E → F) (N : ℕ)
@@ -592,7 +598,7 @@ theorem derivativeSum_comp_id_add_le (f : E → E) (g : E → F) (N : ℕ)
     derivativeSum (g ∘ (id+f)) N z x ≤
       EulerGevreyFlowBootstrap.rationalRate B R z (derivativeSum f N z x) := by
   have hsum := mul_le_mul_of_nonneg_left (derivativeSum_id_add_le f N z x hf hz) hR
-  have he := derivativeSum_comp_le (id+f) g N z B R x hz hB hR
+  have he := derivativeSum_comp_le (id (α := E) + f) g N z B R x hz hB hR
     (contDiffAt_id.add hf) hg
     (by simpa only [Pi.add_apply, id_eq] using hgj) (hsum.trans_lt hsmall)
   exact he.trans (rational_fraction_mono B _ _ hB hsum hsmall)

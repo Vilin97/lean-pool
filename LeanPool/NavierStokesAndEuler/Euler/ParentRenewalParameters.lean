@@ -170,11 +170,12 @@ theorem normalized_velocity_eq : unit (P.v G.targetTime)=unit (G.w G.center G.ta
 the original packet's center error. -/
 theorem target_remainder (hδ : 0 < G.δ) (hT : G.targetTime ≤ D.T) :
     ‖D.M.field (D.clamp G.targetTime) 0-G.M G.center G.targetTime -
-      G.hchild • rankOne ℝ (unit (G.w G.center G.targetTime))
+      G.hchild • rankOne ℝ (E := Space) (F := Space) (unit (G.w G.center G.targetTime))
         (unit (G.r G.center G.targetTime))‖ ≤ P.error := by
   have h := P.remainder_bound G.targetTime ⟨le_rfl,hT⟩
   change ‖D.M.field (D.clamp G.targetTime) 0-P.B G.targetTime -
-    P.shear • rankOne ℝ (unit (P.v G.targetTime)) (unit (P.m G.targetTime))‖ ≤ P.error at h
+    P.shear • rankOne ℝ (E := Space) (F := Space) (unit (P.v G.targetTime))
+      (unit (P.m G.targetTime))‖ ≤ P.error at h
   rw [J.matrix_eq,J.ray_eq,J.velocity_eq,J.shear_eq hδ] at h
   exact h
 

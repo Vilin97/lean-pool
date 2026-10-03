@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 Uniform comparison of ideal primary sizes before target.  This follows
@@ -17,6 +18,10 @@ from the actual scalar equation's prefix and weighted monotonicity.
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 
 noncomputable section
@@ -34,8 +39,8 @@ theorem quadratic_weight_sqrt {p : ℝ} (hp : 0 ≤ p) :
     Real.sqrt (1+p^2) ≤ 1+p ∧ 1+p ≤ 2*Real.sqrt (1+p^2) := by
   constructor
   · exact Real.sqrt_le_iff.mpr ⟨by positivity, by nlinarith only [hp]⟩
-  · have h1 : 1 ≤ Real.sqrt (1+p^2) := Real.one_le_sqrt.mpr (by nlinarith [sq_nonneg p])
-    have hp' : p ≤ Real.sqrt (1+p^2) := Real.le_sqrt_of_sq_le (by linarith)
+  · have h1 : 1 ≤ Real.sqrt (1+p^2) := Real.one_le_sqrt.mpr (by nlinarith only [sq_nonneg p])
+    have hp' : p ≤ Real.sqrt (1+p^2) := Real.le_sqrt_of_sq_le (by linarith only)
     linarith only [h1, hp']
 
 theorem equation30_polynomial_size_monotone {σ : ℝ} {Z Z₁ : ℝ → ℝ}
@@ -54,8 +59,8 @@ theorem equation30_polynomial_size_monotone {σ : ℝ} {Z Z₁ : ℝ → ℝ}
     have ht0 := hs.trans hst
     have hz := hpre ⟨hs, hst.trans ht⟩ ⟨ht0, ht⟩ hst
     have hpow : s^2 ≤ t^2 := (sq_le_sq₀ hs ht0).mpr hst
-    have hcoef : 1+σ^2*s^2 ≤ 1+σ^2*t^2 := by
-      nlinarith only [mul_le_mul_of_nonneg_left hpow (sq_nonneg σ)]
+    have hcoef : 1+σ^2*s^2 ≤ 1+σ^2*t^2 :=
+      add_le_add_right (mul_le_mul_of_nonneg_left hpow (sq_nonneg σ)) 1
     exact (mul_le_mul_of_nonneg_left hz (by positivity)).trans
       (mul_le_mul_of_nonneg_right hcoef (hpos t ht0).le)
   have hpostW : ∀ s t, 1/σ ≤ s → s ≤ t → (1+σ^2*s^2)*Z s ≤ (1+σ^2*t^2)*Z t := by
@@ -64,8 +69,8 @@ theorem equation30_polynomial_size_monotone {σ : ℝ} {Z Z₁ : ℝ → ℝ}
     have ht := hs.trans hst
     have ht0 := hs0.le.trans hst
     have hz := hpost hs ht hst
-    have hss : 1 ≤ σ*s := by have hh := (div_le_iff₀ hσ).mp hs; nlinarith only [hh]
-    have hst' : 1 ≤ σ*t := by have hh := (div_le_iff₀ hσ).mp ht; nlinarith only [hh]
+    have hss : 1 ≤ σ*s := ((div_le_iff₀ hσ).mp hs).trans_eq (mul_comm s σ)
+    have hst' : 1 ≤ σ*t := ((div_le_iff₀ hσ).mp ht).trans_eq (mul_comm t σ)
     have hproduct : 1 ≤ (σ*s)*(σ*t) := by
       simpa only [one_mul] using mul_le_mul hss hst' zero_le_one (le_trans zero_le_one hss)
     have hpositive : 0 ≤ (t-s)*(σ^2*s*t-1) :=
@@ -74,7 +79,7 @@ theorem equation30_polynomial_size_monotone {σ : ℝ} {Z Z₁ : ℝ → ℝ}
     have h1 := mul_le_mul_of_nonneg_left hz (show 0 ≤ 1+σ^2*s^2 by positivity)
     have h2 := mul_le_mul_of_nonneg_right hcoef (hpos t ht0).le
     apply (mul_le_mul_iff_right₀ hs0).mp
-    nlinarith only [h1, h2]
+    linarith only [h1, h2]
   intro s hs t _ht hst
   by_cases htpre : t ≤ 1/σ
   · exact hpreW s t hs hst htpre

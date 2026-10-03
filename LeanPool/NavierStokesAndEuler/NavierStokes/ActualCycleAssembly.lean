@@ -76,7 +76,8 @@ theorem oscillation_zero_of_inputSupport
   have hcoeff (j : ℤ) : HarmonicResidual.realCoefficients (b.velocity n i) j x = 0 := by
     by_cases hj : j = 0
     · subst j
-      simp [HarmonicResidual.realCoefficients_apply, hzero n i]
+      simp only [HarmonicResidual.realCoefficients_apply, hzero n i, Pi.zero_apply, neg_zero,
+          map_zero, add_zero, mul_zero]
     · exact hs.velocity n i j hj x hx hn
   have hfield : HarmonicFields.field (HarmonicResidual.realCoefficients (b.velocity n i))
       (b.frequency n) (b.phase n) (b.angularFrequency n) (x, θ) = 0 := by
@@ -151,9 +152,9 @@ theorem signed_mask_cutoff_source (l : Index B N0) (n : ℕ)
     lt_of_not_ge (fun h => hg (GaussianTailFlat.profile_zero h))
   have hL := (ActualPrimary.phases B N0 0).L_pos l.1
   have hlo : (1 / 6 : ℝ) ≤ z.2.2 / ((ActualPrimary.phases B N0 0).L l.1) := by
-    linarith [(abs_lt.mp hga).1]
+    linarith only [hga, (abs_lt.mp hga).1]
   have hhi : z.2.2 / ((ActualPrimary.phases B N0 0).L l.1) ≤ 5 / 6 := by
-    linarith [(abs_lt.mp hga).2]
+    linarith only [hga, (abs_lt.mp hga).2]
   refine ⟨k, hs, ⟨htrans.1.le, htrans.2.le⟩, ?_, ?_⟩
   · change ((ActualPrimary.phases B N0 0).L l.1 / 1) / 6 ≤ z.2.2
     simpa only [div_eq_mul_inv, inv_one, mul_one, one_mul, mul_comm] using
@@ -254,9 +255,11 @@ theorem block_inputSupport_of_zero
     (g := fun _ _ => 0) hv hp (fun _ _ _ _ => rfl)
   refine ⟨hh.velocity, hh.pressure, ?_, ?_⟩
   · intro n i j hj x hx hn
-    simp [HarmonicResidual.realCoefficients_apply]
+    simp only [Pi.zero_apply, HarmonicResidual.realCoefficients_apply, AddMonoidAlgebra.coeff_zero,
+        Finsupp.coe_zero, map_zero, add_zero, mul_zero]
   · intro n i j hj x hx hn
-    simp [HarmonicResidual.realCoefficients_apply]
+    simp only [Pi.zero_apply, HarmonicResidual.realCoefficients_apply, AddMonoidAlgebra.coeff_zero,
+        Finsupp.coe_zero, map_zero, add_zero, mul_zero]
 
 theorem tangent_inputSupport (l : Index B N0) (s : StripData Point)
     (request : ℕ → Point × ℝ → SignedWaveUpdate.Vec2) :
@@ -365,9 +368,9 @@ theorem signed_cutoff_sourceCell (l : Index B N0) (n : ℕ)
     lt_of_not_ge (fun h => hg (GaussianTailFlat.profile_zero h))
   have hL := (ActualPrimary.phases B N0 0).L_pos l.1
   have hlo : (1 / 6 : ℝ) ≤ z.2.2 / ((ActualPrimary.phases B N0 0).L l.1) := by
-    linarith [(abs_lt.mp hga).1]
+    linarith only [hga, (abs_lt.mp hga).1]
   have hhi : z.2.2 / ((ActualPrimary.phases B N0 0).L l.1) ≤ 5 / 6 := by
-    linarith [(abs_lt.mp hga).2]
+    linarith only [hga, (abs_lt.mp hga).2]
   refine ⟨⟨htrans.1.le, htrans.2.le⟩, ?_, ?_⟩
   · change ((ActualPrimary.phases B N0 0).L l.1 / 1) / 6 ≤ z.2.2
     simpa only [div_eq_mul_inv, inv_one, mul_one, one_mul, mul_comm] using
@@ -838,10 +841,7 @@ theorem common_raw_zero_germ_of_factorization (j : ℤ) (n : ℕ)
       (StateReindex.blockCoefficients cycleAssoc.symm A) j
     a.common.amplitude n =ᶠ[𝓝 z] fun _ => 0 := by
   classical
-  let a := (ActualParticularStageControls.canonicalParameters (l.2,l.1)).copyData
-    (StateReindex.context cycleAssoc.symm c) (StateReindex.state cycleAssoc.symm u)
-    (StateReindex.block cycleAssoc.symm b) (StateReindex.blockCoefficients cycleAssoc.symm G)
-    (StateReindex.blockCoefficients cycleAssoc.symm A) j
+  intro a
   have hsupp : ∀ n k, support (a.cutoff n k) ⊆ (particularCells l).carrier n k :=
     canonical_cutoff_support l _ _ _ _ _ j
   by_cases hcell : ∃ k, z ∈ (particularCells l).carrier n k
@@ -933,7 +933,8 @@ theorem particular_inputSupport_of_factorization (s : StripData Point) (N : ℕ)
     (fun n z hz hk => (hfactor n (cycleAssoc z).1 hz (cycleAssoc z).2).mpr hk)
   refine ⟨hout.velocity, hout.pressure, hout.gaussian, ?_⟩
   intro n i j hj z hz hn
-  simp [HarmonicResidual.realCoefficients_apply]
+  simp only [Pi.zero_apply, HarmonicResidual.realCoefficients_apply, AddMonoidAlgebra.coeff_zero,
+      Finsupp.coe_zero, map_zero, add_zero, mul_zero]
 
 end FactorizedCarrier
 

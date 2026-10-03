@@ -30,16 +30,18 @@ open ContinuousLinearMap InnerProductSpace EulerLpCylinderTranslation
 variable (P : ℝ) [Fact (0 < P)] {V : Type*}
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
-theorem reflection_adjoint : (reflection (V := V) P).toContinuousLinearMap.adjoint =
-    (reflection P).toContinuousLinearMap := by
+theorem reflection_adjoint :
+    adjoint (𝕜 := ℝ) (E := CylinderL2 P V) (F := CylinderL2 P V)
+      (reflection (V := V) P).toContinuousLinearMap =
+    (reflection (V := V) P).toContinuousLinearMap := by
   apply ContinuousLinearMap.ext
   intro u
   apply ext_inner_right ℝ
   intro v
   rw [adjoint_inner_left]
-  change ⟪u,reflection P v⟫_ℝ = ⟪reflection P u,v⟫_ℝ
+  change ⟪u,reflection (V := V) P v⟫_ℝ = ⟪reflection (V := V) P u,v⟫_ℝ
   simpa only [reflection_involutive] using
-    (reflection (V := V) P).inner_map_map (reflection P u) v
+    (reflection (V := V) P).inner_map_map (reflection (V := V) P u) v
 
 end EulerCylinderFieldReflection
 
@@ -60,32 +62,33 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
 include hQ hQ₁ hH
 
 theorem continuousVelocity_reflection (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
-    D.velocityPath P (pathLp T D.time_pos.le (pathReflection P f)) t =
-      reflection P (D.velocityPath P (pathLp T D.time_pos.le f) t) := by
+    D.velocityPath P (pathLp T D.time_pos.le (pathReflection (K := Icc (0 : ℝ) T) (V := E) P f)) t =
+      reflection (V := U) P (D.velocityPath P (pathLp T D.time_pos.le f) t) := by
   apply D.continuousVelocity_intertwines P D
-    (reflection P).toContinuousLinearMap (reflection P).toContinuousLinearMap
+    (reflection (V := U) P).toContinuousLinearMap (reflection (V := E) P).toContinuousLinearMap
     (fun s u => (reflection_fullOperator P (D.Q s) (hQ s) u).symm)
     (fun s u => (reflection_fullOperator P (D.Q₁ s) (hQ₁ s) u).symm)
     _ _ (fun s u => (reflection_fullOperator P (D.H s) (hH s) u).symm) f t
   · intro s u
-    rw [reflection_adjoint,reflection_adjoint]
+    simp only [reflection_adjoint]
     exact (reflection_fullOperator P (D.Q s) (hQ s) u).symm
   · intro s u
-    rw [reflection_adjoint,reflection_adjoint]
+    simp only [reflection_adjoint]
     exact (reflection_fullOperator P (D.Q₁ s) (hQ₁ s) u).symm
 
 theorem accelerationPath_reflection (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (0 : ℝ) T) :
-    D.accelerationPath P (pathReflection P f) t = reflection P (D.accelerationPath P f t) := by
+    D.accelerationPath P (pathReflection (K := Icc (0 : ℝ) T) (V := E) P f) t =
+      reflection (V := U) P (D.accelerationPath P f t) := by
   apply D.accelerationPath_intertwines P D
-    (reflection P).toContinuousLinearMap (reflection P).toContinuousLinearMap
+    (reflection (V := U) P).toContinuousLinearMap (reflection (V := E) P).toContinuousLinearMap
     (fun s u => (reflection_fullOperator P (D.Q s) (hQ s) u).symm)
     (fun s u => (reflection_fullOperator P (D.Q₁ s) (hQ₁ s) u).symm)
     _ _ (fun s u => (reflection_fullOperator P (D.H s) (hH s) u).symm) f t
   · intro s u
-    rw [reflection_adjoint,reflection_adjoint]
+    simp only [reflection_adjoint]
     exact (reflection_fullOperator P (D.Q s) (hQ s) u).symm
   · intro s u
-    rw [reflection_adjoint,reflection_adjoint]
+    simp only [reflection_adjoint]
     exact (reflection_fullOperator P (D.Q₁ s) (hQ₁ s) u).symm
 
 omit hQ hQ₁ hH in
@@ -94,43 +97,49 @@ theorem accelerationPath_neg (f : C(Icc (0 : ℝ) T, CylinderL2 P E)) (t : Icc (
   have hn : pathLp T D.time_pos.le (-f) = -(pathLp T D.time_pos.le f) :=
     map_neg (pathLpOperator T D.time_pos.le) f
   change gramInverse (D.frame P t) D.lower D.lower_pos (D.frame_lower P t)
-    ((D.frame P t).adjoint (-f t-(2 : ℝ) • D.frameDerivative P t
-      (D.velocityPath P (pathLp T D.time_pos.le (-f)) t))) = _
-  rw [hn,map_neg,ContinuousMap.neg_apply,map_neg,smul_neg,neg_sub_neg,← neg_sub]
-  simp only [map_neg]
+    (adjoint (𝕜 := ℝ) (E := CylinderL2 P U) (F := CylinderL2 P E) (D.frame P t)
+      (-f t-(2 : ℝ) • D.frameDerivative P t
+        (D.velocityPath P (pathLp T D.time_pos.le (-f)) t))) = _
+  simp only [hn, map_neg, ContinuousMap.neg_apply, smul_neg, ← neg_sub']
   rfl
 
 theorem velocityPath_odd (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
-    (hf : ∀ t, reflection P (f t) = -f t) (t : Icc (0 : ℝ) T) :
-    reflection P (D.velocityPath P (pathLp T D.time_pos.le f) t) =
+    (hf : ∀ t, reflection (V := E) P (f t) = -f t) (t : Icc (0 : ℝ) T) :
+    reflection (V := U) P (D.velocityPath P (pathLp T D.time_pos.le f) t) =
       -(D.velocityPath P (pathLp T D.time_pos.le f) t) := by
-  have he : pathReflection P f = -f := ContinuousMap.ext hf
-  rw [← D.continuousVelocity_reflection P hQ hQ₁ hH f t,he]
+  have he : pathReflection (K := Icc (0 : ℝ) T) (V := E) P f = -f := ContinuousMap.ext hf
   have hn : pathLp T D.time_pos.le (-f) = -(pathLp T D.time_pos.le f) :=
     map_neg (pathLpOperator T D.time_pos.le) f
-  rw [hn,map_neg,ContinuousMap.neg_apply]
+  exact (D.continuousVelocity_reflection P hQ hQ₁ hH f t).symm.trans <|
+    (congrArg (fun g => D.velocityPath P (pathLp T D.time_pos.le g) t) he).trans <|
+    (congrArg (fun g => D.velocityPath P g t) hn).trans <|
+    (congrArg (fun F : C(Icc (0 : ℝ) T, CylinderL2 P U) => F t)
+      ((D.velocityPath P).map_neg _)).trans (ContinuousMap.neg_apply _ _)
 
 theorem accelerationPath_odd (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
-    (hf : ∀ t, reflection P (f t) = -f t) (t : Icc (0 : ℝ) T) :
-    reflection P (D.accelerationPath P f t) = -(D.accelerationPath P f t) := by
-  have he : pathReflection P f = -f := ContinuousMap.ext hf
+    (hf : ∀ t, reflection (V := E) P (f t) = -f t) (t : Icc (0 : ℝ) T) :
+    reflection (V := U) P (D.accelerationPath P f t) = -(D.accelerationPath P f t) := by
+  have he : pathReflection (K := Icc (0 : ℝ) T) (V := E) P f = -f := ContinuousMap.ext hf
   rw [← D.accelerationPath_reflection P hQ hQ₁ hH f t,he,D.accelerationPath_neg P f t]
 
 theorem physicalVelocity_odd (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
-    (hf : ∀ t, reflection P (f t) = -f t) (t : Icc (0 : ℝ) T) :
-    reflection P (D.physicalVelocity P f t) = -(D.physicalVelocity P f t) := by
-  change reflection P (fullOperatorMap P (D.Q t) (D.velocityPath P (pathLp T D.time_pos.le f) t)) =
-      _
-  rw [reflection_fullOperator P (D.Q t) (hQ t),D.velocityPath_odd P hQ hQ₁ hH f hf t,map_neg]
+    (hf : ∀ t, reflection (V := E) P (f t) = -f t) (t : Icc (0 : ℝ) T) :
+    reflection (V := E) P (D.physicalVelocity P f t) = -(D.physicalVelocity P f t) := by
+  change reflection (V := E) P (fullOperatorMap (E := U) (F := E) P (D.Q t)
+      (D.velocityPath P (pathLp T D.time_pos.le f) t)) = _
+  simp only [reflection_fullOperator P (D.Q t) (hQ t), D.velocityPath_odd P hQ hQ₁ hH f hf t,
+    map_neg]
   rfl
 
 theorem physicalDerivative_odd (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
-    (hf : ∀ t, reflection P (f t) = -f t) (t : Icc (0 : ℝ) T) :
-    reflection P (D.physicalDerivative P f t) = -(D.physicalDerivative P f t) := by
-  change reflection P (fullOperatorMap P (D.Q₁ t) (D.velocityPath P (pathLp T D.time_pos.le f) t) +
-    fullOperatorMap P (D.Q t) (D.accelerationPath P f t)) = _
-  rw [map_add,reflection_fullOperator P (D.Q₁ t) (hQ₁ t),reflection_fullOperator P (D.Q t) (hQ t),
-    D.velocityPath_odd P hQ hQ₁ hH f hf t,D.accelerationPath_odd P hQ hQ₁ hH f hf t,map_neg,map_neg]
+    (hf : ∀ t, reflection (V := E) P (f t) = -f t) (t : Icc (0 : ℝ) T) :
+    reflection (V := E) P (D.physicalDerivative P f t) = -(D.physicalDerivative P f t) := by
+  change reflection (V := E) P (fullOperatorMap (E := U) (F := E) P (D.Q₁ t)
+      (D.velocityPath P (pathLp T D.time_pos.le f) t) +
+    fullOperatorMap (E := U) (F := E) P (D.Q t) (D.accelerationPath P f t)) = _
+  simp only [map_add, reflection_fullOperator P (D.Q₁ t) (hQ₁ t),
+    reflection_fullOperator P (D.Q t) (hQ t), D.velocityPath_odd P hQ hQ₁ hH f hf t,
+    D.accelerationPath_odd P hQ hQ₁ hH f hf t, map_neg]
   exact (neg_add _ _).symm
 
 end EulerCylinderDirichlet.Coefficients

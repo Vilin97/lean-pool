@@ -45,7 +45,7 @@ theorem Budget.radius_bounds (B : Budget period hT A) (t : Icc (0 : ℝ) T) :
   have ht := mul_le_mul_of_nonneg_left t.property.2 hs
   have hzero := mul_nonneg hs t.property.1
   rw [B.radius_eq 6 le_rfl t]
-  constructor <;> linarith [B.decay 6 le_rfl]
+  constructor <;> linarith only [hT, ht, hzero, B.decay 6 le_rfl]
 
 theorem Budget.reducedRadius_pos (B : Budget period hT A) : 0 < B.reducedRadius period := by
   exact div_pos B.radius_pos (by norm_num)
@@ -54,7 +54,7 @@ theorem Budget.reducedRadius_le_half (B : Budget period hT A) (t : Icc (0 : ℝ)
     B.reducedRadius period ≤ B.radius t/2 := by
   have h := (B.radius_bounds period t).1
   dsimp [Budget.reducedRadius]
-  linarith
+  linarith only [hT, h]
 
 theorem Budget.correctionSize_nonneg (B : Budget period hT A) : 0 ≤ B.correctionSize period := by
   have hμ := metricAmplification_one_le B.metric.c_pos
@@ -108,7 +108,7 @@ theorem Budget.fieldTower_reducedNorm (B : Budget period hT A)
   have hr : B.reducedRadius period ≤ B.radius t := by
     have hh := B.reducedRadius_le_half period t
     have hp := (B.spatial 6 le_rfl).full.radius_pos t
-    linarith
+    linarith only [hT, hh, hp]
   exact (weightedNorm_mono_radius period 6 N (B.reducedRadius_pos period).le hr _).trans
     (B.fieldTower_weightedNorm_delta period s N hN t)
 
@@ -122,7 +122,7 @@ theorem Budget.fieldTower_reducedDerivativeNorm (B : Budget period hT A)
   have hR := (B.spatial 6 le_rfl).full.radius_pos t
   have hfrac : 4/B.radius t ≤ 8/B.initialRadius := by
     apply (div_le_div_iff₀ hR B.radius_pos).mpr
-    linarith [(B.radius_bounds period t).1]
+    linarith only [hT, (B.radius_bounds period t).1]
   calc
     _ ≤ ∑ i : Fin 4, weightedNorm period 6 N (B.radius t/2)
         (derivativeOperator period s i ((B.fieldTower period).realization (s+1) t)) := by
@@ -146,6 +146,6 @@ theorem Budget.residual_le_delta (B : Budget period hT A) (q : ℕ) (hq : 6 ≤ 
     (show 0 ≤ 2*(B.spatial q hq).full.residual by
         have := (B.spatial q hq).full.residual_pos; positivity)
   have hs := B.small q hq
-  linarith
+  linarith only [hq, hT, hm, hs]
 
 end EulerAllOrderDriftCorrection

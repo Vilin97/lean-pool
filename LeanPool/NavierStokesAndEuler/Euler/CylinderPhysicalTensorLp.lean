@@ -44,6 +44,7 @@ theorem physicalTensor_memLp :
   have hm := hs.const_mul (frequencyFactor k m^n)
   have hc : Continuous (iteratedFDeriv ℝ n (physicalField P k m f)) :=
     (physicalField_contDiff P k m f hf).continuous_iteratedFDeriv (by simp)
+  have := secondCountableTopologyEither_of_left Vector3 (Vector3 [×n]→L[ℝ] Vector3)
   apply hm.of_le hc.aestronglyMeasurable
   filter_upwards [] with x
   rw [Real.norm_of_nonneg (mul_nonneg (pow_nonneg (frequencyFactor_nonneg k m) n)

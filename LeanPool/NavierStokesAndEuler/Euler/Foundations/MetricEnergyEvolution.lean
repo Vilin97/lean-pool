@@ -13,12 +13,17 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Metric Energy Evolution
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 noncomputable section
 
@@ -53,7 +58,7 @@ theorem metric_energy_evolution (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
   refine (metric_energy_hasDerivAt K e t K' e' hK he hsym).congr_deriv ?_
   have h := congrArg (fun v => ⟪K t (e t), v⟫_ℝ) heq
   simp only [inner_add_right, hp, add_zero] at h
-  linarith
+  linarith only [h]
 
 theorem energy_derivative_bound (K K' : H →L[ℝ] H) (e transport forcing : H)
     (B : ℝ) (_hB : 0 ≤ B) (ht : |⟪K e, transport⟫_ℝ| ≤ B * ‖e‖ ^ 2) :
@@ -68,7 +73,7 @@ theorem energy_derivative_bound (K K' : H →L[ℝ] H) (e transport forcing : H)
     exact (real_inner_le_norm _ _).trans
       (mul_le_mul_of_nonneg_right (K.le_opNorm e) (norm_nonneg _))
   have ht' := (abs_le.mp ht).1
-  linarith
+  linarith only [hk, hf, ht']
 
 /-- A positive regularization gives a differentiable metric norm even at zero. -/
 theorem regularized_metric_norm_hasDerivAt (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
@@ -80,7 +85,8 @@ theorem regularized_metric_norm_hasDerivAt (K : ℝ → H →L[ℝ] H) (e : ℝ 
       ((⟪K' (e t), e t⟫_ℝ + 2 * ⟪K t (e t), e'⟫_ℝ) /
         (2 * √(⟪K t (e t), e t⟫_ℝ + δ ^ 2))) t := by
   exact HasDerivAt.sqrt
-    ((metric_energy_hasDerivAt K e t K' e' hK he hsym).add_const (δ ^ 2)) (by nlinarith)
+    ((metric_energy_hasDerivAt K e t K' e' hK he hsym).add_const (δ ^ 2)) (by nlinarith only [hpos,
+        hδ])
 
 /-- The norm estimate used before summing Gevrey weights. All terms come from
 the actual differential equation; no estimate for the energy derivative is assumed. -/
@@ -99,29 +105,31 @@ theorem regularized_metric_norm_evolution (K : ℝ → H →L[ℝ] H) (e : ℝ �
   let E := √(⟪K t (e t), e t⟫_ℝ + δ ^ 2)
   have hq : 0 ≤ ⟪K t (e t), e t⟫_ℝ :=
     (mul_nonneg (sq_nonneg c) (sq_nonneg ‖e t‖)).trans hcoercive
-  have hE : 0 < E := sqrt_pos.2 (by nlinarith)
-  have hE2 : E ^ 2 = ⟪K t (e t), e t⟫_ℝ + δ ^ 2 := sq_sqrt (by nlinarith)
+  have hqδ : 0 < ⟪K t (e t), e t⟫_ℝ + δ ^ 2 := add_pos_of_nonneg_of_pos hq (pow_pos hδ 2)
+  have hE : 0 < E := sqrt_pos.2 hqδ
+  have hE2 : E ^ 2 = ⟪K t (e t), e t⟫_ℝ + δ ^ 2 := sq_sqrt hqδ.le
   have hnorm : ‖e t‖ ≤ E / c := by
     apply (le_div_iff₀ hc).2
-    nlinarith [norm_nonneg (e t)]
+    apply Real.le_sqrt_of_sq_le
+    have h : (‖e t‖ * c) ^ 2 = c ^ 2 * ‖e t‖ ^ 2 := by ring
+    linarith only [h, hcoercive, sq_nonneg δ]
   have hnorm2 : ‖e t‖ ^ 2 ≤ E ^ 2 / c ^ 2 := by
     rw [← div_pow]
     exact pow_le_pow_left₀ (norm_nonneg _) hnorm 2
   have hdiff := metric_energy_evolution K e t K' e' transport pressure forcing hK he hsym heq hp
-  have hroot := HasDerivAt.sqrt (hdiff.add_const (δ ^ 2)) (by nlinarith :
-    ⟪K t (e t), e t⟫_ℝ + δ ^ 2 ≠ 0)
+  have hroot := HasDerivAt.sqrt (hdiff.add_const (δ ^ 2)) hqδ.ne'
   rw [hroot.deriv]
   change (_ / (2 * E)) ≤ _
-  apply (div_le_iff₀ (by positivity : 0 < 2 * E)).2
+  apply (div_le_iff₀ (mul_pos two_pos hE)).2
   have hb := energy_derivative_bound (K t) K' (e t) transport forcing B hB ht
   have h1 := mul_le_mul_of_nonneg_left hnorm2
-    (show 0 ≤ ‖K'‖ + 2 * B by positivity)
+    (add_nonneg (norm_nonneg K') (mul_nonneg zero_le_two hB))
   have h2 := mul_le_mul_of_nonneg_left hnorm
-    (show 0 ≤ 2 * ‖K t‖ * ‖forcing‖ by positivity)
+    (mul_nonneg (mul_nonneg zero_le_two (norm_nonneg (K t))) (norm_nonneg forcing))
   calc
     _ ≤ (‖K'‖ + 2 * B) * ‖e t‖ ^ 2 + 2 * ‖K t‖ * ‖e t‖ * ‖forcing‖ := hb
     _ ≤ (‖K'‖ + 2 * B) * (E ^ 2 / c ^ 2) +
-        2 * ‖K t‖ * (E / c) * ‖forcing‖ := by linarith
-    _ = _ := by dsimp [E]; field_simp
+        2 * ‖K t‖ * (E / c) * ‖forcing‖ := by linarith only [h1, h2]
+    _ = _ := by dsimp only [E]; ring
 
 end EulerMetricEnergyEvolution

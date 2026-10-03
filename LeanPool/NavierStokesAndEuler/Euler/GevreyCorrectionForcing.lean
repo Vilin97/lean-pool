@@ -336,7 +336,9 @@ theorem baseCommutator_ae (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
         norm_num : 3 ≤ 7) L u (wordAtLevel period 1 r w (by omega) v)), hfirst,hsecond]
     with x hx h1 h2
   simp only [Pi.sub_apply] at hx
-  exact hx.trans (by rw [h1,h2]; rfl)
+  with_reducible refine hx.trans ?_
+  simp only [h1, h2]
+  rfl
 
 /-- On actual smooth representatives, the base commutator has the H⁶-only norm bound. -/
 theorem baseCommutator_smooth_bound (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
@@ -377,7 +379,7 @@ theorem baseCommutator_bound (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
   have hS : Continuous (fun u : SobolevSpace period 7 => sumNorm period (restrictOperator period (by
       norm_num : 6 ≤ 7) u)) :=
     (continuous_sumNorm period 6).comp (restrictOperator period (by norm_num : 6 ≤ 7)).continuous
-  exact binary_le_of_smooth period
+  have h := binary_le_of_smooth period
     (fun p => ‖baseCommutator period r hr w L hL p.1 p.2‖)
     (fun p => baseTransportConstant period * sumNorm period (restrictOperator period (by
         norm_num : 6 ≤ 7) p.1) *
@@ -385,8 +387,12 @@ theorem baseCommutator_bound (r : ℕ) (hr : r ≤ 6) (w : Fin r → Fin 4)
     (baseCommutator period r hr w L hL).continuous₂.norm
     (((hS.comp continuous_fst).const_mul (baseTransportConstant period)).mul (hS.comp
         continuous_snd))
-    (fun a b f g ha hb hf hg hfL hgL => baseCommutator_smooth_bound period r hr w L hL a b f g ha
-        hb hf hg hfL hgL) u v
+    (fun a b f g ha hb hf hg hfL hgL => by
+      dsimp only
+      with_reducible
+        exact baseCommutator_smooth_bound period r hr w L hL a b f g ha hb hf hg hfL hgL) u v
+  dsimp only at h
+  with_reducible exact h
 
 end EulerSobolevBaseCommutator
 
@@ -435,8 +441,10 @@ theorem sumNorm_restrict_le_weighted {s q : ℕ} (hq : q ≤ s) (N : ℕ) (ρ : 
   have hsum := Finset.single_le_sum (s := Finset.range (N+1))
     (fun n _ => mul_nonneg (weight_pos hρ n).le (show 0 ≤ blockNorm period (toJet period u) q n
         from blockNorm_nonneg _))
-    (show 0 ∈ Finset.range (N+1) by simp)
-  simpa [weight, weightedNorm] using hsum
+    (show 0 ∈ Finset.range (N+1) by simp only [Finset.mem_range, lt_add_iff_pos_left,
+        Order.lt_add_one_iff, zero_le])
+  simpa only [weightedNorm, weight, ge_iff_le, pow_zero, Nat.factorial_zero, Nat.cast_one, one_pow,
+      ne_eq, one_ne_zero, not_false_eq_true, div_self, one_mul] using hsum
 
 /-- Exact external-word expansion of the actual Gevrey Sobolev sum. -/
 theorem weighted_word_sums {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (ρ : ℝ) (u : SobolevSpace period s) :
@@ -478,7 +486,8 @@ theorem baseTransportForcing_family_bound {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s)
       (restrictOperator period (by omega : 7 ≤ s+1) u)
       (wordAtLevel period 7 I.1.val I.2 (by have := I.1.isLt; omega : I.1.val+7 ≤ s+1) v)
     rw [restrictOperator_comp, restrict_wordAtLevel] at h
-    exact h
+    unfold baseTransportForcing
+    with_reducible exact h
   have hsum := Finset.sum_le_sum (s := (Finset.univ : Finset (BaseWord 6))) (fun a _ => hb a)
   exact (familyNorm_le_sum_norm _).trans (hsum.trans_eq (by
     simp only [Finset.sum_const, Finset.card_univ, card_baseWord_six, nsmul_eq_mul]; ring))
@@ -587,7 +596,9 @@ theorem externalTransportForcing_bound {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : 
     (fun I => toJet period (externalCommutator period hs I.1.val I.2 (by
         have := I.1.isLt; omega) L hL u v))
   simp only [← sumNorm_eq_jet] at h
-  exact h.trans_eq (by simp only [Fintype.sum_sigma, weightedCommutatorNorm, Finset.mul_sum])
+  unfold externalTransportForcing
+  with_reducible refine h.trans_eq ?_
+  simp only [Fintype.sum_sigma, weightedCommutatorNorm, Finset.mul_sum]
 
 /-- The literal base derivatives of the actual external coefficient-pressure commutator. -/
 def externalPressureForcing {s : ℕ} {A : SmoothCoefficient period}

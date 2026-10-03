@@ -47,11 +47,12 @@ theorem nonlinear_pressure_lower_bound {s : ℕ} {A : SmoothCoefficient period} 
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period standardDirection s F)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (hpos : ∀ x v, c * ‖v‖ ^ (2 : ℕ) ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (N : ℕ) (hN : N + 5 ≤ s) (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hM : 1 ≤ M)
     (hbase : (EulerH6Pressure.CoefficientJet.restrict K 5 (by omega)).pressureConstant c ≤ M)
     (hsmall : 4 * M * (ρ * Rc) ≤ 1)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 5 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2)
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N →
+      coefficientBlock period K 5 l ≤ Rc ^ l * (l.factorial : ℝ) ^ (2 : ℕ))
     (b : LiftDomain period → Domain 4) (e : LiftDomain period → Vector3)
     (hb : ∀ x, ContDiff ℝ ∞ (localFieldLift period b x))
     (he : ∀ x, ContDiff ℝ ∞ (localFieldLift period e x))
@@ -82,7 +83,7 @@ theorem nonlinear_pressure_lower_bound {s : ℕ} {A : SmoothCoefficient period} 
   rw [heq] at hp
   have ht := mul_le_mul_of_nonneg_left
     (transport_lower_weighted_bound period N ρ hρ b e hb he hbL2 heL2)
-    (show 0 ≤ 2*M by linarith)
+    (show 0 ≤ 2*M by linarith only [hM])
   exact hp.trans (ht.trans_eq (by ring))
 
 end EulerH6Nonlinear
@@ -122,7 +123,7 @@ local instance pressureTransportSpace (q : ℕ) : NormedSpace ℝ (SobolevSpace 
 theorem pressure_block_eq {s q n : ℕ} {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (hpos : ∀ x v, c * ‖v‖ ^ (2 : ℕ) ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (u : SobolevSpace period s) (h : n + q ≤ s) :
     blockNorm period (toJet period (pressureSobolevOperator period K κ m c hc hpos u)) q n =
       blockNorm period ((toJet period u).solvePressure K κ m c hc hpos) q n :=
@@ -141,7 +142,7 @@ def transportPressure {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
 theorem transportPressure_continuous {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (hpos : ∀ x v, c * ‖v‖ ^ (2 : ℕ) ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1) :
     Continuous (fun p : SobolevSpace period (s+1) × SobolevSpace period (s+1) =>
       transportPressure period hs K κ m c hc hpos L hL p.1 p.2) :=
@@ -167,11 +168,12 @@ theorem velocityMap_weighted_bound (q N : ℕ) (ρ : ℝ) (hρ : 0 < ρ)
 theorem transportPressure_lower_smooth {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (hpos : ∀ x v, c * ‖v‖ ^ (2 : ℕ) ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (N : ℕ) (hN : N + 5 ≤ s) (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hM : 1 ≤ M)
     (hbase : (EulerH6Pressure.CoefficientJet.restrict K 5 (by omega)).pressureConstant c ≤ M)
     (hsmall : 4 * M * (ρ * Rc) ≤ 1)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 5 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2)
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N →
+      coefficientBlock period K 5 l ≤ Rc ^ l * (l.factorial : ℝ) ^ (2 : ℕ))
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (u v : SobolevSpace period (s + 1)) (f g : LiftDomain period → Vector3)
     (hu : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f)
@@ -220,11 +222,12 @@ the solver. -/
 theorem transportPressure_lower {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (hpos : ∀ x v, c * ‖v‖ ^ (2 : ℕ) ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (N : ℕ) (hN : N + 5 ≤ s) (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hM : 1 ≤ M)
     (hbase : (EulerH6Pressure.CoefficientJet.restrict K 5 (by omega)).pressureConstant c ≤ M)
     (hsmall : 4 * M * (ρ * Rc) ≤ 1)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 5 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2)
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N →
+      coefficientBlock period K 5 l ≤ Rc ^ l * (l.factorial : ℝ) ^ (2 : ℕ))
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (u v : SobolevSpace period (s + 1)) :
     weightedNorm period 5 N ρ (transportPressure period hs K κ m c hc hpos L hL u v) ≤
@@ -260,9 +263,9 @@ theorem transportPressure_lower {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient 
   intro n
   obtain ⟨f,hf,hfs,hfL⟩ := smoothApprox_representative_all period n u
   obtain ⟨g,hg,hgs,hgL⟩ := smoothApprox_representative_all period n v
-  exact transportPressure_lower_smooth period hs K κ m c hc hpos N hN ρ Rc M hρ hRc hM hbase hsmall
-      hcoeff
-    L hL (U n) (V n) f g hf hg hfs hgs hfL hgL
+  apply (transportPressure_lower_smooth period hs K κ m c hc hpos N hN ρ Rc M hρ hRc hM hbase
+      hsmall hcoeff
+    L hL (U n) (V n) f g hf hg hfs hgs hfL hgL :)
 
 end EulerGevreyPressureTransport
 
@@ -313,11 +316,12 @@ theorem continuous_shiftedPressureNorm {s : ℕ} (N : ℕ) (hN : N + 6 ≤ s) (�
 theorem transportPressure_shifted_smooth {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (hpos : ∀ x v, c * ‖v‖ ^ (2 : ℕ) ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (N : ℕ) (hN : N + 6 ≤ s) (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hM : 1 ≤ M)
     (hbase : (EulerH6Pressure.CoefficientJet.restrict K 6 (by omega)).pressureConstant c ≤ M)
     (hsmall : 4 * M * (ρ * Rc) ≤ 1)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2)
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N →
+      coefficientBlock period K 6 l ≤ Rc ^ l * (l.factorial : ℝ) ^ (2 : ℕ))
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (u v : SobolevSpace period (s + 1)) (f g : LiftDomain period → Vector3)
     (hu : (value period u : LiftDomain period → Vector3) =ᵐ[liftMeasure period] f)
@@ -354,7 +358,7 @@ theorem transportPressure_shifted_smooth {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoe
   conv_rhs => rw [weightedNorm_eq_classical period 6 (N+1) (by omega) ρ u f hu hf,
     weightedLoss_eq_classical period 6 (N+1) (by omega) ρ v g hv hg]
   have hcoef : 0 ≤ 4*M*productConstant period 3 := mul_nonneg (by
-      linarith) (productConstant_nonneg period 3)
+      linarith only [hM]) (productConstant_nonneg period 3)
   have hv0 : 0 ≤ ∑ j ∈ Finset.range (N+2), (j : ℝ)*weight ρ j * wordSobolevNorm period 6 j g :=
     Finset.sum_nonneg fun j _ => mul_nonneg (mul_nonneg (Nat.cast_nonneg j) (weight_pos hρ j).le)
         (wordSobolevNorm_nonneg period 6 j g)
@@ -366,11 +370,12 @@ solver. -/
 theorem transportPressure_shifted {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period standardDirection s A)
     (κ : ℝ) (m : Vector3) (c : ℝ) (hc : 0 < c)
-    (hpos : ∀ x v, c * ‖v‖ ^ 2 ≤ ⟪A.coefficient x v, v⟫_ℝ)
+    (hpos : ∀ x v, c * ‖v‖ ^ (2 : ℕ) ≤ ⟪A.coefficient x v, v⟫_ℝ)
     (N : ℕ) (hN : N + 6 ≤ s) (ρ Rc M : ℝ) (hρ : 0 < ρ) (hRc : 0 ≤ Rc) (hM : 1 ≤ M)
     (hbase : (EulerH6Pressure.CoefficientJet.restrict K 6 (by omega)).pressureConstant c ≤ M)
     (hsmall : 4 * M * (ρ * Rc) ≤ 1)
-    (hcoeff : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc ^ l * (l.factorial : ℝ) ^ 2)
+    (hcoeff : ∀ l, 1 ≤ l → l ≤ N →
+      coefficientBlock period K 6 l ≤ Rc ^ l * (l.factorial : ℝ) ^ (2 : ℕ))
     (L : Fin 4 → Vector3 →L[ℝ] ℝ) (hL : ∀ i, ‖L i‖ ≤ 1)
     (u v : SobolevSpace period (s + 1)) :
     shiftedPressureNorm period N ρ (transportPressure period hs K κ m c hc hpos L hL u v) ≤
@@ -409,8 +414,8 @@ theorem transportPressure_shifted {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficien
   intro n
   obtain ⟨f,hf,hfs,hfL⟩ := smoothApprox_representative_all period n u
   obtain ⟨g,hg,hgs,hgL⟩ := smoothApprox_representative_all period n v
-  exact transportPressure_shifted_smooth period hs K κ m c hc hpos N hN ρ Rc M hρ hRc hM hbase
+  apply (transportPressure_shifted_smooth period hs K κ m c hc hpos N hN ρ Rc M hρ hRc hM hbase
       hsmall hcoeff
-    L hL (U n) (V n) f g hf hg hfs hgs hfL hgL
+    L hL (U n) (V n) f g hf hg hfs hgs hfL hgL :)
 
 end EulerGevreyPressureTransport

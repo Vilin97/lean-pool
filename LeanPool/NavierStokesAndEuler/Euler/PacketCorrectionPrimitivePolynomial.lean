@@ -142,27 +142,32 @@ theorem primitive_components (P X : ℝ) [Fact (0 < P)] (hX : 0 ≤ X) :
     linearEnvelope X ≤ primitiveEnvelope P X ∧ quadraticEnvelope X ≤ primitiveEnvelope P X ∧
     radiusEnvelope X ≤ primitiveEnvelope P X ∧ pressureEnvelope X ≤ primitiveEnvelope P X ∧
     multiplierEnvelope X ≤ primitiveEnvelope P X ∧ termEnvelope P X ≤ primitiveEnvelope P X := by
-  have hm : 0 ≤ metricEnvelope X :=
-    sobolevCoefficientAmplitude_nonneg 6 (4*X) (3*X*X) (by positivity) (by positivity)
-  have hl : 0 ≤ linearEnvelope X := mul_nonneg (by norm_num)
-    (sobolevCoefficientAmplitude_nonneg 6 (4*X) (6*X*X) (by positivity) (by positivity))
-  have hq : 0 ≤ quadraticEnvelope X := mul_nonneg (by norm_num)
-    (sobolevCoefficientAmplitude_nonneg 6 (4*X) (3*X*(X*X)) (by positivity) (by positivity))
-  have hr : 0 ≤ radiusEnvelope X := by unfold radiusEnvelope; positivity
-  have h5 := pressureCost_nonneg ((1+X)^2)⁻¹ (metricEnvelope X) (by positivity) hm 5
-  have h6 := pressureCost_nonneg ((1+X)^2)⁻¹ (metricEnvelope X) (by positivity) hm 6
-  have hp : 0 ≤ pressureEnvelope X := by unfold pressureEnvelope; positivity
-  have hb : 0 ≤ multiplierEnvelope X := mul_nonneg (by norm_num)
+  have h4X : 0 ≤ 4*X := mul_nonneg (Nat.ofNat_nonneg 4) hX
+  have hm : 0 ≤ metricEnvelope X := sobolevCoefficientAmplitude_nonneg 6 (4*X) (3*X*X) h4X
+    (mul_nonneg (mul_nonneg (Nat.ofNat_nonneg 3) hX) hX)
+  have hl : 0 ≤ linearEnvelope X := mul_nonneg zero_le_two
+    (sobolevCoefficientAmplitude_nonneg 6 (4*X) (6*X*X) h4X
+      (mul_nonneg (mul_nonneg (Nat.ofNat_nonneg 6) hX) hX))
+  have hq : 0 ≤ quadraticEnvelope X := mul_nonneg (Nat.ofNat_nonneg 6)
+    (sobolevCoefficientAmplitude_nonneg 6 (4*X) (3*X*(X*X)) h4X
+      (mul_nonneg (mul_nonneg (Nat.ofNat_nonneg 3) hX) (mul_nonneg hX hX)))
+  have h1 : 0 ≤ 1+X := add_nonneg zero_le_one hX
+  have h64 : 0 ≤ 64*X := mul_nonneg (Nat.ofNat_nonneg 64) hX
+  have hr : 0 ≤ radiusEnvelope X :=
+    add_nonneg (add_nonneg zero_le_one (mul_nonneg (add_nonneg zero_le_one hm) h64)) h64
+  have hc : 0 < ((1+X)^2)⁻¹ := inv_pos.mpr (pow_pos (add_pos_of_pos_of_nonneg one_pos hX) 2)
+  have hp : 0 ≤ pressureEnvelope X := add_nonneg
+    (add_nonneg zero_le_one (pressureCost_nonneg ((1+X)^2)⁻¹ (metricEnvelope X) hc hm 5))
+    (pressureCost_nonneg ((1+X)^2)⁻¹ (metricEnvelope X) hc hm 6)
+  have hb : 0 ≤ multiplierEnvelope X := mul_nonneg (Nat.ofNat_nonneg 3)
     (sobolevCoefficientAmplitude_nonneg 6 X X hX hX)
-  have ht : 0 ≤ termEnvelope P X := by
-    have hc := productBlockConstant_nonneg P
-    unfold termEnvelope
-    positivity
-  have h1 : 0 ≤ 1+X := by positivity
+  have ht : 0 ≤ termEnvelope P X := mul_nonneg zero_le_two (add_nonneg (add_nonneg zero_le_one hb)
+    (mul_nonneg (mul_nonneg (Nat.ofNat_nonneg 9) (productBlockConstant_nonneg P)) hb))
   have h2 : 0 ≤ X^2 := sq_nonneg X
-  have h3 : 0 ≤ 3*X*X*X := by positivity
-  have h4 : 0 ≤ 2*X*X := by positivity
+  have h3 : 0 ≤ 3*X*X*X := mul_nonneg (mul_nonneg (mul_nonneg (Nat.ofNat_nonneg 3) hX) hX) hX
+  have h4 : 0 ≤ 2*X*X := mul_nonneg (mul_nonneg zero_le_two hX) hX
   unfold primitiveEnvelope
-  refine ⟨?_,?_,?_,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩ <;> linarith
+  refine ⟨?_,?_,?_,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩ <;>
+    linarith only [h1, h2, h3, h4, hm, hl, hq, hr, hp, hb, ht]
 
 end EulerPacketCorrectionPrimitive

@@ -88,7 +88,7 @@ theorem metric_polynomial_conversion (S0 S1 S2 D R B a E Y X Z H : ℝ)
     (hE : E ≤ a * X) (hY : Y ≤ a * Z)
     (hH : H ≤ S0 * R + S1 * E + S2 * E ^ 2 + D * (B + E) * Y) :
     H ≤ S0*R+(S1*a)*X+(S2*a^2)*X^2+(D*a^2)*(B+X)*Z := by
-  have ha0 : 0 ≤ a := by linarith
+  have ha0 : 0 ≤ a := by linarith only [ha]
   have hsq : E^2 ≤ a^2*X^2 := by
     simpa only [pow_two, mul_assoc, mul_left_comm, mul_comm] using mul_le_mul hE hE hE0 (mul_nonneg
         ha0 hX0)

@@ -159,7 +159,9 @@ theorem base_mem_slitPlane {z : ℂ} (hz : z ∈ strip) :
   apply Or.inl
   have him := abs_lt.mp (show |z.im| < (1 / 2 : ℝ) from hz)
   simp only [Complex.add_re, Complex.one_re, pow_two, Complex.mul_re]
-  nlinarith [sq_nonneg z.re, sq_nonneg (z.im - 1 / 2), sq_nonneg (z.im + 1 / 2)]
+  have h1 : 0 < (1 / 2 - z.im) * (z.im + 1 / 2) :=
+    mul_pos (by linarith only [him.2]) (by linarith only [him.1])
+  linarith only [h1, mul_self_nonneg z.re]
 
 /-- Complex kernel, given by `Complex.exp ((-2 * (a : ℂ)) * Complex.log (1 + z ^ 2))`. -/
 def complexKernel (a : ℝ) (z : ℂ) : ℂ :=
@@ -711,30 +713,32 @@ pressure at most minus one is already sufficient. -/
 theorem Z_at_root_lower {h j η : ℝ} {P : ℝ → ℝ} (p : SmallParameters h j)
     (hη : η ∈ Ioo (-j / 4) (-j / 5)) (hz : H h j η = 0)
     (hP : P η ≤ -1) (hP' : deriv P η ≤ 0) : j / 5 < Z h j P η := by
-  have hηn : η < 0 := by linarith [hη.2, p.j_pos]
+  have hηn : η < 0 := by linarith only [hη.2, p.j_pos]
   have hI : η ∈ Icc (-1 : ℝ) 1 := by
-    constructor <;> linarith [hη.1, hη.2, p.j_pos, p.j_le]
-  have hU : 0 < U j η := by dsimp [U]; linarith [hη.1]
-  have hUj : U j η < j / 5 := by dsimp [U]; linarith [hη.2]
-  have hrU : -η * U j η ≤ U j η := by
-    simpa using mul_le_mul_of_nonneg_right (show -η ≤ 1 by linarith [hI.1]) hU.le
-  have hfactor : 1 - 2 * η * U j η ≤ 2 := by linarith [p.j_le]
+    constructor <;> linarith only [hη.1, hη.2, p.j_pos, p.j_le]
+  have hU : 0 < U j η := by dsimp [U]; linarith only [hη.1]
+  have hUj : U j η < j / 5 := by dsimp [U]; linarith only [hη.2]
+  have hrU : -η * U j η ≤ U j η :=
+    (mul_le_mul_of_nonneg_right (show -η ≤ 1 by linarith only [hI.1]) hU.le).trans_eq
+      (one_mul _)
+  have hfactor : 1 - 2 * η * U j η ≤ 2 := by linarith only [hrU, hUj, p.j_le]
   have hadverse : (1 - 2 * η * U j η) * U j η < 2 * j / 5 :=
-    lt_of_le_of_lt (mul_le_mul_of_nonneg_right hfactor hU.le) (by linarith)
+    lt_of_le_of_lt (mul_le_mul_of_nonneg_right hfactor hU.le) (by linarith only [hUj])
   have hpressure := mul_le_mul_of_nonpos_left hP hηn.le
   have hcore : 2 * j / 5 < -(1 - 2 * η * U j η) * U j η + 4 * η * P η := by
-    linarith [hη.2]
+    linarith only [hη.2, hadverse, hpressure]
   have hderiv : d η * deriv P η ≤ 0 :=
     mul_nonpos_of_nonneg_of_nonpos (d_nonneg hI) hP'
   calc
     j / 5 ≤ A h * (2 * j / 5) := by
-      linarith [mul_nonneg (show 0 ≤ A h - 1 / 2 by linarith [(A_bounds p).1]) p.j_pos.le]
+      linarith only [mul_nonneg (show 0 ≤ A h - 1 / 2 by linarith only [(A_bounds p).1])
+        p.j_pos.le]
     _ < A h * (-(1 - 2 * η * U j η) * U j η + 4 * η * P η) :=
       mul_lt_mul_of_pos_left hcore (A_pos p)
     _ ≤ Z h j P η := by
       unfold Z
       rw [hz]
-      linarith
+      linarith only [hderiv]
 
 theorem Z_continuous (h j : ℝ) {P : ℝ → ℝ} (hP : ContDiff ℝ ∞ P) :
     Continuous (Z h j P) := by
@@ -833,27 +837,27 @@ theorem pressureData_of_ideal_prefix {g a : ℝ → ℝ} {cap B : ℝ}
     (hg : ∀ y ≤ 0, g y = B ^ 2 * Real.exp ((1 / 5 : ℝ) * y))
     (ha : ∀ y ≤ 0, a y = 1) :
     PressureData (PressureDatum.pressure g a) := by
-  have hBpos : 0 < B := by linarith
+  have hBpos : 0 < B := by linarith only [hB]
   have hmass := PressureDatum.exponent_mass_pos_of_ideal_prefix hp hBpos hg ha
   refine ⟨PressureDatum.pressure_contDiff hp, ?_, ?_⟩
   · intro η hη
     have hηsq : η ^ 2 ≤ 1 := by
       have hd := d_nonneg hη
       dsimp [d] at hd
-      linarith
+      linarith only [hd]
     have hden : 0 < 1 + η ^ 2 := by positivity
     have hi : 1 / 2 ≤ (1 + η ^ 2)⁻¹ := by
       rw [← one_div]
       apply (le_div_iff₀ hden).mpr
-      linarith
+      linarith only [hηsq]
     have hisq : (1 / 4 : ℝ) ≤ ((1 + η ^ 2)⁻¹) ^ 2 := by
-      linarith [sq_nonneg ((1 + η ^ 2)⁻¹ - 1 / 2)]
-    have hBsq : (4 : ℝ) ≤ B ^ 2 := by nlinarith
+      linarith only [sq_nonneg ((1 + η ^ 2)⁻¹ - 1 / 2), hi]
+    have hBsq : (4 : ℝ) ≤ B ^ 2 := by nlinarith only [hB]
     have hprod : (1 : ℝ) ≤ B ^ 2 * ((1 + η ^ 2)⁻¹) ^ 2 := by
       have hm := mul_le_mul hBsq hisq (by norm_num : (0 : ℝ) ≤ 1 / 4) (sq_nonneg B)
-      linarith
+      linarith only [hm]
     have hpressure := PressureDatum.pressure_le_of_ideal_prefix hp hg ha η
-    linarith
+    linarith only [hpressure, hprod]
   · intro η hη
     rcases lt_trichotomy η 0 with hn | rfl | hpη
     · exact (mul_pos_of_neg_of_neg hn (PressureDatum.deriv_pressure_neg hp hmass hn)).le
@@ -1594,10 +1598,11 @@ theorem L_pos_on_window {h j : ℝ} (hp : NaturalAxisData.SmallParameters h j)
   have hx' : -(11 / 10 : ℝ) ≤ x ∧ x ≤ 11 / 10 := by
     simpa [window, Window.interval, neg_div] using hx
   have hs : x ^ 2 ≤ 2 := by
-    linarith [mul_nonneg (sub_nonneg.mpr hx'.2) (show 0 ≤ x + 11 / 10 by linarith [hx'.1])]
+    linarith only [mul_nonneg (sub_nonneg.mpr hx'.2)
+      (show 0 ≤ x + 11 / 10 by linarith only [hx'.1])]
   have hh := mul_le_mul_of_nonneg_left hs hp.h_pos.le
   dsimp [NaturalAxisData.L]
-  linarith [hp.h_le]
+  linarith only [hh, hp.h_le]
 
 theorem denominator_ne_zero_on_real (h j : ℝ) {σ : ℝ} (hσ : 0 < σ) (x : ℝ) :
     denominator h j σ (x : ℂ) ≠ 0 := by

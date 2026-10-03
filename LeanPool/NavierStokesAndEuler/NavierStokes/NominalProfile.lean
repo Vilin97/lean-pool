@@ -303,13 +303,15 @@ noncomputable def correctedE (F : Profile) (E : Field) (debt : ℝ → Debt) (p 
 theorem corrected_unchanged (F : Profile) (U E : Field) (debt : ℝ → Debt) (p : Point)
     (hp : p.1 ∉ Ioo resetPatch.left resetPatch.right) :
     correctedU F U debt p = U p ∧ correctedE F E debt p = E p := by
-  simp [correctedU, correctedE, FiveProfileMoments.u_zero_outside resetPatch _ hp,
-    FiveProfileMoments.e_zero_outside resetPatch _ hp]
+  simp only [correctedU, FiveProfileMoments.u_zero_outside resetPatch _ hp, mul_zero, add_zero,
+      correctedE, FiveProfileMoments.e_zero_outside resetPatch _ hp, and_self]
 
 theorem density_change (U E dU dE : ℝ → ℝ) (x : ℝ) (i : Fin 5) :
     density (fun t => U t + dU t) (fun t => E t + dE t) x i =
       density U E x i + FiveProfileMoments.profileChangeDensity U E dU dE x i := by
-  fin_cases i <;> simp [density, FiveProfileMoments.profileChangeDensity] <;> ring
+  fin_cases i <;> simp only [density, Nat.ofNat_nonneg, Real.sqrt_mul, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val_zero, FiveProfileMoments.profileChangeDensity, add_sub_cancel_left,
+      Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val, add_sub_cancel] <;> ring
 
 theorem corrected_density (F : Profile) (U E : Field) (debt : ℝ → Debt) (eta x : ℝ)
     (hU : ∀ x ∈ Ioo resetPatch.left resetPatch.right, U (x, eta) = idealU eta)
@@ -916,21 +918,18 @@ theorem regularDensity_eq {D : ProfileHistories.RadialDomain}
     (P : ProfileHistories.Profiles D) {x : ℝ} (hx : 0 < x) (eta : ℝ) :
     density (fun t => P.U (t, eta)) (fun t => P.E (t, eta)) x = regularDensity P (x, eta) := by
   ext i
-  fin_cases i
-  · rfl
-  · change Real.sqrt (2 * x) * (Real.sqrt (2 * x) * P.f (x, eta)) = 2 * x * P.f (x, eta)
-    rw [← mul_assoc, Real.mul_self_sqrt (show 0 ≤ 2 * x by positivity)]
-  · change P.U (x, eta) * Real.sqrt (2 * x) * (Real.sqrt (2 * x) * P.f (x, eta)) =
-      P.U (x, eta) * (2 * x * P.f (x, eta))
-    calc
+  fin_cases i <;>
+    simp only [density, regularDensity, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, ProfileHistories.Profiles.E,
+      ProfileHistories.Profiles.H, ProfileHistories.Profiles.transportDensity,
+      ProfileHistories.Profiles.energyDensity]
+  · rw [← mul_assoc, Real.mul_self_sqrt (show 0 ≤ 2 * x by positivity)]
+  · calc
       _ = (Real.sqrt (2 * x) * Real.sqrt (2 * x)) * (P.U (x, eta) * P.f (x, eta)) := by ring
       _ = _ := by rw [Real.mul_self_sqrt (show 0 ≤ 2 * x by positivity)]; ring
-  · change P.U (x, eta) ^ 2 - (Real.sqrt (2 * x) * P.f (x, eta)) ^ 2 / 2 =
-      P.U (x, eta) ^ 2 - x * P.f (x, eta) ^ 2
-    rw [mul_pow, Real.sq_sqrt (show 0 ≤ 2 * x by positivity)]
+  · rw [mul_pow, Real.sq_sqrt (show 0 ≤ 2 * x by positivity)]
     ring
-  · change (Real.sqrt (2 * x) * P.f (x, eta)) ^ 2 / (2 * x) = P.f (x, eta) ^ 2
-    rw [mul_pow, Real.sq_sqrt (show 0 ≤ 2 * x by positivity),
+  · rw [mul_pow, Real.sq_sqrt (show 0 ≤ 2 * x by positivity),
       mul_div_cancel_left₀ _ (show 2 * x ≠ 0 by positivity)]
 
 theorem regularDensity_integrable {D : ProfileHistories.RadialDomain}
@@ -1073,7 +1072,11 @@ theorem outgoing_moments_ideal (F : Profile) {r : ℝ} (hr : r ≤ 1) (eta : ℝ
     apply setIntegral_congr_fun measurableSet_Ioc
     intro x hx
     rcases hvals x hx with ⟨hU, hE⟩
-    fin_cases i <;> simp [density, hU, hE] <;> ring
+    fin_cases i <;>
+      simp only [density, hU, Nat.ofNat_nonneg, Real.sqrt_mul, hE, one_div, Fin.zero_eta,
+        Fin.mk_one, Fin.reduceFinMk, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.cons_val, Nat.succ_eq_add_one, Nat.reduceAdd, mul_one, sub_right_inj] <;>
+      ring
   rw [hrows]
   have hc0 : IntegrableOn (fun _ : ℝ => (1 : ℝ)) (Ioc 0 r) := continuous_const.integrableOn_Ioc
   have hc2 : IntegrableOn (fun x : ℝ => (x ^ (1 / 10 : ℝ)) ^ 2) (Ioc 0 r) :=
@@ -1423,7 +1426,9 @@ theorem density_dilate (R : ℝ) (hR : 0 < R) (U E : Field) (eta : ℝ) {x : ℝ
   have hd : R * x / R = x := mul_div_cancel_left₀ x hR.ne'
   have hs : Real.sqrt (2 * (R * x)) = Real.sqrt R * Real.sqrt (2 * x) := by
     rw [show 2 * (R * x) = R * (2 * x) by ring, Real.sqrt_mul hR.le]
-  fin_cases i <;> simp [density, dilateField, dilationFactor, hd, hs]
+  fin_cases i <;> simp only [density, dilateField, hd, hs, Nat.ofNat_nonneg, Real.sqrt_mul,
+      Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, dilationFactor, Fin.mk_one,
+      Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val, one_mul]
   all_goals try field_simp [hR.ne', hx.ne']
 
 theorem moments_dilate (R : ℝ) (hR : 0 < R) (U E : Field) (X eta : ℝ) :
@@ -1632,9 +1637,12 @@ theorem base_restore_difference {x eta : ℝ} (hx : c.separation ≤ x) (hxb : x
   have hx0 := c.separation_pos.trans_le hx
   have hx1 := hxb.trans matchFraction_lt_one.le
   ext i
-  fin_cases i <;> simp [density, hU, hE, F.U_ideal eta hx0 hx1, F.E_ideal eta hx0 hx1,
-    idealE, idealAmplitude, ShapeTransition.restoreDefect, ShapeTransition.restoreDensityJ,
-    ShapeTransition.restoreDensityS] <;> ring
+  fin_cases i <;> simp only [density, hU, Nat.ofNat_nonneg, Real.sqrt_mul, hE, idealE,
+      idealAmplitude, one_div, F.U_ideal eta hx0 hx1, F.E_ideal eta hx0 hx1, Fin.zero_eta,
+      Fin.isValue, Pi.sub_apply, Matrix.cons_val_zero, Nat.succ_eq_add_one, Nat.reduceAdd,
+      ShapeTransition.restoreDefect, ShapeTransition.restoreDensityJ,
+      ShapeTransition.restoreDensityS, Fin.mk_one, Matrix.cons_val_one, sub_self, Fin.reduceFinMk,
+      Matrix.cons_val, sub_sub_sub_cancel_right] <;> ring
 
 theorem restoreRows_eq_integral {eta : ℝ} (hη : eta ∈ ReferencePath.parameterInterval)
     (hsep : c.separation ≤ Real.exp (-8)) :
@@ -1658,8 +1666,11 @@ theorem restoreRows_eq_integral {eta : ℝ} (hη : eta ∈ ReferencePath.paramet
     exact congrArg (fun q : Debt => q i) (c.base_restore_difference hx.1.le hx.2 hη)
   rw [hpoint]
   ext i
-  fin_cases i <;> simp [restoreRows, ShapeTransition.restoreDebtM, ShapeTransition.restoreDebtJ,
-    ShapeTransition.restoreDebtS, intervalIntegral.integral_of_le hrb]
+  fin_cases i <;> simp only [restoreRows, ShapeTransition.restoreDebtM,
+      intervalIntegral.integral_of_le hrb, ShapeTransition.restoreDebtJ,
+      ShapeTransition.restoreDebtS, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      Nat.succ_eq_add_one, Nat.reduceAdd, Fin.mk_one, Matrix.cons_val_one, integral_zero,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 theorem debt_eq_negative_manuscriptDebt
     (hsep : c.separation ≤ Real.exp (-8)) {eta : ℝ} (hη : eta ∈ ReferencePath.parameterInterval) :
@@ -1681,9 +1692,12 @@ theorem debt_eq_negative_manuscriptDebt
   rw [hdebt]
   congr 1
   ext i
-  fin_cases i <;> simp [manuscriptDebt, rawRows, manuscriptIdealRows, restoreRows,
-    ShapeTransition.resetDebtM, ShapeTransition.resetDebtI, ShapeTransition.resetDebtJ,
-    ShapeTransition.resetDebtS, ShapeTransition.resetDebtP] <;> rfl
+  fin_cases i <;> simp only [rawRows, manuscriptIdealRows, Matrix.sub_cons, Matrix.head_cons,
+      Matrix.tail_cons, sub_self, Matrix.zero_empty, restoreRows, Fin.zero_eta, Fin.isValue,
+      Pi.add_apply, Matrix.cons_val_zero, manuscriptDebt, ShapeTransition.resetDebtM,
+      ShapeTransition.resetDebtI, ShapeTransition.resetDebtJ, ShapeTransition.resetDebtS,
+      ShapeTransition.resetDebtP, add_left_inj, sub_right_inj, Fin.mk_one, Matrix.cons_val_one,
+      add_zero, Fin.reduceFinMk, Matrix.cons_val] <;> rfl
 
 end Controls
 
@@ -1817,7 +1831,7 @@ theorem outgoing_axis_halfKernel (F : Profile) (R eta : ℝ) (hR : 0 < R) :
   simp only [OutgoingDilation.axisDatum, OutgoingDilation.canonicalKernel] at ha
   simp_rw [halfKernel_eq]
   rw [integral_div]
-  linarith
+  linear_combination -ha
 
 theorem outgoing_pressure_halfKernel (F : Profile) (R eta : ℝ) (hR : 0 < R)
     {X : ℝ} (hX : 0 < X) :
@@ -1927,7 +1941,7 @@ theorem Controls.ofContinuation_log_control {F : Profile} (A : AxisStage F) {N :
 
 theorem physical_band_in_parameterInterval {eta : ℝ} (hη : eta ∈ Icc (-1 : ℝ) 1) :
     eta ∈ ReferencePath.parameterInterval := by
-  dsimp [ReferencePath.parameterInterval, NaturalAxisCoefficients.window]
+  dsimp only [ReferencePath.parameterInterval, NaturalAxisCoefficients.window]
   constructor <;> linarith [hη.1, hη.2]
 
 namespace Controls
@@ -2205,7 +2219,7 @@ theorem heated_outgoing_axis_halfKernel {F : Profile} {R B : ℝ}
   rw [he, integral_div]
   have ha := w.axisDatum_eq eta hη
   dsimp only [HeatedOutgoing.axisDatum] at ha
-  linarith
+  linear_combination -ha
 
 theorem heated_outgoing_pressure_prefix {F : Profile} {R B : ℝ}
     (w : HeatedOutgoing.CompensationWitness F R B) {eta X : ℝ}

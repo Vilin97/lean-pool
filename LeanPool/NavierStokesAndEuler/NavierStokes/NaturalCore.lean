@@ -84,18 +84,18 @@ noncomputable def coreVelocity (h : ℝ) (f V : ℝ × ℝ → ℝ) : VelocityFi
 
 theorem physicalQ_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : ProfilePoint} (hp : p.1 < 1) : 0 < physicalQ h p :=
-  (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith)
+  (SimilarityCoordinates.coordinateQ_spec (by linarith only [hh]) (by linarith only [hh1])
     (sub_pos.mpr hp)).1
 
 theorem physicalQ_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : ProfilePoint} (hp : p.1 < 1) : ContDiffAt ℝ ∞ (physicalQ h) p := by
-  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith) (by linarith)
+  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - p.1, p.2.2)) (sub_pos.mpr hp)).comp p
     ((contDiffAt_const.sub contDiffAt_fst).prodMk contDiffAt_snd.snd)
 
 theorem physicalEta_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : ProfilePoint} (hp : p.1 < 1) : ContDiffAt ℝ ∞ (physicalEta h) p := by
-  exact (SimilarityCoordinates.coordinateEta_smooth (by linarith) (by linarith)
+  exact (SimilarityCoordinates.coordinateEta_smooth (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - p.1, p.2.2)) (sub_pos.mpr hp)).comp p
     ((contDiffAt_const.sub contDiffAt_fst).prodMk contDiffAt_snd.snd)
 
@@ -121,7 +121,7 @@ theorem coreDomain_isOpen {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (Λ : ℝ) :
 
 theorem physicalQ_at_zero_z {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {t : ℝ} (ht : t < 1) (s : ℝ) : physicalQ h (t, (s, 0)) = 1 - t := by
-  apply (SimilarityCoordinates.eq_coordinateQ (by linarith) (by linarith)
+  apply (SimilarityCoordinates.eq_coordinateQ (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - t, 0)) (sub_pos.mpr ht) (sub_pos.mpr ht) ?_).symm
   simp [SimilarityCoordinates.forwardScalar]
 
@@ -164,21 +164,14 @@ theorem parameterJet_contDiffAt {F : (ℝ × ℝ) × ℝ → ℝ} {z : (ℝ × �
       (fun w : (ℝ × ℝ) × ℝ => iteratedFDeriv ℝ k (fun p => F (p, w.2)) w.1) z := by
   induction k with
   | zero =>
-    exact hF.continuousLinearMap_comp
-      ((continuousMultilinearCurryFin0 ℝ (ℝ × ℝ) ℝ).symm :
-        ℝ →L[ℝ] (ℝ × ℝ)[×0]→L[ℝ] ℝ)
+    exact (continuousMultilinearCurryFin0 ℝ (ℝ × ℝ) ℝ).symm.contDiff.comp_contDiffAt z hF
   | succ k ih =>
-    have hG : ContDiffAt ℝ ∞
-        (fun w : ((ℝ × ℝ) × ℝ) × (ℝ × ℝ) =>
-          iteratedFDeriv ℝ k (fun p => F (p, w.1.2)) w.2) (z, z.1) :=
-      ih.comp (z, z.1) (contDiffAt_snd.prodMk contDiffAt_fst.snd)
-    have hD : ContDiffAt ℝ ∞
-        (fun w : (ℝ × ℝ) × ℝ => fderiv ℝ
-          (fun p : ℝ × ℝ => iteratedFDeriv ℝ k (fun q => F (q, w.2)) p) w.1) z :=
-      hG.fderiv contDiffAt_fst infty_add_one_le
-    exact hD.continuousLinearMap_comp
-      ((continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => ℝ × ℝ) ℝ).symm :
-        ((ℝ × ℝ) →L[ℝ] (ℝ × ℝ)[×k]→L[ℝ] ℝ) →L[ℝ] (ℝ × ℝ)[×(k + 1)]→L[ℝ] ℝ)
+    have hG := ih.comp (f := fun w : ((ℝ × ℝ) × ℝ) × (ℝ × ℝ) => (w.2, w.1.2)) (z, z.1)
+      (contDiffAt_snd.prodMk contDiffAt_fst.snd)
+    have hD := hG.fderiv (f := fun (w : (ℝ × ℝ) × ℝ) (p : ℝ × ℝ) =>
+      iteratedFDeriv ℝ k (fun q => F (q, w.2)) p) contDiffAt_fst infty_add_one_le
+    exact (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => ℝ × ℝ)
+      ℝ).symm.contDiff.comp_contDiffAt z hD
 
 theorem radialPrimitive_unit_interval (f : ℝ × ℝ → ℝ) (p : ℝ × ℝ) :
     radialPrimitive f p = p.1 * ∫ r in (0 : ℝ)..1, f (p.1 * r, p.2) := by
@@ -244,7 +237,7 @@ theorem partialS_eq_deriv_slice {F : Profile} {p : ProfilePoint}
     (hF : DifferentiableAt ℝ F p) :
     partialS F p = deriv (fun s => F (p.1, (s, p.2.2))) p.2.1 := by
   symm
-  exact (hF.hasFDerivAt.comp_hasDerivAt p.2.1
+  exact (hF.hasFDerivAt.comp_hasDerivAt (F := ProfilePoint) (f := fun s => (p.1, (s, p.2.2))) p.2.1
     ((hasDerivAt_const p.2.1 p.1).prodMk
       ((hasDerivAt_id p.2.1).prodMk (hasDerivAt_const p.2.1 p.2.2)))).deriv
 
@@ -279,7 +272,7 @@ theorem meridionalPotential_partialS {h Λ : ℝ} {V : ℝ × ℝ → ℝ}
       (p.2.1 / physicalQ h p) (contDiffAt_id.prodMk contDiffAt_const)).differentiableAt (by simp)
   rw [partialS_eq_deriv_slice
     ((meridionalPotential_contDiffAt hh hh1 hV hp).differentiableAt (by simp))]
-  have hd := (hVs.hasDerivAt.comp p.2.1
+  have hd := (hVs.hasDerivAt.comp (h := fun s => s / physicalQ h p) p.2.1
     ((hasDerivAt_id p.2.1).div_const (physicalQ h p))).const_mul
       (physicalQ h p ^ (-NaturalAxisData.A h))
   convert! hd.deriv using 1
@@ -294,7 +287,7 @@ theorem swirlPotential_partialS {h Λ : ℝ} {f : ℝ × ℝ → ℝ}
       -(physicalQ h p ^ (-h) / physicalQ h p) * f (similarityPoint h p) := by
   rw [partialS_eq_deriv_slice
     ((swirlPotential_contDiffAt hh hh1 hf hp).differentiableAt (by simp))]
-  have hd := ((radialPrimitive_hasDerivAt hf hp.2).comp p.2.1
+  have hd := ((radialPrimitive_hasDerivAt hf hp.2).comp (h := fun s => s / physicalQ h p) p.2.1
     ((hasDerivAt_id p.2.1).div_const (physicalQ h p))).const_mul
       (-(physicalQ h p ^ (-h)))
   convert! hd.deriv using 1
@@ -454,7 +447,7 @@ theorem coreVelocity_axis_tendsto_atTop {h j Λ : ℝ} {P0 a0 : ℝ → ℝ}
     {f U V Pr : ℝ × ℝ → ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hj : 0 < j)
     (hs : NaturalProfile.IsNaturalSolution h j Λ P0 a0 f U V Pr) :
     Tendsto (fun t : ℝ => ‖coreVelocity h f V (t, 0)‖) (𝓝[<] 1) atTop := by
-  have hA : 0 < NaturalAxisData.A h := by dsimp [NaturalAxisData.A]; linarith
+  have hA : 0 < NaturalAxisData.A h := by dsimp [NaturalAxisData.A]; linarith only [hh, hh1]
   have hlim : Tendsto (fun t : ℝ => (1 - t) ^ (-NaturalAxisData.A h) * j)
       (𝓝[<] 1) atTop :=
     (BlowupImplication.negative_power_tendsto_atTop hA
@@ -468,7 +461,7 @@ theorem speedUnbounded_of_axis_tendsto {u : VelocityField}
     SpeedUnboundedAtOne u := by
   intro M hM δ hδ
   have hlow : Ioi (max 0 (1 - δ)) ∈ 𝓝[<] (1 : ℝ) :=
-    mem_nhdsWithin_of_mem_nhds (Ioi_mem_nhds (max_lt (by norm_num) (by linarith)))
+    mem_nhdsWithin_of_mem_nhds (Ioi_mem_nhds (max_lt (by norm_num) (by linarith only [hδ])))
   have hlarge : ∀ᶠ t in 𝓝[<] (1 : ℝ), M < ‖u (t, 0)‖ :=
     hu.eventually (eventually_gt_atTop M)
   have hbefore : ∀ᶠ t in 𝓝[<] (1 : ℝ), t < 1 := self_mem_nhdsWithin
@@ -522,7 +515,7 @@ theorem exists_natural_core {h j : ℝ} (hsmall : NaturalAxisData.SmallParameter
       SpeedUnboundedAtOne (coreVelocity h f V) := by
   obtain ⟨_, _, Λ, _, _, _, hΛ, _, f, U, V, Pr, hs, _, _⟩ :=
     NaturalProfile.exists_natural_profiles hsmall hp hB hg ha
-  have hh1 : h < 1 / 2 := by linarith [hsmall.h_le]
+  have hh1 : h < 1 / 2 := by linarith only [hsmall, hsmall.h_le]
   refine ⟨Λ, hΛ, f, V, coreDomain_isOpen hsmall.h_pos hh1 Λ,
     (fun t ht => core_axis_mem h Λ ht),
     coreVelocity_contDiffOn hsmall.h_pos hh1 hs.f_smooth hs.average_smooth,

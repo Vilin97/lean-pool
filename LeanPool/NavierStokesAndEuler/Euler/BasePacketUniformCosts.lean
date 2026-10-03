@@ -42,9 +42,10 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
   (Ti : ℝ) (hT1 : A.T ≤ 1) (hTi : A.T⁻¹ ≤ Ti)
 
-local notation "J" => L.forwardInputs H m hm R S hS CM hCM hM Ω hΩ hΩo hsub hΩball hshort Ti hT1 hTi
-local notation "BC" => forwardCoefficientBudget period (A.meanData H) (A.transverseData m hm R S hS)
-  rfl (ForwardInputs.normal J)
+local notation "J" => (L.forwardInputs H m hm R S hS CM hCM hM Ω hΩ hΩo hsub hΩball hshort Ti hT1
+    hTi)
+local notation "BC" => (forwardCoefficientBudget period (A.meanData H) (A.transverseData m hm R S
+    hS) rfl (ForwardInputs.normal J))
 local notation "Cp" => (2 : ℝ)
 
 /-- Short forward canonical radius, given by `EulerPacketForwardRadius.canonicalRadius
@@ -175,14 +176,14 @@ theorem firstParameterSize_bounds (T δ hchild : ℝ) (hT : 0 < T) (hδ : 0 < δ
 variable (β : ℝ) (hβ : |β| ≤ 1) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
   (T : ℝ) (hT : 0 < T) (hTB : T ≤ initialTime)
 
-local notation "A" => firstPacketInputs β hβ ell hell hell1 T hT hTB
-local notation "G" => packetBaseParent β hβ ell hell hell1 T hT hTB
-local notation "L" => SmoothState.labels (packetBaseState β hβ ell hell hell1 T hT hTB)
-local notation "H" => packetBaseLowBounds β hβ ell hell hell1 T hT hTB
-local notation "D" => Parent.transverseData G firstNormal firstNormal_unit firstFrame support
-    compact
-local notation "BC" => forwardCoefficientBudget period (Parent.meanData G H) D rfl
-    (ForwardInputs.normal A)
+local notation "A" => (firstPacketInputs β hβ ell hell hell1 T hT hTB)
+local notation "G" => (packetBaseParent β hβ ell hell hell1 T hT hTB)
+local notation "L" => (SmoothState.labels (packetBaseState β hβ ell hell hell1 T hT hTB))
+local notation "H" => (packetBaseLowBounds β hβ ell hell hell1 T hT hTB)
+local notation "D" => (Parent.transverseData G firstNormal firstNormal_unit firstFrame support
+    compact)
+local notation "BC" => (forwardCoefficientBudget period (Parent.meanData G H) D rfl
+    (ForwardInputs.normal A))
 
 theorem firstPacket_uniform_primitives (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1)
     (hchild : ℝ) (hh : 0 ≤ hchild) :

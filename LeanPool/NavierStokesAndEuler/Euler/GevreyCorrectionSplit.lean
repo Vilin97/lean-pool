@@ -66,8 +66,8 @@ theorem correction_split_identity {s : ℕ} (hs : 6 ≤ s)
     (C0 : SobolevSpace period s →L[ℝ] SobolevSpace period s)
     (C : Fin 3 → SobolevSpace period s →L[ℝ] SobolevSpace period s)
     (background e : SobolevSpace period (s + 1)) (r : SobolevSpace period s) :
-    r + linearize (eulerBilinear period hs L hL C) (C0.comp (truncateOperator period s)) background
-        e +
+    r + linearize (X := SobolevSpace period (s + 1)) (Y := SobolevSpace period s)
+        (eulerBilinear period hs L hL C) (C0.comp (truncateOperator period s)) background e +
       eulerBilinear period hs L hL C e e =
       transportBilinear period hs L hL (background+e) e +
         orderZeroSource period hs L hL C0 C background r (truncateOperator period s e) := by
@@ -77,8 +77,8 @@ theorem correction_split_identity {s : ℕ} (hs : 6 ≤ s)
           algebraicBilinear period hs C e e := by
     simp only [orderZeroSource, backgroundDrift, algebraicAt, transportBilinear_apply,
       algebraicBilinear_apply, coordinateProduct_apply]
-  have halg : r + linearize (eulerBilinear period hs L hL C) (C0.comp (truncateOperator period s))
-      background e +
+  have halg : r + linearize (X := SobolevSpace period (s + 1)) (Y := SobolevSpace period s)
+      (eulerBilinear period hs L hL C) (C0.comp (truncateOperator period s)) background e +
       eulerBilinear period hs L hL C e e =
       transportBilinear period hs L hL (background+e) e +
         (r + transportBilinear period hs L hL e background + C0 (truncateOperator period s e) +
@@ -140,7 +140,7 @@ theorem orderZeroPressure_bound {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 �
       _).trans
     (mul_le_mul_of_nonneg_left (orderZeroSource_bound period hs N hN ρ hρ L hL C0 K0 C K background
         r e)
-      (by linarith : 0 ≤ 2*M))
+      (by linarith only [hM] : 0 ≤ 2*M))
 
 /-- The solver's actual raw source has exactly the transport/order-zero decomposition used by the
 energy estimate. -/

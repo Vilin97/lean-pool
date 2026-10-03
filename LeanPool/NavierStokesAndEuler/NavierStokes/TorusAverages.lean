@@ -16,6 +16,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.SpecialFunctions.Sqrt
 public import Mathlib.Analysis.Real.Sqrt
 public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
 
 /-!
 # Actual torus and native-coordinate averages
@@ -90,7 +91,8 @@ def coefficients (a b scaleMinus scalePlus m t : ℝ) : Fin 2 → ℝ :=
 theorem determinant_formula (a b scaleMinus scalePlus : ℝ) :
     (signedMatrix a b scaleMinus scalePlus).det =
       -(2 * a * b * scaleMinus * scalePlus) := by
-  simp [signedMatrix, Matrix.det_fin_two]
+  simp only [signedMatrix, neg_mul, det_fin_two, Fin.isValue, of_apply, cons_val', cons_val_zero,
+      cons_val_fin_one, cons_val_one, mul_neg, neg_neg]
   ring
 
 theorem determinant_neg {a b scaleMinus scalePlus : ℝ}
@@ -99,7 +101,7 @@ theorem determinant_neg {a b scaleMinus scalePlus : ℝ}
     (signedMatrix a b scaleMinus scalePlus).det < 0 := by
   rw [determinant_formula]
   have : 0 < 2 * a * b * scaleMinus * scalePlus := by positivity
-  linarith
+  linarith only [this]
 
 theorem determinant_ne_zero {a b scaleMinus scalePlus : ℝ}
     (ha : 0 < a) (hb : 0 < b)
@@ -115,8 +117,9 @@ theorem reconstruct {a b scaleMinus scalePlus : ℝ} (m t : ℝ)
       (coefficients a b scaleMinus scalePlus m t) = target m t := by
   ext i
   fin_cases i <;>
-    simp [signedMatrix, coefficients, target, Matrix.mulVec, dotProduct,
-      Fin.sum_univ_two] <;>
+    simp only [mulVec, dotProduct, signedMatrix, neg_mul, Fin.zero_eta, Fin.isValue, of_apply,
+        cons_val', cons_val_fin_one, cons_val_zero, coefficients, Fin.sum_univ_two, cons_val_one,
+        target, Fin.mk_one] <;>
     field_simp <;> ring
 
 /-- Thus the explicit formula is the matrix inverse applied to the stress. -/
@@ -157,9 +160,9 @@ theorem coefficients_pos {a b scaleMinus scalePlus m t : ℝ}
   intro i
   fin_cases i
   · change 0 < (b * m - a * t) / (2 * a * b * scaleMinus)
-    exact div_pos (by linarith) (by positivity)
+    exact div_pos (by linarith only [hc]) (by positivity)
   · change 0 < (b * m + a * t) / (2 * a * b * scalePlus)
-    exact div_pos (by linarith) (by positivity)
+    exact div_pos (by linarith only [hc]) (by positivity)
 
 /-- The same strict cone condition is necessary as well as sufficient. -/
 theorem coefficients_pos_iff {a b scaleMinus scalePlus m t : ℝ}
@@ -174,7 +177,7 @@ theorem coefficients_pos_iff {a b scaleMinus scalePlus m t : ℝ}
       (div_pos_iff_of_pos_right hm).mp (by simpa [coefficients] using hy 0)
     have hnPlus : 0 < b * m + a * t :=
       (div_pos_iff_of_pos_right hp).mp (by simpa [coefficients] using hy 1)
-    exact abs_lt.mpr ⟨by linarith, by linarith⟩
+    exact abs_lt.mpr ⟨by linarith only [hnPlus], by linarith only [hnMinus]⟩
   · exact coefficients_pos ha hb hMinus hPlus
 
 /-- The primary velocity amplitudes are positive square roots of the solve. -/
@@ -231,14 +234,14 @@ def normalMagnitude (c u : ℝ) : ℝ := -c * Real.sqrt (1 + u ^ 2)
 
 theorem normalMagnitude_pos {c u : ℝ} (hc : c < 0) : 0 < normalMagnitude c u := by
   unfold normalMagnitude
-  exact mul_pos (neg_pos.mpr hc) (Real.sqrt_pos.mpr (by nlinarith [sq_nonneg u]))
+  exact mul_pos (neg_pos.mpr hc) (Real.sqrt_pos.mpr (by nlinarith only [sq_nonneg u]))
 
 /-- The manuscript's strict ratio choice for `u_*` implies the exact cone test. -/
 theorem cone_of_ratio {c u m t : ℝ} (hm : 0 < m)
     (hratio : |c * t / m| < u / Real.sqrt (1 + u ^ 2)) :
     |normalMagnitude c u * t| < u * m := by
   have hs : 0 < Real.sqrt (1 + u ^ 2) :=
-    Real.sqrt_pos.mpr (by nlinarith [sq_nonneg u])
+    Real.sqrt_pos.mpr (by nlinarith only [sq_nonneg u])
   have hr : |c * t| / m < u / Real.sqrt (1 + u ^ 2) := by
     simpa only [abs_div, abs_of_pos hm] using hratio
   have hcross : |c * t| * Real.sqrt (1 + u ^ 2) < u * m :=
@@ -343,8 +346,9 @@ theorem reconstruct (H : Mat2) (T : Vec2) (hdet : H.det ≠ 0) :
   have hc : H.mulVec (cramerNumerator H T) = H.det • T := by
     ext i
     fin_cases i <;>
-      simp [cramerNumerator, Matrix.mulVec, dotProduct, Fin.sum_univ_two,
-        Matrix.det_fin_two] <;> ring
+      simp only [mulVec, dotProduct, Fin.zero_eta, Fin.isValue, cramerNumerator, Fin.sum_univ_two,
+          cons_val_zero, cons_val_one, cons_val_fin_one, det_fin_two, Pi.smul_apply, smul_eq_mul,
+          Fin.mk_one] <;> ring
   have hw : weights H T = H.det⁻¹ • cramerNumerator H T := by
     funext i
     simp only [weights, Pi.smul_apply, smul_eq_mul, div_eq_mul_inv]
@@ -701,7 +705,7 @@ def signedAmplitude (σ τ : ℝ) (κ : Vec2) (G : ℝ → Mat2)
 
 theorem sqrt_edge (c x : ℝ) : Real.sqrt (edge c x) = edge (c / 2) x := by
   by_cases hx : x ≤ 0
-  · simp [FlatCutoff.edge_of_nonpos c hx, FlatCutoff.edge_of_nonpos (c / 2) hx]
+  · simp only [FlatCutoff.edge_of_nonpos c hx, Real.sqrt_zero, FlatCutoff.edge_of_nonpos (c / 2) hx]
   · have hp : 0 < x := lt_of_not_ge hx
     rw [FlatCutoff.edge_of_pos c hp, FlatCutoff.edge_of_pos (c / 2) hp,
       ← Real.exp_half]
@@ -710,7 +714,7 @@ theorem sqrt_edge (c x : ℝ) : Real.sqrt (edge c x) = edge (c / 2) x := by
 
 theorem edge_mul (c d x : ℝ) : edge c x * edge d x = edge (c + d) x := by
   by_cases hx : x ≤ 0
-  · simp [FlatCutoff.edge_of_nonpos c hx, FlatCutoff.edge_of_nonpos d hx,
+  · simp only [FlatCutoff.edge_of_nonpos c hx, FlatCutoff.edge_of_nonpos d hx, mul_zero,
       FlatCutoff.edge_of_nonpos (c + d) hx]
   · have hp : 0 < x := lt_of_not_ge hx
     rw [FlatCutoff.edge_of_pos c hp, FlatCutoff.edge_of_pos d hp,
@@ -761,18 +765,19 @@ theorem inverseCoefficients_of_nonpos (σ : ℝ) (κ : Vec2)
     inverseCoefficients σ κ G T x = 0 := by
   have ht : edgeTarget σ T x = 0 := by
     ext i
-    simp [edgeTarget, scaledTarget, FlatCutoff.edge_of_nonpos σ hx]
-  simp [inverseCoefficients, ht]
+    simp only [edgeTarget, scaledTarget, FlatCutoff.edge_of_nonpos σ hx, zero_mul, Pi.zero_apply]
+  simp only [inverseCoefficients, ht, mulVec_zero]
 
 theorem primaryAmplitude_of_nonpos (σ : ℝ) (κ : Vec2)
     (G : ℝ → Mat2) (T : ℝ → Vec2) {x : ℝ} (hx : x ≤ 0) (i : Fin 2) :
     primaryAmplitude σ κ G T x i = 0 := by
-  simp [primaryAmplitude, inverseCoefficients_of_nonpos σ κ G T hx]
+  simp only [primaryAmplitude, inverseCoefficients_of_nonpos σ κ G T hx, Pi.zero_apply,
+      Real.sqrt_zero]
 
 theorem signedAmplitude_of_nonpos (σ τ : ℝ) (κ : Vec2)
     (G : ℝ → Mat2) (T R : ℝ → Vec2) {x : ℝ} (hx : x ≤ 0) (i : Fin 2) :
     signedAmplitude σ τ κ G T R x i = 0 := by
-  simp [signedAmplitude, inverseCoefficients_of_nonpos τ κ G R hx]
+  simp only [signedAmplitude, inverseCoefficients_of_nonpos τ κ G R hx, Pi.zero_apply, zero_div]
 
 /-- Exact cancellation of the column exponential in the actual inverse.
 This identity includes the edge and the full zero half-line. -/
@@ -781,8 +786,8 @@ theorem inverseCoefficients_factor (σ : ℝ) (κ : Vec2)
     inverseCoefficients σ κ G T x i =
       edge (σ - κ i) x * SmoothCovariance.weights (G x) (T x) i := by
   by_cases hx : x ≤ 0
-  · simp [inverseCoefficients_of_nonpos σ κ G T hx,
-      FlatCutoff.edge_of_nonpos (σ - κ i) hx]
+  · simp only [inverseCoefficients_of_nonpos σ κ G T hx, Pi.zero_apply,
+      FlatCutoff.edge_of_nonpos (σ - κ i) hx, zero_mul]
   · have hp : 0 < x := lt_of_not_ge hx
     have hs := SmoothCovariance.inverse_formula (edgeMatrix κ G x) (edgeTarget σ T x)
       (edgeMatrix_det_ne_zero hG hp)
@@ -862,7 +867,7 @@ theorem inverse_reconstruct (σ : ℝ) (κ : Vec2)
   by_cases hx : x ≤ 0
   · rw [inverseCoefficients_of_nonpos σ κ G T hx, Matrix.mulVec_zero]
     ext i
-    simp [edgeTarget, scaledTarget, FlatCutoff.edge_of_nonpos σ hx]
+    simp only [Pi.zero_apply, edgeTarget, scaledTarget, FlatCutoff.edge_of_nonpos σ hx, zero_mul]
   · have hp : 0 < x := lt_of_not_ge hx
     unfold inverseCoefficients
     rw [Matrix.mulVec_mulVec,
@@ -877,7 +882,7 @@ theorem primary_reconstruct {σ : ℝ} {κ : Vec2}
   have hy : ∀ i, 0 ≤ inverseCoefficients σ κ G T x i := by
     intro i
     by_cases hx : x ≤ 0
-    · simp [inverseCoefficients_of_nonpos σ κ G T hx]
+    · simp only [inverseCoefficients_of_nonpos σ κ G T hx, Pi.zero_apply, Std.le_refl]
     · exact le_of_lt (inverseCoefficients_pos hcone (lt_of_not_ge hx) i)
   have hs : (fun i => primaryAmplitude σ κ G T x i ^ 2) =
       inverseCoefficients σ κ G T x := by
@@ -898,8 +903,8 @@ theorem signed_cross_reconstruct {σ τ : ℝ} {κ : Vec2}
         inverseCoefficients τ κ G R x := by
     funext i
     by_cases hx : x ≤ 0
-    · simp [primaryAmplitude_of_nonpos σ κ G T hx,
-        inverseCoefficients_of_nonpos τ κ G R hx]
+    · simp only [primaryAmplitude_of_nonpos σ κ G T hx, mul_zero, zero_mul,
+        inverseCoefficients_of_nonpos τ κ G R hx, Pi.zero_apply]
     · have ha : primaryAmplitude σ κ G T x i ≠ 0 :=
         ne_of_gt (primaryAmplitude_pos hcone (lt_of_not_ge hx) i)
       unfold signedAmplitude
@@ -943,7 +948,7 @@ theorem primaryAmplitude_contDiffOn
     (hcone : ∀ x ∈ s, SmoothCovariance.StrictCone (G x) (T x))
     (hgap : ∀ i, κ i < σ) (i : Fin 2) :
     ContDiffOn ℝ ∞ (fun x => primaryAmplitude σ κ G T x i) s := by
-  have hp : 0 < (σ - κ i) / 2 := by linarith [hgap i]
+  have hp : 0 < (σ - κ i) / 2 := by linarith only [hgap, hgap i]
   apply ((FlatCutoff.edge_contDiff hp (n := ⊤)).contDiffOn.mul
     (SmoothCovariance.contDiffOn_amplitudes hG hT hcone i)).congr
   intro x hx
@@ -957,7 +962,7 @@ theorem primaryAmplitude_div_pow_contDiffOn
     (hcone : ∀ x ∈ s, SmoothCovariance.StrictCone (G x) (T x))
     (hgap : ∀ i, κ i < σ) (i : Fin 2) (loss : ℕ) :
     ContDiffOn ℝ ∞ (fun x => primaryAmplitude σ κ G T x i / x ^ loss) s := by
-  have hp : 0 < (σ - κ i) / 2 := by linarith [hgap i]
+  have hp : 0 < (σ - κ i) / 2 := by linarith only [hgap, hgap i]
   apply ((FlatCutoff.edge_div_pow_contDiff hp loss (n := ⊤)).contDiffOn.mul
     (SmoothCovariance.contDiffOn_amplitudes hG hT hcone i)).congr
   intro x hx
@@ -1033,9 +1038,9 @@ theorem squared_factors_smooth {lam : Vec2}
     ContDiffOn ℝ ∞ (fun x => signedAmplitude σ σ (fun j => 2 * lam j) G T R x i / x ^ loss) s := by
   constructor
   · exact primaryAmplitude_div_pow_contDiffOn hG hT hcone
-      (fun j => by linarith [hgap j]) i loss
+      (fun j => by linarith only [hgap, hgap j]) i loss
   · exact signedAmplitude_div_pow_contDiffOn hG hT hR hcone
-      (fun j => by linarith [hgap j]) i loss
+      (fun j => by linarith only [hgap, hgap j]) i loss
 
 /-- The requested stricter half-exponent condition also suffices when the
 exponential appears directly in a covariance column, without a square. -/
@@ -1049,9 +1054,9 @@ theorem direct_half_factors_smooth
     ContDiffOn ℝ ∞ (fun x => signedAmplitude σ σ κ G T R x i / x ^ loss) s := by
   constructor
   · exact primaryAmplitude_div_pow_contDiffOn hG hT hcone
-      (fun j => by linarith [hgap j]) i loss
+      (fun j => by linarith only [hσ, hgap, hgap j]) i loss
   · exact signedAmplitude_div_pow_contDiffOn hG hT hR hcone
-      (fun j => by linarith [hgap j]) i loss
+      (fun j => by linarith only [hσ, hgap, hgap j]) i loss
 
 end Smooth
 
@@ -1096,7 +1101,7 @@ theorem iteratedDeriv_zero_of_nonpos_zero {f : ℝ → ℝ}
     (WithTop.coe_le_coe.mpr (le_top : (n : ℕ∞) ≤ ⊤))
   have hcl := hd.closure hc continuous_const
   apply hcl
-  simp
+  simp only [closure_Iio, mem_Iic, Std.le_refl]
 
 section GlobalFlatness
 
@@ -1134,7 +1139,7 @@ theorem primary_weighted_derivatives_zero
   apply iteratedDeriv_zero_of_nonpos_zero
     (primaryAmplitude_div_pow_contDiff hG hT hcone hgap i loss)
   intro x hx
-  simp [primaryAmplitude_of_nonpos σ κ G T hx i]
+  simp only [primaryAmplitude_of_nonpos σ κ G T hx i, zero_div]
 
 theorem signed_weighted_derivatives_zero
     (hG : ∀ i j, ContDiff ℝ ∞ (fun x => G x i j))
@@ -1146,7 +1151,7 @@ theorem signed_weighted_derivatives_zero
   apply iteratedDeriv_zero_of_nonpos_zero
     (signedAmplitude_div_pow_contDiff hG hT hR hcone hgap i loss)
   intro x hx
-  simp [signedAmplitude_of_nonpos σ τ κ G T R hx i]
+  simp only [signedAmplitude_of_nonpos σ τ κ G T R hx i, zero_div]
 
 end GlobalFlatness
 
@@ -1189,7 +1194,7 @@ theorem parameterPrimary_div_pow_contDiffOn
     (hcone : ∀ z ∈ s, SmoothCovariance.StrictCone (G z) (T z))
     (hgap : ∀ i, κ i < σ) (i : Fin 2) (loss : ℕ) :
     ContDiffOn ℝ ∞ (fun z => parameterPrimary σ κ d G T z i / d z ^ loss) s := by
-  have hp : 0 < (σ - κ i) / 2 := by linarith [hgap i]
+  have hp : 0 < (σ - κ i) / 2 := by linarith only [hgap, hgap i]
   apply (((FlatCutoff.edge_div_pow_contDiff hp loss (n := ⊤)).comp_contDiffOn hd).mul
     (SmoothCovariance.contDiffOn_amplitudes hG hT hcone i)).congr
   intro z hz
@@ -1411,32 +1416,28 @@ theorem weight_continuous : Continuous (weight ψ x) :=
 theorem weight_gaussian_upper (v : ℝ) :
     weight ψ x v ≤ A ^ 2 * gaussian (2 * b) (r ^ 2 / 2) r v := by
   by_cases hv : v ∈ Icc (r ^ 2 / 6) (5 * r ^ 2 / 6)
-  · have hslot : v ∈ Icc 0 (r ^ 2) := by
-      constructor <;> nlinarith [hv.1, hv.2, sq_nonneg r]
+  · have hslot : v ∈ Icc 0 (r ^ 2) :=
+      ⟨(div_nonneg (sq_nonneg r) (by norm_num)).trans hv.1,
+        hv.2.trans (by linarith only [sq_nonneg r])⟩
     have hx := h.component_upper v hslot
     have hx0 := (h.component_pos hslot).le
-    have hg := (gaussian_pos b (r ^ 2 / 2) r v).le
-    have hψ : ψ v ^ 2 ≤ 1 := by
-      have hp := h.cutoff_abs_le v
-      have hab := abs_le.mp hp
-      nlinarith [sq_nonneg (ψ v), hab.1, hab.2]
+    have hψ : ψ v ^ 2 ≤ 1 := (sq_le_one_iff_abs_le_one _).mpr (h.cutoff_abs_le v)
     have he : gaussian b (r ^ 2 / 2) r v ^ 2 =
         gaussian (2 * b) (r ^ 2 / 2) r v := by
       simp only [gaussian, sq, ← Real.exp_add]
       congr 1
       ring
     calc
-      weight ψ x v ≤ x v ^ 2 := by
-        unfold weight
-        nlinarith [mul_le_mul_of_nonneg_right hψ (sq_nonneg (x v))]
+      weight ψ x v ≤ x v ^ 2 :=
+        (mul_le_mul_of_nonneg_right hψ (sq_nonneg (x v))).trans_eq (one_mul _)
       _ ≤ (A * gaussian b (r ^ 2 / 2) r v) ^ 2 :=
         pow_le_pow_left₀ hx0 hx 2
       _ = A ^ 2 * gaussian (2 * b) (r ^ 2 / 2) r v := by rw [mul_pow, he]
-  · rw [weight, h.cutoff_zero v hv]
-    simpa using mul_nonneg (sq_nonneg A) (gaussian_pos (2 * b) (r ^ 2 / 2) r v).le
+  · rw [weight, h.cutoff_zero v hv, zero_pow two_ne_zero, zero_mul]
+    exact mul_nonneg (sq_nonneg A) (gaussian_pos (2 * b) (r ^ 2 / 2) r v).le
 
 theorem weight_integrable : Integrable (weight ψ x) := by
-  apply ((integrable_gaussian (b := 2 * b) (by linarith [h.decay_pos]) h.radius_pos
+  apply ((integrable_gaussian (b := 2 * b) (by linarith only [h, h.decay_pos]) h.radius_pos
     (r ^ 2 / 2)).const_mul (A ^ 2)).mono' h.weight_continuous.aestronglyMeasurable
   filter_upwards [] with v
   simpa only [Real.norm_eq_abs, abs_of_nonneg (weight_nonneg v)] using
@@ -1452,12 +1453,13 @@ theorem moment_integrable :
   rw [Real.norm_eq_abs, abs_of_nonneg
     (mul_nonneg (abs_nonneg _) (weight_nonneg v))]
   simp only [id_eq]
-  nlinarith [mul_le_mul_of_nonneg_left (h.weight_gaussian_upper v) (abs_nonneg (v - r ^ 2 / 2))]
+  linarith only [mul_le_mul_of_nonneg_left (h.weight_gaussian_upper v)
+    (abs_nonneg (v - r ^ 2 / 2))]
 
 theorem mass_upper : mass ψ x ≤ A ^ 2 * Real.sqrt (Real.pi / (2 * b)) * r := by
   have hi := integral_mono h.weight_integrable
     ((integrable_gaussian (b := 2 * b) (by
-        linarith [h.decay_pos]) h.radius_pos (r ^ 2 / 2)).const_mul
+        linarith only [h, h.decay_pos]) h.radius_pos (r ^ 2 / 2)).const_mul
       (A ^ 2)) h.weight_gaussian_upper
   rw [integral_const_mul, integral_gaussian_scaled _ _ _ h.radius_pos] at hi
   exact hi.trans_eq (by ring)
@@ -1465,43 +1467,43 @@ theorem mass_upper : mass ψ x ≤ A ^ 2 * Real.sqrt (Real.pi / (2 * b)) * r := 
 theorem moment_upper :
     centeredMoment ψ x (r ^ 2 / 2) ≤ A ^ 2 * firstGaussianMoment (2 * b) * r ^ 2 := by
   have hi := integral_mono h.moment_integrable
-    ((integrable_first_gaussian_scaled (b := 2 * b) (by linarith [h.decay_pos]) h.radius_pos
+    ((integrable_first_gaussian_scaled (b := 2 * b) (by linarith only [h, h.decay_pos]) h.radius_pos
       (r ^ 2 / 2)).const_mul (A ^ 2)) (fun v => ?_)
   · rw [integral_const_mul, integral_first_gaussian_scaled _ _ _ h.radius_pos] at hi
     exact hi.trans_eq (by ring)
-  · nlinarith [mul_le_mul_of_nonneg_left (h.weight_gaussian_upper v)
+  · linarith only [mul_le_mul_of_nonneg_left (h.weight_gaussian_upper v)
       (abs_nonneg (v - r ^ 2 / 2))]
 
 theorem core_mem_middle {v : ℝ}
     (hv : v ∈ Icc (r ^ 2 / 2 - r / 6) (r ^ 2 / 2 + r / 6)) :
     v ∈ Icc (r ^ 2 / 3) (2 * r ^ 2 / 3) := by
   have hr := h.radius_one_le
-  have hrr : r ≤ r ^ 2 := by nlinarith [mul_nonneg (sub_nonneg.mpr hr) h.radius_pos.le]
-  constructor <;> nlinarith [hv.1, hv.2]
+  have hrr : r ≤ r ^ 2 := by linarith only [mul_nonneg (sub_nonneg.mpr hr) h.radius_pos.le]
+  constructor <;> linarith only [hv.1, hv.2, hrr]
 
 theorem core_scaled_sq {v : ℝ}
     (hv : v ∈ Icc (r ^ 2 / 2 - r / 6) (r ^ 2 / 2 + r / 6)) :
     ((v - r ^ 2 / 2) / r) ^ 2 ≤ 1 / 36 := by
   have hlo : -(1 / 6 : ℝ) ≤ (v - r ^ 2 / 2) / r := by
     apply (le_div_iff₀ h.radius_pos).mpr
-    linarith [hv.1]
+    linarith only [hv, hv.1]
   have hhi : (v - r ^ 2 / 2) / r ≤ (1 / 6 : ℝ) := by
     apply (div_le_iff₀ h.radius_pos).mpr
-    linarith [hv.2]
-  nlinarith
+    linarith only [hv, hv.2]
+  nlinarith only [hlo, hhi]
 
 theorem core_weight_lower {v : ℝ}
     (hv : v ∈ Icc (r ^ 2 / 2 - r / 6) (r ^ 2 / 2 + r / 6)) :
     a ^ 2 * Real.exp (-B / 18) ≤ weight ψ x v := by
   have hmid := h.core_mem_middle hv
   have hslot : v ∈ Icc 0 (r ^ 2) := by
-    constructor <;> nlinarith [hmid.1, hmid.2, sq_nonneg r]
+    constructor <;> nlinarith only [hmid, hmid.1, hmid.2, sq_nonneg r]
   have hx := h.component_lower v hslot
   have he : Real.exp (-B / 18) ≤ gaussian B (r ^ 2 / 2) r v ^ 2 := by
     unfold gaussian
     rw [pow_two, ← Real.exp_add]
     apply Real.exp_le_exp.mpr
-    nlinarith [mul_le_mul_of_nonneg_left (h.core_scaled_sq hv) h.lower_decay_pos.le]
+    nlinarith only [h, hv, mul_le_mul_of_nonneg_left (h.core_scaled_sq hv) h.lower_decay_pos.le]
   rw [weight, h.cutoff_one v hmid]
   simp only [one_pow, one_mul]
   calc
@@ -1524,7 +1526,7 @@ theorem mass_lower : lowerMassConstant a B * r ≤ mass ψ x := by
     ne_of_lt (isCompact_Icc.measure_lt_top)
   have hi := setIntegral_ge_of_const_le measurableSet_Icc hv
     (fun v hv => h.core_weight_lower hv) h.weight_integrable.integrableOn
-  rw [Real.volume_real_Icc_of_le (by linarith [h.radius_pos])] at hi
+  rw [Real.volume_real_Icc_of_le (by linarith only [h, h.radius_pos])] at hi
   have hj := setIntegral_le_integral (s := Icc (r ^ 2 / 2 - r / 6) (r ^ 2 / 2 + r / 6))
     h.weight_integrable (ae_of_all _ weight_nonneg)
   change _ ≤ mass ψ x at hj
@@ -1546,7 +1548,8 @@ theorem cutoff_compact : HasCompactSupport ψ :=
 theorem weight_compact : HasCompactSupport (weight ψ x) := by
   apply HasCompactSupport.intro (K := Icc (r ^ 2 / 6) (5 * r ^ 2 / 6)) isCompact_Icc
   intro v hv
-  simp [weight, h.cutoff_zero v hv]
+  simp only [weight, h.cutoff_zero v hv, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      zero_mul]
 
 theorem weight_direction_integrable {q : ℝ → ℝ}
     (hq : ContinuousOn q (Icc 0 (r ^ 2))) :
@@ -1557,8 +1560,9 @@ theorem weight_direction_integrable {q : ℝ → ℝ}
     have hout : v ∉ Icc (r ^ 2 / 6) (5 * r ^ 2 / 6) := by
       intro hin
       apply hv'
-      constructor <;> nlinarith [hin.1, hin.2, sq_nonneg r]
-    exact hv (by simp [weight, h.cutoff_zero v hout])
+      constructor <;> nlinarith only [hin, hin.1, hin.2, sq_nonneg r]
+    exact hv (by simp only [weight, h.cutoff_zero v hout, ne_eq, OfNat.ofNat_ne_zero,
+        not_false_eq_true, zero_pow, zero_mul])
   apply (integrableOn_iff_integrable_of_support_subset hs).mp
   exact (h.weight_continuous.continuousOn.mul hq).integrableOn_Icc
 
@@ -1646,12 +1650,14 @@ theorem averagedDirection_error {q : ℝ → ℝ} (hq : ContinuousOn q (Icc 0 (r
   have hpoint (v : ℝ) : |weight ψ x v * (q v - q₀)| ≤
       ε * weight ψ x v + (K / r ^ 2) * (|v - r ^ 2 / 2| * weight ψ x v) := by
     by_cases hv : v ∈ Icc (r ^ 2 / 6) (5 * r ^ 2 / 6)
-    · have hslot : v ∈ Icc 0 (r ^ 2) := by
-        constructor <;> nlinarith [hv.1, hv.2, sq_nonneg r]
+    · have hslot : v ∈ Icc 0 (r ^ 2) :=
+        ⟨(div_nonneg (sq_nonneg r) (by norm_num)).trans hv.1,
+          hv.2.trans (by linarith only [sq_nonneg r])⟩
       rw [abs_mul, abs_of_nonneg (weight_nonneg v)]
       convert! mul_le_mul_of_nonneg_left (hqbound v hslot) (weight_nonneg v) using 1
       ring
-    · simp [weight, h.cutoff_zero v hv]
+    · simp only [weight, h.cutoff_zero v hv, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+        zero_pow, zero_mul, abs_zero, mul_zero, add_zero, Std.le_refl]
   have hi := norm_integral_le_of_norm_le (f := fun v => weight ψ x v * (q v - q₀))
     hgi (ae_of_all _ (fun v => by simpa only [Real.norm_eq_abs] using hpoint v))
   simp only [Real.norm_eq_abs] at hi
@@ -1684,7 +1690,7 @@ theorem averagedDirection_error_order {q : ℝ → ℝ}
   have hi := h.averagedDirection_error hq hK hqbound
   have hEr : E / r ^ 2 ≤ E / r := by
     apply div_le_div_of_nonneg_left hE h.radius_pos
-    nlinarith [mul_nonneg (sub_nonneg.mpr h.radius_one_le) h.radius_pos.le]
+    nlinarith only [h, mul_nonneg (sub_nonneg.mpr h.radius_one_le) h.radius_pos.le]
   apply hi.trans
   rw [add_div]
   exact add_le_add_left hEr _
@@ -1709,7 +1715,7 @@ theorem radiusProfile_sq (s : ℝ) : radiusProfile s ^ 2 = 1 + s ^ 2 :=
 theorem abs_le_radiusProfile (s : ℝ) : |s| ≤ radiusProfile s := by
   have hp := (radiusProfile_pos s).le
   have hs := radiusProfile_sq s
-  nlinarith [sq_abs s, abs_nonneg s]
+  nlinarith only [hs, hp, sq_abs s, abs_nonneg s]
 
 /-- The square-root profile used in the actual tangent model is globally
 one-Lipschitz; smoothness of a normalized direction is not assumed here. -/
@@ -1719,13 +1725,13 @@ theorem radiusProfile_lipschitz (s t : ℝ) :
     add_pos (radiusProfile_pos s) (radiusProfile_pos t)
   have he : (radiusProfile s - radiusProfile t) * (radiusProfile s + radiusProfile t) =
       (s - t) * (s + t) := by
-    nlinarith [radiusProfile_sq s, radiusProfile_sq t]
+    nlinarith only [radiusProfile_sq s, radiusProfile_sq t]
   have ha := congrArg abs he
   rw [abs_mul, abs_mul, abs_of_pos hp] at ha
   have hst : |s + t| ≤ radiusProfile s + radiusProfile t :=
     (abs_add_le s t).trans (add_le_add (abs_le_radiusProfile s) (abs_le_radiusProfile t))
   exact (mul_le_mul_iff_left₀ hp).mp (by
-    nlinarith [mul_le_mul_of_nonneg_left hst (abs_nonneg (s - t))])
+    nlinarith only [ha, hst, mul_le_mul_of_nonneg_left hst (abs_nonneg (s - t))])
 
 /-- Coordinates in the fixed tangent frame `(N,K)` of `h N - s K`, where
 `h = c₀ sqrt(1+s²)`. -/
@@ -1739,21 +1745,21 @@ theorem modelDirection_lipschitz (c₀ s t : ℝ) (i : Fin 2) :
     calc
       |c₀| * |radiusProfile s - radiusProfile t| ≤ |c₀| * |s - t| :=
         mul_le_mul_of_nonneg_left (radiusProfile_lipschitz s t) (abs_nonneg _)
-      _ ≤ (|c₀| + 1) * |s - t| := by nlinarith [abs_nonneg (s - t)]
+      _ ≤ (|c₀| + 1) * |s - t| := by nlinarith only [abs_nonneg (s - t)]
   · change |(-s) - (-t)| ≤ _
     have he : |(-s) - (-t)| = |s - t| := by
       calc
         |(-s) - (-t)| = |-(s - t)| := congrArg abs (by ring)
         _ = |s - t| := abs_neg _
     rw [he]
-    nlinarith [mul_nonneg (abs_nonneg c₀) (abs_nonneg (s - t))]
+    nlinarith only [mul_nonneg (abs_nonneg c₀) (abs_nonneg (s - t))]
 
 /-- Affine slope, given by `s₀ + slope * (v - r ^ 2 / 2) / r ^ 2`. -/
 noncomputable def affineSlope (s₀ slope r v : ℝ) : ℝ :=
   s₀ + slope * (v - r ^ 2 / 2) / r ^ 2
 
 theorem affineSlope_midpoint (s₀ slope r : ℝ) : affineSlope s₀ slope r (r ^ 2 / 2) = s₀ := by
-  simp [affineSlope]
+  simp only [affineSlope, sub_self, mul_zero, zero_div, add_zero]
 
 theorem hasDerivAt_affineSlope (s₀ slope r v : ℝ) :
     HasDerivAt (affineSlope s₀ slope r) (slope / r ^ 2) v := by
@@ -1801,8 +1807,9 @@ theorem raw_integrand_eq {t : ℝ → Vec2} (v : ℝ) (i : Fin 2) :
   · have hout : v ∉ Icc (r ^ 2 / 6) (5 * r ^ 2 / 6) := by
       intro hin
       apply hv
-      constructor <;> nlinarith [hin.1, hin.2, sq_nonneg r]
-    simp [weight, h.cutoff_zero v hout]
+      constructor <;> nlinarith only [hin, hin.1, hin.2, sq_nonneg r]
+    simp only [h.cutoff_zero v hout, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+        zero_mul, weight]
 
 /-- Exact factorization of the actual covariance integral into its positive
 mass and normalized direction. -/
@@ -1826,8 +1833,9 @@ theorem actualColumn_eq_intervalIntegral (ci : ℝ) (t : ℝ → Vec2) (i : Fin 
     intro hin
     apply hv
     have hr2 : 0 < r ^ 2 := sq_pos_of_pos h.radius_pos
-    constructor <;> nlinarith [hin.1, hin.2]
-  simp [h.cutoff_zero v hout]
+    constructor <;> nlinarith only [hr2, hin, hin.1, hin.2]
+  simp only [h.cutoff_zero v hout, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      zero_mul]
 
 theorem ratio_continuousOn {t : ℝ → Vec2}
     (ht : ∀ i, ContinuousOn (fun v => t v i) (Icc 0 (r ^ 2))) (i : Fin 2) :
@@ -1867,7 +1875,7 @@ theorem normalizedColumn_error_of_outer_scale {t : ℝ → Vec2}
   intro v hv j
   apply (htmodel v hv j).trans
   apply (div_le_div_iff₀ hS (sq_pos_of_pos h.radius_pos)).mpr
-  nlinarith [mul_le_mul_of_nonneg_left hL hE]
+  nlinarith only [hL, hE, mul_le_mul_of_nonneg_left hL hE]
 
 end PulseBounds
 
@@ -1897,8 +1905,10 @@ theorem signedModel_eq_covariance (c₀ u : ℝ) :
     signedModel c₀ u = Covariance.signedMatrix (Covariance.normalMagnitude c₀ u) u 1 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [signedModel, modelDirection, signedSlopes, Covariance.signedMatrix,
-      Covariance.normalMagnitude, radiusProfile]
+    simp only [signedModel, modelDirection, radiusProfile, signedSlopes, Fin.zero_eta, Fin.isValue,
+        Matrix.cons_val_zero, Covariance.signedMatrix, Covariance.normalMagnitude, neg_mul, neg_neg,
+        mul_one, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_fin_one, Fin.mk_one,
+        Matrix.cons_val_one, even_two, Even.neg_pow]
 
 theorem signedModel_strictCone {c₀ u m t : ℝ} (hc₀ : c₀ < 0) (hu : 0 < u)
     (hcone : |Covariance.normalMagnitude c₀ u * t| < u * m) :
@@ -1913,10 +1923,14 @@ theorem signedModel_continuousOn {X : Type*} [TopologicalSpace X] {K : Set X}
   have hn : ContinuousOn (fun p => c₀ p * Real.sqrt (1 + u p ^ 2)) K :=
     hc₀.mul (Real.continuous_sqrt.comp_continuousOn (continuousOn_const.add (hu.pow 2)))
   fin_cases i <;> fin_cases j
-  · simpa [signedModel, modelDirection, signedSlopes, radiusProfile] using hn
-  · simpa [signedModel, modelDirection, signedSlopes, radiusProfile] using hn
+  · simpa only [signedModel, modelDirection, radiusProfile, signedSlopes, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val_zero] using hn
+  · simpa only [signedModel, modelDirection, radiusProfile, signedSlopes, Fin.mk_one, Fin.isValue,
+      Matrix.cons_val_one, Matrix.cons_val_fin_one, even_two, Even.neg_pow, neg_neg, Fin.zero_eta,
+      Matrix.cons_val_zero] using hn
   · simpa [signedModel, modelDirection, signedSlopes] using hu.fun_neg
-  · simpa [signedModel, modelDirection, signedSlopes] using hu
+  · simpa only [signedModel, modelDirection, signedSlopes, Fin.mk_one, Fin.isValue,
+      Matrix.cons_val_one, Matrix.cons_val_fin_one, neg_neg] using hu
 
 /-- Signed pulse pair: an abbreviation for `(j : Fin 2) → TangentPulse r a A b B c₀
 (signedSlopes u j) (signedSlopes u j) E`. -/
@@ -1941,7 +1955,8 @@ noncomputable def columnScales {r a A b B c₀ u E : ℝ}
   fun j => ci j * mass (pulses j).cutoff (pulses j).component
 
 theorem signedSlopes_abs (u : ℝ) (j : Fin 2) : |signedSlopes u j| = |u| := by
-  fin_cases j <;> simp [signedSlopes]
+  fin_cases j <;> simp only [signedSlopes, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one, abs_neg]
 
 theorem actualMatrix_factorization {r a A b B c₀ u E : ℝ}
     (pulses : SignedPulsePair r a A b B c₀ u E) (ci : Vec2) :
@@ -1975,7 +1990,7 @@ theorem actualMatrix_positive_of_normalized {r a A b B c₀ u E : ℝ}
   have hsn : ∀ j, columnScales pulses ci j ≠ 0 := fun j => (hs j).ne'
   have hT : FlatCovariance.scaledTarget 1 T = T := by
     ext i
-    simp [FlatCovariance.scaledTarget]
+    simp only [FlatCovariance.scaledTarget, one_mul]
   rw [actualMatrix_factorization]
   have hweight : ∀ i, 0 < SmoothCovariance.weights
       (FlatCovariance.columns (normalizedMatrix pulses) (columnScales pulses ci)) T i := by
@@ -2016,7 +2031,7 @@ theorem compact_actual_positive_inverse
     hK hmodel hT hcone
   let Q : ℝ := E + ((C + 1) * U) * |concentrationConstant a A b B|
   have hQ : 0 ≤ Q := by
-    dsimp [Q]
+    dsimp only [Q]
     positivity
   refine ⟨max 1 (Q / ρ), le_max_left _ _, ?_⟩
   intro p hp r hr pulses ci hci
@@ -2025,20 +2040,20 @@ theorem compact_actual_positive_inverse
   have hsmall : Q / r ≤ ρ := by
     apply (div_le_iff₀ hrp).mpr
     have hR : Q / ρ ≤ r := (le_max_right _ _).trans hr
-    nlinarith [(div_le_iff₀ hρ).mp hR]
+    nlinarith only [hρ, hR, (div_le_iff₀ hρ).mp hR]
   have hentry (i j : Fin 2) :
       |normalizedMatrix pulses i j - signedModel (c₀ p) (u p) i j| ≤ ρ := by
     apply (normalizedMatrix_entry_error pulses hE i j).trans
     apply le_trans _ hsmall
     apply div_le_div_of_nonneg_right _ hrp.le
-    dsimp [Q]
+    dsimp only [Q]
     apply add_le_add_right
     have hf : (|c₀ p| + 1) * |u p| ≤ (C + 1) * U :=
       mul_le_mul (add_le_add_left (hc₀ p hp) 1) (hu p hp)
-        (abs_nonneg _) (by linarith)
+        (abs_nonneg _) (by linarith only [hC])
     exact mul_le_mul hf (le_abs_self _)
       (pulses j).bounds.concentrationConstant_nonneg
-      (mul_nonneg (by linarith) hU)
+      (mul_nonneg (by linarith only [hC]) hU)
   have hdist : dist (normalizedMatrix pulses, T p) (signedModel (c₀ p) (u p), T p) ≤ ρ := by
     rw [dist_prod_same_right]
     apply (dist_pi_le_iff hρ.le).mpr
@@ -2073,7 +2088,8 @@ theorem compact_actual_positive_inverse_of_scalar_cone
     intro i
     fin_cases i
     · simpa [Covariance.target] using hm.fun_neg
-    · simpa [Covariance.target] using ht
+    · simpa only [Covariance.target, Fin.mk_one, Fin.isValue, Matrix.cons_val_one,
+        Matrix.cons_val_fin_one] using ht
   apply compact_actual_positive_inverse hK (signedModel_continuousOn hc₀ hu) htarget
     (fun p hp => signedModel_strictCone (hc₀neg p hp) (hupos p hp) (hcone p hp)) hE
     (le_max_left 0 C) (le_max_left 0 U)
@@ -2120,7 +2136,8 @@ noncomputable def covering (z : Plane) : Plane := (3 * z.1 + z.2, z.1 + 5 * z.2)
 /-- Torus covering, bundling `toFun`, `map_zero`, `map_add`. -/
 noncomputable def torusCovering : Torus →+ Torus where
   toFun z := ((3 : ℕ) • z.1 + z.2, z.1 + (5 : ℕ) • z.2)
-  map_zero' := by simp
+  map_zero' := by simp only [Prod.fst_zero, nsmul_zero, Prod.snd_zero, add_zero, Prod.mk_eq_zero,
+      and_self]
   map_add' := by
     intro z w
     apply Prod.ext <;> simp only [Prod.fst_add, Prod.snd_add, nsmul_add] <;> abel
@@ -2150,7 +2167,7 @@ theorem torusCovering_surjective : Surjective torusCovering := by
   refine ⟨quotientPoint ((5 * a - b) / 14, (-a + 3 * b) / 14), ?_⟩
   rw [← quotient_covering]
   have heq : covering ((5 * a - b) / 14, (-a + 3 * b) / 14) = (a, b) := by
-    apply Prod.ext <;> dsimp [covering] <;> ring
+    apply Prod.ext <;> dsimp only [covering] <;> ring
   rw [heq]
   rfl
 
@@ -2223,7 +2240,7 @@ noncomputable def latticePoint (k : Frequency) : Plane := ((k.1 : ℝ), (k.2 : �
 
 theorem latticePoint_add (k l : Frequency) :
     latticePoint (k + l) = latticePoint k + latticePoint l := by
-  ext <;> simp [latticePoint]
+  ext <;> simp only [latticePoint, Prod.fst_add, Int.cast_add, Prod.snd_add, Prod.mk_add_mk]
 
 theorem latticePoint_injective : Injective latticePoint := by
   intro k l h
@@ -2237,7 +2254,8 @@ theorem latticePoint_injective : Injective latticePoint := by
 
 theorem quotientPoint_lattice_add (k : Frequency) (z : Plane) :
     quotientPoint (latticePoint k + z) = quotientPoint z := by
-  simp [quotientPoint, latticePoint, circle_int_eq_zero]
+  simp only [quotientPoint, latticePoint, Prod.fst_add, QuotientAddGroup.mk_add, circle_int_eq_zero,
+      zero_add, Prod.snd_add]
 
 /-- Each translated half-open unit square is an injective coordinate chart
 for the quotient to the torus. -/
@@ -2255,7 +2273,7 @@ theorem quotientPoint_injOn_small_chart (L : Plane ≃L[ℝ] Plane) (center : Pl
     InjOn quotientPoint ((fun z => center + L z) '' Metric.ball (0 : Plane) r) := by
   apply (quotientPoint_injOn_square (center - (1 / 2, 1 / 2))).mono
   rintro _ ⟨z, hz, rfl⟩
-  have hz' : ‖z‖ < r := by simpa using hz
+  have hz' : ‖z‖ < r := by simpa only [Metric.mem_ball, dist_zero_right] using hz
   have hnorm : ‖L z‖ < 1 / 2 :=
     ((L : Plane →L[ℝ] Plane).le_opNorm z).trans_lt
       ((mul_le_mul_of_nonneg_left hz'.le (norm_nonneg _)).trans_lt hr)
@@ -2264,10 +2282,10 @@ theorem quotientPoint_injOn_small_chart (L : Plane ≃L[ℝ] Plane) (center : Pl
   change (center.1 + (L z).1 ∈ Ico (center.1 - 1 / 2) (center.1 - 1 / 2 + 1)) ∧
     (center.2 + (L z).2 ∈ Ico (center.2 - 1 / 2) (center.2 - 1 / 2 + 1))
   constructor <;> constructor
-  · linarith [(abs_lt.mp h1).1]
-  · linarith [(abs_lt.mp h1).2]
-  · linarith [(abs_lt.mp h2).1]
-  · linarith [(abs_lt.mp h2).2]
+  · linarith only [h1, (abs_lt.mp h1).1]
+  · linarith only [h1, (abs_lt.mp h1).2]
+  · linarith only [h2, (abs_lt.mp h2).1]
+  · linarith only [h2, (abs_lt.mp h2).2]
 
 /-- A positive injective native radius always exists; this proof supplies the
 explicit radius `1 / (4 * (‖L‖ + 1))`. -/
@@ -2281,7 +2299,7 @@ theorem exists_injective_native_radius (L : Plane ≃L[ℝ] Plane) (center : Pla
     quotientPoint_injOn_small_chart L center _ ?_⟩
   change N * (1 / (4 * (N + 1))) < 1 / 2
   rw [mul_one_div, div_lt_iff₀ hpos]
-  nlinarith
+  nlinarith only [hN]
 
 theorem latticeTranslate_unique {s : Set Plane} (hs : InjOn quotientPoint s)
     {z : Plane} {k l : Frequency} (hk : latticePoint k + z ∈ s)
@@ -2295,10 +2313,11 @@ local instance latticeAddAction : AddAction Frequency Plane where
   vadd k z := latticePoint k + z
   zero_vadd z := by
     change latticePoint 0 + z = z
-    simp [latticePoint]
+    simp only [latticePoint, Prod.fst_zero, Int.cast_zero, Prod.snd_zero, add_eq_right,
+        Prod.mk_eq_zero, and_self]
   add_vadd k l z := by
     change latticePoint (k + l) + z = latticePoint k + (latticePoint l + z)
-    simp [latticePoint, Prod.add_def, add_assoc]
+    simp only [latticePoint, Prod.add_def, Int.cast_add, add_assoc]
 
 local instance instTorusAverages3 : MeasurableVAdd Frequency Plane where
   measurable_const_vadd _ := measurable_const.add measurable_id
@@ -2328,7 +2347,7 @@ theorem fundamentalSquare_isAddFundamentalDomain :
     have h1 : ⌊(k.1 : ℝ) + z.1⌋ = 0 := Int.floor_eq_zero_iff.mpr hk.1
     have h2 : ⌊(k.2 : ℝ) + z.2⌋ = 0 := Int.floor_eq_zero_iff.mpr hk.2
     rw [Int.floor_intCast_add] at h1 h2
-    apply Prod.ext <;> dsimp
+    apply Prod.ext <;> dsimp only
     · omega
     · omega
 
@@ -2376,7 +2395,8 @@ theorem periodize_eventually_eq_sum {V : Type*} [NormedAddCommGroup V] {f : Plan
   obtain ⟨s, hs⟩ := finite_translates_on_ball hf (‖z‖ + 1)
   refine ⟨s, ?_⟩
   have hnear : {w : Plane | ‖w‖ < ‖z‖ + 1} ∈ 𝓝 z :=
-    (isOpen_lt continuous_norm continuous_const).mem_nhds (by simp)
+    (isOpen_lt continuous_norm continuous_const).mem_nhds (by simp only [mem_ofPred_eq,
+        lt_add_iff_pos_right, zero_lt_one])
   filter_upwards [hnear] with w hw
   exact tsum_eq_sum (hs w hw.le)
 
@@ -2440,7 +2460,7 @@ theorem periodize_mul_of_injective_support {s : Set Plane} (hs : InjOn quotientP
       periodize_eq_native_copy hs hfg (hf hk)]
   · have hzero : ∀ k : Frequency, f (latticePoint k + z) = 0 := by
       simpa only [not_exists, not_not] using h
-    simp [periodize, hzero]
+    simp only [periodize, hzero, tsum_zero, zero_mul]
 
 /-- The set-integral and iterated-integral descriptions of the unit-square
 average agree. Endpoint choices have zero Lebesgue measure. -/
@@ -2563,7 +2583,9 @@ theorem slotLinearMap_apply (vr vt z : Plane) :
 
 theorem det_slotLinearMap (vr vt : Plane) :
     LinearMap.det (slotLinearMap vr vt) = vr.1 * vt.2 - vr.2 * vt.1 := by
-  simp [slotLinearMap, LinearMap.det_toLin, Matrix.det_fin_two, mul_comm]
+  simp only [slotLinearMap, LinearMap.det_toLin, Matrix.det_fin_two, Fin.isValue, Matrix.of_apply,
+      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_one,
+      mul_comm]
 
 /-- The genuine nondegenerate native chart. -/
 noncomputable def slotChart (vr vt : Plane) (hdet : vr.1 * vt.2 - vr.2 * vt.1 ≠ 0) :
@@ -2587,23 +2609,24 @@ theorem integral_periodize_slot {V : Type*} [NormedAddCommGroup V] [NormedSpace 
 
 /-- Rescaling the transverse coordinate by `ci`. -/
 noncomputable def transverseChart (ci : ℝ) (hci : ci ≠ 0) : Plane ≃L[ℝ] Plane :=
-  slotChart (1, 0) (0, ci) (by simpa using hci)
+  slotChart (1, 0) (0, ci) (by simpa only [one_mul, mul_zero, sub_zero, ne_eq] using hci)
 
 theorem transverseChart_apply (ci : ℝ) (hci : ci ≠ 0) (z : Plane) :
     transverseChart ci hci z = (z.1, ci * z.2) := by
   rw [transverseChart, slotChart_apply]
-  ext <;> simp [mul_comm]
+  ext <;> simp only [Prod.smul_mk, smul_eq_mul, mul_one, mul_zero, mul_comm, Prod.mk_add_mk,
+      add_zero, zero_add]
 
 theorem transverseChart_symm_apply (ci : ℝ) (hci : ci ≠ 0) (z : Plane) :
     (transverseChart ci hci).symm z = (z.1, z.2 / ci) := by
   apply (transverseChart ci hci).injective
   rw [ContinuousLinearEquiv.apply_symm_apply, transverseChart_apply]
-  ext <;> simp [hci, mul_div_cancel₀]
+  ext <;> simp only [ne_eq, hci, not_false_eq_true, mul_div_cancel₀]
 
 theorem det_transverseChart (ci : ℝ) (hci : ci ≠ 0) :
     LinearMap.det (transverseChart ci hci : Plane →ₗ[ℝ] Plane) = ci := by
   rw [transverseChart, det_slotChart]
-  simp
+  simp only [one_mul, mul_zero, sub_zero]
 
 /-- `η = ci * v - r0`, written as the field in the native `(ξ,η)` coordinates. -/
 noncomputable def transverseStretch {V : Type*} (ci r0 : ℝ) (f : Plane → V) (z : Plane) : V :=
@@ -2613,7 +2636,8 @@ theorem transverseStretch_eq_nativeField {V : Type*} (ci r0 : ℝ) (hci : ci ≠
     (f : Plane → V) :
     transverseStretch ci r0 f = nativeField (transverseChart ci hci) (0, -r0) f := by
   funext z
-  simp [transverseStretch, nativeField, transverseChart_symm_apply]
+  simp only [transverseStretch, nativeField, transverseChart_symm_apply, Prod.fst_sub, sub_zero,
+      Prod.snd_sub, sub_neg_eq_add]
 
 theorem transverseStretch_continuous {V : Type*} [TopologicalSpace V] (ci r0 : ℝ)
     (hci : ci ≠ 0) {f : Plane → V} (hf : Continuous f) :
@@ -2698,11 +2722,11 @@ theorem squareAverage_covered_pulseColumn (vr vt center : Plane)
   have hca : HasCompactSupport (fun ξ => χ ξ ^ 2) := by
     apply hcχ.mono
     intro ξ hξ heq
-    exact hξ (by simp [heq])
+    exact hξ (by simp only [heq, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow])
   have hcb : HasCompactSupport (fun v => ψ v ^ 2 * x v * t v i) := by
     apply hcψ.mono
     intro v hv heq
-    exact hv (by simp [heq])
+    exact hv (by simp only [heq, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_mul])
   exact squareAverage_covered_product vr vt center hdet ci r0 hci
     (hχ.pow 2) (((hψ.pow 2).mul hx).mul ((continuous_apply i).comp ht)) hca hcb n
 

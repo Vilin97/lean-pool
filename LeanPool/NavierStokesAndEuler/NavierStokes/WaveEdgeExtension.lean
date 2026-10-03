@@ -167,11 +167,8 @@ theorem extendedJets_hasFDerivAt {Ω : Set D} (hΩ : IsOpen Ω) {ρ : D → ℝ}
       (extendedJets ρ a b f x (n + 1)).curryLeft x := by
   have hρc := (hρ.contDiffAt (hΩ.mem_nhds hx)).continuousAt
   have hρd := (hρ.contDiffAt (hΩ.mem_nhds hx)).differentiableAt (by simp)
-  change HasFDerivAt (extension ρ a b (iteratedFDeriv ℝ n f))
-    (extension ρ a b (iteratedFDeriv ℝ (n + 1) f) x).curryLeft x
-  have hcurry : (0 : D[×(n + 1)]→L[ℝ] E).curryLeft = 0 := by
-    ext u v
-    rfl
+  simp only [extendedJets]
+  have hcurry : (0 : D[×(n + 1)]→L[ℝ] E).curryLeft = 0 := rfl
   rcases lt_trichotomy (ρ x) a with hleft | heq | hleft
   · have hn : x ∉ window ρ a b := fun h => (not_lt_of_ge hleft.le) h.1
     rw [extension_outside ρ a b _ hn, hcurry]

@@ -69,8 +69,10 @@ theorem physical_forward_block_bound
     (Ω : Set Space) (hΩ : MeasurableSet Ω) (hSc : IsCompact S) (hΩo : IsOpen Ω) (hsub : S ⊆ Ω)
     (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
     (hg₀ : g ⟨0, le_rfl, hT⟩ = 1)
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS f)))
-    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period U)))
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) period a
+      (includePath (K := Icc (0 : ℝ) T) (V := E) period S hS f)))
+    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      translate (V := U) period a (a₀ : CylinderL2 period U)))
     (C A D Rc C₀ C₁ Ri R : ℝ)
     (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
     (hRi : 2*gramCost c C₀ 1*(Rc+1) ≤ Ri)
@@ -85,27 +87,34 @@ theorem physical_forward_block_bound
         ((fundamentalPath T hT (sourceGenerator Q Q₁ c hc hQ)).backward s x)‖ ≤ C*g t/g s)
     (d : ℕ)
     (hforce : ∀ n, block directions q
-      (fun a : LiftTangent => pathTranslate period a (includePath period S hS f)) n 0 ≤ D*majorant
-          R d n)
+      (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) period a
+        (includePath (K := Icc (0 : ℝ) T) (V := E) period S hS f)) n 0 ≤ D*majorant R d n)
     (hinitial : ∀ n, block directions q
-      (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period U)) n 0 ≤ A*majorant R d n)
+      (fun a : LiftTangent => translate (V := U) period a (a₀ : CylinderL2 period U)) n 0 ≤
+        A*majorant R d n)
     (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate period a (includePath period S hS
-      (normalizedVelocity period T hT S hS Q Q₁ c hc hQ g hg f a₀))) n 0 ≤
+    block directions q (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) period a
+      (includePath (K := Icc (0 : ℝ) T) (V := E) period S hS
+        (normalizedVelocity period T hT S hS Q Q₁ c hc hQ g hg f a₀))) n 0 ≤
       (3*sobolevCoefficientAmplitude ι q Rc C₀)*majorant R (d+1) n := by
   have hpf := projectedForcing_contDiff period S hS Q c hc hQ f hf
-  have hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS
-      (normalizedCoordinates period T hT S hS Q Q₁ c hc hQ g hg f a₀))) :=
+  have hu : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := U) period a
+        (includePath (K := Icc (0 : ℝ) T) (V := U) period S hS
+          (normalizedCoordinates period T hT S hS Q Q₁ c hc hQ g hg f a₀))) :=
     EulerLpCylinderRegularForward.source_solution_contDiff period T hT Ω hΩ
       (sourceGenerator Q Q₁ c hc hQ) (sourceGenerator_translation_contDiff Q Q₁ c hc hQ)
       S hS hSc hΩo hsub g hg (projectedForcing period S hS Q c hc hQ f) a₀ hpf ha₀
-  obtain ⟨hRi₀,-⟩ := EulerTransverseForwardCoefficientGevrey.inverseRadius_bounds c C₀ Rc Ri hc hRc
-      hRi
+  have hRi₀ := (EulerTransverseForwardCoefficientGevrey.inverseRadius_bounds c C₀ Rc Ri hc hRc
+      hRi).1
   have hcost : 0 ≤ forcingCost ι q Ri C₀ := mul_nonneg (by norm_num)
-    (sobolevCoefficientAmplitude_nonneg q (4*Ri) (3*Ri*C₀) (by positivity) (by positivity))
-  have hub (j : ℕ) : block directions q (fun a : LiftTangent => pathTranslate period a (includePath
-      period S hS
-      (normalizedCoordinates period T hT S hS Q Q₁ c hc hQ g hg f a₀))) j 0 ≤ majorant R (d+1) j :=
+    (sobolevCoefficientAmplitude_nonneg q (4*Ri) (3*Ri*C₀) (mul_nonneg (by norm_num) hRi₀)
+      (mul_nonneg (mul_nonneg (by norm_num) hRi₀) hC₀))
+  have hub (j : ℕ) : block directions q (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := U) period a
+        (includePath (K := Icc (0 : ℝ) T) (V := U) period S hS
+          (normalizedCoordinates period T hT S hS Q Q₁ c hc hQ g hg f a₀))) j 0 ≤
+      majorant R (d+1) j :=
     source_forward_block_bound period directions hd q T hT Q Q₁ c hc hQ Ω S hΩ hS hSc hΩo hsub
         hΩball
       g hg hg₀ (projectedForcing period S hS Q c hc hQ f) a₀ hpf ha₀

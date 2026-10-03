@@ -53,14 +53,14 @@ def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialDerivative P D.T D.potentialCoefficientPath D.potentialDerivative
     (velocityPath τ hτ hτT B Y) (derivativePath τ hτ hτT B Y)
 
-theorem potentialPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (potentialPath τ hτ hτT B
-    Y)) :=
+theorem potentialPath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (potentialPath τ hτ hτT B Y)) :=
   EulerCylinderPotential.potentialPath_orbit P D.potentialCoefficientPath
       D.potentialCoefficientPath_orbit
     (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y)
 
-theorem potentialTimePath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (potentialTimePath τ hτ
-    hτT B Y)) :=
+theorem potentialTimePath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (potentialTimePath τ hτ hτT B Y)) :=
   EulerCylinderPotential.potentialDerivative_orbit P D.T D.potentialCoefficientPath
       D.potentialDerivative
     D.potentialCoefficientPath_orbit D.potentialDerivative_orbit
@@ -85,13 +85,13 @@ def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.derivative P D.T D.FInv.field D.inverseDerivative
     (potentialPath τ hτ hτT B Y) (potentialTimePath τ hτ hτT B Y)
 
-theorem correctorPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (correctorPath τ hτ hτT B
-    Y)) :=
+theorem correctorPath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (correctorPath τ hτ hτT B Y)) :=
   EulerCylinderSlowCurl.path_orbit P D.FInv.field D.FInv.translation_contDiff
     (potentialPath τ hτ hτT B Y) (potentialPath_orbit τ hτ hτT B Y)
 
-theorem correctorTimePath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (correctorTimePath τ hτ
-    hτT B Y)) :=
+theorem correctorTimePath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (correctorTimePath τ hτ hτT B Y)) :=
   EulerCylinderSlowCurl.derivative_orbit P D.T D.FInv.field D.inverseDerivative
     D.FInv.translation_contDiff D.inverseDerivative_orbit
     (potentialPath τ hτ hτT B Y) (potentialTimePath τ hτ hτT B Y)
@@ -219,22 +219,26 @@ theorem correctorTimePath_supported (t : Icc (0 : ℝ) D.T) :
       (potentialTimePath_orbit τ hτ hτT B Y) D.FInv.field D.support_compact.isClosed
       (potentialTimePath_supported τ hτ hτT B Y) t
 
-theorem potentialPath_average_zero : pathAverage P (potentialPath τ hτ hτT B Y) = 0 :=
+theorem potentialPath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (potentialPath τ hτ hτT B Y) = 0 :=
   potentialPath_mean_zero P (velocityPath τ hτ hτT B Y) D.potentialCoefficientPath
     (ContinuousMap.ext (velocityPath_mean_zero τ hτ hτT B Y))
 
-theorem potentialTimePath_average_zero : pathAverage P (potentialTimePath τ hτ hτT B Y) = 0 := by
+theorem potentialTimePath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (potentialTimePath τ hτ hτT B Y) = 0 := by
   rw [potentialTimePath,EulerCylinderPotential.potentialDerivative,map_add,
     potentialPath_mean_zero P (velocityPath τ hτ hτT B Y) D.potentialDerivative
       (ContinuousMap.ext (velocityPath_mean_zero τ hτ hτT B Y)),
     potentialPath_mean_zero P (derivativePath τ hτ hτT B Y) D.potentialCoefficientPath
       (ContinuousMap.ext (derivativePath_mean_zero τ hτ hτT B Y)),add_zero]
 
-theorem correctorPath_average_zero : pathAverage P (correctorPath τ hτ hτT B Y) = 0 :=
+theorem correctorPath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (correctorPath τ hτ hτT B Y) = 0 :=
   slowCurl_mean_zero P (potentialPath τ hτ hτT B Y) (potentialPath_orbit τ hτ hτT B Y)
     D.FInv.field (potentialPath_average_zero τ hτ hτT B Y)
 
-theorem correctorTimePath_average_zero : pathAverage P (correctorTimePath τ hτ hτT B Y) = 0 := by
+theorem correctorTimePath_average_zero :
+    pathAverage (K := Icc (0 : ℝ) D.T) (V := Vector3) P (correctorTimePath τ hτ hτT B Y) = 0 := by
   rw [correctorTimePath,EulerCylinderSlowCurl.derivative,map_add,
     slowCurl_mean_zero P (potentialPath τ hτ hτT B Y) (potentialPath_orbit τ hτ hτT B Y)
       D.inverseDerivative (potentialPath_average_zero τ hτ hτT B Y),
@@ -278,7 +282,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
   (hH : ∀ t x, B.H.field t (-x) = B.H.field t x)
-  (hY : reflection P (Y.value : CylinderL2 P U) = -(Y.value : CylinderL2 P U))
+  (hY : reflection (V := U) P (Y.value : CylinderL2 P U) = -(Y.value : CylinderL2 P U))
 
 include hSym hF hM hH hY
 

@@ -32,7 +32,7 @@ theorem majorant_mono_shift (R : ℝ) (hR : 1 ≤ R) (d D n : ℕ) (h : d ≤ D)
   have hs : ((n+d).factorial : ℝ)^2 ≤ ((n+D).factorial : ℝ)^2 :=
     pow_le_pow_left₀ (by positivity) hf 2
   exact mul_le_mul (pow_le_pow_right₀ hR (Nat.add_le_add_left h n)) hs
-    (sq_nonneg _) (pow_nonneg (by linarith) _)
+    (sq_nonneg _) (pow_nonneg (by linarith only [hR]) _)
 
 /-- A single spare shift pays a linear number of grade terms at one fixed radius. -/
 theorem linear_grade_cost_absorbed (C R : ℝ) (hC : 0 ≤ C) (hR : C ≤ R)
@@ -42,7 +42,8 @@ theorem linear_grade_cost_absorbed (C R : ℝ) (hC : 0 ≤ C) (hR : C ≤ R)
   have hnd : (1 : ℝ) ≤ ((n+d : ℕ) : ℝ) := by exact_mod_cast (show 1 ≤ n+d by omega)
   have hpnd : (p : ℝ) ≤ ((n+d : ℕ) : ℝ) := by exact_mod_cast (show p ≤ n+d by omega)
   have hpsq : (p : ℝ) ≤ ((n+d : ℕ) : ℝ)^2 := by
-    nlinarith [mul_nonneg (show (0 : ℝ) ≤ ((n+d : ℕ) : ℝ) by positivity) (sub_nonneg.mpr hnd)]
+    nlinarith only [hpnd, hd, hnd,
+        mul_nonneg (show (0 : ℝ) ≤ ((n+d : ℕ) : ℝ) by positivity) (sub_nonneg.mpr hnd)]
   have hcost : C*(p : ℝ) ≤ R*((n+d : ℕ) : ℝ)^2 :=
     (mul_le_mul_of_nonneg_left hpsq hC).trans (mul_le_mul_of_nonneg_right hR (sq_nonneg _))
   calc

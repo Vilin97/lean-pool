@@ -495,7 +495,8 @@ theorem pullContext_frame (e : D ≃L[ℝ] E) (c : Context E) (n : ℕ) :
 
 theorem pullFrame_on (e : D ≃L[ℝ] E) (g : HarmonicResidual.Frame E) :
     PhysicalResidualNaturality.FrameOn univ e 1 1 (pullFrame e g) g := by
-  constructor <;> simp [pullFrame]
+  constructor <;> simp only [mem_univ, pullFrame, ContinuousLinearEquiv.apply_symm_apply, one_smul,
+      imp_self, implies_true, mul_one, one_mul]
 
 /-- The full residual, rather than only its on-graph values, is pulled back.
 No carrier nondegeneracy or differentiability premise is needed. -/
@@ -512,17 +513,17 @@ theorem pull_residualSource (e : D ≃L[ℝ] E) (c : Context E) (u : State E)
     · intro y hy; rfl
     · rfl
     · intro i k y hy
-      simp [HarmonicResidual.ofBlock, HarmonicResidual.realCoefficients_apply,
-        pullBlock]
+      simp only [HarmonicResidual.ofBlock, pullBlock, HarmonicResidual.realCoefficients_apply,
+          pullCoefficients_apply, one_smul]
     · intro k y hy
-      simp [HarmonicResidual.ofBlock, HarmonicResidual.realCoefficients_apply,
-        pullBlock]
+      simp only [HarmonicResidual.ofBlock, pullBlock, HarmonicResidual.realCoefficients_apply,
+          pullCoefficients_apply, mul_one, one_smul]
     · intro i k y hy
-      simp [HarmonicResidual.ofBlock, HarmonicResidual.realCoefficients_apply,
-        pullBlockCoefficients]
+      simp only [HarmonicResidual.ofBlock, pullBlockCoefficients,
+          HarmonicResidual.realCoefficients_apply, pullCoefficients_apply, mul_one, one_smul]
     · intro i k y hy
-      simp [HarmonicResidual.ofBlock, HarmonicResidual.realCoefficients_apply,
-        pullBlockCoefficients]
+      simp only [HarmonicResidual.ofBlock, pullBlockCoefficients,
+          HarmonicResidual.realCoefficients_apply, pullCoefficients_apply, mul_one, one_smul]
   have hg : PhysicalResidualNaturality.FrameOn univ e 1 1
       (HarmonicResidual.contextFrame (pullContext e c) n)
       (HarmonicResidual.contextFrame c n) := by
@@ -530,10 +531,11 @@ theorem pull_residualSource (e : D ≃L[ℝ] E) (c : Context E) (u : State E)
     exact pullFrame_on e _
   have hb : ∀ y ∈ (univ : Set D), HarmonicResidual.contextBase (pullContext e c) n y =
       (1 : ℝ) • HarmonicResidual.contextBase c n (e y) := by
-    intro y hy; simp [HarmonicResidual.contextBase, pullContext, pullTriple, pullField]
+    intro y hy; simp only [HarmonicResidual.contextBase, pullContext, pullTriple, pullField,
+        one_smul]
   have hm : ∀ y ∈ (univ : Set D), HarmonicResidual.stateMean (pullState e u) n y =
       (1 : ℝ) • HarmonicResidual.stateMean u n (e y) := by
-    intro y hy; simp [HarmonicResidual.stateMean, pullState, pullTriple, pullField]
+    intro y hy; simp only [HarmonicResidual.stateMean, pullState, pullTriple, pullField, one_smul]
   funext i
   have he := hlabel.waveResidualCoefficients isOpen_univ one_ne_zero hg hb hm i j x (mem_univ x)
   simp only [one_mul, one_smul] at he
@@ -748,7 +750,8 @@ theorem inverseCover_associatedFrame (h Q : ℝ) (i k : ℕ) :
       ((ChartScales.Lambda ^ i * Q ^ (ChartScales.radialExponent h / 2) *
         GraphCalculus.radialSpeed (ChartScales.radialExponent h) x.1.1) •
           PhysicalGraphBounds.radialDirection)) = _
-    rw [map_smul, coverPower_apply, PhysicalGraphBounds.cover_pow_radialDirection, smul_smul]
+    rw [(coverPower k).map_smul, coverPower_apply, PhysicalGraphBounds.cover_pow_radialDirection,
+      smul_smul]
     congr 2
     simp only [ PhysicalResidualBridge.commonGraph,
       PhysicalResidualNaturality.associatedToLift_apply]
@@ -756,12 +759,13 @@ theorem inverseCover_associatedFrame (h Q : ℝ) (i k : ℕ) :
     ring
   · funext x
     change ((0, (0, Q ^ h)), coverPower k 0) = _
-    rw [map_zero]
+    rw [(coverPower k).map_zero]
     rfl
   · funext x
     change ((0, (-(Q ^ h), 0)), coverPower k
       ((ChartScales.Tg ^ i * Q ^ (1+h)) • PhysicalGraphBounds.timeDirection)) = _
-    rw [map_smul, coverPower_apply, PhysicalGraphBounds.cover_pow_timeDirection, smul_smul]
+    rw [(coverPower k).map_smul, coverPower_apply, PhysicalGraphBounds.cover_pow_timeDirection,
+      smul_smul]
     congr 2
     simp only [PhysicalResidualBridge.commonGraph]
     rw [pow_add]
@@ -775,26 +779,34 @@ theorem associatedContext_frame (B n : ℕ) :
     PhysicalResidualNaturality.associatedFrame PhysicalResidualNaturality.commonFrame
   congr 1
   · funext x
-    simp [HarmonicResidual.contextFrame, commonContext, CommonBaseContext.context,
-      CommonBaseContext.operators, CorrectionState.graphOperators, CommonBaseContext.reconstruction,
-      CommonBaseContext.radialFrequency, PhysicalResidualBridge.ScaledGraph.radial,
-      PhysicalResidualBridge.commonGraph, GraphCalculus.radialSpeed, RadialPullback.radialJacobian,
-          PhysicalGraphBounds.radialDirection, TorusInverse.vector, StateReindex.vector,
-              ParticularWaveBounds.reindexVector,
-      PhysicalResidualNaturality.associatedToLift_apply]
+    simp only [LinearIsometryEquiv.symm_symm, HarmonicResidual.contextFrame, commonContext,
+        CommonBaseContext.context, CommonBaseContext.operators, graphOperators,
+        CommonBaseContext.reconstruction, vector, RadialPullback.radialJacobian,
+        CommonBaseContext.radialFrequency, Prod.smul_mk, smul_eq_mul, mul_zero, smul_zero, mul_one,
+        Prod.mk_add_mk, add_zero, zero_add, Prod.mk_sub_mk, sub_self, zero_sub, Prod.neg_mk,
+        neg_zero, sub_zero, cycleAssoc_symm_apply, cycleAssoc_apply, StateReindex.vector,
+        ParticularWaveBounds.reindexVector, PhysicalResidualBridge.ScaledGraph.radial,
+        PhysicalResidualBridge.commonGraph, one_div, PhysicalGraphBounds.radialDirection,
+        GraphCalculus.radialSpeed, PhysicalResidualNaturality.associatedToLift_apply,
+        associatedToLift_symm_apply, Prod.mk.injEq, true_and, and_true]
     rfl
   · funext x
-    simp [HarmonicResidual.contextFrame, commonContext, CommonBaseContext.context,
-      CommonBaseContext.operators, CorrectionState.graphOperators, ChartScales.epsilon,
-      PhysicalResidualBridge.ScaledGraph.axial, PhysicalResidualBridge.commonGraph,
-          StateReindex.vector, ParticularWaveBounds.reindexVector]
+    simp only [LinearIsometryEquiv.symm_symm, HarmonicResidual.contextFrame, commonContext,
+        CommonBaseContext.context, CommonBaseContext.operators, graphOperators, Prod.smul_mk,
+        smul_eq_mul, mul_zero, smul_zero, Prod.mk_add_mk, add_zero, zero_add, ChartScales.epsilon,
+        mul_one, Prod.mk_sub_mk, sub_self, zero_sub, Prod.neg_mk, neg_zero, sub_zero,
+        cycleAssoc_symm_apply, cycleAssoc_apply, StateReindex.vector,
+        ParticularWaveBounds.reindexVector, PhysicalResidualBridge.ScaledGraph.axial,
+        PhysicalResidualBridge.commonGraph, one_div, associatedToLift_symm_apply]
   · funext x
-    simp [HarmonicResidual.contextFrame, commonContext, CommonBaseContext.context,
-      CommonBaseContext.operators, CorrectionState.graphOperators,
-          CommonBaseContext.fastCoefficient,
-      PhysicalResidualBridge.ScaledGraph.temporal, PhysicalResidualBridge.commonGraph,
-          StateReindex.vector, ParticularWaveBounds.reindexVector,
-      PhysicalGraphBounds.timeDirection, TorusInverse.vector, ChartScales.epsilon]
+    simp only [LinearIsometryEquiv.symm_symm, HarmonicResidual.contextFrame, commonContext,
+        CommonBaseContext.context, CommonBaseContext.operators, graphOperators, vector,
+        Prod.smul_mk, smul_eq_mul, mul_zero, smul_zero, Prod.mk_add_mk, add_zero, zero_add,
+        ChartScales.epsilon, mul_one, CommonBaseContext.fastCoefficient, Prod.mk_sub_mk, sub_self,
+        zero_sub, Prod.neg_mk, neg_zero, sub_zero, cycleAssoc_symm_apply, cycleAssoc_apply,
+        StateReindex.vector, ParticularWaveBounds.reindexVector,
+        PhysicalResidualBridge.ScaledGraph.temporal, PhysicalResidualBridge.commonGraph, one_div,
+        PhysicalGraphBounds.timeDirection, associatedToLift_symm_apply]
 
 theorem nativeAssembly_frame
     (x : CorrectionStep.CycleState (ActualParticularStageControls.Label B N0))

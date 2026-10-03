@@ -90,6 +90,8 @@ theorem parameterIntegral_hasFDerivAt {U : Set D} (hU : IsOpen U) {f : D × ℝ 
     HasFDerivAt (fun y => ∫ θ in a..b, f (y, θ))
       (∫ θ in a..b, TransportPrimitive.parameterDerivative f (x, θ)) x := by
   have hdf := (parameterDerivative_smooth hU hf).continuousOn
+  have := secondCountableTopologyEither_of_left ℝ E
+  have := secondCountableTopologyEither_of_left ℝ (D →L[ℝ] E)
   obtain ⟨η, hη, C, hball, hC⟩ := uniform_local_bound hU hdf hx a b
   apply intervalIntegral.hasFDerivAt_integral_of_dominated_of_fderiv_le
     (F' := fun y θ => TransportPrimitive.parameterDerivative f (y, θ)) (bound := fun _ => C)
@@ -114,11 +116,12 @@ theorem parameterIntegral_smooth_nat {U : Set D} (hU : IsOpen U) (m : ℕ) :
     exact (parameterIntegral_hasFDerivAt hU hf a b hx).continuousAt.continuousWithinAt
   | succ m ih =>
     intro E _ _ _ f hf a b
-    rw [show (((m + 1 : ℕ) : ℕ∞) : WithTop ℕ∞) = (m : WithTop ℕ∞) + 1 by simp]
+    rw [show (((m + 1 : ℕ) : ℕ∞) : WithTop ℕ∞) = (m : WithTop ℕ∞) + 1 by simp only [Nat.cast_add,
+        Nat.cast_one, WithTop.coe_add, WithTop.coe_natCast, WithTop.coe_one]]
     apply (contDiffOn_succ_iff_fderiv_of_isOpen hU).mpr
     refine ⟨fun x hx => (parameterIntegral_hasFDerivAt hU hf a b
         hx).differentiableAt.differentiableWithinAt,
-      (by simp), ?_⟩
+      (by simp only [WithTop.natCast_ne_top, IsEmpty.forall_iff]), ?_⟩
     exact (ih (parameterDerivative_smooth hU hf) a b).congr
       (fun x hx => (parameterIntegral_hasFDerivAt hU hf a b hx).fderiv)
 
@@ -160,7 +163,8 @@ theorem avg_smooth {U : Set D} (hU : IsOpen U) {f : D × ℝ → ℝ}
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem avg_lift (f : D → ℝ) : avg (liftScalar f) = f := by
   funext x
-  simp [avg, liftScalar, period_ne]
+  simp only [avg, liftScalar, intervalIntegral.integral_const, sub_zero, smul_eq_mul, ne_eq,
+      period_ne, not_false_eq_true, mul_div_cancel_left₀]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem avg_add {f g : D × ℝ → ℝ} {x : D}
@@ -267,7 +271,7 @@ theorem avg_theta_zero {U : Set D} (hU : IsOpen U) {f : D × ℝ → ℝ}
   have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun θ _ => hasDerivAt_theta hU hf hx θ)
     ((continuous_slice hU hs.continuousOn hx).intervalIntegrable 0 period)
-  have hb : f (x, period) = f (x, 0) := by simpa using hp x hx 0
+  have hb : f (x, period) = f (x, 0) := by simpa only [zero_add] using hp x hx 0
   rw [hb, sub_self] at hi
   simp only [avg, hi, zero_div]
 
@@ -420,9 +424,10 @@ theorem advectionIncrement_conservative (R : D × ℝ → ℝ) (Vr Vθ Vz : D ×
       LinearWaveResidual.along_mul_real V (ha j) (hB k),
       LinearWaveResidual.along_mul_real V (ha j) (ha k)]
   fin_cases i <;>
-    simp [advectionIncrement, LinearWaveResidual.realTransport,
-        LinearWaveResidual.realAngularGenerator,
-      conservativeFlux, realDivergence, hd, quadraticFlux] <;> ring
+    simp only [advectionIncrement, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue,
+      Pi.add_apply, LinearWaveResidual.realTransport, LinearWaveResidual.realAngularGenerator,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, add_zero, conservativeFlux, hd,
+      quadraticFlux, realDivergence] <;> ring
 
 theorem advectionIncrement_eq_conservative (R : D × ℝ → ℝ) (Vr Vθ Vz : D × ℝ → D × ℝ)
     {B a : D × ℝ → Fin 3 → ℝ} {p : D × ℝ}
@@ -509,7 +514,7 @@ theorem avg_conservativeFlux {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
         ((hθc 1 j).div_const (R x)),
       avg_add (hrc 0 j) ((continuous_const.mul (hJc 0 j)).div_const (R x)),
       avg_div, avg_div, avg_const_mul, hr, hz, hθ]
-    simp
+    simp only [Fin.isValue, zero_div, add_zero]
   fin_cases i
   · have hs := avg_sub (x := x)
       (f := fun p => along (liftDirection Vr) (J 0 0) p + 1 * J 0 0 p / R p.1 +
@@ -562,14 +567,15 @@ theorem avg_scalarLaplacian {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
     avg_along_twice G.isOpen hf G.radial_smooth hx,
     avg_along_twice G.isOpen hf G.axial_smooth hx, avg_theta_twice_zero G.isOpen hf hp hx,
     ← along_avg G.isOpen hf Vr hx]
-  simp [meanScalarLaplacian]
+  simp only [mul_zero, add_zero, meanScalarLaplacian]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem avg_neg (f : D × ℝ → ℝ) (x : D) : avg (fun p => -f p) x = -avg f x := by
   simp only [avg, intervalIntegral.integral_neg, neg_div]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
-theorem avg_zero (x : D) : avg (fun _ : D × ℝ => 0) x = 0 := by simp [avg]
+theorem avg_zero (x : D) : avg (fun _ : D × ℝ => 0) x = 0 := by simp only [avg,
+    intervalIntegral.integral_zero, zero_div]
 
 theorem Regular.scalarLaplacian_smooth {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
     (G : Regular U R Vr Vz Vt) {f : D × ℝ → ℝ}
@@ -645,7 +651,8 @@ theorem avg_frameLaplacian {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
       avg_mul_left (fun y => (R y ^ 2)⁻¹) _ x,
       avg_add (constant_mul_continuous 2 (hθc 1).neg) (hac 0).neg,
       avg_const_mul, avg_neg, avg_neg, hθ, hLap]
-    simp [meanFrameLaplacian, LinearWaveResidual.realAngularGenerator]
+    simp only [Fin.isValue, neg_zero, mul_zero, zero_add, mul_neg, meanFrameLaplacian, Fin.zero_eta,
+        LinearWaveResidual.realAngularGenerator, Matrix.cons_val_one, Matrix.cons_val_zero]
   · change avg (fun p => cylindricalLaplacian (liftScalar R) (liftDirection Vr) angularDirection
       (liftDirection Vz) (fun y => a y 1) p + (R p.1 ^ 2)⁻¹ *
         (2 * along angularDirection (fun y => a y 0) p + -a p 1)) x = _
@@ -654,9 +661,11 @@ theorem avg_frameLaplacian {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
       avg_mul_left (fun y => (R y ^ 2)⁻¹) _ x,
       avg_add (constant_mul_continuous 2 (hθc 0)) (hac 1).neg,
       avg_const_mul, avg_neg, hθ, hLap]
-    simp [meanFrameLaplacian, LinearWaveResidual.realAngularGenerator]
-  · simpa [LinearWaveResidual.realFrameLaplacian, meanFrameLaplacian,
-      LinearWaveResidual.realAngularGenerator] using hLap 2
+    simp only [Fin.isValue, mul_zero, zero_add, mul_neg, meanFrameLaplacian, Fin.mk_one,
+        LinearWaveResidual.realAngularGenerator, Matrix.cons_val_one, Matrix.cons_val_zero]
+  · simpa only [LinearWaveResidual.realFrameLaplacian, Fin.reduceFinMk, Fin.isValue,
+      LinearWaveResidual.realAngularGenerator, Matrix.cons_val, mul_zero, Matrix.cons_val_one,
+      Matrix.cons_val_zero, add_zero, meanFrameLaplacian] using hLap 2
 
 theorem Regular.conservativeFlux_smooth {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → D}
     (G : Regular U R Vr Vz Vt) {J : Fin 3 → Fin 3 → D × ℝ → ℝ}
@@ -734,13 +743,16 @@ theorem nonlinearResidual_realLift {U : Set D} {R : D → ℝ} {Vr Vz Vt : D →
     Complex.ofRealCLM.contDiff.comp_contDiffOn (ha j)
   have hpC : ContDiffOn ℝ ∞ (fun y => (p y : ℂ)) (cylinder U) :=
     Complex.ofRealCLM.contDiff.comp_contDiffOn hp
-  have db j := ((hB j).contDiffAt (ho.mem_nhds hx)).differentiableAt (by simp)
-  have da j := ((ha j).contDiffAt (ho.mem_nhds hx)).differentiableAt (by simp)
+  have db j := ((hB j).contDiffAt (ho.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have da j := ((ha j).contDiffAt (ho.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hl := congrFun (LinearWaveResidual.realMap_linearResidual Complex.reCLM ε (liftScalar R)
     (liftDirection Vt) (B := B) (a := LinearWaveResidual.realLift a) (p := fun y => (p y : ℂ))
     (Vθ := angularDirection)
     ho (liftDirection_smooth G.radial_smooth) contDiffOn_const (liftDirection_smooth G.axial_smooth)
-    haC db ((hpC.contDiffAt (ho.mem_nhds hx)).differentiableAt (by simp)) hx) i
+    haC db ((hpC.contDiffAt (ho.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hx) i
   have ht := WaveInteractionBounds.transport_realLift (liftScalar R) (liftDirection Vr)
     angularDirection (liftDirection Vz) a da i
   simp only [nonlinearResidual, Pi.add_apply, Complex.add_re, ht, Complex.ofReal_re,
@@ -806,8 +818,10 @@ theorem avg_realNonlinearResidual {U : Set D} {R : D → ℝ} {Vr Vz Vt : D → 
           angularDirection (liftDirection Vz) a y i) (cylinder U) := by
     intro y hy
     exact realNonlinearResidual_conservative ε _ _ _ _ _ p
-      (fun j => ((hB j).contDiffAt (hu.mem_nhds hy)).differentiableAt (by simp))
-      (fun j => ((ha j).contDiffAt (hu.mem_nhds hy)).differentiableAt (by simp))
+      (fun j => ((hB j).contDiffAt (hu.mem_nhds hy)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      (fun j => ((ha j).contDiffAt (hu.mem_nhds hy)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
       (hBd y hy) (had y hy) i
   rw [avg_congr he hx, avg_sub ((ht.add hc).add hg) (constant_mul_continuous ε hl),
     avg_add (ht.add hc) hg, avg_add ht hc, avg_const_mul,
@@ -878,8 +892,11 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem totalVelocity_eq (c : CorrectionState.Context D) (u : CorrectionState.State D) (n : ℕ) :
     u.totalVelocity c n = fun p => baseLift c n p + perturbation u n p := by
   funext p i
-  fin_cases i <;> simp [CorrectionState.State.totalVelocity, baseLift, perturbation, tripleVector,
-    Matrix.vecHead, Matrix.vecTail] <;> ring
+  fin_cases i <;> simp only [CorrectionState.State.totalVelocity, Fin.isValue, Fin.zero_eta,
+      Matrix.cons_val_zero, baseLift, tripleVector, perturbation, Matrix.cons_add, Matrix.vecHead,
+      Matrix.vecTail, Nat.succ_eq_add_one, Nat.reduceAdd, Function.comp_apply, Fin.succ_zero_eq_one,
+      Fin.succ_one_eq_two, Matrix.empty_add_empty, Pi.add_apply, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val] <;> ring
 
 theorem tripleVector_smooth {U : Set D} {m : MeanIncrementBounds.Triple D}
     (hm : MeanIncrementBounds.SmoothTriple U m) (n : ℕ) (i : Fin 3) :
@@ -966,11 +983,9 @@ theorem MeanHypotheses.perturbation_divergence {U : Set D} {c : CorrectionState.
   have hd := H.total_divergence n p hp
   rw [totalVelocity_eq, realDivergence_add _ _ _ _
     (fun i => ((H.baseLift_smooth n i).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-        hp)).differentiableAt (by
-        simp))
+        hp)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     (fun i => ((H.perturbation_smooth n i).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-        hp)).differentiableAt (by
-        simp)),
+        hp)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)),
     H.base_divergence n p hp, zero_add] at hd
   exact hd
 
@@ -1103,14 +1118,18 @@ theorem meanExpression_congr {U : Set D} (hU : IsOpen U) (ε : ℝ) (R : D → �
   have hv (j : Fin 3) := hab j hx
   have hjv (j k : Fin 3) := hJK j k hx
   fin_cases i <;>
-    simp [meanExpression, meanConservativeFlux, meanGradient, meanFrameLaplacian,
-      meanScalarLaplacian, LinearWaveResidual.realAngularGenerator, hd, hdd, hj, hp, hv, hjv]
+    simp only [meanExpression, Fin.zero_eta, Fin.isValue, hd, meanConservativeFlux, hj, hjv,
+        Matrix.cons_val_zero, meanGradient, hp, meanFrameLaplacian, meanScalarLaplacian, hdd,
+        LinearWaveResidual.realAngularGenerator, hv, Matrix.cons_val_one, mul_neg, Fin.mk_one,
+        add_zero, Fin.reduceFinMk, Matrix.cons_val, mul_zero]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem stateFlux_00 (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     stateFlux c u 0 0 = MeanIncrementBounds.radialRadial c.base u.mean + u.covariance 0 0 := by
   funext n x
-  simp [stateFlux, tripleVector, MeanIncrementBounds.radialRadial]
+  simp only [stateFlux, tripleVector, Fin.isValue, Matrix.cons_val_zero,
+      MeanIncrementBounds.radialRadial, Pi.add_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul,
+      add_left_inj]
   ring
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -1129,28 +1148,34 @@ omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem stateFlux_11 (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     stateFlux c u 1 1 = MeanIncrementBounds.radialAngular c.base u.mean + u.covariance 1 1 := by
   funext n x
-  simp [stateFlux, tripleVector, MeanIncrementBounds.radialAngular]
+  simp only [stateFlux, tripleVector, Fin.isValue, Matrix.cons_val_one, Matrix.cons_val_zero,
+      MeanIncrementBounds.radialAngular, Pi.add_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul,
+      add_left_inj]
   ring
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem stateFlux_20 (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     stateFlux c u 2 0 = MeanIncrementBounds.axialRadial c.base u.mean + u.covariance 2 0 := by
   funext n x
-  simp [stateFlux, tripleVector, MeanIncrementBounds.axialRadial]
+  simp only [stateFlux, tripleVector, Fin.isValue, Matrix.cons_val, Matrix.cons_val_zero,
+      MeanIncrementBounds.axialRadial, Pi.add_apply, Pi.mul_apply, add_left_inj]
   ring
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem stateFlux_21 (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     stateFlux c u 2 1 = MeanIncrementBounds.thetaAxial c.base u.mean + u.covariance 2 1 := by
   funext n x
-  simp [stateFlux, tripleVector, MeanIncrementBounds.thetaAxial]
+  simp only [stateFlux, tripleVector, Fin.isValue, Matrix.cons_val, Matrix.cons_val_one,
+      Matrix.cons_val_zero, MeanIncrementBounds.thetaAxial, Pi.add_apply, Pi.mul_apply,
+      add_left_inj, add_right_inj]
   ring
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem stateFlux_22 (c : CorrectionState.Context D) (u : CorrectionState.State D) :
     stateFlux c u 2 2 = MeanIncrementBounds.axialAxial c.base u.mean + u.covariance 2 2 := by
   funext n x
-  simp [stateFlux, tripleVector, MeanIncrementBounds.axialAxial]
+  simp only [stateFlux, tripleVector, Fin.isValue, Matrix.cons_val, MeanIncrementBounds.axialAxial,
+      Pi.add_apply, Pi.smul_apply, Pi.mul_apply, smul_eq_mul, add_left_inj]
   ring
 
 theorem meanExpression_state {U : Set D} {c : CorrectionState.Context D} {u : CorrectionState.State
@@ -1250,11 +1275,9 @@ theorem MeanHypotheses.nonlinearField_continuous {U : Set D} {c : CorrectionStat
     rw [H.nonlinearField_eq_real n hp i]
     exact realNonlinearResidual_conservative _ _ _ _ _ _ _
       (fun j => ((H.baseLift_smooth n j).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-          hp)).differentiableAt (by
-          simp))
+          hp)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
       (fun j => ((H.perturbation_smooth n j).contDiffAt ((cylinder_open H.isOpen).mem_nhds
-          hp)).differentiableAt (by
-          simp))
+          hp)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
       (H.base_divergence n (x, θ) hp) (H.perturbation_divergence n hp) i
   rw [he]
   exact ((ht.add hc).add hg).sub (constant_mul_continuous (c.operators.epsilon n) hl)

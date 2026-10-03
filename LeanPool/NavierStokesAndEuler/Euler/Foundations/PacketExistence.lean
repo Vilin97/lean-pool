@@ -19,6 +19,10 @@ import Mathlib.Analysis.ODE.ExistUnique
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 open Function intervalIntegral MeasureTheory Metric Set
@@ -223,22 +227,22 @@ theorem scalar_coefficient_bounds
   · unfold scalarCoefficientA
     rw [abs_div, abs_of_pos hD, div_le_iff₀ hD]
     apply abs_le.mpr
-    constructor <;> nlinarith only [hβx, hβx0, sq_nonneg (β * t ^ 2 - 1), sq_nonneg (β * t ^ 2)]
-  · have hβ2 : β ^ 2 ≤ 1 := by nlinarith only [hβ, hβupper]
+    constructor <;> linarith only [hβx, hβx0, sq_nonneg (β * t ^ 2 - 1), sq_nonneg (β * t ^ 2)]
+  · have hβ2 : β ^ 2 ≤ 1 := pow_le_one₀ hβ hβupper
     have ht3 : β ^ 2 * |t| ^ 3 ≤ 1 + (β * t ^ 2) ^ 2 := by
       by_cases ht : |t| ≤ 1
-      · have hh : |t| ^ 3 ≤ 1 := by simpa using pow_le_pow_left₀ (abs_nonneg t) ht 3
+      · have hh : |t| ^ 3 ≤ 1 := pow_le_one₀ (abs_nonneg t) ht
         have hm := mul_le_mul hβ2 hh (pow_nonneg (abs_nonneg t) 3) (by norm_num : (0 : ℝ) ≤ 1)
-        nlinarith only [hm, sq_nonneg (β * t ^ 2)]
+        linarith only [hm, sq_nonneg (β * t ^ 2)]
       · have hh : |t| ^ 3 ≤ |t| ^ 4 := pow_le_pow_right₀ (le_of_not_ge ht) (by decide)
         have hm := mul_le_mul_of_nonneg_left hh (sq_nonneg β)
         have ht4 : |t| ^ 4 = t ^ 4 := by rw [← abs_pow, abs_of_nonneg (by positivity : 0 ≤ t ^ 4)]
         rw [ht4] at hm
-        nlinarith only [hm]
+        linarith only [hm]
     unfold scalarCoefficientB
     rw [abs_div, abs_neg, abs_mul, abs_mul, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 4),
       abs_of_nonneg (sq_nonneg β), abs_pow, abs_of_pos hD, div_le_iff₀ hD]
-    nlinarith only [ht3]
+    linarith only [ht3]
 
 theorem continuous_scalarVectorField (β : ℝ) : Continuous (uncurry (scalarVectorField β)) := by
   have hden : ∀ p : ℝ × (ℝ × ℝ), 1 + (β * p.1 ^ 2) ^ 2 ≠ 0 := by intro p; positivity
@@ -262,7 +266,7 @@ theorem lipschitz_scalarVectorField
       (scalarCoefficientA β t * y.1 + scalarCoefficientB β t * y.2)) ≤ (7 : ℝ) * dist x y
   apply max_le
   · rw [Real.dist_eq]
-    nlinarith only [hsnd, dist_nonneg (x := x) (y := y)]
+    linarith only [hsnd, dist_nonneg (x := x) (y := y)]
   · rw [Real.dist_eq]
     have h₁ := mul_le_mul ha hfst (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 3)
     have h₂ := mul_le_mul hb hsnd (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 4)
@@ -273,7 +277,7 @@ theorem lipschitz_scalarVectorField
         (scalarCoefficientA β t * y.1 + scalarCoefficientB β t * y.2) =
         scalarCoefficientA β t * (x.1 - y.1) + scalarCoefficientB β t * (x.2 - y.2) := by ring
     rw [hid]
-    nlinarith only [h₁, h₂, hh]
+    linarith only [h₁, h₂, hh]
 
 /-- Global construction of equation (30) for arbitrary real initial data. -/
 theorem equation30_exists_global
@@ -319,11 +323,11 @@ theorem equation30_exists_growing_primary
         let z := -ε * EulerPacketGrowth.invertedScalarDeriv ε V V₁ y /
           EulerPacketGrowth.invertedScalar ε V y
         |z ^ 2 - 2 / (1 + y ^ 4)| ≤ 360 * ε) := by
-  have hβ : ε ^ 2 ≤ 1 := by nlinarith only [hε, hεsmall]
+  have hβ : ε ^ 2 ≤ 1 := pow_le_one₀ hε.le (hεsmall.trans (by norm_num))
   obtain ⟨V, V₁, hV0, hV₁0, hV, hflux⟩ := equation30_exists_global (sq_nonneg ε) hβ 1 lam
   have hV₁0pos : 0 ≤ V₁ 0 := by rw [hV₁0]; exact hlam
   have hgrowth := EulerPacketGrowth.equation30_endpoint_exponential (sq_pos_of_pos hε)
-    (by nlinarith only [hε, hεsmall] : ε ^ 2 ≤ 1 / 16)
+    ((pow_le_pow_left₀ hε.le hεsmall 2).trans_eq (by norm_num) : ε ^ 2 ≤ 1 / 16)
     (fun t _ => hV t) (fun t _ => hflux t) hV0 hV₁0pos
   rw [Real.sqrt_sq hε.le] at hgrowth
   refine ⟨V, V₁, hV0, hV₁0, hV, hflux, hgrowth, ?_, ?_, ?_⟩

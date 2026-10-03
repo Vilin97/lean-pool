@@ -148,7 +148,7 @@ theorem block_clm_apply_le (directions : ι → P) (q : ℕ)
     block directions q (fun y => A y (f y)) n x ≤
       leibnizConvolution (fun k => coefficientBlock directions q A k x)
         (fun k => block directions q f k x) n := by
-  let B : (E →L[ℝ] F) →L[ℝ] E →L[ℝ] F := (ContinuousLinearMap.apply ℝ F).flip
+  let B := (ContinuousLinearMap.apply ℝ F (E := E)).flip
   induction n generalizing A f with
   | zero =>
     simpa only [leibnizConvolution, Nat.zero_add, sum_range_one, Nat.choose_zero_right,

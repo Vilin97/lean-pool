@@ -88,7 +88,7 @@ theorem maximalApproximation_word (q : ℕ) (T : ℝ) (n : ℕ)
         omega : 2+q ≤ q+3) (heatRegularizer period q n (truncateOperator period q (u t))))) =
       value period (truncateOperator period 2 (heatRegularizer period 0 n
         (truncateOperator period 0 (boundedWordBlock period 1 q (by omega) w (u t)))))
-  rw [wordBlock_value, value_truncateOperator, heatRegularizer_value, value_truncateOperator,
+  simp only [wordBlock_value, value_truncateOperator, heatRegularizer_value,
     boundedWordBlock_value]
   exact heatRegularizer_word period n (le_refl q) w (truncateOperator period q (u t))
 

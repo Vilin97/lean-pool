@@ -45,17 +45,17 @@ variable {P : ℝ} [Fact (0 < P)]
 include hF hM hH hraw
 
 theorem coordinatePath_reflection_neg (t : Icc (0 : ℝ) D.T) :
-    reflection P (B.coordinatePath G t) = -B.coordinatePath G t :=
+    reflection (V := U) P (B.coordinatePath G t) = -B.coordinatePath G t :=
   B.coefficients.velocityPath_odd P (D.frame_even hF) (D.frameDerivative_even hF hM) hH
     (forcingPath G) (G.path_reflection_neg hraw) t
 
 theorem velocityPath_reflection_neg (t : Icc (0 : ℝ) D.T) :
-    reflection P (B.velocityPath G t) = -B.velocityPath G t :=
+    reflection (V := Space) P (B.velocityPath G t) = -B.velocityPath G t :=
   B.coefficients.physicalVelocity_odd P (D.frame_even hF) (D.frameDerivative_even hF hM) hH
     (forcingPath G) (G.path_reflection_neg hraw) t
 
 theorem derivativePath_reflection_neg (t : Icc (0 : ℝ) D.T) :
-    reflection P (B.derivativePath G t) = -B.derivativePath G t :=
+    reflection (V := Space) P (B.derivativePath G t) = -B.derivativePath G t :=
   B.coefficients.physicalDerivative_odd P (D.frame_even hF) (D.frameDerivative_even hF hM) hH
     (forcingPath G) (G.path_reflection_neg hraw) t
 
@@ -120,7 +120,7 @@ variable {P : ℝ} [Fact (0 < P)]
 include hF hM hH hraw
 
 theorem forwardInitial_reflection_neg :
-    reflection P ((forwardInitial τ hτ hτT B G).value : CylinderL2 P U) =
+    reflection (V := U) P ((forwardInitial τ hτ hτT B G).value : CylinderL2 P U) =
       -((forwardInitial τ hτ hτT B G).value : CylinderL2 P U) :=
   B.coordinatePath_reflection_neg (G.initial τ hτ hτT.le)
     (fun t x => hF (initialInclusion D.T τ hτT.le t) x)
@@ -130,7 +130,8 @@ theorem forwardInitial_reflection_neg :
 include hSym
 
 theorem futureVelocity_reflection_neg (t : Icc (0 : ℝ) (D.T - τ)) :
-    reflection P (futureVelocity τ hτ hτT B G t) = -futureVelocity τ hτ hτT B G t :=
+    reflection (V := Vector3) P (futureVelocity τ hτ hτT B G t) =
+      -futureVelocity τ hτ hτT B G t :=
   (G.tail τ hτ.le hτT).velocityPath_reflection_neg (forwardInitial τ hτ hτT B G) hSym
     (fun s x => hF (tailInclusion D.T τ hτ.le s) x)
     (fun s x => hM (tailInclusion D.T τ hτ.le s) x)
@@ -138,14 +139,14 @@ theorem futureVelocity_reflection_neg (t : Icc (0 : ℝ) (D.T - τ)) :
     (forwardInitial_reflection_neg τ hτ hτT B G hF hM hH hraw) t
 
 theorem velocityPath_reflection_neg (t : Icc (0 : ℝ) D.T) :
-    reflection P (velocityPath τ hτ hτT B G t) = -velocityPath τ hτ hτT B G t := by
+    reflection (V := Vector3) P (velocityPath τ hτ hτT B G t) = -velocityPath τ hτ hτT B G t := by
   apply join_mem D.T τ hτ.le hτT.le _ _ (velocity_match τ hτ hτT B G)
-    {u | reflection P u = -u} _ _ t
-  · exact B.velocityPath_reflection_neg (G.initial τ hτ hτT.le)
+    {u | reflection (V := Vector3) P u = -u} _ _ t
+  · apply B.velocityPath_reflection_neg (G.initial τ hτ hτT.le)
       (fun s x => hF (initialInclusion D.T τ hτT.le s) x)
       (fun s x => hM (initialInclusion D.T τ hτT.le s) x) hH
       (fun s x θ => hraw (initialInclusion D.T τ hτT.le s) x θ)
-  · exact futureVelocity_reflection_neg τ hτ hτT B G hSym hF hM hH hraw
+  · apply futureVelocity_reflection_neg τ hτ hτT B G hSym hF hM hH hraw
 
 theorem vector_odd (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     vector τ hτ hτT B G (t,(-x,-θ)) = -vector τ hτ hτT B G (t,(x,θ)) :=

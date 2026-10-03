@@ -217,15 +217,15 @@ theorem particular_coefficients (v : CycleCoefficients (Index B N0))
       (particular_phase v c u l hc j) n hn k (hsource j hj)
   refine ⟨?_, ?_, ?_⟩
   · intro i m
-    apply assembled_velocity_translation (fun x => cycleAssoc x)
+    apply assembled_velocity_translation (fun x => cycleAssoc x) v.residualBand
     intro j hj
     exact nativeSection_translation (ht j hj).2.1
   · intro m
-    apply assembled_pressure_translation (fun x => cycleAssoc x)
+    apply assembled_pressure_translation (fun x => cycleAssoc x) v.residualBand
     intro j hj
     exact nativeSection_translation (ht j hj).2.2.1
   · intro i m
-    apply assembled_velocity_translation (fun x => cycleAssoc x)
+    apply assembled_velocity_translation (fun x => cycleAssoc x) v.residualBand
     intro j hj
     exact nativeSection_translation (ht j hj).2.2.2
 

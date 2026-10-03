@@ -91,7 +91,7 @@ omit [CompactSpace K] in
       ZeroHom.toFun_eq_coe,
     AddMonoidHom.toZeroHom_coe, ContinuousMap.coe_sum, Finset.sum_apply]
   change (∑ j : ι, Pi.single j (p j t) i) = p i t
-  simp [Pi.single_apply]
+  simp only [Pi.single_apply, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
 
 end Paths
 end EulerHilbertProductSubspace
@@ -122,25 +122,28 @@ def sobolevPathTranslate (q : ℕ) (a : LiftTangent) :
 
 /-- Sobolev orbit, given by `sobolevPathTranslate P q a (sobolevPath P q p hp)`. -/
 def sobolevOrbit (q : ℕ) (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (a : LiftTangent) :
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+    (a : LiftTangent) :
     C(K,SobolevSpace P q) := sobolevPathTranslate P q a (sobolevPath P q p hp)
 
 @[simp] theorem sobolevOrbit_value (q : ℕ) (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-    (a : LiftTangent) (t : K) : value P (sobolevOrbit P q p hp a t) = pathTranslate P a p t := by
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+    (a : LiftTangent) (t : K) :
+    value P (sobolevOrbit P q p hp a t) = pathTranslate (K := K) (V := Vector3) P a p t := by
   change translation P (coveringMap P a) (value P (sobolevPath P q p hp t)) = _
   rw [sobolevPath_value]
   rfl
 
 theorem sobolevOrbit_coordinate (q : ℕ) (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
     (a : LiftTangent) (t : K) (w : SobolevWord q) :
     (sobolevOrbit P q p hp a t).val w =
-      wordDerivative standardDirection (fun b : LiftTangent => pathTranslate P b p) w.2 a t := by
+      wordDerivative standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) w.2 a t := by
   have hc : (sobolevPath P q p hp t).val w = wordPath P p w.2 t := by
     exact (sobolev_coordinate P q (p t) (path_evaluation_smooth P p hp t) w).trans
       (path_word_evaluation P p hp w.2 t)
-  change translate P a ((sobolevPath P q p hp t).val w) = _
+  change translate (V := Vector3) P a ((sobolevPath P q p hp t).val w) = _
   rw [hc]
   exact congrArg (fun z : C(K,LiftL2 P) => z t) (wordPath_translation P p hp w.2 a)
 
@@ -151,14 +154,16 @@ def assembleSobolevPath (q : ℕ) :
   ((retraction (sobolevSubspace P q)).compLeftContinuous ℝ K).comp packPaths
 
 theorem sobolevOrbit_eq_assemble (q : ℕ) (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (a : LiftTangent) :
-    sobolevOrbit P q p hp a = assembleSobolevPath P q
-      (fun w => wordDerivative standardDirection (fun b : LiftTangent => pathTranslate P b p) w.2
-          a) := by
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+    (a : LiftTangent) :
+    sobolevOrbit P q p hp a = assembleSobolevPath (K := K) P q
+      (fun w => wordDerivative standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) w.2 a) := by
   apply ContinuousMap.ext
   intro t
-  have he : packPaths (fun w : SobolevWord q =>
-        wordDerivative standardDirection (fun b : LiftTangent => pathTranslate P b p) w.2 a) t =
+  have he : packPaths (ι := SobolevWord q) (K := K) (V := CylinderL2 P Vector3)
+        (fun w : SobolevWord q => wordDerivative standardDirection
+          (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) w.2 a) t =
       (sobolevOrbit P q p hp a t).val := by
     funext w
     rw [packPaths_apply]
@@ -169,11 +174,11 @@ theorem sobolevOrbit_eq_assemble (q : ℕ) (p : C(K, LiftL2 P))
 
 /-- Actual L² orbit smoothness promotes to every fixed complete Sobolev path space. -/
 theorem sobolevOrbit_contDiff (q : ℕ) (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
     ContDiff ℝ ∞ (sobolevOrbit P q p hp) := by
-  have he : sobolevOrbit P q p hp = fun a => assembleSobolevPath P q
-      (fun w => wordDerivative standardDirection (fun b : LiftTangent => pathTranslate P b p) w.2
-          a) :=
+  have he : sobolevOrbit P q p hp = fun a => assembleSobolevPath (K := K) P q
+      (fun w => wordDerivative standardDirection
+        (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) w.2 a) :=
     funext (sobolevOrbit_eq_assemble P q p hp)
   rw [he]
   apply (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
@@ -181,7 +186,7 @@ theorem sobolevOrbit_contDiff (q : ℕ) (p : C(K, LiftL2 P))
         q)).comp
   apply contDiff_pi.mpr
   intro w
-  exact wordDerivative_contDiff standardDirection (fun b : LiftTangent => pathTranslate P b p) hp
-      w.2
+  exact wordDerivative_contDiff standardDirection
+    (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) hp w.2
 
 end EulerCylinderSmoothOrbit

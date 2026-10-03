@@ -57,22 +57,22 @@ def residualPath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourceResidual P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     (forcingPath G) (B.velocityPath G)
 
-theorem residualPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (B.residualPath G)) :=
+theorem residualPath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := ℝ) P a (B.residualPath G)) :=
   sourceResidual_contDiff P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     (forcingPath G) (B.velocityPath G) G.path_orbit (B.velocityPath_orbit G)
 
 theorem residualPath_slice_smooth (t : Icc (0 : ℝ) D.T) :
-    ContDiff ℝ ∞ (fun a => translate P a (B.residualPath G t)) :=
+    ContDiff ℝ ∞ (fun a => translate (V := ℝ) P a (B.residualPath G t)) :=
   (ContinuousMap.evalCLM ℝ t : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) →L[ℝ]
     CylinderL2 P ℝ).contDiff.comp (B.residualPath_orbit G)
 
-theorem residualPath_average_zero (t : Icc (0 : ℝ) D.T) : average P (B.residualPath G t) = 0 := by
-  have hf : average P (forcingPath G t) = 0 := G.mean_zero t
-  change average P (fullOperatorMap P
-    (normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower t)
-    (forcingPath G t-(2 : ℝ) • fullOperatorMap P (D.M.field t) (B.velocityPath G t))) = 0
-  rw [average_fullOperator,map_sub,map_smul,average_fullOperator,
-    B.velocityPath_mean_zero G t,hf,map_zero,smul_zero,sub_self,map_zero]
+theorem residualPath_average_zero (t : Icc (0 : ℝ) D.T) :
+    average (V := ℝ) P (B.residualPath G t) = 0 := by
+  have hf : average (V := Space) P (forcingPath G t) = 0 := G.mean_zero t
+  simp only [residualPath, sourceResidual, normalResidualPath, fullMultiplierMap_apply,
+    ContinuousMap.sub_apply, ContinuousMap.smul_apply, average_fullOperator, map_sub, map_smul,
+    hf, B.velocityPath_mean_zero G t, map_zero, smul_zero, sub_self]
 
 theorem normalResidual_continuous (t : Icc (0 : ℝ) D.T) : Continuous (B.normalResidual G t) := by
   have hA := smoothField_continuous P _ (B.field_smooth G t)
@@ -106,29 +106,18 @@ theorem normalResidual_smooth (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
 /-- The actual scalar L² source equals the literal normal quotient. -/
 theorem residualPath_ae (t : Icc (0 : ℝ) D.T) :
     B.residualPath G t =ᵐ[liftMeasure P] B.normalResidual G t := by
-  let v := B.velocityPath G t
-  let w := fullOperatorMap P (D.M.field t) v
-  let r := forcingPath G t-(2 : ℝ) • w
-  let N := normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower t
-  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P N) r,
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (D.M.field t)) v,
-    Lp.coeFn_sub (forcingPath G t) ((2 : ℝ) • w),Lp.coeFn_smul (2 : ℝ) w,
-    B.field_ae G t,pointField_ae P (forcingPath G) G.path_orbit t] with x hn hM hr hs hv hf
-  change (EulerLpOperatorField.full (liftMeasure P) (fieldLift P N) r) x = _
-  rw [hn]
-  change normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower t x.1 (r x) = _
-  rw [normalFunctional_apply]
-  change ⟪D.normal.field t x.1,(forcingPath G t-(2 : ℝ) • w) x⟫_ℝ/_ = _
-  rw [hr]
-  simp only [Pi.sub_apply]
-  rw [hs]
-  simp only [Pi.smul_apply]
-  change ⟪D.normal.field t x.1,forcingPath G t x-(2 : ℝ) •
-    (EulerLpOperatorField.full (liftMeasure P) (fieldLift P (D.M.field t)) v) x⟫_ℝ/_ = _
-  rw [hM,inner_sub_right,inner_smul_right]
-  change (⟪D.normal.field t x.1,forcingPath G t x⟫_ℝ -
-    2*⟪D.normal.field t x.1,D.M.field t x.1 (B.velocityPath G t x)⟫_ℝ)/_ = _
-  rw [hv,hf]
+  simp only [residualPath, sourceResidual, normalResidualPath, fullMultiplierMap_apply,
+    ContinuousMap.sub_apply, ContinuousMap.smul_apply, fullOperatorMap_apply]
+  refine (EulerLpOperatorField.full_ae (E := Space) (F := ℝ) _ _ _).trans ?_
+  let w := EulerLpOperatorField.full (liftMeasure P)
+    (fieldLift (W := Space →L[ℝ] Space) P (D.M.field t)) (B.velocityPath G t)
+  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P)
+      (fieldLift (W := Space →L[ℝ] Space) P (D.M.field t)) (B.velocityPath G t),
+    Lp.coeFn_sub (forcingPath G t) ((2 : ℝ) • w), Lp.coeFn_smul (2 : ℝ) w,
+    B.field_ae G t, pointField_ae P (forcingPath G) G.path_orbit t] with x hM hr hs hv hf
+  simp only [fieldLift_apply, normalFunctional_apply]
+  rw [hr, Pi.sub_apply, hs, Pi.smul_apply, hM, fieldLift_apply, inner_sub_right, inner_smul_right,
+    hv, hf]
   rfl
 
 theorem normalResidual_mean_zero (t : Icc (0 : ℝ) D.T) (y : Space) :

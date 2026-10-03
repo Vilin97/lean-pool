@@ -58,18 +58,18 @@ structure ParameterWindow (S : Set ℝ) where
 theorem exists_parameterWindow {S : Set ℝ} (hS : IsOpen S)
     (hI : Icc (-1 : ℝ) 1 ⊆ S) : Nonempty (ParameterWindow S) := by
   obtain ⟨δ, hδ, hsub⟩ := isCompact_Icc.exists_thickening_subset_open hS hI
-  refine ⟨⟨1 + δ / 4, 1 + δ / 2, by linarith, by linarith, ?_⟩⟩
+  refine ⟨⟨1 + δ / 4, 1 + δ / 2, by linarith only [hδ], by linarith only [hδ], ?_⟩⟩
   intro y hy
   apply hsub
   apply Metric.mem_thickening_iff.mpr
   by_cases hl : y < -1
   · refine ⟨-1, by norm_num, ?_⟩
-    rw [Real.dist_eq, abs_of_neg (by linarith : y - -1 < 0)]
-    linarith [hy.1]
+    rw [Real.dist_eq, abs_of_neg (by linarith only [hl] : y - -1 < 0)]
+    linarith only [hl, hy, hy.1]
   · by_cases hr : 1 < y
     · refine ⟨1, by norm_num, ?_⟩
-      rw [Real.dist_eq, abs_of_pos (by linarith : 0 < y - 1)]
-      linarith [hy.2]
+      rw [Real.dist_eq, abs_of_pos (by linarith only [hr] : 0 < y - 1)]
+      linarith only [hr, hy, hy.2]
     · exact ⟨y, ⟨le_of_not_gt hl, le_of_not_gt hr⟩, by simpa using hδ⟩
 
 /-- Parameter window, given by `Classical.choice (exists_parameterWindow hS hI)`. -/
@@ -124,11 +124,11 @@ theorem parameterMap_mem (eta : ℝ) : w.parameterMap eta ∈ S := by
 theorem target_subset : Ioo (-w.inner) w.inner ⊆ S := by
   intro eta heta
   apply w.outer_subset
-  constructor <;> linarith [heta.1, heta.2, w.inner_lt_outer]
+  constructor <;> linarith only [heta, heta.1, heta.2, w.inner_lt_outer]
 
 theorem unit_subset : Icc (-1 : ℝ) 1 ⊆ Ioo (-w.inner) w.inner := by
   intro eta heta
-  constructor <;> linarith [heta.1, heta.2, w.one_lt_inner]
+  constructor <;> linarith only [heta, heta.1, heta.2, w.one_lt_inner]
 
 end ParameterWindow
 
@@ -183,7 +183,7 @@ theorem halfPlaneLift_contDiffOn {g : Plane → E}
   constructor
   · change 0 ≤ -z.1
     have ht : z.1 ≤ 0 := hz.1
-    linarith
+    linarith only [ht]
   · exact mem_univ _
 
 /-- Half plane extension, constructed using `SpacetimeGluing.smoothExtension`. -/
@@ -213,7 +213,7 @@ theorem halfPlaneExtension_zero {g : Plane → E}
     (hg : ContDiffOn ℝ ∞ g (Ici 0 ×ˢ (univ : Set ℝ))) {p : Plane} (hp : p.1 ≤ -1) :
     halfPlaneExtension g hg p = 0 := by
   apply SpacetimeGluing.smoothExtension_zero_from
-  linarith
+  linarith only [hp]
 
 /-- The global smooth extension.  The outer parameter cutoff and the
 negative radial support bound are independent of the input profile. -/
@@ -350,10 +350,10 @@ theorem extension_zero_exterior {S : Set ℝ} (w : ParameterWindow S) {F : Plane
     {B : ℝ} (hB : 0 ≤ B)
     (hzero : ∀ eta ∈ S, ∀ r, B ≤ r → F (r, eta) = 0)
     {p : Plane} (hX : B ^ 2 / 2 ≤ p.1) : extension w F hF he p = 0 := by
-  have hX0 : 0 ≤ p.1 := by nlinarith [sq_nonneg B]
+  have hX0 : 0 ≤ p.1 := by nlinarith only [hX, sq_nonneg B]
   have hsqrt : B ≤ Real.sqrt (2 * p.1) := by
     apply (Real.le_sqrt hB (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hX0)).mpr
-    linarith
+    linarith only [hX]
   rw [extension, halfPlaneExtension_eq _ hX0]
   change w.bump p.2 • F (Real.sqrt (2 * p.1), w.parameterMap p.2) = 0
   rw [hzero _ (w.parameterMap_mem p.2) _ hsqrt, smul_zero]

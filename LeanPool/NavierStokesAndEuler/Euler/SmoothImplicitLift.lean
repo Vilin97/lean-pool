@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! A continuous, already constructed solution of a smooth identity is
 smooth when the derivative in its value variable is invertible. The local

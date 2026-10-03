@@ -60,7 +60,7 @@ theorem weakHarmonic_scaled_smallBall_energy (u : L2) (R : ℝ) (hR : 0 < R)
     (r : ℝ) (hr : 0 ≤ r) (hrquarter : r ≤ 1 / 4) :
     localL2Energy (Metric.ball (0 : Space) (R*r)) u ≤
       weakHarmonicSmallBallConstant * r^3 * ‖u‖^2 := by
-  have hrr : R*r ≤ R/4 := by nlinarith
+  have hrr : R*r ≤ R/4 := by nlinarith only [hR, hrquarter]
   have hb : ∀ᵐ x ∂volume, x ∈ Metric.ball (0 : Space) (R*r) →
       ‖u x‖^2 ≤ (harmonicQuarterBallConstant * (R^3)⁻¹) * ‖u‖^2 := by
     filter_upwards [weakHarmonic_pointwise_scaled u R hR hu] with x hx

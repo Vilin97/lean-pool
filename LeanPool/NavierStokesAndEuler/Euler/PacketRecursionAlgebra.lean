@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.FiniteGradeAssembly
 public import LeanPool.NavierStokesAndEuler.Euler.PacketResidualGrades
 import LeanPool.NavierStokesAndEuler.Euler.PacketLowGrades
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! The coefficient equations of the literal assembled packet give the force in (14). -/
 
@@ -73,6 +74,7 @@ theorem coefficient_zero_grade (N : ℕ) (L : V →ₗ[ℝ] W) (G H : Q →ₗ[�
     (hu0 : u 0 = 0) (hq0 : G (q 0) = 0) (hq1 : H (q 1) = 0) :
     coefficient (N+1) L G H B C u q 0=0 := by
   rw [coefficient_eq_diagonal (N+1) 0 (by omega)]
-  simp [hu0, hq0, hq1, sum_range_succ]
+  simp only [hu0, map_zero, hq0, add_zero, zero_add, hq1, range_one, zero_tsub, sum_const_zero,
+      sum_range_succ, sum_singleton, tsub_zero, LinearMap.zero_apply, tsub_self]
 
 end EulerPacketResidual

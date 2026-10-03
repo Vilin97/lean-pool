@@ -67,7 +67,7 @@ theorem constructed_initial_matching
     (hHnorm : ‖B.coefficients.labelHessian 0‖ ≤ CH*h^2)
     (hζsmall : 16*(activationConstant CM CH+1)*ζ ≤ 1)
     (hB : ‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0 -
-      h • rankOne ℝ (unit (v τ)) (unit (m τ))‖ ≤ ζ*h)
+      h • rankOne ℝ (E := Space) (F := Space) (unit (v τ)) (unit (m τ))‖ ≤ ζ*h)
     (hBpp : ⟪D.M.field ⟨τ,hτ.le,hτT.le⟩ 0 (unit (m τ)),unit (m τ)⟫_ℝ < 0) :
     let Da := activatedData D τ hτ hτT m v hm hv hmv
     let Ba := activatedHistory D τ hτ hτT B m v hm hv hmv

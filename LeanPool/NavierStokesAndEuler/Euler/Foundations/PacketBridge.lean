@@ -19,6 +19,10 @@ import Mathlib.Analysis.Calculus.Deriv.Pow
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 open Set
@@ -146,11 +150,11 @@ theorem ray_controlled_velocity_error
           idealVelocityFirst β t U V| +
         |velocitySecondRhs (A t) (C t) ε (P t) (Q t) (N t) U V + U| ≤
           200000 * e * Θ ^ 12 * (|U| + |V|) := by
-  have hΘ0 : 0 ≤ Θ := by linarith
+  have hΘ0 : 0 ≤ Θ := by linarith only [hΘ]
   have hsmallR : 400 * (4 * e) * Θ ^ 5 ≤ 1 := by
     have hnonneg : 0 ≤ e * Θ ^ 5 := by positivity
     linarith only [hsmall, hnonneg]
-  have hinitialR : norm3 (P 0) (Q 0) (N 0 - 1) ≤ 4 * e := by linarith
+  have hinitialR : norm3 (P 0) (Q 0) (N 0 - 1) ≤ 4 * e := by linarith only [he, hinitial]
   have hray := ray_closeness_of_coefficient_error hβ hβupper hΘ hT0 hT
     (by positivity : 0 ≤ 4 * e) hsmallR hRc hP hQ hN hRclose hinitialR
   intro t ht
@@ -198,12 +202,13 @@ theorem continuousOn_velocity_rhs
     exact ((hP.mul hU).add (hQ.mul hV)).neg.div hN hNne
   have hD : ContinuousOn (fun t => rayDenominator ε (P t) (Q t) (N t)) I := by
     unfold rayDenominator
-    fun_prop
+    exact ((hP.pow 2).add (continuousOn_const.mul (hQ.pow 2))).add (hN.pow 2)
   have hDne : ∀ t ∈ I, rayDenominator ε (P t) (Q t) (N t) ≠ 0 := by
     intro t ht
     have hn : 0 < N t ^ 2 := sq_pos_of_ne_zero (hNne t ht)
     unfold rayDenominator
-    positivity
+    exact (add_pos_of_nonneg_of_pos (add_nonneg (sq_nonneg _)
+      (mul_nonneg (sq_nonneg _) (sq_nonneg _))) hn).ne'
   have hJ : ContinuousOn (fun t => velocityNumerator (A t) (P t) (Q t) (N t)
       (U t) (V t) (velocityThird (P t) (Q t) (N t) (U t) (V t))) I := by
     unfold velocityNumerator
@@ -256,7 +261,7 @@ theorem controlled_velocity_relative_error
     (hU0 : U 0 = -lam) (hV0 : V 0 = 1) (hZ0 : Z 0 = 1) (hZ₁0 : Z₁ 0 = lam) :
     ∀ t ∈ Icc 0 T,
       |V t - Z t| + |U t + Z₁ t| ≤ 160000000 * e * Θ ^ 29 * (1 + lam) * F t := by
-  have hσsq : σ ^ 2 ≤ 1 := by nlinarith only [hσ, hσsmall]
+  have hσsq : σ ^ 2 ≤ 1 := pow_le_one₀ hσ.le (hσsmall.trans (by norm_num))
   have hgeomSmall : 10000 * e * Θ ^ 5 ≤ 1 := by
     have hh := pow_le_pow_right₀ hΘ (show 5 ≤ 21 by decide)
     have hm := mul_le_mul_of_nonneg_left hh he
@@ -272,7 +277,7 @@ theorem controlled_velocity_relative_error
   have hNne : ∀ t ∈ Icc 0 T, N t ≠ 0 := by
     intro t ht
     have hh := (hcontrol t ht).1
-    linarith
+    linarith only [hσ, hσsmall, hh]
   obtain ⟨hU₁c, hV₁c⟩ := continuousOn_velocity_rhs (ε := ε) hAc hCc hPc hQc hNc hUc hVc hNne
   have hsmall' : 40 * (200000 * e) * Θ ^ 21 ≤ 1 := by linarith only [hsmall]
   have herror : ∀ t ∈ Icc 0 T,

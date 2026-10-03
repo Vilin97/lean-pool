@@ -151,21 +151,22 @@ theorem lifted_regularized_energy_evolution (κ : ℝ) (m : Vector3)
       ((C : ℝ) / c) * ‖forcing‖ := by
   let A := metricFamily period K hKm C hC
   let β : ℝ := (1 / 2 : ℝ) * D * ((|κ| + ‖m‖) * B)
-  have hβ : 0 ≤ β := by dsimp [β]; positivity
-  have hsymL : ∀ v w, ⟪A t v, w⟫_ℝ = ⟪v, A t w⟫_ℝ :=
+  have hβ : 0 ≤ β := mul_nonneg (mul_nonneg one_half_pos.le D.coe_nonneg)
+    (mul_nonneg (add_nonneg (abs_nonneg κ) (norm_nonneg m)) B.coe_nonneg)
+  have hsymL :=
     coefficientOperator_inner_swap (K t) (hKm t) C (hC t) hsym
-  have hposL : c ^ 2 * ‖e t‖ ^ 2 ≤ ⟪A t (e t), e t⟫_ℝ :=
+  have hposL :=
     coefficientOperator_coercive (K t) (hKm t) C (hC t) (c ^ 2) hpos (e t)
-  have hpL : ⟪A t (e t), coefficientOperator G hGm E hG p⟫_ℝ = 0 :=
+  have hpL :=
     metric_pressure_cancellation period κ m (K t) G (hKm t) hGm C E (hC t) hG hsym hKG hep hp
   have htL := metric_transport_inner_bound period κ m (K t) (hKm t) (e t) g z hrep
     hKs hes hDe hsym hz C D B (hC t) hD hzB
   have h := regularized_metric_norm_evolution A e t δ c β K' e'
     (liftedTransport period κ m g z hDe B hzB) (coefficientOperator G hGm E hG p)
     forcing hδ hc hβ hposL hKt het hsymL heq hpL htL
-  have hA : ‖A t‖ ≤ C := coefficientOperator_norm_le (K t) (hKm t) C (hC t)
+  have hA := coefficientOperator_norm_le (K t) (hKm t) C (hC t)
   have hb : 2 * β = (D : ℝ) * ((|κ| + ‖m‖) * B) := by dsimp [β]; ring
-  rw [hb] at h
+  simp only [hb] at h
   exact h.trans (add_le_add_right (mul_le_mul_of_nonneg_right
     (div_le_div_of_nonneg_right hA hc.le) (norm_nonneg forcing)) _)
 

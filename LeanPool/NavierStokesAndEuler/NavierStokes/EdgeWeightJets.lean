@@ -71,7 +71,7 @@ theorem jetMass_pos (c : ℝ) (p : ℝ[X]) (n : ℕ) : 0 < jetMass c p n := by
   have hs := Finset.sum_nonneg (s := Finset.range (n + 1))
     (fun i _ => coefficientMass_nonneg (FlatCutoff.jetPolynomial c p i))
   dsimp [jetMass]
-  linarith
+  linarith only [hs]
 
 theorem jetMass_bound (c : ℝ) (p : ℝ[X]) {i n : ℕ} (hi : i ≤ n) :
     coefficientMass (FlatCutoff.jetPolynomial c p i) ≤ jetMass c p n := by
@@ -79,7 +79,7 @@ theorem jetMass_bound (c : ℝ) (p : ℝ[X]) {i n : ℕ} (hi : i ≤ n) :
     (fun j _ => coefficientMass_nonneg (FlatCutoff.jetPolynomial c p j))
     (Finset.mem_range.mpr (Nat.lt_succ_of_le hi))
   dsimp [jetMass]
-  linarith
+  linarith only [h]
 
 theorem jetOrder_bound (c : ℝ) (p : ℝ[X]) {i n : ℕ} (hi : i ≤ n) :
     (FlatCutoff.jetPolynomial c p i).natDegree ≤ jetOrder c p n := by
@@ -94,7 +94,7 @@ theorem polynomialEdge_jets_bound {c : ℝ} (hc : 0 < c) (p : ℝ[X]) (n : ℕ)
         C * FlatCutoff.edge c x / x ^ N := by
   let M := jetMass c p n
   let N := jetOrder c p n
-  refine ⟨M * (d + 1) ^ N, mul_pos (jetMass_pos c p n) (pow_pos (by linarith) _), N, ?_⟩
+  refine ⟨M * (d + 1) ^ N, mul_pos (jetMass_pos c p n) (pow_pos (by linarith only [hd]) _), N, ?_⟩
   intro i hi x hx hxd
   let T := max 1 x⁻¹
   have hT : 1 ≤ T := le_max_left _ _
@@ -102,10 +102,10 @@ theorem polynomialEdge_jets_bound {c : ℝ} (hc : 0 < c) (p : ℝ[X]) (n : ℕ)
   have hscale : T ≤ (d + 1) / x := by
     apply max_le
     · apply (le_div_iff₀ hx).2
-      linarith
+      linarith only [hxd]
     · apply (le_div_iff₀ hx).2
       rw [inv_mul_cancel₀ hx.ne']
-      linarith
+      linarith only [hd]
   have hpoly : |(FlatCutoff.jetPolynomial c p i).eval x⁻¹| ≤ M * T ^ N := by
     exact (polynomial_eval_bound _ hT hxi).trans
       (mul_le_mul (jetMass_bound c p hi)
@@ -168,11 +168,11 @@ theorem compact_coefficient_jets {F : Type*} [NormedAddCommGroup F] [NormedSpace
   choose C hC hbound using hb
   refine ⟨1 + ∑ i ∈ Finset.range (n + 1), C i, ?_, ?_⟩
   · have hs := Finset.sum_nonneg (s := Finset.range (n + 1)) (fun i _ => hC i)
-    linarith
+    linarith only [hs]
   · intro i hi p hp x hx
     have hs := Finset.single_le_sum (fun i _ => hC i)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hi))
-    exact (hbound i (p, x) ⟨hp, hx⟩).trans (by linarith)
+    exact (hbound i (p, x) ⟨hp, hx⟩).trans (by linarith only [hs])
 
 /-- Weighted, given by `(FlatCutoff.edge c y.2 / y.2 ^ j) * B y`. -/
 noncomputable def weighted (c : ℝ) (j : ℕ) (B : E × ℝ → ℝ) (y : E × ℝ) : ℝ :=
@@ -193,7 +193,7 @@ theorem edge_mul_iteratedFDeriv_bound {c : ℝ} (hc : 0 < c) (j : ℕ)
         C * FlatCutoff.edge c x / x ^ N := by
   obtain ⟨A, hA, N, hweight⟩ := edge_div_pow_jets_bound hc j n hd
   obtain ⟨D, hD, hcoef⟩ := compact_coefficient_jets hB hS n d
-  refine ⟨(2 : ℝ) ^ n * A * D, by positivity, N, ?_⟩
+  refine ⟨(2 : ℝ) ^ n * A * D, mul_pos (mul_pos (pow_pos two_pos n) hA) hD, N, ?_⟩
   intro i hi p hp x hx hxd
   have he := FlatCutoff.edge_nonneg c x
   have hw : ContDiff ℝ ∞ (fun y : E × ℝ => FlatCutoff.edge c y.2 / y.2 ^ j) :=
@@ -205,7 +205,7 @@ theorem edge_mul_iteratedFDeriv_bound {c : ℝ} (hc : 0 < c) (j : ℕ)
     exact (norm_iteratedFDeriv_snd_le (FlatCutoff.edge_div_pow_contDiff hc j) k (p, x)).trans
       (hweight k (hk.trans hi) x hx hxd)
   have hbnd := ParametricKernelBounds.norm_iteratedFDeriv_mul_le_of_bounds hw hB i (p, x)
-    (by positivity : 0 ≤ A * FlatCutoff.edge c x / x ^ N) hD.le hwbound
+    (div_nonneg (mul_nonneg hA.le he) (pow_nonneg hx.le N)) hD.le hwbound
     (fun k hk => hcoef k (hk.trans hi) p hp x ⟨hx.le, hxd⟩)
   have hsum : (∑ k ∈ Finset.range (i + 1), (i.choose k : ℝ)) = (2 : ℝ) ^ i := by
     exact_mod_cast Nat.sum_range_choose i
@@ -218,7 +218,7 @@ theorem edge_mul_iteratedFDeriv_bound {c : ℝ} (hc : 0 < c) (j : ℕ)
       exact div_le_div_of_nonneg_right
         (mul_le_mul_of_nonneg_right
           (mul_le_mul_of_nonneg_right
-            (mul_le_mul_of_nonneg_right (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hi) hA.le)
+            (mul_le_mul_of_nonneg_right (pow_le_pow_right₀ one_le_two hi) hA.le)
             hD.le) he) (pow_nonneg hx.le N)
 
 theorem edge_mul_iteratedFDeriv_bound_unit {c : ℝ} (hc : 0 < c) (j : ℕ)
@@ -398,11 +398,11 @@ theorem compact_coefficient_jets_on {B : E × ℝ → F} {V : Set (E × ℝ)}
   choose C hC hbound using hb
   refine ⟨1 + ∑ i ∈ Finset.range (n + 1), C i, ?_, ?_⟩
   · have hs := Finset.sum_nonneg (s := Finset.range (n + 1)) (fun i _ => hC i)
-    linarith
+    linarith only [hs]
   · intro i hi p hp x hx
     have hs := Finset.single_le_sum (fun i _ => hC i)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hi))
-    exact (hbound i (p, x) ⟨hp, hx⟩).trans (by linarith)
+    exact (hbound i (p, x) ⟨hp, hx⟩).trans (by linarith only [hs])
 
 /-- The vector-valued local version needs only genuine smoothness on an open
 neighborhood of the compact parameter-coordinate region. -/
@@ -416,7 +416,7 @@ theorem edge_smul_iteratedFDeriv_bound_on {c : ℝ} (hc : 0 < c) (j : ℕ)
           C * FlatCutoff.edge c x / x ^ N := by
   obtain ⟨A, hA, N, hweight⟩ := edge_div_pow_jets_bound hc j n hd
   obtain ⟨D, hD, hcoef⟩ := compact_coefficient_jets_on hV hB hS n d hSV
-  refine ⟨(2 : ℝ) ^ n * A * D, by positivity, N, ?_⟩
+  refine ⟨(2 : ℝ) ^ n * A * D, mul_pos (mul_pos (pow_pos two_pos n) hA) hD, N, ?_⟩
   intro i hi p hp x hx hxd
   have he := FlatCutoff.edge_nonneg c x
   have hy : (p, x) ∈ V := hSV ⟨hp, hx.le, hxd⟩
@@ -441,7 +441,8 @@ theorem edge_smul_iteratedFDeriv_bound_on {c : ℝ} (hc : 0 < c) (j : ℕ)
       exact mul_le_mul
         (mul_le_mul_of_nonneg_left (hwbound k hki) (Nat.cast_nonneg _))
         (hcoef (i - k) ((Nat.sub_le i k).trans hi) p hp x ⟨hx.le, hxd⟩)
-        (norm_nonneg _) (by positivity)
+        (norm_nonneg _)
+        (mul_nonneg (Nat.cast_nonneg _) (div_nonneg (mul_nonneg hA.le he) (pow_nonneg hx.le N)))
     _ = ((2 : ℝ) ^ i * A * D) * FlatCutoff.edge c x / x ^ N := by
       rw [← Finset.sum_mul, ← Finset.sum_mul]
       have hsum : (∑ k ∈ Finset.range (i + 1), (i.choose k : ℝ)) = (2 : ℝ) ^ i := by
@@ -452,7 +453,7 @@ theorem edge_smul_iteratedFDeriv_bound_on {c : ℝ} (hc : 0 < c) (j : ℕ)
       exact div_le_div_of_nonneg_right
         (mul_le_mul_of_nonneg_right
           (mul_le_mul_of_nonneg_right
-            (mul_le_mul_of_nonneg_right (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hi) hA.le)
+            (mul_le_mul_of_nonneg_right (pow_le_pow_right₀ one_le_two hi) hA.le)
             hD.le) he) (pow_nonneg hx.le N)
 
 theorem edge_smul_iteratedFDeriv_bound {c : ℝ} (hc : 0 < c) (j : ℕ)

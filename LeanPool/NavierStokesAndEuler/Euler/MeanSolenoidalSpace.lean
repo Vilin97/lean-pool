@@ -11,6 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedPressure
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.VectorCalculus
 public import Mathlib.Analysis.Calculus.Gradient.Basic
 import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.NormedSpaceShortcuts
 
 /-!
 # The ordinary three-dimensional solenoidal space for the mean inverse
@@ -80,6 +81,12 @@ def solenoidalSpace : Submodule ℝ L2 := gradientSpace.orthogonal
 
 instance : CompleteSpace solenoidalSpace :=
   gradientSpace.isClosed_orthogonal.completeSpace_coe
+
+real_normed_space_shortcut_instances solenoidalSpace : solenoidalSpace
+
+/-- Shortcut for the inner product space structure of the solenoidal space. -/
+instance solenoidalSpace.instInnerProductSpace : InnerProductSpace ℝ solenoidalSpace :=
+  inferInstance
 
 theorem testGradient_mem (φ : Space → ℝ) (hc : HasCompactSupport φ)
     (hs : ContDiff ℝ ∞ φ) : testGradient φ hc hs ∈ gradientSpace :=

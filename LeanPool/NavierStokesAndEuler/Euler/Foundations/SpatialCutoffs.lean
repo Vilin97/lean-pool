@@ -45,20 +45,21 @@ theorem real_part_inv_lower_bound (x : ℝ) (hx : 0 < x) (z : ℂ)
     have h := (Complex.abs_re_le_norm (z - (x : ℂ))).trans hz
     simp only [sub_re, ofReal_re] at h
     have := (abs_le.mp h).1
-    linarith
+    linarith only [this]
   have hn : ‖z‖ ≤ 2 * x := by
     calc
       ‖z‖ = ‖(z - (x : ℂ)) + (x : ℂ)‖ := by rw [sub_add_cancel]
       _ ≤ ‖z - (x : ℂ)‖ + ‖(x : ℂ)‖ := norm_add_le _ _
-      _ ≤ x / 2 + x := by simpa [Complex.norm_real, abs_of_pos hx] using add_le_add_right hz x
-      _ ≤ 2 * x := by linarith
-  have hzn : z ≠ 0 := by intro h; simp [h] at hre; linarith
+      _ ≤ x / 2 + x := by simpa only [norm_real, Real.norm_eq_abs, abs_of_pos hx,
+          add_le_add_iff_right, add_le_add_iff_left] using add_le_add_right hz x
+      _ ≤ 2 * x := by linarith only [hx]
+  have hzn : z ≠ 0 := by intro h; simp only [h, zero_re] at hre; linarith only [hx, hre]
   have hden : 0 < ‖z‖ ^ 2 := sq_pos_of_pos (norm_pos_iff.mpr hzn)
   rw [Complex.inv_re, Complex.normSq_eq_norm_sq]
   apply (div_le_div_iff₀ (by positivity : 0 < 8 * x) hden).2
   have hsq : ‖z‖ ^ 2 ≤ (2 * x) ^ 2 :=
     pow_le_pow_left₀ (norm_nonneg z) hn 2
-  nlinarith
+  nlinarith only [hsq, hx, hre]
 
 theorem complexFlat_differentiableAt {z : ℂ} (hz : z ≠ 0) :
     DifferentiableAt ℂ complexFlat z :=
@@ -84,11 +85,11 @@ theorem complexFlat_gevrey_bound (n : ℕ) (x : ℝ) (hx : 0 < x) :
   have hr : 0 < x / 2 := by positivity
   have hfd : DifferentiableOn ℂ complexFlat (Metric.closedBall (x : ℂ) (x / 2)) := by
     intro z hz
-    have hd : ‖z - (x : ℂ)‖ ≤ x / 2 := by simpa [dist_eq_norm] using hz
+    have hd : ‖z - (x : ℂ)‖ ≤ x / 2 := by simpa only [Metric.mem_closedBall, dist_eq_norm] using hz
     have hn : z ≠ 0 := by
       intro h
-      simp [h, Complex.norm_real, abs_of_pos hx] at hd
-      linarith
+      simp only [h, zero_sub, norm_neg, norm_real, Real.norm_eq_abs, abs_of_pos hx] at hd
+      linarith only [hx, hd]
     exact (complexFlat_differentiableAt hn).differentiableWithinAt
   have hfc : DiffContOnCl ℂ complexFlat (Metric.ball (x : ℂ) (x / 2)) :=
     (hfd.mono Metric.closure_ball_subset_closedBall).diffContOnCl
@@ -96,8 +97,8 @@ theorem complexFlat_gevrey_bound (n : ℕ) (x : ℝ) (hx : 0 < x) :
     (fun z hz => complexFlat_disc_bound x hx z (by
       exact le_of_eq (by simpa only [Metric.mem_sphere, dist_eq_norm] using hz)))
   let t : ℝ := 1 / (8 * x)
-  have ht : 0 ≤ t := by dsimp [t]; positivity
-  have hi : (x / 2)⁻¹ = 16 * t := by dsimp [t]; field_simp; ring
+  have ht : 0 ≤ t := by dsimp only [t]; positivity
+  have hi : (x / 2)⁻¹ = 16 * t := by dsimp only [t]; field_simp; ring
   have he : (n.factorial : ℝ) * Real.exp (-t) / (x / 2) ^ n =
       (16 : ℝ) ^ n * n.factorial * (t ^ n * Real.exp (-t)) := by
     rw [div_eq_mul_inv, ← inv_pow, hi, mul_pow]
@@ -130,12 +131,14 @@ theorem iteratedDeriv_real_restriction (f : ℂ → ℂ) (s : Set ℂ) (hs : IsO
   change (iteratedFDeriv ℝ n (Complex.reCLM ∘ (f ∘ Complex.ofRealCLM)) x)
     (fun _ => 1) = ((iteratedFDeriv ℂ n f (x : ℂ)) (fun _ => 1)).re
   rw [hre, he, ← hca.restrictScalars_iteratedFDeriv (𝕜 := ℝ)]
-  simp
+  simp only [Function.comp_apply, ContinuousLinearMap.compContinuousMultilinearMap_coe,
+      ContinuousMultilinearMap.compContinuousLinearMap_apply, ofRealCLM_apply, ofReal_one,
+      ContinuousMultilinearMap.coe_restrictScalars, reCLM_apply]
 
 theorem polynomial_glue_flat (p : Polynomial ℝ) (n : ℕ) (x : ℝ) (hx : x ≤ 0) :
     iteratedDeriv n (fun y => p.eval y⁻¹ * expNegInvGlue y) x = 0 := by
   induction n generalizing p with
-  | zero => simp [expNegInvGlue.zero_of_nonpos hx]
+  | zero => simp only [iteratedDeriv_zero, expNegInvGlue.zero_of_nonpos hx, mul_zero]
   | succ n ih =>
     rw [iteratedDeriv_succ']
     have hd : deriv (fun y => p.eval y⁻¹ * expNegInvGlue y) =
@@ -148,18 +151,19 @@ theorem expNegInvGlue_gevrey_bound (n : ℕ) (x : ℝ) :
     |iteratedDeriv n expNegInvGlue x| ≤ (16 : ℝ) ^ n * (n.factorial : ℝ) ^ 2 := by
   by_cases hx : x ≤ 0
   · have hz : iteratedDeriv n expNegInvGlue x = 0 := by
-      simpa using polynomial_glue_flat 1 n x hx
+      simpa only [Polynomial.eval_one, one_mul] using polynomial_glue_flat 1 n x hx
     rw [hz, abs_zero]
     positivity
   have hx : 0 < x := lt_of_not_ge hx
   have hs : IsOpen ({0}ᶜ : Set ℂ) := isClosed_singleton.isOpen_compl
   have hd : DifferentiableOn ℂ complexFlat ({0}ᶜ : Set ℂ) :=
     fun z hz => (complexFlat_differentiableAt hz).differentiableWithinAt
-  have hr := iteratedDeriv_real_restriction complexFlat _ hs hd n x (by simpa using hx.ne')
+  have hr := iteratedDeriv_real_restriction complexFlat _ hs hd n x (by simpa only [mem_compl_iff,
+      mem_singleton_iff, ofReal_eq_zero, ne_eq] using hx.ne')
   have hg : expNegInvGlue =ᶠ[nhds x] (fun t : ℝ => (complexFlat (t : ℂ)).re) := by
     filter_upwards [lt_mem_nhds hx] with y hy
-    simp [expNegInvGlue, hy.not_ge, complexFlat, ← Complex.ofReal_inv,
-      ← Complex.ofReal_neg, ← Complex.ofReal_exp]
+    simp only [expNegInvGlue, hy.not_ge, ↓reduceIte, complexFlat, ← ofReal_inv, ← ofReal_neg,
+        ← ofReal_exp, ofReal_re]
   rw [hg.iteratedDeriv_eq n, hr]
   exact (Complex.abs_re_le_norm _).trans (complexFlat_gevrey_bound n x hx)
 
@@ -185,11 +189,11 @@ theorem rawBump_support : tsupport rawBump ⊆ Icc (-1 : ℝ) 1 := by
   intro x hx
   constructor
   · by_contra h
-    have hz := expNegInvGlue.zero_of_nonpos (show x + 1 ≤ 0 by linarith)
-    exact hx (by simp [rawBump, hz])
+    have hz := expNegInvGlue.zero_of_nonpos (show x + 1 ≤ 0 by linarith only [h])
+    exact hx (by simp only [rawBump, hz, zero_mul])
   · by_contra h
-    have hz := expNegInvGlue.zero_of_nonpos (show 1 - x ≤ 0 by linarith)
-    exact hx (by simp [rawBump, hz])
+    have hz := expNegInvGlue.zero_of_nonpos (show 1 - x ≤ 0 by linarith only [h])
+    exact hx (by simp only [rawBump, hz, mul_zero])
 
 theorem rawBump_compactSupport : HasCompactSupport rawBump :=
   isCompact_Icc.of_isClosed_subset (isClosed_tsupport _) rawBump_support
@@ -209,8 +213,10 @@ theorem rawBump_gevrey_bound (n : ℕ) (x : ℝ) :
   have hp := EulerGevrey.sequence_product_majorant 16 1 1 (by norm_num) (by norm_num)
     (by norm_num) 0 0 (fun k => iteratedDeriv k f x) (fun k => iteratedDeriv k g x) hb₁ hb₂ n
   have hmul : rawBump = f * g := rfl
-  rw [hmul, iteratedDeriv_mul (hf.contDiffAt.of_le (by simp)) (hg.contDiffAt.of_le (by simp))]
-  simpa [EulerGevrey.majorant, mul_assoc] using hp
+  rw [hmul, iteratedDeriv_mul (hf.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+      WithTop.natCast_ne_top, not_false_eq_true])) (hg.contDiffAt.of_le (by simp only [
+      WithTop.le_coe_top, ne_eq, WithTop.natCast_ne_top, not_false_eq_true]))]
+  simpa only [mul_assoc, ge_iff_le, mul_one, EulerGevrey.majorant, add_zero] using hp
 
 /-- Positive integral used to normalize the smooth transition. -/
 def bumpMass : ℝ := ∫ t in (-1 : ℝ)..1, rawBump t
@@ -219,7 +225,7 @@ theorem bumpMass_pos : 0 < bumpMass := by
   apply intervalIntegral.intervalIntegral_pos_of_pos_on
     (rawBump_contDiff.continuous.intervalIntegrable _ _)
   · intro x hx
-    apply mul_pos <;> apply expNegInvGlue.pos_of_pos <;> linarith [hx.1, hx.2]
+    apply mul_pos <;> apply expNegInvGlue.pos_of_pos <;> linarith only [hx, hx.1, hx.2]
   · norm_num
 
 /-- Smooth monotone transition from zero to one, with explicit Gevrey bounds. -/
@@ -240,27 +246,27 @@ theorem transition_contDiff : ContDiff ℝ ∞ transition := by
     transition_deriv ▸ rawBump_contDiff.div_const bumpMass⟩
 
 theorem rawBump_eq_zero_of_le (x : ℝ) (hx : x ≤ -1) : rawBump x = 0 := by
-  simp [rawBump, expNegInvGlue.zero_of_nonpos (show x + 1 ≤ 0 by linarith)]
+  simp only [rawBump, expNegInvGlue.zero_of_nonpos (show x + 1 ≤ 0 by linarith only [hx]), zero_mul]
 
 theorem rawBump_eq_zero_of_ge (x : ℝ) (hx : 1 ≤ x) : rawBump x = 0 := by
-  simp [rawBump, expNegInvGlue.zero_of_nonpos (show 1 - x ≤ 0 by linarith)]
+  simp only [rawBump, expNegInvGlue.zero_of_nonpos (show 1 - x ≤ 0 by linarith only [hx]), mul_zero]
 
 theorem transition_zero_of_le (x : ℝ) (hx : x ≤ -1) : transition x = 0 := by
   have hi : (∫ t in x..(-1 : ℝ), rawBump t) = 0 := by
     calc
       _ = ∫ t in x..(-1 : ℝ), (0 : ℝ) := intervalIntegral.integral_congr (fun t ht =>
         rawBump_eq_zero_of_le t (((uIcc_of_le hx) ▸ ht).2))
-      _ = 0 := by simp
+      _ = 0 := by simp only [intervalIntegral.integral_zero]
   unfold transition
   rw [intervalIntegral.integral_symm, hi]
-  simp
+  simp only [neg_zero, zero_div]
 
 theorem transition_one_of_ge (x : ℝ) (hx : 1 ≤ x) : transition x = 1 := by
   have hi : (∫ t in (1 : ℝ)..x, rawBump t) = 0 := by
     calc
       _ = ∫ t in (1 : ℝ)..x, (0 : ℝ) := intervalIntegral.integral_congr (fun t ht =>
         rawBump_eq_zero_of_ge t (((uIcc_of_le hx) ▸ ht).1))
-      _ = 0 := by simp
+      _ = 0 := by simp only [intervalIntegral.integral_zero]
   unfold transition
   rw [← intervalIntegral.integral_add_adjacent_intervals
     (rawBump_contDiff.continuous.intervalIntegrable (-1) 1)
@@ -294,7 +300,7 @@ theorem transition_gevrey_bound (n : ℕ) (x : ℝ) :
     rw [abs_of_nonneg (transition_mem_unitInterval x).1]
     have h := (transition_mem_unitInterval x).2
     have : 0 < 3 / bumpMass := div_pos (by norm_num) bumpMass_pos
-    linarith
+    linarith only [h, this]
   | succ n =>
     rw [iteratedDeriv_succ', transition_deriv]
     have he : (fun x => rawBump x / bumpMass) = fun x => rawBump x * bumpMass⁻¹ := by
@@ -307,7 +313,7 @@ theorem transition_gevrey_bound (n : ℕ) (x : ℝ) :
     have hf : (n.factorial : ℝ) ^ 2 ≤ ((n + 1).factorial : ℝ) ^ 2 := by
       gcongr
       omega
-    have hA : 3 * bumpMass⁻¹ ≤ 1 + 3 / bumpMass := by rw [div_eq_mul_inv]; linarith
+    have hA : 3 * bumpMass⁻¹ ≤ 1 + 3 / bumpMass := by rw [div_eq_mul_inv]; linarith only
     calc
       _ ≤ (3 * 16 ^ n * (n.factorial : ℝ) ^ 2) * bumpMass⁻¹ := hb
       _ = (3 * bumpMass⁻¹) * 16 ^ n * (n.factorial : ℝ) ^ 2 := by ring
@@ -350,7 +356,7 @@ theorem normalizedBump_gevrey (n : ℕ) (t : ℝ) :
     |iteratedDeriv n normalizedBump t| ≤ (3 / rawBump 0) * majorant 16 0 n := by
   have he : normalizedBump = fun x => rawBump x * (rawBump 0)⁻¹ := by
     funext x
-    simp [normalizedBump, div_eq_mul_inv]
+    simp only [normalizedBump, div_eq_mul_inv]
   rw [he, iteratedDeriv_mul_const_field, abs_mul, abs_inv, abs_of_pos rawBump_pos_zero]
   have h := mul_le_mul_of_nonneg_right (rawBump_gevrey_bound n t)
     (inv_nonneg.mpr rawBump_pos_zero.le)
@@ -364,17 +370,19 @@ theorem outerWindow_contDiff : ContDiff ℝ ∞ outerWindow :=
     (transition_contDiff.comp (contDiff_const.sub (contDiff_const.mul contDiff_id)))
 
 theorem outerWindow_even (t : ℝ) : outerWindow (-t) = outerWindow t := by
-  simp [outerWindow, sub_eq_add_neg, mul_comm]
+  simp only [outerWindow, mul_comm, neg_mul, sub_eq_add_neg, neg_neg]
 
 theorem outerWindow_one (t : ℝ) (ht : |t| ≤ 1) : outerWindow t = 1 := by
   have ht' := abs_le.mp ht
-  simp [outerWindow, transition_one_of_ge _ (show 1 ≤ 17 + 16 * t by linarith),
-    transition_one_of_ge _ (show 1 ≤ 17 - 16 * t by linarith)]
+  simp only [outerWindow, transition_one_of_ge _ (show 1 ≤ 17 + 16 * t by linarith only [ht']),
+      transition_one_of_ge _ (show 1 ≤ 17 - 16 * t by linarith only [ht']), mul_one]
 
 theorem outerWindow_zero (t : ℝ) (ht : 9 / 8 ≤ |t|) : outerWindow t = 0 := by
   rcases le_abs.mp ht with h | h
-  · simp [outerWindow, transition_zero_of_le _ (show 17 - 16 * t ≤ -1 by linarith)]
-  · simp [outerWindow, transition_zero_of_le _ (show 17 + 16 * t ≤ -1 by linarith)]
+  · simp only [outerWindow, transition_zero_of_le _ (show 17 - 16 * t ≤ -1 by linarith only [h]),
+      mul_zero]
+  · simp only [outerWindow, transition_zero_of_le _ (show 17 + 16 * t ≤ -1 by linarith only [h]),
+      zero_mul]
 
 theorem outerWindow_gevrey (n : ℕ) (t : ℝ) :
     |iteratedDeriv n outerWindow t| ≤
@@ -383,15 +391,16 @@ theorem outerWindow_gevrey (n : ℕ) (t : ℝ) :
   have hn : ‖L‖ ≤ 16 := by
     apply L.opNorm_le_bound (by norm_num)
     intro y
-    simp [L, norm_mul]
+    simp only [smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, norm_mul, Real.norm_ofNat,
+        Real.norm_eq_abs, Std.le_refl, L]
   have hmass := bumpMass_pos
   have hb : ∀ n t, |iteratedDeriv n transition t| ≤ (1 + 3 / bumpMass) * majorant 16 0 n :=
-    fun n t => by simpa [majorant, mul_assoc] using transition_gevrey_bound n t
+    fun n t => by simpa only [majorant, add_zero, mul_assoc] using transition_gevrey_bound n t
   have hp := affine_composition_bound transition transition_contDiff L 17 16
     (1 + 3 / bumpMass) 16 (by norm_num) (by positivity) (by norm_num) hn hb
   have hm := affine_composition_bound transition transition_contDiff (-L) 17 16
     (1 + 3 / bumpMass) 16 (by norm_num) (by positivity) (by norm_num)
-    (by simpa using hn) hb
+    (by simpa only [norm_neg] using hn) hb
   have hf : ContDiff ℝ ∞ (fun y : ℝ => transition (L y + 17)) :=
     transition_contDiff.comp (L.contDiff.add contDiff_const)
   have hg : ContDiff ℝ ∞ (fun y : ℝ => transition ((-L) y + 17)) :=
@@ -401,10 +410,11 @@ theorem outerWindow_gevrey (n : ℕ) (t : ℝ) :
     (by norm_num at hm; exact hm) n t
   have he : outerWindow = (fun y => transition (L y + 17) * transition ((-L) y + 17)) := by
     funext y
-    simp [outerWindow, L, sub_eq_add_neg, add_comm]
+    simp only [outerWindow, add_comm, sub_eq_add_neg, smul_apply, ContinuousLinearMap.id_apply,
+        smul_eq_mul, neg_apply, L]
   rw [he]
-  simpa [L, norm_iteratedFDeriv_eq_norm_iteratedDeriv,
-    Real.norm_eq_abs, sub_eq_add_neg, add_comm, pow_two, mul_assoc] using h
+  simpa only [smul_apply, ContinuousLinearMap.id_apply, smul_eq_mul, neg_apply, pow_two, mul_assoc,
+      ge_iff_le, norm_iteratedFDeriv_eq_norm_iteratedDeriv, Real.norm_eq_abs] using h
 
 /-- Product of three copies of a scalar profile at a common coordinate scale. -/
 def tensorCutoff (g : ℝ → ℝ) (a : ℝ) (x : Space) : ℝ := ∏ i : Fin 3, g (a * x i)
@@ -419,7 +429,7 @@ theorem tensorCutoff_contDiff (g : ℝ → ℝ) (hg : ContDiff ℝ ∞ g) (a : �
 
 theorem tensorCutoff_even (g : ℝ → ℝ) (hg : ∀ t, g (-t) = g t) (a : ℝ) (x : Space) :
     tensorCutoff g a (-x) = tensorCutoff g a x := by
-  simp [tensorCutoff, hg]
+  simp only [tensorCutoff, PiLp.neg_apply, mul_neg, hg]
 
 theorem tensorCutoff_gevrey (g : ℝ → ℝ) (hg : ContDiff ℝ ∞ g)
     (a R A : ℝ) (ha : 0 ≤ a) (hR : 0 ≤ R) (hA : 0 ≤ A)
@@ -429,7 +439,8 @@ theorem tensorCutoff_gevrey (g : ℝ → ℝ) (hg : ContDiff ℝ ∞ g)
   have hL (i : Fin 3) : ‖(a • EuclideanSpace.proj i : Space →L[ℝ] ℝ)‖ ≤ a := by
     apply (a • EuclideanSpace.proj i : Space →L[ℝ] ℝ).opNorm_le_bound ha
     intro y
-    simpa [Real.norm_eq_abs, abs_of_nonneg ha] using
+    simpa only [smul_apply, PiLp.proj_apply, smul_eq_mul, norm_mul, Real.norm_eq_abs,
+        abs_of_nonneg ha] using
       mul_le_mul_of_nonneg_left (PiLp.norm_apply_le y i) ha
   have hi (i : Fin 3) := linear_composition_bound g hg (a • EuclideanSpace.proj i)
     R A a hR hA ha (hL i) hb
@@ -467,7 +478,8 @@ theorem innerCutoff_nonneg (x : Space) : 0 ≤ innerCutoff x := by
   exact Finset.prod_nonneg (fun i _ => normalizedBump_nonneg _)
 
 theorem innerCutoff_zero : innerCutoff 0 = 1 := by
-  simp [innerCutoff, tensorCutoff, normalizedBump_zero]
+  simp only [innerCutoff, tensorCutoff, PiLp.zero_apply, mul_zero, normalizedBump_zero,
+      Finset.prod_const_one]
 
 theorem outerCutoff_one (x : Space) (hx : ‖x‖ ≤ 1) : outerCutoff x = 1 := by
   unfold outerCutoff tensorCutoff
@@ -509,7 +521,8 @@ theorem norm_sq_le_of_mem_cube (r : ℝ) (hr : 0 ≤ r) (x : Space) (hx : x ∈ 
       intro i _
       have h := (sq_le_sq₀ (abs_nonneg (x i)) hr).2 (hx i)
       simpa only [sq_abs] using h
-    _ = _ := by simp
+    _ = _ := by simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+        Nat.cast_ofNat]
 
 theorem tensorCutoff_support (g : ℝ → ℝ) (a b : ℝ) (ha : 0 < a)
     (hg : ∀ t, g t ≠ 0 → |t| ≤ b) :
@@ -520,16 +533,16 @@ theorem tensorCutoff_support (g : ℝ → ℝ) (a b : ℝ) (ha : 0 < a)
     exact (Finset.prod_ne_zero_iff.mp hx) i (Finset.mem_univ _)
   have h := hg (a * x i) hgx
   rw [abs_mul, abs_of_pos ha] at h
-  exact (le_div_iff₀ ha).2 (by nlinarith)
+  exact (le_div_iff₀ ha).2 (by nlinarith only [h])
 
 theorem innerCutoff_support : tsupport innerCutoff ⊆ Metric.ball (0 : Space) (1 / 2) := by
   have hs := tensorCutoff_support normalizedBump 4 1 (by norm_num) (fun t ht => by
-    have hraw : rawBump t ≠ 0 := fun h => ht (by simp [normalizedBump, h])
+    have hraw : rawBump t ≠ 0 := fun h => ht (by simp only [normalizedBump, h, zero_div])
     exact abs_le.mpr (rawBump_support (subset_tsupport _ hraw)))
   intro x hx
   have hn := norm_sq_le_of_mem_cube (1 / 4) (by norm_num) x (hs hx)
   rw [Metric.mem_ball, dist_zero_right]
-  nlinarith [norm_nonneg x]
+  nlinarith only [hn, norm_nonneg x]
 
 theorem outerCutoff_support : tsupport outerCutoff ⊆ Metric.closedBall (0 : Space) 2 := by
   have hs := tensorCutoff_support outerWindow 1 (9 / 8) (by norm_num) (fun t ht => by
@@ -539,7 +552,7 @@ theorem outerCutoff_support : tsupport outerCutoff ⊆ Metric.closedBall (0 : Sp
   have hc : x ∈ ({x : Space | ∀ i, |x i| ≤ 9 / 8}) := by simpa using hs hx
   have hn := norm_sq_le_of_mem_cube (9 / 8) (by norm_num) x hc
   rw [Metric.mem_closedBall, dist_zero_right]
-  nlinarith [norm_nonneg x]
+  nlinarith only [hn, norm_nonneg x]
 
 theorem innerCutoff_compactSupport : HasCompactSupport innerCutoff := by
   apply (isCompact_closedBall (0 : Space) (1 / 2)).of_isClosed_subset (isClosed_tsupport _)

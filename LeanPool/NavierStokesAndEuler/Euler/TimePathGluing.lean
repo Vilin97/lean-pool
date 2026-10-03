@@ -78,7 +78,7 @@ theorem gluePath_left (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b)
     (hmatch : u ⟨a, ha, le_rfl⟩ = v ⟨0, le_rfl, hb⟩) (t : ℝ) (ht : t ∈ Icc 0 a) :
     extendPath (a+b) (add_nonneg ha hb) (gluePath a b ha hb u v hmatch) t = extendPath a ha u t :=
         by
-  have htu : t ∈ Icc 0 (a+b) := ⟨ht.1, by linarith [ht.2]⟩
+  have htu : t ∈ Icc 0 (a+b) := ⟨ht.1, by linarith only [hb, ht, ht.2]⟩
   change glueFunction a b ha hb u v (projIcc 0 (a+b) (add_nonneg ha hb) t).val = _
   rw [projIcc_of_mem (add_nonneg ha hb) htu]
   exact glueFunction_left a b ha hb u v t ht.2
@@ -90,10 +90,10 @@ theorem gluePath_right (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b)
     (hmatch : u ⟨a, ha, le_rfl⟩ = v ⟨0, le_rfl, hb⟩) (t : ℝ) (ht : t ∈ Icc 0 b) :
     extendPath (a+b) (add_nonneg ha hb) (gluePath a b ha hb u v hmatch) (a+t) = extendPath b hb v t
         := by
-  have htu : a+t ∈ Icc 0 (a+b) := ⟨by linarith [ht.1], by linarith [ht.2]⟩
+  have htu : a+t ∈ Icc 0 (a+b) := ⟨by linarith only [ha, ht, ht.1], by linarith only [ht, ht.2]⟩
   change glueFunction a b ha hb u v (projIcc 0 (a+b) (add_nonneg ha hb) (a+t)).val = _
   rw [projIcc_of_mem (add_nonneg ha hb) htu, glueFunction_right a b ha hb u v hmatch (a+t) (by
-      linarith [ht.1]), add_sub_cancel_left]
+      linarith only [ht, ht.1]), add_sub_cancel_left]
 
 /-- The actual pasted path is bounded by any common uniform bound for its two pieces. -/
 theorem gluePath_norm_le (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b)

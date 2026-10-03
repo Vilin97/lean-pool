@@ -32,8 +32,9 @@ def zeroJet : (q : ℕ) → EulerSpatialSobolevInverse.SpatialJet period directi
 
 theorem zeroJet_norm (q : ℕ) : (zeroJet period (directions := directions) q).sobolevNorm = 0 := by
   induction q with
-  | zero => simp [zeroJet, EulerSpatialSobolevInverse.SpatialJet.sobolevNorm]
-  | succ q ih => simp [zeroJet, EulerSpatialSobolevInverse.SpatialJet.sobolevNorm, ih]
+  | zero => simp only [zeroJet, SpatialJet.sobolevNorm, norm_zero]
+  | succ q ih => simp only [zeroJet, SpatialJet.sobolevNorm, norm_zero, ih, Finset.sum_const_zero,
+      add_zero]
 
 @[simp]
 theorem sobolevSize_zero (q : ℕ) : sobolevSize period (directions := directions) q 0 = 0 := by
@@ -63,7 +64,8 @@ theorem commutatorBlock_zero {s q : ℕ} {A : SmoothCoefficient period} {f : Lif
     (K : EulerSpatialSobolevInverse.CoefficientJet period directions s A)
     (J : EulerSpatialSobolevInverse.SpatialJet period directions s f) : commutatorBlock K J q 0 = 0
         := by
-  simp [commutatorBlock]
+  simp only [commutatorBlock, Finset.univ_unique, SpatialJet.word_zero, sub_self, sobolevSize_zero,
+      Finset.sum_const_zero]
 
 theorem commutatorBlock_nonneg {s q n : ℕ} {A : SmoothCoefficient period} {f : LiftL2 period}
     (K : EulerSpatialSobolevInverse.CoefficientJet period directions s A)
@@ -109,7 +111,7 @@ theorem commutatorBlock_succ_le {s q n : ℕ} {A : SmoothCoefficient period} {f 
       rw [multiply_word_snoc]
       simp only [EulerSpatialSobolevInverse.SpatialJet.word_succ, Fin.init_snoc]
       have hlast : (Fin.snoc (α := fun _ : Fin (n + 1) => Fin 4) w i) (Fin.last n) = i := by
-        simp [Fin.snoc]
+        simp only [Fin.snoc, Fin.val_last, lt_self_iff_false, ↓reduceDIte, cast_eq]
       rw [hlast]
       have he :
           (EulerSpatialSobolevInverse.SpatialJet.multiply K.truncate (lowerF i)).word w +
@@ -131,7 +133,9 @@ theorem commutatorBlock_bound {s q n : ℕ} {A : SmoothCoefficient period} {f : 
     commutatorBlock K J q n ≤
       commutatorConvolution (coefficientBlock period K q) (blockNorm period J q) n := by
   induction n generalizing s A f with
-  | zero => simp [commutatorConvolution_eq_sum, commutatorBlock_zero]
+  | zero => simp only [commutatorBlock_zero, commutatorConvolution_eq_sum, Finset.range_zero,
+      Nat.choose_zero_succ, CharP.cast_eq_zero, zero_mul, zero_tsub, Finset.sum_const_zero,
+      Std.le_refl]
   | succ n ih =>
     cases s with
     | zero => omega

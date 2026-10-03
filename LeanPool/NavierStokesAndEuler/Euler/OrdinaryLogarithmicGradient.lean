@@ -49,6 +49,13 @@ open scoped ContDiff ENNReal RealInnerProductSpace Topology
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
 
+theorem integral_three_quarter_rpow (ε N : ℝ) :
+    (∫ t in (0:ℝ)..ε, (3/4:ℝ)*t^(-(3:ℝ)/4)*N) = 3*ε^((1:ℝ)/4)*N := by
+  rw [intervalIntegral.integral_mul_const, intervalIntegral.integral_const_mul,
+    integral_rpow (Or.inl (by norm_num : (-1:ℝ) < -(3:ℝ)/4)),
+    show -(3:ℝ)/4+1=(1:ℝ)/4 by norm_num, Real.zero_rpow (by norm_num : (1:ℝ)/4 ≠ 0)]
+  ring
+
 /-- The heat remainder of one actual spatial derivative is O(ε^(1/4))
 times the third spatial L² tensor. No Hölder or heat estimate is assumed. -/
 theorem derivative_high_remainder (A : SmoothL2Field V) (j : Fin 3) (x : Space)
@@ -68,24 +75,17 @@ theorem derivative_high_remainder (A : SmoothL2Field V) (j : Fin 3) (x : Space)
     rw [(hd t ht).deriv, norm_smul, Real.norm_of_nonneg (by norm_num : (0:ℝ) ≤ 1/4)]
     have h := mul_le_mul_of_nonneg_left (secondAverage_directional_bound ht.1 A j x)
       (by norm_num : (0:ℝ) ≤ 1/4)
-    exact h.trans_eq (by dsimp [B]; ring)
+    exact h.trans_eq (by dsimp only [B]; ring)
   have hbi : IntervalIntegrable B volume 0 ε :=
     ((intervalIntegral.intervalIntegrable_rpow' (by norm_num : (-1:ℝ) < -(3:ℝ)/4)).const_mul
       (3/4:ℝ)).mul_const ‖A.jetLp 3‖
   have h := norm_sub_le_integral_of_norm_deriv_le_of_le hε.le hc.continuousOn
     (fun t ht => (hd t ht).differentiableAt.differentiableWithinAt)
     (Eventually.of_forall hb) hbi
-  have he : (∫ t in (0:ℝ)..ε, B t) = 3*ε^((1:ℝ)/4)*‖A.jetLp 3‖ := by
-    dsimp [B]
-    rw [intervalIntegral.integral_mul_const, intervalIntegral.integral_const_mul,
-      integral_rpow (Or.inl (by norm_num : (-1:ℝ) < -(3:ℝ)/4))]
-    rw [show -(3:ℝ)/4+1=(1:ℝ)/4 by norm_num,
-      Real.zero_rpow (by norm_num : (1:ℝ)/4 ≠ 0)]
-    ring
-  rw [he] at h
-  change ‖scaledAverage ε D.field x-scaledAverage 0 D.field x‖ ≤ _ at h
-  rw [scaledAverage_eq hε, scaledAverage_zero, norm_sub_rev] at h
-  exact h
+  have he := integral_three_quarter_rpow ε ‖A.jetLp 3‖
+  exact (norm_sub_rev _ _).trans_le ((congrArg₂ (fun a b : V => ‖a - b‖)
+    (scaledAverage_eq hε D.field x) (scaledAverage_zero D.field x)).symm.trans_le
+      (h.trans_eq he))
 
 end EulerWholeSpaceGaussian
 
@@ -171,7 +171,7 @@ theorem derivative_elliptic_middle (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
     (fun t ht => (hd t ht).differentiableAt.differentiableWithinAt)
     (Eventually.of_forall hb) hbi
   have he : (∫ t in ε..(1:ℝ), B t) = middleCost*W*(-Real.log ε) := by
-    dsimp [B]
+    dsimp only [B]
     rw [intervalIntegral.integral_mul_const, intervalIntegral.integral_const_mul,
       integral_inv_of_pos hε (by norm_num)]
     simp only [one_div, Real.log_inv]
@@ -204,7 +204,7 @@ theorem elliptic_derivative_split (A G H : SmoothL2Field ℝ) (a b j : Fin 3)
       change ‖v-m‖ ≤ _ at hh
       change ‖m-l‖ ≤ _ at hm
       change ‖l‖ ≤ _ at hl
-      linarith
+      linarith only [hh, hm, hl]
 
 end EulerWholeSpaceGaussian
 
@@ -238,17 +238,17 @@ theorem optimize (X c L W H : ℝ) (hc : 0 ≤ c) (hL : 0 ≤ L) (hH : 0 ≤ H)
   let A := exp 1+H
   have hE : 1 < exp (1 : ℝ) := by
     simpa only [exp_zero] using exp_lt_exp.mpr (by norm_num : (0 : ℝ) < 1)
-  have hA1 : 1 < A := by dsimp [A]; linarith
+  have hA1 : 1 < A := by dsimp only [A]; linarith only [hH, hE]
   have hA0 : 0 < A := zero_lt_one.trans hA1
   have hl : 0 < log A := log_pos hA1
   let ε := exp (-4*log A)
   have he0 : 0 < ε := exp_pos _
   have he1 : ε < 1 := by
-    have hneg : -4*log A < 0 := by linarith
+    have hneg : -4*log A < 0 := by linarith only [hl]
     simpa only [ε,exp_zero] using exp_lt_exp.mpr hneg
   have heLog : -log ε=4*log A := by simp only [ε,log_exp]; ring
   have hePow : ε^(1/4 : ℝ)=A⁻¹ := by
-    dsimp [ε]
+    dsimp only [ε]
     rw [rpow_def_of_pos (exp_pos _),log_exp,
       show (-4*log A)*(1/4 : ℝ) = -log A by ring,exp_neg,exp_log hA0]
   have hHA : H ≤ A := le_add_of_nonneg_left (exp_pos 1).le
@@ -260,8 +260,8 @@ theorem optimize (X c L W H : ℝ) (hc : 0 ≤ c) (hL : 0 ≤ L) (hH : 0 ≤ H)
   have hmid : X ≤ c*(L+4*(W*log A)+1) := by
     apply h.trans
     apply mul_le_mul_of_nonneg_left _ hc
-    nlinarith only [hsmall]
-  have hdiff : 0 ≤ c*(3+3*L) := mul_nonneg hc (by linarith)
+    linarith only [hsmall]
+  have hdiff : 0 ≤ c*(3+3*L) := mul_nonneg hc (by linarith only [hL])
   change X ≤ 4*c*(1+L+W*log A)
   nlinarith only [hmid,hdiff]
 
@@ -309,9 +309,10 @@ theorem elliptic_derivative_logarithmic (A G J : SmoothL2Field ℝ) (a b j : Fin
   intro ε hε hε1
   have he : 0 ≤ -Real.log ε := neg_nonneg.mpr (Real.log_nonpos hε.le hε1.le)
   have hr : 0 ≤ ε^((1:ℝ)/4) := Real.rpow_nonneg hε.le _
-  have hl : lowCost ≤ splitCost := by unfold splitCost; linarith [middleCost_nonneg]
-  have hm : middleCost ≤ splitCost := by unfold splitCost; linarith [lowCost_nonneg]
-  have hh : (3:ℝ) ≤ splitCost := by unfold splitCost; linarith [lowCost_nonneg, middleCost_nonneg]
+  have hl : lowCost ≤ splitCost := by unfold splitCost; linarith only [hε, hε1, middleCost_nonneg]
+  have hm : middleCost ≤ splitCost := by unfold splitCost; linarith only [hε, hε1, lowCost_nonneg]
+  have hh : (3:ℝ) ≤ splitCost := by unfold splitCost; linarith only [lowCost_nonneg,
+      middleCost_nonneg]
   calc
     _ ≤ lowCost*‖A.toLp‖+middleCost*W*(-Real.log ε)+3*ε^((1:ℝ)/4)*‖A.jetLp 3‖ :=
       elliptic_derivative_split A G J a b j hΔ W hG hJ x hε hε1.le
@@ -364,7 +365,7 @@ theorem logarithmic_gradient_bound (A : SmoothL2Field Space)
     (Real.one_le_exp (by norm_num : (0:ℝ) ≤ 1)).trans (le_add_of_nonneg_right hH0)
   have hlog : 0 ≤ Real.log (Real.exp 1+tensorNorm 3 A) := Real.log_nonneg harg
   let K : ℝ := 4*splitCost*(1+‖A.toLp‖+W*Real.log (Real.exp 1+tensorNorm 3 A))
-  have hK : 0 ≤ K := by dsimp [K]; positivity [splitCost_nonneg]
+  have hK : 0 ≤ K := by dsimp only [K]; positivity [splitCost_nonneg]
   have hcomponent (i : Fin 3) (y : Space) :
       ‖(componentField (vorticityField A) i).field y‖ ≤ W := by
     rw [componentField_apply]
@@ -381,9 +382,9 @@ theorem logarithmic_gradient_bound (A : SmoothL2Field Space)
     rw [componentField_partial] at h
     apply h.trans
     apply mul_le_mul_of_nonneg_left _ (mul_nonneg (by norm_num) splitCost_nonneg)
-    linarith [componentField_toLp_norm A j]
+    linarith only [componentField_toLp_norm A j]
   have h := operator_norm_le_of_entries (fderiv ℝ A.field x) K hK hentries
-  exact h.trans_eq (by unfold logarithmicGradientConstant; dsimp [K]; ring)
+  exact h.trans_eq (by unfold logarithmicGradientConstant; dsimp only [K]; ring)
 
 /-- This form discharges the entire logarithmic-estimate hypothesis of
 the ordinary Euler continuation theorem. -/

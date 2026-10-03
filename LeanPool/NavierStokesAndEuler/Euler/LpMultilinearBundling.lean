@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
 public import Mathlib.Analysis.Normed.Operator.NormedSpace
 public import Mathlib.MeasureTheory.Function.LpSpace.Basic
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-! Pointwise multilinear L² fields define genuine bounded multilinear maps into L². -/
 

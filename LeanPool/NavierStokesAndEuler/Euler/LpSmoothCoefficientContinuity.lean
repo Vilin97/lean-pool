@@ -38,28 +38,24 @@ theorem jetLp_zero_from_value (f : SmoothL2Field V) :
       (continuousMultilinearCurryFin0 ℝ Space
           V).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
         2 volume f.toLp := by
-  let L : V →L[ℝ] (Space [×0]→L[ℝ] V) :=
+  let L :=
     (continuousMultilinearCurryFin0 ℝ Space V).symm.toContinuousLinearEquiv.toContinuousLinearMap
   apply Lp.ext
   filter_upwards [f.jetLp_ae 0, L.coeFn_compLpL f.toLp, f.toLp_ae] with x h₁ h₂ h₃
-  rw [h₁, h₂, h₃, iteratedFDeriv_zero_eq_comp]
-  rfl
+  exact h₁.trans ((congrFun iteratedFDeriv_zero_eq_comp x).trans
+    ((congrArg L h₃.symm).trans h₂.symm))
 
 theorem jetLp_succ_from_derivative (f : SmoothL2Field V) (n : ℕ) :
     f.jetLp (n+1) =
       (continuousMultilinearCurryRightEquiv' ℝ n Space
           V).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
         2 volume (f.derivative.jetLp n) := by
-  let L : (Space [×n]→L[ℝ] (Space →L[ℝ] V)) →L[ℝ] (Space [×(n+1)]→L[ℝ] V) :=
-    (continuousMultilinearCurryRightEquiv' ℝ n Space
-        V).symm.toContinuousLinearEquiv.toContinuousLinearMap
+  let L := (continuousMultilinearCurryRightEquiv' ℝ n Space
+    V).symm.toContinuousLinearEquiv.toContinuousLinearMap
   apply Lp.ext
-  filter_upwards [f.jetLp_ae (n+1),
-    ContinuousLinearMap.coeFn_compLpL (𝕜 := ℝ) (𝕜' := ℝ)
-      (E := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (F := Space [×(n+1)]→L[ℝ] V)
-      (σ := RingHom.id ℝ) L (f.derivative.jetLp n), f.derivative.jetLp_ae n] with x h₁ h₂ h₃
-  rw [h₁, h₂, h₃, iteratedFDeriv_succ_eq_comp_right]
-  rfl
+  filter_upwards [f.jetLp_ae (n+1), L.coeFn_compLpL (f.derivative.jetLp n),
+    f.derivative.jetLp_ae n] with x h₁ h₂ h₃
+  exact h₁.trans (iteratedFDeriv_succ_eq_comp_right.trans ((congrArg L h₃.symm).trans h₂.symm))
 
 theorem continuous_product_value (A : SmoothCoefficientPath K (V →L[ℝ] W))
     (f : K → SmoothL2Field V) (hf : Continuous (fun t => (f t).jetLp 0)) :
@@ -81,10 +77,7 @@ private theorem continuous_product_jet_aux (n : ℕ) :
   induction n with
   | zero =>
     intro V W _ _ _ _ A f hf
-    have he : (fun t => (product A t (f t)).jetLp 0) =
-        fun t => (continuousMultilinearCurryFin0 ℝ Space
-            W).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
-          2 volume (product A t (f t)).toLp :=
+    have he : (fun t => (product A t (f t)).jetLp 0) = _ :=
       funext (fun t => jetLp_zero_from_value (product A t (f t)))
     rw [he]
     exact ContinuousLinearMap.continuous _ |>.comp (continuous_product_value A f (hf 0))
@@ -94,16 +87,11 @@ private theorem continuous_product_jet_aux (n : ℕ) :
       (fun t => (f t).derivative) (continuous_jetLp_derivative f hf)
     have hleft := ih V (Space →L[ℝ] W) (leftDerivative A) f hf
     have hd : Continuous (fun t => (product A t (f t)).derivative.jetLp n) := by
-      have he : (fun t => (product A t (f t)).derivative.jetLp n) =
-          (fun t => (product (rightDerivative A) t (f t).derivative).jetLp n) +
-            (fun t => (product (leftDerivative A) t (f t)).jetLp n) :=
+      have he : (fun t => (product A t (f t)).derivative.jetLp n) = _ :=
         funext (fun t => product_derivative_jetLp A t (f t) n)
       rw [he]
       exact hright.add hleft
-    have he : (fun t => (product A t (f t)).jetLp (n+1)) =
-        fun t => (continuousMultilinearCurryRightEquiv' ℝ n Space
-            W).symm.toContinuousLinearEquiv.toContinuousLinearMap.compLpL
-          2 volume ((product A t (f t)).derivative.jetLp n) :=
+    have he : (fun t => (product A t (f t)).jetLp (n+1)) = _ :=
       funext (fun t => jetLp_succ_from_derivative (product A t (f t)) n)
     rw [he]
     exact ContinuousLinearMap.continuous _ |>.comp hd

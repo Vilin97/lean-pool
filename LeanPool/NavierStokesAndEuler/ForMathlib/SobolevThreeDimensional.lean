@@ -10,6 +10,8 @@ public import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothCutoff
 public import Mathlib.Analysis.FunctionalSpaces.SobolevInequality
 import Mathlib.MeasureTheory.Function.LpSpace.Complete
 import Mathlib.MeasureTheory.Function.LpSeminorm.LpNorm
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-!
 # The homogeneous `H¹ → L⁶` inequality on `ℝ³`
@@ -38,7 +40,7 @@ open scoped ContDiff ENNReal NNReal Topology
 
 namespace NavierStokesAndEuler.SobolevThreeDimensional
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 /-- The fixed whole-space `H¹ → L⁶` Sobolev constant in dimension three. -/
 @[expose] def sobolevConstant : ℝ≥0 :=
@@ -85,6 +87,9 @@ theorem eLpNorm_fderiv_cutoff_smul_le {f : ℝ³ → E} (hf : ContDiff ℝ 1 f)
     eLpNorm (fderiv ℝ (fun y => cutoff ℝ³ R y • f y)) 2 volume ≤
       eLpNorm (fderiv ℝ f) 2 volume +
         ENNReal.ofReal (derivativeConstant ℝ³ 1 / R) * eLpNorm f 2 volume := by
+  have : SecondCountableTopologyEither ℝ³ (ℝ³ →L[ℝ] E) :=
+    secondCountableTopologyEither_of_left _ _
+  have : SecondCountableTopologyEither ℝ³ E := secondCountableTopologyEither_of_left _ _
   calc
     eLpNorm (fderiv ℝ (fun y => cutoff ℝ³ R y • f y)) 2 volume
         ≤ eLpNorm (fun x => ‖fderiv ℝ f x‖ +

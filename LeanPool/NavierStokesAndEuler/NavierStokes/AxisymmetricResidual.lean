@@ -346,6 +346,10 @@ def advectionAngular (B F U : Profile) (p : ProfilePoint) : ℝ :=
 def advectionAxial (B U : Profile) (p : ProfilePoint) : ℝ :=
   -2 * p.2.1 * B p * partialS U p + U p * partialZ U p
 
+theorem pack_congr {a b c a' b' c' : ℝ} (ha : a = a') (hb : b = b') (hc : c = c') :
+    pack a b c = pack a' b' c' := by
+  rw [ha, hb, hc]
+
 theorem advection_velocity {B F U : Profile} {t : ℝ}
     (hB : SliceDifferentiable B t) (hF : SliceDifferentiable F t)
     (hU : SliceDifferentiable U t) (x : Space) :
@@ -358,16 +362,11 @@ theorem advection_velocity {B F U : Profile} {t : ℝ}
   change (fderiv ℝ (fun y => velocity B F U (t, y)) x) (velocity B F U (t, x)) = _
   rw [(hasFDerivAt_velocity hB hF hU x).fderiv]
   simp only [velocityJacobian, packDerivative_apply]
-  ext i
-  fin_cases i <;> simp only [pack, Fin.isValue, lift, profilePoint, radialEnergy, neg_add_rev,
-      velocity, componentX,
-                    coordinateVector, componentY, add_apply, neg_apply, smul_apply,
-                        projection_apply, PiLp.add_apply, PiLp.smul_apply,
-                    ne_eq, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul,
-                        mul_zero, PiLp.single_eq_same, mul_one,
-                    zero_add, Fin.reduceEq, add_zero, profileDerivative_apply, zero_ne_one,
-                        sub_apply, Fin.zero_eta, advectionRadial,
-                    advectionAngular, advectionAxial, neg_mul] <;> ring
+  refine pack_congr ?_ ?_ ?_ <;>
+    simp only [lift, profilePoint, radialEnergy, velocity, componentX, componentY, add_apply,
+      neg_apply, smul_apply, sub_apply, projection_apply, profileDerivative_apply, pack_zero,
+      pack_one, pack_two, smul_eq_mul, advectionRadial, advectionAngular, advectionAxial] <;>
+    ring
 
 theorem divergence_velocity {B F U : Profile} {t : ℝ}
     (hB : SliceDifferentiable B t) (hF : SliceDifferentiable F t)
@@ -377,14 +376,12 @@ theorem divergence_velocity {B F U : Profile} {t : ℝ}
         2 * radialEnergy x * partialS B (profilePoint t x) := by
   unfold spatialDivergence spatialDerivative
   rw [(hasFDerivAt_velocity hB hF hU x).fderiv, Fin.sum_univ_three]
-  simp only [velocityJacobian, Fin.isValue, lift, profilePoint, radialEnergy, neg_add_rev,
-      coordinateVector,
-    packDerivative_apply, add_apply, neg_apply, smul_apply, projection_apply, ne_eq, one_ne_zero,
-        not_false_eq_true,
+  simp only [velocityJacobian, packDerivative_apply, pack_zero, pack_one, pack_two]
+  simp only [Fin.isValue, lift, profilePoint, radialEnergy, neg_add_rev, coordinateVector,
+    add_apply, neg_apply, smul_apply, projection_apply, ne_eq, one_ne_zero, not_false_eq_true,
     PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, neg_zero, profileDerivative_apply,
-        PiLp.single_eq_same, mul_one,
-    add_zero, Fin.reduceEq, zero_mul, zero_add, sub_apply, pack_zero, zero_ne_one, pack_one,
-        one_mul, pack_two]
+    PiLp.single_eq_same, mul_one, add_zero, Fin.reduceEq, zero_mul, zero_add, sub_apply,
+    zero_ne_one, one_mul]
   ring
 
 theorem spatialLaplacian_velocity {B F U : Profile} {t : ℝ}
@@ -411,12 +408,7 @@ theorem spatialLaplacian_velocity {B F U : Profile} {t : ℝ}
   rw [scalarLaplacian_neg, scalarLaplacian_add h0b h1f, scalarLaplacian_sub h0f h1b]
   rw [scalarLaplacian_weighted_zero hB, scalarLaplacian_weighted_one hF,
     scalarLaplacian_weighted_zero hF, scalarLaplacian_weighted_one hB, scalarLaplacian_lift hU]
-  ext i
-  fin_cases i <;> simp only [pack, Fin.isValue, neg_add_rev, coordinateVector, Fin.zero_eta,
-      PiLp.add_apply, PiLp.smul_apply,
-                    PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
-                        not_false_eq_true, PiLp.single_eq_of_ne, mul_zero,
-                    add_zero, Fin.reduceEq, neg_mul] <;> ring
+  refine pack_congr ?_ ?_ rfl <;> ring
 
 theorem pressureGradient_pressure {P : Profile} {t : ℝ}
     (hP : SliceDifferentiable P t) (x : Space) :
@@ -464,11 +456,7 @@ theorem temporalDerivative_velocity {B F U : Profile} {t : ℝ}
   rw [hv.fderiv]
   simp only [Fin.isValue, neg_add_rev, packDerivative_apply, add_apply, neg_apply, smul_apply,
     timeProfileDerivative_one, smul_eq_mul, sub_apply, neg_mul]
-  ext i
-  fin_cases i <;> simp only [pack, Fin.isValue, coordinateVector, Fin.zero_eta, PiLp.add_apply,
-      PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
-          not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, Fin.mk_one,
-              one_ne_zero, zero_add, Fin.reduceFinMk] <;> ring
+  refine pack_congr ?_ ?_ rfl <;> ring
 
 /-- Residual radial, given by `-partialT B p + advectionRadial B F U p + laplaceWeighted B p +
 partialS P p`. -/
@@ -481,6 +469,16 @@ def residualAngular (B F U : Profile) (p : ProfilePoint) : ℝ :=
 P p`. -/
 def residualAxial (B U P : Profile) (p : ProfilePoint) : ℝ :=
   partialT U p + advectionAxial B U p - laplaceScalar U p + partialZ P p
+
+theorem pack_add_pack (a b c d e f : ℝ) :
+    pack a b c + pack d e f = pack (a + d) (b + e) (c + f) := by
+  simp only [pack, add_smul]
+  abel
+
+theorem pack_sub_pack (a b c d e f : ℝ) :
+    pack a b c - pack d e f = pack (a - d) (b - e) (c - f) := by
+  simp only [pack, sub_smul]
+  abel
 
 /-- Exact physical Navier--Stokes residual, at viscosity one, including radial,
 angular, and axial viscosity. Its hypotheses need no continuation past time `t`. -/
@@ -497,13 +495,9 @@ theorem navierStokesResidual_velocity {B F U P : Profile} {t : ℝ}
   rw [temporalDerivative_velocity hB.differentiable hF.differentiable hU.differentiable,
     advection_velocity hB.differentiable hF.differentiable hU.differentiable,
     spatialLaplacian_velocity hB hF hU, pressureGradient_pressure hP]
-  ext i
-  fin_cases i <;> simp only [pack, Fin.isValue, neg_mul, coordinateVector, Fin.zero_eta,
-      PiLp.add_apply, PiLp.sub_apply,
-                    PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
-                        not_false_eq_true,
-                    PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, residualRadial,
-                        residualAngular, residualAxial] <;> ring
+  simp only [pack_add_pack, pack_sub_pack]
+  refine pack_congr ?_ ?_ ?_ <;>
+    simp only [residualRadial, residualAngular, residualAxial] <;> ring
 
 theorem navierStokesResidual_on_axis {B F U P : Profile} {t : ℝ}
     (hB : SliceC2 B t) (hF : SliceC2 F t) (hU : SliceC2 U t)

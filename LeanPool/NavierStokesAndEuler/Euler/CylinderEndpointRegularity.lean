@@ -31,9 +31,10 @@ variable (P : ℝ) [Fact (0 < P)]
   [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 theorem constantPath_orbit_contDiff (Y : CylinderL2 P V)
-    (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (ContinuousMap.const K Y)) := by
-  convert (ContinuousLinearMap.const ℝ K).contDiff.comp hY using 1
+    (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := V) P a Y)) :
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := V) P a (ContinuousMap.const K Y)) := by
+  convert (ContinuousLinearMap.const ℝ (M := CylinderL2 P V) K).contDiff.comp hY using 1
   funext a
   apply ContinuousMap.ext
   intro t
@@ -53,34 +54,44 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   (D : Coefficients T U E)
 
-variable (hQ : ContDiff ℝ ∞ (translateCoefficientPath D.Q))
-  (hQ₁ : ContDiff ℝ ∞ (translateCoefficientPath D.Q₁))
-  (hH : ContDiff ℝ ∞ (translateCoefficientPath D.H))
-  (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y))
+section
+
+variable (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Y))
 
 omit [CompleteSpace U] [CompleteSpace E] in
 include hY in
 theorem endpointConstant_orbit_contDiff :
     ContDiff ℝ ∞ (fun a : LiftTangent =>
-      pathTranslate P a (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y))) := by
+      pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a
+        (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y))) := by
   apply constantPath_orbit_contDiff
   simpa only [map_smul] using hY.const_smul T⁻¹
+
+end
+
+variable (hQ : ContDiff ℝ ∞ (translateCoefficientPath D.Q))
+  (hQ₁ : ContDiff ℝ ∞ (translateCoefficientPath D.Q₁))
+  (hH : ContDiff ℝ ∞ (translateCoefficientPath D.H))
+  (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Y))
 
 omit [CompleteSpace U] [CompleteSpace E] in
 include hQ₁ hY in
 theorem endpointForcing_orbit_contDiff :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (D.endpointForcing P Y)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a (D.endpointForcing P Y)) := by
   have hp := product_orbit_contDiff P D.Q₁ hQ₁
     (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y))
     (endpointConstant_orbit_contDiff P Y hY)
-  have he : D.endpointForcing P Y = (2 : ℝ) • fullMultiplierMap P D.Q₁
-      (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y)) := rfl
+  have he : D.endpointForcing P Y =
+      (2 : ℝ) • fullMultiplierMap (K := Icc (0 : ℝ) T) (E := U) (F := E) P D.Q₁
+        (ContinuousMap.const (Icc (0 : ℝ) T) (T⁻¹ • Y)) := rfl
   simpa only [he,map_smul] using hp.const_smul (2 : ℝ)
 
 include hQ hQ₁ hH hY
 
 theorem endpointCoordinate_orbit_contDiff :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (D.endpointCoordinate P Y)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a (D.endpointCoordinate P Y)) := by
   rw [D.endpointCoordinate_eq_forced P Y]
   simp only [map_sub]
   exact (endpointConstant_orbit_contDiff P Y hY).sub
@@ -88,27 +99,33 @@ theorem endpointCoordinate_orbit_contDiff :
       (D.endpointForcing_orbit_contDiff P hQ₁ Y hY))
 
 theorem endpointAcceleration_orbit_contDiff :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (D.endpointAcceleration P Y)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a (D.endpointAcceleration P Y)) := by
   rw [D.endpointAcceleration_eq_forced P Y]
   simp only [map_neg]
   exact (D.accelerationPath_orbit_contDiff P hQ hQ₁ hH (D.endpointForcing P Y)
     (D.endpointForcing_orbit_contDiff P hQ₁ Y hY)).neg
 
 theorem endpointVelocity_orbit_contDiff :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (D.endpointVelocity P Y)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a (D.endpointVelocity P Y)) := by
   change ContDiff ℝ ∞ (fun a : LiftTangent =>
-    pathTranslate P a (fullMultiplierMap P D.Q (D.endpointCoordinate P Y)))
+    pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a
+      (fullMultiplierMap (K := Icc (0 : ℝ) T) (E := U) (F := E) P D.Q (D.endpointCoordinate P Y)))
   exact product_orbit_contDiff P D.Q hQ _ (D.endpointCoordinate_orbit_contDiff P hQ hQ₁ hH Y hY)
 
 theorem endpointDerivative_orbit_contDiff :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (D.endpointDerivative P Y)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a (D.endpointDerivative P Y)) := by
   have hv := product_orbit_contDiff P D.Q₁ hQ₁ _
     (D.endpointCoordinate_orbit_contDiff P hQ hQ₁ hH Y hY)
   have ha := product_orbit_contDiff P D.Q hQ _
     (D.endpointAcceleration_orbit_contDiff P hQ hQ₁ hH Y hY)
   have he : D.endpointDerivative P Y =
-      fullMultiplierMap P D.Q₁ (D.endpointCoordinate P Y) +
-        fullMultiplierMap P D.Q (D.endpointAcceleration P Y) := rfl
+      fullMultiplierMap (K := Icc (0 : ℝ) T) (E := U) (F := E) P D.Q₁
+          (D.endpointCoordinate P Y) +
+        fullMultiplierMap (K := Icc (0 : ℝ) T) (E := U) (F := E) P D.Q
+          (D.endpointAcceleration P Y) := rfl
   simpa only [he,map_add] using hv.add ha
 
 end EulerCylinderDirichlet.Coefficients

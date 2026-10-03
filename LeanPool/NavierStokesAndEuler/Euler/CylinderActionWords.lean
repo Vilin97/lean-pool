@@ -169,28 +169,29 @@ section Path
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 theorem pathTranslate_norm_map (a : LiftTangent) (f : C(K, CylinderL2 P V)) :
-    ‖pathTranslate P a f‖ = ‖f‖ := by
+    ‖pathTranslate (K := K) (V := V) P a f‖ = ‖f‖ := by
   apply le_antisymm
   · apply (ContinuousMap.norm_le _ (norm_nonneg f)).2
     intro t
-    change ‖translate P a (f t)‖ ≤ ‖f‖
+    change ‖translate (V := V) P a (f t)‖ ≤ ‖f‖
     rw [LinearIsometry.norm_map]
     exact f.norm_coe_le_norm t
-  · apply (ContinuousMap.norm_le _ (norm_nonneg (pathTranslate P a f))).2
+  · apply (ContinuousMap.norm_le _ (norm_nonneg (pathTranslate (K := K) (V := V) P a f))).2
     intro t
     rw [← (translate P a).norm_map (f t)]
-    exact (pathTranslate P a f).norm_coe_le_norm t
+    exact (pathTranslate (K := K) (V := V) P a f).norm_coe_le_norm t
 
 /-- Path translate isometry, bundling `toLinearMap`, `norm_map`. -/
 def pathTranslateIsometry (a : LiftTangent) : C(K,CylinderL2 P V) →ₗᵢ[ℝ] C(K,CylinderL2 P V) where
-  toLinearMap := (pathTranslate P a).toLinearMap
+  toLinearMap := (pathTranslate (K := K) (V := V) P a).toLinearMap
   norm_map' := pathTranslate_norm_map P a
 
 theorem path_block_constant {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
-    (f : C(K, CylinderL2 P V)) (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) (n : ℕ) (a :
-        LiftTangent) :
-    block directions q (fun b => pathTranslate P b f) n a =
-      block directions q (fun b => pathTranslate P b f) n 0 :=
+    (f : C(K, CylinderL2 P V))
+    (hf : ContDiff ℝ ∞ (fun a => pathTranslate (K := K) (V := V) P a f)) (n : ℕ)
+    (a : LiftTangent) :
+    block directions q (fun b => pathTranslate (K := K) (V := V) P b f) n a =
+      block directions q (fun b => pathTranslate (K := K) (V := V) P b f) n 0 :=
   EulerIsometricAction.block_orbit_constant (X := LiftTangent)
     (E := C(K,CylinderL2 P V)) (ι := ι) (pathTranslateIsometry (K := K) (V := V) P)
     (fun a b u => pathTranslate_add P a b u) (fun u => pathTranslate_zero P u) directions q f hf n a
@@ -203,45 +204,48 @@ def timeTranslateIsometry (T : ℝ) (a : LiftTangent) :
   timeLiftIsometry T (translate P a)
 
 theorem timeTranslateIsometry_add (T : ℝ) (a b : LiftTangent) (f : TimeLp T (CylinderL2 P V)) :
-    timeTranslateIsometry P T a (timeTranslateIsometry P T b f) = timeTranslateIsometry P T (a+b) f
-        := by
+    timeTranslateIsometry (V := V) P T a (timeTranslateIsometry (V := V) P T b f) =
+      timeTranslateIsometry (V := V) P T (a+b) f := by
   apply Lp.ext
-  filter_upwards [timeLift_ae T (translate P a).toContinuousLinearMap (timeTranslateIsometry P T b
-      f),
-    timeLift_ae T (translate P b).toContinuousLinearMap f,
-    timeLift_ae T (translate P (a+b)).toContinuousLinearMap f] with t ha hb hab
-  change timeTranslateIsometry P T a (timeTranslateIsometry P T b f) t = _ at ha
-  change timeTranslateIsometry P T b f t = _ at hb
-  change timeTranslateIsometry P T (a+b) f t = _ at hab
+  filter_upwards [timeLift_ae T (translate (V := V) P a).toContinuousLinearMap
+      (timeTranslateIsometry (V := V) P T b f),
+    timeLift_ae T (translate (V := V) P b).toContinuousLinearMap f,
+    timeLift_ae T (translate (V := V) P (a+b)).toContinuousLinearMap f] with t ha hb hab
+  change timeTranslateIsometry (V := V) P T a (timeTranslateIsometry (V := V) P T b f) t = _ at ha
+  change timeTranslateIsometry (V := V) P T b f t = _ at hb
+  change timeTranslateIsometry (V := V) P T (a+b) f t = _ at hab
   rw [ha,hb,hab]
   exact translate_add P a b (f t)
 
 theorem timeTranslateIsometry_zero (T : ℝ) (f : TimeLp T (CylinderL2 P V)) :
-    timeTranslateIsometry P T 0 f = f := by
+    timeTranslateIsometry (V := V) P T 0 f = f := by
   apply Lp.ext
-  filter_upwards [timeLift_ae T (translate P 0).toContinuousLinearMap f] with t ht
-  change timeTranslateIsometry P T 0 f t = _ at ht
+  filter_upwards [timeLift_ae T (translate (V := V) P 0).toContinuousLinearMap f] with t ht
+  change timeTranslateIsometry (V := V) P T 0 f t = _ at ht
   rw [ht]
   exact translate_zero P (f t)
 
 theorem time_block_constant {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
     (T : ℝ) (f : TimeLp T (CylinderL2 P V))
-    (hf : ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap f))
+    (hf : ContDiff ℝ ∞ (fun a => timeLift T (translate (V := V) P a).toContinuousLinearMap f))
     (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b => timeLift T (translate P b).toContinuousLinearMap f) n a =
-      block directions q (fun b => timeLift T (translate P b).toContinuousLinearMap f) n 0 :=
+    block directions q (fun b => timeLift T (translate (V := V) P b).toContinuousLinearMap f) n a =
+      block directions q
+        (fun b => timeLift T (translate (V := V) P b).toContinuousLinearMap f) n 0 :=
   EulerIsometricAction.block_orbit_constant (X := LiftTangent)
     (E := TimeLp T (CylinderL2 P V)) (ι := ι) (timeTranslateIsometry (V := V) P T)
     (fun a b u => timeTranslateIsometry_add P T a b u)
     (fun u => timeTranslateIsometry_zero P T u) directions q f hf n a
 
 theorem pathLp_orbit_contDiff (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, CylinderL2 P V))
-    (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) :
-    ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap (pathLp T hT f)) := by
-  have he : (fun a => timeLift T (translate P a).toContinuousLinearMap (pathLp T hT f)) =
-      (pathLpOperator T hT) ∘ (fun a => pathTranslate P a f) := by
+    (hf : ContDiff ℝ ∞ (fun a => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a f)) :
+    ContDiff ℝ ∞ (fun a =>
+      timeLift T (translate (V := V) P a).toContinuousLinearMap (pathLp T hT f)) := by
+  have he : (fun a => timeLift T (translate (V := V) P a).toContinuousLinearMap (pathLp T hT f)) =
+      (pathLpOperator (E := CylinderL2 P V) T hT) ∘
+        (fun a => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a f) := by
     funext a
-    convert (pathLp_timeLift T hT (translate P a).toContinuousLinearMap f).symm using 1
+    convert (pathLp_timeLift T hT (translate (V := V) P a).toContinuousLinearMap f).symm using 1
     rfl
   rw [he]
   exact (pathLpOperator (E := CylinderL2 P V) T hT).contDiff.comp hf
@@ -250,14 +254,18 @@ theorem pathLp_orbit_contDiff (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, C
 with exactly the square-root time length factor. -/
 theorem pathLp_block_le {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
     (T : ℝ) (hT : 0 ≤ T) (f : C(Icc (0 : ℝ) T, CylinderL2 P V))
-    (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f)) (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b => timeLift T (translate P b).toContinuousLinearMap (pathLp T hT f))
+    (hf : ContDiff ℝ ∞ (fun a => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P a f)) (n : ℕ)
+    (a : LiftTangent) :
+    block directions q
+        (fun b => timeLift T (translate (V := V) P b).toContinuousLinearMap (pathLp T hT f))
         n a ≤
-      Real.sqrt T*block directions q (fun b => pathTranslate P b f) n a := by
-  have he : (fun b => timeLift T (translate P b).toContinuousLinearMap (pathLp T hT f)) =
-      (pathLpOperator T hT) ∘ (fun b => pathTranslate P b f) := by
+      Real.sqrt T*block directions q
+        (fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P b f) n a := by
+  have he : (fun b => timeLift T (translate (V := V) P b).toContinuousLinearMap (pathLp T hT f)) =
+      (pathLpOperator (E := CylinderL2 P V) T hT) ∘
+        (fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := V) P b f) := by
     funext b
-    convert (pathLp_timeLift T hT (translate P b).toContinuousLinearMap f).symm using 1
+    convert (pathLp_timeLift T hT (translate (V := V) P b).toContinuousLinearMap f).symm using 1
     rfl
   rw [he]
   exact (block_comp_clm_le directions q (pathLpOperator (E := CylinderL2 P V) T hT) _ hf n a).trans

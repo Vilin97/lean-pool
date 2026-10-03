@@ -90,13 +90,13 @@ theorem jet_decay {S : Set Space} (hS : IsCompact S) {f : VelocityField}
     left
     change 1 + ‖z.2‖ + z.1 ≠ 0
     have htz : 0 ≤ z.1 := hz.1.1
-    exact ne_of_gt (by linarith [norm_nonneg z.2])
+    exact ne_of_gt (by linarith only [htz, norm_nonneg z.2])
   obtain ⟨M, hM⟩ := (isCompact_Icc.prod hS).exists_bound_of_continuousOn
     (((hj.mono hsub).norm).mul hw)
   apply NavierStokesAndEuler.WeightedDecay.exists_pos_norm_le_div_of_slab_bound
     (J := J) (w := fun z => (1 + ‖z.2‖ + z.1) ^ K) (T := T + 1)
     (fun t ht _ => Real.rpow_pos_of_pos (by positivity) K)
-    (fun t ht x => jet_zero_after hz m (by linarith) x)
+    (fun t ht x => jet_zero_after hz m (by linarith only [ht]) x)
   refine ⟨max M 0, ?_⟩
   intro t ht x
   by_cases hx : x ∈ S
@@ -187,11 +187,11 @@ theorem outerCutoff_one {x : Space} (hx : x ∈ supportCylinder) : outerCutoff x
   have hrad : |16 * radialSquare ((1 / 2 : ℝ) • x)| ≤ 1 / 2 := by
     rw [abs_of_nonneg (mul_nonneg (by norm_num) (radialSquare_nonneg _))]
     simp only [radialSquare, PiLp.smul_apply, smul_eq_mul] at hr ⊢
-    nlinarith
+    nlinarith only [hr]
   have hax : |4 * ((1 / 2 : ℝ) • x) 2| ≤ 1 / 2 := by
     simp only [PiLp.smul_apply, smul_eq_mul, ← mul_assoc]
     norm_num
-    linarith
+    linarith only [hz]
   exact congrArg₂ (· * ·) (SmoothCutoffs.cutoff_one_of_abs_le hrad)
     (SmoothCutoffs.cutoff_one_of_abs_le hax) |>.trans (one_mul 1)
 
@@ -210,14 +210,14 @@ theorem outerCutoff_ne_zero_inner {x : Space} (hx : outerCutoff x ≠ 0) :
   simp only [PiLp.smul_apply, smul_eq_mul, abs_mul] at hb
   norm_num at hb
   change |x i| < 1 - 1 / 4
-  linarith
+  linarith only [hb]
 
 theorem supportCylinder_inner {x : Space} (hx : x ∈ supportCylinder) :
     x ∈ PeriodicLocalization.innerCube (1 / 4) := by
   intro i
   have hb := supportCylinder_coordinate_bound hx i
   change |x i| < 1 - 1 / 4
-  linarith
+  linarith only [hb]
 
 /-- Compact force, defined pointwise by `outerCutoff z.2 • f z`. -/
 def compactForce (f : VelocityField) : VelocityField := fun z => outerCutoff z.2 • f z

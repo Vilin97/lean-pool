@@ -34,18 +34,22 @@ variable (G : Parent)
 
 /-- Source normal, given by `(G.inverse.realField G.T G.T_pos.le t 0).adjoint m`. -/
 def sourceNormal (m : Space) (t : ℝ) : Space :=
-  (G.inverse.realField G.T G.T_pos.le t 0).adjoint m
+  adjoint (𝕜 := ℝ) (E := Space) (F := Space) (G.inverse.realField G.T G.T_pos.le t 0 :) m
 
 theorem sourceNormal_apply (m : Space) (t : Icc (0 : ℝ) G.T) :
-    G.sourceNormal m t = (G.inverse.field t 0).adjoint m := by
+    G.sourceNormal m t =
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (G.inverse.field t 0) m := by
   simp only [sourceNormal,SmoothTimeField.realField_apply]
 
 theorem sourceNormal_equation (m : Space) (t : Icc (0 : ℝ) G.T) :
     HasDerivWithinAt (G.sourceNormal m)
-      (-(G.centerStrain t).adjoint (G.sourceNormal m t)) (Icc (0 : ℝ) G.T) t := by
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (G.centerStrain t)
+        (G.sourceNormal m t)) (Icc (0 : ℝ) G.T) t := by
   have h := (EulerTransverseBoundedFrame.normalMap m).hasFDerivAt.comp_hasDerivWithinAt
     (t : ℝ) (G.inverse_time t 0)
-  change HasDerivWithinAt (G.sourceNormal m) ((G.inverseDerivative.field t 0).adjoint m)
+  change HasDerivWithinAt (G.sourceNormal m)
+    (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (G.inverseDerivative.field t 0) m)
     (Icc (0 : ℝ) G.T) t at h
   apply h.congr_deriv
   rw [G.inverseDerivative_apply,G.sourceNormal_apply]
@@ -60,7 +64,8 @@ theorem sourceNormal_ne_zero (m : Space) (hm : m ≠ 0) (t : Icc (0 : ℝ) G.T) 
     apply ContinuousLinearMap.ext
     intro v
     exact G.inverse_left t 0 v
-  have hc := congrArg (fun A : Space →L[ℝ] Space => A.adjoint m) hi
+  have hc := congrArg (fun A : Space →L[ℝ] Space =>
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) A m) hi
   rw [adjoint_comp,comp_apply,adjoint_id,id_apply] at hc
   intro hz
   rw [← G.sourceNormal_apply m t,hz,map_zero] at hc
@@ -142,7 +147,8 @@ def geometryFrameOfCenterExpansion (η : U) (hη : η ≠ 0)
     (hupdate : ∀ t : Icc (0 : ℝ) D.T,
       D.M.field t 0 = G.centerStrain t+fderiv ℝ (w t) 0)
     (hpacket : ∀ t ∈ Icc τ D.T,
-      ‖fderiv ℝ (w t) 0-c • rankOne ℝ (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t)‖ ≤
+      ‖fderiv ℝ (w t) 0-c • rankOne (E := Space) (F := Space) ℝ
+          (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t)‖ ≤
           error) :
     ParentFrame D τ where
   B := G.centerStrain
@@ -163,8 +169,9 @@ def geometryFrameOfCenterExpansion (η : U) (hη : η ≠ 0)
       (fun r hr => ⟨hτ.trans hr.1,by simpa only [hTime] using hr.2⟩)
   velocity_equation t ht := by
     have ht0 : t ∈ Icc (0 : ℝ) G.T := ⟨hτ.trans ht.1,by simpa only [hTime] using ht.2⟩
-    exact (G.sourceVelocity_equation m hm R S hS η ⟨t,ht0⟩).mono
-      (fun r hr => ⟨hτ.trans hr.1,by simpa only [hTime] using hr.2⟩)
+    have h := G.sourceVelocity_equation m hm R S hS η ⟨t,ht0⟩
+    dsimp only at h
+    exact h.mono (fun r hr => ⟨hτ.trans hr.1,by simpa only [hTime] using hr.2⟩)
   ray_nonzero t ht := by
     have hm0 : m ≠ 0 := by intro h; simp [h] at hm
     exact G.sourceNormal_ne_zero m hm0 ⟨t,hτ.trans ht.1,by simpa only [hTime] using ht.2⟩

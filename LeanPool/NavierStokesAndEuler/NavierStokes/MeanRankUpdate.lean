@@ -21,6 +21,10 @@ physical length and velocity scales. Each moment carries its own scale.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -52,7 +56,10 @@ theorem scale_normalizeDebt {ell U : ℝ} (hell : ell ≠ 0) (hU : U ≠ 0) (d :
 theorem normalize_scaleDebt {ell U : ℝ} (hell : ell ≠ 0) (hU : U ≠ 0) (d : Debt) :
     normalizeDebt ell U (scaleDebt ell U d) = d := by
   ext i
-  fin_cases i <;> simp [scaleDebt, normalizeDebt, hell, hU]
+  fin_cases i <;> simp only [normalizeDebt, scaleDebt, Fin.isValue, Matrix.cons_val_zero, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, pow_eq_zero_iff, hU, mul_div_cancel_left₀,
+      Matrix.cons_val_one, mul_eq_zero, hell, or_self, Matrix.cons_val, Fin.zero_eta, Fin.mk_one,
+      Fin.reduceFinMk]
 
 theorem integral_scaled {ell : ℝ} (hell : 0 < ell) (c : ℝ) (f : ℝ → ℝ) :
     (∫ r, c * f (r / ell)) = ell * c * ∫ x, f x := by
@@ -71,7 +78,7 @@ theorem scaleField_tsupport {ell : ℝ} (hell : 0 < ell) (U a b : ℝ) {f : ℝ 
     intro r hr
     apply subset_closure
     intro hf
-    exact hr (by simp [scaleField, hf])
+    exact hr (by simp only [scaleField, hf, mul_zero])
   intro r hr
   have hx := hs (closure_minimal hsup hclosed hr)
   exact ⟨by simpa only [mul_comm ell a] using (lt_div_iff₀ hell).1 hx.1,
@@ -110,7 +117,7 @@ theorem scaled_pressure_row {ell : ℝ} (hell : 0 < ell) (U : ℝ) (V f : ℝ �
       (fun r => (U ^ 2 / ell) * ((2 * V (r / ell) / (r / ell)) * f (r / ell))) := by
     funext r
     by_cases hr : r = 0
-    · simp [scaleField, hr]
+    · simp only [scaleField, hr, zero_div, div_zero, zero_mul, mul_zero]
     · unfold scaleField
       field_simp [hell.ne', hr]
   rw [he, integral_scaled hell (U ^ 2 / ell) (fun x => (2 * V x / x) * f x)]
@@ -159,7 +166,7 @@ theorem fiveRows_scaled {ell : ℝ} (hell : 0 < ell) (U : ℝ) {V G f g : ℝ �
     simp only [scaleDebt, Matrix.cons_val_one, Matrix.cons_val_zero]
     ring
   · rw [scaled_axial_row hell, h5]
-    simp [scaleDebt]
+    simp only [Fin.isValue, mul_neg, scaleDebt, Matrix.cons_val]
 
 /-- Angular increment, given by `scaleField ell U (FiveRowRank.deltaV lam C a b (normalizeDebt
 ell U d))`. -/
@@ -185,7 +192,7 @@ theorem physical_five_rows {lam C a b ell U : ℝ} (hlam : 0 < lam) (hC : C ≠ 
   rw [scale_normalizeDebt hell.ne' hU] at h
   have hz : scaleField ell U (fun _ => 0) = (fun _ => 0) := by
     funext r
-    simp [scaleField]
+    simp only [scaleField, mul_zero]
   rw [hz] at h
   exact h
 
@@ -230,7 +237,7 @@ theorem physical_rows_on_patch {lam C a b ell U : ℝ} (hlam : 0 < lam) (hC : C 
       by_cases hr : r ∈ Ioo (ell * a) (ell * b)
       · rw [hV r hr]
       · rw [hv0 r hr]
-        simp
+        simp only [mul_zero]
   · rw [← h.2.2.2.1]
     apply integral_congr_ae
     exact Filter.Eventually.of_forall fun r => by
@@ -238,7 +245,7 @@ theorem physical_rows_on_patch {lam C a b ell U : ℝ} (hlam : 0 < lam) (hC : C 
       by_cases hr : r ∈ Ioo (ell * a) (ell * b)
       · rw [hV r hr, hG r hr]
       · rw [hv0 r hr, hg0 r hr]
-        simp
+        simp only [mul_zero, add_zero]
   · rw [← h.2.2.2.2]
     apply integral_congr_ae
     exact Filter.Eventually.of_forall fun r => by
@@ -246,7 +253,7 @@ theorem physical_rows_on_patch {lam C a b ell U : ℝ} (hlam : 0 < lam) (hC : C 
       by_cases hr : r ∈ Ioo (ell * a) (ell * b)
       · rw [hV r hr, hG r hr]
       · rw [hv0 r hr, hg0 r hr]
-        simp
+        simp only [mul_zero, sub_self]
 
 section Families
 
@@ -387,7 +394,7 @@ theorem slowLift_supported {f : ℝ × E → ℝ} {a b : ℝ}
 
 theorem slowLift_shift (f : ℝ × E → ℝ) (r : ℝ) (s : E) (Y v : PressureStream.Plane)
     (c : ℝ) : slowLift f (r, (s, Y) + c • ((0 : E), v)) = f (r, s) := by
-  simp [slowLift]
+  simp only [slowLift, Prod.smul_mk, smul_zero, Prod.mk_add_mk, add_zero]
 
 omit [NormedSpace ℝ E] in
 theorem radial_integral_eq_interval {a b : ℝ} {f : ℝ × E → ℝ}
@@ -461,15 +468,18 @@ noncomputable def normalizeDebtLinearMap (ell U : ℝ) : Debt →ₗ[ℝ] Debt w
   toFun := normalizeDebt ell U
   map_add' d e := by
     ext i
-    fin_cases i <;> simp [normalizeDebt, add_div]
+    fin_cases i <;> simp only [normalizeDebt, Fin.isValue, Pi.add_apply, add_div, Fin.zero_eta,
+        Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   map_smul' c d := by
     ext i
-    fin_cases i <;> simp [normalizeDebt, mul_div_assoc]
+    fin_cases i <;> simp only [normalizeDebt, Fin.isValue, Pi.smul_apply, smul_eq_mul,
+        mul_div_assoc, Fin.zero_eta, Matrix.cons_val_zero, RingHom.id_apply, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
 
 /-- Scale field linear map, bundling `toFun`, `map_add`, `map_smul`. -/
 noncomputable def scaleFieldLinearMap (ell U : ℝ) : (ℝ → ℝ) →ₗ[ℝ] (ℝ → ℝ) where
   toFun := scaleField ell U
-  map_add' f g := by ext r; simp [scaleField, mul_add]
+  map_add' f g := by ext r; simp only [scaleField, Pi.add_apply, mul_add]
   map_smul' c f := by ext r; simp [scaleField]; ring
 
 /-- Angular linear map, given by `(scaleFieldLinearMap ell U).comp ((FiveRowRank.deltaVLinearMap
@@ -487,7 +497,8 @@ noncomputable def axialLinearMap (lam C a b ell U : ℝ) : Debt →ₗ[ℝ] (ℝ
 theorem debt_eq_sum (d : Debt) : d = ∑ i : Fin 3, d i • (Pi.single i (1 : ℝ) : Debt) := by
   classical
   ext j
-  simp [Pi.single_apply]
+  simp only [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one,
+      mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
 
 theorem linearMap_eq_sum {F : Type*} [AddCommMonoid F] [Module ℝ F]
     (L : Debt →ₗ[ℝ] F) (d : Debt) : L d = ∑ i : Fin 3, d i • L (Pi.single i 1) := by
@@ -666,8 +677,8 @@ theorem modelBox_slope_pos {coord qlo qhi rlo rhi : ℝ} (hc : 0 < coord) (hc1 :
     0 < SimilarityCoordinates.scalarSlope coord (modelToInverse coord y).2.2
       (modelToInverse coord y).1 := by
   rw [modelToInverse_slope (hqlo.trans_le hy.1.1)]
-  have hη : y.2.2 ^ 2 ≤ 1 := by nlinarith [hy.2.2.1, hy.2.2.2]
-  nlinarith [mul_le_mul_of_nonneg_left hη hc.le]
+  have hη : y.2.2 ^ 2 ≤ 1 := by nlinarith only [hc, hc1, hy, hy.2.2.1, hy.2.2.2]
+  nlinarith only [hc1, hη, hc, mul_le_mul_of_nonneg_left hη hc.le]
 
 theorem modelBox_image_isCompact {qlo qhi rlo rhi : ℝ} (hqlo : 0 < qlo) (coord : ℝ) :
     IsCompact (modelToInverse coord '' modelBox qlo qhi rlo rhi) :=
@@ -877,10 +888,9 @@ theorem chartKernel_finiteJetBounds {coord qlo qhi rlo rhi : ℝ}
   calc
     _ ≤ ‖iteratedFDeriv ℝ j (g ∘ PhysicalCoordinateBounds.inverseCoordinates coord) (chartInput p)‖
         *
-        ‖chartInput‖ ^ j := by
-      simpa using ContinuousMultilinearMap.norm_compContinuousLinearMap_le
-        (iteratedFDeriv ℝ j (g ∘ PhysicalCoordinateBounds.inverseCoordinates coord) (chartInput p))
-        (fun _ => chartInput)
+        ‖chartInput‖ ^ j :=
+      (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ fun _ => chartInput).trans_eq
+        (congrArg (_ * ·) (Fin.prod_const _ _))
     _ ≤ C * 1 := mul_le_mul (hb _ (hT p hp) (hq p hp) (hR p hp))
       (pow_le_one₀ (norm_nonneg _) chartInput_norm_le_one) (pow_nonneg (norm_nonneg _) _) hC
     _ = C := mul_one _
@@ -1384,7 +1394,8 @@ theorem slow_streamPotential_eq_primitive {lo hi power M : ℝ}
     rw [radial_integral_eq_interval (PressureStream.weightedSource_contDiff hf).continuous
       (PressureStream.weightedSource_supported hs)]
     exact hm p.2.1
-  simp [PressureStream.weightedSource, slowLift, he]
+  simp only [PressureStream.weightedSource, slowLift, Prod.smul_mk, smul_zero, Prod.fst_add,
+      add_zero, he, smul_eq_mul, mul_zero, sub_zero]
 
 end ActualStream
 
@@ -1411,7 +1422,7 @@ theorem potential_zero_outside (F : SmoothFamily E) {power lo hi M : ℝ}
           have hrp : r ≤ p.1 := (by simpa only [uIcc_of_le hr] using hri : r ∈ Icc lo p.1).2
           dsimp only
           rw [F.desired_zero_outside p.2.1 (fun h => (not_lt_of_ge (hrp.trans hl)) h.1), mul_zero]
-        _ = 0 := by simp
+        _ = 0 := by simp only [intervalIntegral.integral_zero]
     · have hu : F.length p.2.1 * F.b ≤ p.1 :=
         le_of_not_gt (fun hh => hnot ⟨lt_of_not_ge hl, hh⟩)
       have he : (∫ r in lo..p.1, r * F.desired (r, p.2.1)) =
@@ -1420,7 +1431,7 @@ theorem potential_zero_outside (F : SmoothFamily E) {power lo hi M : ℝ}
         intro r hrs
         have hn : F.desired (r, p.2.1) ≠ 0 := by
           intro hz
-          exact hrs (by simp [hz])
+          exact hrs (by simp only [hz, mul_zero])
         have hm := desiredAxialIncrement_tsupport F.lam (F.amplitude p.2.1) F.a F.b
           (F.velocity p.2.1) (F.length_pos p.2.1) F.ordered (F.debt p.2.1) (subset_closure hn)
         exact ⟨(hlo p.2.1).trans_lt hm.1, hm.2.le.trans hu⟩
@@ -1454,7 +1465,7 @@ theorem radial_zero_outside (F : SmoothFamily E) {power lo hi M : ℝ}
       (fun h => hz (Ioo_subset_Icc_self h))
   unfold radial PressureStream.streamBeta PressureStream.graphDz
   rw [he.fderiv_eq, fderiv_fun_const]
-  simp
+  simp only [Pi.zero_apply, zero_apply, neg_zero]
 
 theorem radial_tsupport (F : SmoothFamily E) {power lo hi M : ℝ}
     (hlo0 : 0 < lo) (horder : lo < hi) (hp : 0 < power) (v : PressureStream.Plane)
@@ -1506,8 +1517,8 @@ theorem reserved_five_rows (F : OutgoingProfile.Profile) {XR q : ℝ}
             Real.sqrt q) := by
     have hdiv : r / Real.sqrt q ∈ ReservedPatches.radialClosedPatch F XR .mean := by
       constructor
-      · exact ((le_div_iff₀ (Real.sqrt_pos.mpr hq)).mpr (by nlinarith [hr.1])).trans le_rfl
-      · exact (div_le_iff₀ (Real.sqrt_pos.mpr hq)).mpr (by nlinarith [hr.2])
+      · exact ((le_div_iff₀ (Real.sqrt_pos.mpr hq)).mpr (by nlinarith only [hr, hr.1])).trans le_rfl
+      · exact (div_le_iff₀ (Real.sqrt_pos.mpr hq)).mpr (by nlinarith only [hr, hr.2])
     exact ReservedPatches.radial_heated_fields F XR hXR c (by decide) η
       (ReservedPatches.radial_closedPatch_subset F XR hXR .mean hdiv)
   apply physical_rows_on_patch F.data.core.lam_pos
@@ -1584,8 +1595,8 @@ theorem scaledPrimitive_zero_of_support {l u r : ℝ} (hl : 0 < l) (_ : l < u)
           apply intervalIntegral.integral_congr
           intro t ht
           dsimp only
-          rw [hz t (by simpa using ht), mul_zero]
-        _ = 0 := by simp
+          rw [hz t (by simpa only [mem_Icc, zero_le_one, uIcc_of_le] using ht), mul_zero]
+        _ = 0 := by simp only [intervalIntegral.integral_zero]
     rw [he, mul_zero]
   · have hru : u ≤ r := le_of_not_gt (fun hh => hr ⟨lt_of_not_ge hrl, hh⟩)
     have hrpos : 0 < r := hl.trans (lt_of_not_ge hrl)
@@ -1595,7 +1606,7 @@ theorem scaledPrimitive_zero_of_support {l u r : ℝ} (hl : 0 < l) (_ : l < u)
       intro s hs0
       have hfs : f s ≠ 0 := by
         intro hz
-        exact hs0 (by simp [hz])
+        exact hs0 (by simp only [hz, mul_zero])
       have hsu := hs (subset_closure hfs)
       exact ⟨hl.trans hsu.1, hsu.2.le.trans hru⟩
     rw [he, hm, zero_div]
@@ -1776,12 +1787,12 @@ theorem scaledPrimitive_zero_below {l r : ℝ} (hl : 0 ≤ l) {f : ℝ → ℝ}
       _ = ∫ _t in (0 : ℝ)..1, (0 : ℝ) := by
         apply intervalIntegral.integral_congr
         intro t ht
-        have ht' : t ∈ Icc (0 : ℝ) 1 := by simpa using ht
+        have ht' : t ∈ Icc (0 : ℝ) 1 := by simpa only [mem_Icc, zero_le_one, uIcc_of_le] using ht
         have hrt : r * t ≤ l := (mul_le_mul_of_nonneg_right hr ht'.1).trans
           (mul_le_of_le_one_right hl ht'.2)
         dsimp only
         rw [hf _ hrt, mul_zero]
-      _ = 0 := by simp
+      _ = 0 := by simp only [intervalIntegral.integral_zero]
   rw [he, mul_zero]
 
 theorem scaledPrimitive_sum (f : Fin 3 → ℝ → ℝ) (hf : ∀ i, Continuous (f i)) (d : Debt) (r : ℝ) :
@@ -1849,7 +1860,7 @@ theorem slow_streamPotential_eq_scaledPrimitive {lo hi power M : ℝ}
           have hle : r ≤ lo := (by simpa only [uIcc_of_le hlo.le] using hri : r ∈ Icc 0 lo).2
           dsimp only
           rw [hzero _ hle, mul_zero]
-        _ = 0 := by simp
+        _ = 0 := by simp only [intervalIntegral.integral_zero]
     have hi : (∫ r in (0 : ℝ)..lo, r * f (r, p.2.1)) +
         (∫ r in lo..p.1, r * f (r, p.2.1)) = (∫ r in (0 : ℝ)..p.1, r * f (r, p.2.1)) :=
       intervalIntegral.integral_add_adjacent_intervals
@@ -1866,10 +1877,12 @@ theorem slow_streamPotential_congr_slice (lo hi power M : ℝ) (v : PressureStre
     {f g : ℝ × E → ℝ} (p : PressureStream.Lift E) (he : ∀ r, f (r, p.2.1) = g (r, p.2.1)) :
     PressureStream.streamPotential power lo hi M ((0 : E), v) (slowLift f) p =
       PressureStream.streamPotential power lo hi M ((0 : E), v) (slowLift g) p := by
-  simp [PressureStream.streamPotential, PressureStream.divideRadius, RadialPullback.physicalCompact,
-    RadialPullback.pullback, TransportPrimitive.compactIntegral, TransportPrimitive.pastIntegral,
-    TransportPrimitive.totalIntegral, TransportPrimitive.shift, RadialPullback.normalizeSource,
-    RadialPullback.liftChart, PressureStream.weightedSource, slowLift, he]
+  simp only [PressureStream.streamPotential, PressureStream.divideRadius,
+      RadialPullback.physicalCompact, RadialPullback.pullback, comp_apply,
+      TransportPrimitive.compactIntegral, TransportPrimitive.pastIntegral,
+      RadialPullback.normalizeSource, TransportPrimitive.shift, RadialPullback.liftChart,
+      Prod.smul_mk, smul_zero, Prod.mk_add_mk, PressureStream.weightedSource, slowLift,
+      Prod.fst_add, add_zero, he, smul_eq_mul, TransportPrimitive.totalIntegral]
 
 /-- Only the radial slice is needed for this identity; no extension of the
 slow data outside its open physical domain is assumed. -/
@@ -1979,8 +1992,8 @@ theorem fderiv_apply_eq_of_line_eq {D : Type*} [NormedAddCommGroup D] [NormedSpa
   have hc : HasDerivAt (fun t : ℝ => x + t • v) v 0 := by
     simpa only [one_smul, zero_add, id_eq] using
       (hasDerivAt_const (0 : ℝ) x).fun_add ((hasDerivAt_id (0 : ℝ)).smul_const v)
-  have hfc := hf.hasFDerivAt.comp_hasDerivAt_of_eq 0 hc (by simp)
-  have hgc := hg.hasFDerivAt.comp_hasDerivAt_of_eq 0 hc (by simp)
+  have hfc := hf.hasFDerivAt.comp_hasDerivAt_of_eq 0 hc (by simp only [zero_smul, add_zero])
+  have hgc := hg.hasFDerivAt.comp_hasDerivAt_of_eq 0 hc (by simp only [zero_smul, add_zero])
   have hfun : f ∘ (fun t : ℝ => x + t • v) = g ∘ (fun t : ℝ => x + t • v) := funext he
   rw [hfun] at hfc
   exact hfc.unique hgc
@@ -2006,10 +2019,12 @@ theorem slow_streamGamma_eq_desired_slice {lo hi power M : ℝ}
   have hΨg := PressureStream.streamPotential_contDiff (M := M) hlo horder hp ((0 : E), v)
     (slowLift_contDiff hg) (slowLift_supported hgs)
   let u := PressureStream.radialVector (PressureStream.physicalSpeed power M) ((0 : E), v) p
-  have hDr := fderiv_apply_eq_of_line_eq u hΨ (hΨg.differentiable (by simp) p) (fun t => by
+  have hDr := fderiv_apply_eq_of_line_eq u hΨ (hΨg.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) p) (fun t => by
     apply slow_streamPotential_congr_slice lo hi power M v (f := f) (g := g) (p + t • u)
     intro r
-    simp [g, u, PressureStream.radialVector])
+    simp only [PressureStream.radialVector, Prod.smul_mk, smul_zero, smul_eq_mul, mul_one,
+        Prod.snd_add, Prod.fst_add, add_zero, u, g])
   have hval := slow_streamPotential_congr_slice lo hi power M v (f := f) (g := g) p (fun r => rfl)
   have hAx := slow_streamGamma_eq_desired (M := M) hlo horder hp v hg hgs (fun _ => hm) p
   calc
@@ -2087,9 +2102,10 @@ theorem actual_rank_stream_identities (s : WeightedClasses.StripData ChartPoint)
     hΨ.of_le (ENat.natCast_lt_of_coe_top_le_withTop le_rfl 2).le
   have hr : p.1 ≠ 0 := (hlo.trans_le (hR p hps).1).ne'
   refine ⟨actualChartAxial_eq_desired hlam hB ha hab hp hlo horder hqlo hleft hright
-    (v n) (d n) (hq p hps) (hΨ.differentiableAt (by simp)), ?_⟩
+    (v n) (d n) (hq p hps) (hΨ.differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)), ?_⟩
   exact PressureStream.stream_divergence_zero ((0 : PressureStream.Plane), v n) w
-    hΨ2 ((PressureStream.physicalSpeed_smooth power (M n) hr).differentiableAt (by simp)) hr
+    hΨ2 ((PressureStream.physicalSpeed_smooth power (M n) hr).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hr
 
 end ActualChartIdentities
 
@@ -2126,10 +2142,12 @@ theorem slow_streamPotential_phase_independent (lo hi power M : ℝ) (v : Pressu
     (f : ℝ × E → ℝ) (r : ℝ) (s : E) (Y Y' : PressureStream.Plane) :
     PressureStream.streamPotential power lo hi M ((0 : E), v) (slowLift f) (r, s, Y) =
       PressureStream.streamPotential power lo hi M ((0 : E), v) (slowLift f) (r, s, Y') := by
-  simp [PressureStream.streamPotential, PressureStream.divideRadius, RadialPullback.physicalCompact,
-    RadialPullback.pullback, TransportPrimitive.compactIntegral, TransportPrimitive.pastIntegral,
-    TransportPrimitive.totalIntegral, TransportPrimitive.shift, RadialPullback.normalizeSource,
-    RadialPullback.liftChart, PressureStream.weightedSource, slowLift]
+  simp only [PressureStream.streamPotential, PressureStream.divideRadius,
+      RadialPullback.physicalCompact, RadialPullback.pullback, comp_apply,
+      TransportPrimitive.compactIntegral, TransportPrimitive.pastIntegral,
+      RadialPullback.normalizeSource, TransportPrimitive.shift, RadialPullback.liftChart,
+      Prod.smul_mk, smul_zero, Prod.mk_add_mk, add_zero, PressureStream.weightedSource, slowLift,
+      smul_eq_mul, TransportPrimitive.totalIntegral]
 
 /-- Arbitrarily large fast parts of the axial graph direction vanish exactly
 for the slow rank stream. They cannot create a band-dependent loss. -/
@@ -2151,7 +2169,7 @@ theorem slow_streamBeta_eq_slow_direction (lo hi power M : ℝ) (v : PressureStr
     (differentiableAt_const (Ψ p)) he
   simp only [fderiv_fun_const, Pi.zero_apply, _root_.zero_apply] at hz
   have hw : ((0 : ℝ), (w, wfast)) = ((0 : ℝ), (w, (0 : PressureStream.Plane))) +
-      ((0 : ℝ), ((0 : E), wfast)) := by ext <;> simp
+      ((0 : ℝ), ((0 : E), wfast)) := by ext <;> simp only [Prod.mk_add_mk, add_zero, zero_add]
   change -(fderiv ℝ Ψ p ((0 : ℝ), (w, wfast))) = -(fderiv ℝ Ψ p ((0 : ℝ), (w, (0 :
       PressureStream.Plane))))
   rw [hw, map_add, hz, add_zero]

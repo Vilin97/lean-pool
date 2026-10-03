@@ -33,13 +33,14 @@ variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField}
 theorem WordBound.toFieldTower_weightedNorm_le (hG : G.WordBound q R A d)
     (s N : ℕ) (hN : N + q ≤ s) (ρ : ℝ) (hρ : 0 < ρ) (t : Icc (0 : ℝ) T) :
     weightedNorm P q N ρ (G.toFieldTower.realization s t) ≤
-      A*(∑ n ∈ range (N+1), weight ρ n*majorant R d n) := by
+      A*(∑ n ∈ Finset.range (N+1), weight ρ n*majorant R d n) := by
   calc
-    _ ≤ ∑ n ∈ range (N+1), weight ρ n*(A*majorant R d n) := by
+    _ ≤ ∑ n ∈ Finset.range (N+1), weight ρ n*(A*majorant R d n) := by
       apply sum_le_sum
       intro n hn
       exact mul_le_mul_of_nonneg_left
-        ((G.toFieldTower_blockNorm_le s q n (by have := mem_range.mp hn; omega) t).trans (hG n))
+        ((G.toFieldTower_blockNorm_le s q n
+          (by have := Finset.mem_range.mp hn; omega) t).trans (hG n))
         (weight_pos hρ n).le
     _ = _ := by
       rw [mul_sum]
@@ -51,21 +52,21 @@ theorem WordBound.toFieldTower_weightedDerivativeNorm_le (hG : G.WordBound q R A
     (s N : ℕ) (hN : N + q ≤ s) (ρ : ℝ) (hρ : 0 < ρ) (t : Icc (0 : ℝ) T) :
     (∑ i : Fin 4, weightedNorm P q N ρ
       (derivativeOperator P s i (G.toFieldTower.realization (s+1) t))) ≤
-      A*(∑ n ∈ range (N+1), weight ρ n*majorant R (d+1) n) := by
-  have hb (n : ℕ) (hn : n ∈ range (N+1)) :
+      A*(∑ n ∈ Finset.range (N+1), weight ρ n*majorant R (d+1) n) := by
+  have hb (n : ℕ) (hn : n ∈ Finset.range (N+1)) :
       (∑ i : Fin 4, blockNorm P
         (toJet P (derivativeOperator P s i (G.toFieldTower.realization (s+1) t))) q n) ≤
         A*majorant R (d+1) n := by
     have h := (G.toFieldTower_derivative_block_sum_le s q n
-      (by have := mem_range.mp hn; omega) t).trans (hG (n+1))
+      (by have := Finset.mem_range.mp hn; omega) t).trans (hG (n+1))
     simpa only [majorant, show n+1+d=n+(d+1) by omega] using h
   calc
-    _ = ∑ n ∈ range (N+1), weight ρ n*(∑ i : Fin 4, blockNorm P
+    _ = ∑ n ∈ Finset.range (N+1), weight ρ n*(∑ i : Fin 4, blockNorm P
         (toJet P (derivativeOperator P s i (G.toFieldTower.realization (s+1) t))) q n) := by
       unfold weightedNorm
       rw [sum_comm]
       simp only [mul_sum]
-    _ ≤ ∑ n ∈ range (N+1), weight ρ n*(A*majorant R (d+1) n) :=
+    _ ≤ ∑ n ∈ Finset.range (N+1), weight ρ n*(A*majorant R (d+1) n) :=
       sum_le_sum (fun n hn => mul_le_mul_of_nonneg_left (hb n hn) (weight_pos hρ n).le)
     _ = _ := by
       rw [mul_sum]
@@ -88,7 +89,7 @@ theorem weight_majorant_one (ρ R : ℝ) (n : ℕ) :
     _ = _ := by rw [weight_majorant_zero]
 
 private theorem half_square_sum_identity (N : ℕ) :
-    (∑ n ∈ range N, (1/2 : ℝ)^n*((n+1 : ℕ) : ℝ)^2) +
+    (∑ n ∈ Finset.range N, (1/2 : ℝ)^n*((n+1 : ℕ) : ℝ)^2) +
       (2*(N : ℝ)^2+8*(N : ℝ)+12)*(1/2 : ℝ)^N = 12 := by
   induction N with
   | zero => norm_num
@@ -99,8 +100,8 @@ private theorem half_square_sum_identity (N : ℕ) :
     ring
 
 theorem square_geometric_le_twelve (r : ℝ) (hr : 0 ≤ r) (hrhalf : r ≤ 1 / 2) (N : ℕ) :
-    (∑ n ∈ range N, r^n*((n+1 : ℕ) : ℝ)^2) ≤ 12 := by
-  have hs : (∑ n ∈ range N, (1/2 : ℝ)^n*((n+1 : ℕ) : ℝ)^2) ≤ 12 := by
+    (∑ n ∈ Finset.range N, r^n*((n+1 : ℕ) : ℝ)^2) ≤ 12 := by
+  have hs : (∑ n ∈ Finset.range N, (1/2 : ℝ)^n*((n+1 : ℕ) : ℝ)^2) ≤ 12 := by
     have h := half_square_sum_identity N
     have hp : 0 ≤ (2*(N : ℝ)^2+8*(N : ℝ)+12)*(1/2 : ℝ)^N := by positivity
     linarith only [h, hp]

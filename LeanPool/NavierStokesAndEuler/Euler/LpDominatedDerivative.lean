@@ -53,9 +53,7 @@ theorem hasFDerivAt_of_dominated (U : P → Lp V 2 μ) (F : P → X → V)
       (fun x => M x + ‖D x‖) (hM.add (Lp.memLp D).norm)
     · filter_upwards [hbound] with a ha
       filter_upwards [ha, hM0] with x hx hm
-      rw [sub_zero]
-      change ‖‖a‖⁻¹ • (F a x-F 0 x-D x a)‖ ≤ M x+‖D x‖
-      rw [norm_smul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg a))]
+      rw [sub_zero, norm_smul, Real.norm_of_nonneg (inv_nonneg.mpr (norm_nonneg a))]
       by_cases hz : ‖a‖ = 0
       · simp only [hz, inv_zero, zero_mul]
         exact add_nonneg hm (norm_nonneg _)
@@ -65,7 +63,7 @@ theorem hasFDerivAt_of_dominated (U : P → Lp V 2 μ) (F : P → X → V)
           _ ≤ ‖a‖⁻¹ * (M x*‖a‖+‖D x‖*‖a‖) :=
             mul_le_mul_of_nonneg_left (add_le_add hx ((D x).le_opNorm a))
               (inv_nonneg.mpr (norm_nonneg a))
-          _ = M x+‖D x‖ := by field_simp
+          _ = M x+‖D x‖ := by rw [← add_mul, mul_comm, mul_inv_cancel_right₀ hz]
     · filter_upwards [hpoint] with x hx
       apply tendsto_zero_iff_norm_tendsto_zero.mpr
       have h := hasFDerivAt_iff_tendsto.mp hx

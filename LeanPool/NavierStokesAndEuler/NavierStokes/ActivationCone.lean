@@ -22,6 +22,10 @@ damping parameter. The later results use the constructed activation fields.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -32,11 +36,12 @@ open scoped Topology ContDiff
 open ConeAlgebra StressActivation ProfileHistories
 
 /-- Actual smooth factor in the reciprocal angular-field ratio. -/
-noncomputable def inverseRelativeError (L : Field) (q : ActivationBounds.ScaledPoint) : ℝ :=
+noncomputable def inverseRelativeError (L : ProfileHistories.Field)
+    (q : ActivationBounds.ScaledPoint) : ℝ :=
   -ActivationBounds.controlledErrorFactor L q *
     meanExp (-ActivationBounds.scaledDistance q * ActivationBounds.controlledErrorFactor L q)
 
-theorem inverseRelativeError_smooth {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem inverseRelativeError_smooth {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (inverseRelativeError L) (ActivationBounds.scaledDomain J) :=
   (ActivationBounds.controlledErrorFactor_smooth hJ hL).neg.mul
@@ -45,7 +50,7 @@ theorem inverseRelativeError_smooth {J : Set ℝ} (hJ : IsOpen J) {L : Field}
         (ActivationBounds.controlledErrorFactor_smooth hJ hL)))
 
 theorem inverse_relative_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
     referenceAngular L (T * u, η) / activatedAngular T κ L (T * u, η) - 1 =
       ActivationBounds.scaledDistance ((κ, T), (u, η)) * inverseRelativeError L ((κ, T), (u, η)) :=
@@ -53,7 +58,7 @@ theorem inverse_relative_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   have hd := ActivationBounds.controlled_scaled_factor hT κ hJ hL u hη
   have hrev : L (T * u, η) - controlled T κ L (T * u, η) =
       -ActivationBounds.scaledDistance ((κ, T), (u, η)) *
-        ActivationBounds.controlledErrorFactor L ((κ, T), (u, η)) := by linarith
+        ActivationBounds.controlledErrorFactor L ((κ, T), (u, η)) := by linarith only [hd]
   rw [referenceAngular, activatedAngular, ← Real.exp_sub, hrev, exp_sub_one]
   unfold inverseRelativeError
   ring
@@ -61,7 +66,7 @@ theorem inverse_relative_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
 /-- All fixed parameter jets of this actual ratio have uniform `C*y*ea`
 bounds as the ramp width and retained damping tend to zero. -/
 theorem inverse_relative_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
-    (hKJ : K ⊆ J) {L : Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
+    (hKJ : K ⊆ J) {L : ProfileHistories.Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (T0 : ℝ) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ T ∈ Ioc (0 : ℝ) T0, ∀ κ ∈ Icc (0 : ℝ) 1,
       ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
@@ -82,33 +87,34 @@ theorem ramp_cone_of_errors {c B r e s P J v : ℝ}
     (hP : |P - r| ≤ s * e) (hv : |v - (1 - e) * r| ≤ s * e)
     (hJ : |J| ≤ s * e) :
     e ≤ P - v ∧ 2 + c / 4 < P ∧ (v - 2) * J ^ 2 < 2 * (P - v) ^ 2 := by
-  have hrpos : 0 < r := by linarith
+  have hrpos : 0 < r := by linarith only [hc, hr]
   have hBpos : 0 < B := lt_of_lt_of_le hrpos hrB
   obtain ⟨hPl, hPu⟩ := abs_le.mp hP
   obtain ⟨hvl, hvu⟩ := abs_le.mp hv
   have hse : 0 ≤ s * e := mul_nonneg hs he.le
   have hsle : s * e ≤ s := mul_le_of_le_one_right hs he1
-  have hrgap : 1 ≤ r - 2 * s := by linarith
+  have hrgap : 1 ≤ r - 2 * s := by linarith only [hr, hsc]
   have hgap : e ≤ P - v := by
     have h := mul_le_mul_of_nonneg_left hrgap he.le
-    linarith
-  have hPgt : 2 + c / 4 < P := by linarith
+    linarith only [h, hPl, hvu]
+  have hPgt : 2 + c / 4 < P := by linarith only [hPl, hr, hsle, hsc, hc]
   have hvB : v - 2 ≤ B := by
     have h := mul_nonneg he.le hrpos.le
-    linarith
+    linarith only [hvu, h, hsle, hsquarter, hrB]
   have hJsq : J ^ 2 ≤ s ^ 2 * e ^ 2 := by
     simpa only [mul_pow] using sq_le_sq' (abs_le.mp hJ).1 (abs_le.mp hJ).2
-  have hBs : B * s ≤ 1 / 4 := by linarith
+  have hBs : B * s ≤ 1 / 4 :=
+    (le_add_of_nonneg_right hs).trans ((add_one_mul B s).symm.trans_le hsB)
   have hBss : B * s ^ 2 ≤ 1 / 16 := by
     have h := mul_le_mul_of_nonneg_right hBs hs
-    linarith
+    linarith only [h, hsquarter]
   have he2 : 0 < e ^ 2 := sq_pos_of_pos he
   have hquad : (v - 2) * J ^ 2 < 2 * (P - v) ^ 2 := calc
     (v - 2) * J ^ 2 ≤ B * J ^ 2 := mul_le_mul_of_nonneg_right hvB (sq_nonneg J)
     _ ≤ B * (s ^ 2 * e ^ 2) := mul_le_mul_of_nonneg_left hJsq hBpos.le
     _ = (B * s ^ 2) * e ^ 2 := by ring
     _ ≤ (1 / 16 : ℝ) * e ^ 2 := mul_le_mul_of_nonneg_right hBss he2.le
-    _ < 2 * e ^ 2 := by linarith
+    _ < 2 * e ^ 2 := by linarith only [he2]
     _ ≤ 2 * (P - v) ^ 2 :=
       mul_le_mul_of_nonneg_left (pow_le_pow_left₀ he.le hgap 2) (by norm_num)
   exact ⟨hgap, hPgt, hquad⟩
@@ -121,8 +127,8 @@ theorem collar_lower_of_errors {c B r e s v : ℝ}
     (hv : |v - (1 - e) * r| ≤ s * e) :
     2 + c / 2 < v := by
   have hl := (abs_le.mp hv).1
-  have hm := mul_le_mul_of_nonneg_left (show r + s ≤ B + 1 by linarith) he
-  linarith
+  have hm := mul_le_mul_of_nonneg_left (show r + s ≤ B + 1 by linarith only [hrB, hs]) he
+  linarith only [hc, hr, heB, hl, hm]
 
 /-- Combining the ramp and collar estimates gives the actual lower-root
 criterion, including the strict lower bound on `v`. -/
@@ -135,9 +141,9 @@ theorem true_collar_of_errors {c B r e s P J v : ℝ}
     (hJ : |J| ≤ s * e) :
     e ≤ P - v ∧ 2 + c / 2 < v ∧ 2 < P ∧ v < coneBound P J := by
   obtain ⟨hgap, _, hquad⟩ := ramp_cone_of_errors hc hr hrB he he1 hs hsquarter hsc hsB hP hv hJ
-  have hvc := collar_lower_of_errors hc hr hrB he.le (by linarith) heB hv
-  have hv2 : 2 < v := by linarith
-  have hcone := (true_cone_iff hv2).mpr ⟨by linarith, hquad⟩
+  have hvc := collar_lower_of_errors hc hr hrB he.le (by linarith only [hsquarter]) heB hv
+  have hv2 : 2 < v := by linarith only [hc, hvc]
+  have hcone := (true_cone_iff hv2).mpr ⟨by linarith only [he, hgap], hquad⟩
   exact ⟨hgap, hvc, hcone⟩
 
 /-- A single error tolerance is chosen from the fixed reference bounds. -/
@@ -158,7 +164,7 @@ theorem errorTolerance_bounds {c B s : ℝ} (hB : 0 ≤ B) (hs : s ≤ errorTole
   have hp : 0 < 4 * (B + 1) := by positivity
   have hm := (le_div_iff₀ hp).mp h3
   refine ⟨h1, h2, ?_⟩
-  linarith
+  linarith only [hm]
 
 /-- Positivity of the actual flat activation on the nonzero ramp. -/
 theorem activation_pos {T κ y : ℝ} (hT : 0 < T) (hκ : κ < 1) (hy : 0 < y) :
@@ -181,21 +187,21 @@ theorem activation_uniform_collar {m : ℝ} (hm : 0 < m) :
   have hud : dist (y / T) (0 : ℝ) < δ := by
     rw [Real.dist_eq, sub_zero, abs_of_nonneg hu]
     have := huy.trans (min_le_left _ _)
-    linarith
+    linarith only [hδ, this]
   have hsigma : OutgoingSchedule.sigma (y / T) < m := by
     have h := hδprop hud
     simpa only [OutgoingSchedule.sigma_zero le_rfl, Real.dist_eq, sub_zero,
       abs_of_nonneg (OutgoingSchedule.sigma_nonneg _)] using h
   have hact : activation T κ y ≤ OutgoingSchedule.sigma (y / T) := by
     unfold activation
-    exact mul_le_of_le_one_left (OutgoingSchedule.sigma_nonneg _) (by linarith [hκ.1])
+    exact mul_le_of_le_one_left (OutgoingSchedule.sigma_nonneg _) (by linarith only [hκ, hκ.1])
   exact hact.trans_lt hsigma
 
 /-- Uniform conversion of proved comparison estimates into a complete
 initial ramp and a first true-cone collar. The constants are chosen before
 the retained damping parameter. -/
-theorem uniform_ramp_from_comparison {K : Set ℝ} {r : Field}
-    {P J v : ℝ → ℝ → Field} {c B C T0 : ℝ}
+theorem uniform_ramp_from_comparison {K : Set ℝ} {r : ProfileHistories.Field}
+    {P J v : ℝ → ℝ → ProfileHistories.Field} {c B C T0 : ℝ}
     (hc : 0 < c) (hB : 0 ≤ B) (hC : 0 ≤ C) (hT0 : 0 < T0)
     (href : ∀ y ∈ Icc (0 : ℝ) T0, ∀ η ∈ K, 2 + c ≤ r (y, η) ∧ r (y, η) ≤ B)
     (herr : ∀ T ∈ Ioc (0 : ℝ) T0, ∀ κ ∈ Ioo (0 : ℝ) 1,
@@ -213,7 +219,7 @@ theorem uniform_ramp_from_comparison {K : Set ℝ} {r : Field}
           v T κ (y, η) < coneBound (P T κ (y, η)) (J T κ (y, η)) ∧
           (y ≤ θ * T → 2 + c / 2 < v T κ (y, η)) := by
   have htolerance : 0 < errorTolerance c B := errorTolerance_pos hc hB
-  have hCp : 0 < C + 1 := by linarith
+  have hCp : 0 < C + 1 := by linarith only [hC]
   have hBp : 0 < 4 * (B + 1) := by positivity
   obtain ⟨θ, hθ, hθone, hsmallactivation⟩ :=
     activation_uniform_collar (div_pos hc hBp)
@@ -238,18 +244,18 @@ theorem uniform_ramp_from_comparison {K : Set ℝ} {r : Field}
       (C * y) * activation T κ y := herrors.2.1
   obtain ⟨hgap, hPgt, hquad⟩ := ramp_cone_of_errors hc hr.1 hr.2 he heone hs hsq hsc hsB herrors.1
       hve herrors.2.2
-  have hP2 : 2 < P T κ (y, η) := by linarith
+  have hP2 : 2 < P T κ (y, η) := by linarith only [hc, hPgt]
   have hroot : v T κ (y, η) < coneBound (P T κ (y, η)) (J T κ (y, η)) := by
     by_cases hv2 : 2 < v T κ (y, η)
-    · exact ((true_cone_iff hv2).mpr ⟨by linarith, hquad⟩).2
+    · exact ((true_cone_iff hv2).mpr ⟨by linarith only [he, hgap], hquad⟩).2
     · exact relaxed_cone_of_le_two hP2 (le_of_not_gt hv2)
   refine ⟨hgap, hPgt, hquad, hroot, ?_⟩
   intro hycollar
   have hsmall := hsmallactivation T hT.1 κ ⟨hκ.1.le, hκ.2.le⟩ y ⟨hy.1.le, hycollar⟩
   have heB : activation T κ y * (B + 1) ≤ c / 4 := by
     have h := (lt_div_iff₀ hBp).mp hsmall
-    linarith
-  exact collar_lower_of_errors hc hr.1 hr.2 he.le (by linarith) heB hve
+    linarith only [h]
+  exact collar_lower_of_errors hc hr.1 hr.2 he.le (by linarith only [hsq]) heB hve
 
 /-- Exact stress factorization when stock and shear-ratio errors carry the
 constructed factor `y*e`. Neither component divides by the damping. -/
@@ -289,7 +295,7 @@ theorem reducedStress_first_positive {F A B κ y dA dB dR α M : ℝ}
   apply mul_pos hF
   have hlo := (abs_le.mp hdA).1
   have hm := mul_le_mul_of_nonneg_left hlo hy
-  linarith
+  linarith only [hα, hA, hsmall, hm]
 
 theorem reducedStress_nonzero {F A B κ y dA dB dR α M : ℝ}
     (hF : 0 < F) (hα : 0 < α) (hA : α ≤ A) (hy : 0 ≤ y)
@@ -314,7 +320,7 @@ theorem reducedStress_edge_margin {F A B c κ dA dB dR : ℝ}
     2 * F < (reducedStress F A B κ 0 dA dB dR).1 +
       (B / A) * (reducedStress F A B κ 0 dA dB dR).2 := by
   rw [reducedStress_edge_projection]
-  nlinarith
+  nlinarith only [hF, hc, hr]
 
 /-- The quadratic cone gap after removing the square of the flat activation. -/
 noncomputable def normalizedConeGap (r v y dP dv dJ : ℝ) : ℝ :=
@@ -383,28 +389,36 @@ theorem cone_error_bounds {κ A B z dA dB dR M : ℝ}
   have hzr : |z * dR| ≤ M := by
     rw [abs_mul]
     simpa only [one_mul] using mul_le_mul hz hdR (abs_nonneg _) (by norm_num : (0 : ℝ) ≤ 1)
-  have h1 : |1 + z * dR| ≤ 1 + M := (abs_add_le _ _).trans (by simpa using add_le_add_right hzr 1)
-  have h2 : |2 + z * dR| ≤ 2 + M := (abs_add_le _ _).trans (by simpa using add_le_add_right hzr 2)
+  have h1 : |1 + z * dR| ≤ 1 + M := (abs_add_le _ _).trans (add_le_add abs_one.le hzr)
+  have h2 : |2 + z * dR| ≤ 2 + M := (abs_add_le _ _).trans (add_le_add abs_two.le hzr)
+  have hMM : 0 ≤ M * M := mul_nonneg hM hM
   refine ⟨?_, ?_, ?_⟩
   · calc
       |projectionError A B z dA dB dR| ≤
           |dA| + |dB| * |B / A| * |1 + z * dR| + |B ^ 2 / A| * |dR| := by
         exact (abs_add_le _ _).trans (add_le_add_left (abs_add_le _ _) _)
           |>.trans_eq (by simp only [abs_mul])
-      _ ≤ M + M * M * (1 + M) + M * M := by gcongr
+      _ ≤ M + M * M * (1 + M) + M * M :=
+        add_le_add (add_le_add hdA (mul_le_mul (mul_le_mul hdB hBA (abs_nonneg _) hM) h1
+          (abs_nonneg _) hMM)) (mul_le_mul hB2A hdR (abs_nonneg _) hM)
       _ = comparisonConstant M := by unfold comparisonConstant; ring
   · calc
       |crossError A B z dA dB dR| ≤
           |dB| + |B| * |dR| + |dA| * |B / A| * |1 + z * dR| := by
         exact (abs_sub _ _).trans (add_le_add_left (abs_sub _ _) _)
           |>.trans_eq (by simp only [abs_mul])
-      _ ≤ M + M * M + M * M * (1 + M) := by gcongr
+      _ ≤ M + M * M + M * M * (1 + M) :=
+        add_le_add (add_le_add hdB (mul_le_mul hB hdR (abs_nonneg _) hM))
+          (mul_le_mul (mul_le_mul hdA hBA (abs_nonneg _) hM) h1 (abs_nonneg _) hMM)
       _ = comparisonConstant M := by unfold comparisonConstant; ring
   · calc
       |sizeError κ A B z dR| = |κ| * |B ^ 2 / A| * |dR| * |2 + z * dR| := by
         simp only [sizeError, abs_mul]
-      _ ≤ 1 * M * M * (2 + M) := by gcongr
-      _ ≤ comparisonConstant M := by unfold comparisonConstant; linarith
+      _ ≤ 1 * M * M * (2 + M) :=
+        mul_le_mul (mul_le_mul (mul_le_mul hκ hB2A (abs_nonneg _) zero_le_one) hdR
+          (abs_nonneg _) (mul_nonneg zero_le_one hM)) h2 (abs_nonneg _)
+          (mul_nonneg (mul_nonneg zero_le_one hM) hM)
+      _ ≤ comparisonConstant M := by unfold comparisonConstant; linarith only [hM]
 
 private theorem bounded_error_factor {M z x : ℝ} (hM : 0 ≤ M) (hz : 0 ≤ z)
     (hx : |x| ≤ M * z) : ∃ d : ℝ, |d| ≤ M ∧ x = z * d := by
@@ -429,9 +443,9 @@ theorem cone_comparison_from_stock_bounds {κ A B z p q R M : ℝ}
   obtain ⟨dA, hdA, hda⟩ := bounded_error_factor hM hz hp
   obtain ⟨dB, hdB, hdb⟩ := bounded_error_factor hM hz hq
   obtain ⟨dR, hdR, hdr⟩ := bounded_error_factor hM hz hR
-  have hpval : p = A + z * dA := by linarith
-  have hqval : q = B + z * dB := by linarith
-  have hRval : R = 1 + z * dR := by linarith
+  have hpval : p = A + z * dA := by linarith only [hda]
+  have hqval : q = B + z * dB := by linarith only [hdb]
+  have hRval : R = 1 + z * dR := by linarith only [hdr]
   rw [hpval, hqval, hRval]
   obtain ⟨hfP, hfJ, hfv⟩ := cone_error_factorizations κ A B z dA dB dR hA
   obtain ⟨hbP, hbJ, hbv⟩ := cone_error_bounds (A := A) (B := B) (z := z)
@@ -439,14 +453,14 @@ theorem cone_comparison_from_stock_bounds {κ A B z p q R M : ℝ}
     (by simpa only [abs_of_nonneg hz] using hz1) hB hBA hB2A hdA hdB hdR
   rw [hfP, hfJ, hfv]
   simp only [abs_mul, abs_of_nonneg hz]
-  exact ⟨by linarith [mul_le_mul_of_nonneg_left hbP hz],
-    by linarith [mul_le_mul_of_nonneg_left hbv hz],
-    by linarith [mul_le_mul_of_nonneg_left hbJ hz]⟩
+  exact ⟨by linarith only [hbP, hz, mul_le_mul_of_nonneg_left hbP hz],
+    by linarith only [hbv, hz, mul_le_mul_of_nonneg_left hbv hz],
+    by linarith only [hbJ, hz, mul_le_mul_of_nonneg_left hbJ hz]⟩
 
 /-- The genuine derivative-defined shear size has the cancellation form used
 in the error transport. -/
 theorem shearSize_eq (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX0 : 0 < X0)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J)
     (hA : referenceP1 L (y, η) ≠ 0) :
@@ -455,49 +469,49 @@ theorem shearSize_eq (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX0
         (referenceAngular L (y, η) / activatedAngular T κ L (y, η)) ^ 2) := by
   have h := shearSize_error T hκ hX0 hJ hL hU y hη hA
   unfold referenceSize at h
-  linarith
+  linarith only [h]
 
 /-- Activated stock one, given by `ActivationStocks.logViewOne h X0 (activatedAngular T κ L)
 (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))`. -/
 noncomputable def activatedStockOne (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    (L U : Field) (T κ : ℝ) : Field :=
+    (L U : ProfileHistories.Field) (T κ : ℝ) : ProfileHistories.Field :=
   ActivationStocks.logViewOne h X0 (activatedAngular T κ L)
     (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))
 
 /-- Activated stock two, constructed using `ActivationStocks.logViewTwo`. -/
 noncomputable def activatedStockTwo (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    (L U : Field) (T κ : ℝ) : Field :=
+    (L U : ProfileHistories.Field) (T κ : ℝ) : ProfileHistories.Field :=
   ActivationStocks.logViewTwo h X0 (activatedAngular T κ L) (controlled T κ U)
     (logHistory X0 initial (activatedAngular T κ L) (controlled T κ U))
 
 /-- Activated projection, defined pointwise by `stockProjection (activatedStockOne h X0 initial
 L U T κ p) (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)`. -/
 noncomputable def activatedProjection (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    (L U : Field) (T κ : ℝ) : Field := fun p =>
+    (L U : ProfileHistories.Field) (T κ : ℝ) : ProfileHistories.Field := fun p =>
   stockProjection (activatedStockOne h X0 initial L U T κ p)
     (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)
 
 /-- Activated cross, defined pointwise by `stockCross (activatedStockOne h X0 initial L U T κ p)
 (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)`. -/
 noncomputable def activatedCross (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    (L U : Field) (T κ : ℝ) : Field := fun p =>
+    (L U : ProfileHistories.Field) (T κ : ℝ) : ProfileHistories.Field := fun p =>
   stockCross (activatedStockOne h X0 initial L U T κ p)
     (activatedStockTwo h X0 initial L U T κ p) (shearSlope T κ X0 L U p)
 
 /-- Activated stress as an element of `ℝ × ℝ`. -/
 noncomputable def activatedStress (h X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    (L U : Field) (T κ : ℝ) (p : Point) : ℝ × ℝ :=
+    (L U : ProfileHistories.Field) (T κ : ℝ) (p : Point) : ℝ × ℝ :=
   (activatedAngular T κ L p * (activatedStockOne h X0 initial L U T κ p - actualP1 T κ L p),
     activatedAngular T κ L p * (activatedStockTwo h X0 initial L U T κ p - actualP2 T κ X0 L U p))
 
 theorem reference_coordinates_smooth {X0 : ℝ} (hX0 : 0 < X0)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (referenceP1 L) (logDomain J hJ).carrier ∧
       ContDiffOn ℝ ∞ (referenceP2 X0 L U) (logDomain J hJ).carrier := by
   have hs : ContDiff ℝ ∞ (fun p : Point => Real.sqrt (2 * radius X0 p.1)) :=
-    (contDiff_const.mul (contDiff_const.mul (Real.contDiff_exp.comp contDiff_fst))).sqrt
+    (contDiff_const.mul (contDiff_const.mul (Real.contDiff_exp.comp (contDiff_fst (F := ℝ))))).sqrt
       (fun p => (mul_pos (by norm_num : (0 : ℝ) < 2) (mul_pos hX0 (Real.exp_pos p.1))).ne')
   refine ⟨contDiffOn_const.mul (radialPartial_smooth (logDomain J hJ) hL), ?_⟩
   exact (contDiffOn_const.mul (radialPartial_smooth (logDomain J hJ) hU)).div
@@ -509,7 +523,7 @@ theorem reference_coordinates_smooth {X0 : ℝ} (hX0 : 0 < X0)
 the flat activation. Its inner-edge value is the positive reference direction. -/
 theorem exists_actual_stress_direction (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
     (initial : HistoryRow → ℝ → ℝ) {J K : Set ℝ} (hJ : IsOpen J) (hKJ : K ⊆ J)
-    {L U : Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
+    {L U : ProfileHistories.Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (hi : ∀ r, ContDiffOn ℝ ∞ (initial r) J)
     (hcoef : ∀ η ∈ J, NaturalAxisData.L h η ≠ 0) {T0 : ℝ}
@@ -539,9 +553,11 @@ theorem exists_actual_stress_direction (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
     · exact (ActivationBounds.controlledValue_smooth hJ hL).exp
     · exact ActivationBounds.rescale_smooth hJ ha
     · exact ActivationBounds.rescale_smooth hJ hb
-    · exact (contDiff_const.sub ((contDiff_const.sub contDiff_fst.fst).mul
-        (OutgoingSchedule.sigma_contDiff.comp (contDiff_snd.fst.div_const 1)))).contDiffOn
-    · exact (contDiff_fst.snd.mul contDiff_snd.fst).contDiffOn
+    · exact (contDiff_const.sub ((contDiff_const.sub
+        (contDiff_fst (𝕜 := ℝ) (E := ℝ × ℝ) (F := Point)).fst).mul
+          (OutgoingSchedule.sigma_contDiff.comp
+            ((contDiff_snd (𝕜 := ℝ) (E := ℝ × ℝ) (F := Point)).fst.div_const 1)))).contDiffOn
+    · exact ((contDiff_fst (𝕜 := ℝ) (E := ℝ × ℝ) (F := Point)).snd.mul contDiff_snd.fst).contDiffOn
     · exact hdA
     · exact hdB
     · exact inverseRelativeError_smooth hJ hL
@@ -558,17 +574,17 @@ theorem exists_actual_stress_direction (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
         referenceP1 L (T * u, η) + T * u * activation 1 κ u * dA ((κ, T), (u, η)) := by
       dsimp only [ActivationBounds.scaledDistance] at hfa
       change activatedStockOne h X0 initial L U T κ (T * u, η) - _ = _ at hfa
-      linarith
+      linarith only [hfa]
     have hpb : activatedStockTwo h X0 initial L U T κ (T * u, η) =
         referenceP2 X0 L U (T * u, η) + T * u * activation 1 κ u * dB ((κ, T), (u, η)) := by
       dsimp only [ActivationBounds.scaledDistance] at hfb
       change activatedStockTwo h X0 initial L U T κ (T * u, η) - _ = _ at hfb
-      linarith
+      linarith only [hfb]
     have hir := inverse_relative_scaled_factor hT.ne' κ hJ hL u hηJ
     have hratio : referenceAngular L (T * u, η) / activatedAngular T κ L (T * u, η) =
         1 + T * u * activation 1 κ u * inverseRelativeError L ((κ, T), (u, η)) := by
       dsimp only [ActivationBounds.scaledDistance] at hir
-      linarith
+      linarith only [hir]
     have hF : ActivationBounds.angularValue L ((κ, T), (u, η)) =
         activatedAngular T κ L (T * u, η) := by
       unfold ActivationBounds.angularValue activatedAngular
@@ -588,7 +604,7 @@ the constructed reciprocal-field factor. Uniform stock estimates are
 obtained internally from their proved smooth factors. -/
 theorem actual_comparisons (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
     (initial : HistoryRow → ℝ → ℝ) {J K : Set ℝ} (hJ : IsOpen J)
-    (hK : IsCompact K) (hKJ : K ⊆ J) {L U : Field}
+    (hK : IsCompact K) (hKJ : K ⊆ J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (hi : ∀ r, ContDiffOn ℝ ∞ (initial r) J)
@@ -633,22 +649,22 @@ theorem actual_comparisons (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
   have hdamp : |damping T κ y| ≤ 1 := by
     rw [abs_of_nonneg (damping_pos T κ y hκoc).le]
     unfold damping
-    linarith
+    linarith only [he0]
   obtain ⟨ha, hb, hba, hb2⟩ := href y hy0 η hη
   obtain ⟨hm1, hm2⟩ := hmatch y hy0 η hη
   have hsval := hs T hT κ hκcc y hy η hη
   simp only [iteratedDeriv_zero, hm1, hm2] at hsval
   have hpbound : |activatedStockOne h X0 initial L U T κ (y, η) - referenceP1 L (y, η)| ≤
       M * (y * activation T κ y) := by
-    exact hsval.1.trans (by linarith [mul_le_mul_of_nonneg_right hsM hz])
+    exact hsval.1.trans (by linarith only [hsM, hz, mul_le_mul_of_nonneg_right hsM hz])
   have hqbound : |activatedStockTwo h X0 initial L U T κ (y, η) - referenceP2 X0 L U (y, η)| ≤
       M * (y * activation T κ y) := by
-    exact hsval.2.trans (by linarith [mul_le_mul_of_nonneg_right hsM hz])
+    exact hsval.2.trans (by linarith only [hsM, hz, mul_le_mul_of_nonneg_right hsM hz])
   have hrval := hr T hT κ hκcc y hy η hη
   simp only [iteratedDeriv_zero] at hrval
   have hrbound : |referenceAngular L (y, η) / activatedAngular T κ L (y, η) - 1| ≤
       M * (y * activation T κ y) :=
-    hrval.trans (by linarith [mul_le_mul_of_nonneg_right hrM hz])
+    hrval.trans (by linarith only [hrM, hz, mul_le_mul_of_nonneg_right hrM hz])
   have hcomp := cone_comparison_from_stock_bounds hM ha hdamp hz hz1
     (hb.trans hrefM) (hba.trans hrefM) (hb2.trans hrefM) hpbound hqbound hrbound
   unfold activatedProjection activatedCross
@@ -659,29 +675,29 @@ theorem actual_comparisons (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
 /-- A strict initial reference margin persists on one common radial collar.
 The collar is obtained from actual uniform continuity on a compact set. -/
 theorem compact_reference_collar {K : Set ℝ} (hK : IsCompact K)
-    {T c : ℝ} (hT : 0 < T) (hc : 0 < c) {r : Field}
+    {T c : ℝ} (hT : 0 < T) (hc : 0 < c) {r : ProfileHistories.Field}
     (hr : ContinuousOn r (Icc (0 : ℝ) T ×ˢ K))
     (hzero : ∀ η ∈ K, 2 + 2 * c ≤ r (0, η)) :
     ∃ τ : ℝ, 0 < τ ∧ τ ≤ T ∧ ∀ y ∈ Icc (0 : ℝ) τ, ∀ η ∈ K,
       2 + c < r (y, η) := by
-  have hu := (isCompact_Icc.prod hK).uniformContinuousOn_of_continuous hr
+  have hu := ((isCompact_Icc (a := (0 : ℝ)) (b := T)).prod hK).uniformContinuousOn_of_continuous hr
   obtain ⟨δ, hδ, hδprop⟩ := Metric.uniformContinuousOn_iff.mp hu c hc
   refine ⟨min T (δ / 2), lt_min hT (by positivity), min_le_left _ _, ?_⟩
   intro y hy η hη
   have hyT : y ≤ T := hy.2.trans (min_le_left _ _)
-  have hyd : y < δ := by have := hy.2.trans (min_le_right _ _); linarith
+  have hyd : y < δ := by have := hy.2.trans (min_le_right _ _); linarith only [hδ, this]
   have hd : dist (y, η) (0, η) < δ := by
     simpa only [Prod.dist_eq, Real.dist_eq, sub_zero, sub_self, abs_zero,
       abs_of_nonneg hy.1, max_eq_left hy.1] using hyd
   have hclose := hδprop (y, η) ⟨⟨hy.1, hyT⟩, hη⟩ (0, η) ⟨⟨le_rfl, hT.le⟩, hη⟩ hd
   have habs : |r (y, η) - r (0, η)| < c := by simpa only [Real.dist_eq] using hclose
   have hlo := (abs_lt.mp habs).1
-  linarith [hzero η hη]
+  linarith only [hlo, hzero, hη, hzero η hη]
 
 /-- Compact reference data provide all fixed bounds needed by the algebraic
 error transport and a genuine common initial cone collar. -/
 theorem compact_reference_bounds {K : Set ℝ} (hK : IsCompact K)
-    {T c : ℝ} (hT : 0 < T) (hc : 0 < c) {A B : Field}
+    {T c : ℝ} (hT : 0 < T) (hc : 0 < c) {A B : ProfileHistories.Field}
     (hA : ContinuousOn A (Icc (0 : ℝ) T ×ˢ K))
     (hB : ContinuousOn B (Icc (0 : ℝ) T ×ˢ K))
     (hApos : ∀ p ∈ Icc (0 : ℝ) T ×ˢ K, 0 < A p)
@@ -698,7 +714,8 @@ theorem compact_reference_bounds {K : Set ℝ} (hK : IsCompact K)
   have hR : ContinuousOn (fun p => A p + B p ^ 2 / A p) D := hA.add ((hB.pow 2).div hA hne)
   obtain ⟨τ, hτ, hτT, hcollar⟩ := compact_reference_collar hK hT hc hR hzero
   obtain ⟨α, hα, hαbound⟩ := UniformCone.positive_uniform_margin hD hA hApos
-  let g : Field := fun p => |B p| + |B p / A p| + |B p ^ 2 / A p| + |A p + B p ^ 2 / A p|
+  let g : ProfileHistories.Field := fun p =>
+    |B p| + |B p / A p| + |B p ^ 2 / A p| + |A p + B p ^ 2 / A p|
   have hg : ContinuousOn g D :=
     ((hB.abs.add ((hB.div hA hne).abs)).add (((hB.pow 2).div hA hne).abs)).add hR.abs
   obtain ⟨M, hM⟩ := (hD.image_of_continuousOn hg).bddAbove
@@ -708,18 +725,19 @@ theorem compact_reference_bounds {K : Set ℝ} (hK : IsCompact K)
   have hb : g (y, η) ≤ max 1 M := (hM (mem_image_of_mem g hp)).trans (le_max_right _ _)
   dsimp only [g] at hb
   refine ⟨hαbound (y, η) hp, hcollar y hy η hη, ?_, ?_, ?_, ?_⟩
-  · linarith [le_abs_self (A (y, η) + B (y, η) ^ 2 / A (y, η)),
-      abs_nonneg (B (y, η)), abs_nonneg (B (y, η) / A (y, η)), abs_nonneg (B (y, η) ^ 2 / A (y, η))]
-  · linarith [abs_nonneg (B (y, η) / A (y, η)), abs_nonneg (B (y, η) ^ 2 / A (y, η)),
+  · linarith only [hb, le_abs_self (A (y, η) + B (y, η) ^ 2 / A (y, η)), abs_nonneg (B (y, η)),
+      abs_nonneg (B (y, η) / A (y, η)), abs_nonneg (B (y, η) ^ 2 / A (y, η))]
+  · linarith only [hb, abs_nonneg (B (y, η) / A (y, η)), abs_nonneg (B (y, η) ^ 2 / A (y, η)),
       abs_nonneg (A (y, η) + B (y, η) ^ 2 / A (y, η))]
-  · linarith [abs_nonneg (B (y, η)), abs_nonneg (B (y, η) ^ 2 / A (y, η)),
+  · linarith only [hb, abs_nonneg (B (y, η)), abs_nonneg (B (y, η) ^ 2 / A (y, η)),
       abs_nonneg (A (y, η) + B (y, η) ^ 2 / A (y, η))]
-  · linarith [abs_nonneg (B (y, η)), abs_nonneg (B (y, η) / A (y, η)),
+  · linarith only [hb, abs_nonneg (B (y, η)), abs_nonneg (B (y, η) / A (y, η)),
       abs_nonneg (A (y, η) + B (y, η) ^ 2 / A (y, η))]
 
-private theorem radialPartial_eq_partialY {F : Field} {p : Point}
+private theorem radialPartial_eq_partialY {F : ProfileHistories.Field} {p : Point}
     (hF : ContDiffAt ℝ ∞ F p) : radialPartial F p = NaturalAxisBridge.partialY F p := by
-  have hd := (hF.differentiableAt (by simp)).hasFDerivAt.comp_hasDerivAt p.1
+  have hd := (hF.differentiableAt (by simp)).hasFDerivAt.comp_hasDerivAt (F := ℝ × ℝ)
+    (f := fun x : ℝ => (id x, p.2)) p.1
     ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))
   exact hd.deriv.symm
 
@@ -734,7 +752,7 @@ theorem referenceP1_natural {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLim
       NaturalEntrance.p1 N.f (N.fromLog (y, η)) := by
   have hp : (y, η) ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
       parameterInterval_open).carrier :=
-    ⟨show y < rampLimit by linarith, hη⟩
+    ⟨show y < rampLimit by linarith only [hδ, hδlim, hy], hη⟩
   have href := radialPartial_hasDerivAt (logDomain parameterInterval parameterInterval_open)
     (FromReference.refLog_smooth N hδ hδlim) (p := (y, η)) ⟨mem_univ _, hη⟩
   have hnat := continuation_hasDerivAt rampLimit_pos hδ hδlim parameterInterval_open N.logF_smooth
@@ -753,7 +771,7 @@ theorem referenceP2_natural {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLim
       NaturalEntrance.p2 N.f N.U (N.fromLog (y, η)) := by
   have hp : (y, η) ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
       parameterInterval_open).carrier :=
-    ⟨show y < rampLimit by linarith, hη⟩
+    ⟨show y < rampLimit by linarith only [hδ, hδlim, hy], hη⟩
   have href := radialPartial_hasDerivAt (logDomain parameterInterval parameterInterval_open)
     (FromReference.refAxial_smooth N hδ hδlim) (p := (y, η)) ⟨mem_univ _, hη⟩
   have hnat := continuation_hasDerivAt rampLimit_pos hδ hδlim parameterInterval_open N.logU_smooth
@@ -783,7 +801,7 @@ theorem referenceP2_smooth {δ : ℝ} (hδ : 0 < δ) (hδlim : 2 * δ < rampLimi
     ContDiffOn ℝ ∞ (referenceP2 N.endpoint (FromReference.refLog N δ) (FromReference.refAxial N δ))
       (logDomain parameterInterval parameterInterval_open).carrier := by
   have hs : ContDiff ℝ ∞ (fun p : Point => Real.sqrt (2 * radius N.endpoint p.1)) :=
-    (contDiff_const.mul (contDiff_const.mul (Real.contDiff_exp.comp contDiff_fst))).sqrt
+    (contDiff_const.mul (contDiff_const.mul (Real.contDiff_exp.comp (contDiff_fst (F := ℝ))))).sqrt
       (fun p => (mul_pos (by
           norm_num : (0 : ℝ) < 2) (mul_pos N.endpoint_pos (Real.exp_pos p.1))).ne')
   have he : ContDiffOn ℝ ∞ (referenceAngular (FromReference.refLog N δ))
@@ -828,17 +846,17 @@ theorem natural_reference_bounds {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     apply F.slope_positive
     · change (Λ * (N.fromLog p).1, p.2) ∈ NaturalEntrance.entranceSet
       have he : Real.exp p.1 < 41 / 40 := by
-        have hy : p.1 < ReferencePath.rampLimit := by linarith [hp.1.2]
+        have hy : p.1 < ReferencePath.rampLimit := by linarith only [hδ, hδlim, hp, hp.1.2]
         simpa only [ReferencePath.rampLimit, Real.exp_log (by norm_num : (0 : ℝ) < 41 / 40)]
           using Real.exp_lt_exp.mpr hy
       have hid : Λ * (N.fromLog p).1 = 4 * Real.exp p.1 := N.fromLog_scaled p
-      exact ⟨⟨by rw [hid]; positivity, by rw [hid]; linarith⟩, hp.2⟩
+      exact ⟨⟨by rw [hid]; positivity, by rw [hid]; linarith only [he]⟩, hp.2⟩
     · exact mul_pos N.endpoint_pos (Real.exp_pos p.1)
   · intro η hη
     rw [referenceP1_natural N hδ hδlim (by
-        linarith) (NaturalAxisCoefficients.original_interval_interior hη),
+        linarith only [hδ]) (NaturalAxisCoefficients.original_interval_interior hη),
       referenceP2_natural N hδ hδlim (by
-          linarith) (NaturalAxisCoefficients.original_interval_interior hη)]
+          linarith only [hδ]) (NaturalAxisCoefficients.original_interval_interior hη)]
     have hm := F.cone_margin η hη
     rw [show (2 + 2 * (1 / 8) : ℝ) = 9 / 4 by norm_num]
     simpa only [NaturalEntrance.coneSize, ReferencePath.Input.fromLog, Real.exp_zero,
@@ -911,7 +929,7 @@ theorem natural_initial_activation {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
   have hT0 : 0 < T0 := lt_min hτ zero_lt_one
   have hT0τ : T0 ≤ τ := min_le_left _ _
   have hT0δ : T0 ≤ δ := hT0τ.trans hτδ
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   have href : ∀ y ∈ Icc (0 : ℝ) T0, ∀ η ∈ Icc (-1 : ℝ) 1,
       referenceP1 L (y, η) ≠ 0 ∧ |referenceP2 N.endpoint L U (y, η)| ≤ M ∧
       |referenceP2 N.endpoint L U (y, η) / referenceP1 L (y, η)| ≤ M ∧
@@ -1015,7 +1033,7 @@ theorem natural_activation_direction {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     intro η hη
     apply mul_pos (Real.exp_pos _)
     have hr := (hb 0 ⟨le_rfl, hτ.le⟩ η hη).2.1
-    linarith)
+    linarith only [hΛ, hr])
   refine ⟨D, min ε1 ε2, hD, lt_min hε1 hε2, ?_, hfactor⟩
   intro κ T η hη
   rw [hedge]

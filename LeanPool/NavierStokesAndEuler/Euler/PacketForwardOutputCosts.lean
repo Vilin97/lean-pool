@@ -79,7 +79,7 @@ theorem forwardInitializedPrimary_global_bound :
   simp only [mul_one] at hb
   have ha : S.H0^2 ≤ 3*S.H0^(2*1) := by
     norm_num only [Nat.mul_one]
-    nlinarith [sq_nonneg S.H0]
+    nlinarith only [sq_nonneg S.H0]
   have hc := (hb.mono_amplitude (zero_le_one.trans L.radius_one) ha).fixed_velocity_grade
     (n := 1) (zero_le_one.trans L.radius_one) S.H0_pos.le
   exact (hc.changeTime hTime).ofRawEq _
@@ -92,40 +92,34 @@ theorem forwardInitializedVelocity_global_gradient_error (N : ℕ) (hN : 1 ≤ N
     ‖fderiv ℝ (fun y => forwardInitializedVelocity M D δ hδ ξ hs α N k⁻¹
       (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x -
       (α*deriv (profile δ) (k*⟪D.m₀,Y x⟫_ℝ)) •
-        rankOne ℝ (canonicalVelocity D ξ t (Y x)) (D.normal.field t (Y x))‖ ≤
+        rankOne ℝ (E := Space) (F := Space) (canonicalVelocity D ξ t (Y x))
+          (D.normal.field t (Y x))‖ ≤
       forwardInitializedGlobalShearCost L.R S.H0 NB.C/k := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hr0 : 0 ≤ L.R := zero_le_one.trans L.radius_one
   have hc0 := fixedVelocityGradeCost_nonneg L.R S.H0 hr0 1
   have hinv : ‖D.FInv.field t (Y x)‖ ≤ NB.C := by
-    simpa [majorant] using NB.inverse_bound 0 t (Y x)
+    simpa only [norm_iteratedFDeriv_zero, majorant, add_zero, pow_zero, Nat.factorial_zero,
+        Nat.cast_one, one_pow, mul_one] using NB.inverse_bound 0 t (Y x)
   have hprimary := EulerPacketForwardShear.global_gradient_bound D δ hδ ξ hs α k hk0
-    (4*L.R) (fixedVelocityGradeCost L.R S.H0 1) NB.C (by positivity) hc0 NB.C_nonneg
+    (4*L.R) (fixedVelocityGradeCost L.R S.H0 1) NB.C (mul_nonneg (by norm_num) hr0) hc0
+    NB.C_nonneg
     (forwardInitializedPrimary_global_bound M D hTime δ hδ ξ hs α
       L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth) t Y x hY hinv
   have htail := forwardInitializedPrimaryRemainder_physical_fderiv_inv M D hTime δ hδ ξ hs α
     L NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase t Y x hY.differentiableAt
   rw [hY.fderiv] at htail
-  have htail' : ‖fderiv ℝ (fun y => forwardInitializedPrimaryRemainder M D δ hδ ξ hs α N k⁻¹
-      (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x‖ ≤ |forwardInitializedRemainderDerivativeCost L.R S.H0| *NB.C/k
-          := by
-    apply htail.trans
-    calc
-      _ ≤ (|forwardInitializedRemainderDerivativeCost L.R S.H0|/k)*‖D.FInv.field t (Y x)‖ :=
-        mul_le_mul_of_nonneg_right (div_le_div_of_nonneg_right (le_abs_self _) hk0.le) (norm_nonneg
-            _)
-      _ ≤ (|forwardInitializedRemainderDerivativeCost L.R S.H0|/k)*NB.C :=
-        mul_le_mul_of_nonneg_left hinv (by positivity)
-      _ = _ := by ring
+  have htail' := htail.trans ((mul_le_mul (div_le_div_of_nonneg_right (le_abs_self _) hk0.le)
+    hinv (norm_nonneg _) (div_nonneg (abs_nonneg _) hk0.le)).trans_eq (div_mul_eq_mul_div _ _ _))
   have hp := ((((forcing D).vectorField (initialData D δ hδ (α • ξ) hs)).smul
       k⁻¹).raw_graph_contDiff
-    t k D.m₀).differentiable (by simp) (Y x)
+    t k D.m₀).differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) (Y x)
   have hpd : DifferentiableAt ℝ (fun y => k⁻¹ • vector D (initialData D δ hδ (α • ξ) hs)
       (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x := by
     simpa only [Function.comp_def,Pi.smul_apply] using hp.comp x hY.differentiableAt
   have hr := ((forwardInitializedPrimaryRemainderField M D hTime δ hδ ξ hs α N hN
       k⁻¹).raw_graph_contDiff
-    t k D.m₀).differentiable (by simp) (Y x)
+    t k D.m₀).differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) (Y x)
   have hrd : DifferentiableAt ℝ (fun y => forwardInitializedPrimaryRemainder M D δ hδ ξ hs α N k⁻¹
       (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x := by
     simpa only [Function.comp_def] using hr.comp x hY.differentiableAt
@@ -138,9 +132,7 @@ theorem forwardInitializedVelocity_global_gradient_error (N : ℕ) (hN : 1 ≤ N
     funext y
     dsimp only [forwardInitializedPrimaryRemainder,Pi.add_apply,Pi.sub_apply,Pi.smul_apply]
     abel
-  rw [he,fderiv_add hpd hrd]
-  have ha : ∀ A E R : Space →L[ℝ] Space, A+E-R=(A-R)+E := by intros; abel
-  rw [ha]
+  simp only [he, fderiv_add hpd hrd, add_sub_right_comm]
   exact (norm_add_le _ _).trans ((add_le_add hprimary htail').trans_eq (by
     unfold forwardInitializedGlobalShearCost
     ring))
@@ -155,7 +147,8 @@ theorem forwardInitializedExactPhysicalVelocity_global_gradient_error
     ‖fderiv ℝ (forwardInitializedExactPhysicalVelocity M D hTime δ hδ ξ hs α
       Cagree N hN k hk Q t Y) x -
       (α*deriv (profile δ) (k*⟪D.m₀,Y x⟫_ℝ)) •
-        rankOne ℝ (canonicalVelocity D ξ t (Y x)) (D.normal.field t (Y x))‖ ≤
+        rankOne ℝ (E := Space) (F := Space) (canonicalVelocity D ξ t (Y x))
+          (D.normal.field t (Y x))‖ ≤
       forwardInitializedGlobalShearCost L.R S.H0 NB.C/k +
         ‖fderiv ℝ (fun y => k⁻¹ • D.F.field t (Y y)
           (Q.pointField period t (cylinderGraph period k D.m₀ (Y y)))) x‖ := by
@@ -249,7 +242,8 @@ theorem forward_output_costs (W H0 : ℝ) (hδ : 0 < δ)
     simp only [physicalInputRadius,max_self,liftedInputRadius]
     change 1+coordinateCost*(4*R+ρ⁻¹) ≤ 1+coordinateCost*(4*Z+4*inverseRadiusEnvelope Z)
     have hc : 0 ≤ coordinateCost := norm_nonneg _
-    gcongr
+    exact add_le_add le_rfl (mul_le_mul_of_nonneg_left
+      (add_le_add (mul_le_mul_of_nonneg_left hRZ (by norm_num)) hρinv) hc)
   have hv := velocity_mono hR0 hH0 hC0 hRZ hHZ hCZ
   have ha1 := gradeCost_mono R H0 Z hR0 hH0 hRZ hHZ 1
   have ha2 := gradeCost_mono R H0 Z hR0 hH0 hRZ hHZ 2
@@ -266,7 +260,9 @@ theorem forward_output_costs (W H0 : ℝ) (hδ : 0 < δ)
   have hb0 := NB.blockAmplitude_nonneg
   have hbZ := hb0.trans hb
   have ht : 6*NB.blockAmplitude*(fixedVelocityGradeCost R H0 1+fixedVelocityGradeCost R H0 2+1) ≤
-      timeEnvelope Z := by unfold timeEnvelope; gcongr
+      timeEnvelope Z :=
+    mul_le_mul (mul_le_mul_of_nonneg_left hb (by norm_num)) (add_le_add (add_le_add ha1 ha2) le_rfl)
+      (add_nonneg (add_nonneg hg1 hg2) zero_le_one) (mul_nonneg (by norm_num) hbZ)
   have hat : 2*liftedInputConstant period*(6*NB.blockAmplitude *
       (fixedVelocityGradeCost R H0 1+fixedVelocityGradeCost R H0 2+1) +
       EulerPacketInitializedCost.weightSize W) ≤ timeInputEnvelope Z := by
@@ -288,8 +284,10 @@ theorem forward_output_costs (W H0 : ℝ) (hδ : 0 < δ)
         unfold weightedPhysicalGradientCost EulerPacketInitializedCost.weightSize
         ring
       _ ≤ ((1+9*Z)*physicalEnvelope Z (4*inverseRadiusEnvelope Z) *
-          EulerCylinderSobolevSpace.sobolevEmbeddingConstant period 3)*outputEnvelope period Z := by
-              gcongr
+          EulerCylinderSobolevSpace.sobolevEmbeddingConstant period 3)*outputEnvelope period Z :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (mul_le_mul
+          (add_le_add le_rfl (mul_le_mul_of_nonneg_left hLC (by norm_num))) hphys hphys0
+          (by positivity)) he) ho
       _ = _ := rfl
   have hshear := shearCost_le R H0 NB.C Z hR0 hH0 NB.C_nonneg hRZ hHZ hNC
   have hhess := hessianCost_le D NB R H0 L.Rc L.C₀ Z hR0 hH0 L.Rc_nonneg L.C₀_nonneg

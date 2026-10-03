@@ -101,7 +101,7 @@ theorem initializedCorrection_drift (s Q : ℕ) (hQ : Q + 6 ≤ s)
   have hn := initializedNormalizedField_normal_bound M D hTime τ hτ hτT B δ hδ ξ hs α
     L H NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth N hN k hk hbase
   have hR0 := zero_le_one.trans L.radius_bounds.1
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hd := hz.toFieldTower_weightedDrift_le_two k⁻¹ D.m₀ hn (by linarith)
     (velocity_nonneg L.R S.H0 BC.multiplierCost hR0 BC.multiplierCost_nonneg)
     (div_nonneg (normal_nonneg L.R S.H0 BC.multiplierCost hR0 BC.multiplierCost_nonneg) hk0.le)
@@ -154,8 +154,8 @@ def initializedMetricBudget (q : ℕ) :
       ((initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk).atOrder period
           (q+1)) :=
   sourceMetricBudgetOfFields D period k⁻¹
-    (by rw [abs_of_pos (inv_pos.mpr (by linarith : 0 < k))]
-        exact inv_le_one_of_one_le₀ (by linarith))
+    (by rw [abs_of_pos (inv_pos.mpr (by linarith only [hk] : 0 < k))]
+        exact inv_le_one_of_one_le₀ (by linarith only [hk]))
     (initializedNormalizedField M D hTime τ hτ hτT B δ hδ ξ hs α N k)
     (initializedNormalizedResidualField M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk) q
 
@@ -242,7 +242,7 @@ def initializedDriftBudget (q : ℕ) (hq : 6 ≤ q) :
   drift_nonneg := div_nonneg
     (drift_nonneg L.R S.H0 BC.multiplierCost (zero_le_one.trans L.radius_bounds.1)
         BC.multiplierCost_nonneg)
-    (by linarith)
+    (by linarith only [hk])
   drift_bound t := initializedCorrection_drift M D hTime τ hτ hτT B δ hδ ξ hs α
     L H NB W LM WM BC hRc hcost hδ1 hα hR WP S hgrowth Cagree N hN k hk hbase
     (((q+1)+1)+1) (q-4) (by omega) (ρ t) (hρ t) (hpacket t) t
@@ -382,9 +382,9 @@ variable (M : EulerMeanPacketProvider.Data)
   (hgrowth : timeProfileChange S.growth hTime = α • L.fullProfile)
   (Kc : CorrectionCoefficientBudget D period)
 
-local notation "cg" => growth D period Kc L.R S.H0 BC.multiplierCost
-local notation "dg" => drift L.R S.H0 BC.multiplierCost
-local notation "ρg" => initialRadius L.R Kc.M Kc.Rc
+local notation "cg" => (growth D period Kc L.R S.H0 BC.multiplierCost)
+local notation "dg" => (drift L.R S.H0 BC.multiplierCost)
+local notation "ρg" => (initialRadius L.R Kc.M Kc.Rc)
 
 /-- Explicit scalar guards suffice because every analytic input to the
 all-order correction theorem is supplied by the constructed packet. -/
@@ -400,16 +400,16 @@ def initializedAllOrderBudget (k : ℝ) (hk : 4 ≤ k)
     (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1) :
     EulerAllOrderDriftCorrection.Budget period D.T_pos
       (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree
-        (truncation k) (truncation_bounds k (by linarith)).1 k hk) := by
-  have hk1 : 1 ≤ k := by linarith
-  have hk0 : 0 < k := by linarith
+        (truncation k) (truncation_bounds k (by linarith only [hk])).1 k hk) := by
+  have hk1 : 1 ≤ k := by linarith only [hk]
+  have hk0 : 0 < k := by linarith only [hk]
   have hn := (truncation_bounds k hk1).1
   have hnx := (truncation_bounds k hk1).2.1
   have hR0 := zero_le_one.trans L.radius_bounds.1
   have hM0 := zero_le_one.trans Kc.M_one_le
   have hb := tailBase_frequency L.R S.H0 BC.termCost k BC.termCost_nonneg hk1 htail
   have hc := hcoefficient.trans (smallPower_le_gradeCap k hk1)
-  have hx6 : 6 ≤ expansion k := by linarith
+  have hx6 : 6 ≤ expansion k := by linarith only [hX]
   have hcg := growth_pos D period Kc L.R S.H0 BC.multiplierCost hR0 BC.multiplierCost_nonneg
   have hdg := drift_nonneg L.R S.H0 BC.multiplierCost hR0 BC.multiplierCost_nonneg
   have hinit := initialRadius_bounds L.R Kc.M Kc.Rc hR0 hM0 Kc.Rc_nonneg

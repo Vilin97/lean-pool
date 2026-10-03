@@ -113,7 +113,7 @@ open scoped ContDiff
 
 namespace Euler.EulerExistenceAndSmoothnessR3
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 variable {u₀ : ℝ³ → ℝ³} {v : ℝ³ → ℝ → ℝ³} {p : ℝ³ → ℝ → ℝ}
 
@@ -246,10 +246,10 @@ theorem evolution_field_eq_of_local_evolution
     have hdδ : d ≤ δ := min_le_left _ _
     have had : a + d ≤ S := by
       have hh : d ≤ S - a := (min_le_right _ _).trans (min_le_left _ _)
-      linarith
+      linarith only [hh]
     have hab : a + d ≤ b := by
       have hh : d ≤ b - a := (min_le_right _ _).trans (min_le_right _ _)
-      linarith
+      linarith only [hh]
     let R := U.shiftTime a ha.2.1 d hd.le had
     let Q := W.restrictTime d hd.le hdδ
     have hinit : R.velocity ⟨0, le_rfl, hd.le⟩ = Q.velocity ⟨0, le_rfl, hd.le⟩ := by
@@ -262,7 +262,7 @@ theorem evolution_field_eq_of_local_evolution
             (hW ⟨0, le_rfl, hδ.le⟩).symm
     have heq := Q.velocity_eq_of_initial R (congrArg SmoothL2Field.toLp hinit)
       ⟨d, hd.le, le_rfl⟩
-    refine ⟨a + d, ?_, by linarith, hab⟩
+    refine ⟨a + d, ?_, by linarith only [hd], hab⟩
     intro x
     have hmem : a + d ∈ Icc (0 : ℝ) S := ⟨add_nonneg ha.2.1 hd.le, had⟩
     rw [projIcc_of_mem hS hmem]

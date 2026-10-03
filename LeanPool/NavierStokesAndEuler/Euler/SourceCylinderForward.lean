@@ -68,8 +68,11 @@ theorem source_forward_block_bound
     (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
     (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) (hg₀ : g ⟨0, le_rfl, hT⟩ = 1)
     (f : C(Icc (0 : ℝ) T, Supported period U K hK)) (a₀ : Supported period U K hK)
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period K hK f)))
-    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period U)))
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := U) period a
+        (includePath (K := Icc (0 : ℝ) T) (V := U) period K hK f)))
+    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      translate (V := U) period a (a₀ : CylinderL2 period U)))
     (C A D Rc C₀ C₁ Ri R : ℝ)
     (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
     (hRi : 2*gramCost c C₀ 1*(Rc+1) ≤ Ri)
@@ -82,20 +85,23 @@ theorem source_forward_block_bound
         ((fundamentalPath T hT (sourceGenerator Q Q₁ c hc hQ)).backward s x)‖ ≤ C*g t/g s)
     (d : ℕ)
     (hforce : ∀ n, block directions q
-      (fun a : LiftTangent => pathTranslate period a (includePath period K hK f)) n 0 ≤ D*majorant
+      (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := U) period a
+        (includePath (K := Icc (0 : ℝ) T) (V := U) period K hK f)) n 0 ≤ D*majorant
           R d n)
-    (hinitial : ∀ n, block directions q (fun a : LiftTangent => translate period a (a₀ : CylinderL2
-        period U)) n 0 ≤
+    (hinitial : ∀ n, block directions q (fun a : LiftTangent =>
+        translate (V := U) period a (a₀ : CylinderL2 period U)) n 0 ≤
       A*majorant R d n)
     (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate period a (includePath period K hK
-      ((evolution period T hT Q Q₁ c hc hQ K hK).weightedSolution g hg f a₀))) n 0 ≤
+    block directions q (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := U) period a
+      (includePath (K := Icc (0 : ℝ) T) (V := U) period K hK
+        ((evolution period T hT Q Q₁ c hc hQ K hK).weightedSolution g hg f a₀))) n 0 ≤
       majorant R (d+1) n := by
-  obtain ⟨hRi₀,-⟩ := inverseRadius_bounds c C₀ Rc Ri hc hRc hRi
-  exact EulerLpCylinderRegularForward.source_forward_block_bound period directions hd q T hT Ω hΩ
+  have hRi₀ := (inverseRadius_bounds c C₀ Rc Ri hc hRc hRi).1
+  apply EulerLpCylinderRegularForward.source_forward_block_bound period directions hd q T hT Ω hΩ
     (sourceGenerator Q Q₁ c hc hQ) (sourceGenerator_translation_contDiff Q Q₁ c hc hQ) g hg hg₀
     K hK hKc hΩo hsub hΩball f a₀ hf ha₀ C A D (18*Ri*C₀*C₁) (4*Ri) R
-    hC hA hD (by positivity) (by positivity) hR
+    hC hA hD (mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) hRi₀) hC₀) hC₁)
+    (mul_nonneg zero_le_four hRi₀) hR
     (sourceGenerator_translation_bound Q Q₁ c hc hQ Rc C₀ C₁ Ri hRc hC₀ hC₁ hRi hbQ hbQ₁)
     hH3 d hforce hinitial n
 

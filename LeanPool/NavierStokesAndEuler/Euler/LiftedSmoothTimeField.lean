@@ -146,20 +146,12 @@ theorem transport_tensor_norm {E : Type*} [NormedAddCommGroup E] [NormedSpace �
     intro v
     exact congrArg (fun L : Space →L[ℝ] LiftTangent => L (A v)) (transportLinear_split κ m)
   rw [he]
-  calc
-    _ ≤ ‖κ • (ContinuousLinearMap.inl ℝ Space ℝ).compContinuousMultilinearMap A‖ +
-        ‖angularInjection.compContinuousMultilinearMap
-          ((normalComponentMap m).compContinuousMultilinearMap A)‖ := norm_add_le _ _
-    _ ≤ |κ| * (1 * ‖A‖) +
-        1 * ‖(normalComponentMap m).compContinuousMultilinearMap A‖ := by
-      rw [norm_smul, Real.norm_eq_abs]
-      apply add_le_add
-      · exact mul_le_mul_of_nonneg_left
-          (((ContinuousLinearMap.inl ℝ Space ℝ).norm_compContinuousMultilinearMap_le A).trans
-            (mul_le_mul_of_nonneg_right spatialInjection_norm (norm_nonneg A))) (abs_nonneg κ)
-      · exact (angularInjection.norm_compContinuousMultilinearMap_le _).trans
-          (mul_le_mul_of_nonneg_right angularInjection_norm (norm_nonneg _))
-    _ = _ := by rw [one_mul, one_mul]
+  exact (norm_add_le _ _).trans (add_le_add
+    ((norm_smul_le κ _).trans (mul_le_mul_of_nonneg_left
+      (((ContinuousLinearMap.inl ℝ Space ℝ).norm_compContinuousMultilinearMap_le A).trans
+        (mul_le_of_le_one_left (norm_nonneg A) spatialInjection_norm)) (abs_nonneg κ)))
+    ((angularInjection.norm_compContinuousMultilinearMap_le _).trans
+      (mul_le_of_le_one_left (norm_nonneg _) angularInjection_norm)))
 
 variable {K E : Type} [TopologicalSpace K] [CompactSpace K]
   [NormedAddCommGroup E] [NormedSpace ℝ E]

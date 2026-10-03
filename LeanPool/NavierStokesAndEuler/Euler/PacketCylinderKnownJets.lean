@@ -38,7 +38,8 @@ def PrefixFields.knownJet (F : PrefixFields P T p a) (O : Operators) (hp : 1 ≤
   · by_cases hz : i = 0
     · refine (SpatialJetField.zero P T).congr ?_
       intro t x θ
-      simp [knownJets,history,velocityJet,hz,show 0 < p by omega]
+      simp only [knownJets, history, hz, show 0 < p by omega, ↓reduceIte, velocityJet,
+          Pi.zero_apply]
     · let G := ((SpatialJetField.ofField O.interval (F.high i hi)).add
         (SpatialJetField.ofField O.interval (F.mean i hi))).add
         (SpatialJetField.ofField O.interval (F.corrector (i-1) (by omega)))
@@ -49,7 +50,7 @@ def PrefixFields.knownJet (F : PrefixFields P T p a) (O : Operators) (hp : 1 ≤
   · by_cases he : i = p
     · refine (SpatialJetField.ofField O.interval (F.corrector (p-1) (by omega))).congr ?_
       intro t x θ
-      simp [knownJets,history,he]
+      simp only [knownJets, history, he, lt_self_iff_false, ↓reduceIte]
     · refine (SpatialJetField.zero P T).congr ?_
       intro t x θ
       simp only [knownJets,history,hi,ite_false,he]

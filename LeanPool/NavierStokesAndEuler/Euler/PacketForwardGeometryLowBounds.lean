@@ -155,7 +155,8 @@ theorem halfBall_physicalGrowth (hball : (1 / 2 : ℝ) ≤ G.radius) :
       g ⟨0,le_rfl,D.T_pos.le⟩=1 ∧
       PhysicalGrowth D {x | ‖x‖ ≤ (1/2 : ℝ)} g (560*P.horizon^10/P.epsilon) := by
   obtain ⟨F,F₁,Z,Z₁,J,hpos,hzero,hgrowth⟩ :=
-    G.exists_geometry_and_growth {x | ‖x‖ ≤ (1/2 : ℝ)} (by simp)
+    G.exists_geometry_and_growth {x | ‖x‖ ≤ (1/2 : ℝ)} (by simp only [one_div, mem_ofPred_eq,
+        norm_zero, inv_nonneg, Nat.ofNat_nonneg])
       (fun _ hx => hx.trans hball)
   exact ⟨_,hpos,hzero,hgrowth⟩
 
@@ -209,7 +210,7 @@ theorem scaledTime_mem (t : Icc (0 : ℝ) D.T) :
   have he := G.epsilon_pos
   constructor
   · unfold scaledTime
-    exact mul_nonneg (div_nonneg ha.le he.le) (by simpa using t.property.1)
+    exact mul_nonneg (div_nonneg ha.le he.le) (by simpa only [sub_zero] using t.property.1)
   · have hh := mul_le_mul_of_nonneg_left t.property.2 (div_nonneg ha.le he.le)
     calc
       _ = (P.a/P.epsilon)*(t : ℝ) := by unfold scaledTime; ring

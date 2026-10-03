@@ -97,7 +97,7 @@ theorem nativeMask_tsupport_subset {n : ℕ} (hn : 1 ≤ n) (k : Grid) :
   change |position q j - SquaredPartition.nativeSpacing n * (k j : ℝ)| ≤
     1 * SquaredPartition.nativeSpacing n
   rw [one_mul, abs_le]
-  constructor <;> linarith [hj.1, hj.2]
+  constructor <;> linarith only [hj, hj.1, hj.2]
 
 theorem gridBox_distance {n : ℕ} {k : Grid} {a b : ℝ} {q q₀ : Slow}
     (hq : q ∈ gridBox n k a) (h₀ : q₀ ∈ gridBox n k b) :
@@ -108,7 +108,7 @@ theorem gridBox_distance {n : ℕ} {k : Grid} {a b : ℝ} {q q₀ : Slow}
   have ht := abs_sub_le (position q j)
     (SquaredPartition.nativeSpacing n * (k j : ℝ)) (position q₀ j)
   rw [abs_sub_comm (SquaredPartition.nativeSpacing n * (k j : ℝ))] at ht
-  linarith [hq j, h₀ j]
+  linarith only [ht, hq, h₀, hq j, h₀ j]
 
 /-- Exactly the labels whose closed mask support meets the closed active set. -/
 noncomputable def ActiveLabel (K : Set Slow) :=
@@ -170,7 +170,7 @@ theorem physicalBox_normalizes (D : ℝ) (L : SlotColoring.Label) {x : Position}
   have hj := hx j
   rw [width_eq_scaled_spacing] at hj
   rw [width_eq_scaled_spacing]
-  nlinarith
+  nlinarith only [hj]
 
 theorem physicalMask_nativeMask (D : ℝ) (L : Label) (q : ℝ) (x : Position) :
     PartitionedCovariance.mask D L q x = SquaredPartition.dyadicMask (L.1 : ℤ) q *
@@ -234,7 +234,7 @@ structure ReferenceCone (F : ℝ) (g : Plane) : Prop where
 
 theorem ReferenceCone.shear_ne_zero {F : ℝ} {g : Plane} (h : ReferenceCone F g) : g ≠ 0 := by
   intro hg
-  simpa [hg] using h.theta_neg
+  simpa only [Fin.isValue, hg, PiLp.zero_apply, lt_self_iff_false] using h.theta_neg
 
 /-- The manuscript's shear coordinates give the primitive reference cone
 from `a > 0` and `a²+b² > 2a`. -/
@@ -247,7 +247,7 @@ theorem referenceCone_of_shear_coordinates {F a b : ℝ} (hF : 0 < F) (ha : 0 < 
     change ‖F • !₂[-a, b]‖ ^ 2 = (F * -a) ^ 2 + (F * b) ^ 2 at hn
     change 0 < 2 * F * (F * -a) + ‖F • !₂[-a, b]‖ ^ 2
     rw [hn]
-    nlinarith [mul_pos (sq_pos_of_pos hF) (sub_pos.mpr hv)]
+    nlinarith only [hF, hv, mul_pos (sq_pos_of_pos hF) (sub_pos.mpr hv)]
 
 theorem normalDirection_unit {g : Plane} (hg : g ≠ 0) : ‖normalDirection g‖ = 1 := by
   simp only [normalDirection, norm_smul, norm_inv, norm_norm]
@@ -271,7 +271,7 @@ theorem transverseDirection_inner_shear (g : Plane) :
   ring
 
 theorem normalDirection_theta (g : Plane) : normalDirection g 0 = g 0 / ‖g‖ := by
-  simp [normalDirection, div_eq_mul_inv, mul_comm]
+  simp only [Fin.isValue, normalDirection, PiLp.smul_apply, smul_eq_mul, mul_comm, div_eq_mul_inv]
 
 theorem coupling_eq (F : ℝ) (g : Plane) : coupling F g = (2 * F * g 0) / ‖g‖ := by
   rw [coupling, normalDirection_theta]
@@ -398,22 +398,28 @@ theorem compact_parameter_bounds {K : Set Slow} (hK : IsCompact K)
       ((hB q hq).trans (le_max_right _ _))
   have hgq : 0 < ‖g q‖ := norm_pos_iff.mpr (hc q hq).shear_ne_zero
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa [parameterScalars, abs_of_pos (hR q hq)] using hb 0
-  · simpa [parameterScalars] using hb 1
-  · simpa [parameterScalars] using hb 2
-  · simpa [parameterScalars, abs_of_pos (hc q hq).lambda0_pos] using hb 3
-  · simpa [parameterScalars] using hb 4
-  · simpa [parameterScalars, abs_of_pos (inv_pos.mpr (hR q hq))] using hb 5
-  · simpa [parameterScalars, abs_of_pos (inv_pos.mpr hgq)] using hb 6
-  · simpa [parameterScalars, abs_of_pos (inv_pos.mpr (hc q hq).lambda0_pos)] using hb 7
-  · simpa [parameterScalars, abs_inv] using hb 8
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val_zero,
+      abs_of_pos (hR q hq)] using hb 0
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val_one,
+      Matrix.cons_val_zero] using hb 1
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val, abs_norm] using hb 2
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val,
+      abs_of_pos (hc q hq).lambda0_pos] using hb 3
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val] using hb 4
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val,
+      abs_of_pos (inv_pos.mpr (hR q hq))] using hb 5
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val,
+      abs_of_pos (inv_pos.mpr hgq)] using hb 6
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val,
+      abs_of_pos (inv_pos.mpr (hc q hq).lambda0_pos)] using hb 7
+  · simpa only [le_max_iff, parameterScalars, Fin.isValue, Matrix.cons_val, abs_inv] using hb 8
 
 private theorem reciprocal_lower {M x : ℝ} (hM : 0 < M) (hx : 0 < x) (h : x⁻¹ ≤ M) :
     M⁻¹ ≤ x := by
   have hb := mul_le_mul_of_nonneg_right h hx.le
   rw [inv_mul_cancel₀ hx.ne'] at hb
   have he : M * M⁻¹ = 1 := mul_inv_cancel₀ hM.ne'
-  nlinarith
+  nlinarith only [hb, he, hM]
 
 theorem ParameterBounds.mono {M M' R F : ℝ} {g : Plane}
     (h : ParameterBounds M R F g) (hMM' : M ≤ M') : ParameterBounds M' R F g :=
@@ -458,34 +464,37 @@ noncomputable def referenceCompact (h a b : ℝ) : Set Slow := closure (activeRe
 theorem activeReference_subset_box {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
     (ha : 0 < a) (hab : a ≤ b) : activeReference h a b ⊆ referenceBox a b := by
   rintro p ⟨hR, hT, q, hq, he, hX⟩
-  have hq0 : 0 < q := by linarith [hq.1]
+  have hq0 : 0 < q := one_half_pos.trans_le hq.1
   have hb : 0 < b := ha.trans_le hab
   have hp : 0 < q ^ (2 * h) := Real.rpow_pos_of_pos hq0 _
   have hfactor : q ^ (2 * h) * (q ^ (1 - 2 * h) - p.2.1 ^ 2) = p.2.2 := by
     rw [← SimilarityCoordinates.forwardScalar_factor hq0]
     exact he
-  have hZ : p.2.1 ^ 2 ≤ q ^ (1 - 2 * h) := by nlinarith
+  have hZ : p.2.1 ^ 2 ≤ q ^ (1 - 2 * h) :=
+    sub_nonneg.mp ((mul_nonneg_iff_of_pos_left hp).mp (hT.trans_eq hfactor.symm))
   have hqpow : q ^ (1 - 2 * h) ≤ 2 := by
     calc
       q ^ (1 - 2 * h) ≤ (2 : ℝ) ^ (1 - 2 * h) :=
-        Real.rpow_le_rpow hq0.le hq.2 (by linarith)
+        Real.rpow_le_rpow hq0.le hq.2 (by linarith only [hh1])
       _ ≤ (2 : ℝ) ^ (1 : ℝ) :=
-        Real.rpow_le_rpow_of_exponent_le (by norm_num) (by linarith)
+        Real.rpow_le_rpow_of_exponent_le one_le_two (by linarith only [hh])
       _ = 2 := Real.rpow_one _
-  have hRlo := (le_div_iff₀ (show 0 < 2 * q by positivity)).mp hX.1
-  have hRhi := (div_le_iff₀ (show 0 < 2 * q by positivity)).mp hX.2
-  have hRlower : a ≤ p.1 ^ 2 := by nlinarith [hq.1]
-  have hRupper : p.1 ^ 2 ≤ 4 * b := by nlinarith [hq.2]
-  have hsa := Real.sq_sqrt ha.le
-  have hsb := Real.sq_sqrt hb.le
-  have hTq : p.2.2 ≤ q := by
-    dsimp [SimilarityCoordinates.forwardScalar] at he
-    nlinarith [sq_nonneg p.2.1]
-  refine ⟨⟨?_, ?_⟩, ⟨⟨?_, ?_⟩, ⟨hT, hTq.trans hq.2⟩⟩⟩
-  · nlinarith [Real.sqrt_nonneg a]
-  · nlinarith [Real.sqrt_nonneg b]
-  · nlinarith
-  · nlinarith
+  have hRlo := (le_div_iff₀ (mul_pos two_pos hq0)).mp hX.1
+  have hRhi := (div_le_iff₀ (mul_pos two_pos hq0)).mp hX.2
+  have hRlower : a ≤ p.1 ^ 2 :=
+    (le_mul_of_one_le_right ha.le (by linarith only [hq.1])).trans hRlo
+  have hRupper : p.1 ^ 2 ≤ 4 * b :=
+    hRhi.trans ((mul_le_mul_of_nonneg_left (show 2 * q ≤ 4 by linarith only [hq.2])
+      hb.le).trans_eq (mul_comm b 4))
+  have hTq : p.2.2 ≤ q :=
+    he.symm.trans_le (sub_le_self q (mul_nonneg (sq_nonneg p.2.1) hp.le))
+  have hZbox : p.2.1 ^ 2 ≤ 2 ^ 2 := (hZ.trans hqpow).trans (by norm_num)
+  have hRbox : p.1 ^ 2 ≤ (2 * Real.sqrt b) ^ 2 := by
+    rw [mul_pow, Real.sq_sqrt hb.le]
+    exact hRupper.trans_eq (by norm_num)
+  exact ⟨⟨Real.sqrt_le_iff.mpr ⟨hR, hRlower⟩,
+      (sq_le_sq₀ hR (mul_nonneg zero_le_two (Real.sqrt_nonneg b))).mp hRbox⟩,
+    ⟨abs_le_of_sq_le_sq' hZbox zero_le_two, ⟨hT, hTq.trans hq.2⟩⟩⟩
 
 theorem referenceCompact_subset_box {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
     (ha : 0 < a) (hab : a ≤ b) : referenceCompact h a b ⊆ referenceBox a b :=
@@ -517,9 +526,9 @@ theorem referenceCompact_subset_baseChart {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h 
   intro q hq
   obtain ⟨hR, hZ, hT⟩ := referenceCompact_subset_box hh hh1 ha hab hq
   have hsa := Real.sqrt_pos.mpr ha
-  exact ⟨⟨by linarith [hR.1], by linarith [hR.2]⟩,
-    ⟨⟨by linarith [hZ.1], by linarith [hZ.2]⟩,
-      ⟨by linarith [hT.1], by linarith [hT.2]⟩⟩⟩
+  exact ⟨⟨by linarith only [hsa, hR, hR.1], by linarith only [hR, hR.2]⟩,
+    ⟨⟨by linarith only [hZ, hZ.1], by linarith only [hZ, hZ.2]⟩,
+      ⟨by linarith only [hT, hT.1], by linarith only [hT, hT.2]⟩⟩⟩
 
 theorem reference_enlarged_eventually_in_chart {h a b : ℝ} (hh : 0 ≤ h)
     (hh1 : h < 1 / 2) (ha : 0 < a) (hab : a ≤ b) :
@@ -532,7 +541,9 @@ theorem normalizedSlow_coordinates (D : ℝ) (n : ℕ) (x : Position) :
     normalizedSlow D n x =
       (x 0 / ChartScales.Q n ^ (1 / 2 : ℝ), (x 1 / ChartScales.Q n ^ D, x 2 / ChartScales.Q n)) :=
           by
-  simp [normalizedSlow, slow, SquaredPartition.slowCoordinates, SlotColoring.axisExponent]
+  simp only [normalizedSlow, slow, SquaredPartition.slowCoordinates, Fin.isValue,
+      SlotColoring.axisExponent, one_div, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val, Real.rpow_one]
 
 /-- The physical similarity equation and the actual dyadic mask put every
 active point into the same compact reference set, independent of its label. -/
@@ -551,7 +562,7 @@ theorem physicalMask_normalized_mem {h a b : ℝ} (L : Label) {q : ℝ} {x : Pos
   have hqn : q / ChartScales.Q L.1 ∈ Icc (1 / 2 : ℝ) 2 := by
     constructor
     · apply (le_div_iff₀ hQ).mpr
-      linarith [hd.1]
+      linarith only [hd, hd.1]
     · exact (div_le_iff₀ hQ).mpr hd.2.le
   have hs := SimilarityHomogeneity.forwardScalar_scale hQ (div_pos hq hQ) (2 * h)
     (x 1 / ChartScales.Q L.1 ^ CoordinateAlgebra.D h)
@@ -563,7 +574,7 @@ theorem physicalMask_normalized_mem {h a b : ℝ} (L : Label) {q : ℝ} {x : Pos
       (x 1 / ChartScales.Q L.1 ^ CoordinateAlgebra.D h) (q / ChartScales.Q L.1) =
       x 2 / ChartScales.Q L.1 := by
     apply (eq_div_iff hQ.ne').mpr
-    nlinarith [hs]
+    nlinarith only [hs]
   have hroot : (ChartScales.Q L.1 ^ (1 / 2 : ℝ)) ^ 2 = ChartScales.Q L.1 := by
     rw [← Real.rpow_mul_natCast hQ.le]
     norm_num
@@ -601,26 +612,26 @@ noncomputable def slopeRatio (u : ℝ) : ℝ := u / Real.sqrt (1 + u ^ 2)
 
 theorem exists_slopeRatio_gt {r : ℝ} (hr : 0 ≤ r) (hr1 : r < 1) :
     ∃ u : ℝ, 0 < u ∧ r < slopeRatio u := by
-  have hsq : 0 < 1 - r ^ 2 := by nlinarith
+  have hsq : 0 < 1 - r ^ 2 := by nlinarith only [hr1, hr]
   let u := (Real.sqrt (1 - r ^ 2))⁻¹
   have hu : 0 < u := inv_pos.mpr (Real.sqrt_pos.mpr hsq)
   have hp : u ^ 2 * (1 - r ^ 2) = 1 := by
-    dsimp [u]
+    dsimp only [u]
     rw [inv_pow, Real.sq_sqrt hsq.le, inv_mul_cancel₀ hsq.ne']
   have hroot : 0 < Real.sqrt (1 + u ^ 2) := Real.sqrt_pos.mpr (by positivity)
   have hsquare : (r * Real.sqrt (1 + u ^ 2)) ^ 2 < u ^ 2 := by
     rw [mul_pow, Real.sq_sqrt (show 0 ≤ 1 + u ^ 2 by positivity)]
-    nlinarith
+    nlinarith only [hsq, hp]
   refine ⟨u, hu, (lt_div_iff₀ hroot).mpr ?_⟩
   by_contra! hn
   have hbad := pow_le_pow_left₀ hu.le hn 2
-  linarith
+  linarith only [hsquare, hbad]
 
 theorem slopeRatio_lt_one (u : ℝ) : slopeRatio u < 1 := by
   have hp : 0 < Real.sqrt (1 + u ^ 2) := Real.sqrt_pos.mpr (by positivity)
   apply (div_lt_one hp).mpr
   have hs := Real.sq_sqrt (show 0 ≤ 1 + u ^ 2 by positivity)
-  nlinarith [Real.sqrt_nonneg (1 + u ^ 2)]
+  nlinarith only [hs, hp, Real.sqrt_nonneg (1 + u ^ 2)]
 
 theorem targetRatio_continuousOn {K : Set Slow} {F : Slow → ℝ} {g T : Slow → Plane}
     (hF : ContinuousOn F K) (hg : ContinuousOn g K) (hT : ContinuousOn T K)
@@ -647,8 +658,8 @@ theorem compact_target_choice {K : Set Slow} (hK : IsCompact K)
     (continuousOn_const.fun_sub (targetRatio_continuousOn hF hg hT hc ht))
     (fun q hq => sub_pos.mpr (ht q hq).ratio_lt_one)
   let r := 1 - min e (1 / 2)
-  have hr : 0 ≤ r := by dsimp [r]; linarith [min_le_right e (1 / 2 : ℝ)]
-  have hr1 : r < 1 := by dsimp [r]; linarith [lt_min he (by norm_num : (0 : ℝ) < 1 / 2)]
+  have hr : 0 ≤ r := by dsimp only [r]; linarith only [min_le_right e (1 / 2 : ℝ)]
+  have hr1 : r < 1 := by dsimp [r]; linarith only [he, lt_min he (by norm_num : (0 : ℝ) < 1 / 2)]
   obtain ⟨u, hu, hur⟩ := exists_slopeRatio_gt hr hr1
   let η := min d ((slopeRatio u - r) / 2)
   have hη : 0 < η := lt_min hd (half_pos (sub_pos.mpr hur))
@@ -656,9 +667,9 @@ theorem compact_target_choice {K : Set Slow} (hK : IsCompact K)
   have hηd : η ≤ d := min_le_left _ _
   have hηr : η ≤ (slopeRatio u - r) / 2 := min_le_right _ _
   have hratio : targetRatio (F q) (g q) (T q) ≤ r := by
-    dsimp [r]
-    linarith [heb q hq, min_le_left e (1 / 2 : ℝ)]
-  refine ⟨by linarith [hdb q hq], ?_⟩
+    dsimp only [r]
+    linarith only [heb, hq, heb q hq, min_le_left e (1 / 2 : ℝ)]
+  refine ⟨by linarith only [hηd, hdb, hq, hdb q hq], ?_⟩
   calc
     targetRatio (F q) (g q) (T q) + η ≤ r + (slopeRatio u - r) / 2 :=
       add_le_add hratio hηr
@@ -685,7 +696,7 @@ theorem compact_diagonal_positive {K : Set Slow} (hK : IsCompact K)
   have hh := hb (q₀, q) ⟨h₀, hq⟩ (q₀, q₀) ⟨h₀, h₀⟩ hp
   rw [Real.dist_eq] at hh
   have hlo := (abs_lt.mp hh).1
-  linarith [hmb q₀ h₀]
+  linarith only [hm, hlo, hmb, h₀, hmb q₀ h₀]
 
 theorem compact_mixed_target {K : Set Slow} (hK : IsCompact K)
     {F : Slow → ℝ} {g T : Slow → Plane}
@@ -717,7 +728,8 @@ theorem compact_mixed_target {K : Set Slow} (hK : IsCompact K)
     (fun q hq => neg_pos.mpr (ht q hq).inward)
   have hbp : ∀ q ∈ K, 0 < b (q, q) := by
     intro q hq
-    have hratio : targetRatio (F q) (g q) (T q) < slopeRatio u := by linarith [(hb q hq).2]
+    have hratio : targetRatio (F q) (g q) (T q) < slopeRatio u := by linarith only [hη, hb, hq,
+        (hb q hq).2]
     rw [targetRatio, abs_div, abs_of_neg (ht q hq).inward] at hratio
     exact sub_pos.mpr ((div_lt_iff₀ (neg_pos.mpr (ht q hq).inward)).mp hratio)
   obtain ⟨δb, hδb, hpb⟩ := compact_diagonal_positive hK hb' hbp
@@ -773,7 +785,7 @@ theorem compact_mixed_target_margin {K : Set Slow} (hK : IsCompact K)
       -⟪T z.2, normalDirection (g z.1)⟫_ℝ - m / 2) (K ×ˢ K) :=
     (hT'.inner hn).neg.sub continuousOn_const
   obtain ⟨δ₁, hδ₁, hden⟩ := compact_diagonal_positive hK hcont
-    (fun q hq => by dsimp only; linarith [hmb q hq])
+    (fun q hq => by dsimp only; linarith only [hm, hmb, hq, hmb q hq])
   let η := min (m / 2) ((slopeRatio u - slopeRatio u₀) / 2)
   have hη : 0 < η := lt_min (half_pos hm) (half_pos (sub_pos.mpr hgap))
   refine ⟨u, η, min δ₀ δ₁, hu, hη, lt_min hδ₀ hδ₁, fun q₀ h₀ q hq hd => ?_⟩
@@ -781,7 +793,7 @@ theorem compact_mixed_target_margin {K : Set Slow} (hK : IsCompact K)
   have hratio := (hbase q₀ h₀ q hq (hd.trans_le (min_le_left _ _))).2
   have hηm : η ≤ m / 2 := min_le_left _ _
   have hηgap : η ≤ (slopeRatio u - slopeRatio u₀) / 2 := min_le_right _ _
-  refine ⟨by dsimp only at hinner; linarith, ?_⟩
+  refine ⟨by dsimp only at hinner; linarith only [hinner, hηm], ?_⟩
   calc
     _ ≤ slopeRatio u₀ + (slopeRatio u - slopeRatio u₀) / 2 := add_le_add hratio.le hηgap
     _ ≤ slopeRatio u₀ + (slopeRatio u - slopeRatio u₀) :=

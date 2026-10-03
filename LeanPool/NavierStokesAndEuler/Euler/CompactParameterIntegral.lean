@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.Calculus.ContDiff.Comp
 import Mathlib.Analysis.Calculus.ParametricIntegral
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Smooth parameter dependence of an actual integral over a compact interval. -/
 
@@ -43,6 +44,8 @@ theorem integral_hasFDerivAt (a b : ℝ) (hab : a ≤ b) (F : X × ℝ → E)
     HasFDerivAt (fun y => ∫ t in a..b, F (y,t))
       (∫ t in a..b, parameterDerivative F (x,t)) x := by
   have hd : Continuous (parameterDerivative F) := (parameterDerivative_contDiff F hF).continuous
+  have : SecondCountableTopologyEither ℝ (X →L[ℝ] E) := secondCountableTopologyEither_of_left ℝ _
+  have : SecondCountableTopologyEither ℝ E := secondCountableTopologyEither_of_left ℝ _
   obtain ⟨C, hC⟩ := ((isCompact_closedBall x 1).prod isCompact_Icc).exists_bound_of_continuousOn
     hd.continuousOn
   apply hasFDerivAt_integral_of_dominated_of_fderiv_le''
@@ -57,10 +60,9 @@ theorem integral_hasFDerivAt (a b : ℝ) (hab : a ≤ b) (F : X × ℝ → E)
     rw [uIoc_of_le hab] at ht
     exact hC (y,t) ⟨ball_subset_closedBall hy, ht.1.le, ht.2⟩
   · exact intervalIntegrable_const
-  · exact Eventually.of_forall fun t y _ => by
-      have hin : HasFDerivAt (fun v : X => (v,t)) (ContinuousLinearMap.inl ℝ X ℝ) y :=
-        (hasFDerivAt_id (𝕜 := ℝ) y).prodMk (hasFDerivAt_const (𝕜 := ℝ) t y)
-      exact ((hF.differentiable (by simp)) (y,t)).hasFDerivAt.comp y hin
+  · exact Eventually.of_forall fun t y _ =>
+      ((hF.differentiable (by simp)) (y,t)).hasFDerivAt.comp (f := fun v : X => (v,t)) y
+        (hasFDerivAt_prodMk_left (𝕜 := ℝ) y t)
 
 theorem integral_contDiff_finite (n : ℕ) (a b : ℝ) (hab : a ≤ b)
     (F : X × ℝ → E) (hF : ContDiff ℝ ∞ F) :

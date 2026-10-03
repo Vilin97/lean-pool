@@ -59,15 +59,9 @@ theorem nonempty_smoothLimitData (hT : 0 ≤ T)
     let R := ordinaryLift.toContinuousLinearMap.compLeftContinuous ℝ (Icc (0 : ℝ) T)
     have hleft := (L.continuous.tendsto (v q)).comp (hv q)
     have hright := (R.continuous.tendsto u).comp hu
-    have heq : (fun k => L (sobolevPath (A k) (hA k) q)) =
-        fun k => R (fieldPath (A k) (hA k)) := by
-      funext k
-      apply ContinuousMap.ext
-      intro t
-      exact ordinarySobolev_value q (A k t).toLp (A k t).translation_contDiff
-    simp only [Function.comp_def] at hleft
-    rw [heq] at hleft
-    exact tendsto_nhds_unique hleft hright
+    have heq (k : ℕ) : L (sobolevPath (A k) (hA k) q) = R (fieldPath (A k) (hA k)) :=
+      ContinuousMap.ext fun t => ordinarySobolev_value q (A k t).toLp (A k t).translation_contDiff
+    exact tendsto_nhds_unique (hleft.congr heq) hright
   let B : SobolevTower T := {
     field := u
     realization := v

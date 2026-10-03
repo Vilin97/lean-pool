@@ -53,16 +53,6 @@ theorem comp_bound (A : MatrixCoefficient T a) (B : MatrixCoefficient T b)
     (n : ℕ) (x : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (A.comp B).path) x‖ ≤
       (3*C*D)*majorant R 0 n := by
-  have he : translateCoefficientPath (A.comp B).path =
-      fun v => pathCompositionMap (translateCoefficientPath A.path v) (translateCoefficientPath
-          B.path v) := by
-    funext v
-    apply ContinuousMap.ext
-    intro t
-    apply BoundedContinuousFunction.ext
-    intro y
-    rfl
-  rw [he]
   exact pathComposition_bound (α := Space) (K := Icc (0 : ℝ) T)
     (U := Space) (E := Space) (F := Space)
     (translateCoefficientPath A.path) (translateCoefficientPath B.path)
@@ -80,8 +70,8 @@ theorem smul_bound (A : MatrixCoefficient T a) (c R C : ℝ)
     apply BoundedContinuousFunction.ext
     intro y
     rfl
-  rw [he,iteratedFDeriv_const_smul_apply (A.orbit.of_le (by
-      simp)).contDiffAt,norm_smul,Real.norm_eq_abs]
+  simp only [he, iteratedFDeriv_const_smul_apply (A.orbit.of_le (by simp)).contDiffAt, norm_smul,
+    Real.norm_eq_abs]
   exact (mul_le_mul_of_nonneg_left (hb n x) (abs_nonneg c)).trans_eq (by ring)
 
 theorem spatialDerivative_norm_le (A : MatrixCoefficient T a) (v : Space)

@@ -76,7 +76,8 @@ theorem wordSum_bilinear_le (directions : ι → P) (B : E →L[ℝ] F →L[ℝ]
       ((mul_le_mul_of_nonneg_right (B.le_opNorm (f x)) (norm_nonneg (g x))).trans_eq (mul_assoc _ _
           _))
   | succ n ih =>
-    have hp : ContDiff ℝ ∞ (fun y => B (f y) (g y)) := (B.contDiff.comp hf).clm_apply hg
+    have hB := B.contDiff (n := ∞)
+    have hp : ContDiff ℝ ∞ (fun y => B (f y) (g y)) := (hB.comp hf).clm_apply hg
     rw [wordSum_succ directions _ hp n x]
     have ht (i : ι) :
         wordSum directions (directional directions (fun y => B (f y) (g y)) i) n x ≤
@@ -86,14 +87,14 @@ theorem wordSum_bilinear_le (directions : ι → P) (B : E →L[ℝ] F →L[ℝ]
             (fun k => wordSum directions g k x) n) := by
       rw [directional_bilinear directions B f g hf hg i]
       apply (wordSum_add_le directions _ _
-        ((B.contDiff.comp hf).clm_apply (directional_contDiff directions g hg i))
-        ((B.contDiff.comp (directional_contDiff directions f hf i)).clm_apply hg) n x).trans
+        ((hB.comp hf).clm_apply (directional_contDiff directions g hg i))
+        ((hB.comp (directional_contDiff directions f hf i)).clm_apply hg) n x).trans
       exact (add_le_add (ih f (directional directions g i) hf (directional_contDiff directions g hg
           i))
         (ih (directional directions f i) g (directional_contDiff directions f hf i) hg)).trans_eq
           (mul_add _ _ _).symm
     apply (sum_le_sum (fun i _ => ht i)).trans_eq
-    rw [← mul_sum, sum_add_distrib, sum_convolution_right, sum_convolution_left]
+    simp only [← mul_sum, sum_add_distrib, sum_convolution_right, sum_convolution_left]
     simp_rw [← wordSum_succ directions g hg, ← wordSum_succ directions f hf]
     rw [leibnizConvolution_succ]
 
@@ -103,7 +104,7 @@ theorem wordSum_clm_apply_le (directions : ι → P) (A : P → E →L[ℝ] F)
     wordSum directions (fun y => A y (f y)) n x ≤
       leibnizConvolution (fun k => wordSum directions A k x)
         (fun k => wordSum directions f k x) n := by
-  let B : (E →L[ℝ] F) →L[ℝ] E →L[ℝ] F := (ContinuousLinearMap.apply ℝ F).flip
+  let B := (ContinuousLinearMap.apply ℝ F (E := E)).flip
   have hB : ‖B‖ ≤ 1 := by
     simp only [B, opNorm_flip, ContinuousLinearMap.apply]
     apply opNorm_le_bound _ zero_le_one

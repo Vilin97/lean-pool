@@ -79,9 +79,8 @@ theorem exists_fundamental : ∃ Φ Ψ : ℝ → A,
   have hback (t : ℝ) (ht : t ∈ Icc (0 : ℝ) T) : Ψ t*Φ t = 1 := by
     have hd (s : ℝ) (hs : s ∈ Icc (0 : ℝ) T) :
         HasDerivWithinAt (fun r => Ψ r*Φ r) 0 (Icc (0 : ℝ) T) s := by
-      have hh := ((hΨ s hs).mul (hΦ s hs)).hasDerivWithinAt (s := Icc (0 : ℝ) T)
-      convert hh using 1
-      all_goals first | rfl | simp only [neg_mul, mul_assoc, neg_add_cancel]
+      exact ((hΨ s hs).mul (hΦ s hs)).hasDerivWithinAt.congr_deriv
+        (by simp only [neg_mul, mul_assoc, neg_add_cancel])
     have hbound := Convex.norm_image_sub_le_of_norm_hasDerivWithin_le (C := 0) hd
       (fun s hs => by simp) (convex_Icc (0 : ℝ) T)
       (show (0 : ℝ) ∈ Icc 0 T from ⟨le_rfl,hT⟩) ht
@@ -90,7 +89,8 @@ theorem exists_fundamental : ∃ Φ Ψ : ℝ → A,
     apply LipschitzWith.of_dist_le_mul
     intro x y
     rw [dist_eq_norm, dist_eq_norm]
-    have he : (b t*x-x*b t)-(b t*y-y*b t) = b t*(x-y)-(x-y)*b t := by noncomm_ring
+    have he : (b t*x-x*b t)-(b t*y-y*b t) = b t*(x-y)-(x-y)*b t := by
+      rw [mul_sub, sub_mul]; abel
     rw [he]
     calc
       _ ≤ ‖b t*(x-y)‖ + ‖(x-y)*b t‖ := norm_sub_le _ _
@@ -106,9 +106,8 @@ theorem exists_fundamental : ∃ Φ Ψ : ℝ → A,
       (hcΦ.mul hcΨ) ?_ (fun _ _ => mem_univ _) continuousOn_const ?_
       (fun _ _ => mem_univ _) (by change Φ 0*Ψ 0 = 1; rw [hΦ0,hΨ0,one_mul])
     · intro t ht
-      have hh := ((hΦ t ⟨ht.1,ht.2.le⟩).mul (hΨ t ⟨ht.1,ht.2.le⟩)).hasDerivWithinAt (s := Ici t)
-      convert hh using 1
-      all_goals first | rfl | simp only [Pi.mul_apply, mul_neg, mul_assoc, sub_eq_add_neg]
+      exact ((hΦ t ⟨ht.1,ht.2.le⟩).mul (hΨ t ⟨ht.1,ht.2.le⟩)).hasDerivWithinAt.congr_deriv
+        (by simp only [Pi.mul_apply, mul_neg, mul_assoc, sub_eq_add_neg])
     · intro t _
       simpa only [mul_one, one_mul, sub_self] using
         (hasDerivAt_const t (1 : A)).hasDerivWithinAt (s := Ici t)

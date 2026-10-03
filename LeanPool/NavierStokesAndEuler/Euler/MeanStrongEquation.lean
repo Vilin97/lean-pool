@@ -56,9 +56,11 @@ structure StrongMeanEvolution (T : ℝ) (hT : 0 ≤ T)
   label_derivative : ∀ᵐ t ∂timeMeasure T, HasDerivAt label (velocity t) t
   velocity_derivative : ∀ᵐ t ∂timeMeasure T, HasDerivAt velocity (acceleration t) t
   equation : ∀ᵐ t ∂timeMeasure T,
-    solenoidalProjection ((extendPath T hT F t).adjoint
+    solenoidalProjection (adjoint (𝕜 := ℝ) (E := L2) (F := L2)
+      (extendPath (Y := L2 →L[ℝ] L2) T hT F t)
       (extendPath T hT F t (acceleration t : L2))) =
-    solenoidalProjection ((extendPath T hT F t).adjoint
+    solenoidalProjection (adjoint (𝕜 := ℝ) (E := L2) (F := L2)
+      (extendPath (Y := L2 →L[ℝ] L2) T hT F t)
       (f t - (2 : ℝ) • extendPath T hT F₁ t (velocity t : L2)))
 
 /-- At the initial identity frame, the derived momentum condition cancels M0.
@@ -67,21 +69,18 @@ theorem initial_momentum_cancellation (F₀ F₁ M0 A : L2 →L[ℝ] L2) (L : �
     (hF₀ : F₀ = ContinuousLinearMap.id ℝ L2) (hF₁ : F₁ = M0)
     (z v : solenoidalSpace) (hAz : A (z : L2) ∈ solenoidalSpace)
     (hm : gram (F₀.comp solenoidalSpace.subtypeL) v +
-      (F₀.comp solenoidalSpace.subtypeL).adjoint (F₁ (z : L2)) =
-      (F₀.comp solenoidalSpace.subtypeL).adjoint ((M0 + L • A) (z : L2))) :
+      adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (F₀.comp solenoidalSpace.subtypeL :)
+        (F₁ (z : L2)) =
+      adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (F₀.comp solenoidalSpace.subtypeL :)
+        ((M0 + L • A) (z : L2))) :
     (v : L2) = L • A (z : L2) := by
   subst F₀ F₁
-  have hm' : v + solenoidalSpace.orthogonalProjectionOnto (M0 (z : L2)) =
-      solenoidalSpace.orthogonalProjectionOnto ((M0+L • A) (z : L2)) := by
-    simpa only [id_comp, gram, Submodule.adjoint_subtypeL, comp_apply,
-      Submodule.subtypeL_apply, Submodule.orthogonalProjectionOnto_mem_subspace_eq_self] using hm
-  simp only [add_apply, smul_apply, map_add, map_smul] at hm'
-  have hv : v = L • solenoidalSpace.orthogonalProjectionOnto (A (z : L2)) := by
-    apply add_left_cancel (a := solenoidalSpace.orthogonalProjectionOnto (M0 (z : L2)))
-    exact (add_comm _ _).trans hm'
-  have hproj : (solenoidalSpace.orthogonalProjectionOnto (A (z : L2)) : L2) = A (z : L2) :=
-    congrArg (fun w : solenoidalSpace => (w : L2))
-      (solenoidalSpace.orthogonalProjectionOnto_mem_subspace_eq_self ⟨A (z : L2), hAz⟩)
+  simp only [id_comp, gram, Submodule.adjoint_subtypeL, comp_apply, Submodule.subtypeL_apply,
+    Submodule.orthogonalProjectionOnto_mem_subspace_eq_self, add_apply, smul_apply, map_add,
+    map_smul] at hm
+  have hv := add_left_cancel ((add_comm _ _).symm.trans hm)
+  have hproj := congrArg (fun w : solenoidalSpace => (w : L2))
+    (solenoidalSpace.orthogonalProjectionOnto_mem_subspace_eq_self ⟨A (z : L2), hAz⟩)
   have he := congrArg (fun w : solenoidalSpace => (w : L2)) hv
   change (v : L2) = L • (solenoidalSpace.orthogonalProjectionOnto (A (z : L2)) : L2) at he
   exact he.trans (congrArg (fun x : L2 => L • x) hproj)
@@ -90,9 +89,10 @@ theorem initial_momentum_cancellation (F₀ F₁ M0 A : L2 →L[ℝ] L2) (L : �
 theorem ordinary_projected_equation (F F₁ : L2 →L[ℝ] L2) (f : L2)
     (a v : solenoidalSpace)
     (h : gram (F.comp solenoidalSpace.subtypeL) a =
-      (F.comp solenoidalSpace.subtypeL).adjoint (f - (2 : ℝ) • F₁ (v : L2))) :
-    solenoidalProjection (F.adjoint (F (a : L2))) =
-      solenoidalProjection (F.adjoint (f-(2 : ℝ) • F₁ (v : L2))) := by
+      adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (F.comp solenoidalSpace.subtypeL :)
+        (f - (2 : ℝ) • F₁ (v : L2))) :
+    solenoidalProjection (adjoint (𝕜 := ℝ) (E := L2) (F := L2) F (F (a : L2))) =
+      solenoidalProjection (adjoint (𝕜 := ℝ) (E := L2) (F := L2) F (f-(2 : ℝ) • F₁ (v : L2))) := by
   have he := congrArg (fun w : solenoidalSpace => (w : L2)) h
   simpa only [gram, adjoint_comp, Submodule.adjoint_subtypeL, comp_apply,
     Submodule.subtypeL_apply, Submodule.coe_orthogonalProjectionOnto_apply,
@@ -180,13 +180,9 @@ theorem meanWeakSolution_strong
     simp only [extendPath, projIcc_of_mem hT ⟨le_rfl, hT⟩,
       gramPath, mixedPath] at hm
     have hm := hm.trans hp₀
-    change gram ((F ⟨0, le_rfl, hT⟩).comp solenoidalSpace.subtypeL) (v 0) +
-      ((F ⟨0, le_rfl, hT⟩).comp solenoidalSpace.subtypeL).adjoint
-        (F₁ ⟨0, le_rfl, hT⟩ (z 0 : L2)) =
-      ((F ⟨0, le_rfl, hT⟩).comp solenoidalSpace.subtypeL).adjoint
-        ((M0+L • A) (meanTrace T hT FInv u)) at hm
     have hb := congrArg (fun x : L2 =>
-      ((F ⟨0, le_rfl, hT⟩).comp solenoidalSpace.subtypeL).adjoint ((M0+L • A) x)) hz₀.symm
+      adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2)
+        ((F ⟨0, le_rfl, hT⟩).comp solenoidalSpace.subtypeL) ((M0+L • A) x)) hz₀.symm
     exact initial_momentum_cancellation _ _ M0 A L hF₀ hF₁₀ (z 0) (v 0)
       (hAσ (z 0 : L2) (z 0).property) (hm.trans hb)
   · filter_upwards [coordinatePrimitive_hasDerivAt_ae T hT Q Q₁ c hc hQ hd
@@ -195,7 +191,8 @@ theorem meanWeakSolution_strong
   · filter_upwards [velocityRepresentative_projected_equation T hT Q Q₁ Q₂ c hc hQ hd hd₁
       H (u : TimeLp T L2) f hRange hframe p hpAC hp hpder, hV.2.1] with t he hvt
     have hr := congrArg (fun w : solenoidalSpace =>
-      (Q (projIcc 0 T hT t)).adjoint (f t - (2 : ℝ) • Q₁ (projIcc 0 T hT t) w)) hvt
+      adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (Q (projIcc 0 T hT t))
+        (f t - (2 : ℝ) • Q₁ (projIcc 0 T hT t) w)) hvt
     exact ordinary_projected_equation (F (projIcc 0 T hT t)) (F₁ (projIcc 0 T hT t))
       (f t) (a t) (v t) (he.trans hr)
 

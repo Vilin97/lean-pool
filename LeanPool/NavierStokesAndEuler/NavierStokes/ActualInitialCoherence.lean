@@ -324,7 +324,8 @@ theorem context_frame_band (B : ℕ) {V : Set Plane} (htime : ∀ s ∈ V, 0 < s
   · intro x hx
     rw [frame_radial, frame_radial, bandChartEquiv_apply]
     apply Prod.ext
-    · simp [PressureStream.radialVector]
+    · simp only [PressureStream.radialVector, Prod.smul_mk, smul_zero, mul_one,
+        bandChartEquiv_apply, bandSlowEquiv_apply, smul_eq_mul]
     · change ((bandSlowEquiv h n m).toContinuousLinearMap.prodMap (TemporalMeanUpdate.coverMap k))
         (PressureStream.physicalSpeed commonGauge.radial.exponent (commonGauge.radial.frequency n)
             x.1 •
@@ -334,14 +335,17 @@ theorem context_frame_band (B : ℕ) {V : Set Plane} (htime : ∀ s ∈ V, 0 < s
             ((0 : Plane), commonGauge.radial.radialDirection))
       apply TemporalStateCoherence.physicalSpeed_vector_all (bandScale_pos n m)
       apply Prod.ext
-      · simp
+      · simp only [ContinuousLinearMap.coe_prodMap', ContinuousLinearEquiv.coe_coe, Prod.map_apply,
+          bandSlowEquiv_apply, Prod.fst_zero, mul_zero, Prod.snd_zero, Prod.smul_mk, smul_eq_mul,
+          smul_zero, Prod.mk_eq_zero, and_self]
       · exact hg.frequency
   · intro x hx
     change bandChartEquiv h n m k
       (ChartScales.epsilon h n • ((0, ((0,1),0)) : Point)) =
         bandScale n m • (ChartScales.epsilon h m • ((0, ((0,1),0)) : Point))
     apply Prod.ext
-    · simp [bandChartEquiv_apply]
+    · simp only [Prod.smul_mk, smul_eq_mul, mul_zero, mul_one, smul_zero, bandChartEquiv_apply,
+        bandSlowEquiv_apply, map_zero]
     · have he := TemporalStateCoherence.band_axial_transport h n m k
       simp only [bandChartEquiv_apply, Prod.smul_mk] at he ⊢
       exact he
@@ -352,7 +356,7 @@ theorem context_frame_band (B : ℕ) {V : Set Plane} (htime : ∀ s ∈ V, 0 < s
       (bandVelocityScale h n m * bandScale n m) •
         ((commonContext B).operators.fastCoefficient m • (commonContext B).operators.vT -
           ChartScales.epsilon h m • ((0, ((1,0),0)) : Point))
-    rw [map_sub, smul_sub, slowTime_vector]
+    rw [ContinuousLinearEquiv.map_sub, smul_sub, slowTime_vector]
     congr 1
     exact TemporalStateCoherence.common_fast_transport h
         (CorrectionInitialization.CommonWindow.index h)
@@ -731,7 +735,8 @@ theorem blockFields_band (l : Label B N0 × Fin 2) (U : Set Point) (n m k : ℕ)
     exact congrFun (ActualPrimaryCoherence.piece_excluded_band standardRegion l.2 l.1 n m k hi (x,
         θ)) i
   · intro x hx θ i
-    simp [HarmonicFields.field]
+    simp only [HarmonicFields.field, Pi.zero_apply, HarmonicFields.evaluate_zero, Complex.zero_re,
+        bandChartEquiv_apply, bandSlowEquiv_apply, mul_zero]
 
 end IndividualBlocks
 
@@ -791,10 +796,14 @@ theorem seed_band (B N0 n m k : ℕ)
   have hb := ActualBaseResidual.errorState_band certificate modulation upper B
     (PhysicalMeanDomain.slowDomain V) n m k
   refine ⟨⟨?_, ?_, ?_⟩, ?_, ?_, ?_, hb.baseError, ?_, ?_⟩
-  · intro x hx; simp [seed, CorrectionInitialization.bandSeed]
-  · intro x hx; simp [seed, CorrectionInitialization.bandSeed]
-  · intro x hx; simp [seed, CorrectionInitialization.bandSeed]
-  · intro x hx; simp [seed, CorrectionInitialization.bandSeed]
+  · intro x hx; simp only [seed, CorrectionInitialization.bandSeed, Pi.zero_apply,
+      bandChartEquiv_apply, bandSlowEquiv_apply, mul_zero]
+  · intro x hx; simp only [seed, CorrectionInitialization.bandSeed, Pi.zero_apply,
+      bandChartEquiv_apply, bandSlowEquiv_apply, mul_zero]
+  · intro x hx; simp only [seed, CorrectionInitialization.bandSeed, Pi.zero_apply,
+      bandChartEquiv_apply, bandSlowEquiv_apply, mul_zero]
+  · intro x hx; simp only [seed, CorrectionInitialization.bandSeed, Pi.zero_apply,
+      bandChartEquiv_apply, bandSlowEquiv_apply, mul_zero]
   · intro x hx θ i
     apply sum_eq_mul_sum_of_support
     · intro l hl
@@ -822,7 +831,8 @@ theorem seed_band (B N0 n m k : ℕ)
       exact congrFun (ActualPrimaryCoherence.piece_excluded_band standardRegion l.2 l.1 n m k hi
           (x, θ)) i
   · intro x hx θ i
-    simp [seed, CorrectionInitialization.bandSeed]
+    simp only [seed, CorrectionInitialization.bandSeed, Pi.zero_apply, bandChartEquiv_apply,
+        bandSlowEquiv_apply, mul_zero]
 
 end ActualSeed
 

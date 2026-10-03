@@ -10,6 +10,7 @@ public import Mathlib.Topology.ContinuousMap.Compact
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.ContDiff.Comp
 import Mathlib.Analysis.Calculus.MeanValue
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Jointly smooth functions as smooth families on a compact set
@@ -74,15 +75,15 @@ noncomputable def flipLinear (K : Set Z) :
     C(K, P →L[ℝ] E) →ₗ[ℝ] P →ₗ[ℝ] C(K, E) where
   toFun g := {
     toFun := fun v => ⟨fun z => g z v, g.continuous.clm_apply continuous_const⟩
-    map_add' := by intros; ext z; exact map_add (g z) _ _
-    map_smul' := by intros; ext z; exact map_smul (g z) _ _ }
-  map_add' := by intros; ext v z; rfl
-  map_smul' := by intros; ext v z; rfl
+    map_add' := by intros; ext z; exact (g z).map_add _ _
+    map_smul' := by intros; ext z; exact (g z).map_smul _ _ }
+  map_add' := by intros; rfl
+  map_smul' := by intros; rfl
 
 omit [NormedSpace ℝ Z] in
 theorem norm_flipLinear_le (K : Set Z) [CompactSpace K]
-    (g : C(K, P →L[ℝ] E)) (v : P) : ‖flipLinear K g v‖ ≤ ‖g‖ * ‖v‖ := by
-  apply (ContinuousMap.norm_le (flipLinear K g v)
+    (g : C(K, P →L[ℝ] E)) (v : P) : ‖flipLinear (P := P) (E := E) K g v‖ ≤ ‖g‖ * ‖v‖ := by
+  apply (ContinuousMap.norm_le (flipLinear (P := P) (E := E) K g v)
     (mul_nonneg (norm_nonneg g) (norm_nonneg v))).mpr
   intro z
   exact ((g z).le_opNorm v).trans
@@ -115,8 +116,7 @@ theorem hasFDerivAt_family (K : Set Z) [CompactSpace K] {U : Set P} (hU : IsOpen
   intro ε hε
   have hgc : ContinuousAt (family K G) p :=
     (continuousOn_family hG).continuousAt (hU.mem_nhds hp)
-  have hsmall : ∀ᶠ q in 𝓝 p, ‖family K G q - family K G p‖ < ε := by
-    simpa only [dist_eq_norm] using (Metric.tendsto_nhds.mp hgc ε hε)
+  have hsmall := Metric.tendsto_nhds.mp hgc ε hε
   have hnear : ∀ᶠ q in 𝓝 p, q ∈ U := hU.mem_nhds hp
   obtain ⟨δ, hδ, hδmem⟩ := Metric.eventually_nhds_iff.mp (hnear.and hsmall)
   filter_upwards [Metric.ball_mem_nhds (0 : P) hδ] with v hv
@@ -136,22 +136,13 @@ theorem hasFDerivAt_family (K : Set Z) [CompactSpace K] {U : Set P} (hU : IsOpen
     exact ((hderiv q (hδmem hq').1 z).sub (G (p, z)).hasFDerivAt).hasFDerivWithinAt
   have hb : ∀ q ∈ ball p δ, ‖G (q, z) - G (p, z)‖ ≤ ε := by
     intro q hq'
-    have hcontq := slice_continuous hG (hδmem hq').1
-    have hcontp := slice_continuous hG hp
-    calc
-      _ = ‖(family K G q - family K G p : C(K, P →L[ℝ] E)) z‖ := by
-        simp only [ContinuousMap.sub_apply, family_apply K G q hcontq,
-          family_apply K G p hcontp]
-      _ ≤ ‖family K G q - family K G p‖ := ContinuousMap.norm_coe_le_norm _ z
-      _ ≤ ε := (hδmem hq').2.le
+    have h := ((ContinuousMap.dist_apply_le_dist z).trans_lt (hδmem hq').2).le
+    rwa [family_apply K G q (slice_continuous hG (hδmem hq').1),
+      family_apply K G p (slice_continuous hG hp), dist_eq_norm] at h
   have hmean := (convex_ball p δ).norm_image_sub_le_of_norm_hasFDerivWithin_le
     hd hb (mem_ball_self hδ) hv'
-  have heq : F (p + v, z) - F (p, z) - G (p, z) v =
-      (F (p + v, z) - G (p, z) (p + v)) - (F (p, z) - G (p, z) p) := by
-    rw [map_add]
-    abel
-  rw [heq]
-  simpa only [add_sub_cancel_left] using hmean
+  rw [sub_sub_sub_comm, ← ContinuousLinearMap.map_sub, add_sub_cancel_left] at hmean
+  exact hmean
 
 /-- Parameter derivative, given by `(fderiv ℝ F z).comp (ContinuousLinearMap.inl ℝ P Z)`. -/
 noncomputable def parameterDerivative (F : P × Z → E) (z : P × Z) : P →L[ℝ] E :=
@@ -178,22 +169,13 @@ theorem contDiffOn_family_nat (K : Set Z) [CompactSpace K] (U : Set P) (V : Set 
       hF.continuousOn.mono (Set.prod_mono Subset.rfl hK)
     have hDc : ContinuousOn (parameterDerivative F) (U ×ˢ K) :=
       hD.continuousOn.mono (Set.prod_mono Subset.rfl hK)
-    have hd : ∀ p ∈ U, HasFDerivAt (family K F)
-        (flipCLM (P := P) (E := W) K (family K (parameterDerivative F) p)) p := by
-      intro p hp
-      apply hasFDerivAt_family K hU F (parameterDerivative F) hFc hDc _ hp
-      intro q hq z
-      have hDF := (hdata.1 (q, (z : Z)) ⟨hq, hK z.2⟩).differentiableAt
-        ((hU.prod hV).mem_nhds ⟨hq, hK z.2⟩)
-      exact hDF.hasFDerivAt.comp q (hasFDerivAt_prodMk_left q (z : Z))
-    have hfamilyD := ih (parameterDerivative F) hD
-    let L : C(K, P →L[ℝ] W) →L[ℝ] P →L[ℝ] C(K, W) := flipCLM K
-    have hL : ContDiff ℝ (n : WithTop ℕ∞) L :=
-      ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
-        (E := C(K, P →L[ℝ] W)) (F := P →L[ℝ] C(K, W)) L
-    have hflip : ContDiffOn ℝ n
-        (fun p => flipCLM (P := P) (E := W) K (family K (parameterDerivative F) p)) U :=
-      hL.comp_contDiffOn hfamilyD
+    have hd := fun p (hp : p ∈ U) => hasFDerivAt_family K hU F (parameterDerivative F) hFc hDc
+      (fun q hq z => HasFDerivAt.comp (f := fun q : P => (q, (z : Z))) q
+        ((hdata.1 (q, (z : Z)) ⟨hq, hK z.2⟩).differentiableAt
+          ((hU.prod hV).mem_nhds ⟨hq, hK z.2⟩)).hasFDerivAt
+        (hasFDerivAt_prodMk_left q (z : Z))) hp
+    have hflip := (ih (parameterDerivative F) hD).continuousLinearMap_comp
+      (flipCLM (P := P) (E := W) K)
     have hresult : ContDiffOn ℝ ((n : WithTop ℕ∞) + 1) (family K F) U := by
       apply (contDiffOn_succ_iff_hasFDerivWithinAt_of_uniqueDiffOn hU.uniqueDiffOn).mpr
       refine ⟨?_, _, hflip, fun p hp => (hd p hp).hasFDerivWithinAt⟩

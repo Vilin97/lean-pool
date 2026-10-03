@@ -73,11 +73,11 @@ theorem cube_norm {f : Space → E} (h6 : MemLp f 6 volume) :
 private theorem square_domination (a z : ℝ) (ha : 0 < a) (hz : 0 ≤ z) :
     z^2 ≤ a*z+a⁻¹*z^3 := by
   have h : a*z^2 ≤ a^2*z+z^3 := by
-    nlinarith [mul_nonneg hz (sq_nonneg (z-a))]
+    nlinarith only [hz, ha, mul_nonneg hz (sq_nonneg (z-a))]
   have he : a*z+a⁻¹*z^3=(a^2*z+z^3)/a := by field_simp
   rw [he]
   apply (le_div_iff₀ ha).mpr
-  nlinarith
+  nlinarith only [h]
 
 theorem square_memLp {f : Space → E} (h2 : MemLp f 2 volume) (h6 : MemLp f 6 volume) :
     MemLp (fun x => ‖f x‖^2) 2 volume := by
@@ -145,7 +145,7 @@ theorem norm_four_le_two {f : Space → E} (h2 : MemLp f 2 volume) (h6 : MemLp f
     lpNorm f 4 volume ≤ 2*a := by
   have h := square_norm_le_two h2 h6 a ha h2a h6a
   rw [← norm_four_sq h2 h6] at h
-  nlinarith [show 0 ≤ lpNorm f 4 volume from lpNorm_nonneg]
+  nlinarith only [h, ha, show 0 ≤ lpNorm f 4 volume from lpNorm_nonneg]
 
 end Interpolation
 

@@ -87,7 +87,9 @@ theorem cross_perpendicular_right {R : Type*} [CommRing R] (u v : Vec3 R) :
 theorem triple_product {R : Type*} [CommRing R] (n a : Vec3 R) :
     cross n (cross n a) = dot n a • n - dot n n • a := by
   funext j
-  fin_cases j <;> simp [cross, dot] <;> ring
+  fin_cases j <;> simp only [cross, Fin.isValue, Matrix.cons_val, Matrix.cons_val_one,
+      Matrix.cons_val_zero, Fin.zero_eta, dot, Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Fin.mk_one,
+      Fin.reduceFinMk] <;> ring
 
 /-- Tangency is exactly the hypothesis eliminating the longitudinal term. -/
 theorem tangent_double_cross {R : Type*} [CommRing R] (n a : Vec3 R)
@@ -149,7 +151,7 @@ def complexify (n : Vec3 ℝ) : Vec3 ℂ := fun j => (n j : ℂ)
 
 theorem complexify_dot_self (n : Vec3 ℝ) :
     dot (complexify n) (complexify n) = ((dot n n : ℝ) : ℂ) := by
-  simp [complexify, dot]
+  simp only [dot, complexify, Fin.isValue, Complex.ofReal_add, Complex.ofReal_mul]
 
 /-- Specialization to the manuscript's real, nonzero phase normal and real,
 nonzero frequency. The only amplitude condition is complex tangency. -/
@@ -169,7 +171,7 @@ theorem curl_symbol_transverse (ξ A : Vec3 ℂ) : dot ξ (curlSymbol ξ A) = 0 
   rw [h]
   simp only [dot, Pi.smul_apply, smul_eq_mul]
   have hp := cross_perpendicular_left ξ A
-  dsimp [dot] at hp
+  dsimp only [dot, Fin.isValue] at hp
   calc
     _ = Complex.I * (ξ 0 * cross ξ A 0 + ξ 1 * cross ξ A 1 + ξ 2 * cross ξ A 2) := by
       ring
@@ -249,40 +251,51 @@ theorem cross_apply (u v : Space) :
 
 @[simp] theorem cross_zero (u v : Space) : (cross u v) 0 = u 1 * v 2 - u 2 * v 1 := by
   rw [cross_apply]
-  simp [coordinateVector]
+  simp only [Fin.isValue, coordinateVector, PiLp.sub_apply, PiLp.add_apply, PiLp.smul_apply,
+      PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true,
+      PiLp.single_eq_of_ne, mul_zero, add_zero, sub_zero, Fin.reduceEq]
 
 @[simp] theorem cross_one (u v : Space) : (cross u v) 1 = u 2 * v 0 - u 0 * v 2 := by
   rw [cross_apply]
-  simp [coordinateVector]
+  simp only [Fin.isValue, coordinateVector, PiLp.sub_apply, PiLp.add_apply, PiLp.smul_apply, ne_eq,
+      one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, sub_self,
+      PiLp.single_eq_same, mul_one, zero_add, Fin.reduceEq, add_zero, sub_zero]
 
 @[simp] theorem cross_two (u v : Space) : (cross u v) 2 = u 0 * v 1 - u 1 * v 0 := by
   rw [cross_apply]
-  simp [coordinateVector]
+  simp only [Fin.isValue, coordinateVector, PiLp.sub_apply, PiLp.add_apply, PiLp.smul_apply, ne_eq,
+      Fin.reduceEq, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, sub_self,
+      add_zero, PiLp.single_eq_same, mul_one, zero_add]
 
 @[simp] theorem cross_smul_left (c : ℝ) (u v : Space) :
-    cross (c • u) v = c • cross u v := by simp [cross]
+    cross (c • u) v = c • cross u v := by simp only [cross, map_smul, smul_apply]
 
 @[simp] theorem cross_smul_right (c : ℝ) (u v : Space) :
-    cross u (c • v) = c • cross u v := by simp [cross]
+    cross u (c • v) = c • cross u v := by simp only [cross, map_smul]
 
-@[simp] theorem cross_zero_right (u : Space) : cross u 0 = 0 := by simp [cross]
+@[simp] theorem cross_zero_right (u : Space) : cross u 0 = 0 := by simp only [cross, map_zero]
 
 theorem inner_coordinates (u v : Space) :
     ⟪u, v⟫_ℝ = u 0 * v 0 + u 1 * v 1 + u 2 * v 2 := by
-  simp [PiLp.inner_apply, Fin.sum_univ_three, mul_comm]
+  simp only [PiLp.inner_apply, RCLike.inner_apply, conj_trivial, mul_comm, Fin.sum_univ_three,
+      Fin.isValue]
 
 /-- The Euclidean cross product agrees coordinatewise with the previously
 checked symbol algebra. -/
 theorem cross_coordinates (u v : Space) :
     (fun i : Fin 3 => (cross u v) i) = CurlGeometry.cross (fun i => u i) (fun i => v i) := by
   ext i
-  fin_cases i <;> simp [CurlGeometry.cross]
+  fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, cross_zero, CurlGeometry.cross,
+      Matrix.cons_val_zero, Fin.mk_one, cross_one, Matrix.cons_val_one, Fin.reduceFinMk, cross_two,
+      Matrix.cons_val]
 
 theorem cross_triple (n a : Space) :
     cross n (cross n a) = ⟪n, a⟫_ℝ • n - ‖n‖ ^ 2 • a := by
   rw [EuclideanSpace.real_norm_sq_eq]
   ext i
-  fin_cases i <;> simp [inner_coordinates, Fin.sum_univ_three] <;> ring
+  fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, cross_zero, cross_two, cross_one,
+      inner_coordinates, Fin.sum_univ_three, PiLp.sub_apply, PiLp.smul_apply, smul_eq_mul,
+      Fin.mk_one, Fin.reduceFinMk] <;> ring
 
 /-- The inverse-square-normal coefficient used by the real potential. -/
 def normalCoefficient (n a : Space) : Space := (‖n‖ ^ 2)⁻¹ • cross n a
@@ -298,12 +311,18 @@ def gradientLinear : (Space →L[ℝ] ℝ) →L[ℝ] Space :=
 
 @[simp] theorem gradientLinear_apply (L : Space →L[ℝ] ℝ) (i : Fin 3) :
     (gradientLinear L) i = L (coordinateVector i) := by
-  simp [gradientLinear, coordinateVector, Pi.single_apply]
+  simp only [gradientLinear, coordinateVector, sum_apply, ContinuousLinearMap.smulRight_apply,
+      ContinuousLinearMap.apply_apply, WithLp.ofLp_sum, WithLp.ofLp_smul, PiLp.ofLp_single,
+      Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero,
+      Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
 
 theorem curlLinear_smulRight (L : Space →L[ℝ] ℝ) (a : Space) :
     SpatialCurl.curlLinear (L.smulRight a) = cross (gradientLinear L) a := by
   ext i
-  fin_cases i <;> simp
+  fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, SpatialCurl.curlLinear_apply_zero,
+      ContinuousLinearMap.smulRight_apply, PiLp.smul_apply, smul_eq_mul, cross_zero,
+      gradientLinear_apply, Fin.mk_one, SpatialCurl.curlLinear_apply_one, cross_one,
+      Fin.reduceFinMk, SpatialCurl.curlLinear_apply_two, cross_two]
 
 /-- The genuine spatial curl product rule. -/
 theorem curl_smul {f : Space → ℝ} {B : Space → Space} {x : Space}
@@ -333,7 +352,8 @@ def phaseNormal (Φ : PressureField) : VelocityField :=
 
 theorem phaseNormal_eq_pressureGradient (Φ : PressureField) (z : SpaceTime) :
     phaseNormal Φ z = pressureGradient Φ z.1 z.2 := by
-  simp [phaseNormal, gradientLinear, pressureGradient]
+  simp only [phaseNormal, gradientLinear, sum_apply, ContinuousLinearMap.smulRight_apply,
+      ContinuousLinearMap.apply_apply, pressureGradient]
 
 /-- Coefficient, defined pointwise by `normalCoefficient (phaseNormal Φ z) (a z)`. -/
 def coefficient (Φ : PressureField) (a : VelocityField) : VelocityField :=
@@ -349,7 +369,8 @@ def wave (k : ℝ) (Φ : PressureField) (a : VelocityField) : VelocityField :=
 
 theorem phaseNormal_contDiffOn {U : Set SpaceTime} {Φ : PressureField}
     (hU : IsOpen U) (hΦ : ContDiffOn ℝ ∞ Φ U) : ContDiffOn ℝ ∞ (phaseNormal Φ) U :=
-  (ResidualRegularity.contDiffOn_space_fderiv hU hΦ (m := ∞) (by simp)).continuousLinearMap_comp
+  (ResidualRegularity.contDiffOn_space_fderiv hU hΦ (m := ∞) (by simp only [ENat.coe_top_add_one,
+      Std.le_refl])).continuousLinearMap_comp
     gradientLinear
 
 theorem coefficient_contDiffOn {U : Set SpaceTime} {Φ : PressureField} {a : VelocityField}
@@ -379,14 +400,17 @@ theorem wave_eq {U : Set SpaceTime} {Φ : PressureField} {a : VelocityField}
   have hBslice := ResidualStability.spatialSlice_differentiable hU hB hz
   have hcarrier : HasFDerivAt (fun y : Space => carrier k (Φ (z.1, y)))
       ((-Real.cos (k * Φ z)) • fderiv ℝ (fun y : Space => Φ (z.1, y)) z.2) z.2 := by
-    exact (carrier_hasDerivAt hk (Φ z)).comp_hasFDerivAt z.2 hΦslice.hasFDerivAt
+    exact (carrier_hasDerivAt hk (Φ z)).comp_hasFDerivAt (f := fun y : Space => Φ (z.1, y)) z.2
+      hΦslice.hasFDerivAt
   change SpatialCurl.curl (fun y => carrier k (Φ (z.1, y)) • coefficient Φ a (z.1, y)) z.2 = _
   rw [curl_smul hcarrier.differentiableAt hBslice, hcarrier.fderiv, map_smul,
     cross_smul_left]
-  change (-Real.cos (k * Φ z)) • cross (phaseNormal Φ z) (normalCoefficient (phaseNormal Φ z) (a
-      z)) +
-    carrier k (Φ z) • SpatialCurl.spatialCurl (coefficient Φ a) z = _
-  rw [cross_normalCoefficient (hn z hz) (htangent z hz)]
+  have hcross : cross (gradientLinear (fderiv ℝ (fun y => Φ (z.1, y)) z.2))
+      (coefficient Φ a (z.1, z.2)) = -a z :=
+    cross_normalCoefficient (hn z hz) (htangent z hz)
+  have hcurl : SpatialCurl.curl (fun y => coefficient Φ a (z.1, y)) z.2 =
+      SpatialCurl.spatialCurl (coefficient Φ a) z := rfl
+  rw [hcross, hcurl, Prod.mk.eta]
   simp only [neg_smul, smul_neg, neg_neg, carrier, neg_div, sub_eq_add_neg]
 
 theorem wave_contDiffOn {U : Set SpaceTime} {Φ : PressureField} {a : VelocityField}
@@ -394,7 +418,8 @@ theorem wave_contDiffOn {U : Set SpaceTime} {Φ : PressureField} {a : VelocityFi
     (hn : ∀ z ∈ U, phaseNormal Φ z ≠ 0) : ContDiffOn ℝ ∞ (wave k Φ a) U := by
   intro z hz
   exact (SpatialCurl.contDiffAt_spatialCurl
-    ((potential_contDiffOn k hU hΦ ha hn).contDiffAt (hU.mem_nhds hz)) (by simp)).contDiffWithinAt
+    ((potential_contDiffOn k hU hΦ ha hn).contDiffAt (hU.mem_nhds hz)) (by simp only [
+        ENat.coe_top_add_one, Std.le_refl])).contDiffWithinAt
 
 /-- Divergence vanishes for the full realized wave, including its remainder. -/
 theorem wave_divergence_free {U : Set SpaceTime} {Φ : PressureField} {a : VelocityField}
@@ -411,13 +436,14 @@ theorem wave_divergence_free {U : Set SpaceTime} {Φ : PressureField} {a : Veloc
 theorem coefficient_support_subset (Φ : PressureField) (a : VelocityField) :
     Function.support (coefficient Φ a) ⊆ Function.support a := by
   intro z hz haz
-  exact hz (by simp [coefficient, normalCoefficient, haz])
+  exact hz (by simp only [coefficient, normalCoefficient, haz, cross_zero_right, smul_zero])
 
 theorem potential_tsupport_subset (k : ℝ) (Φ : PressureField) (a : VelocityField) :
     tsupport (potential k Φ a) ⊆ tsupport a := by
   apply closure_mono
   intro z hz haz
-  exact hz (by simp [potential, coefficient, normalCoefficient, haz])
+  exact hz (by simp only [potential, coefficient, normalCoefficient, haz, cross_zero_right,
+      smul_zero])
 
 /-- Spatial differentiation cannot create support outside the closed joint
 spacetime support, since vanishing on a joint neighborhood implies vanishing
@@ -431,7 +457,7 @@ theorem spatialCurl_tsupport_subset (A : VelocityField) :
   apply hz
   change SpatialCurl.curlLinear (fderiv ℝ (fun y : Space => A (z.1, y)) z.2) = 0
   rw [ResidualRegularity.space_fderiv_congr heq]
-  simp
+  simp only [fderiv_fun_const, Pi.zero_apply, map_zero]
 
 theorem wave_tsupport_subset (k : ℝ) (Φ : PressureField) (a : VelocityField) :
     tsupport (wave k Φ a) ⊆ tsupport a :=
@@ -500,9 +526,10 @@ theorem strippedRemainder_jet_bound {U : Set SpaceTime} {B : VelocityField}
       (‖SpatialCurl.curlLinear.comp (ResidualStability.spaceRestriction Space)‖ / |k|) *
         ‖iteratedFDeriv ℝ (m + 1) B z‖ := by
   have hcurl : ContDiffAt ℝ ∞ (SpatialCurl.spatialCurl B) z :=
-    SpatialCurl.contDiffAt_spatialCurl (hB.contDiffAt (hU.mem_nhds hz)) (by simp)
+    SpatialCurl.contDiffAt_spatialCurl (hB.contDiffAt (hU.mem_nhds hz)) (by simp only [
+        ENat.coe_top_add_one, Std.le_refl])
   unfold strippedRemainder
-  rw [iteratedFDeriv_const_smul_apply' (hcurl.of_le
+  simp only [iteratedFDeriv_const_smul_apply' (hcurl.of_le
     (ENat.natCast_le_of_coe_top_le_withTop le_rfl m)), norm_smul, Real.norm_eq_abs, abs_div,
         abs_one]
   calc
@@ -519,7 +546,8 @@ theorem strippedRemainder_finiteJetBound {U : Set SpaceTime} {B : VelocityField}
       ((‖SpatialCurl.curlLinear.comp (ResidualStability.spaceRestriction Space)‖ / |k|) * C) := by
   intro n hn z hz
   exact (strippedRemainder_jet_bound k hU hB hz n).trans
-    (mul_le_mul_of_nonneg_left (hjet (n + 1) (Nat.add_le_add_right hn 1) z hz) (by positivity))
+    (mul_le_mul_of_nonneg_left (hjet (n + 1) (Nat.add_le_add_right hn 1) z hz)
+      (div_nonneg (norm_nonneg _) (abs_nonneg k)))
 
 end NavierStokes.OscillatoryCurl
 
@@ -569,7 +597,7 @@ private theorem nat_le_infty (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ :=
   ENat.natCast_le_of_coe_top_le_withTop le_rfl n
 
 private theorem one_le_mul' {a b : ℝ} (ha : 1 ≤ a) (hb : 1 ≤ b) : 1 ≤ a * b := by
-  nlinarith
+  nlinarith only [ha, hb]
 
 section Calculus
 
@@ -608,7 +636,7 @@ theorem PolynomialJets.const (c : ι → F) {C : ℝ} {m : ℕ} (hC : 1 ≤ C)
 
 theorem PolynomialJets.const_uniform (c : ι → F) {C : ℝ} (hC : 1 ≤ C)
     (hc : ∀ i, ‖c i‖ ≤ C) : PolynomialJets D (fun i _ => c i) :=
-  PolynomialJets.const c hC (m := 0) (by simpa using hc)
+  PolynomialJets.const c hC (m := 0) (by simpa only [pow_zero, mul_one] using hc)
 
 theorem PolynomialJets.const_fixed (c : F) : PolynomialJets D (fun _ _ => c) :=
   PolynomialJets.const_uniform _ (le_max_left 1 ‖c‖) (fun _ => le_max_right _ _)
@@ -619,7 +647,7 @@ theorem PolynomialJets.clm {f : ι → E → F} (hf : PolynomialJets D f)
   intro N
   obtain ⟨C, hC, m, hm⟩ := hf.bound N
   refine ⟨(‖L‖ + 1) * C, ?_, m, ?_⟩
-  · nlinarith [norm_nonneg L]
+  · nlinarith only [hC, norm_nonneg L]
   intro i n hn x hx
   have he := L.iteratedFDeriv_comp_left
     ((hf.smooth i).contDiffAt ((D.isOpen i).mem_nhds hx)) (nat_le_infty n)
@@ -631,7 +659,7 @@ theorem PolynomialJets.clm {f : ι → E → F} (hf : PolynomialJets D f)
       mul_le_mul_of_nonneg_left (hm i n hn x hx) (norm_nonneg L)
     _ ≤ (‖L‖ + 1) * C * D.scale i ^ m := by
       have := pow_nonneg (le_trans zero_le_one (D.one_le_scale i)) m
-      nlinarith
+      nlinarith only [this, hC]
 
 theorem PolynomialJets.add {f g : ι → E → F}
     (hf : PolynomialJets D f) (hg : PolynomialJets D g) :
@@ -640,18 +668,18 @@ theorem PolynomialJets.add {f g : ι → E → F}
   intro N
   obtain ⟨A, hA, a, ha⟩ := hf.bound N
   obtain ⟨B, hB, b, hb⟩ := hg.bound N
-  refine ⟨A + B, by linarith, a + b, ?_⟩
+  refine ⟨A + B, by linarith only [hA, hB], a + b, ?_⟩
   intro i
   apply (JetBounds.FiniteJetBound.add (D.isOpen i)
     ((hf.smooth i).of_le (nat_le_infty N)) ((hg.smooth i).of_le (nat_le_infty N))
     (ha i) (hb i)).mono
   have hsa := pow_le_pow_right₀ (D.one_le_scale i) (Nat.le_add_right a b)
   have hsb := pow_le_pow_right₀ (D.one_le_scale i) (Nat.le_add_left b a)
-  nlinarith
+  nlinarith only [hsa, hsb, hA, hB]
 
 theorem PolynomialJets.neg {f : ι → E → F} (hf : PolynomialJets D f) :
     PolynomialJets D (fun i x => -f i x) := by
-  simpa using hf.clm (-ContinuousLinearMap.id ℝ F)
+  simpa only [neg_apply, ContinuousLinearMap.id_apply] using hf.clm (-ContinuousLinearMap.id ℝ F)
 
 theorem PolynomialJets.sub {f g : ι → E → F}
     (hf : PolynomialJets D f) (hg : PolynomialJets D g) :
@@ -661,7 +689,8 @@ theorem PolynomialJets.sub {f g : ι → E → F}
 theorem PolynomialJets.pair {f : ι → E → F} {g : ι → E → G}
     (hf : PolynomialJets D f) (hg : PolynomialJets D g) :
     PolynomialJets D (fun i x => (f i x, g i x)) := by
-  simpa using (hf.clm (ContinuousLinearMap.inl ℝ F G)).add
+  simpa only [ContinuousLinearMap.inl_apply, ContinuousLinearMap.inr_apply, Prod.mk_add_mk,
+      add_zero, zero_add] using (hf.clm (ContinuousLinearMap.inl ℝ F G)).add
     (hg.clm (ContinuousLinearMap.inr ℝ F G))
 
 theorem PolynomialJets.bilinear {f : ι → E → F} {g : ι → E → G}
@@ -675,7 +704,7 @@ theorem PolynomialJets.bilinear {f : ι → E → F} {g : ι → E → G}
   obtain ⟨C, hC, c, hc⟩ := hg.bound N
   refine ⟨(‖B‖ + 1) * 2 ^ N * A * C, ?_, a + c, ?_⟩
   · have hpow : (1 : ℝ) ≤ 2 ^ N := one_le_pow₀ (by norm_num)
-    have hba : 1 ≤ (‖B‖ + 1) * 2 ^ N := one_le_mul' (by linarith [norm_nonneg B]) hpow
+    have hba : 1 ≤ (‖B‖ + 1) * 2 ^ N := one_le_mul' (by linarith only [norm_nonneg B]) hpow
     exact one_le_mul' (one_le_mul' hba hA) hC
   intro i
   apply (JetBounds.FiniteJetBound.bilinear B (D.isOpen i)
@@ -691,16 +720,17 @@ theorem PolynomialJets.bilinear {f : ι → E → F} {g : ι → E → G}
 theorem PolynomialJets.mul {f g : ι → E → ℝ}
     (hf : PolynomialJets D f) (hg : PolynomialJets D g) :
     PolynomialJets D (fun i x => f i x * g i x) := by
-  simpa using hf.bilinear hg (ContinuousLinearMap.mul ℝ ℝ)
+  simpa only [ContinuousLinearMap.mul_apply'] using hf.bilinear hg (ContinuousLinearMap.mul ℝ ℝ)
 
 theorem PolynomialJets.smul {f : ι → E → ℝ} {g : ι → E → F}
     (hf : PolynomialJets D f) (hg : PolynomialJets D g) :
     PolynomialJets D (fun i x => f i x • g i x) := by
-  simpa using hf.bilinear hg (ContinuousLinearMap.lsmul ℝ ℝ)
+  simpa only [ContinuousLinearMap.lsmul_apply] using hf.bilinear hg (ContinuousLinearMap.lsmul ℝ ℝ)
 
 theorem PolynomialJets.fderiv {f : ι → E → F} (hf : PolynomialJets D f) :
     PolynomialJets D (fun i => fderiv ℝ (f i)) := by
-  refine ⟨fun i => (hf.smooth i).fderiv_of_isOpen (D.isOpen i) (by simp), ?_⟩
+  refine ⟨fun i => (hf.smooth i).fderiv_of_isOpen (D.isOpen i) (by simp only [ENat.coe_top_add_one,
+      Std.le_refl]), ?_⟩
   intro N
   obtain ⟨C, hC, m, hm⟩ := hf.bound (N + 1)
   exact ⟨C, hC, m, fun i => (hm i).fderiv⟩
@@ -715,7 +745,7 @@ theorem PolynomialJets.affine (L : E →L[ℝ] F) (c : ι → F) {C : ℝ} {m : 
     PolynomialJets D (fun i x => L x + c i) := by
   refine ⟨fun _ => L.contDiff.contDiffOn.add contDiffOn_const, ?_⟩
   intro N
-  refine ⟨C + ‖L‖, by linarith [norm_nonneg L], m, ?_⟩
+  refine ⟨C + ‖L‖, by linarith only [hC, norm_nonneg L], m, ?_⟩
   intro i n hn x hx
   have hs : 1 ≤ D.scale i ^ m := one_le_pow₀ (D.one_le_scale i)
   have hfd : _root_.fderiv ℝ (fun y => L y + c i) = fun _ => L := by
@@ -724,17 +754,20 @@ theorem PolynomialJets.affine (L : E →L[ℝ] F) (c : ι → F) {C : ℝ} {m : 
   cases n with
   | zero =>
       rw [norm_iteratedFDeriv_zero]
-      exact (hv i x hx).trans (by nlinarith [norm_nonneg L])
+      exact (hv i x hx).trans (mul_le_mul_of_nonneg_right
+        (le_add_of_nonneg_right (norm_nonneg L)) (zero_le_one.trans hs))
   | succ n =>
       rw [← norm_iteratedFDeriv_fderiv, hfd]
       cases n with
       | zero =>
           rw [norm_iteratedFDeriv_zero]
-          nlinarith [norm_nonneg L]
+          exact (le_add_of_nonneg_left (zero_le_one.trans hC)).trans
+            (le_mul_of_one_le_right (add_nonneg (zero_le_one.trans hC) (norm_nonneg L)) hs)
       | succ n =>
           rw [iteratedFDeriv_succ_const]
           simp only [Pi.zero_apply, norm_zero]
-          positivity
+          exact mul_nonneg (add_nonneg (zero_le_one.trans hC) (norm_nonneg L))
+            (zero_le_one.trans hs)
 
 theorem norm_jet_comp_linear {f : F → G} {U : Set F}
     (hU : IsOpen U) (hf : ContDiffOn ℝ ∞ f U)
@@ -746,7 +779,8 @@ theorem norm_jet_comp_linear {f : F → G} {U : Set F}
   rw [iteratedFDerivWithin_of_isOpen n hp hx,
     iteratedFDerivWithin_of_isOpen n hU hx] at he
   rw [he]
-  simpa using (iteratedFDeriv ℝ n f (L x)).norm_compContinuousLinearMap_le (fun _ => L)
+  simpa only [Finset.prod_const, Finset.card_univ, Fintype.card_fin] using
+    (iteratedFDeriv ℝ n f (L x)).norm_compContinuousLinearMap_le (fun _ => L)
 
 /-- Translations introduce no growth in higher-derivative norms. -/
 theorem norm_jet_comp_affine {f : F → G} {U : Set F}
@@ -770,11 +804,11 @@ theorem PolynomialJets.precomp_affine {D' : Domain ι F} {f : ι → F → G}
     (L.contDiff.contDiffOn.add contDiffOn_const) (hmap i), ?_⟩
   intro N
   obtain ⟨C, hC, m, hm⟩ := hf.bound N
-  refine ⟨C * (‖L‖ + 1) ^ N, one_le_mul' hC (one_le_pow₀ (by linarith [norm_nonneg L])), m, ?_⟩
+  refine ⟨C * (‖L‖ + 1) ^ N, one_le_mul' hC (one_le_pow₀ (by linarith only [norm_nonneg L])), m, ?_⟩
   intro i n hn x hx
   have hp : ‖L‖ ^ n ≤ (‖L‖ + 1) ^ N :=
-    (pow_le_pow_left₀ (norm_nonneg L) (by linarith) n).trans
-      (pow_le_pow_right₀ (by linarith [norm_nonneg L]) hn)
+    (pow_le_pow_left₀ (norm_nonneg L) (by linarith only) n).trans
+      (pow_le_pow_right₀ (by linarith only [norm_nonneg L]) hn)
   calc
     _ ≤ ‖iteratedFDeriv ℝ n (f i) (L x + c i)‖ * ‖L‖ ^ n :=
       norm_jet_comp_affine (D'.isOpen i) (hf.smooth i) L (c i) (hmap i x hx) n
@@ -850,7 +884,7 @@ theorem PolynomialJets.compact_comp {f : ι → E → F} (hf : PolynomialJets D 
     exact hc k (hk.trans hn) (f i x) (hmap i hx)
   · rw [iteratedFDerivWithin_of_isOpen k (D.isOpen i) hx]
     exact (ha i k (hkn.trans hn) x hx).trans
-      (by simpa using pow_le_pow_right₀ hD hk)
+      (by simpa only [pow_one] using pow_le_pow_right₀ hD hk)
 
 end Calculus
 
@@ -872,7 +906,7 @@ theorem PolynomialJets.norm_sq {f : ι → E → F} (hf : PolynomialJets D f) :
 theorem PolynomialJets.pow {f : ι → E → ℝ} (hf : PolynomialJets D f) (n : ℕ) :
     PolynomialJets D (fun i x => f i x ^ n) := by
   induction n with
-  | zero => simpa using (PolynomialJets.const_fixed (D := D) (1 : ℝ))
+  | zero => simpa only [pow_zero] using (PolynomialJets.const_fixed (D := D) (1 : ℝ))
   | succ n ih => simpa only [pow_succ] using ih.mul hf
 
 theorem PolynomialJets.div_const {f : ι → E → ℝ} (hf : PolynomialJets D f) (c : ℝ) :
@@ -892,7 +926,7 @@ theorem PolynomialJets.inv {f : ι → E → ℝ} (hf : PolynomialJets D f)
     intro r hr he
     have h : b ≤ |r| := hr.2
     simp only [he, abs_zero] at h
-    linarith
+    linarith only [hb, h]
   apply hf.compact_comp (isClosed_singleton.isOpen_compl)
     (contDiffOn_id.inv (fun _ h => h)) hK hKU
   intro i x hx
@@ -927,7 +961,7 @@ theorem normalRange_regular {b M : ℝ} (hb : 0 < b) : normalRange b M ⊆ regul
   intro n hn he
   have h : b ≤ ‖MovingFrameODE.tail n‖ := hn.2
   simp only [he, norm_zero] at h
-  linarith
+  linarith only [hb, h]
 
 section Geometry
 
@@ -1032,7 +1066,8 @@ theorem PolynomialJets.lift_slot {F : Type*} [NormedAddCommGroup F] [NormedSpace
     PolynomialJets (D.slot V hV) (fun i z => f i z.1) := by
   simpa only [ContinuousLinearMap.coe_fst', add_zero] using
     hf.precomp_affine (D := D.slot V hV) (ContinuousLinearMap.fst ℝ Slow ℝ)
-      (fun _ => 0) (fun _ => rfl) (fun _ _ hz => by simpa using hz.1)
+      (fun _ => 0) (fun _ => rfl) (fun _ _ hz => by simpa only [ContinuousLinearMap.coe_fst',
+          add_zero] using hz.1)
 
 theorem PolynomialJets.vec2 {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {D : Domain ι E} {f g : ι → E → ℝ}
@@ -1129,13 +1164,15 @@ theorem PhaseFamily.polynomial_jets (a : PhaseFamily ι) (D : Domain ι Slow)
   have hpR : PolynomialJets D (fun _ q => q.1) := by
     simpa only [ContinuousLinearMap.coe_fst', add_zero] using
       (PolynomialJets.affine (D := D) (ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ))
-        (fun _ => 0) (m := 0) hM (fun i q hq => by simpa using (hR i q hq).2))
+        (fun _ => 0) (m := 0) hM (fun i q hq => by simpa only [ContinuousLinearMap.coe_fst',
+            add_zero, Real.norm_eq_abs, pow_zero, mul_one] using (hR i q hq).2))
   have hpRi := (hpR.inv hr (fun i q hq => (hR i q hq).1)
     (fun i q hq => (hR i q hq).2)).lift_slot V hV
   have hpv : PolynomialJets (D.slot V hV) (fun _ z => z.2) := by
     simpa only [ContinuousLinearMap.coe_snd', add_zero] using
       (PolynomialJets.affine (D := D.slot V hV) (ContinuousLinearMap.snd ℝ Slow ℝ)
-        (fun _ => 0) (m := 1) hM (fun i z hz => by simpa [Domain.slot] using hslot i z.2 hz.2))
+        (fun _ => 0) (m := 1) hM (fun i z hz => by simpa only [ContinuousLinearMap.coe_snd',
+            add_zero, Real.norm_eq_abs, Domain.slot, pow_one] using hslot i z.2 hz.2))
   have hFR := (hF.directional (1, (0, 0))).lift_slot V hV
   have hGR := (hG.directional (1, (0, 0))).lift_slot V hV
   have hFZ := (hF.directional (0, (1, 0))).lift_slot V hV
@@ -1146,8 +1183,10 @@ theorem PhaseFamily.polynomial_jets (a : PhaseFamily ι) (D : Domain ι Slow)
     intro i z hz
     exact (PhaseEstimates.phaseNormal_eq_explicit (a.epsilon i) (a.p i) (a.pz i) (a.x0 i)
       (a.F i) (a.G i) (z.1, (a.theta i, z.2)) (heps i)
-      (((hF.smooth i).contDiffAt ((D.isOpen i).mem_nhds hz.1)).differentiableAt (by simp))
-      (((hG.smooth i).contDiffAt ((D.isOpen i).mem_nhds hz.1)).differentiableAt (by simp))).symm
+      (((hF.smooth i).contDiffAt ((D.isOpen i).mem_nhds hz.1)).differentiableAt (by simp only [
+          ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
+      (((hG.smooth i).contDiffAt ((D.isOpen i).mem_nhds hz.1)).differentiableAt (by simp only [
+          ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))).symm
   have hd : PolynomialJets (D.slot V hV) a.velocity :=
     normalVelocity_polynomial hpε hpp hppz hFR hGR hFZ hGZ
   have hg : PolynomialJets (D.slot V hV) a.shear :=
@@ -1249,8 +1288,11 @@ theorem FrameJets.coefficient {d : ι → PrimaryODE.FrameData Q} (h : FrameJets
   apply hh.congr
   intro i z _
   ext w k
-  fin_cases k <;> simp [PrimaryODE.FrameData.coefficient, PrimaryODE.FrameData.damping,
-    GrowingMode.modalOperator]
+  fin_cases k <;> simp only [GrowingMode.modalOperator, Fin.isValue, sub_self, zero_add, one_mul,
+      zero_mul, add_zero, neg_zero, add_apply, smul_apply, LinearMap.coe_toContinuousLinearMap',
+      LinearMap.coe_mk, AddHom.coe_mk, Fin.zero_eta, PiLp.add_apply, PiLp.smul_apply,
+      Matrix.cons_val_zero, smul_eq_mul, mul_zero, PrimaryODE.FrameData.coefficient,
+      PrimaryODE.FrameData.damping, Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one]
 
 /-- The actual projection and eigenbasis conversion of a supplied source
 preserve polynomial jets.  A scalar weight on the source can be carried
@@ -1304,7 +1346,7 @@ theorem frameJets_ofNormalLocal
     have hbnd := hhlow i z hz
     change h i z = 0 at he
     rw [he, abs_zero] at hbnd
-    linarith
+    linarith only [hbh, hbnd]
 
 /-- The form consumed by `PrimaryODE.norm_iteratedFDeriv_solution_le_polynomial`
 and `WeightedODEJets`: all parameter jets at fixed slot time share one
@@ -1316,15 +1358,16 @@ theorem PolynomialJets.parameter_bound {F : Type*} [NormedAddCommGroup F] [Norme
   obtain ⟨C, hC, m, hm⟩ := hf.bound N
   let L := ContinuousLinearMap.inl ℝ Q ℝ
   refine ⟨C * (‖L‖ + 1) ^ N,
-    one_le_mul' hC (one_le_pow₀ (by linarith [norm_nonneg L])), m, ?_⟩
+    one_le_mul' hC (one_le_pow₀ (by linarith only [norm_nonneg L])), m, ?_⟩
   intro i p v hp k hk
   have hmap : L p + (0, v) ∈ D.carrier i := by simpa [L] using hp
   have hjet := norm_jet_comp_affine (D.isOpen i) (hf.smooth i) L (0, v) hmap k
   have hfac : ‖L‖ ^ k ≤ (‖L‖ + 1) ^ N :=
-    (pow_le_pow_left₀ (norm_nonneg L) (by linarith) k).trans
-      (pow_le_pow_right₀ (by linarith [norm_nonneg L]) hk)
+    (pow_le_pow_left₀ (norm_nonneg L) (by linarith only) k).trans
+      (pow_le_pow_right₀ (by linarith only [norm_nonneg L]) hk)
   calc
-    _ ≤ ‖iteratedFDeriv ℝ k (f i) (p, v)‖ * ‖L‖ ^ k := by simpa [L] using hjet
+    _ ≤ ‖iteratedFDeriv ℝ k (f i) (p, v)‖ * ‖L‖ ^ k := by simpa only [ContinuousLinearMap.inl_apply,
+        Prod.mk_add_mk, add_zero, zero_add, L] using hjet
     _ ≤ (C * D.scale i ^ m) * (‖L‖ + 1) ^ N :=
       mul_le_mul (hm i k hk (p, v) hp) hfac (by positivity)
         (by have := le_trans zero_le_one (D.one_le_scale i); positivity)
@@ -1350,12 +1393,12 @@ theorem normal_range_of_reference_close {n : ι → E → Space}
       ‖n i z - MovingFrameODE.pack (B i * s i z) (B i • K i)‖ ≤ δ i z) :
     (∀ i, ∀ z ∈ D.carrier i, b ≤ ‖MovingFrameODE.tail (n i z)‖) ∧
       (∀ i, ∀ z ∈ D.carrier i, ‖n i z‖ ≤ M ^ 2 + 3 * M) := by
-  have hBpos (i) : 0 < B i := lt_of_lt_of_le (by linarith) (hB i).1
+  have hBpos (i) : 0 < B i := lt_of_lt_of_le (by linarith only [hb]) (hB i).1
   constructor
   · intro i z hz
     have h := (PhaseEstimates.normal_lower_bounds (hBpos i) (hK i) (hδ i z hz) (hclose i z hz)).1
     change b ≤ MovingFrameODE.normalScale (n i z)
-    linarith [(hB i).1]
+    linarith only [h, hB, (hB i).1]
   · intro i z hz
     have hc (k : Fin 2) : |K i k| ≤ 1 := by
       simpa only [Real.norm_eq_abs, hK i] using PiLp.norm_apply_le (K i) k
@@ -1364,14 +1407,14 @@ theorem normal_range_of_reference_close {n : ι → E → Space}
       change ‖MovingFrameODE.pack (B i * s i z) (B i • K i)‖ ≤
         |B i * s i z| + |B i * K i 0| + |B i * K i 1| at hh
       simp only [abs_mul, abs_of_pos (hBpos i)] at hh
-      have h1 := mul_le_mul (hB i).2 (hs i z hz) (abs_nonneg _) (by linarith : 0 ≤ M)
-      have h2 := mul_le_mul (hB i).2 (hc 0) (abs_nonneg _) (by linarith : 0 ≤ M)
-      have h3 := mul_le_mul (hB i).2 (hc 1) (abs_nonneg _) (by linarith : 0 ≤ M)
-      linarith
+      have h1 := mul_le_mul (hB i).2 (hs i z hz) (abs_nonneg _) (by linarith only [hM] : 0 ≤ M)
+      have h2 := mul_le_mul (hB i).2 (hc 0) (abs_nonneg _) (by linarith only [hM] : 0 ≤ M)
+      have h3 := mul_le_mul (hB i).2 (hc 1) (abs_nonneg _) (by linarith only [hM] : 0 ≤ M)
+      linarith only [hh, h1, h2, h3]
     have hh := norm_sub_le_norm_sub_add_norm_sub (n i z)
       (MovingFrameODE.pack (B i * s i z) (B i • K i)) 0
     simp only [sub_zero] at hh
-    linarith [hclose i z hz, hδ i z hz, (hB i).2]
+    linarith only [hM, href, hh, hclose, hz, hδ, hB, hclose i z hz, hδ i z hz, (hB i).2]
 
 theorem PolynomialJets.radius {s : ι → E → ℝ} (hs : PolynomialJets D s)
     {M : ℝ} (hbound : ∀ i, ∀ z ∈ D.carrier i, |s i z| ≤ M) :
@@ -1392,9 +1435,10 @@ theorem PolynomialJets.radius {s : ι → E → ℝ} (hs : PolynomialJets D s)
 
 theorem radius_bounds (s : ℝ) : 1 ≤ Real.sqrt (1 + s ^ 2) ∧
     Real.sqrt (1 + s ^ 2) ≤ 1 + |s| := by
-  have hpos := Real.sqrt_nonneg (1 + s ^ 2)
-  have hsq := Real.sq_sqrt (show 0 ≤ 1 + s ^ 2 by positivity)
-  constructor <;> nlinarith [sq_nonneg s, sq_abs s, abs_nonneg s]
+  refine ⟨Real.one_le_sqrt.mpr (le_add_of_nonneg_right (sq_nonneg s)),
+    (Real.sqrt_le_left (add_nonneg zero_le_one (abs_nonneg s))).mpr ?_⟩
+  rw [add_sq, one_pow, mul_one, sq_abs]
+  linarith only [abs_nonneg s]
 
 end ReferenceBounds
 
@@ -1417,8 +1461,8 @@ theorem reference_jets (lam c0 u ell : ι → ℝ)
     (∀ i, ∀ z ∈ D.carrier i, b ≤ |PrimaryODE.referenceProfile (c0 i) (u i) (ell i) z.2|) ∧
     (∀ i, ∀ z ∈ D.carrier i,
       |PrimaryODE.referenceProfile (c0 i) (u i) (ell i) z.2| ≤ M * (1 + M + M ^ 2)) := by
-  have hq (i) : |u i / ell i| ≤ M := by
-    nlinarith [hrate i, D.one_le_scale i, abs_nonneg (u i / ell i)]
+  have hq (i) : |u i / ell i| ≤ M :=
+    (le_mul_of_one_le_right (abs_nonneg _) (D.one_le_scale i)).trans (hrate i)
   have pu := PolynomialJets.const_uniform (D := D) u hM (fun i => by simpa using hu i)
   have pq := PolynomialJets.const_uniform (D := D) (fun i => u i / ell i) hM
     (fun i => by simpa only [Real.norm_eq_abs] using hq i)
@@ -1437,13 +1481,13 @@ theorem reference_jets (lam c0 u ell : ι → ℝ)
   have hsb (i) (z : Q × ℝ) (hz : z ∈ D.carrier i) :
       |PulseGrowth.slotMagnitude (u i) (ell i) z.2| ≤ M + M ^ 2 := by
     rw [← heq i z]
-    have h1 : |u i / 2| ≤ M := by rw [abs_div]; norm_num; linarith [hu i]
+    have h1 : |u i / 2| ≤ M := by rw [abs_div]; norm_num; linarith only [hM, hu, hu i]
     have h2 : |(u i / ell i) * z.2| ≤ M ^ 2 := by
       rw [abs_mul]
       have hh := mul_le_mul_of_nonneg_left (hslot i z hz) (abs_nonneg (u i / ell i))
-      have hh' := mul_le_mul_of_nonneg_right (hrate i) (show 0 ≤ M by linarith)
-      linarith
-    exact (abs_add_le _ _).trans (by linarith)
+      have hh' := mul_le_mul_of_nonneg_right (hrate i) (show 0 ≤ M by linarith only [hM])
+      linarith only [hh, hh']
+    exact (abs_add_le _ _).trans (by linarith only [h1, h2])
   obtain ⟨pr, pri, pdi⟩ := ps.radius hsb
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · simpa only [ViscousPropagator.referenceEigenvalue, div_eq_mul_inv] using plam.mul pri
@@ -1452,13 +1496,13 @@ theorem reference_jets (lam c0 u ell : ι → ℝ)
   · intro i z _
     have h := (radius_bounds (PulseGrowth.slotMagnitude (u i) (ell i) z.2)).1
     simp only [PrimaryODE.referenceProfile, abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)]
-    nlinarith [(hc i).1, abs_nonneg (c0 i)]
+    exact (hc i).1.trans (le_mul_of_one_le_right (hb.le.trans (hc i).1) h)
   · intro i z hz
     have h := (radius_bounds (PulseGrowth.slotMagnitude (u i) (ell i) z.2)).2.trans
       (add_le_add_right (hsb i z hz) 1)
     simp only [PrimaryODE.referenceProfile, abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)]
-    have hh := mul_le_mul (hc i).2 h (Real.sqrt_nonneg _) (show 0 ≤ M by linarith)
-    linarith
+    have hh := mul_le_mul (hc i).2 h (Real.sqrt_nonneg _) (show 0 ≤ M by linarith only [hM])
+    linarith only [hh]
 
 end ReferenceJets
 
@@ -1532,7 +1576,7 @@ It is constant in the chart variables even when it jumps across labels. -/
 theorem rounded_frequency_jets (k target : ι → ℝ) {M : ℝ} (hM : 1 ≤ M)
     (hk : ∀ i, 1 ≤ k i) (ht : ∀ i, |target i| ≤ M) :
     PolynomialJets D (fun i _ => PhaseEstimates.roundedFrequency (k i) (target i)) := by
-  apply PolynomialJets.const_uniform _ (show 1 ≤ M + 1 by linarith)
+  apply PolynomialJets.const_uniform _ (show 1 ≤ M + 1 by linarith only [hM])
   intro i
   have hkpos : 0 < k i := lt_of_lt_of_le zero_lt_one (hk i)
   have herr := PhaseEstimates.roundedFrequency_error hkpos (target i)
@@ -1540,7 +1584,7 @@ theorem rounded_frequency_jets (k target : ι → ℝ) {M : ℝ} (hM : 1 ≤ M)
   have hsum := abs_add_le (PhaseEstimates.roundedFrequency (k i) (target i) - target i) (target i)
   rw [sub_add_cancel] at hsum
   rw [Real.norm_eq_abs]
-  linarith [ht i]
+  linarith only [herr, hinv, hsum, ht, ht i]
 
 /-- With the actual carrier choice, the fundamental viscosity factor is a
 uniformly bounded label constant.  Thus no factor k is lost in slow jets. -/
@@ -1579,8 +1623,8 @@ noncomputable def Domain.ofBands (band : ι → ℕ) (hband : ∀ i, 1 ≤ band 
   isOpen := hU
   one_le_scale i := by
     have h : (1 : ℝ) ≤ band i := by exact_mod_cast hband i
-    dsimp [ChartScales.S]
-    nlinarith
+    dsimp only [ChartScales.S]
+    nlinarith only [h]
 
 omit [NormedSpace ℝ E] in
 /-- The reference logarithmic-rate input follows from a lower slot-length
@@ -1595,7 +1639,7 @@ theorem normalized_slot_rate_le {S ell u c M : ℝ} (hS : 0 < S) (hc : 0 < c)
   apply (div_le_iff₀ hellpos).mpr
   have h1 := mul_le_mul_of_nonneg_right hu (mul_nonneg hS.le hc.le)
   have h2 := mul_le_mul_of_nonneg_left hell hM
-  linarith
+  linarith only [h1, h2]
 
 end BandChoices
 
@@ -1644,7 +1688,7 @@ theorem class_congr {f g : ℕ → D → E} (hf : MemClass s w α f)
 
 theorem class_neg {f : ℕ → D → E} (hf : MemClass s w α f) :
     MemClass s w α (fun n x => -f n x) := by
-  simpa using hf.map (-ContinuousLinearMap.id ℝ E)
+  simpa only [neg_apply, ContinuousLinearMap.id_apply] using hf.map (-ContinuousLinearMap.id ℝ E)
 
 theorem class_sub {f g : ℕ → D → E} (hf : MemClass s w α f) (hg : MemClass s w α g) :
     MemClass s w α (fun n x => f n x - g n x) := by
@@ -1662,7 +1706,8 @@ theorem class_vector {a : ℕ → D → ComplexVector}
   apply class_congr hsum
   intro n x hx
   ext i
-  simp
+  simp only [ContinuousLinearMap.single_apply, Finset.sum_apply, Finset.sum_pi_single,
+      Finset.mem_univ, ↓reduceIte]
 
 /-- A genuine directional derivative consumes the class of its vector field. -/
 theorem class_along {V : ℕ → D → D} {f : ℕ → D → E}
@@ -1741,25 +1786,33 @@ theorem normalCross_apply (n : RealVector) (a : ComplexVector) :
 @[simp] theorem normalCross_zero (n : RealVector) (a : ComplexVector) :
     normalCross n a 0 = (n 1 : ℂ) * a 2 - (n 2 : ℂ) * a 1 := by
   rw [normalCross_apply]
-  simp
+  simp only [Fin.isValue, Complex.coe_smul, Pi.sub_apply, Pi.add_apply, Pi.smul_apply,
+      Pi.single_eq_same, smul_eq_mul, mul_one, Complex.real_smul, ne_eq, zero_ne_one,
+      not_false_eq_true, Pi.single_eq_of_ne, mul_zero, smul_zero, add_zero, sub_zero, Fin.reduceEq]
 
 @[simp] theorem normalCross_one (n : RealVector) (a : ComplexVector) :
     normalCross n a 1 = (n 2 : ℂ) * a 0 - (n 0 : ℂ) * a 2 := by
   rw [normalCross_apply]
-  simp
+  simp only [Fin.isValue, Complex.coe_smul, Pi.sub_apply, Pi.add_apply, Pi.smul_apply, ne_eq,
+      one_ne_zero, not_false_eq_true, Pi.single_eq_of_ne, smul_eq_mul, mul_zero, smul_zero,
+      sub_self, Pi.single_eq_same, mul_one, Complex.real_smul, zero_add, Fin.reduceEq, add_zero,
+      sub_zero]
 
 @[simp] theorem normalCross_two (n : RealVector) (a : ComplexVector) :
     normalCross n a 2 = (n 0 : ℂ) * a 1 - (n 1 : ℂ) * a 0 := by
   rw [normalCross_apply]
-  simp
+  simp only [Fin.isValue, Complex.coe_smul, Pi.sub_apply, Pi.add_apply, Pi.smul_apply, ne_eq,
+      Fin.reduceEq, not_false_eq_true, Pi.single_eq_of_ne, smul_eq_mul, mul_zero, smul_zero,
+      sub_self, add_zero, Pi.single_eq_same, mul_one, Complex.real_smul, zero_add]
 
 theorem normalCross_smul (n : RealVector) (a : ComplexVector) (c : ℂ) :
     normalCross n (c • a) = c • normalCross n a := by
   ext i
-  fin_cases i <;> simp [mul_sub] <;> ring
+  fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, normalCross_zero, Pi.smul_apply,
+      smul_eq_mul, mul_sub, Fin.mk_one, normalCross_one, Fin.reduceFinMk, normalCross_two] <;> ring
 
 theorem normalCross_real_smul (n : RealVector) (a : ComplexVector) (c : ℝ) :
-    normalCross n (c • a) = c • normalCross n a := by simp [normalCross]
+    normalCross n (c • a) = c • normalCross n a := by simp only [normalCross, map_smul]
 
 theorem normalCross_triple (n : RealVector) (a : ComplexVector) :
     normalCross n (normalCross n a) =
@@ -1844,13 +1897,13 @@ theorem cylindricalCurl_class (ha : MemClass s w α a) (hκ : 0 ≤ κ)
     simpa only [sub_eq_add_neg] using class_along hr (class_component ha i)
   have hDz (i : Fin 3) : MemClass s w (α - κ)
       (fun n => HarmonicCalculus.along (Vz n) (fun x => a n x i)) :=
-    (class_along hz (class_component ha i)).mono_exponent (by linarith)
+    (class_along hz (class_component ha i)).mono_exponent (by linarith only [hκ])
   have hDθ (i : Fin 3) : MemClass s w (α - κ)
       (fun n x => (R x)⁻¹ • HarmonicCalculus.along (Vθ n) (fun y => a n y i) x) := by
     apply (class_mul_real hR (class_along hθ (class_component ha i))).mono_exponent
-    linarith
+    linarith only [hκ]
   have hconn (i : Fin 3) : MemClass s w (α - κ) (fun n x => (R x)⁻¹ • a n x i) :=
-    (class_mul_real hR (class_component ha i)).mono_exponent (by linarith)
+    (class_mul_real hR (class_component ha i)).mono_exponent (by linarith only [hκ])
   apply class_vector
   intro i
   fin_cases i
@@ -1868,9 +1921,9 @@ theorem strippedDivergence_class (ha : MemClass s w α a) (hκ : 0 ≤ κ)
     simpa only [sub_eq_add_neg] using class_along hr (class_component ha 0)
   have hDz : MemClass s w (α - κ)
       (fun n => HarmonicCalculus.along (Vz n) (fun x => a n x 2)) :=
-    (class_along hz (class_component ha 2)).mono_exponent (by linarith)
+    (class_along hz (class_component ha 2)).mono_exponent (by linarith only [hκ])
   have hconn : MemClass s w (α - κ) (fun n x => (R x)⁻¹ • a n x 0) :=
-    (class_mul_real hR (class_component ha 0)).mono_exponent (by linarith)
+    (class_mul_real hR (class_component ha 0)).mono_exponent (by linarith only [hκ])
   exact (hDr.add hconn).add hDz
 
 end CurlClass
@@ -1948,7 +2001,7 @@ theorem graphVector_class {ρ : D → ℝ} {M : ℕ → ℝ}
     have h := hv.band_smul hM
     simp only [zero_add] at h
     exact h
-  exact ((unweighted_const s e).mono_exponent (by linarith)).add hm
+  exact ((unweighted_const s e).mono_exponent (by linarith only [hκ])).add hm
 
 theorem axialVector_class (s : StripData D) (z : D) :
     UnweightedClass s 1 (fun n _ => s.epsilon n • z) := by
@@ -1994,18 +2047,21 @@ theorem cylindricalCurl_vectorMode (R : D → ℝ) (Vr Vθ Vz : D → D) (K : �
     HarmonicCalculus.along_mode V K hΦ (hB i)
   ext i
   fin_cases i <;>
-    simp [cylindricalCurl, HarmonicCalculus.vectorMode, HarmonicCalculus.mode, hD,
-      HarmonicCalculus.phaseNormal, Complex.real_smul] <;> ring
+    simp only [cylindricalCurl, HarmonicCalculus.vectorMode, HarmonicCalculus.mode, Fin.isValue, hD,
+        Complex.real_smul, Complex.ofReal_inv, Fin.zero_eta, Matrix.cons_val_zero,
+        HarmonicCalculus.phaseNormal, normalCross_zero, Matrix.cons_val_one, Complex.ofReal_div,
+        Matrix.cons_val, Fin.mk_one, normalCross_one, Fin.reduceFinMk, normalCross_two] <;> ring
 
 theorem cylindricalCurl_const_smul (R : D → ℝ) (Vr Vθ Vz : D → D) (c : ℂ)
     {B : D → ComplexVector} {x : D} (hB : ∀ i, DifferentiableAt ℝ (fun y => B y i) x) :
     cylindricalCurl R Vr Vθ Vz (fun y => c • B y) x = c • cylindricalCurl R Vr Vθ Vz B x := by
   ext i
   fin_cases i <;>
-    simp [cylindricalCurl, Pi.smul_apply, smul_eq_mul,
-      HarmonicCalculus.along_const_mul _ c (hB 0),
-      HarmonicCalculus.along_const_mul _ c (hB 1),
-      HarmonicCalculus.along_const_mul _ c (hB 2), Complex.real_smul] <;> ring
+    simp only [cylindricalCurl, Fin.isValue, Pi.smul_apply, smul_eq_mul,
+        HarmonicCalculus.along_const_mul _ c (hB 2), Complex.real_smul, Complex.ofReal_inv,
+        HarmonicCalculus.along_const_mul _ c (hB 1), HarmonicCalculus.along_const_mul _ c (hB 0),
+        Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val] <;> ring
 
 end CurlIdentities
 
@@ -2077,17 +2133,25 @@ theorem divergence_curl_zero {U : Set D} {R : D → ℝ} {Vr Vθ Vz : D → D}
   have hDr i := HarmonicCalculus.contDiffOn_along G.isOpen G.radial_smooth (hBi i)
   have hDθ i := HarmonicCalculus.contDiffOn_along G.isOpen G.angular_smooth (hBi i)
   have hDz i := HarmonicCalculus.contDiffOn_along G.isOpen G.axial_smooth (hBi i)
-  have db i := ((hBi i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
-  have dr i := ((hDr i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
-  have dθ i := ((hDθ i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
-  have dz i := ((hDz i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
+  have db i := ((hBi i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dr i := ((hDr i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dθ i := ((hDθ i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dz i := ((hDz i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have dinv := ((G.radius_smooth.inv G.radius_ne).contDiffAt
-    (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
+    (G.isOpen.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   change DifferentiableAt ℝ (fun y => (R y)⁻¹) x at dinv
-  have dR := (G.radius_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
-  have dVr := (G.radial_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
-  have dVθ := (G.angular_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
-  have dVz := (G.axial_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
+  have dR := (G.radius_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
+  have dVr := (G.radial_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
+  have dVθ := (G.angular_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
+  have dVz := (G.axial_smooth.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   have crθ i := along_commute ((hBi i).contDiffAt (G.isOpen.mem_nhds hx))
     dVr dVθ (G.radial_angular x hx)
   have crz i := along_commute ((hBi i).contDiffAt (G.isOpen.mem_nhds hx))
@@ -2096,7 +2160,7 @@ theorem divergence_curl_zero {U : Set D} {R : D → ℝ} {Vr Vθ Vz : D → D}
     dVθ dVz (G.angular_axial x hx)
   have hir : HarmonicCalculus.along Vr (fun y => (R y)⁻¹) x = -((R x)⁻¹) ^ 2 := by
     rw [along_inv Vr dR (G.radius_ne x hx), G.radial_radius x hx]
-    simp
+    simp only [mul_one, inv_pow]
   have hiz : HarmonicCalculus.along Vz (fun y => (R y)⁻¹) x = 0 := by
     rw [along_inv Vz dR (G.radius_ne x hx), G.axial_radius x hx, mul_zero]
   simp only [HarmonicCalculus.cylindricalDivergence, cylindricalCurl,
@@ -2128,7 +2192,9 @@ theorem radialField_aux_derivative {K : ℝ → ℝ} (v w : A) {x : ℝ × A}
   dsimp only [Function.comp_def] at hd
   change fderiv ℝ (fun y : ℝ × A => (1, K y.1 • v)) x (0, w) = 0
   rw [hd.fderiv]
-  simp
+  simp only [ContinuousLinearMap.prod_apply, zero_apply, ContinuousLinearMap.smulRight_apply,
+      ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_fst', fderiv_eq_smul_deriv,
+      smul_eq_mul, zero_mul, zero_smul, Prod.mk_eq_zero, and_self]
 
 /-- Concrete graph directions commute because their radial coefficient only
 depends on the radius. No operator commutation is assumed in this constructor. -/
@@ -2155,13 +2221,15 @@ theorem explicitGraph_geometry {U : Set (ℝ × A)} (hU : IsOpen U)
     rw [ContinuousLinearMap.fderiv]
     rfl
   · intro x hx
-    rw [radialField_aux_derivative v θ ((hK x hx).differentiableAt (by simp))]
-    simp
+    rw [radialField_aux_derivative v θ ((hK x hx).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))]
+    simp only [fderiv_fun_const, Pi.zero_apply, zero_apply]
   · intro x hx
-    rw [radialField_aux_derivative v z ((hK x hx).differentiableAt (by simp))]
-    simp
+    rw [radialField_aux_derivative v z ((hK x hx).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))]
+    simp only [fderiv_fun_const, Pi.zero_apply, zero_apply]
   · intro x hx
-    simp
+    simp only [fderiv_fun_const, Pi.zero_apply, zero_apply]
 
 end ExplicitGraph
 
@@ -2210,8 +2278,8 @@ theorem curlRemainder_eq (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
     (B : D → ComplexVector) (x : D) :
     curlRemainder K R Vr Vθ Vz B x = inverseCarrier K • cylindricalCurl R Vr Vθ Vz B x := by
   ext i
-  simp [curlRemainder, inverseCarrier, Complex.real_smul, div_eq_mul_inv,
-    mul_comm, mul_left_comm, mul_assoc]
+  simp only [curlRemainder, div_eq_mul_inv, mul_comm, mul_one, Pi.smul_apply, smul_eq_mul,
+      Complex.real_smul, Complex.ofReal_inv, mul_left_comm, inverseCarrier, mul_assoc]
 
 /-- Vector potential, given by `HarmonicCalculus.vectorMode K Φ (fun x => inverseCarrier K •
 coefficient R Vr Vθ Vz Φ a x)`. -/
@@ -2249,9 +2317,10 @@ theorem cylindricalCurl_vectorPotential {U : Set D} {R : D → ℝ} {Vr Vθ Vz :
       HarmonicCalculus.vectorMode K Φ (realizedCoefficient K R Vr Vθ Vz Φ a) x := by
   have hB : ContDiffOn ℝ ∞ (coefficient R Vr Vθ Vz Φ a) U :=
     normalCoefficient_contDiffOn (phaseNormal_contDiffOn G hΦ) ha hn
-  have db i := ((contDiffOn_pi.mp hB i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by
-      simp)
-  have dΦ := (hΦ.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt (by simp)
+  have db i := ((contDiffOn_pi.mp hB i).contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dΦ := (hΦ.contDiffAt (G.isOpen.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hcross := normalCross_normalCoefficient (hn x hx) (ht x hx)
   rw [vectorPotential, cylindricalCurl_vectorMode R Vr Vθ Vz K
     (B := fun y => inverseCarrier K • coefficient R Vr Vθ Vz Φ a y) dΦ
@@ -2349,7 +2418,8 @@ theorem longitudinal_class (ha : MemClass s w α a) (hκ : 0 ≤ κ)
     ((hΦ n x hx).differentiableAt (s.isOpen_domain.mem_nhds hx))
     (fun i => ((class_component ha i).contDiffAt n hx 1).differentiableAt (by norm_num))
     (hθ n x hx) (hdiv n x hx)]
-  simp [inverseCarrier, Complex.real_smul, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc]
+  simp only [div_eq_mul_inv, mul_comm, mul_one, smul_apply, ContinuousLinearMap.id_apply,
+      smul_eq_mul, Complex.real_smul, Complex.ofReal_inv, mul_left_comm, inverseCarrier, mul_assoc]
 
 /-- The divergence premise is discharged by a genuine smooth vector
 potential. Equality is required on the open strip so all derivatives transfer. -/
@@ -2410,7 +2480,7 @@ theorem realizedCoefficient_waveClass
     (hK : BandBound s (1 / 2) (fun n => 1 / K n)) :
     WaveClass s P α (fun n => realizedCoefficient (K n) R (Vr n) (Vθ n) (Vz n) (Φ n) (a n)) := by
   have hrem := curlRemainder_waveClass hN ha hb hlower hupper hκ hr hθ hz hR hK
-  exact ha.add (hrem.mono_exponent (by linarith))
+  exact ha.add (hrem.mono_exponent (by linarith only [hκhalf]))
 
 end WaveClasses
 
@@ -2424,7 +2494,7 @@ theorem coefficient_tsupport_subset (R : D → ℝ) (Vr Vθ Vz : D → D)
   apply closure_mono
   intro x hx ha
   apply hx
-  simp [coefficient, normalCoefficient, normalCross, ha]
+  simp only [coefficient, normalCoefficient, normalCross, ha, map_zero, smul_zero]
 
 theorem cylindricalCurl_tsupport_subset (R : D → ℝ) (Vr Vθ Vz : D → D)
     (B : D → ComplexVector) : tsupport (cylindricalCurl R Vr Vθ Vz B) ⊆ tsupport B := by
@@ -2438,10 +2508,12 @@ theorem cylindricalCurl_tsupport_subset (R : D → ℝ) (Vr Vθ Vz : D → D)
       filter_upwards [he] with y hy
       exact congrFun hy i
     rw [hei.fderiv_eq]
-    simp
+    simp only [fderiv_fun_const, Pi.zero_apply]
   apply hx
   ext i
-  fin_cases i <;> simp [cylindricalCurl, HarmonicCalculus.along, hderiv, hval]
+  fin_cases i <;> simp only [cylindricalCurl, HarmonicCalculus.along, Fin.isValue, hderiv,
+      zero_apply, smul_zero, sub_self, hval, Pi.zero_apply, add_zero, Fin.zero_eta,
+      Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
 
 theorem vectorPotential_tsupport_subset (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) :
@@ -2450,8 +2522,9 @@ theorem vectorPotential_tsupport_subset (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D
   intro x hx ha
   apply hx
   ext i
-  simp [vectorPotential, HarmonicCalculus.vectorMode, HarmonicCalculus.mode,
-    coefficient, normalCoefficient, normalCross, ha]
+  simp only [vectorPotential, HarmonicCalculus.vectorMode, HarmonicCalculus.mode, coefficient,
+      normalCoefficient, normalCross, ha, map_zero, smul_zero, Pi.smul_apply, Pi.zero_apply,
+      smul_eq_mul, mul_zero, zero_mul]
 
 theorem realizedWave_tsupport_subset (K : ℝ) (R : D → ℝ) (Vr Vθ Vz : D → D)
     (Φ : D → ℝ) (a : D → ComplexVector) :

@@ -47,7 +47,7 @@ variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField} (G : Field P T raw)
 /-- Weighted, constructed using `ofLifted`. -/
 def weighted (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) :
     Field P T (fun z => g (projIcc 0 T hT z.1) • raw z) :=
-  ofLifted (weight g G.path) (weighted_orbit P g G.path G.orbit)
+  ofLifted (weight (E := LiftL2 P) g G.path) (weighted_orbit P g G.path G.orbit)
     (fun t x => g t • pointField P G.path G.orbit t x)
     (fun t => (EulerMetricTransport.smoothField_continuous P _
       (pointField_smooth P G.path G.orbit t)).const_smul (g t))
@@ -62,10 +62,11 @@ def normalized (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t
   G.weighted hT (reciprocal g hg)
 
 @[simp] theorem weighted_path (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) :
-    (G.weighted hT g).path = weight g G.path := rfl
+    (G.weighted hT g).path = weight (E := LiftL2 P) g G.path := rfl
 
 @[simp] theorem normalized_path (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (hg : ∀ t, 0 < g t) :
-    (G.normalized hT g hg).path = normalize g hg G.path := rfl
+    (G.normalized hT g hg).path =
+        EulerContinuousTimeWeight.normalize (E := LiftL2 P) g hg G.path := rfl
 
 theorem derivative_weighted_path (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (i : Fin 4) :
     ((G.weighted hT g).derivative i).path = ((G.derivative i).weighted hT g).path :=
@@ -82,14 +83,18 @@ theorem WordBound.weighted {q d : ℕ} {R A : ℝ} (hG : G.WordBound q R A d)
     (hT : 0 ≤ T) (g : C(Icc (0 : ℝ) T, ℝ)) (C : ℝ) (hC : 0 ≤ C) (hg : ∀ t, |g t| ≤ C) :
     (G.weighted hT g).WordBound q R (C*A) d := by
   intro n
-  have he : (fun a : LiftTangent => pathTranslate P a (G.weighted hT g).path) =
-      weight g ∘ (fun a : LiftTangent => pathTranslate P a G.path) :=
+  have he : (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a (G.weighted hT g).path) =
+      weight (E := LiftL2 P) g ∘ (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) :=
     funext (fun a => translate_weight P g a G.path)
   rw [he]
-  have h := block_comp_clm_le standardDirection q (weight g)
-    (fun a : LiftTangent => pathTranslate P a G.path) G.orbit n 0
+  have h := block_comp_clm_le standardDirection q (weight (E := LiftL2 P) g)
+    (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path)
+    G.orbit n 0
   have hn := h.trans (mul_le_mul_of_nonneg_right (weight_norm_of_pointwise g C hC hg)
-    (block_nonneg standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) n 0))
+    (block_nonneg standardDirection q
+      (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) n 0))
   exact hn.trans ((mul_le_mul_of_nonneg_left (hG n) hC).trans_eq (by ring))
 
 end EulerPacketCylinderField.Field

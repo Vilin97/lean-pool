@@ -42,8 +42,8 @@ theorem scalar_angle (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
       (-(2*⟪D.normal.field t x,D.M.field t x (vector D Y (t,(x,θ)))⟫_ℝ)/
         ‖D.normal.field t x‖^2) θ := by
   let G := forcing (P := P) D
-  have hforce : pointField P (includePath P D.support D.support_measurable G.path)
-      G.path_orbit t (x,(θ : AddCircle P)) = 0 := (G.raw_eq t x θ).symm
+  have hforce : pointField P (includePath (K := Icc (0 : ℝ) D.T) (V := Vector3) P D.support
+      D.support_measurable G.path) G.path_orbit t (x,(θ : AddCircle P)) = 0 := (G.raw_eq t x θ).symm
   have hp := pressureField_angle P D.support D.support_measurable D.support_compact
     D.T D.T_pos.le D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
     G.path Y.value G.path_orbit Y.orbit D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
@@ -57,8 +57,7 @@ theorem scalar_angle (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :
     rw [hforce]
     simp only [inner_zero_right,zero_sub,EulerPacketForwardPrimary.vector,
       Forcing.vector,Data.clamp_coe,G]
-  convert! hp.congr_deriv hn using 1
-  funext s
+  refine (hp.congr_deriv hn).congr_of_eventuallyEq (Filter.Eventually.of_forall fun s => ?_)
   simp only [EulerPacketForwardPrimary.scalar,Forcing.scalar,Data.clamp_coe,G]
 
 theorem vector_homogeneous_time (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :

@@ -49,12 +49,12 @@ theorem graphMap_norm_le (k : ℝ) (m : Vector3) : ‖graphMap k m‖ ≤ 1+|k| 
   intro x
   rw [graphMap_apply,Prod.norm_def]
   apply max_le
-  · nlinarith [norm_nonneg x,mul_nonneg (abs_nonneg k) (norm_nonneg m)]
+  · nlinarith only [norm_nonneg x, mul_nonneg (abs_nonneg k) (norm_nonneg m)]
   · have hi := norm_inner_le_norm (𝕜 := ℝ) m x
     rw [norm_mul,Real.norm_eq_abs]
     calc
       |k| * ‖inner ℝ m x‖ ≤ |k| * (‖m‖*‖x‖) := mul_le_mul_of_nonneg_left hi (abs_nonneg k)
-      _ ≤ (1+|k| * ‖m‖)*‖x‖ := by nlinarith [norm_nonneg x]
+      _ ≤ (1+|k| * ‖m‖)*‖x‖ := by nlinarith only [norm_nonneg x]
 
 theorem graphCoordinates_norm_le (k : ℝ) (m : Vector3) :
     ‖graphCoordinates k m‖ ≤ frequencyFactor k m :=

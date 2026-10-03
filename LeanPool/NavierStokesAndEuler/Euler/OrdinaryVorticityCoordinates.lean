@@ -40,17 +40,13 @@ theorem componentField_toLp_norm (A : SmoothL2Field Space) (j : Fin 3) :
 
 theorem componentField_jetLp_norm (A : SmoothL2Field Space) (j : Fin 3) (n : ℕ) :
     ‖(componentField A j).jetLp n‖ ≤ ‖A.jetLp n‖ := by
-  have hJ : ‖jetPostcompose (EuclideanSpace.proj j : Space →L[ℝ] ℝ) n‖ ≤ 1 := by
-    apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
-    intro F
-    change ‖(EuclideanSpace.proj j).compContinuousMultilinearMap F‖ ≤ 1*‖F‖
-    exact ((EuclideanSpace.proj j : Space →L[ℝ] ℝ).norm_compContinuousMultilinearMap_le F).trans
-      (mul_le_mul_of_nonneg_right (norm_coordinate_le j) (norm_nonneg _))
-  change ‖(mapField (EuclideanSpace.proj j) A).jetLp n‖ ≤ _
-  rw [jetLp_mapField]
-  exact ((jetPostcompose (EuclideanSpace.proj j : Space →L[ℝ] ℝ) n).norm_compLp_le (A.jetLp
-      n)).trans
-    ((mul_le_mul_of_nonneg_right hJ (norm_nonneg _)).trans_eq (one_mul _))
+  have hJ := ContinuousLinearMap.opNorm_le_bound
+    (jetPostcompose (EuclideanSpace.proj j : Space →L[ℝ] ℝ) n) zero_le_one fun F =>
+      ((EuclideanSpace.proj j : Space →L[ℝ] ℝ).norm_compContinuousMultilinearMap_le F).trans
+        (mul_le_mul_of_nonneg_right (norm_coordinate_le j) (norm_nonneg _))
+  exact (congrArg norm (jetLp_mapField (EuclideanSpace.proj j : Space →L[ℝ] ℝ) A n)).trans_le
+    (((jetPostcompose (EuclideanSpace.proj j : Space →L[ℝ] ℝ) n).norm_compLp_le
+      (A.jetLp n)).trans ((mul_le_mul_of_nonneg_right hJ (norm_nonneg _)).trans_eq (one_mul _)))
 
 theorem componentField_partial (A : SmoothL2Field Space) (j i : Fin 3) (x : Space) :
     partialDerivative (componentField A j).field i x=(fderiv ℝ A.field x (axis i)) j :=

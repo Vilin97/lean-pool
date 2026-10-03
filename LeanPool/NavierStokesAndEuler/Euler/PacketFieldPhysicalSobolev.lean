@@ -70,21 +70,28 @@ variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField} {G : Field P T raw}
 
 theorem WordBound.slice_word_le (hG : G.WordBound q R A d)
     (t : Icc (0 : ℝ) T) (n : ℕ) :
-    wordSum standardDirection (fun a : LiftTangent => translate P a (G.path t)) n 0 ≤
+    wordSum standardDirection
+        (fun a : LiftTangent => translate (V := Vector3) P a (G.path t)) n 0 ≤
       A*majorant R d n := by
-  have he : wordSum standardDirection (fun a : LiftTangent => translate P a (G.path t)) n 0 ≤
-      wordSum standardDirection (fun a : LiftTangent => pathTranslate P a G.path) n 0 := by
+  have he : wordSum standardDirection
+        (fun a : LiftTangent => translate (V := Vector3) P a (G.path t)) n 0 ≤
+      wordSum standardDirection (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) n 0 := by
     apply sum_le_sum
     intro w _
     rw [path_word_evaluation P G.path G.orbit w t]
     exact ContinuousMap.norm_coe_le_norm _ t
-  have hb : wordSum standardDirection (fun a : LiftTangent => pathTranslate P a G.path) n 0 ≤
-      block standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) n 0 := by
+  have hb : wordSum standardDirection (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) n 0 ≤
+      block standardDirection q (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) n 0 := by
     rw [block_eq_sum_levels standardDirection q _ G.orbit]
     have h := single_le_sum (s := range (q+1))
-      (f := fun j => wordSum standardDirection (fun a : LiftTangent => pathTranslate P a G.path)
+      (f := fun j => wordSum standardDirection (fun a : LiftTangent =>
+          pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path)
           (n+j) 0)
-      (fun j _ => wordSum_nonneg _ _ _ _) (show 0 ∈ range (q+1) by simp)
+      (fun j _ => wordSum_nonneg _ _ _ _) (show 0 ∈ range (q+1) by simp only [Finset.mem_range,
+          lt_add_iff_pos_left, Order.lt_add_one_iff, zero_le])
     simpa only [Nat.add_zero] using h
   exact he.trans (hb.trans (hG n))
 
@@ -93,7 +100,7 @@ theorem WordBound.tower_norm_le_polynomial (hG : G.WordBound q R A 0)
     ‖G.toFieldTower.realization s t‖ ≤ A*jetPolynomial R s := by
   apply (sobolev_norm_le_baseSize P s (G.path t) (path_evaluation_smooth P G.path G.orbit t)).trans
   change (∑ n ∈ range (s+1), wordSum standardDirection
-    (fun a : LiftTangent => translate P a (G.path t)) n 0) ≤ _
+    (fun a : LiftTangent => translate (V := Vector3) P a (G.path t)) n 0) ≤ _
   rw [jetPolynomial,mul_sum]
   apply sum_le_sum
   intro n _

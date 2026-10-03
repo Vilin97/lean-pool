@@ -45,26 +45,33 @@ theorem radialSource_mem {s : StripData D} {o : Operators D} {base mean : Triple
   have hν : ν ≤ 9 / 10 := min_le_left _ _
   have hνγ : ν ≤ γ := min_le_right _ _
   have hκ := ho.kappa_nonneg
+  have h2κ : ν - 2 * κ ≤ ν := sub_le_self ν (mul_nonneg zero_le_two hκ)
   have hrr : MeanClass s ν (radialRadial base mean) :=
-    ((Class.smul (Class.coefficient_mul hb.radial hm.radial) 2).mono_exponent (by linarith)).add
-      ((Class.product hm.radial hm.radial ho.weight_le_one).mono_exponent (by linarith))
+    ((Class.smul (Class.coefficient_mul hb.radial hm.radial) 2).mono_exponent
+      (hν.trans (by norm_num))).add
+      ((Class.product hm.radial hm.radial ho.weight_le_one).mono_exponent (hν.trans (by norm_num)))
   have hzr : MeanClass s ν (axialRadial base mean) :=
-    (((Class.coefficient_mul hb.radial hm.axial).mono_exponent (by linarith)).add
-      ((Class.mul_coefficient hm.radial hb.axial).mono_exponent (by linarith))).add
-        ((Class.product hm.radial hm.axial ho.weight_le_one).mono_exponent (by linarith))
+    (((Class.coefficient_mul hb.radial hm.axial).mono_exponent (hν.trans (by norm_num))).add
+      ((Class.mul_coefficient hm.radial hb.axial).mono_exponent (hν.trans (by norm_num)))).add
+        ((Class.product hm.radial hm.axial ho.weight_le_one).mono_exponent
+          (hν.trans (by norm_num)))
   have hθ : MeanClass s ν (radialAngular base mean) :=
-    ((Class.smul (Class.coefficient_mul hb.angular hm.angular) 2).mono_exponent (by linarith)).add
-      ((Class.product hm.angular hm.angular ho.weight_le_one).mono_exponent (by linarith))
+    ((Class.smul (Class.coefficient_mul hb.angular hm.angular) 2).mono_exponent
+      (hν.trans_eq (zero_add _).symm)).add
+      ((Class.product hm.angular hm.angular ho.weight_le_one).mono_exponent
+        (hν.trans (by norm_num)))
   have ht : MeanClass s (ν - 2 * κ) (o.time mean.radial) :=
-    (ho.time hm.radial).mono_exponent (by linarith)
+    (ho.time hm.radial).mono_exponent (h2κ.trans (hν.trans (by norm_num)))
   have hr : MeanClass s (ν - 2 * κ) (o.radialDiv 1 (radialRadial base mean + W 0 0)) :=
-    (ho.radialDiv (hrr.add ((hW 0 0).mono_exponent hνγ)) 1).mono_exponent (by linarith)
+    (ho.radialDiv (hrr.add ((hW 0 0).mono_exponent hνγ)) 1).mono_exponent
+      (sub_le_sub_left (le_mul_of_one_le_left hκ one_le_two) ν)
   have hz : MeanClass s (ν - 2 * κ) (o.dz (axialRadial base mean + W 2 0)) :=
-    (ho.dz (hzr.add ((hW 2 0).mono_exponent hνγ))).mono_exponent (by linarith)
+    (ho.dz (hzr.add ((hW 2 0).mono_exponent hνγ))).mono_exponent
+      (h2κ.trans (le_add_of_nonneg_right zero_le_one))
   have hi : MeanClass s (ν - 2 * κ) (o.invRadius * (radialAngular base mean + W 1 1)) :=
-    (ho.inv_mul (hθ.add ((hW 1 1).mono_exponent hνγ))).mono_exponent (by linarith)
+    (ho.inv_mul (hθ.add ((hW 1 1).mono_exponent hνγ))).mono_exponent h2κ
   have hv : MeanClass s (ν - 2 * κ) (o.viscosity 1 mean.radial) :=
-    (ho.viscosity hm.radial 1).mono_exponent (by linarith)
+    (ho.viscosity hm.radial 1).mono_exponent (sub_le_sub_right (hν.trans (by norm_num)) _)
   exact Class.neg (Class.sub (Class.sub ((ht.add hr).add hz) hi) hv)
 
 theorem state_gr_mem {s : StripData D} {c : CorrectionState.Context D}
@@ -107,7 +114,10 @@ theorem pressureAlias_vector_mem {s : StripData (PressureStream.Lift S)} {β : �
   have hm := hf.map (ContinuousLinearMap.single ℝ (fun _ : Fin 3 => ℝ) 0)
   convert! hm using 1
   funext n z i
-  fin_cases i <;> simp [pressureAliasState]
+  fin_cases i <;> simp only [pressureAliasState, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      ContinuousLinearMap.single_apply, Pi.single_eq_same, Fin.mk_one, Matrix.cons_val_one, ne_eq,
+      one_ne_zero, not_false_eq_true, Pi.single_eq_of_ne, Fin.reduceFinMk, Matrix.cons_val,
+      Fin.reduceEq]
 
 theorem temporalAlias_vector_mem {s : StripData (PressureStream.Lift S)} {β : ℝ}
     (g : GaugeData S) (h : ℝ) (index : ℕ → ℕ)
@@ -118,7 +128,9 @@ theorem temporalAlias_vector_mem {s : StripData (PressureStream.Lift S)} {β : �
   have hm := hf.map (ContinuousLinearMap.single ℝ (fun _ : Fin 3 => ℝ) 2)
   convert! hm using 1
   funext n z i
-  fin_cases i <;> simp [temporalAliasState]
+  fin_cases i <;> simp only [temporalAliasState, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      Matrix.cons_val, ContinuousLinearMap.single_apply, ne_eq, Fin.reduceEq, not_false_eq_true,
+      Pi.single_eq_of_ne, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Pi.single_eq_same]
 
 theorem pressureAlias_angle_mem {s : StripData (PressureStream.Lift S)} {β : ℝ}
     (g : GaugeData S) (c : CorrectionState.Context (PressureStream.Lift S))

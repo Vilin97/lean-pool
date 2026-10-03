@@ -58,15 +58,18 @@ theorem pressurePath_eq_source : pressurePath τ hτ hτT B G =
       intro v
       erw [normalFunctional_apply]
     rw [pressurePath_left τ hτ hτT B G th]
-    change primitive P (fullOperatorMap P
+    change primitive P (fullOperatorMap (E := Space) (F := ℝ) P
       (normalFunctional Dh.normal Dh.normalLower Dh.normalLower_pos Dh.normal_lower th)
       ((HistoryData.forcingPath (G.initial τ hτ hτT.le)) th-(2 : ℝ) •
-        fullOperatorMap P (Dh.M.field th) (pastVelocity τ hτ hτT B G th))) =
-      primitive P (fullOperatorMap P
+        fullOperatorMap (E := Space) (F := Space) P (Dh.M.field th)
+          (pastVelocity τ hτ hτT B G th))) =
+      primitive P (fullOperatorMap (E := Space) (F := ℝ) P
         (normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower t)
-        ((HistoryData.forcingPath G) t-(2 : ℝ) • fullOperatorMap P (D.M.field t)
-          (velocityPath τ hτ hτT B G t)))
-    rw [hN,velocityPath_left τ hτ hτT B G th]
+        ((HistoryData.forcingPath G) t-(2 : ℝ) •
+          fullOperatorMap (E := Space) (F := Space) P (D.M.field t)
+            (velocityPath τ hτ hτT B G t)))
+    simp only [hN]
+    rw [velocityPath_left τ hτ hτT B G th]
     rfl
   · let tr : Icc τ D.T := ⟨t,(not_le.mp ht).le,t.property.2⟩
     let tf : Icc (0 : ℝ) (D.T-τ) :=
@@ -82,7 +85,8 @@ theorem pressurePath_eq_source : pressurePath τ hτ hτT B G =
       intro x
       apply ContinuousLinearMap.ext
       intro v
-      erw [normalFunctional_apply,normalFunctional_apply]
+      erw [normalFunctional_apply,
+        normalFunctional_apply D.normal D.normalLower D.normalLower_pos D.normal_lower t x v]
       change ⟪D.normal.field (tailInclusion D.T τ hτ.le tf) x,v⟫_ℝ/
         ‖D.normal.field (tailInclusion D.T τ hτ.le tf) x‖^2 = _
       rw [he]
@@ -94,22 +98,27 @@ theorem pressurePath_eq_source : pressurePath τ hτ hτT B G =
       change (HistoryData.forcingPath G) (tailInclusion D.T τ hτ.le tf) = _
       rw [he]
     rw [pressurePath_right τ hτ hτT B G tr]
-    change primitive P (fullOperatorMap P
+    change primitive P (fullOperatorMap (E := Space) (F := ℝ) P
       (normalFunctional Df.normal Df.normalLower Df.normalLower_pos Df.normal_lower tf)
       ((HistoryData.forcingPath (G.tail τ hτ.le hτT)) tf-(2 : ℝ) •
-        fullOperatorMap P (Df.M.field tf) (futureVelocity τ hτ hτT B G tf))) =
-      primitive P (fullOperatorMap P
+        fullOperatorMap (E := Space) (F := Space) P (Df.M.field tf)
+          (futureVelocity τ hτ hτT B G tf))) =
+      primitive P (fullOperatorMap (E := Space) (F := ℝ) P
         (normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower t)
-        ((HistoryData.forcingPath G) t-(2 : ℝ) • fullOperatorMap P (D.M.field t)
-          (velocityPath τ hτ hτT B G t)))
-    rw [hN,hM,hf,velocityPath_right τ hτ hτT B G tr]
+        ((HistoryData.forcingPath G) t-(2 : ℝ) •
+          fullOperatorMap (E := Space) (F := Space) P (D.M.field t)
+            (velocityPath τ hτ hτT B G t)))
+    simp only [hN, hM, hf]
+    rw [velocityPath_right τ hτ hτT B G tr]
 
 theorem pressurePath_normalized_eq_source
     (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t) :
-    normalize g hg (pressurePath τ hτ hτT B G) =
+    EulerContinuousTimeWeight.normalize (E := CylinderL2 P ℝ) g hg (pressurePath τ hτ hτT B G) =
       sourcePressure P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
-        (normalize g hg (HistoryData.forcingPath G))
-        (normalize g hg (velocityPath τ hτ hτT B G)) := by
+        (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Space) g hg
+            (HistoryData.forcingPath G))
+        (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Space) g hg
+            (velocityPath τ hτ hτT B G)) := by
   rw [pressurePath_eq_source]
   exact (sourcePressure_weight P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     (reciprocal g hg) (HistoryData.forcingPath G) (velocityPath τ hτ hτT B G)).symm
@@ -125,12 +134,17 @@ theorem source_pressure_bound
     (hM : ∀ n t x, ‖iteratedFDeriv ℝ n (D.M.field t : Space → Space →L[ℝ] Space) x‖ ≤ CM * majorant
         Rc 0 n)
     (d : ℕ)
-    (hf : ∀ n, block directions q (fun a => pathTranslate P a
-      (normalize g hg (HistoryData.forcingPath G))) n 0 ≤ Af * majorant R d n)
-    (hv : ∀ n, block directions q (fun a => pathTranslate P a
-      (normalize g hg (velocityPath τ hτ hτT B G))) n 0 ≤ Av * majorant R d n) (n : ℕ) :
-    block directions q (fun a => pathTranslate P a
-      (normalize g hg (pressurePath τ hτ hτT B G))) n 0 ≤
+    (hf : ∀ n, block directions q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Space) g hg
+          (HistoryData.forcingPath G))) n 0 ≤
+        Af * majorant R d n)
+    (hv : ∀ n, block directions q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Vector3) g hg
+          (velocityPath τ hτ hτT B G))) n 0 ≤
+        Av * majorant R d n) (n : ℕ) :
+    block directions q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := ℝ) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P ℝ) g hg
+          (pressurePath τ hτ hτT B G))) n 0 ≤
         (P*pressureCost ι q Ri Cm CM Af Av)*majorant R d n := by
   rw [pressurePath_normalized_eq_source]
   exact sourcePressure_block_bound P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
@@ -142,10 +156,13 @@ theorem source_pressure_bound
 theorem scalarGradientField_normalized_bound
     (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
     (q : ℕ) (R A : ℝ) (d : ℕ)
-    (hb : ∀ n, block standardDirection q (fun a => pathTranslate P a
-      (normalize g hg (pressurePath τ hτ hτT B G))) n 0 ≤ A * majorant R d n) (n : ℕ) :
-    block standardDirection q (fun a => pathTranslate P a
-      (normalize g hg (scalarGradientField τ hτ hτT B G).path)) n 0 ≤
+    (hb : ∀ n, block standardDirection q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := ℝ) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P ℝ) g hg
+          (pressurePath τ hτ hτT B G))) n 0 ≤
+        A * majorant R d n) (n : ℕ) :
+    block standardDirection q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Vector3) g hg
+          (scalarGradientField τ hτ hτT B G).path)) n 0 ≤
         (3*A)*majorant R (d+1) n :=
   scalarGradientPath_normalized_majorant (pressurePath τ hτ hτT B G)
     (pressurePath_orbit τ hτ hτT B G) g hg q R A d hb n

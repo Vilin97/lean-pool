@@ -17,6 +17,10 @@ small label scale is kept outside this polynomial. -/
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -67,25 +71,48 @@ theorem formula_mono {F V R Hist Ei Hi CM CH F' V' R' Hist' Ei' Hi' CM' CH' : �
   have hV0 := hV.trans hVV
   have hR0 := hR.trans hRR
   have hH0 := hHist.trans hHH
-  have hE0 := hEi.trans hEE
   have hI0 := hHi.trans hII
-  have hM0 := hCM.trans hMM
   have hC0 := hCH.trans hCC
   unfold formula
-  gcongr
+  have hF2 : F^2 ≤ F'^2 := pow_le_pow_left₀ hF hFF 2
+  have h27 : 27*F^2 ≤ 27*F'^2 := mul_le_mul_of_nonneg_left hF2 (by norm_num)
+  have h27' : 0 ≤ 27*F'^2 := mul_nonneg (by norm_num) (sq_nonneg F')
+  have hA : 5+64*CM^2+2*CH ≤ 5+64*CM'^2+2*CH' :=
+    add_le_add (add_le_add_right (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hCM hMM 2)
+      (by norm_num)) 5) (mul_le_mul_of_nonneg_left hCC (by norm_num))
+  have hA0 : 0 ≤ 5+64*CM'^2+2*CH' :=
+    add_nonneg (add_nonneg (by norm_num) (mul_nonneg (by norm_num) (sq_nonneg CM')))
+      (mul_nonneg (by norm_num) hC0)
+  have hB : 1+3*F^2 ≤ 1+3*F'^2 :=
+    add_le_add_right (mul_le_mul_of_nonneg_left hF2 (by norm_num)) 1
+  have hB0 : 0 ≤ 1+3*F'^2 := add_nonneg zero_le_one (mul_nonneg (by norm_num) (sq_nonneg F'))
+  have hH16 : 0 ≤ 16*Hist' := mul_nonneg (by norm_num) hH0
+  refine add_le_add (add_le_add ?_ ?_) ?_
+  · exact mul_le_mul (mul_le_mul h27 hVV hV h27') hRR hR (mul_nonneg h27' hV0)
+  · exact mul_le_mul (mul_le_mul (mul_le_mul h27 hRR hR h27') (add_le_add_right hFF 1)
+      (add_nonneg zero_le_one hF) (mul_nonneg h27' hR0)) hEE hEi
+      (mul_nonneg (mul_nonneg h27' hR0) (add_nonneg zero_le_one hF0))
+  · have hA0' : 0 ≤ 5+64*CM^2+2*CH :=
+      add_nonneg (add_nonneg (by norm_num) (mul_nonneg (by norm_num) (sq_nonneg CM)))
+        (mul_nonneg (by norm_num) hCH)
+    have hB0' : 0 ≤ 1+3*F^2 := add_nonneg zero_le_one (mul_nonneg (by norm_num) (sq_nonneg F))
+    exact mul_le_mul (mul_le_mul (mul_le_mul (mul_le_mul
+      (mul_le_mul_of_nonneg_left hHH (by norm_num)) hA hA0' hH16) hB hB0' (mul_nonneg hH16 hA0))
+      hII hHi (mul_nonneg (mul_nonneg hH16 hA0) hB0)) hEE hEi
+      (mul_nonneg (mul_nonneg (mul_nonneg hH16 hA0) hB0) hI0)
 
 theorem envelope_power (K Ti Ei Hi CM CH : ℝ)
     (hK : 0 ≤ K) (hTi : 0 ≤ Ti) (hEi : 0 ≤ Ei) (hHi : 0 ≤ Hi)
     (hCM : 0 ≤ CM) (hCH : 0 ≤ CH) :
     envelope K Ti Ei Hi CM CH ≤ boundConstant*(1+K+Ti+Ei+Hi+CM+CH)^degree := by
   let P := 1+K+Ti+Ei+Hi+CM+CH
-  have hP : 1 ≤ P := by dsimp [P]; linarith
-  have hKP : K ≤ P := by dsimp [P]; linarith
-  have hbase : 1+K+Ti ≤ P := by dsimp [P]; linarith
-  have hEP : Ei ≤ P := by dsimp [P]; linarith
-  have hIP : Hi ≤ P := by dsimp [P]; linarith
-  have hMP : CM ≤ P := by dsimp [P]; linarith
-  have hHP : CH ≤ P := by dsimp [P]; linarith
+  have hP : 1 ≤ P := by dsimp [P]; linarith only [hK, hTi, hEi, hHi, hCM, hCH]
+  have hKP : K ≤ P := by dsimp [P]; linarith only [hTi, hEi, hHi, hCM, hCH]
+  have hbase : 1+K+Ti ≤ P := by dsimp [P]; linarith only [hEi, hHi, hCM, hCH]
+  have hEP : Ei ≤ P := by dsimp [P]; linarith only [hK, hTi, hHi, hCM, hCH]
+  have hIP : Hi ≤ P := by dsimp [P]; linarith only [hK, hTi, hEi, hCM, hCH]
+  have hMP : CM ≤ P := by dsimp [P]; linarith only [hK, hTi, hEi, hHi, hCH]
+  have hHP : CH ≤ P := by dsimp [P]; linarith only [hK, hTi, hEi, hHi, hCM]
   have hEmbedding := embeddingCost_nonneg
   have hHistory := labelHistoryConstant_pos
   have hV : gradientAmplitude K ≤ gradientAmplitude P := by
@@ -94,7 +121,7 @@ theorem envelope_power (K Ti Ei Hi CM CH : ℝ)
   have hF : frameAmplitude K ≤ frameAmplitude P := add_le_add (le_refl (1 : ℝ)) hV
   have hR : coefficientRadius K ≤ 1024+4*P := by
     unfold coefficientRadius
-    apply max_le <;> linarith
+    apply max_le <;> linarith only [hK, hTi, hEi, hHi, hCM, hCH]
   have hHist : labelHistoryConstant*(1+K+Ti)^labelHistoryPower ≤
       labelHistoryConstant*P^labelHistoryPower := by gcongr
   have he : envelope K Ti Ei Hi CM CH ≤ polynomial.eval P := by
@@ -115,7 +142,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 theorem epsilon_inv_le_twice_shear (ha : 1 / 2 ≤ P.a) (hH : 1 ≤ P.shear) :
     P.epsilon⁻¹ ≤ 2*P.shear := by
-  have ha0 : 0 < P.a := by linarith only [ha]
+  have ha0 : 0 < P.a := (by norm_num : (0 : ℝ) < 1 / 2).trans_le ha
   have hH0 : 0 ≤ P.shear := zero_le_one.trans hH
   rw [epsilon,← Real.sqrt_inv,inv_div]
   calc
@@ -169,14 +196,7 @@ theorem neighborScaleCost_envelope :
     ((D.activationRayScale_bounds ⟨τ,hτ.le,hτT.le⟩ _ hn).2.2).trans hFnorm
   have hHistory := (L.initialHistoryDifferenceScaleCost_bound m hm R S hS H τ hτ hτT
     Ti hτ1 hTi).trans (labelHistoryEnvelope_power L.K Ti hK hTi0)
-  have hHistory0 : 0 ≤ L.initialHistoryDifferenceScaleCost m hm R S hS H τ hτ hτT := by
-    have h0 := historyLabelDifferenceCost_nonneg (G.historyOn H m hm R S hS τ hτ hτT)
-    have hb := L.initial_history_derivative_scale m hm R S hS H τ hτ hτT
-    have hell := G.ell_pos
-    nlinarith only [h0,hb,hell]
   have hR := coefficientRadius_nonneg L.K
-  have hV := gradientAmplitude_nonneg L.K
-  have hRayPos := Guards.rayScale_pos hτ hτT P
   have hHistConst := labelHistoryConstant_pos
   have heq : L.neighborScaleCost m hm R S hS H τ hτ hτT P CM CH =
       L.strainDifferenceCost+3*L.normalDifferenceCost*(P.rayScale hτ hτT)⁻¹*P.epsilon⁻¹ +
@@ -192,7 +212,20 @@ theorem neighborScaleCost_envelope :
         3*(9*(frameAmplitude L.K)^2*coefficientRadius L.K)*(1+frameAmplitude L.K)*P.epsilon⁻¹ +
         16*(labelHistoryConstant*(1+L.K+Ti)^labelHistoryPower) *
           (5+64*CM^2+2*CH)*(1+3*(frameAmplitude L.K)^2)*P.shear⁻¹*P.epsilon⁻¹ := by
-      gcongr
+      have hEi := inv_nonneg.mpr heps.le
+      have hc5 : 0 ≤ 5+64*CM^2+2*CH := add_nonneg
+        (add_nonneg (by norm_num) (mul_nonneg (by norm_num) (sq_nonneg CM)))
+        (mul_nonneg zero_le_two hCH)
+      have hlab := mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_left hHistory (by norm_num : (0 : ℝ) ≤ 16)) hc5
+      have hlab0 : 0 ≤ 16*(labelHistoryConstant*(1+L.K+Ti)^labelHistoryPower)*(5+64*CM^2+2*CH) :=
+        mul_nonneg (mul_nonneg (by norm_num) (mul_nonneg hHistConst.le
+          (pow_nonneg (add_nonneg (add_nonneg zero_le_one hK) hTi0) _))) hc5
+      refine add_le_add (add_le_add le_rfl (mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_left hray (mul_nonneg zero_le_three
+          (mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 9) (sq_nonneg _)) hR))) hEi)) ?_
+      exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
+        (mul_le_mul hlab hInv hInv0.le hlab0) (inv_nonneg.mpr hshear.le)) hEi
     _ = _ := by ring
 
 include hτ1 hTi hCM hCH hshear heps in
@@ -224,23 +257,26 @@ theorem neighborScaleCost_low_polynomial (ha : 1 / 2 ≤ P.a) (hH : 1 ≤ P.shea
   have hK : 0 ≤ L.K := zero_le_one.trans L.K_one
   have hTi0 : 0 ≤ Ti := (inv_pos.mpr hτ).le.trans hTi
   have hHp : 0 < P.shear := zero_lt_one.trans_le hH
-  have ha0 : 0 < P.a := by linarith only [ha]
+  have ha0 : 0 < P.a := (by norm_num : (0 : ℝ) < 1 / 2).trans_le ha
   have hEp : 0 < P.epsilon := Real.sqrt_pos.mpr (div_pos ha0 hHp)
   have hEi := P.epsilon_inv_le_twice_shear ha hH
   have hHi : P.shear⁻¹ ≤ 1 := inv_le_one_of_one_le₀ hH
   have hbase : 1 ≤ 1+L.K+Ti+P.shear := by linarith only [hK,hTi0,hH]
   have hab : 1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH ≤
       2*(1+CM+CH)*(1+L.K+Ti+P.shear) := by
-    have hc := mul_le_mul_of_nonneg_left hbase (show 0 ≤ CM+CH by positivity)
-    nlinarith only [hEi,hHi,hK,hTi0,hc,hCM,hCH]
-  have hA0 : 0 ≤ 1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH := by positivity
+    have hc := mul_le_mul_of_nonneg_left hbase (add_nonneg hCM hCH)
+    linear_combination hEi + hHi + 2 * hc + hK + hTi0 + hCM + hCH
+  have hA0 : 0 ≤ 1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH :=
+    add_nonneg (add_nonneg (add_nonneg (add_nonneg (add_nonneg (add_nonneg zero_le_one hK) hTi0)
+      (inv_nonneg.mpr hEp.le)) (inv_nonneg.mpr hHp.le)) hCM) hCH
   have hC := EulerParentNeighborCost.constant_pos
   calc
     _ ≤ EulerParentNeighborCost.boundConstant *
         (1+L.K+Ti+P.epsilon⁻¹+P.shear⁻¹+CM+CH)^EulerParentNeighborCost.degree :=
       L.neighborScaleCost_polynomial m hm R S hS H τ hτ hτT P Ti CM CH hτ1 hTi hCM hCH hHp hEp
     _ ≤ EulerParentNeighborCost.boundConstant *
-        (2*(1+CM+CH)*(1+L.K+Ti+P.shear))^EulerParentNeighborCost.degree := by gcongr
+        (2*(1+CM+CH)*(1+L.K+Ti+P.shear))^EulerParentNeighborCost.degree :=
+      mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hA0 hab _) hC.le
     _ = _ := by rw [mul_pow]; ring
 
 include hτ1 hTi hCM hCH in
@@ -249,7 +285,7 @@ theorem source_neighbor_low_polynomial (ha : 1 / 2 ≤ P.a) (hH : 1 ≤ P.shear)
       ((EulerParentNeighborCost.boundConstant*(2*(1+CM+CH))^EulerParentNeighborCost.degree) *
         (1+L.K+Ti+P.shear)^EulerParentNeighborCost.degree)*G.ell := by
   have hHp : 0 < P.shear := zero_lt_one.trans_le hH
-  have ha0 : 0 < P.a := by linarith only [ha]
+  have ha0 : 0 < P.a := (by norm_num : (0 : ℝ) < 1 / 2).trans_le ha
   have hEp : 0 < P.epsilon := Real.sqrt_pos.mpr (div_pos ha0 hHp)
   exact (L.source_neighbor_scale m hm R S hS H τ hτ hτT P CM CH hCM hCH hHp hEp).trans
     (mul_le_mul_of_nonneg_right

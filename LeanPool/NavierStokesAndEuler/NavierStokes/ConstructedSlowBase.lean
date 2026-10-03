@@ -66,7 +66,8 @@ noncomputable def heatPressureField (C h : ℝ) : PressureField :=
 
 theorem heatCoefficient_eq (C h : ℝ) (p : PhysicalPoint) :
     heatCoefficient C h p = TerminalStress.physicalHeat C (1 + h) p / Real.sqrt (2 * p.2.1) := by
-  simp [heatCoefficient, TerminalStress.swirlCoefficient, TerminalStress.flattening]
+  simp only [heatCoefficient, TerminalStress.swirlCoefficient, TerminalStress.flattening, mul_one,
+      Nat.ofNat_nonneg, Real.sqrt_mul]
 
 theorem heatCoefficient_z_invariant (C h t s z z' : ℝ) :
     heatCoefficient C h (t, (s, z)) = heatCoefficient C h (t, (s, z')) := rfl
@@ -81,7 +82,7 @@ theorem heatCoefficient_smoothAt (C : ℝ) {h : ℝ} (hh : 0 < h)
       TerminalStress.physicalHeat C (1 + h) p / Real.sqrt (2 * p.2.1) :=
     funext (heatCoefficient_eq C h)
   rw [he]
-  exact (TerminalStress.physicalHeat_contDiffAt C (by linarith) ht hs).div
+  exact (TerminalStress.physicalHeat_contDiffAt C (by linarith only [hh]) ht hs).div
     ((contDiffAt_const.mul contDiffAt_snd.fst).sqrt (by positivity))
     (ne_of_gt (Real.sqrt_pos.mpr (by positivity)))
 
@@ -94,7 +95,7 @@ theorem heatPressure_smoothAt (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 theorem partialZ_of_invariant {f : PhysicalProfile} {p : PhysicalPoint}
     (hf : DifferentiableAt ℝ f p)
     (he : ∀ z : ℝ, f (p.1, (p.2.1, z)) = f p) : partialZ f p = 0 := by
-  have hd := hf.hasFDerivAt.comp_hasDerivAt p.2.2
+  have hd := hf.hasFDerivAt.comp_hasDerivAt (F := ℝ × ℝ × ℝ) (f := fun z => (p.1, (p.2.1, z))) p.2.2
     ((hasDerivAt_const p.2.2 p.1).prodMk
       ((hasDerivAt_const p.2.2 p.2.1).prodMk (hasDerivAt_id p.2.2)))
   have hz : HasDerivAt (fun z => f (p.1, (p.2.1, z))) 0 p.2.2 := by
@@ -104,7 +105,8 @@ theorem partialZ_of_invariant {f : PhysicalProfile} {p : PhysicalPoint}
 theorem heatCoefficient_partialZ (C : ℝ) {h : ℝ} (hh : 0 < h)
     {p : PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
     partialZ (heatCoefficient C h) p = 0 :=
-  partialZ_of_invariant ((heatCoefficient_smoothAt C hh ht hs).differentiableAt (by simp))
+  partialZ_of_invariant ((heatCoefficient_smoothAt C hh ht hs).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
     (fun z => heatCoefficient_z_invariant C h _ _ z _)
 
 theorem heatCoefficient_partialZZ (C : ℝ) {h : ℝ} (hh : 0 < h)
@@ -114,12 +116,13 @@ theorem heatCoefficient_partialZZ (C : ℝ) {h : ℝ} (hh : 0 < h)
     filter_upwards [continuousAt_fst.eventually (Iio_mem_nhds ht),
       continuousAt_snd.fst.eventually (Ioi_mem_nhds hs)] with y hyt hys
     exact heatCoefficient_partialZ C hh hyt hys
-  simp [partialZ, he.fderiv_eq]
+  simp only [partialZ, he.fderiv_eq, fderiv_fun_const, Pi.zero_apply, zero_apply]
 
 theorem heatPressure_partialZ (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
     partialZ (heatPressure C h) p = 0 :=
-  partialZ_of_invariant ((heatPressure_smoothAt C hh hh1 ht hs).differentiableAt (by simp))
+  partialZ_of_invariant ((heatPressure_smoothAt C hh hh1 ht hs).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
     (fun z => heatPressure_z_invariant C h _ _ z _)
 
 theorem heatCoefficient_sq_integrable (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -139,10 +142,11 @@ theorem heatCoefficient_sq_continuous (C : ℝ) {h : ℝ} (hh : 0 < h)
 theorem heatPressure_partialS (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
     partialS (heatPressure C h) p = heatCoefficient C h p ^ 2 :=
-  TerminalStress.canonicalPressure_partialS (a := p.2.1 / 2) (by linarith)
+  TerminalStress.canonicalPressure_partialS (a := p.2.1 / 2) (by linarith only [hs])
     (heatCoefficient_sq_integrable C hh hh1 ht (by positivity))
     (heatCoefficient_sq_continuous C hh ht (by positivity))
-    ((heatPressure_smoothAt C hh hh1 ht hs).differentiableAt (by simp))
+    ((heatPressure_smoothAt C hh hh1 ht hs).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
 
 theorem heatCoefficient_residual_zero (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (ht : p.1 < 1) (hs : 0 < p.2.1) :
@@ -153,15 +157,15 @@ theorem heatCoefficient_residual_zero (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h 
     have hr2 : r ^ 2 = 2 * p.2.1 := Real.sq_sqrt (by positivity)
     simp only [TerminalStress.radiusPoint, hr2]
     congr 1
-    ext <;> simp
+    ext <;> simp only [ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, mul_div_cancel_left₀]
   have hd := TerminalStress.swirlCoefficient_leading_residual C (z := p.2.2) hh hh1 ht hr
     (f := fun _ => 1) contDiffAt_const
   rw [he] at hd
   have hzero : TerminalStress.leadingResidual C h (fun _ => 1) p.1 r p.2.2 = 0 := by
     have hc : TerminalStress.radialSlice (TerminalStress.flattening h (fun _ => 1)) p.1 p.2.2 =
         (fun _ => 1) := rfl
-    simp [TerminalStress.leadingResidual, TerminalStress.viscousResidual,
-      hc]
+    simp only [TerminalStress.leadingResidual, deriv_const', zero_div, mul_zero,
+        TerminalStress.viscousResidual, hc, add_zero, sub_self]
   rw [hzero] at hd
   have hmain := (mul_eq_zero.mp hd).resolve_left hr.ne'
   unfold TerminalStress.residualCoefficient
@@ -176,10 +180,11 @@ theorem heat_navierStokesResidual_zero (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h
   unfold heatVelocity heatPressureField
   rw [TerminalStress.pureSwirl_navierStokesResidual
     ((heatCoefficient_smoothAt C hh ht hs).of_le (nat_le_infty 2))
-    ((heatPressure_smoothAt C hh hh1 ht hs).differentiableAt (by simp)),
+    ((heatPressure_smoothAt C hh hh1 ht hs).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)),
     heatPressure_partialS C hh hh1 ht hs, heatPressure_partialZ C hh hh1 ht hs,
     heatCoefficient_residual_zero C hh hh1 ht hs]
-  simp [AxisymmetricResidual.pack]
+  simp only [AxisymmetricResidual.pack, Fin.isValue, sub_self, mul_zero, zero_smul, add_zero]
 
 end PureHeat
 
@@ -188,14 +193,15 @@ section ExteriorSummation
 /-- Original scalar coefficient and mass identities. These say nothing
 about the summed velocity or its residual. -/
 structure ExteriorCoefficients (d : Coefficients) (R : ℝ) : Prop where
-  axial : ∀ n : ℕ, ∀ w : Inner, R < w.1 → w.2 ∈ Icc (-1) 1 → d.axial n w = 0
-  mass : ∀ n : ℕ, ∀ w : Inner, R < w.1 → w.2 ∈ Icc (-1) 1 →
+  axial : ∀ n : ℕ, ∀ w : SlowBorelBase.Inner, R < w.1 → w.2 ∈ Icc (-1) 1 → d.axial n w = 0
+  mass : ∀ n : ℕ, ∀ w : SlowBorelBase.Inner, R < w.1 → w.2 ∈ Icc (-1) 1 →
     ProfileHistories.primitive (d.axial n) w = 0
-  phi : ∀ n : ℕ, 0 < n → ∀ w : Inner, R < w.1 → w.2 ∈ Icc (-1) 1 → d.phi n w = 0
-  pressure : ∀ n : ℕ, 0 < n → ∀ w : Inner, R < w.1 → w.2 ∈ Icc (-1) 1 → d.pressure n w = 0
+  phi : ∀ n : ℕ, 0 < n → ∀ w : SlowBorelBase.Inner, R < w.1 → w.2 ∈ Icc (-1) 1 → d.phi n w = 0
+  pressure : ∀ n : ℕ, 0 < n → ∀ w : SlowBorelBase.Inner, R < w.1 → w.2 ∈ Icc (-1) 1 →
+    d.pressure n w = 0
 
 theorem ExteriorCoefficients.average {d : Coefficients} {R : ℝ}
-    (hd : ExteriorCoefficients d R) (hR : 0 ≤ R) (n : ℕ) {w : Inner}
+    (hd : ExteriorCoefficients d R) (hR : 0 ≤ R) (n : ℕ) {w : SlowBorelBase.Inner}
     (hw : R < w.1) (he : w.2 ∈ Icc (-1) 1) : ProfileHistories.average (d.axial n) w = 0 := by
   have hm := hd.mass n w hw he
   rw [ProfileHistories.primitive_eq_mul_average] at hm
@@ -216,7 +222,8 @@ noncomputable def cartesianExterior (h R : ℝ) : Set SpaceTime :=
 
 theorem exteriorDomain_isOpen {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (R : ℝ) :
     IsOpen (exteriorDomain h R) := by
-  simpa [exteriorDomain, SimilarityProfile.physicalDomain] using
+  simpa only [exteriorDomain, physicalChart_eq, physicalDomain, mem_prod, mem_Ioi, mem_univ,
+      and_true] using
     SimilarityProfile.isOpen_physicalDomain hh hh1
       ((isOpen_Ioi : IsOpen (Ioi R)).prod (isOpen_univ : IsOpen (univ : Set ℝ)))
 
@@ -225,7 +232,7 @@ theorem cartesianExterior_isOpen {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (R : �
   (exteriorDomain_isOpen hh hh1 R).preimage
     (AxisymmetricFields.contDiff_profilePoint (n := ∞)).continuous
 
-theorem physicalProfile_eq_leading {a : ℕ → ℕ} {h b : ℝ} {f : ℕ → Inner → ℝ}
+theorem physicalProfile_eq_leading {a : ℕ → ℕ} {h b : ℝ} {f : ℕ → SlowBorelBase.Inner → ℝ}
     {p : PhysicalPoint} (hf : ∀ n : ℕ, 0 < n → f n (physicalChart h p).2 = 0) :
     physicalProfile a h b f p = SimilarityProfile.pullback h b (f 0) p := by
   unfold physicalProfile
@@ -278,37 +285,46 @@ theorem exterior_velocity_eq_leading {a : ℕ → ℕ} (ha : StrictMono a) {h C 
   have hp : p ∈ exteriorDomain h R := hz
   have hH : DifferentiableAt ℝ (streamFactor a h C d) p :=
     (physicalProfile_smoothAt ha hh hh1 (bundleComponent_smooth hds C 0) _ hp.1).differentiableAt
-        (by
-        simp)
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hK : DifferentiableAt ℝ (swirlPotential a h C d) p :=
     (physicalProfile_smoothAt ha hh hh1 (bundleComponent_smooth hds C 1) _ hp.1).differentiableAt
-        (by
-        simp)
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have he := exterior_stream_germ (a := a) (C := C) hh hh1 hR hd hp
   have h0 := he.self_of_nhds
   have hS : AxisymmetricFields.partialS (streamFactor a h C d) p = 0 := by
-    simp [AxisymmetricFields.partialS, he.fderiv_eq]
+    simp only [AxisymmetricFields.partialS, he.fderiv_eq, fderiv_fun_const, Pi.zero_apply,
+        zero_apply]
   have hZ : AxisymmetricFields.partialZ (streamFactor a h C d) p = 0 := by
-    simp [AxisymmetricFields.partialZ, he.fderiv_eq]
+    simp only [AxisymmetricFields.partialZ, he.fderiv_eq, fderiv_fun_const, Pi.zero_apply,
+        zero_apply]
   have hsw := exterior_swirl_derivative (C := C) ha hh hh1 hds hd hp
   dsimp only [p] at h0 hS hZ hsw
   ext i
   fin_cases i
   · change baseVelocity a h C d z 0 = _
     rw [show baseVelocity a h C d z 0 = _ from AxisymmetricFields.velocity_zero _ _ _ _ hH hK]
-    simp [hZ, hsw, AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
-      AxisymmetricResidual.componentY, AxisymmetricResidual.pack, AxisymmetricResidual.lift,
-      coordinateVector]
+    simp only [Fin.isValue, hZ, mul_zero, zero_div, hsw, mul_neg, zero_add,
+        AxisymmetricResidual.velocity, AxisymmetricResidual.pack, AxisymmetricResidual.componentX,
+        AxisymmetricResidual.lift, coordinateVector, neg_smul, AxisymmetricResidual.componentY,
+        sub_zero, zero_smul, add_zero, Fin.zero_eta, PiLp.add_apply, PiLp.neg_apply,
+        PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+        not_false_eq_true, PiLp.single_eq_of_ne]
   · change baseVelocity a h C d z 1 = _
     rw [show baseVelocity a h C d z 1 = _ from AxisymmetricFields.velocity_one _ _ _ _ hH hK]
-    simp [hZ, hsw, AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
-      AxisymmetricResidual.componentY, AxisymmetricResidual.pack, AxisymmetricResidual.lift,
-      coordinateVector]
+    simp only [Fin.isValue, hZ, mul_zero, zero_div, hsw, mul_neg, sub_neg_eq_add, zero_add,
+        AxisymmetricResidual.velocity, AxisymmetricResidual.pack, AxisymmetricResidual.componentX,
+        AxisymmetricResidual.lift, coordinateVector, neg_smul, AxisymmetricResidual.componentY,
+        sub_zero, zero_smul, add_zero, Fin.mk_one, PiLp.add_apply, PiLp.neg_apply, PiLp.smul_apply,
+        ne_eq, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul, neg_zero,
+        PiLp.single_eq_same, mul_one]
   · change baseVelocity a h C d z 2 = _
     rw [show baseVelocity a h C d z 2 = _ from AxisymmetricFields.velocity_two _ _ _ _ hH hK]
-    simp [h0, hS, AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
-      AxisymmetricResidual.componentY, AxisymmetricResidual.pack, AxisymmetricResidual.lift,
-      coordinateVector, Fin.ext_iff]
+    simp only [Fin.isValue, h0, hS, mul_zero, add_zero, AxisymmetricResidual.velocity,
+        AxisymmetricResidual.pack, AxisymmetricResidual.componentX, AxisymmetricResidual.lift,
+        zero_add, coordinateVector, neg_smul, AxisymmetricResidual.componentY, sub_zero, zero_smul,
+        Fin.reduceFinMk, PiLp.add_apply, PiLp.neg_apply, PiLp.smul_apply, ne_eq, Fin.ext_iff,
+        Fin.coe_ofNat_eq_mod, Nat.mod_succ, Nat.zero_mod, OfNat.ofNat_ne_zero, not_false_eq_true,
+        PiLp.single_eq_of_ne, smul_eq_mul, neg_zero, Nat.one_mod, OfNat.ofNat_ne_one]
 
 theorem exterior_pressure_eq_leading {a : ℕ → ℕ} {h C R : ℝ} {d : Coefficients}
     (hh : 0 < h) (hh1 : h < 1 / 2) (hd : ExteriorCoefficients d R)
@@ -407,9 +423,11 @@ theorem canonicalPressure_congr_tail {F G : PhysicalProfile} {p : PhysicalPoint}
 
 theorem physical_angular_from_profile (h : ℝ) {f E : InnerProfile} {p : PhysicalPoint}
     (hq : 0 < q h p) (hs : 0 < p.2.1)
-    (he : E (inner h p) = Real.sqrt (2 * X h p) * f (inner h p)) :
+    (he : E (SimilarityProfile.inner h p) =
+      Real.sqrt (2 * X h p) * f (SimilarityProfile.inner h p)) :
     pullback h (-CoordinateAlgebra.A h - 1 / 2) f p =
-      q h p ^ (-CoordinateAlgebra.A h) * E (inner h p) / Real.sqrt (2 * p.2.1) := by
+      q h p ^ (-CoordinateAlgebra.A h) * E (SimilarityProfile.inner h p) /
+        Real.sqrt (2 * p.2.1) := by
   have hroot : Real.sqrt (2 * p.2.1) ≠ 0 := (Real.sqrt_pos.mpr (by positivity)).ne'
   rw [he]
   unfold pullback
@@ -463,7 +481,7 @@ theorem heatCoefficient_contDiffOn_closed (C : ℝ) {h : ℝ} (hh : 0 < h) :
     ContDiffOn ℝ ∞ (heatCoefficient C h) closedHeatDomain := by
   have hheat : ContDiffOn ℝ ∞ (fun p : PhysicalPoint =>
       RadialHeatProfile.spatialProfile (1 + h) (1 - p.1) p.2.1) closedHeatDomain :=
-    (RadialHeatProfile.spatialProfile_joint_contDiffOn (by linarith)).comp
+    (RadialHeatProfile.spatialProfile_joint_contDiffOn (by linarith only [hh])).comp
       (contDiffOn_snd.fst.prodMk (contDiffOn_const.sub contDiffOn_fst))
       (fun _ hp => ⟨hp.2, sub_nonneg.mpr hp.1⟩)
   have hr : ContDiffOn ℝ ∞ (fun p : PhysicalPoint => Real.sqrt (2 * p.2.1)) closedHeatDomain :=
@@ -567,7 +585,7 @@ theorem nominal_late_ratio {X : ℝ} (hX : nominalExteriorRadius W < X) :
     rw [mul_comm]
     exact (nominalExteriorRadius_ge_late W).trans_lt hX
   have hl := (Real.lt_log_iff_exp_lt harg).mpr he
-  linarith
+  linarith only [hl]
 
 theorem nominal_angular_pure_heat {p : PhysicalPoint}
     (hp : p ∈ exteriorDomain F.data.h (nominalExteriorRadius W)) :
@@ -583,7 +601,7 @@ theorem nominal_angular_pure_heat {p : PhysicalPoint}
     (W.controls.heatJoin_lt_radius.trans_le (nominalExteriorRadius_ge_radius W)).trans hp.2
   have hswitch : nominalHeatSwitch W ≤ X F.data.h p :=
     (nominalExteriorRadius_gt_switch W).le.trans hp.2.le
-  have hE : W.E (inner F.data.h p) =
+  have hE : W.E (SimilarityProfile.inner F.data.h p) =
       ParametricHeatTail.physicalEdit F.data (nominalHeatSwitch W) (eta F.data.h p) (X F.data.h p)
           :=
     (W.heat_agreement hjoin he).2.1.trans
@@ -708,9 +726,14 @@ theorem heatVelocity_eq_angularVector (C h : ℝ) (z : SpaceTime) :
       BaseResidual.angularVector z := by
   ext i
   fin_cases i <;>
-    simp [heatVelocity, AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
-      AxisymmetricResidual.componentY, AxisymmetricResidual.lift, AxisymmetricResidual.pack,
-      BaseResidual.angularVector, coordinateVector, Fin.ext_iff] <;> ring
+    simp only [heatVelocity, AxisymmetricResidual.velocity, AxisymmetricResidual.pack,
+        AxisymmetricResidual.componentX, Fin.isValue, AxisymmetricResidual.lift, mul_zero, zero_add,
+        coordinateVector, neg_smul, AxisymmetricResidual.componentY, sub_zero, zero_smul, add_zero,
+        Fin.zero_eta, PiLp.add_apply, PiLp.neg_apply, PiLp.smul_apply, PiLp.single_eq_same,
+        smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne,
+        BaseResidual.angularVector, smul_add, smul_neg, neg_inj, Fin.mk_one, one_ne_zero, neg_zero,
+        Fin.reduceFinMk, Fin.ext_iff, Fin.coe_ofNat_eq_mod, Nat.mod_succ, Nat.zero_mod,
+        OfNat.ofNat_ne_zero, Nat.one_mod, OfNat.ofNat_ne_one] <;> ring
 
 /-- The exact exterior solution is jointly smooth up to the terminal time
 on every region of positive physical radius, in Cartesian coordinates. -/
@@ -746,10 +769,10 @@ theorem near_one_in_exterior {h R : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hR : 0 
   change R < AxisymmetricFields.radialEnergy x / q h (AxisymmetricFields.profilePoint t x)
   rw [hq]
   apply (lt_div_iff₀ (sub_pos.mpr ht.2)).mpr
-  have hRp : 0 < R + 1 := by linarith
-  have hsmall : 1 - t < AxisymmetricFields.radialEnergy x / (R + 1) := by linarith [ht.1]
+  have hRp : 0 < R + 1 := by linarith only [hh, hh1, hR]
+  have hsmall : 1 - t < AxisymmetricFields.radialEnergy x / (R + 1) := by linarith only [ht, ht.1]
   have hprod := (lt_div_iff₀ hRp).mp hsmall
-  linarith [sub_pos.mpr ht.2]
+  linarith only [hprod, ht, sub_pos.mpr ht.2]
 
 open AssembledSlowBase
 
@@ -768,7 +791,7 @@ theorem nominal_base_terminal_extension {F : OutgoingProfile.Profile} (W : Nomin
       ContDiffOn ℝ ∞ (fun t => heatPressureField (nominalHeatNormalization W) F.data.h (t, x)) (Iic
           1) := by
   refine ⟨AxisymmetricFields.radialEnergy x / (nominalExteriorRadius W + 1),
-    div_pos hs (by linarith [nominalExteriorRadius_pos W]), ?_, ?_, ?_⟩
+    div_pos hs (by linarith only [nominalExteriorRadius_pos W]), ?_, ?_, ?_⟩
   · intro t ht
     have hm := near_one_in_exterior F.data.h_pos F.data.h_lt_half (nominalExteriorRadius_pos W).le
         hx hs ht
@@ -785,7 +808,11 @@ theorem nominal_base_meridional_zero {F : OutgoingProfile.Profile} (W : NominalP
       z.2 0 * baseVelocity a F.data.h W.axis.normalization (nominalCoefficients W) z 0 +
         z.2 1 * baseVelocity a F.data.h W.axis.normalization (nominalCoefficients W) z 1 = 0 := by
   rw [(nominal_base_eq_heat W ha).1 hz, heatVelocity_eq_angularVector]
-  simp [BaseResidual.angularVector, coordinateVector, Fin.ext_iff]
+  simp only [Fin.isValue, BaseResidual.angularVector, coordinateVector, neg_smul, smul_add,
+      smul_neg, PiLp.add_apply, PiLp.neg_apply, PiLp.smul_apply, ne_eq, Fin.ext_iff,
+      Fin.coe_ofNat_eq_mod, Nat.mod_succ, Nat.zero_mod, OfNat.ofNat_ne_zero, not_false_eq_true,
+      PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, neg_zero, Nat.one_mod, OfNat.ofNat_ne_one,
+      add_zero, PiLp.single_eq_same, mul_one, zero_ne_one, mul_neg, one_ne_zero, zero_add, true_and]
   ring
 
 end TerminalExtension
@@ -819,16 +846,18 @@ open scoped Topology ContDiff
 open SlowBorelBase (Inner Chart Coefficients SmoothCoefficients)
 
 /-- Differentiating the actual primitive gives the radial average identity. -/
-theorem average_radial_identity {U : Inner → ℝ} (hU : ContDiff ℝ ∞ U) (w : Inner) :
+theorem average_radial_identity {U : SlowBorelBase.Inner → ℝ} (hU : ContDiff ℝ ∞ U)
+    (w : SlowBorelBase.Inner) :
     ProfileHistories.average U w + w.1 * SimilarityProfile.partialX (ProfileHistories.average U) w =
       U w := by
   have he : ProfileHistories.primitive U =
       fun y => y.1 * ProfileHistories.average U y :=
     funext (ProfileHistories.primitive_eq_mul_average U)
-  have hf : HasFDerivAt (fun y : Inner => y.1) (ContinuousLinearMap.fst ℝ ℝ ℝ) w :=
+  have hf : HasFDerivAt (fun y : SlowBorelBase.Inner => y.1) (ContinuousLinearMap.fst ℝ ℝ ℝ) w :=
     hasFDerivAt_fst
   have hd := hf.fun_mul
-    ((SlowBorelBase.average_smooth hU).differentiable (by simp)).differentiableAt.hasFDerivAt
+    ((SlowBorelBase.average_smooth hU).differentiable
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)).differentiableAt.hasFDerivAt
   have hi := congrFun (SlowBorelBase.partialX_primitive hU) w
   rw [he] at hi
   unfold SimilarityProfile.partialX at hi ⊢
@@ -837,8 +866,8 @@ theorem average_radial_identity {U : Inner → ℝ} (hU : ContDiff ℝ ∞ U) (w
 
 /-- The flux computed from histories is the axial derivative of the averaged
 stream coefficient, with its exact exponent.  No divergence equation is assumed. -/
-theorem radialFlux_eq_neg_X_Z_average {U : Inner → ℝ} (hU : ContDiff ℝ ∞ U)
-    (h lam : ℝ) (w : Inner) :
+theorem radialFlux_eq_neg_X_Z_average {U : SlowBorelBase.Inner → ℝ} (hU : ContDiff ℝ ∞ U)
+    (h lam : ℝ) (w : SlowBorelBase.Inner) :
     SlowDivergence.radialFlux h lam U w =
       -w.1 * SimilarityProfile.Z h (-CoordinateAlgebra.A h + lam) (ProfileHistories.average U) w :=
           by
@@ -851,14 +880,14 @@ theorem radialFlux_eq_neg_X_Z_average {U : Inner → ℝ} (hU : ContDiff ℝ ∞
 /-- The direct finite profile and the finite Borel prefix have the same local
 germ throughout the past-time chart. -/
 theorem physicalUncutPrefix_germ {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    (b : ℝ) (f : ℕ → Inner → ℝ) (J : ℕ) {p : Chart} (hp : p.1 < 1) :
+    (b : ℝ) (f : ℕ → SlowBorelBase.Inner → ℝ) (J : ℕ) {p : Chart} (hp : p.1 < 1) :
     SlowBorelBase.physicalUncutPrefix h b f J =ᶠ[𝓝 p] SlowExpansionResidual.finiteProfile J h b f
         := by
   filter_upwards [(isOpen_lt continuous_fst continuous_const).mem_nhds hp] with y hy
   exact SlowBorelBase.physicalUncutPrefix_eq_finiteProfile hh hh1 b f J hy
 
 theorem partialS_physicalUncutPrefix {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    (J : ℕ) (f : ℕ → Inner → ℝ) {p : Chart} (hp : p.1 < 1)
+    (J : ℕ) (f : ℕ → SlowBorelBase.Inner → ℝ) {p : Chart} (hp : p.1 < 1)
     (hf : ∀ n ≤ J, DifferentiableAt ℝ (f n) (SimilarityProfile.inner h p)) :
     AxisymmetricFields.partialS (SlowBorelBase.physicalUncutPrefix h b f J) p =
       SlowExpansionResidual.finiteProfile J h (b - 1) (fun n => SimilarityProfile.partialX (f n)) p
@@ -868,7 +897,7 @@ theorem partialS_physicalUncutPrefix {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   exact SlowExpansionResidual.partialS_finiteProfile hh hh1 J f hp hf
 
 theorem partialZ_physicalUncutPrefix {h b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    (J : ℕ) (f : ℕ → Inner → ℝ) {p : Chart} (hp : p.1 < 1)
+    (J : ℕ) (f : ℕ → SlowBorelBase.Inner → ℝ) {p : Chart} (hp : p.1 < 1)
     (hf : ∀ n ≤ J, DifferentiableAt ℝ (f n) (SimilarityProfile.inner h p)) :
     AxisymmetricFields.partialZ (SlowBorelBase.physicalUncutPrefix h b f J) p =
       SlowExpansionResidual.finiteProfile J h (b - CoordinateAlgebra.D h)
@@ -973,10 +1002,12 @@ theorem prefixVelocity_eq_profiles {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       SlowExpansionResidual.slowVelocity J h C (profiles h d) (t, x) := by
   have hH := (SlowBorelBase.physicalUncutPrefix_smoothAt hh hh1
     (SlowBorelBase.bundleComponent_smooth hd C 0) (-CoordinateAlgebra.A h) J
-    (p := AxisymmetricFields.profilePoint t x) ht).differentiableAt (by simp)
+    (p := AxisymmetricFields.profilePoint t x) ht).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hK := (SlowBorelBase.physicalUncutPrefix_smoothAt hh hh1
     (SlowBorelBase.bundleComponent_smooth hd C 1) (1 / 2 - CoordinateAlgebra.A h) J
-    (p := AxisymmetricFields.profilePoint t x) ht).differentiableAt (by simp)
+    (p := AxisymmetricFields.profilePoint t x) ht).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   change DifferentiableAt ℝ (BaseResidual.prefixStream J h C d)
     (AxisymmetricFields.profilePoint t x) at hH
   change DifferentiableAt ℝ (BaseResidual.prefixSwirl J h C d)
@@ -1008,7 +1039,7 @@ theorem prefixVelocity_eq_profiles {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     exact hu
 
 /-- The physical similarity coordinates range inside this open half strip. -/
-noncomputable def profileWindow : Set Inner := Ioi 0 ×ˢ Ioo (-1) 1
+noncomputable def profileWindow : Set SlowBorelBase.Inner := Ioi 0 ×ˢ Ioo (-1) 1
 
 theorem profileWindow_open : IsOpen profileWindow := isOpen_Ioi.prod isOpen_Ioo
 
@@ -1018,8 +1049,8 @@ theorem inner_mem_profileWindow {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   refine ⟨LeadingStress.inner_X_pos hh hh1 ht hs, ?_⟩
   have he := SimilarityProfile.eta_sq_lt_one hh hh1 ht
   change -1 < SimilarityProfile.eta h p ∧ SimilarityProfile.eta h p < 1
-  constructor <;> linarith [sq_nonneg (SimilarityProfile.eta h p + 1),
-    sq_nonneg (SimilarityProfile.eta h p - 1)]
+  constructor <;> linarith only [he, sq_nonneg (SimilarityProfile.eta h p + 1),
+      sq_nonneg (SimilarityProfile.eta h p - 1)]
 
 /-- Only scalar coefficient values and the actual flux identity are needed
 to identify the reconstructed velocity. -/
@@ -1032,7 +1063,7 @@ structure VelocityMatches (h : ℝ) (d : Coefficients)
     (f.flux n) profileWindow
 
 theorem finiteProfile_eq_of_values (J : ℕ) (h b : ℝ)
-    {f g : ℕ → Inner → ℝ} {p : Chart}
+    {f g : ℕ → SlowBorelBase.Inner → ℝ} {p : Chart}
     (he : ∀ n ≤ J, f n (SimilarityProfile.inner h p) = g n (SimilarityProfile.inner h p)) :
     SlowExpansionResidual.finiteProfile J h b f p =
       SlowExpansionResidual.finiteProfile J h b g p := by
@@ -1076,7 +1107,7 @@ theorem prefixVelocity_germ {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 /-- In the regular radial-quotient convention, the sole radial input is the
 proved identity `X * beta = radialFlux`; it determines the finite curl. -/
-theorem velocityMatches_of_beta (h : ℝ) (d : Coefficients) (beta : ℕ → Inner → ℝ)
+theorem velocityMatches_of_beta (h : ℝ) (d : Coefficients) (beta : ℕ → SlowBorelBase.Inner → ℝ)
     (hb : ∀ n, ∀ w ∈ profileWindow, w.1 * beta n w =
       SlowDivergence.radialFlux h (SlowExpansionResidual.slowOrder h n) (d.axial n) w) :
     VelocityMatches h d (SlowResidualMatching.ofBeta d.phi d.axial beta d.pressure) where
@@ -1092,13 +1123,13 @@ structure CoefficientMatches (h C : ℝ) (d : Coefficients)
   stressTheta : ∀ n, EqOn (d.stressTheta n) (SlowResidualMatching.thetaStress h C f n) profileWindow
   stressAxial : ∀ n, EqOn (d.stressAxial n) (SlowResidualMatching.zStress h f n) profileWindow
 
-theorem coefficient_germ {f g : Inner → ℝ} (he : EqOn f g profileWindow)
-    {w : Inner} (hw : w ∈ profileWindow) : f =ᶠ[𝓝 w] g := by
+theorem coefficient_germ {f g : SlowBorelBase.Inner → ℝ} (he : EqOn f g profileWindow)
+    {w : SlowBorelBase.Inner} (hw : w ∈ profileWindow) : f =ᶠ[𝓝 w] g := by
   filter_upwards [profileWindow_open.mem_nhds hw] with y hy
   exact he hy
 
 theorem prefixProfile_germ_of_coefficients {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
-    (J : ℕ) (b : ℝ) {f g : ℕ → Inner → ℝ}
+    (J : ℕ) (b : ℝ) {f g : ℕ → SlowBorelBase.Inner → ℝ}
     (he : ∀ n, EqOn (f n) (g n) profileWindow)
     {p : Chart} (ht : p.1 < 1) (hs : 0 < p.2.1) :
     SlowBorelBase.physicalUncutPrefix h b f J =ᶠ[𝓝 p]
@@ -1149,24 +1180,24 @@ theorem prefixStressForce_eq {h C : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 theorem VelocityMatches.phi_contDiffAt {h : ℝ} {d : Coefficients}
     (hd : SmoothCoefficients d) {f : SlowExpansionResidual.SlowProfiles}
-    (hm : VelocityMatches h d f) (n : ℕ) {w : Inner} (hw : w ∈ profileWindow) :
+    (hm : VelocityMatches h d f) (n : ℕ) {w : SlowBorelBase.Inner} (hw : w ∈ profileWindow) :
     ContDiffAt ℝ ∞ (f.phi n) w :=
   (hd.phi n).contDiffAt.congr_of_eventuallyEq (coefficient_germ (hm.phi n) hw).symm
 
 theorem VelocityMatches.axial_contDiffAt {h : ℝ} {d : Coefficients}
     (hd : SmoothCoefficients d) {f : SlowExpansionResidual.SlowProfiles}
-    (hm : VelocityMatches h d f) (n : ℕ) {w : Inner} (hw : w ∈ profileWindow) :
+    (hm : VelocityMatches h d f) (n : ℕ) {w : SlowBorelBase.Inner} (hw : w ∈ profileWindow) :
     ContDiffAt ℝ ∞ (f.axial n) w :=
   (hd.axial n).contDiffAt.congr_of_eventuallyEq (coefficient_germ (hm.axial n) hw).symm
 
 theorem VelocityMatches.flux_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {d : Coefficients} (hd : SmoothCoefficients d) {f : SlowExpansionResidual.SlowProfiles}
-    (hm : VelocityMatches h d f) (n : ℕ) {w : Inner} (hw : w ∈ profileWindow) :
+    (hm : VelocityMatches h d f) (n : ℕ) {w : SlowBorelBase.Inner} (hw : w ∈ profileWindow) :
     ContDiffAt ℝ ∞ (f.flux n) w := by
   have hs : w.2 ^ 2 ≤ 1 := by
     have h1 := hw.2.1
     have h2 := hw.2.2
-    linarith [mul_nonneg (show 0 ≤ 1 - w.2 by linarith) (show 0 ≤ 1 + w.2 by linarith)]
+    linarith only [h2, h1, mul_nonneg (show 0 ≤ 1 - w.2 by linarith) (show 0 ≤ 1 + w.2 by linarith)]
   have hL := (CoordinateAlgebra.L_pos hh.le hh1 hs).ne'
   exact (SlowDivergence.radialFlux_smoothAt SlowBorelBase.globalRadialDomain
     (hd.axial n).contDiffOn h (SlowExpansionResidual.slowOrder h n) (mem_univ _)
@@ -1175,7 +1206,7 @@ theorem VelocityMatches.flux_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 theorem CoefficientMatches.pressure_contDiffAt {h C : ℝ} {d : Coefficients}
     (hd : SmoothCoefficients d) {f : SlowExpansionResidual.SlowProfiles}
-    (hm : CoefficientMatches h C d f) (n : ℕ) {w : Inner} (hw : w ∈ profileWindow) :
+    (hm : CoefficientMatches h C d f) (n : ℕ) {w : SlowBorelBase.Inner} (hw : w ∈ profileWindow) :
     ContDiffAt ℝ ∞ (f.pressure n) w :=
   (hd.pressure n).contDiffAt.congr_of_eventuallyEq (coefficient_germ (hm.pressure n) hw).symm
 
@@ -1201,7 +1232,8 @@ theorem finiteIdentities_of_coefficients {h C : ℝ} (hh : 0 < h) (hh1 : h < 1 /
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2))
     (fun n _ => (hm.toVelocityMatches.axial_contDiffAt hd n hw).of_le
       (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2))
-    (fun n _ => (hm.pressure_contDiffAt hd n hw).differentiableAt (by simp))
+    (fun n _ => (hm.pressure_contDiffAt hd n hw).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     (fun n _ => hp n _ hw)
 
 end NavierStokes.BasePrefixIdentity
@@ -1227,7 +1259,7 @@ private theorem parameter_abs_le {eta : ℝ} (h : eta ∈ Ioo (-1 : ℝ) 1) :
 
 /-- Restricting the compact set preserves the very same cutoff schedule. -/
 theorem admissibleScales_mono {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
-    {a : ℕ → ℕ} {h : ℝ} {f : ℕ → Inner → V} {K K' : Set Inner}
+    {a : ℕ → ℕ} {h : ℝ} {f : ℕ → SlowBorelBase.Inner → V} {K K' : Set SlowBorelBase.Inner}
     (ha : AdmissibleScales h f K a) (hK : K' ⊆ K) : AdmissibleScales h f K' a where
   positive := ha.positive
   doubling := ha.doubling
@@ -1312,11 +1344,12 @@ theorem repaired_stressZeroCore :
 
 /-- One open coefficient neighborhood contains the whole physical parameter
 band and avoids the coordinate denominator's zeros. -/
-noncomputable def regularDomain (s : Scheme S h C) (hI : Icc (-1 : ℝ) 1 ⊆ S) : Set Inner :=
+noncomputable def regularDomain (s : Scheme S h C) (hI : Icc (-1 : ℝ) 1 ⊆ S) :
+    Set SlowBorelBase.Inner :=
   {w | |w.2| < (commonWindow s hI).inner ∧ CoordinateAlgebra.L h w.2 ≠ 0}
 
 theorem regularDomain_open : IsOpen (regularDomain s hI) := by
-  have hL : Continuous (fun w : Inner => CoordinateAlgebra.L h w.2) :=
+  have hL : Continuous (fun w : SlowBorelBase.Inner => CoordinateAlgebra.L h w.2) :=
     continuous_const.sub (continuous_const.mul (continuous_snd.pow 2))
   exact (isOpen_lt continuous_snd.abs continuous_const).inter
     (isOpen_ne_fun hL continuous_const)
@@ -1328,7 +1361,8 @@ theorem innerBox_subset_regularDomain (hh : 0 < h) (hh1 : h < 1 / 2) (lo hi : �
   exact ⟨he.trans_lt (commonWindow s hI).one_lt_inner,
     (CoordinateAlgebra.L_pos hh.le hh1 ((sq_le_one_iff_abs_le_one w.2).mpr he)).ne'⟩
 
-theorem regular_fields_eq (n : ℕ) {w : Inner} (hw : w ∈ regularDomain s hI) (hX : 0 ≤ w.1) :
+theorem regular_fields_eq (n : ℕ) {w : SlowBorelBase.Inner} (hw : w ∈ regularDomain s hI)
+    (hX : 0 ≤ w.1) :
     (asSlowProfiles s).phi n w = extendedCoefficient s hI n 0 w ∧
     (asSlowProfiles s).axial n w = extendedCoefficient s hI n 1 w ∧
     (asSlowProfiles s).flux n w = w.1 * extendedCoefficient s hI n 2 w := by
@@ -1390,7 +1424,7 @@ theorem repaired_higherInteriorSupport
   intro n hn
   have he := GlobalStressSupport.raw_stresses_exterior s hbase hn
   have hs := coefficients_stress_support L B0 Z0 hI n s.B_pos.le he.1 he.2
-  have hz {w : Inner} (hw : w.1 ∉ Icc (inner / 8) (s.B ^ 2 / 2)) :
+  have hz {w : SlowBorelBase.Inner} (hw : w.1 ∉ Icc (inner / 8) (s.B ^ 2 / 2)) :
       ((coefficients L B0 Z0 hI).stressTheta n w,
         (coefficients L B0 Z0 hI).stressAxial n w) = 0 := by
     by_contra hh
@@ -1411,7 +1445,7 @@ include W
 
 theorem height_pos : 0 < F.data.h := W.axis.small.h_pos
 
-theorem height_lt_half : F.data.h < 1 / 2 := by linarith [W.axis.small.h_le]
+theorem height_lt_half : F.data.h < 1 / 2 := by linarith only [W.axis.small.h_le]
 
 theorem nominal_coefficientMatches :
     BasePrefixIdentity.CoefficientMatches F.data.h W.axis.normalization
@@ -1653,13 +1687,13 @@ theorem weighted_on_actual_scales {a : ℕ → ℕ} {h C : ℝ} (hh : 0 < h)
     {d : Coefficients} (hd : SmoothCoefficients d) {c left right inner cut : ℝ}
     (hc : 0 < c) (hl : Real.exp left < inner) (hi : inner ≤ cut) (hr : cut < Real.exp right)
     (hs : HigherInteriorSupport d left right)
-    (hz : ∀ w : Inner, w.1 < inner → stressPair d 1 w = 0)
+    (hz : ∀ w : SlowBorelBase.Inner, w.1 < inner → stressPair d 1 w = 0)
     (ho : PolynomialEdgeJets (outerWindow cut right) (activeZeta c left right)
       (activeDelta left right) (stressPair d 1))
-    {K : Set Inner} (hK : IsCompact K) (hWK : activeWindow left right ⊆ K)
+    {K : Set SlowBorelBase.Inner} (hK : IsCompact K) (hWK : activeWindow left right ⊆ K)
     (ha : AdmissibleScales h (weightedBundle C d (activeZeta c left right)) K a) :
     WeightedStressBound a h d c left right := by
-  let O : Set Inner := Ioo (Real.exp left) (Real.exp right) ×ˢ univ
+  let O : Set SlowBorelBase.Inner := Ioo (Real.exp left) (Real.exp right) ×ˢ univ
   have hO : IsOpen O := isOpen_Ioo.prod isOpen_univ
   have hWO : activeWindow left right ⊆ O := fun _ hw => ⟨hw.1, mem_univ _⟩
   exact normalizedTensor_weighted_bound hh hd hK hWK hO hWO
@@ -1675,14 +1709,14 @@ theorem firstStress_edgeJets (Cedge : ℝ) (tail : OutgoingTail.TailData) (y0 : 
     {d : Coefficients} (hd : SmoothCoefficients d)
     {c left width inner : ℝ} (hc : 0 < c) (hw : 0 < width)
     (hl : Real.exp left < inner) (hi : inner ≤ Real.exp (y0 + 3 - width))
-    (hz : ∀ w : Inner, w.1 < inner → stressPair d 1 w = 0)
+    (hz : ∀ w : SlowBorelBase.Inner, w.1 < inner → stressPair d 1 w = 0)
     (he : ∀ w ∈ outerWindow (Real.exp (y0 + 3 - width)) (y0 + 3),
       stressPair d 1 =ᶠ[𝓝 w] (fun v => (SlowFirstOrderEdge.stressX Cedge tail y0 v, 0))) :
     PolynomialEdgeJets (activeWindow left (y0 + 3))
       (activeZeta c left (y0 + 3)) (activeDelta left (y0 + 3)) (stressPair d 1) := by
   have hlog : left < y0 + 3 - width := Real.exp_lt_exp.mp (hl.trans_le hi)
   exact edgeJets_of_outer_collar (stressPair_smooth hd 1) hc hl hi
-    (Real.exp_lt_exp.mpr (by linarith)) hz
+    (Real.exp_lt_exp.mpr (by linarith only [hw])) hz
     (firstOrder_pair_outer_edgeJets Cedge tail y0 hc hw hlog he)
 
 /-- Choose one sequence for the actual seven-component stream bundle and
@@ -1692,10 +1726,11 @@ theorem exists_common_scales_from_primitive {h : ℝ} (hh : 0 < h) (Cbase Cedge 
     (y0 : ℝ) {c left width inner : ℝ} (hc : 0 < c) (hw : 0 < width)
     (hl : Real.exp left < inner) (hi : inner ≤ Real.exp (y0 + 3 - width))
     (hs : HigherInteriorSupport d left (y0 + 3))
-    (hz : ∀ w : Inner, w.1 < inner → stressPair d 1 w = 0)
+    (hz : ∀ w : SlowBorelBase.Inner, w.1 < inner → stressPair d 1 w = 0)
     (he : ∀ w ∈ outerWindow (Real.exp (y0 + 3 - width)) (y0 + 3),
       stressPair d 1 =ᶠ[𝓝 w] (fun v => (SlowFirstOrderEdge.stressX Cedge tail y0 v, 0)))
-    {K : Set Inner} (hK : IsCompact K) (hWK : activeWindow left (y0 + 3) ⊆ K) (B : ℕ) :
+    {K : Set SlowBorelBase.Inner} (hK : IsCompact K) (hWK : activeWindow left (y0 + 3) ⊆ K)
+    (B : ℕ) :
     ∃ a : ℕ → ℕ, B ≤ a 0 ∧
       AdmissibleScales h (weightedBundle Cbase d (activeZeta c left (y0 + 3))) K a ∧
       AdmissibleScales h (coefficientBundle Cbase d) K a ∧
@@ -1704,14 +1739,14 @@ theorem exists_common_scales_from_primitive {h : ℝ} (hh : 0 < h) (Cbase Cedge 
   obtain ⟨a, ha0, ha⟩ := exists_admissibleScales (weightedBundle_smooth hd hq Cbase) hh hK B
   refine ⟨a, ha0, ha, weightedBundle_base_scales hd hq ha, ?_⟩
   have hlog : left < y0 + 3 - width := Real.exp_lt_exp.mp (hl.trans_le hi)
-  let O : Set Inner := Ioo (Real.exp left) (Real.exp (y0 + 3)) ×ˢ univ
+  let O : Set SlowBorelBase.Inner := Ioo (Real.exp left) (Real.exp (y0 + 3)) ×ˢ univ
   have hO : IsOpen O := isOpen_Ioo.prod isOpen_univ
   have hWO : activeWindow left (y0 + 3) ⊆ O := fun _ hw => ⟨hw.1, mem_univ _⟩
   exact normalizedTensor_weighted_bound hh hd hK hWK hO hWO
     (activeZeta_smooth hc left (y0 + 3)) (fun _ hw => radialWeight_pos hw.1)
     (fun _ hw => activeDelta_bounds hw)
     (firstStress_edgeJets Cedge tail y0 hd hc hw hl hi hz he)
-    (activeZeta_edgeJets (by linarith) hc) hq ha
+    (activeZeta_edgeJets (by linarith only [hw, hlog]) hc) hq ha
 
 end CommonWeightedSchedule
 
@@ -1739,14 +1774,14 @@ theorem exp_activeLeft : Real.exp (activeLeft W) = nominalInner W / 16 :=
 
 theorem activeLeft_margin : Real.exp (activeLeft W) < nominalInner W / 8 := by
   rw [exp_activeLeft]
-  linarith [nominalInner_pos W]
+  linarith only [nominalInner_pos W]
 
 theorem core_before_outer : nominalInner W / 8 < nominalOuterX W := by
   have hi := (nominalInner_lt_stop W).trans (nominalStop_lt_initial W)
   have ho := (W.controls.Xi_lt_heatJoin W.separated).trans
     (W.controls.heatJoin_lt_radius.trans (nominalOuterX_gt_radius W))
   have hxi := nominalInitial_le_Xi W
-  linarith [nominalInner_pos W]
+  linarith only [hi, ho, hxi, nominalInner_pos W]
 
 theorem switch_before_collar : BaseExterior.nominalHeatSwitch W < Real.exp (terminalShift W + 2) :=
     by
@@ -1755,13 +1790,13 @@ theorem switch_before_collar : BaseExterior.nominalHeatSwitch W < Real.exp (term
   calc
     _ = Real.exp (Real.log (BaseExterior.nominalHeatSwitch W)) :=
       (Real.exp_log (BaseExterior.nominalHeatSwitch_pos W)).symm
-    _ < _ := Real.exp_lt_exp.mpr (by linarith)
+    _ < _ := Real.exp_lt_exp.mpr (by linarith only)
 
 theorem outer_before_collar : nominalOuterX W < Real.exp (terminalShift W + 2) :=
   (nominalOuterX_lt_switch W).trans (switch_before_collar W)
 
 theorem collar_before_upper : Real.exp (terminalShift W + 2) < activeUpper W :=
-  Real.exp_lt_exp.mpr (by dsimp [activeUpper, activeRight]; linarith)
+  Real.exp_lt_exp.mpr (by dsimp only [activeRight]; linarith only)
 
 theorem outer_before_upper : nominalOuterX W < activeUpper W :=
   (outer_before_collar W).trans (collar_before_upper W)
@@ -2019,7 +2054,7 @@ theorem nominalScales_weighted_bound :
     (nominalScales_spec W c hc upper B).2
   · apply Real.exp_lt_exp.mpr
     change terminalShift W + 3 - 1 < terminalShift W + 3
-    linarith
+    linarith only
   · intro w hw
     have hz := nominalCoefficients_stress_zero W hw.le 1
     exact Prod.ext hz.1 hz.2
@@ -2041,7 +2076,7 @@ theorem modifiedScales_weighted_bound
     (modifiedScales_spec W c hc upper B Q M).2
   · apply Real.exp_lt_exp.mpr
     change terminalShift W + 3 - 1 < terminalShift W + 3
-    linarith
+    linarith only
   · intro w hw
     have hz := coefficients_stress_zero_left (modifiedLocalization W Q M) (modifiedBaseAgreement W
         Q M)
@@ -2175,7 +2210,7 @@ There is no profile, PDE identity, or residual estimate among the inputs. -/
 theorem exists_actual_base (c : ℝ) (hc : 0 < c) (upper : ℝ) (B : ℕ) :
     ∃ (F : OutgoingProfile.Profile) (W : NominalProfile.Witness F)
       (ld : ModulatedProfileAssembly.LoopData W) (v : ModulatedProfileAssembly.Witness ld),
-      (∀ p : Inner, NominalConeAssembly.activeLeft W < p.1 →
+      (∀ p : SlowBorelBase.Inner, NominalConeAssembly.activeLeft W < p.1 →
         p.1 < NominalConeAssembly.activeRight W → p.2 ∈ Icc (-1 : ℝ) 1 →
         TrueConeLoop.InTrueCone
           (ActivationStocks.profileStockOne v.profiles F.data.h p)

@@ -148,8 +148,12 @@ theorem localPotentialMode_eq (x : CycleState (Label B N0)) (l : Label B N0)
           (CartesianCopySource.rotationMap (PhysicalGraphBounds.radialProjection w)
             (nativePotential x l j n (nativePoint n w))) := by
   ext i
-  fin_cases i <;> simp [localPotentialMode, cylindricalPotential, nativePoint,
-    PhysicalCurlCovariance.realVector, Complex.real_smul]
+  fin_cases i <;> simp only [localPotentialMode, PhysicalCurlCovariance.realVector,
+      PhysicalGraphBounds.radialProjection_apply, Fin.isValue, cylindricalPotential, map_smul,
+      Pi.smul_apply, Complex.real_smul, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
+      zero_mul, sub_zero, Fin.zero_eta, AxisymmetricResidual.pack_zero, nativePoint,
+      PiLp.smul_apply, smul_eq_mul, Fin.mk_one, AxisymmetricResidual.pack_one, Fin.reduceFinMk,
+      AxisymmetricResidual.pack_two]
 
 /-! ## The polar angle is only a coordinate choice -/
 
@@ -161,7 +165,8 @@ theorem chosenChart_valid {w : SpaceTime}
         (PhysicalGraphBounds.radialProjection w)) := by
   apply PhysicalWaveSum.chooseChart_valid (b := ‖PhysicalGraphBounds.radialProjection w‖)
     (norm_pos_iff.mpr hw)
-  refine ⟨by simp, ?_⟩
+  refine ⟨by simp only [PhysicalGraphBounds.radialProjection_apply, Fin.isValue, Prod.norm_mk,
+      Real.norm_eq_abs, Metric.mem_closedBall, dist_zero_right, Std.le_refl], ?_⟩
   change ‖PhysicalGraphBounds.radialProjection w‖ ≤ ‖PhysicalGraphBounds.radialProjection w‖
   exact le_rfl
 
@@ -200,7 +205,7 @@ theorem periodic_eq_of_cos_sin {E : Type*} {f : ℝ → E}
     (hf : Function.Periodic f (2 * Real.pi)) {a b : ℝ}
     (hc : Real.cos a = Real.cos b) (hs : Real.sin a = Real.sin b) : f a = f b := by
   obtain ⟨k, hk⟩ := Real.Angle.angle_eq_iff_two_pi_dvd_sub.mp (Real.Angle.cos_sin_inj hc hs)
-  have he : a = b + (k : ℝ) * (2 * Real.pi) := by nlinarith [hk]
+  have he : a = b + (k : ℝ) * (2 * Real.pi) := by nlinarith only [hk]
   rw [he]
   exact hf.int_mul k b
 
@@ -704,10 +709,10 @@ theorem common_tangent_on_strip (x : CycleState (Label B N0))
         ring
       rw [hlin, ht, mul_zero]
     · rw [ha.eq_of_nhds]
-      simp [normalDot]
+      simp only [normalDot, Fin.isValue, Pi.zero_apply, mul_zero, add_zero]
   · rw [((ActualParticularDynamics.data x l j).common_zero_germs
       S.cells S.cutoff_support (not_exists.mp he)).1.eq_of_nhds]
-    simp [normalDot]
+    simp only [normalDot, Fin.isValue, Pi.zero_apply, mul_zero, add_zero]
 
 theorem native_normal_ne {x : CycleState (Label B N0)}
     (hx : ActualParticularStageControls.PreservesCarriers x) (l : Label B N0) (j : ℤ) (n : ℕ)
@@ -771,17 +776,17 @@ theorem nativePotential_curl_of_invariant
         j hj (ActualParticularCycleData.native_source_class H j hj) (l.2,l.1) n
         (nativeStrip_mem hz.1 hr)
     · rw [hzero n z hz.1 hr]
-      simp [normalDot]
+      simp only [normalDot, Fin.isValue, Pi.zero_apply, mul_zero, add_zero]
   have hfreq : (copyData y (l.2,l.1) j).background.frequency n ≠ 0 := by
     rw [copyData_eq_actual y (l.2,l.1) j (ActualParticularStageControls.preserves_frequency hx _)]
     exact ActualParticularDynamics.frequency_ne hx (l.2,l.1) j hj n
   exact ClosedNativeWaveIdentities.cylindricalCurl_vectorPotential_of_differentiable _ _ _ _ hfreq
     ((hphi.contDiffAt (ActualWaveRegularityData.particularPositive_open.mem_nhds
         hz)).differentiableAt
-      (by simp))
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     (fun i => (contDiffAt_pi.mp (hnormal.contDiffAt (nativeDomain_open.mem_nhds hz.1))
         i).differentiableAt
-      (by simp))
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     (native_normal_ne hx (l.2,l.1) j n hz) ht
 
 /-! ## Curl in genuine Cartesian coordinates -/
@@ -876,11 +881,12 @@ theorem localPotentialMode_curl_transport (x : CycleState (Label B N0)) (l : Lab
       (fun y => nativePotential x l j n (PhysicalParticularWave.waveEquiv y) k) (G.map z) := by
     intro k
     exact (contDiffAt_pi.mp (hP.comp (G.map z)
-      PhysicalParticularWave.waveEquiv.contDiff.contDiffAt) k).differentiableAt (by simp)
+      PhysicalParticularWave.waveEquiv.contDiff.contDiffAt) k).differentiableAt (by simp only [
+          ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   have hr := localPotentialMode_forward_germ x l j hf n ha i hz
   have hc := PhysicalCurlCovariance.ScaledGraph.physical_curl G hl hz.1 hB
     ((ChartScales.Q n) ^ (-CorrectionInitialization.ActualPrimary.h))
-    (hA.differentiableAt (by simp)) hr k
+    (hA.differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hr k
   rw [nativeCurl_reindex x l j n] at hc
   have hscale : (ChartScales.Q n) ^ (-CorrectionInitialization.ActualPrimary.h) * G.radialScale =
       (ChartScales.Q n) ^ (-CoordinateAlgebra.A CorrectionInitialization.ActualPrimary.h) := by

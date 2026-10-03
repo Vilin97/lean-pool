@@ -56,24 +56,18 @@ theorem exists_local_quadratic_mild (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ
         ‖u‖ ≤ ‖u₀‖+1 ∧ u ⟨0, le_rfl, hT.le⟩ = u₀ ∧
         ∀ t, u t = quadraticDuhamel period ν hν hT.le hTS C u₀ u t := by
   let R := ‖u₀‖+1
-  have hR : 0 ≤ R := by dsimp [R]; positivity
+  have hR : 0 ≤ R := add_nonneg (norm_nonneg u₀) zero_le_one
   obtain ⟨T, hT, hTS, hb, hs⟩ := exists_positive_time_budget ν (C.ballBound R) (C.ballLipschitz R)
       1 S (by
       norm_num) hS
   let F := (C.comp (timeInclusion hTS)).apply
-  have hF : Continuous (fun p : Icc (0 : ℝ) T × SobolevSpace period (q+1) => F p.1 p.2) :=
-    (C.comp (timeInclusion hTS)).continuous
-  have hFM (t : Icc (0 : ℝ) T) (u : SobolevSpace period (q+1)) (hu : ‖u‖ ≤ R) : ‖F t u‖ ≤
-      C.ballBound R :=
-    C.apply_bound R hR (timeInclusion hTS t) u hu
-  have hFL (t : Icc (0 : ℝ) T) (u v : SobolevSpace period (q+1)) (hu : ‖u‖ ≤ R) (hv : ‖v‖ ≤ R) :
-      ‖F t u-F t v‖ ≤ C.ballLipschitz R*‖u-v‖ :=
-    C.apply_sub_bound R hR (timeInclusion hTS t) u v hu hv
   have hbudget : ‖u₀‖+(T+2*parabolicConstant ν*Real.sqrt T)*C.ballBound R ≤ R := add_le_add
       (le_refl ‖u₀‖) hb.le
-  obtain ⟨u, hu, hsol⟩ := exists_viscous_mild_solution period q ν hν T hT.le u₀ F hF R
+  obtain ⟨u, hu, hsol⟩ := exists_viscous_mild_solution period q ν hν T hT.le u₀ F
+    (C.comp (timeInclusion hTS)).continuous R
     (C.ballBound R) (C.ballLipschitz R) hR (C.ballBound_nonneg R hR) (C.ballLipschitz_nonneg R hR)
-    hFM hFL hbudget hs
+    (fun t u hu => (C.apply_bound R hR (timeInclusion hTS t) u hu :))
+    (fun t u v hu hv => (C.apply_sub_bound R hR (timeInclusion hTS t) u v hu hv :)) hbudget hs
   refine ⟨T, hT, hTS, u, hu, ?_, hsol⟩
   have hzero := hsol ⟨0, le_rfl, hT.le⟩
   simpa only [mul_zero, Real.toNNReal_zero, heatOperator_zero, intervalIntegral.integral_same,

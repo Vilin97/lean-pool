@@ -58,13 +58,13 @@ theorem cellLower_gt {n : ℕ} (a b : ℝ) (hab : a < b) (j : Fin n) :
   have hj : (0 : ℝ) ≤ j.val := Nat.cast_nonneg _
   have hd := cellStep_pos a b hab n
   unfold cellLower
-  nlinarith
+  nlinarith only [hd]
 
 theorem cell_lower_lt_upper {n : ℕ} (a b : ℝ) (hab : a < b) (j : Fin n) :
     cellLower a b j < cellUpper a b j := by
   have hd := cellStep_pos a b hab n
   unfold cellLower cellUpper
-  nlinarith
+  nlinarith only [hd]
 
 theorem cellUpper_lt {n : ℕ} (a b : ℝ) (hab : a < b) (j : Fin n) :
     cellUpper a b j < b := by
@@ -72,14 +72,14 @@ theorem cellUpper_lt {n : ℕ} (a b : ℝ) (hab : a < b) (j : Fin n) :
   have hd := cellStep_pos a b hab n
   have hm := cellStep_mul a b n
   unfold cellUpper
-  nlinarith
+  nlinarith only [hd, hm, hab, hj]
 
 theorem cell_separated {n : ℕ} (a b : ℝ) (hab : a < b)
     (i j : Fin n) (hij : i < j) : cellUpper a b i ≤ cellLower a b j := by
   have hij' : (i.val : ℝ) + 1 ≤ j.val := by exact_mod_cast hij
   have hd := cellStep_pos a b hab n
   unfold cellUpper cellLower
-  nlinarith
+  nlinarith only [hd, hij']
 
 theorem cell_positive {n : ℕ} (a b : ℝ) (ha : 0 < a) (hab : a < b)
     (j : Fin n) : 0 < cellLower a b j :=
@@ -98,12 +98,12 @@ def axialPowers (lam : ℝ) : Fin 2 → ℝ := ![1, 1 - 2 * lam]
 
 theorem angularPowers_injective (lam : ℝ) (hlam : 0 < lam) : Injective (angularPowers lam) := by
   intro i j hij
-  fin_cases i <;> fin_cases j <;> simp_all [angularPowers] <;> linarith
+  fin_cases i <;> fin_cases j <;> simp_all [angularPowers] <;> linarith only [hlam, hij]
 
 theorem axialPowers_injective (lam : ℝ) (hlam : 0 < lam) : Injective (axialPowers lam) := by
   intro i j hij
   fin_cases i <;> fin_cases j <;> simp_all [axialPowers]
-  linarith
+  linarith only [hlam, hij]
 
 /-- Normalized angular moments, including the signs of the pressure and axial rows. -/
 def angularDebt (C : ℝ) (d : Debt) : Fin 3 → ℝ := ![0, -(d 0) / (2 * C), d 2 / C]
@@ -172,7 +172,8 @@ theorem axial_moments (lam C a b : ℝ) (d : Debt) (hlam : 0 < lam)
 
 theorem angular_mass_zero (lam C a b : ℝ) (d : Debt) (hlam : 0 < lam)
     (ha : 0 < a) (hab : a < b) : (∫ R, R ^ (2 : ℕ) * deltaV lam C a b d R) = 0 := by
-  simpa [angularPowers, angularDebt, Real.rpow_natCast] using
+  simpa only [angularPowers, neg_mul, Fin.isValue, Matrix.cons_val_zero, Real.rpow_ofNat,
+      angularDebt] using
     angular_moments lam C a b d hlam ha hab 0
 
 theorem axial_mass_zero (lam C a b : ℝ) (d : Debt) (hlam : 0 < lam)
@@ -305,7 +306,7 @@ theorem integrable_power_mul_of_patch (p a b : ℝ) (f : ℝ → ℝ) (ha : 0 < 
     Integrable (fun R => R ^ p * f R) := by
   have hprod : support (fun R => R ^ p * f R) ⊆ Icc a b := by
     intro R hR
-    have hne : f R ≠ 0 := by intro hz; exact hR (by simp [hz])
+    have hne : f R ≠ 0 := by intro hz; exact hR (by simp only [hz, mul_zero])
     exact Ioo_subset_Icc_self (hs hne)
   apply (integrableOn_iff_integrable_of_support_subset hprod).mp
   apply ContinuousOn.integrableOn_Icc
@@ -346,21 +347,28 @@ def angularDebtLinearMap (C : ℝ) : Debt →ₗ[ℝ] (Fin 3 → ℝ) where
   toFun := angularDebt C
   map_add' d e := by
     ext i
-    fin_cases i <;> simp [angularDebt, Pi.add_apply] <;> ring
+    fin_cases i <;> simp only [angularDebt, Fin.isValue, Pi.add_apply, neg_add_rev, Fin.zero_eta,
+        Matrix.cons_val_zero, add_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val] <;> ring
   map_smul' r d := by
     ext i
-    fin_cases i <;> simp [angularDebt, Pi.smul_apply, smul_eq_mul] <;> ring
+    fin_cases i <;> simp only [angularDebt, Fin.isValue, Pi.smul_apply, smul_eq_mul, Fin.zero_eta,
+        Matrix.cons_val_zero, RingHom.id_apply, mul_zero, Fin.mk_one, Matrix.cons_val_one,
+        Fin.reduceFinMk, Matrix.cons_val] <;> ring
 
 /-- Axial debt linear map, bundling `toFun`, `map_add`, `map_smul`. -/
 def axialDebtLinearMap (C : ℝ) : Debt →ₗ[ℝ] (Fin 2 → ℝ) where
   toFun := axialDebt C
   map_add' d e := by
     ext i
-    fin_cases i <;> simp [axialDebt, Pi.add_apply]
+    fin_cases i <;> simp only [axialDebt, Fin.isValue, Pi.add_apply, neg_add_rev, Fin.zero_eta,
+        Matrix.cons_val_zero, add_zero, Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one]
     ring
   map_smul' r d := by
     ext i
-    fin_cases i <;> simp [axialDebt, Pi.smul_apply, smul_eq_mul]
+    fin_cases i <;> simp only [axialDebt, Fin.isValue, Pi.smul_apply, smul_eq_mul, Fin.zero_eta,
+        Matrix.cons_val_zero, RingHom.id_apply, mul_zero, Fin.mk_one, Matrix.cons_val_one,
+        Matrix.cons_val_fin_one]
     ring
 
 /-- The concrete angular correction as a linear map in `(P,Jθ,Jz)`. -/
@@ -405,12 +413,16 @@ theorem angularDebt_rescale (C : ℝ) (d : Debt) :
     angularDebt C d = C⁻¹ • angularDebt 1 d := by
   ext i
   fin_cases i <;>
-    simp [angularDebt, Pi.smul_apply, smul_eq_mul, div_eq_mul_inv, mul_inv_rev] <;> ring
+    simp only [angularDebt, Fin.isValue, div_eq_mul_inv, mul_inv_rev, neg_mul, Fin.zero_eta,
+        Matrix.cons_val_zero, mul_one, inv_one, Pi.smul_apply, smul_eq_mul, mul_zero, Fin.mk_one,
+        Matrix.cons_val_one, mul_neg, neg_inj, Fin.reduceFinMk, Matrix.cons_val] <;> ring
 
 theorem axialDebt_rescale (C : ℝ) (d : Debt) : axialDebt C d = C⁻¹ • axialDebt 1 d := by
   ext i
   fin_cases i <;>
-    simp [axialDebt, Pi.smul_apply, smul_eq_mul, div_eq_mul_inv]
+    simp only [axialDebt, Fin.isValue, div_eq_mul_inv, neg_mul, Fin.zero_eta, Matrix.cons_val_zero,
+        inv_one, mul_one, Pi.smul_apply, smul_eq_mul, mul_zero, Fin.mk_one, Matrix.cons_val_one,
+        Matrix.cons_val_fin_one, mul_neg, neg_inj]
   ring
 
 theorem deltaV_rescale (lam C a b : ℝ) (d : Debt) :
@@ -433,20 +445,24 @@ theorem angularDebt_one_norm (d : Debt) : ‖angularDebt 1 d‖ ≤ ‖d‖ := b
   apply (pi_norm_le_iff_of_nonneg (norm_nonneg d)).mpr
   intro i
   fin_cases i
-  · simp [angularDebt]
+  · simp only [angularDebt, Fin.isValue, mul_one, div_one, Fin.zero_eta, Matrix.cons_val_zero,
+      norm_zero, norm_nonneg]
   · change ‖-(d 0) / (2 * 1 : ℝ)‖ ≤ ‖d‖
     have hd : |d 0| ≤ ‖d‖ := by simpa only [Real.norm_eq_abs] using norm_le_pi_norm d 0
     rw [norm_div, norm_neg]
     norm_num
-    nlinarith [abs_nonneg (d 0)]
-  · simpa [angularDebt] using norm_le_pi_norm d 2
+    nlinarith only [hd, abs_nonneg (d 0)]
+  · simpa only [angularDebt, Fin.isValue, mul_one, div_one, Fin.reduceFinMk, Matrix.cons_val,
+      Real.norm_eq_abs] using norm_le_pi_norm d 2
 
 theorem axialDebt_one_norm (d : Debt) : ‖axialDebt 1 d‖ ≤ ‖d‖ := by
   apply (pi_norm_le_iff_of_nonneg (norm_nonneg d)).mpr
   intro i
   fin_cases i
-  · simp [axialDebt]
-  · simpa [axialDebt] using norm_le_pi_norm d 1
+  · simp only [axialDebt, Fin.isValue, div_one, Fin.zero_eta, Matrix.cons_val_zero, norm_zero,
+      norm_nonneg]
+  · simpa only [axialDebt, Fin.isValue, div_one, Fin.mk_one, Matrix.cons_val_one,
+      Matrix.cons_val_fin_one, norm_neg, Real.norm_eq_abs] using norm_le_pi_norm d 1
 
 /-- The normalization loses at most the explicit factor `‖C⁻¹‖`. -/
 theorem angularDebt_norm_le (C : ℝ) (d : Debt) : ‖angularDebt C d‖ ≤ ‖C⁻¹‖ * ‖d‖ := by

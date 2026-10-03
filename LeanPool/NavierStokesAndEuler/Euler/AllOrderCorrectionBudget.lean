@@ -167,12 +167,13 @@ theorem finite_exists {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget per
     (B.constant_bound q hq) B.delta_pos B.delta_le_one B.radius_pos (B.decay q hq)
     (B.scale q hq) (B.small q hq) (B.radius_eq q hq)
     (fun t => by simpa only [Data.atOrder,A.approximation.value_eq] using B.divergence t)
-  rw [A.lower_twice period q] at h
   obtain ⟨e,hi,hd,_,he,hp⟩ := h
   refine ⟨e,hi,hd,(fun P hP hPq t => (he P hP hPq t).2),?_⟩
   intro t ht
-  have hs := hp t ht
-  rw [← CorrectionData.source_sobolev] at hs
+  have hs := (hp t ht).congr_deriv (g' := ((A.atOrder period q).coefficients period hq).apply
+    ⟨t,ht.1.le,ht.2.le⟩ (e ⟨t,ht.1.le,ht.2.le⟩)) (by
+      simp only [A.lower_twice period q]
+      exact (CorrectionData.source_sobolev period _ hq _ _).symm)
   exact (valueOperator period q).hasFDerivAt.comp_hasDerivAt t hs
 
 end EulerAllOrderCorrectionBudget

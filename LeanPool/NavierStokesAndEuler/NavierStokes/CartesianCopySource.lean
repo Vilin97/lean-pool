@@ -141,7 +141,14 @@ theorem rotationMap_apply (y : Plane) (v : ComplexVector) :
     rotationMap y v = ![(y.1 / cartesianRadius y : ℝ) • v 0 - (y.2 / cartesianRadius y : ℝ) • v 1,
       (y.2 / cartesianRadius y : ℝ) • v 0 + (y.1 / cartesianRadius y : ℝ) • v 1, v 2] := by
   ext i
-  fin_cases i <;> simp [rotationMap, horizontal, connection, vertical, sub_eq_add_neg, add_comm]
+  fin_cases i <;>
+    simp only [rotationMap, horizontal, connection, vertical, Fin.isValue, Fin.zero_eta,
+      Fin.mk_one, Fin.reduceFinMk, add_apply, smul_apply, ContinuousLinearMap.coe_pi',
+      Pi.add_apply, Pi.smul_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val,
+      ContinuousLinearMap.proj_apply, Complex.real_smul, Complex.ofReal_div, neg_apply, smul_neg,
+      zero_apply, smul_zero, add_zero, zero_add, Nat.succ_eq_add_one, Nat.reduceAdd,
+      sub_eq_add_neg]
+  exact add_comm _ _
 
 theorem rotationMap_smooth : ContDiffOn ℝ ∞ rotationMap {y : Plane | y ≠ 0} := by
   have hr : ∀ y : Plane, y ≠ 0 → cartesianRadius y ≠ 0 := by

@@ -97,7 +97,7 @@ theorem exists_viscous_mild_solution (q : ℕ) (ν : ℝ) (hν : 0 < ν) (T : �
     (freeHeatPath period (q + 1) ν T u₀) F hF R M L hR hM hL hFM hFL
   · rw [hmass]
     have hf := freeHeatPath_bound period (q + 1) ν T u₀
-    linarith
+    linarith only [hbudget, hf]
   · rwa [hmass]
 
 end EulerSobolevHeat

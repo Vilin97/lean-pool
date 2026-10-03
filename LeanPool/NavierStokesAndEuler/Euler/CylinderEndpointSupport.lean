@@ -88,40 +88,47 @@ end Support
 
 section Mean
 
-variable (Y : CylinderL2 P U) (hY : average P Y = 0)
+variable (Y : CylinderL2 P U) (hY : EulerCylinderAngleAverage.average (V := U) P Y = 0)
 
 include hY
 
-theorem endpointForcing_mean_zero (t : Icc (0 : ℝ) T) : average P (D.endpointForcing P Y t) = 0 :=
-    by
+theorem endpointForcing_mean_zero (t : Icc (0 : ℝ) T) :
+    EulerCylinderAngleAverage.average (V := E) P (D.endpointForcing P Y t) = 0 := by
   rw [D.endpointForcing_apply P Y t,map_smul]
-  change (2 : ℝ) • average P (fullOperatorMap P (D.Q₁ t) (T⁻¹ • Y)) = 0
-  rw [average_fullOperator,map_smul,hY,smul_zero,map_zero,smul_zero]
+  change (2 : ℝ) • EulerCylinderAngleAverage.average (V := E) P
+    (fullOperatorMap (E := U) (F := E) P (D.Q₁ t) (T⁻¹ • Y)) = 0
+  simp only [average_fullOperator, ContinuousLinearMap.map_smul, hY, smul_zero,
+    ContinuousLinearMap.map_zero]
 
 theorem endpointCoordinate_mean_zero (t : Icc (0 : ℝ) T) :
-    average P (D.endpointCoordinate P Y t) = 0 := by
-  rw [D.endpointCoordinate_eq_const_sub P Y t,map_sub,map_smul,hY,smul_zero,
-    D.velocityPath_mean_zero P (D.endpointForcing P Y) (D.endpointForcing_mean_zero P Y hY)
-        t,sub_zero]
+    EulerCylinderAngleAverage.average (V := U) P (D.endpointCoordinate P Y t) = 0 := by
+  simp only [D.endpointCoordinate_eq_const_sub P Y t, ContinuousLinearMap.map_sub,
+    ContinuousLinearMap.map_smul, hY, smul_zero,
+    D.velocityPath_mean_zero P (D.endpointForcing P Y) (D.endpointForcing_mean_zero P Y hY) t,
+    sub_zero]
 
 theorem endpointAcceleration_mean_zero (t : Icc (0 : ℝ) T) :
-    average P (D.endpointAcceleration P Y t) = 0 := by
-  rw [D.endpointAcceleration_eq_forced P Y,ContinuousMap.neg_apply,map_neg,
-    D.accelerationPath_mean_zero P (D.endpointForcing P Y) (D.endpointForcing_mean_zero P Y hY)
-        t,neg_zero]
+    EulerCylinderAngleAverage.average (V := U) P (D.endpointAcceleration P Y t) = 0 := by
+  simp only [D.endpointAcceleration_eq_forced P Y, ContinuousMap.neg_apply,
+    ContinuousLinearMap.map_neg,
+    D.accelerationPath_mean_zero P (D.endpointForcing P Y) (D.endpointForcing_mean_zero P Y hY) t,
+    neg_zero]
 
 theorem endpointVelocity_mean_zero (t : Icc (0 : ℝ) T) :
-    average P (D.endpointVelocity P Y t) = 0 := by
-  change average P (fullOperatorMap P (D.Q t) (D.endpointCoordinate P Y t)) = 0
-  rw [average_fullOperator,D.endpointCoordinate_mean_zero P Y hY t,map_zero]
+    EulerCylinderAngleAverage.average (V := E) P (D.endpointVelocity P Y t) = 0 := by
+  change EulerCylinderAngleAverage.average (V := E) P
+    (fullOperatorMap (E := U) (F := E) P (D.Q t) (D.endpointCoordinate P Y t)) = 0
+  simp only [average_fullOperator, D.endpointCoordinate_mean_zero P Y hY t,
+    ContinuousLinearMap.map_zero]
 
 theorem endpointDerivative_mean_zero (t : Icc (0 : ℝ) T) :
-    average P (D.endpointDerivative P Y t) = 0 := by
-  change average P (fullOperatorMap P (D.Q₁ t) (D.endpointCoordinate P Y t) +
-    fullOperatorMap P (D.Q t) (D.endpointAcceleration P Y t)) = 0
-  rw [map_add,average_fullOperator,average_fullOperator,
-    D.endpointCoordinate_mean_zero P Y hY t,D.endpointAcceleration_mean_zero P Y hY t,
-    map_zero,map_zero,add_zero]
+    EulerCylinderAngleAverage.average (V := E) P (D.endpointDerivative P Y t) = 0 := by
+  change EulerCylinderAngleAverage.average (V := E) P
+    (fullOperatorMap (E := U) (F := E) P (D.Q₁ t) (D.endpointCoordinate P Y t) +
+      fullOperatorMap (E := U) (F := E) P (D.Q t) (D.endpointAcceleration P Y t)) = 0
+  simp only [ContinuousLinearMap.map_add, average_fullOperator,
+    D.endpointCoordinate_mean_zero P Y hY t, D.endpointAcceleration_mean_zero P Y hY t,
+    ContinuousLinearMap.map_zero, add_zero]
 
 end Mean
 

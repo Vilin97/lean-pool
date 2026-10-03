@@ -45,7 +45,8 @@ def mapCoefficientPath (L : V →L[ℝ] W) : C(K, Space →ᵇ V) →L[ℝ] C(K,
 
 omit [CompactSpace K] in
 @[simp] theorem mapCoefficientPath_apply (L : V →L[ℝ] W)
-    (A : C(K, Space →ᵇ V)) (t : K) (x : Space) : mapCoefficientPath L A t x = L (A t x) := rfl
+    (A : C(K, Space →ᵇ V)) (t : K) (x : Space) :
+    mapCoefficientPath (K := K) L A t x = L (A t x) := rfl
 
 end Mapping
 
@@ -90,7 +91,7 @@ local instance instSmoothCoefficientPath10 (n : ℕ) : NormedSpace ℝ (Space �
 /-- Derivative field, given by `mapCoefficientPath (continuousMultilinearCurryFin1 ℝ Space
 V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet 1)`. -/
 def derivativeField (A : SmoothCoefficientPath K V) : C(K, Space →ᵇ (Space →L[ℝ] V)) :=
-  mapCoefficientPath
+  mapCoefficientPath (K := K)
     (continuousMultilinearCurryFin1 ℝ Space V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet
         1)
 
@@ -135,17 +136,20 @@ def derivative (A : SmoothCoefficientPath K V) : SmoothCoefficientPath K (Space 
     exact A.derivativeJet_eq n t x
 
 theorem translation_hasFDerivAt (A : SmoothCoefficientPath K V) (a : Space) :
-    HasFDerivAt (translateCoefficientPath A.field)
-      (pathDerivativeMap (translateCoefficientPath A.derivative.field a)) a := by
+    HasFDerivAt (translateCoefficientPath (K := K) (V := V) A.field)
+      (pathDerivativeMap
+        (translateCoefficientPath (K := K) (V := Space →L[ℝ] V) A.derivative.field a)) a := by
   apply translateCoefficientPath_hasFDerivAt A.field A.derivative.field A.smooth
-    A.derivativeField_eq ‖A.jet 2‖ (norm_nonneg _)
+    A.derivativeField_eq ‖A.jet 2‖ (norm_nonneg (A.jet 2))
   intro t x
-  rw [← norm_iteratedFDeriv_one, norm_iteratedFDeriv_fderiv, ← A.jet_eq]
-  exact ((A.jet 2 t).norm_coe_le_norm x).trans ((A.jet 2).norm_coe_le_norm t)
+  exact ((norm_iteratedFDeriv_one (𝕜 := ℝ) (fderiv ℝ (A.field t : Space → V)) (x := x)).symm.trans
+    (norm_iteratedFDeriv_fderiv.trans (congrArg norm (A.jet_eq 2 t x).symm))).trans_le
+    (((A.jet 2 t).norm_coe_le_norm x).trans ((A.jet 2).norm_coe_le_norm t))
 
 theorem translation_fderiv (A : SmoothCoefficientPath K V) :
-    fderiv ℝ (translateCoefficientPath A.field) =
-      fun a => pathDerivativeBundling (translateCoefficientPath A.derivative.field a) :=
+    fderiv ℝ (translateCoefficientPath (K := K) (V := V) A.field) =
+      fun a => pathDerivativeBundling (K := K) (V := V)
+        (translateCoefficientPath (K := K) (V := Space →L[ℝ] V) A.derivative.field a) :=
   funext (fun a => (A.translation_hasFDerivAt a).fderiv)
 
 private theorem translation_contDiff_nat_aux (n : ℕ) :
@@ -161,9 +165,7 @@ private theorem translation_contDiff_nat_aux (n : ℕ) :
     rw [Nat.cast_add, Nat.cast_one, contDiff_succ_iff_fderiv]
     refine ⟨fun a => (A.translation_hasFDerivAt a).differentiableAt, by simp, ?_⟩
     rw [A.translation_fderiv]
-    exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := (n : ℕ∞ω))
-      (E := C(K, Space →ᵇ (Space →L[ℝ] V))) (F := Space →L[ℝ] C(K, Space →ᵇ V))
-      (pathDerivativeBundling (K := K) (V := V))).comp
+    exact (pathDerivativeBundling (K := K) (V := V)).contDiff.comp
       (ih (Space →L[ℝ] V) A.derivative)
 
 /-- Smoothness in the spatial translation parameter holds in the uniform time-path topology. -/

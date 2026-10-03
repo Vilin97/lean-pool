@@ -12,6 +12,10 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseHistoryBounds
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -90,10 +94,10 @@ theorem historyVelocity_sub_norm_le_of_coefficient_bounds (hTpos : 0 < T) (q q�
       historyDifferenceCost T c q q₁ d a r L₀ L₁ LH * s := by
   apply (historyVelocity_sub_norm_le T hT Q Q₁ H c hc hQ hd K hK hH hsmall
     P P₁ G hP hp hG hTpos q q₁ d a r hQn hPn hQ₁n hP₁n hD hD' hA hA' hr hr').trans
-  exact historyDifferenceCost_le_scale T c q q₁ d a r ‖Q-P‖ ‖Q₁-P₁‖ ‖H-G‖ L₀ L₁ LH s
-    hT hc.le ((show 0 ≤ ‖Q‖ by positivity).trans hQn) ((show 0 ≤ ‖Q₁‖ by positivity).trans hQ₁n)
-    ((show 0 ≤ T*‖Q₁‖+‖Q‖ by positivity).trans hD)
-    ((show 0 ≤ 1+T^2*‖H‖ by positivity).trans hA)
+  exact historyDifferenceCost_le_scale T c q q₁ d a r _ _ _ L₀ L₁ LH s
+    hT hc.le ((norm_nonneg Q).trans hQn) ((norm_nonneg Q₁).trans hQ₁n)
+    ((add_nonneg (mul_nonneg hT (norm_nonneg Q₁)) (norm_nonneg Q)).trans hD)
+    ((add_nonneg zero_le_one (mul_nonneg (sq_nonneg T) (norm_nonneg H))).trans hA)
     ((transportCost_pos T hT Q Q₁ c hc).le.trans hr) h₀ h₁ hHdiff
 
 end EulerTransverseHistoryBounds

@@ -13,6 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Factorial bounds for genuine operator-valued derivatives
@@ -62,7 +63,8 @@ theorem linear_bound (L : E →L[ℝ] F) (f : P → E) (hf : ContDiff ℝ ∞ f)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ A * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => L (f y)) x‖ ≤ (‖L‖*A) * majorant R d n := by
-  exact (L.norm_iteratedFDeriv_comp_left hf.contDiffAt (by simp)).trans
+  exact (L.norm_iteratedFDeriv_comp_left hf.contDiffAt (by simp only [WithTop.le_coe_top, ne_eq,
+      WithTop.natCast_ne_top, not_false_eq_true])).trans
     (by simpa only [mul_assoc] using mul_le_mul_of_nonneg_left (hb n x) (norm_nonneg L))
 
 /-- A linear contraction does not enlarge a factorial multiplier constant. -/
@@ -90,8 +92,9 @@ theorem bilinear_bound (B : E →L[ℝ] F →L[ℝ] G) (hB : ‖B‖ ≤ 1)
     (fun k => ‖iteratedFDeriv ℝ k f x‖) (fun k => ‖iteratedFDeriv ℝ k g x‖)
     (fun k => by simpa only [abs_norm] using hb k x)
     (fun k => by simpa only [abs_norm] using hc k x) n
-  exact (B.norm_iteratedFDeriv_le_of_bilinear_of_le_one hf hg x (by simp) hB).trans
-    ((le_abs_self _).trans (by simpa using hp))
+  exact (B.norm_iteratedFDeriv_le_of_bilinear_of_le_one hf hg x (by simp only [WithTop.le_coe_top,
+      ne_eq, WithTop.natCast_ne_top, not_false_eq_true]) hB).trans
+    ((le_abs_self _).trans (by simpa only using hp))
 
 /-- Actual operator application has the shifted factorial product bound. -/
 theorem clm_apply_bound (A : P → E →L[ℝ] F) (u : P → E)
@@ -124,7 +127,8 @@ theorem add_bound (f g : P → E) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ �
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n g x‖ ≤ B * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => f y + g y) x‖ ≤ (A+B) * majorant R d n := by
-  rw [fun_iteratedFDeriv_add_apply (hf.contDiffAt.of_le (by simp)) (hg.contDiffAt.of_le (by simp))]
+  rw [fun_iteratedFDeriv_add_apply (hf.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+      WithTop.natCast_ne_top, not_false_eq_true])) (hg.contDiffAt.of_le (by simp))]
   exact (norm_add_le _ _).trans (by simpa only [add_mul] using add_le_add (ha n x) (hb n x))
 
 /-- Subtracting actual jets adds the multiplier constants. -/
@@ -135,7 +139,9 @@ theorem sub_bound (f g : P → E) (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ �
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => f y - g y) x‖ ≤ (A+B) * majorant R d n := by
   change ‖iteratedFDeriv ℝ n (f-g) x‖ ≤ _
-  rw [iteratedFDeriv_sub_apply (hf.contDiffAt.of_le (by simp)) (hg.contDiffAt.of_le (by simp))]
+  rw [iteratedFDeriv_sub_apply (hf.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+      WithTop.natCast_ne_top, not_false_eq_true])) (hg.contDiffAt.of_le (by simp only [
+      WithTop.le_coe_top, ne_eq, WithTop.natCast_ne_top, not_false_eq_true]))]
   exact (norm_sub_le _ _).trans (by simpa only [add_mul] using add_le_add (ha n x) (hb n x))
 
 /-- Composition with a fixed operator on the right costs its operator norm. -/
@@ -144,11 +150,9 @@ theorem clm_comp_const_right_bound (A : P → F →L[ℝ] G) (B : E →L[ℝ] F)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => (A y).comp B) x‖ ≤ (‖B‖*C) * majorant R d n := by
-  let L : (F →L[ℝ] G) →L[ℝ] (E →L[ℝ] G) := (compL ℝ E F G).flip B
-  have hL : ‖L‖ ≤ ‖B‖ := by
-    apply opNorm_le_bound _ (norm_nonneg B)
-    intro a
-    exact (opNorm_comp_le a B).trans_eq (mul_comm _ _)
+  let L := (compL ℝ E F G).flip B
+  have hL := opNorm_le_bound L (norm_nonneg B)
+    (fun a => (opNorm_comp_le a B).trans_eq (mul_comm _ _))
   exact (linear_bound L A hA R C d hb n x).trans
     (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hL hC) (majorant_nonneg R hR d n))
 
@@ -158,11 +162,8 @@ theorem clm_comp_const_left_bound (A : F →L[ℝ] G) (B : P → E →L[ℝ] F)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n B x‖ ≤ C * majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => A.comp (B y)) x‖ ≤ (‖A‖*C) * majorant R d n := by
-  let L : (E →L[ℝ] F) →L[ℝ] (E →L[ℝ] G) := compL ℝ E F G A
-  have hL : ‖L‖ ≤ ‖A‖ := by
-    apply opNorm_le_bound _ (norm_nonneg A)
-    intro b
-    exact opNorm_comp_le A b
+  let L := compL ℝ E F G A
+  have hL := opNorm_le_bound L (norm_nonneg A) (fun b => opNorm_comp_le A b)
   exact (linear_bound L B hB R C d hb n x).trans
     (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hL hC) (majorant_nonneg R hR d n))
 
@@ -187,11 +188,12 @@ theorem adjoint_bound (A : P → U →L[ℝ] E) (hA : ContDiff ℝ ∞ A)
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (d : ℕ)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n A x‖ ≤ C * majorant R d n)
     (n : ℕ) (x : P) :
-    ‖iteratedFDeriv ℝ n (fun y => (A y).adjoint) x‖ ≤ C * majorant R d n := by
+    ‖iteratedFDeriv ℝ n (fun y => adjoint (𝕜 := ℝ) (E := U) (F := E) (A y)) x‖ ≤
+      C * majorant R d n := by
   have hL : ‖realAdjoint (U := U) (E := E)‖ ≤ 1 := by
     apply opNorm_le_bound _ zero_le_one
     intro a
-    change ‖a.adjoint‖ ≤ 1 * ‖a‖
+    change ‖adjoint (𝕜 := ℝ) (E := U) (F := E) a‖ ≤ 1 * ‖a‖
     simp only [LinearIsometryEquiv.norm_map, one_mul, le_refl]
   exact contraction_bound (P := P) (E := U →L[ℝ] E) (F := E →L[ℝ] U)
     (realAdjoint (U := U) (E := E)) hL A hA R C hR hC d hb n x

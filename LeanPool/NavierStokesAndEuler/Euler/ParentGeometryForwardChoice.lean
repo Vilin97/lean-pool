@@ -161,7 +161,10 @@ theorem exists_geometryForwardChoice
         I.alpha_pos
     (profileEnvelope I.parameterSize) hp.1 hp.2.1 k hk (hp.2.2.trans hfrequency)
     hK hell nextEll hnext hnext1
-  refine ⟨⟨hn,Q,G,hgraph,hG,LC,hLC,hdisplacement,?_⟩⟩
+  refine ⟨⟨hn,Q,G,hgraph,?_,LC,hLC,hdisplacement,?_⟩⟩
+  all_goals dsimp only [GeometryForwardInput.meanData, GeometryForwardInput.data,
+    GeometryForwardInput.agreement]
+  · exact hG
   intro t x
   constructor
   · exact (herror t x).1

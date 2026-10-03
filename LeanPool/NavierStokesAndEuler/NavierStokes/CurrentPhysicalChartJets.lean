@@ -59,7 +59,9 @@ noncomputable def freePart : LiftPoint →L[ℝ] Native :=
 theorem norm_polarPart_le : ‖polarPart‖ ≤ 1 := by
   refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one ?_
   intro y
-  simp [polarPart, Prod.norm_def, Real.norm_eq_abs, abs_nonneg]
+  simp only [polarPart, ContinuousLinearMap.prod_apply, ContinuousLinearMap.coe_fst', zero_apply,
+      ContinuousLinearMap.coe_snd', Prod.norm_def, Real.norm_eq_abs, norm_zero, abs_nonneg,
+      sup_of_le_left, le_max_iff, or_self, one_mul, Std.le_refl]
 
 theorem norm_freePart_le : ‖freePart‖ ≤ 1 := by
   refine ContinuousLinearMap.opNorm_le_bound _ zero_le_one ?_
@@ -81,8 +83,11 @@ theorem chartMap_decomposition (a : ℝ) (j : PolarCharts.Index) :
     chartMap a j = fun x => polarPart (PolarCharts.chart a j (PhysicalGraphBounds.liftXY x)) +
       freePart x := by
   funext x
-  ext <;> simp [chartMap, PhysicalParticularWave.waveEquiv_apply,
-    ActualSignedPhysicalData.cylinderAt, polarPart, freePart, reversePlane]
+  ext <;> simp only [chartMap, ActualSignedPhysicalData.cylinderAt,
+      PhysicalGraphBounds.liftXY_apply, PhysicalGraphBounds.liftZT_apply,
+      PhysicalParticularWave.waveEquiv_apply, polarPart, ContinuousLinearMap.prod_apply,
+      ContinuousLinearMap.coe_fst', zero_apply, ContinuousLinearMap.coe_snd', freePart,
+      reversePlane, ContinuousLinearMap.comp_apply, Prod.mk_add_mk, add_zero, zero_add]
 
 theorem chartMap_smooth {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) :
     ContDiff ℝ ∞ (chartMap a j) := by
@@ -280,9 +285,11 @@ theorem realVector_norm_le (z : ComplexVector) :
     calc
       _ ≤ ∑ _i : Fin 3, ‖z‖ ^ 2 :=
         Finset.sum_le_sum (fun i _ => pow_le_pow_left₀ (norm_nonneg _) (hi i) 2)
-      _ = 3 * ‖z‖ ^ 2 := by simp
-  apply (sq_le_sq₀ (norm_nonneg _) (by positivity : 0 ≤ 3 * ‖z‖)).mp
-  nlinarith [sq_nonneg ‖z‖]
+      _ = 3 * ‖z‖ ^ 2 := by simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin,
+          nsmul_eq_mul, Nat.cast_ofNat]
+  apply (sq_le_sq₀ (norm_nonneg _) (mul_nonneg (by norm_num) (norm_nonneg z))).mp
+  rw [mul_pow]
+  exact hs.trans (mul_le_mul_of_nonneg_right (by norm_num) (sq_nonneg _))
 
 /-- The literal real-vector constructor is a fixed bounded linear map.
 This provides the final codomain conversion for physical vector modes. -/
@@ -291,11 +298,14 @@ noncomputable def realVectorCLM : ComplexVector →L[ℝ] ProblemStatement.Space
      map_add' := by
        intro z w
        ext i
-       simp [PhysicalCurlCovariance.realVector_apply]
+       simp only [PhysicalCurlCovariance.realVector_apply, Pi.add_apply, Complex.add_re,
+           PiLp.add_apply]
      map_smul' := by
        intro c z
        ext i
-       simp [PhysicalCurlCovariance.realVector_apply, Complex.real_smul] } :
+       simp only [PhysicalCurlCovariance.realVector_apply, Pi.smul_apply, Complex.real_smul,
+           Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero,
+           RingHom.id_apply, PiLp.smul_apply, smul_eq_mul] } :
     ComplexVector →ₗ[ℝ] ProblemStatement.Space).mkContinuous 3 realVector_norm_le
 
 @[simp] theorem realVectorCLM_apply (z : ComplexVector) :

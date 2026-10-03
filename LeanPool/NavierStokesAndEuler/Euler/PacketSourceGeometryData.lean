@@ -58,7 +58,7 @@ structure ParentFrame (D : Data U) (τ : ℝ) where
   error_nonneg : 0 ≤ error
   B_derivative : ∀ t ∈ Icc τ D.T, HasDerivWithinAt B (B₁ t) (Icc τ D.T) t
   ray_equation : ∀ t ∈ Icc τ D.T,
-    HasDerivWithinAt m (-(B t).adjoint (m t)) (Icc τ D.T) t
+    HasDerivWithinAt m (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) (B t) (m t)) (Icc τ D.T) t
   velocity_equation : ∀ t ∈ Icc τ D.T, HasDerivWithinAt v
     (-(B t) (v t)+(2*⟪m t,(B t) (v t)⟫_ℝ/‖m t‖^2) • m t) (Icc τ D.T) t
   ray_nonzero : ∀ t ∈ Icc τ D.T, m t ≠ 0
@@ -68,7 +68,7 @@ structure ParentFrame (D : Data U) (τ : ℝ) where
   B₁_bound : ∀ t ∈ Icc τ D.T, ‖B₁ t‖ ≤ G^2
   remainder_bound : ∀ t ∈ Icc τ D.T,
     ‖D.M.field (D.clamp t) 0-B t -
-      primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t))‖ ≤ error
+      primaryShear c m v t • rankOne ℝ (E := Space) (F := Space) (unit (v t)) (unit (m t))‖ ≤ error
 
 namespace ParentFrame
 
@@ -196,7 +196,8 @@ theorem totalError_nonneg : 0 ≤ P.totalError hτ hτT H A.CM A.CH A.radius :=
 
 omit [CompleteSpace U] in
 theorem activation_perturbation :
-    ‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-P.shear • rankOne ℝ (unit (P.v τ)) (unit (P.m τ))‖ ≤
+    ‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0 -
+        P.shear • rankOne ℝ (E := Space) (F := Space) (unit (P.v τ)) (unit (P.m τ))‖ ≤
       A.ζ*P.shear := by
   have ht : τ ∈ Icc τ D.T := ⟨le_rfl,hτT.le⟩
   have hr := P.remainder_bound τ ht
@@ -204,9 +205,11 @@ theorem activation_perturbation :
   rw [hclamp] at hr
   calc
     _ = ‖P.B τ+(D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-P.B τ -
-      P.shear • rankOne ℝ (unit (P.v τ)) (unit (P.m τ)))‖ := by congr 1; module
+      P.shear • rankOne ℝ (E := Space) (F := Space) (unit (P.v τ)) (unit (P.m τ)))‖ := by
+        congr 1; module
     _ ≤ ‖P.B τ‖+‖D.M.field ⟨τ,hτ.le,hτT.le⟩ 0-P.B τ -
-      P.shear • rankOne ℝ (unit (P.v τ)) (unit (P.m τ))‖ := norm_add_le _ _
+      P.shear • rankOne ℝ (E := Space) (F := Space) (unit (P.v τ)) (unit (P.m τ))‖ :=
+        norm_add_le _ _
     _ ≤ P.G+P.error := add_le_add (P.B_bound τ ht) hr
     _ ≤ A.ζ*P.shear := A.activation_error
 

@@ -61,7 +61,7 @@ theorem halfScale_harmonic (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
   have hx' : (1/2 : ℝ) • x ∈ Metric.ball (0 : Space) (1/2 : ℝ) := by
     simp only [Metric.mem_ball, dist_zero_right] at hx ⊢
     rw [norm_smul, Real.norm_eq_abs, abs_of_pos (by norm_num : 0 < (1/2 : ℝ))]
-    linarith
+    linarith only [hx]
   rw [hharmonic _ hx', mul_zero]
 
 /-- Harmonic quarter ball constant, given by `8 * harmonicInteriorConstant ^ 2`. -/
@@ -79,7 +79,7 @@ theorem harmonic_pointwise_quarterBall_sq (f : Space → ℝ) (hf : ContDiff ℝ
   have hx' : (2 : ℝ) • x ∈ Metric.closedBall (0 : Space) (1/2 : ℝ) := by
     simp only [Metric.mem_closedBall, dist_zero_right] at hx ⊢
     rw [norm_smul, Real.norm_eq_abs, abs_of_pos (by norm_num : 0 < (2 : ℝ))]
-    linarith
+    linarith only [hx]
   have H := harmonic_pointwise_halfBall (halfScale f) (halfScale_smooth f hf)
     (halfScale_memLp f hf hLp) (halfScale_harmonic f hf hharmonic) ((2 : ℝ) • x) hx'
   have heval : halfScale f ((2 : ℝ) • x) = f x := by
@@ -88,6 +88,6 @@ theorem harmonic_pointwise_quarterBall_sq (f : Space → ℝ) (hf : ContDiff ℝ
   have H2 := pow_le_pow_left₀ (abs_nonneg (f x)) H 2
   rw [sq_abs, mul_pow, halfScale_energy f hf hLp] at H2
   unfold harmonicQuarterBallConstant
-  nlinarith
+  nlinarith only [H2]
 
 end EulerMeanHarmonic

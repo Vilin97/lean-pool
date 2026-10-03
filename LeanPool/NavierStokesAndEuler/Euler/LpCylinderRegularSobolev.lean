@@ -164,8 +164,9 @@ include hd hg₀ hΩ hB
 at the base parameter, with the same radius as the data. -/
 theorem solutionFamily_block_bound
     (f : C(Icc (0 : ℝ) T, CylinderL2 period V)) (a₀ : CylinderL2 period V)
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a f))
-    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a a₀))
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := V) period a f))
+    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := V) period a a₀))
     (C A D CB Rc R : ℝ) (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D) (hCB : 0 ≤ CB) (hRc : 0 ≤ Rc)
     (hR : 2*forwardSobolevCost ι q T C A D CB Rc*(sobolevCoefficientRadius ι Rc+1) ≤ R)
     (hBb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) x‖ ≤ CB*majorant Rc 0 n)
@@ -173,18 +174,17 @@ theorem solutionFamily_block_bound
       ‖((fundamentalPath T hT B).forward t x).comp
         ((fundamentalPath T hT B).backward s x)‖ ≤ C*g t/g s)
     (d : ℕ)
-    (hforce : ∀ n, block directions q (fun a : LiftTangent => pathTranslate period a f) n 0 ≤
-      D*majorant R d n)
-    (hinitial : ∀ n, block directions q (fun a : LiftTangent => translate period a a₀) n 0 ≤
-        A*majorant R d n)
+    (hforce : ∀ n, block directions q (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := V) period a f) n 0 ≤ D*majorant R d n)
+    (hinitial : ∀ n, block directions q
+      (fun a : LiftTangent => translate (V := V) period a a₀) n 0 ≤ A*majorant R d n)
     (n : ℕ) :
     block directions q (solutionFamily period T hT Ω hΩ B g hg f a₀) n 0 ≤ majorant R (d+1) n := by
-  have hBc : ContDiff ℝ ∞ (coefficientFamily period T Ω hΩ B) :=
-    mixedCoefficient_contDiff period Ω hΩ T B hB
-  have hBbound (j : ℕ) (a : LiftTangent) :
-      ‖iteratedFDeriv ℝ j (coefficientFamily period T Ω hΩ B) a‖ ≤ CB*majorant Rc 0 j :=
+  have hBc := mixedCoefficient_contDiff period Ω hΩ T B hB
+  have hBbound := fun (j : ℕ) (a : LiftTangent) =>
     mixedCoefficient_bound period Ω hΩ T B hB j (CB*majorant Rc 0 j) (hBb j) a
-  exact weightedSolution_block_gevrey_at directions hd q T hT (coefficientFamily period T Ω hΩ B)
+  exact weightedSolution_block_gevrey_at (E := Supported period V Ω hΩ) directions hd q T hT
+    (coefficientFamily period T Ω hΩ B)
     (evolutionFamily period T hT Ω hΩ B) g hg (translatedForcing period Ω hΩ f) (translatedData
         period Ω hΩ a₀)
     hBc (translatedForcing_contDiff period Ω hΩ f hf) (translatedData_contDiff period Ω hΩ a₀ ha₀)
@@ -200,8 +200,10 @@ theorem source_forward_block_bound
     (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
     (f : C(Icc (0 : ℝ) T, Supported period V K hK))
     (a₀ : Supported period V K hK)
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period K hK f)))
-    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate period a (a₀ : CylinderL2 period V)))
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := V) period a
+      (includePath (K := Icc (0 : ℝ) T) (V := V) period K hK f)))
+    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      translate (V := V) period a (a₀ : CylinderL2 period V)))
     (C A D CB Rc R : ℝ) (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D) (hCB : 0 ≤ CB) (hRc : 0 ≤ Rc)
     (hR : 2*forwardSobolevCost ι q T C A D CB Rc*(sobolevCoefficientRadius ι Rc+1) ≤ R)
     (hBb : ∀ n x, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) x‖ ≤ CB*majorant Rc 0 n)
@@ -209,26 +211,27 @@ theorem source_forward_block_bound
       ‖((fundamentalPath T hT B).forward t x).comp
         ((fundamentalPath T hT B).backward s x)‖ ≤ C*g t/g s)
     (d : ℕ)
-    (hforce : ∀ n, block directions q
-      (fun a : LiftTangent => pathTranslate period a (includePath period K hK f)) n 0 ≤ D*majorant
-          R d n)
-    (hinitial : ∀ n, block directions q (fun a : LiftTangent => translate period a (a₀ : CylinderL2
-        period V)) n 0 ≤
+    (hforce : ∀ n, block directions q (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := V) period a
+          (includePath (K := Icc (0 : ℝ) T) (V := V) period K hK f)) n 0 ≤ D*majorant R d n)
+    (hinitial : ∀ n, block directions q (fun a : LiftTangent =>
+        translate (V := V) period a (a₀ : CylinderL2 period V)) n 0 ≤
       A*majorant R d n)
     (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate period a (includePath period K hK
-      ((constructedEvolution period K hK T hT B).weightedSolution g hg f a₀))) n 0 ≤
+    block directions q (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := V) period a
+      (includePath (K := Icc (0 : ℝ) T) (V := V) period K hK
+        ((constructedEvolution period K hK T hT B).weightedSolution g hg f a₀))) n 0 ≤
       majorant R (d+1) n := by
-  let u := solutionFamily period T hT Ω hΩ B g hg (includePath period K hK f) (a₀ : CylinderL2
-      period V)
-  have hu : ContDiff ℝ ∞ u := solutionFamily_contDiff period T hT Ω hΩ B hB g hg (includePath
-      period K hK f)
+  let u := solutionFamily period T hT Ω hΩ B g hg
+    (includePath (K := Icc (0 : ℝ) T) (V := V) period K hK f) (a₀ : CylinderL2 period V)
+  have hu : ContDiff ℝ ∞ u := solutionFamily_contDiff period T hT Ω hΩ B hB g hg
+    (includePath (K := Icc (0 : ℝ) T) (V := V) period K hK f)
     (a₀ : CylinderL2 period V) hf ha₀
   have he := solutionFamily_translation_eventually period T hT Ω hΩ B K hK hKc hΩo hsub g hg f a₀
   rw [← block_eq_of_eventuallyEq directions q he n]
   exact (includePath_block_le period Ω hΩ directions q u hu n 0).trans
-    (solutionFamily_block_bound period directions hd q T hT Ω hΩ B hB g hg hg₀ (includePath period
-        K hK f)
+    (solutionFamily_block_bound period directions hd q T hT Ω hΩ B hB g hg hg₀
+      (includePath (K := Icc (0 : ℝ) T) (V := V) period K hK f)
       (a₀ : CylinderL2 period V) hf ha₀ C A D CB Rc R hC hA hD hCB hRc hR hBb
       (fun t s hst x hx => hH3 t s hst x (hΩball x hx)) d hforce hinitial n)
 

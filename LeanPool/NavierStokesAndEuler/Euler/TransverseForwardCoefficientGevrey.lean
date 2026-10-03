@@ -61,7 +61,8 @@ variable (T : ℝ) (hT : 0 ≤ T) (Q Q₁ : P → C(Icc (0 : ℝ) T, V →L[ℝ]
 theorem frameLeftInversePath_contDiff {n : ℕ∞ω} (hQr : ContDiff ℝ n Q) :
     ContDiff ℝ n (fun x => frameLeftInversePath T (Q x) c hc (hQ x)) := by
   exact contDiff_compose (fun x => gramInversePath T (Q x) c hc (hQ x))
-    (fun x => adjointMap (Q x)) (gramInversePath_contDiff T c hc Q hQ hQr)
+    (fun x => adjointMap (K := Icc (0 : ℝ) T) (U := V) (E := E) (Q x))
+    (gramInversePath_contDiff T c hc Q hQ hQr)
     (contDiff_adjoint Q hQr)
 
 /-- The literal source generator is smoothly parameterized. -/
@@ -136,12 +137,12 @@ open scoped ContDiff
 theorem inverseRadius_bounds (c C Rc R : ℝ) (hc : 0 < c) (hRc : 0 ≤ Rc)
     (hR : 2 * gramCost c C 1 * (Rc + 1) ≤ R) : 0 ≤ R ∧ Rc ≤ 4*R := by
   have hi : 0 ≤ c⁻¹ := inv_nonneg.mpr hc.le
-  have hcost : 1 ≤ gramCost c C 1 := by
-    unfold gramCost
-    nlinarith [sq_nonneg C]
+  have hcost : 1 ≤ gramCost c C 1 :=
+    le_add_of_nonneg_right (mul_nonneg hi
+      (add_nonneg (add_nonneg (mul_nonneg zero_le_three (sq_nonneg C)) zero_le_one) zero_le_one))
   have hp : 0 ≤ (gramCost c C 1-1)*(Rc+1) :=
-    mul_nonneg (sub_nonneg.mpr hcost) (by linarith)
-  constructor <;> linarith
+    mul_nonneg (sub_nonneg.mpr hcost) (by linarith only [hRc])
+  constructor <;> linarith only [hR, hp, hRc]
 
 variable {P V E : Type*}
   [NormedAddCommGroup P] [NormedSpace ℝ P]
@@ -204,7 +205,8 @@ theorem frameLeftInversePath_bound (n : ℕ) (x : P) :
     (hbQ j y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc (4*Ri) hRc hbase 0 j) hC₀)
   have hbAdj := EulerContinuousPathComposition.adjoint_bound Q hQr (4*Ri) C₀ hrad hC₀ 0 hbQ'
   have h := compose_bound (fun y => gramInversePath T (Q y) c hc (hQ y))
-    (fun y => adjointMap (Q y)) (gramInversePath_contDiff T c hc Q hQ hQr)
+    (fun y => adjointMap (K := Icc (0 : ℝ) T) (U := V) (E := E) (Q y))
+    (gramInversePath_contDiff T c hc Q hQ hQr)
     (contDiff_adjoint Q hQr) (4*Ri) Ri C₀ hrad hi hC₀ 0 0
     (inversePath_coefficient_bound T Q c hc hQ hQr Rc C₀ Ri hRc hC₀ hRi hbQ) hbAdj n x
   simp only [Nat.add_zero] at h
@@ -229,7 +231,9 @@ theorem generator_bound (n : ℕ) (x : P) :
       hrad (by positivity) hC₁ 0 0
       (frameLeftInversePath_bound T Q c hc hQ hQr Rc C₀ Ri hRc hC₀ hRi hbQ) hbQ₁' n x
   change ‖iteratedFDeriv ℝ n (fun y => (-2 : ℝ) • S y) x‖ ≤ _
-  rw [iteratedFDeriv_const_smul_apply' (hSr.contDiffAt.of_le (by simp)), norm_smul]
+  refine (congrArg norm
+    (iteratedFDeriv_const_smul_apply' (hSr.contDiffAt.of_le (by simp)))).trans_le
+      ((norm_smul _ _).trans_le ?_)
   norm_num only [norm_neg, Real.norm_ofNat]
   exact (mul_le_mul_of_nonneg_left hSb (by norm_num : (0 : ℝ) ≤ 2)).trans_eq (by ring)
 

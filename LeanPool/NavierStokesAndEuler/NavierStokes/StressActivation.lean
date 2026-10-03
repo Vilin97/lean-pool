@@ -56,7 +56,7 @@ theorem activation_le_one (T κ y : ℝ) (hκ : κ ∈ Icc (0 : ℝ) 1) :
   have hs := OutgoingSchedule.sigma_le_one (y / T)
   have hl := OutgoingSchedule.sigma_nonneg (y / T)
   dsimp [activation]
-  nlinarith [mul_nonneg hκ.1 hl]
+  nlinarith only [hs, hκ, hl, mul_nonneg hκ.1 hl]
 
 theorem activation_monotone {T κ : ℝ} (hT : 0 < T) (hκ : κ ≤ 1) :
     Monotone (activation T κ) := by
@@ -71,31 +71,33 @@ theorem activation_zero {T : ℝ} (hT : 0 < T) (κ : ℝ) {y : ℝ} (hy : y ≤ 
     (div_nonpos_of_nonpos_of_nonneg hy hT.le)]
 
 /-- Weighted field, defined pointwise by `activation T κ p.1 * B p`. -/
-noncomputable def weightedField (T κ : ℝ) (B : Field) : Field :=
+noncomputable def weightedField (T κ : ℝ) (B : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => activation T κ p.1 * B p
 
 /-- Weighted primitive, given by `primitive (weightedField T κ B)`. -/
-noncomputable def weightedPrimitive (T κ : ℝ) (B : Field) : Field :=
+noncomputable def weightedPrimitive (T κ : ℝ) (B : ProfileHistories.Field) :
+    ProfileHistories.Field :=
   primitive (weightedField T κ B)
 
-theorem weightedField_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : Field}
+theorem weightedField_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : ProfileHistories.Field}
     (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (weightedField T κ B) (logDomain J hJ).carrier :=
   ((activation_smooth T κ).comp contDiff_fst).contDiffOn.mul hB
 
-theorem weightedPrimitive_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : Field}
+theorem weightedPrimitive_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : ProfileHistories.Field}
     (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (weightedPrimitive T κ B) (logDomain J hJ).carrier :=
   primitive_smooth (logDomain J hJ) (weightedField_smooth T κ hJ hB)
 
-theorem weightedPrimitive_hasDerivAt (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : Field}
+theorem weightedPrimitive_hasDerivAt (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
+    {B : ProfileHistories.Field}
     (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     HasDerivAt (fun x => weightedPrimitive T κ B (x, η))
       (activation T κ y * B (y, η)) y :=
   primitive_hasDerivAt (logDomain J hJ) (weightedField_smooth T κ hJ hB)
     (p := (y, η)) ⟨mem_univ _, hη⟩
 
-theorem weightedPrimitive_zero {T : ℝ} (hT : 0 < T) (κ : ℝ) (B : Field)
+theorem weightedPrimitive_zero {T : ℝ} (hT : 0 < T) (κ : ℝ) (B : ProfileHistories.Field)
     {y : ℝ} (hy : y ≤ 0) (η : ℝ) : weightedPrimitive T κ B (y, η) = 0 := by
   unfold weightedPrimitive primitive weightedField
   calc
@@ -107,10 +109,11 @@ theorem weightedPrimitive_zero {T : ℝ} (hT : 0 < T) (κ : ℝ) (B : Field)
     _ = 0 := by simp
 
 /-- Direct integration of the reference derivative times the prescribed damping. -/
-noncomputable def controlled (T κ : ℝ) (F : Field) : Field := fun p =>
+noncomputable def controlled (T κ : ℝ) (F : ProfileHistories.Field) :
+    ProfileHistories.Field := fun p =>
   F (0, p.2) + primitive (fun q => damping T κ q.1 * radialPartial F q) p
 
-theorem controlled_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem controlled_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (controlled T κ F) (logDomain J hJ).carrier := by
   apply ContDiffOn.add
@@ -120,7 +123,7 @@ theorem controlled_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Field}
       (((damping_smooth T κ).comp contDiff_fst).contDiffOn.mul
         (radialPartial_smooth (logDomain J hJ) hF))
 
-theorem controlled_hasDerivAt (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem controlled_hasDerivAt (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     HasDerivAt (fun x => controlled T κ F (x, η))
       (damping T κ y * radialPartial F (y, η)) y := by
@@ -129,10 +132,10 @@ theorem controlled_hasDerivAt (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Fi
       (((damping_smooth T κ).comp contDiff_fst).contDiffOn.mul
         (radialPartial_smooth (logDomain J hJ) hF)) (p := (y, η)) ⟨mem_univ _, hη⟩)
 
-@[simp] theorem controlled_initial (T κ : ℝ) (F : Field) (η : ℝ) :
+@[simp] theorem controlled_initial (T κ : ℝ) (F : ProfileHistories.Field) (η : ℝ) :
     controlled T κ F (0, η) = F (0, η) := by simp [controlled, primitive]
 
-theorem controlled_sub (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem controlled_sub (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     controlled T κ F (y, η) - F (y, η) =
       -weightedPrimitive T κ (radialPartial F) (y, η) := by
@@ -230,15 +233,15 @@ theorem activation_flat_form {T : ℝ} (hT : 0 < T) (κ y : ℝ) :
   ring
 
 /-- Flat coefficient, given by `B (q.2, q.1) / stepDenominator T q.2`. -/
-noncomputable def flatCoefficient (T : ℝ) (B : Field) (q : ℝ × ℝ) : ℝ :=
+noncomputable def flatCoefficient (T : ℝ) (B : ProfileHistories.Field) (q : ℝ × ℝ) : ℝ :=
   B (q.2, q.1) / stepDenominator T q.2
 
 /-- Division by `y e_a` is implemented by a smooth transformed integral. -/
-noncomputable def primitiveFactor (T : ℝ) (B : Field) (p : Point) : ℝ :=
+noncomputable def primitiveFactor (T : ℝ) (B : ProfileHistories.Field) (p : Point) : ℝ :=
   p.1 ^ 2 * stepDenominator T p.1 *
     ParametricFlatFactor.factor (T ^ 2) 0 (flatCoefficient T B) (p.2, p.1)
 
-theorem flatCoefficient_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : Field}
+theorem flatCoefficient_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : ProfileHistories.Field}
     (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (flatCoefficient T B) (J ×ˢ univ) :=
   (hB.comp (contDiff_snd.prodMk contDiff_fst).contDiffOn (fun _ hp => ⟨hp.2, hp.1⟩)).div
@@ -246,16 +249,16 @@ theorem flatCoefficient_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {B : Fiel
     (fun p _ => (stepDenominator_pos T p.2).ne')
 
 theorem primitiveFactor_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J)
-    {B : Field} (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier) :
+    {B : ProfileHistories.Field} (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (primitiveFactor T B) (logDomain J hJ).carrier := by
   exact ((contDiff_fst.pow 2).mul ((stepDenominator_smooth T).comp contDiff_fst)).contDiffOn.mul
     ((flatFactor_local (sq_pos_of_pos hT) 0 hJ (flatCoefficient_smooth T hJ hB)).comp
       (contDiff_snd.prodMk contDiff_fst).contDiffOn (fun _ hp => ⟨hp.2, hp.1⟩))
 
-@[simp] theorem primitiveFactor_zero (T : ℝ) (B : Field) (η : ℝ) :
+@[simp] theorem primitiveFactor_zero (T : ℝ) (B : ProfileHistories.Field) (η : ℝ) :
     primitiveFactor T B (0, η) = 0 := by simp [primitiveFactor]
 
-theorem weightedPrimitive_factorization {T : ℝ} (hT : 0 < T) (κ : ℝ) (B : Field)
+theorem weightedPrimitive_factorization {T : ℝ} (hT : 0 < T) (κ : ℝ) (B : ProfileHistories.Field)
     (p : Point) : weightedPrimitive T κ B p = p.1 * activation T κ p.1 * primitiveFactor T B p := by
   have hrepr : weightedPrimitive T κ B p = (1 - κ) *
       ParametricFlatFactor.primitive (T ^ 2) 0 (flatCoefficient T B) (p.2, p.1) := by
@@ -275,7 +278,7 @@ theorem weightedPrimitive_factorization {T : ℝ} (hT : 0 < T) (κ : ℝ) (B : F
 /-- The basic quantitative estimate is uniform as `κ` tends to zero and in
 the ramp length: its constant is only a bound for the reference coefficient. -/
 theorem weightedPrimitive_bound {T κ M y : ℝ} (hT : 0 < T) (hκ : κ ≤ 1)
-    (hM : 0 ≤ M) (hy : 0 ≤ y) (B : Field) (η : ℝ)
+    (hM : 0 ≤ M) (hy : 0 ≤ y) (B : ProfileHistories.Field) (η : ℝ)
     (hB : ∀ t ∈ Icc (0 : ℝ) y, |B (t, η)| ≤ M) :
     |weightedPrimitive T κ B (y, η)| ≤ M * y * activation T κ y := by
   have hb : ∀ t ∈ uIoc (0 : ℝ) y,
@@ -294,14 +297,14 @@ theorem weightedPrimitive_bound {T κ M y : ℝ} (hT : 0 < T) (hκ : κ ≤ 1)
     sub_zero, abs_of_nonneg hy, mul_assoc, mul_left_comm, mul_comm] using hi
 
 theorem controlled_difference_factorization {T : ℝ} (hT : 0 < T) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     controlled T κ F (y, η) - F (y, η) =
       y * activation T κ y * (-primitiveFactor T (radialPartial F) (y, η)) := by
   rw [controlled_sub T κ hJ hF y hη, weightedPrimitive_factorization hT]
   ring
 
-theorem weightedPrimitive_scale (T κ : ℝ) (B : Field) (p : Point) :
+theorem weightedPrimitive_scale (T κ : ℝ) (B : ProfileHistories.Field) (p : Point) :
     weightedPrimitive T κ B p = (1 - κ) * weightedPrimitive T 0 B p := by
   unfold weightedPrimitive primitive weightedField activation
   rw [← intervalIntegral.integral_const_mul]
@@ -331,28 +334,32 @@ theorem exp_sub_one (x : ℝ) : Real.exp x - 1 = x * meanExp x := by
     _ = _ := primitive_eq_mul_average _ _
 
 /-- Reference angular, defined pointwise by `Real.exp (L p)`. -/
-noncomputable def referenceAngular (L : Field) : Field := fun p => Real.exp (L p)
+noncomputable def referenceAngular (L : ProfileHistories.Field) : ProfileHistories.Field :=
+  fun p => Real.exp (L p)
 /-- Activated angular, defined pointwise by `Real.exp (controlled T κ L p)`. -/
-noncomputable def activatedAngular (T κ : ℝ) (L : Field) : Field :=
+noncomputable def activatedAngular (T κ : ℝ) (L : ProfileHistories.Field) :
+    ProfileHistories.Field :=
   fun p => Real.exp (controlled T κ L p)
 /-- Reference P1, defined pointwise by `-2 * radialPartial L p`. -/
-noncomputable def referenceP1 (L : Field) : Field := fun p => -2 * radialPartial L p
+noncomputable def referenceP1 (L : ProfileHistories.Field) : ProfileHistories.Field :=
+  fun p => -2 * radialPartial L p
 /-- Radius, given by `X0 * Real.exp y`. -/
 noncomputable def radius (X0 y : ℝ) : ℝ := X0 * Real.exp y
 /-- Reference ns, defined pointwise by `-2 * radialPartial U p / radius X0 p.1`. -/
-noncomputable def referenceNs (X0 : ℝ) (U : Field) : Field :=
+noncomputable def referenceNs (X0 : ℝ) (U : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => -2 * radialPartial U p / radius X0 p.1
 
-theorem activatedAngular_pos (T κ : ℝ) (L : Field) (p : Point) :
+theorem activatedAngular_pos (T κ : ℝ) (L : ProfileHistories.Field) (p : Point) :
     0 < activatedAngular T κ L p := Real.exp_pos _
 
-theorem activatedAngular_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem activatedAngular_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (activatedAngular T κ L) (logDomain J hJ).carrier :=
   (controlled_smooth T κ hJ hL).exp
 
 /-- The first equation in (18), for the logarithm of the actual positive field. -/
-theorem activation_angular_equation (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem activation_angular_equation (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
+    {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     HasDerivAt (fun x => Real.log (activatedAngular T κ L (x, η)))
       (-(damping T κ y * referenceP1 L (y, η)) / 2) y := by
@@ -363,7 +370,7 @@ theorem activation_angular_equation (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {
 
 /-- The second equation in (18), with `n_s` obtained from the reference field. -/
 theorem activation_axial_equation (T κ : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
-    {J : Set ℝ} (hJ : IsOpen J) {U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     HasDerivAt (fun x => controlled T κ U (x, η))
       (-(damping T κ y * radius X0 y * referenceNs X0 U (y, η)) / 2) y := by
@@ -374,23 +381,23 @@ theorem activation_axial_equation (T κ : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
 
 /-- Relative factor, given by `-primitiveFactor T (radialPartial L) p * meanExp
 (-weightedPrimitive T κ (radialPartial L) p)`. -/
-noncomputable def relativeFactor (T κ : ℝ) (L : Field) (p : Point) : ℝ :=
+noncomputable def relativeFactor (T κ : ℝ) (L : ProfileHistories.Field) (p : Point) : ℝ :=
   -primitiveFactor T (radialPartial L) p *
     meanExp (-weightedPrimitive T κ (radialPartial L) p)
 
 theorem relativeFactor_smooth {T : ℝ} (hT : 0 < T) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (relativeFactor T κ L) (logDomain J hJ).carrier := by
   have hD := radialPartial_smooth (logDomain J hJ) hL
   exact (primitiveFactor_smooth hT hJ hD).neg.mul
     (meanExp_smooth.comp_contDiffOn (weightedPrimitive_smooth T κ hJ hD).neg)
 
-@[simp] theorem relativeFactor_zero (T κ : ℝ) (L : Field) (η : ℝ) :
+@[simp] theorem relativeFactor_zero (T κ : ℝ) (L : ProfileHistories.Field) (η : ℝ) :
     relativeFactor T κ L (0, η) = 0 := by simp [relativeFactor]
 
 theorem angular_relative_difference {T : ℝ} (hT : 0 < T) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     activatedAngular T κ L (y, η) / referenceAngular L (y, η) - 1 =
       y * activation T κ y * relativeFactor T κ L (y, η) := by
@@ -401,7 +408,7 @@ theorem angular_relative_difference {T : ℝ} (hT : 0 < T) (κ : ℝ)
   ring
 
 theorem controlled_eq_reference_before {T : ℝ} (hT : 0 < T) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) {y : ℝ} (hy : y ≤ 0)
     {η : ℝ} (hη : η ∈ J) : controlled T κ F (y, η) = F (y, η) := by
   have he := controlled_sub T κ hJ hF y hη
@@ -414,15 +421,15 @@ theorem controlled_eq_reference_before {T : ℝ} (hT : 0 < T) (κ : ℝ)
 abbrev FamilyPoint := (ℝ × ℝ) × ℝ
 
 /-- Relative family, given by `relativeFactor T q.1.1 L (q.1.2, q.2)`. -/
-noncomputable def relativeFamily (T : ℝ) (L : Field) (q : FamilyPoint) : ℝ :=
+noncomputable def relativeFamily (T : ℝ) (L : ProfileHistories.Field) (q : FamilyPoint) : ℝ :=
   relativeFactor T q.1.1 L (q.1.2, q.2)
 
 /-- Difference family, given by `-primitiveFactor T (radialPartial F) (q.1.2, q.2)`. -/
-noncomputable def differenceFamily (T : ℝ) (F : Field) (q : FamilyPoint) : ℝ :=
+noncomputable def differenceFamily (T : ℝ) (F : ProfileHistories.Field) (q : FamilyPoint) : ℝ :=
   -primitiveFactor T (radialPartial F) (q.1.2, q.2)
 
 theorem relativeFamily_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J)
-    {L : Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
+    {L : ProfileHistories.Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (relativeFamily T L) ((univ : Set (ℝ × ℝ)) ×ˢ J) := by
   have hD := radialPartial_smooth (logDomain J hJ) hL
   have hp := primitiveFactor_smooth hT hJ hD
@@ -444,7 +451,7 @@ theorem relativeFamily_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen 
   simp only [relativeFamily, relativeFactor, weightedPrimitive_scale T z.1.1]
 
 theorem differenceFamily_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J)
-    {F : Field} (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
+    {F : ProfileHistories.Field} (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (differenceFamily T F) ((univ : Set (ℝ × ℝ)) ×ˢ J) :=
   ((primitiveFactor_smooth hT hJ (radialPartial_smooth (logDomain J hJ) hF)).neg).comp
     (contDiff_fst.snd.prodMk contDiff_snd).contDiffOn (fun _ hp => ⟨mem_univ _, hp.2⟩)
@@ -495,10 +502,10 @@ theorem scaled_family_jet_bound {T : ℝ} (_hT : 0 < T) {J K : Set ℝ}
     abs_of_nonneg (mul_nonneg hy.1 (activation_nonneg T κ y hκ.2))]
   have hb := mul_le_mul_of_nonneg_left (hbound κ hκ y hy η hη)
     (mul_nonneg hy.1 (activation_nonneg T κ y hκ.2))
-  nlinarith
+  nlinarith only [hb]
 
 theorem controlled_parameter_jet_bounds {T : ℝ} (hT : 0 < T) {J K : Set ℝ}
-    (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {F : Field}
+    (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ κ ∈ Icc (0 : ℝ) 1, ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
       |iteratedDeriv n (fun ξ => controlled T κ F (y, ξ) - F (y, ξ)) η| ≤
@@ -508,7 +515,7 @@ theorem controlled_parameter_jet_bounds {T : ℝ} (hT : 0 < T) {J K : Set ℝ}
   exact controlled_difference_factorization hT κ hJ hF y hη
 
 theorem angular_relative_parameter_jet_bounds {T : ℝ} (hT : 0 < T) {J K : Set ℝ}
-    (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {L : Field}
+    (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ κ ∈ Icc (0 : ℝ) 1, ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
       |iteratedDeriv n (fun ξ =>
@@ -579,18 +586,19 @@ noncomputable def radialDensity : HistoryRow → ℝ → ℝ → ℝ → ℝ
   | .pressure, _, f, _ => f ^ 2
 
 /-- The Jacobian `X` converts the physical radial histories to log time. -/
-noncomputable def logDensity (X0 : ℝ) (f U : Field) (r : HistoryRow) : Field :=
+noncomputable def logDensity (X0 : ℝ) (f U : ProfileHistories.Field) (r : HistoryRow) :
+    ProfileHistories.Field :=
   fun p => radius X0 p.1 * radialDensity r (radius X0 p.1) (f p) (U p)
 
 /-- The initial row values are shared; every subsequent value is recomputed. -/
 noncomputable def logHistory (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    (f U : Field) (r : HistoryRow) : Field :=
+    (f U : ProfileHistories.Field) (r : HistoryRow) : ProfileHistories.Field :=
   fun p => initial r p.2 + primitive (logDensity X0 f U r) p
 
 theorem radius_smooth (X0 : ℝ) : ContDiff ℝ ∞ (radius X0) :=
   contDiff_const.mul Real.contDiff_exp
 
-theorem logDensity_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J) {f U : Field}
+theorem logDensity_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J) {f U : ProfileHistories.Field}
     (hf : ContDiffOn ℝ ∞ f (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow) :
     ContDiffOn ℝ ∞ (logDensity X0 f U r) (logDomain J hJ).carrier := by
@@ -604,7 +612,7 @@ theorem logDensity_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J) {f U : Field}
   | pressure => exact hx.mul (hf.pow 2)
 
 theorem logHistory_smooth (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {f U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {f U : ProfileHistories.Field}
     (hf : ContDiffOn ℝ ∞ f (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow)
     (hi : ContDiffOn ℝ ∞ (initial r) J) :
@@ -613,24 +621,24 @@ theorem logHistory_smooth (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
     (primitive_smooth (logDomain J hJ) (logDensity_smooth X0 hJ hf hU r))
 
 @[simp] theorem logHistory_initial (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    (f U : Field) (r : HistoryRow) (η : ℝ) :
+    (f U : ProfileHistories.Field) (r : HistoryRow) (η : ℝ) :
     logHistory X0 initial f U r (0, η) = initial r η := by
   simp [logHistory, primitive]
 
 /-- Field family, given by `F (q.1.2, q.2)`. -/
-noncomputable def fieldFamily (F : Field) (q : FamilyPoint) : ℝ := F (q.1.2, q.2)
+noncomputable def fieldFamily (F : ProfileHistories.Field) (q : FamilyPoint) : ℝ := F (q.1.2, q.2)
 
-theorem fieldFamily_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem fieldFamily_smooth {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (fieldFamily F) ((univ : Set (ℝ × ℝ)) ×ˢ J) :=
   hF.comp (contDiff_fst.snd.prodMk contDiff_snd).contDiffOn
     (fun _ hp => ⟨mem_univ _, hp.2⟩)
 
 /-- Controlled family, given by `controlled T q.1.1 F (q.1.2, q.2)`. -/
-noncomputable def controlledFamily (T : ℝ) (F : Field) (q : FamilyPoint) : ℝ :=
+noncomputable def controlledFamily (T : ℝ) (F : ProfileHistories.Field) (q : FamilyPoint) : ℝ :=
   controlled T q.1.1 F (q.1.2, q.2)
 
-theorem controlledFamily_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem controlledFamily_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (controlledFamily T F) ((univ : Set (ℝ × ℝ)) ×ˢ J) := by
   have hw := fieldFamily_smooth hJ
@@ -646,30 +654,31 @@ theorem controlledFamily_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {F : Fie
   have he := controlled_sub T q.1.1 hJ hF q.1.2 hq.2
   rw [weightedPrimitive_scale] at he
   dsimp only [controlledFamily, fieldFamily]
-  linarith
+  linarith only [he]
 
 /-- Angular family, given by `activatedAngular T q.1.1 L (q.1.2, q.2)`. -/
-noncomputable def angularFamily (T : ℝ) (L : Field) (q : FamilyPoint) : ℝ :=
+noncomputable def angularFamily (T : ℝ) (L : ProfileHistories.Field) (q : FamilyPoint) : ℝ :=
   activatedAngular T q.1.1 L (q.1.2, q.2)
 
-theorem angularFamily_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem angularFamily_smooth (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (angularFamily T L) ((univ : Set (ℝ × ℝ)) ×ˢ J) :=
   (controlledFamily_smooth T hJ hL).exp
 
 /-- Angular difference family, given by `fieldFamily (referenceAngular L) q * relativeFamily T L
 q`. -/
-noncomputable def angularDifferenceFamily (T : ℝ) (L : Field) (q : FamilyPoint) : ℝ :=
+noncomputable def angularDifferenceFamily (T : ℝ) (L : ProfileHistories.Field)
+    (q : FamilyPoint) : ℝ :=
   fieldFamily (referenceAngular L) q * relativeFamily T L q
 
 theorem angularDifferenceFamily_smooth {T : ℝ} (hT : 0 < T)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (angularDifferenceFamily T L) ((univ : Set (ℝ × ℝ)) ×ˢ J) :=
   (fieldFamily_smooth hJ hL.exp).mul (relativeFamily_smooth hT hJ hL)
 
 theorem angular_difference_factorization {T : ℝ} (hT : 0 < T) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     activatedAngular T κ L (y, η) - referenceAngular L (y, η) =
       y * activation T κ y * angularDifferenceFamily T L ((κ, y), η) := by
@@ -684,7 +693,7 @@ theorem angular_difference_factorization {T : ℝ} (hT : 0 < T) (κ : ℝ)
       ring
 
 /-- Density difference family as an element of `ℝ`. -/
-noncomputable def densityDifferenceFamily (T X0 : ℝ) (L U : Field)
+noncomputable def densityDifferenceFamily (T X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) (q : FamilyPoint) : ℝ :=
   let x := radius X0 q.1.2
   let df := angularDifferenceFamily T L q
@@ -701,7 +710,7 @@ noncomputable def densityDifferenceFamily (T X0 : ℝ) (L U : Field)
   | .pressure => x * df * (fa + fr)
 
 theorem densityDifferenceFamily_smooth {T : ℝ} (hT : 0 < T) (X0 : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow) :
     ContDiffOn ℝ ∞ (densityDifferenceFamily T X0 L U r)
@@ -723,7 +732,7 @@ theorem densityDifferenceFamily_smooth {T : ℝ} (hT : 0 < T) (X0 : ℝ)
   | pressure => exact (hx.mul hdf).mul (hfa.add hfr)
 
 theorem density_difference_factorization {T : ℝ} (hT : 0 < T) (κ X0 : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (r : HistoryRow) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
@@ -735,11 +744,11 @@ theorem density_difference_factorization {T : ℝ} (hT : 0 < T) (κ X0 : ℝ)
   have hf' : angularFamily T L ((κ, y), η) = fieldFamily (referenceAngular L) ((κ, y), η) +
       y * activation T κ y * angularDifferenceFamily T L ((κ, y), η) := by
     dsimp only [angularFamily, fieldFamily]
-    linarith
+    linarith only [hf]
   have hu' : controlledFamily T U ((κ, y), η) = fieldFamily U ((κ, y), η) +
       y * activation T κ y * differenceFamily T U ((κ, y), η) := by
     dsimp only [controlledFamily, fieldFamily, differenceFamily]
-    linarith
+    linarith only [hu]
   change radius X0 y * radialDensity r (radius X0 y) (angularFamily T L ((κ, y), η))
       (controlledFamily T U ((κ, y), η)) -
     radius X0 y * radialDensity r (radius X0 y) (fieldFamily (referenceAngular L) ((κ, y), η))
@@ -748,12 +757,12 @@ theorem density_difference_factorization {T : ℝ} (hT : 0 < T) (κ X0 : ℝ)
     simp only [hf', hu'] <;> ring
 
 /-- History integrand family, given by `q.1.2 * densityDifferenceFamily T X0 L U r q`. -/
-noncomputable def historyIntegrandFamily (T X0 : ℝ) (L U : Field)
+noncomputable def historyIntegrandFamily (T X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) (q : FamilyPoint) : ℝ :=
   q.1.2 * densityDifferenceFamily T X0 L U r q
 
 theorem historyIntegrandFamily_smooth {T : ℝ} (hT : 0 < T) (X0 : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow) :
     ContDiffOn ℝ ∞ (historyIntegrandFamily T X0 L U r)
@@ -761,7 +770,7 @@ theorem historyIntegrandFamily_smooth {T : ℝ} (hT : 0 < T) (X0 : ℝ)
   contDiffOn_fst.snd.mul (densityDifferenceFamily_smooth hT X0 hJ hL hU r)
 
 theorem history_difference_integral {T : ℝ} (hT : 0 < T) (κ X0 : ℝ)
-    (initial : HistoryRow → ℝ → ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    (initial : HistoryRow → ℝ → ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (r : HistoryRow) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
@@ -790,25 +799,25 @@ theorem history_difference_integral {T : ℝ} (hT : 0 < T) (κ X0 : ℝ)
 
 /-- History difference family, given by `familyPrimitiveFactor T (historyIntegrandFamily T X0 L
 U r)`. -/
-noncomputable def historyDifferenceFamily (T X0 : ℝ) (L U : Field)
+noncomputable def historyDifferenceFamily (T X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) : FamilyPoint → ℝ :=
   familyPrimitiveFactor T (historyIntegrandFamily T X0 L U r)
 
 theorem historyDifferenceFamily_smooth {T : ℝ} (hT : 0 < T) (X0 : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow) :
     ContDiffOn ℝ ∞ (historyDifferenceFamily T X0 L U r)
       ((univ : Set (ℝ × ℝ)) ×ˢ J) :=
   familyPrimitiveFactor_smooth hT hJ (historyIntegrandFamily_smooth hT X0 hJ hL hU r)
 
-@[simp] theorem historyDifferenceFamily_zero (T X0 : ℝ) (L U : Field)
+@[simp] theorem historyDifferenceFamily_zero (T X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) (κ η : ℝ) :
     historyDifferenceFamily T X0 L U r ((κ, 0), η) = 0 := by
   simp [historyDifferenceFamily, familyPrimitiveFactor]
 
 theorem history_difference_factorization {T : ℝ} (hT : 0 < T) (κ X0 : ℝ)
-    (initial : HistoryRow → ℝ → ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    (initial : HistoryRow → ℝ → ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (r : HistoryRow) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
@@ -821,7 +830,7 @@ theorem history_difference_factorization {T : ℝ} (hT : 0 < T) (κ X0 : ℝ)
 
 theorem history_parameter_jet_bounds {T : ℝ} (hT : 0 < T) (X0 : ℝ)
     (initial : HistoryRow → ℝ → ℝ) {J K : Set ℝ}
-    (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {L U : Field}
+    (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ κ ∈ Icc (0 : ℝ) 1, ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
@@ -837,11 +846,12 @@ theorem history_parameter_jet_bounds {T : ℝ} (hT : 0 < T) (X0 : ℝ)
 
 /-- Profile density, defined pointwise by `radialDensity r p.1 (P.f p) (P.U p)`. -/
 noncomputable def profileDensity {D : RadialDomain} (P : Profiles D)
-    (r : HistoryRow) : Field := fun p => radialDensity r p.1 (P.f p) (P.U p)
+    (r : HistoryRow) : ProfileHistories.Field := fun p => radialDensity r p.1 (P.f p) (P.U p)
 
 /-- Profile history as an element of `HistoryRow → Field | .mass => P.M | .angular => P.I |
 .transport => P.J | .energy => P.S | .pressure => P.pressure`. -/
-noncomputable def profileHistory {D : RadialDomain} (P : Profiles D) : HistoryRow → Field
+noncomputable def profileHistory {D : RadialDomain} (P : Profiles D) :
+    HistoryRow → ProfileHistories.Field
   | .mass => P.M
   | .angular => P.I
   | .transport => P.J
@@ -888,7 +898,7 @@ theorem profileHistory_hasDerivAt {D : RadialDomain} (P : Profiles D) (r : Histo
   exact profileHistory_eq_initial_add_primitive P r (x, p.2)
 
 /-- Log pullback, defined pointwise by `F (radius X0 p.1, p.2)`. -/
-noncomputable def logPullback (X0 : ℝ) (F : Field) : Field :=
+noncomputable def logPullback (X0 : ℝ) (F : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => F (radius X0 p.1, p.2)
 
 theorem radius_hasDerivAt (X0 y : ℝ) : HasDerivAt (radius X0) (radius X0 y) y :=
@@ -940,7 +950,7 @@ theorem profileHistory_congr_up_to {D : RadialDomain} (P Q : Profiles D)
   rw [hf x hx, hu x hx]
 
 theorem logHistory_congr_slice (X0 : ℝ) (initial₁ initial₂ : HistoryRow → ℝ → ℝ)
-    (f₁ U₁ f₂ U₂ : Field) (r : HistoryRow) (y η : ℝ)
+    (f₁ U₁ f₂ U₂ : ProfileHistories.Field) (r : HistoryRow) (y η : ℝ)
     (hi : initial₁ r η = initial₂ r η)
     (hf : ∀ t : ℝ, f₁ (t, η) = f₂ (t, η))
     (hu : ∀ t : ℝ, U₁ (t, η) = U₂ (t, η)) :
@@ -962,9 +972,9 @@ open ReferencePath
 variable (N : ReferencePath.Input)
 
 /-- Ref log, given by `ReferencePath.continuation δ N.logF`. -/
-noncomputable def refLog (δ : ℝ) : Field := ReferencePath.continuation δ N.logF
+noncomputable def refLog (δ : ℝ) : ProfileHistories.Field := ReferencePath.continuation δ N.logF
 /-- Ref axial, given by `ReferencePath.continuation δ N.logU`. -/
-noncomputable def refAxial (δ : ℝ) : Field := ReferencePath.continuation δ N.logU
+noncomputable def refAxial (δ : ℝ) : ProfileHistories.Field := ReferencePath.continuation δ N.logU
 
 theorem refLog_smooth {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit) :
     ContDiffOn ℝ ∞ (refLog N δ) (logDomain parameterInterval parameterInterval_open).carrier :=
@@ -976,13 +986,13 @@ theorem refAxial_smooth {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit) :
 
 /-- F, defined pointwise by `if p.1 ≤ N.endpoint then N.refF δ p else activatedAngular T κ
 (refLog N δ) (N.logTime p.1, p.2)`. -/
-noncomputable def f (T κ δ : ℝ) : Field := fun p =>
+noncomputable def f (T κ δ : ℝ) : ProfileHistories.Field := fun p =>
   if p.1 ≤ N.endpoint then N.refF δ p else
     activatedAngular T κ (refLog N δ) (N.logTime p.1, p.2)
 
 /-- U, defined pointwise by `if p.1 ≤ N.endpoint then N.refU δ p else controlled T κ (refAxial N
 δ) (N.logTime p.1, p.2)`. -/
-noncomputable def U (T κ δ : ℝ) : Field := fun p =>
+noncomputable def U (T κ δ : ℝ) : ProfileHistories.Field := fun p =>
   if p.1 ≤ N.endpoint then N.refU δ p else
     controlled T κ (refAxial N δ) (N.logTime p.1, p.2)
 
@@ -1099,7 +1109,7 @@ theorem log_radius_mem (y : ℝ) {η : ℝ} (hη : η ∈ parameterInterval) :
   refine ⟨?_, hη⟩
   have hx : 0 < N.scale * radius N.endpoint y :=
     mul_pos N.scale_pos (mul_pos N.endpoint_pos (Real.exp_pos y))
-  linarith
+  linarith only [hx]
 
 theorem f_logPullback {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ)
     (hδT : 2 * δ < rampLimit) (κ y : ℝ) {η : ℝ} (hη : η ∈ parameterInterval) :
@@ -1216,45 +1226,45 @@ end FromReference
 /-! ## Exact shear identities and cancellation of the common damping -/
 
 /-- Actual P1, given by `-2 * deriv (fun y => Real.log (activatedAngular T κ L (y, p.2))) p.1`. -/
-noncomputable def actualP1 (T κ : ℝ) (L : Field) (p : Point) : ℝ :=
+noncomputable def actualP1 (T κ : ℝ) (L : ProfileHistories.Field) (p : Point) : ℝ :=
   -2 * deriv (fun y => Real.log (activatedAngular T κ L (y, p.2))) p.1
 
 /-- Velocity, given by `Real.sqrt (2 * radius X0 p.1) * f p`. -/
-noncomputable def velocity (X0 : ℝ) (f : Field) (p : Point) : ℝ :=
+noncomputable def velocity (X0 : ℝ) (f : ProfileHistories.Field) (p : Point) : ℝ :=
   Real.sqrt (2 * radius X0 p.1) * f p
 
 /-- Reference P2, given by `-2 * radialPartial U p / velocity X0 (referenceAngular L) p`. -/
-noncomputable def referenceP2 (X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+noncomputable def referenceP2 (X0 : ℝ) (L U : ProfileHistories.Field) (p : Point) : ℝ :=
   -2 * radialPartial U p / velocity X0 (referenceAngular L) p
 
 /-- Actual P2, given by `-2 * deriv (fun y => controlled T κ U (y, p.2)) p.1 / velocity X0
 (activatedAngular T κ L) p`. -/
-noncomputable def actualP2 (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+noncomputable def actualP2 (T κ X0 : ℝ) (L U : ProfileHistories.Field) (p : Point) : ℝ :=
   -2 * deriv (fun y => controlled T κ U (y, p.2)) p.1 /
     velocity X0 (activatedAngular T κ L) p
 
 /-- Shear slope, given by `actualP2 T κ X0 L U p / actualP1 T κ L p`. -/
-noncomputable def shearSlope (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+noncomputable def shearSlope (T κ X0 : ℝ) (L U : ProfileHistories.Field) (p : Point) : ℝ :=
   actualP2 T κ X0 L U p / actualP1 T κ L p
 
 /-- Shear size, given by `actualP1 T κ L p + actualP2 T κ X0 L U p ^ 2 / actualP1 T κ L p`. -/
-noncomputable def shearSize (T κ X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+noncomputable def shearSize (T κ X0 : ℝ) (L U : ProfileHistories.Field) (p : Point) : ℝ :=
   actualP1 T κ L p + actualP2 T κ X0 L U p ^ 2 / actualP1 T κ L p
 
 /-- Reference size, given by `referenceP1 L p + referenceP2 X0 L U p ^ 2 / referenceP1 L p`. -/
-noncomputable def referenceSize (X0 : ℝ) (L U : Field) (p : Point) : ℝ :=
+noncomputable def referenceSize (X0 : ℝ) (L U : ProfileHistories.Field) (p : Point) : ℝ :=
   referenceP1 L p + referenceP2 X0 L U p ^ 2 / referenceP1 L p
 
 theorem damping_ge (T κ y : ℝ) (hκ : κ ≤ 1) : κ ≤ damping T κ y := by
   have hs := mul_le_mul_of_nonneg_left (OutgoingSchedule.sigma_le_one (y / T))
     (sub_nonneg.mpr hκ)
   dsimp only [damping, activation]
-  nlinarith
+  nlinarith only [hs]
 
 theorem damping_pos (T κ y : ℝ) (hκ : κ ∈ Ioc (0 : ℝ) 1) : 0 < damping T κ y :=
   hκ.1.trans_le (damping_ge T κ y hκ.2)
 
-theorem actualP1_eq (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem actualP1_eq (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     actualP1 T κ L (y, η) = damping T κ y * referenceP1 L (y, η) := by
   unfold actualP1
@@ -1262,14 +1272,14 @@ theorem actualP1_eq (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L : Field}
   ring
 
 theorem actualP1_pos (T : ℝ) {κ : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J)
     (hp : 0 < referenceP1 L (y, η)) : 0 < actualP1 T κ L (y, η) := by
   rw [actualP1_eq T κ hJ hL y hη]
   exact mul_pos (damping_pos T κ y hκ) hp
 
 theorem actualP2_eq (T κ : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     actualP2 T κ X0 L U (y, η) = damping T κ y * referenceP2 X0 L U (y, η) *
       (referenceAngular L (y, η) / activatedAngular T κ L (y, η)) := by
@@ -1284,7 +1294,7 @@ theorem actualP2_eq (T κ : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
 
 /-- The reference shear ratio contains no inverse power of the damping. -/
 theorem shearSlope_eq (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX0 : 0 < X0)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J)
     (hp : referenceP1 L (y, η) ≠ 0) :
@@ -1298,7 +1308,7 @@ theorem shearSlope_eq (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX
   field_simp [hd, hp, ha]
 
 theorem shearSize_error (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (hX0 : 0 < X0)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J)
     (hp : referenceP1 L (y, η) ≠ 0) :
@@ -1312,7 +1322,7 @@ theorem shearSize_error (T : ℝ) {κ X0 : ℝ} (hκ : κ ∈ Ioc (0 : ℝ) 1) (
   field_simp; ring
 
 theorem controlled_bound {T κ M y : ℝ} (hT : 0 < T) (hκ : κ ≤ 1)
-    (hM : 0 ≤ M) (hy : 0 ≤ y) {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+    (hM : 0 ≤ M) (hy : 0 ≤ y) {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) {η : ℝ} (hη : η ∈ J)
     (hB : ∀ t ∈ Icc (0 : ℝ) y, |radialPartial F (t, η)| ≤ M) :
     |controlled T κ F (y, η) - F (y, η)| ≤ M * y * activation T κ y := by

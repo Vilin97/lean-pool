@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Topology.ContinuousMap.Bounded.Basic
+public import LeanPool.NavierStokesAndEuler.ForMathlib.BoundedContinuousFunctionShortcuts
 
 /-! Continuous families with a common compact spatial support give continuous paths in the
 space of bounded continuous functions, equipped with the uniform norm. -/
@@ -62,7 +63,7 @@ theorem continuous_boundedOfCompactSupport
       (f := fun y => u (s, y)) (fun h => hx (hs s h))
     have htx : u (t, x) = 0 := image_eq_zero_of_notMem_tsupport
       (f := fun y => u (t, y)) (fun h => hx (hs t h))
-    simpa [hsx, htx] using hε2.le
+    simpa only [hsx, htx, dist_self, ge_iff_le] using hε2.le
 
 /-- A continuous family with one common compact spatial support, bundled as a continuous
 path of bounded continuous functions. -/

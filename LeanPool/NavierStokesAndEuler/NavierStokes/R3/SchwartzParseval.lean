@@ -55,13 +55,13 @@ theorem integral_fourier_mul_conj (f g : ComplexTest) :
       ∫ x : Space, f x * conj (g x) := by
   have hg : Integrable (fun ξ : Space => conj (𝓕 (g : Space → ℂ) ξ)) :=
     (Complex.conjCLE : ℂ →L[ℝ] ℂ).integrable_comp
-      (EulerSobolev.schwartzFourier g).integrable
-  rw [integral_fourier_mul f.integrable hg]
+      ((EulerSobolev.schwartzFourier g).integrable (μ := volume))
+  rw [integral_fourier_mul (f.integrable (μ := volume)) hg]
   apply integral_congr_ae
   filter_upwards [] with x
   rw [fourier_conj_apply,
-    g.continuous.fourierInv_fourier_eq g.integrable
-      (EulerSobolev.schwartzFourier g).integrable]
+    g.continuous.fourierInv_fourier_eq (g.integrable (μ := volume))
+      ((EulerSobolev.schwartzFourier g).integrable (μ := volume))]
 
 /-- The convention with conjugation on the first factor, used by complex inner products. -/
 theorem integral_conj_fourier_mul (f g : ComplexTest) :
@@ -72,7 +72,7 @@ theorem integral_conj_fourier_mul (f g : ComplexTest) :
 /-- A Schwartz function has a finite squared `L²` norm. -/
 theorem integrable_norm_sq (f : ComplexTest) :
     Integrable (fun x : Space => ‖f x‖ ^ 2) :=
-  (memLp_two_iff_integrable_sq_norm f.continuous.aestronglyMeasurable).mp (f.memLp 2)
+  (memLp_two_iff_integrable_sq_norm f.continuous.aestronglyMeasurable).mp (f.memLp 2 volume)
 
 /-- The Fourier transform of a Schwartz function has a finite squared `L²` norm. -/
 theorem integrable_norm_sq_fourier (f : ComplexTest) :

@@ -51,7 +51,8 @@ theorem wordDerivative_comp_clm (directions : ι → P) (L : E →L[ℝ] F)
     (f : P → E) (hf : ContDiff ℝ ∞ f) {n : ℕ} (w : Fin n → ι) (x : P) :
     wordDerivative directions (L ∘ f) w x = L (wordDerivative directions f w x) :=
   congrArg (fun D : P [×n]→L[ℝ] F => D (fun j => directions (w j)))
-    (L.iteratedFDeriv_comp_left (x := x) hf.contDiffAt (by simp))
+    (L.iteratedFDeriv_comp_left (x := x) hf.contDiffAt (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true]))
 
 theorem wordDerivative_add (directions : ι → P) (f g : P → E)
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) {n : ℕ} (w : Fin n → ι) (x : P) :
@@ -59,7 +60,8 @@ theorem wordDerivative_add (directions : ι → P) (f g : P → E)
       wordDerivative directions f w x+wordDerivative directions g w x :=
   congrArg (fun D : P [×n]→L[ℝ] E => D (fun j => directions (w j)))
     (iteratedFDeriv_add_apply (x := x) (hf.contDiffAt.of_le (by
-        simp)) (hg.contDiffAt.of_le (by simp)))
+        simp)) (hg.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+            WithTop.natCast_ne_top, not_false_eq_true])))
 
 theorem wordDerivative_sub (directions : ι → P) (f g : P → E)
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) {n : ℕ} (w : Fin n → ι) (x : P) :
@@ -67,7 +69,8 @@ theorem wordDerivative_sub (directions : ι → P) (f g : P → E)
       wordDerivative directions f w x-wordDerivative directions g w x :=
   congrArg (fun D : P [×n]→L[ℝ] E => D (fun j => directions (w j)))
     (iteratedFDeriv_sub_apply (x := x) (hf.contDiffAt.of_le (by
-        simp)) (hg.contDiffAt.of_le (by simp)))
+        simp)) (hg.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+            WithTop.natCast_ne_top, not_false_eq_true])))
 
 /-- Removing the last word letter differentiates the function in that direction first. -/
 theorem wordDerivative_snoc (directions : ι → P) (f : P → E) (hf : ContDiff ℝ ∞ f)
@@ -141,7 +144,9 @@ theorem wordSum_sub_const_succ (directions : ι → P) (f : P → E)
     (hf : ContDiff ℝ ∞ f) (c : E) (n : ℕ) (x : P) :
     wordSum directions (f-fun _ => c) (n+1) x = wordSum directions f (n+1) x := by
   unfold wordSum wordDerivative
-  rw [iteratedFDeriv_sub_apply (hf.contDiffAt.of_le (by simp)) contDiffAt_const]
+  rw [iteratedFDeriv_sub_apply (hf.contDiffAt.of_le (by simp only [Nat.cast_add, Nat.cast_one,
+      WithTop.le_coe_top, ne_eq, WithTop.add_eq_top, WithTop.natCast_ne_top, WithTop.one_ne_top,
+      or_self, not_false_eq_true])) contDiffAt_const]
   simp only [iteratedFDeriv_succ_const, Pi.zero_apply, sub_zero]
 
 end EulerParameterWordGevrey

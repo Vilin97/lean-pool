@@ -29,8 +29,9 @@ theorem partialDerivative_sum (f : Fin 3 → Space → ℝ)
       ∑ i : Fin 3, partialDerivative (f i) j x := by
   unfold partialDerivative
   rw [(HasFDerivAt.fun_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin 3))) =>
-    (((hf i).differentiable (by simp)).differentiableAt).hasFDerivAt)).fderiv]
-  simp
+    (((hf i).differentiable
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)).differentiableAt).hasFDerivAt)).fderiv]
+  simp only [sum_apply]
 
 theorem laplacian_partialDerivative (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
     (i : Fin 3) (x : Space) :
@@ -44,10 +45,12 @@ theorem laplacian_partialDerivative (f : Space → ℝ) (hf : ContDiff ℝ ∞ f
   intro j _
   have heq : partialDerivative (partialDerivative f i) j =
       partialDerivative (partialDerivative f j) i :=
-    funext fun y => partialDerivative_comm f (hf.of_le (by simp)) i j y
+    funext fun y => partialDerivative_comm f (hf.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.ofNat_ne_top, not_false_eq_true])) i j y
   rw [heq]
   exact partialDerivative_comm (partialDerivative f j)
-    ((contDiff_partialDerivative f hf j).of_le (by simp)) i j x
+    ((contDiff_partialDerivative f hf j).of_le (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.ofNat_ne_top, not_false_eq_true])) i j x
 
 /-- Differentiating a harmonic function preserves harmonicity on the same open set. -/
 theorem partialDerivative_harmonic_on (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
@@ -60,7 +63,7 @@ theorem partialDerivative_harmonic_on (f : Space → ℝ) (hf : ContDiff ℝ ∞
     exact hh y hy
   unfold partialDerivative
   rw [heq.fderiv_eq]
-  simp
+  simp only [fderiv_fun_const, Pi.zero_apply, zero_apply]
 
 /-- Word derivative as an element of `word, f => partialDerivative (wordDerivative word f) i`. -/
 def wordDerivative : List (Fin 3) → (Space → ℝ) → Space → ℝ

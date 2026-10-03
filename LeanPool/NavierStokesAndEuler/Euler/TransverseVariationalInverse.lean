@@ -50,7 +50,8 @@ variable {E U : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Complet
 abbrev referencePlane (m₀ : E) : Submodule ℝ E := (ℝ ∙ m₀)ᗮ
 
 /-- The actual pulled-back normal used by the packet construction. -/
-def movingNormal (F : E ≃L[ℝ] E) (m₀ : E) : E := F.symm.toContinuousLinearMap.adjoint m₀
+def movingNormal (F : E ≃L[ℝ] E) (m₀ : E) : E :=
+  adjoint (𝕜 := ℝ) (E := E) (F := E) F.symm.toContinuousLinearMap m₀
 
 /-- Bounded recovery of fixed-plane coordinates from a physical displacement. -/
 def coordinates (F : E ≃L[ℝ] E) (m₀ : E) : E →L[ℝ] referencePlane m₀ :=
@@ -176,8 +177,8 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 /-- Derivatives of actual zero-endpoint displacements tangent to the moving plane. -/
 def transverseDerivatives (T : ℝ) (hT : 0 ≤ T) (m : Icc (0 : ℝ) T → E) :
     Submodule ℝ (TimeLp T E) where
-  carrier := {u | initialTrace T hT u = 0 ∧
-    ∀ t, ⟪m t, terminalPrimitive T hT u t⟫_ℝ = 0}
+  carrier := {u | initialTrace (E := E) T hT u = 0 ∧
+    ∀ t, ⟪m t, terminalPrimitive (E := E) T hT u t⟫_ℝ = 0}
   zero_mem' := by
     constructor
     · exact map_zero _
@@ -201,8 +202,8 @@ def transverseDerivatives (T : ℝ) (hT : 0 ≤ T) (m : Icc (0 : ℝ) T → E) :
 /-- The two endpoint and moving tangency conditions are closed constraints. -/
 theorem transverseDerivatives_closed (T : ℝ) (hT : 0 ≤ T) (m : Icc (0 : ℝ) T → E) :
     IsClosed (transverseDerivatives T hT m : Set (TimeLp T E)) := by
-  change IsClosed {u : TimeLp T E | initialTrace T hT u = 0 ∧
-    ∀ t, ⟪m t, terminalPrimitive T hT u t⟫_ℝ = 0}
+  change IsClosed {u : TimeLp T E | initialTrace (E := E) T hT u = 0 ∧
+    ∀ t, ⟪m t, terminalPrimitive (E := E) T hT u t⟫_ℝ = 0}
   rw [Set.ofPred_and, Set.ofPred_forall]
   apply (isClosed_eq (initialTrace T hT).continuous continuous_const).inter
   apply isClosed_iInter
@@ -296,7 +297,7 @@ theorem transverseDisplacement_initial (f : TimeLp T E) :
 /-- The solved displacement vanishes at the terminal endpoint. -/
 theorem transverseDisplacement_terminal (f : TimeLp T E) :
     transverseDisplacement T hT m H K hK hH hsmall f ⟨T, hT, le_rfl⟩ = 0 := by
-  change terminalPrimitive T hT
+  change terminalPrimitive (E := E) T hT
     (transverseSolver T hT m H K hK hH hsmall f : TimeLp T E) ⟨T, hT, le_rfl⟩ = 0
   exact terminalPrimitive_terminal T hT
     (transverseSolver T hT m H K hK hH hsmall f : TimeLp T E)
@@ -396,7 +397,7 @@ theorem exists_transverse_frame_displacement
     let mF := fun t => EulerTransverseFrameCoordinates.movingNormal (F t) m₀
     ∃ (u : transverseDerivatives T hT mF)
       (η : C(Icc (0 : ℝ) T, E)) (ξ : C(Icc (0 : ℝ) T, U)),
-      η = terminalPrimitive T hT (u : TimeLp T E) ∧
+      η = terminalPrimitive (E := E) T hT (u : TimeLp T E) ∧
       η ⟨0, le_rfl, hT⟩ = 0 ∧ η ⟨T, hT, le_rfl⟩ = 0 ∧
       ξ ⟨0, le_rfl, hT⟩ = 0 ∧ ξ ⟨T, hT, le_rfl⟩ = 0 ∧
       (∀ t, F t (R (ξ t) : E) = η t) ∧

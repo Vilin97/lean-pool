@@ -153,10 +153,13 @@ theorem directionalDerivative_line_lipschitz
   have hd : ∀ s : ℝ, HasDerivAt (fun u : ℝ => fderiv ℝ f (u • a) a)
       ((fderiv ℝ (fderiv ℝ f) (s • a) a) a) s := by
     intro s
-    have hdf := (((hf.fderiv_right (m := ∞) (by simp)).differentiable
-      (by simp)) (s • a)).hasFDerivAt
+    have hdf := (((hf.fderiv_right (m := ∞)
+      (by simp only [ENat.coe_top_add_one, le_refl])).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      (s • a)).hasFDerivAt
     have hline := hdf.comp_hasDerivAt s ((hasDerivAt_id s).smul_const a)
-    simpa using hline.clm_apply (hasDerivAt_const s a)
+    simpa only [id_eq, Function.comp_apply, one_smul, ContinuousLinearMap.map_zero, add_zero]
+      using hline.clm_apply (hasDerivAt_const s a)
   have hb : ∀ s ∈ (Set.univ : Set ℝ),
       ‖(fderiv ℝ (fderiv ℝ f) (s • a) a) a‖ ≤ (M : ℝ) * ‖a‖ ^ 2 := by
     intro s _
@@ -312,10 +315,7 @@ theorem liftedPressure_unique (κ : ℝ) (m : Vector3)
     apply (coerciveEquiv (projectedOperator S G) c hc
       (projectedOperator_coercive S G c hG)).injective
     simp only [coerciveEquiv_apply]
-    change S.orthogonalProjectionOnto (G p) =
-      S.orthogonalProjectionOnto (G (pressureSolver S G c hc hG f : LiftL2 period))
-    rw [pressureSolver_equation]
-    exact Subtype.ext heq
+    exact (Subtype.ext heq).trans (pressureSolver_equation S G c hc hG f).symm
   exact congrArg Subtype.val hsub
 
 theorem liftedPressure_translation (κ : ℝ) (m : Vector3) (a : LiftDomain period)
@@ -362,12 +362,13 @@ theorem liftedPressure_hasDerivAt (κ : ℝ) (m : Vector3)
     (fun t => S.orthogonalProjectionOnto (f t)) 0 (projectedOperator S G')
     (S.orthogonalProjectionOnto f')
     (hasDerivAt_projectedOperator S G 0 G' hGder)
-    (S.orthogonalProjectionOnto.hasFDerivAt.comp_hasDerivAt 0 hf)
+    (S.orthogonalProjectionOnto.hasFDerivAt.comp_hasDerivAt (f := f) 0 hf)
   have hval := S.subtypeL.hasFDerivAt.comp_hasDerivAt 0 hsol
   convert hval using 1
   · rfl
-  · simp [liftedPressure, pressureSolver, projectedInverse, projectedOperator,
-      S, G, G', ContinuousLinearMap.comp_apply, map_sub]
+  · simp only [liftedPressure, pressureSolver, projectedInverse, projectedOperator,
+      ContinuousLinearMap.comp_apply, ContinuousLinearMap.map_sub, AddSubgroupClass.coe_sub,
+      Submodule.coe_subtypeL, Submodule.subtype_apply, S, G, G']
 
 theorem pressure_translation_hasDerivAt (κ : ℝ) (m : Vector3) (a : LiftTangent)
     (A : LiftDomain period → Vector3 →L[ℝ] Vector3)

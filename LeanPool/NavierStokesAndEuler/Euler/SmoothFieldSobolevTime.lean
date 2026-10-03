@@ -50,8 +50,7 @@ theorem continuous_sobolev (A : K → SmoothL2Field Space)
     rw [EulerLpTranslation.translation_zero] at h
     simpa only [EulerLpTranslation.translation,EulerMeanSolenoidal.translation] using h
   rw [he]
-  exact (EulerLpDerivative.multilinearBundling (P := Space) (V := Space) volume n).continuous.comp
-      (hA n)
+  exact (map_continuous _).comp (hA n)
 
 /-- Sobolev path, given by `⟨fun t => ordinarySobolev q (A t).toLp (A
 t).translation_contDiff,continuous_sobolev A hA q⟩`. -/

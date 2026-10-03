@@ -246,7 +246,9 @@ theorem block_inverse_gevrey (directions : ι → P) (q : ℕ)
         1).factorial : ℝ) ^ 2))
     (d : ℕ) (hforce : ∀ n x, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) (x : P) : block directions q u n x ≤ majorant R (d+1) n := by
-  have hR0 : 0 ≤ R := by nlinarith
+  have hR0 : 0 ≤ R :=
+    (mul_nonneg (mul_nonneg zero_le_two (zero_le_one.trans hM)) (add_nonneg hRc zero_le_one)).trans
+      hR
   have hI : 0 ≤ I := (norm_nonneg (inverse x)).trans (hinv x)
   have hB : 0 ≤ B := (baseSize_nonneg directions q A x).trans (hbase x)
   have hcost := sobolevInverseCost_nonneg I B hI hB q
@@ -276,6 +278,6 @@ theorem block_inverse_gevrey (directions : ι → P) (q : ℕ)
   have h₁ := mul_le_mul_of_nonneg_right hMC hS
   have h₂ := mul_le_mul_of_nonneg_right hMD (majorant_nonneg R hR0 d k)
   change block directions q u k x ≤ M*(majorant R d k+S)
-  nlinarith
+  linarith only [hb, h₁, h₂]
 
 end EulerParameterWordGevrey

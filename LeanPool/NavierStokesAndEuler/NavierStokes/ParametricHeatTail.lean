@@ -51,17 +51,17 @@ include hJ hm hb
 omit hJ in
 theorem chain_integrable (n : ℕ) {ν : ℝ} (hν : 0 ≤ ν) :
     Integrable (J n ν) μ := by
-  obtain ⟨b, hi, hbound⟩ := hb n (ν + 1) (by linarith)
+  obtain ⟨b, hi, hbound⟩ := hb n (ν + 1) (by linarith only [hν])
   exact hi.mono' (hm n ν hν)
-    (hbound.mono fun t ht => ht ν ⟨hν, by linarith⟩)
+    (hbound.mono fun t ht => ht ν ⟨hν, by linarith only⟩)
 
 theorem integral_chain_continuousOn (n : ℕ) :
     ContinuousOn (fun ν => ∫ t, J n ν t ∂μ) (Ici 0) := by
   intro ν hν
-  obtain ⟨b, hi, hbound⟩ := hb n (ν + 1) (by linarith [show 0 ≤ ν from hν])
+  obtain ⟨b, hi, hbound⟩ := hb n (ν + 1) (by linarith only [hν, show 0 ≤ ν from hν])
   have hev : ∀ᶠ u in 𝓝[Ici 0] ν, u ∈ Icc (0 : ℝ) (ν + 1) := by
     filter_upwards [self_mem_nhdsWithin,
-      (eventually_lt_nhds (show ν < ν + 1 by linarith)).filter_mono nhdsWithin_le_nhds]
+      (eventually_lt_nhds (show ν < ν + 1 by linarith only)).filter_mono nhdsWithin_le_nhds]
       with u hu hu'
     exact ⟨hu, hu'.le⟩
   apply tendsto_integral_filter_of_dominated_convergence b
@@ -73,17 +73,17 @@ theorem integral_chain_continuousOn (n : ℕ) :
 
 theorem integral_chain_hasDerivAt (n : ℕ) {ν : ℝ} (hν : 0 < ν) :
     HasDerivAt (fun u => ∫ t, J n u t ∂μ) (∫ t, J (n + 1) ν t ∂μ) ν := by
-  obtain ⟨b, hi, hbound⟩ := hb (n + 1) (2 * ν + 1) (by linarith)
+  obtain ⟨b, hi, hbound⟩ := hb (n + 1) (2 * ν + 1) (by linarith only [hν])
   have hball : ∀ u ∈ Metric.ball ν (ν / 2),
       0 < u ∧ u ≤ 2 * ν + 1 := by
     intro u hu
     have hd : |u - ν| < ν / 2 := by
       simpa only [Metric.mem_ball, Real.dist_eq] using hu
     rcases abs_lt.mp hd with ⟨hl, hr⟩
-    constructor <;> linarith
+    constructor <;> linarith only [hν, hl, hr]
   exact (hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (F := fun u t => J n u t) (F' := fun u t => J (n + 1) u t)
-    (bound := b) (μ := μ) (Metric.ball_mem_nhds ν (show 0 < ν / 2 by linarith))
+    (bound := b) (μ := μ) (Metric.ball_mem_nhds ν (show 0 < ν / 2 by linarith only [hν]))
     (by
       filter_upwards [isOpen_Ioi.mem_nhds hν] with u hu
       exact hm n u (show 0 < u from hu).le)
@@ -178,7 +178,7 @@ theorem jetProduct_bound {a b A B : ℕ → ℝ} {X : ℝ} (hX : 1 ≤ X)
         _ ≤ A 0 * B 0 / X := by
           rw [div_mul_div_comm]
           exact div_le_div_of_nonneg_left (mul_nonneg (hA 0) (hB 0)) hXp
-            (by nlinarith)
+            (by nlinarith only [hX])
   | succ n ih =>
       calc
         _ ≤ |jetProduct (fun i => a (i + 1)) b n| +
@@ -240,13 +240,14 @@ theorem correctionJet_hasDerivWithinAt {h K ν X : ℝ} (hh : 0 < h)
   cases n with
   | zero =>
       have hd := (((RadialHeatProfile.profile_hasDerivWithinAt (a := 1 + h)
-        (by linarith) hz).comp ν hi hmap).sub_const 1).const_mul (switch K X)
+        (by linarith) hz).comp (h := fun u : ℝ => 2 * u / X) ν hi hmap).sub_const 1).const_mul
+          (switch K X)
       convert! hd using 1
       simp only [correctionJet]
       ring
   | succ n =>
       have hd := ((RadialHeatProfile.profileJet_hasDerivWithinAt (a := 1 + h)
-        (by linarith) (n + 1) hz).comp ν hi hmap).const_mul
+        (by linarith only [hh]) (n + 1) hz).comp (h := fun u : ℝ => 2 * u / X) ν hi hmap).const_mul
           (switch K X * (2 / X) ^ (n + 1))
       convert! hd using 1
       simp only [correctionJet, pow_succ]
@@ -289,8 +290,8 @@ theorem correctionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
       have hz : 0 ≤ 2 * ν / X := div_nonneg (mul_nonneg (by norm_num) hν.1) hXp.le
       have hj : |RadialHeatProfile.profileJet (1 + h) (n + 1) (2 * ν / X)| ≤
           heatJetBound h (n + 1) := by
-        rw [← RadialHeatProfile.iteratedDerivWithin_profile (by linarith) (n + 1) hz]
-        exact RadialHeatProfile.profile_derivative_bound (by linarith) (n + 1) hz
+        rw [← RadialHeatProfile.iteratedDerivWithin_profile (by linarith only [hh]) (n + 1) hz]
+        exact RadialHeatProfile.profile_derivative_bound (by linarith only [hh]) (n + 1) hz
       have hp : (2 / X) ^ (n + 1) ≤ 2 ^ (n + 1) / X := by
         rw [div_pow]
         exact div_le_div_of_nonneg_left (by positivity) hXp (le_self_pow₀ hX (by omega))
@@ -558,7 +559,7 @@ theorem tailWeight_bound (d : TailData) {K : ℝ} (hK : 0 < K) (square : Bool)
 theorem nuConstant_nonneg (d : TailData) (square : Bool) {q : ℝ}
     (hq : tailDecay d square + q < 0) (n : ℕ) : 0 ≤ nuConstant d square q n := by
   exact div_nonneg (mul_nonneg (tailSize_nonneg d square)
-    (editBound_nonneg d.h_pos (by norm_num) square n)) (by linarith)
+    (editBound_nonneg d.h_pos (by norm_num) square n)) (by linarith only [hq])
 
 theorem nuDebtJet_derivative (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool)
     {q : ℝ} (hq : tailDecay d square + q < 0) (n : ℕ) {ν : ℝ} (hν : 0 ≤ ν) :
@@ -649,10 +650,10 @@ theorem diffusion_contDiff : ContDiff ℝ ∞ diffusion :=
 
 theorem diffusion_mem {eta : ℝ} (hη : eta ∈ Icc (-1 : ℝ) 1) :
     diffusion eta ∈ Icc (0 : ℝ) 1 := by
-  have hp := mul_nonneg (show 0 ≤ 1 - eta by linarith [hη.2])
-    (show 0 ≤ 1 + eta by linarith [hη.1])
+  have hp := mul_nonneg (show 0 ≤ 1 - eta by linarith only [hη, hη.2])
+    (show 0 ≤ 1 + eta by linarith only [hη, hη.1])
   dsimp [diffusion]
-  constructor <;> nlinarith [sq_nonneg eta]
+  constructor <;> nlinarith only [hp, sq_nonneg eta]
 
 theorem diffusion_hasDerivAt (eta : ℝ) : HasDerivAt diffusion (-2 * eta) eta := by
   convert! (hasDerivAt_const eta (1 : ℝ)).sub ((hasDerivAt_id eta).pow 2) using 1;
@@ -750,15 +751,15 @@ theorem etaDebt_jet_bound (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool
 
 theorem pressure_decay (d : TailData) : tailDecay d true + (-1) < 0 := by
   dsimp [tailDecay, exponent]
-  linarith [d.h_pos]
+  linarith only [d.h_pos]
 
 theorem energy_decay (d : TailData) : tailDecay d true + 0 < 0 := by
   dsimp [tailDecay, exponent]
-  linarith [d.h_pos]
+  linarith only [d.h_pos]
 
 theorem angular_decay (d : TailData) : tailDecay d false + (1 / 2) < 0 := by
   dsimp [tailDecay, exponent]
-  linarith [d.h_pos]
+  linarith only [d.h_pos]
 
 theorem physicalPressure_contDiffOn (d : TailData) {K : ℝ} (hK : 1 ≤ K) :
     ContDiffOn ℝ ∞ (physicalPressure d K) (Icc (-1 : ℝ) 1) := by
@@ -855,16 +856,16 @@ theorem exists_physical_debt_jet_bounds (d : TailData) (n : ℕ) :
   have hs : 0 ≤ CS := etaConstant_nonneg d true (energy_decay d) n
   have hi : 0 ≤ CI := mul_nonneg (Real.sqrt_nonneg 2)
     (etaConstant_nonneg d false (angular_decay d) n)
-  refine ⟨1 + CP + CS + CI, by linarith, ?_⟩
+  refine ⟨1 + CP + CS + CI, by linarith only [hp, hs, hi], ?_⟩
   intro K hK eta hη
   have hKp : 0 < K := lt_of_lt_of_le zero_lt_one hK
   refine ⟨(physicalPressure_jet_bound d hK n hη).trans ?_,
     (physicalEnergy_jet_bound d hK n hη).trans ?_,
     (physicalAngular_jet_bound d hK n hη).trans ?_⟩
-  · exact div_le_div_of_nonneg_right (show CP ≤ 1 + CP + CS + CI by linarith) hKp.le
+  · exact div_le_div_of_nonneg_right (show CP ≤ 1 + CP + CS + CI by linarith only [hs, hi]) hKp.le
   · change CS ≤ 1 + CP + CS + CI
-    linarith
-  · exact mul_le_mul_of_nonneg_right (show CI ≤ 1 + CP + CS + CI by linarith)
+    linarith only [hp, hi]
+  · exact mul_le_mul_of_nonneg_right (show CI ≤ 1 + CP + CS + CI by linarith only [hp, hs])
       (Real.sqrt_nonneg K)
 
 /-- A single constant controls values and actual first within derivatives.
@@ -879,19 +880,19 @@ theorem exists_physical_debt_C1_bounds (d : TailData) :
       |derivWithin (physicalAngular d K) (Icc (-1 : ℝ) 1) eta| ≤ C * Real.sqrt K := by
   obtain ⟨C0, hC0, hb0⟩ := exists_physical_debt_jet_bounds d 0
   obtain ⟨C1, hC1, hb1⟩ := exists_physical_debt_jet_bounds d 1
-  refine ⟨C0 + C1, by linarith, ?_⟩
+  refine ⟨C0 + C1, by linarith only [hC0, hC1], ?_⟩
   intro K hK eta hη
   have hKp : 0 < K := lt_of_lt_of_le zero_lt_one hK
   rcases hb0 K hK eta hη with ⟨hp0, hs0, hi0⟩
   rcases hb1 K hK eta hη with ⟨hp1, hs1, hi1⟩
   simp only [iteratedDerivWithin_zero, iteratedDerivWithin_one] at hp0 hs0 hi0 hp1 hs1 hi1
   refine ⟨hp0.trans ?_, hp1.trans ?_, hs0.trans ?_, hs1.trans ?_, hi0.trans ?_, hi1.trans ?_⟩
-  · exact div_le_div_of_nonneg_right (by linarith) hKp.le
-  · exact div_le_div_of_nonneg_right (by linarith) hKp.le
-  · linarith
-  · linarith
-  · exact mul_le_mul_of_nonneg_right (by linarith) (Real.sqrt_nonneg K)
-  · exact mul_le_mul_of_nonneg_right (by linarith) (Real.sqrt_nonneg K)
+  · exact div_le_div_of_nonneg_right (by linarith only [hC1]) hKp.le
+  · exact div_le_div_of_nonneg_right (by linarith only [hC0]) hKp.le
+  · linarith only [hC1]
+  · linarith only [hC0]
+  · exact mul_le_mul_of_nonneg_right (by linarith only [hC1]) (Real.sqrt_nonneg K)
+  · exact mul_le_mul_of_nonneg_right (by linarith only [hC0]) (Real.sqrt_nonneg K)
 
 /-! ## Endpoint jets and the velocity in physical units -/
 
@@ -912,7 +913,7 @@ theorem multiplier_nu_contDiffOn {h K X : ℝ} (hh : 0 < h) (hX : 0 < X) :
     intro ν hν
     exact div_nonneg (mul_nonneg (by norm_num) hν) hX.le
   exact contDiffOn_const.add (contDiffOn_const.mul
-    (((RadialHeatProfile.profile_contDiffOn (a := 1 + h) (by linarith)).comp
+    (((RadialHeatProfile.profile_contDiffOn (a := 1 + h) (by linarith only [hh])).comp
       ((contDiffOn_const.mul contDiffOn_id).div_const X) hmap).sub contDiffOn_const))
 
 theorem multiplier_nu_jet {h K X ν : ℝ} (hh : 0 < h) (hX : 0 < X)
@@ -933,7 +934,7 @@ theorem multiplier_nu_jet_bound {h K X ν : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
   exact correctionJet_bound hh hX hν (n + 1)
 
 theorem multiplier_zero {h : ℝ} (hh : 0 < h) (K X : ℝ) : multiplier h 0 K X = 1 := by
-  simp [multiplier, RadialHeatProfile.profile_zero (a := 1 + h) (by linarith)]
+  simp [multiplier, RadialHeatProfile.profile_zero (a := 1 + h) (by linarith only [hh])]
 
 theorem outgoing_debts_integrable (d : TailData) {K ν : ℝ} (hK : 0 < K) (hν : 0 ≤ ν)
     (eta : ℝ) :
@@ -987,7 +988,7 @@ theorem physicalEdit_joint_contDiffOn (d : TailData) {K : ℝ} (hK : 0 < K) :
   have hr : ContDiffOn ℝ ∞ (fun p : ℝ × ℝ => 2 * diffusion p.2 / p.1)
       (Ioi 0 ×ˢ Icc (-1 : ℝ) 1) :=
     (contDiffOn_const.mul hD).div contDiffOn_fst (fun p hp => (show 0 < p.1 from hp.1).ne')
-  have hH := (RadialHeatProfile.profile_contDiffOn (a := 1 + d.h) (by linarith [d.h_pos])).comp
+  have hH := (RadialHeatProfile.profile_contDiffOn (a := 1 + d.h) (by linarith only [d.h_pos])).comp
     hr (show MapsTo (fun p : ℝ × ℝ => 2 * diffusion p.2 / p.1)
       (Ioi 0 ×ˢ Icc (-1 : ℝ) 1) (Ici 0) from fun p hp =>
         div_nonneg (mul_nonneg (by norm_num) (diffusion_mem hp.2).1) (show 0 < p.1 from hp.1).le)
@@ -1000,7 +1001,7 @@ theorem diffusion_of_physical_coordinates {q τ z : ℝ} (hq : 0 < q) (hrel : q 
   unfold diffusion
   rw [div_pow, Real.sq_sqrt hq.le]
   field_simp [hq.ne']
-  linarith
+  linarith only [hrel]
 
 theorem heat_ratio_physical {q s τ : ℝ} (hq : 0 < q) (hs : 0 < s) :
     2 * (τ / q) / (s / q) = 2 * τ / s := by
@@ -1051,8 +1052,8 @@ theorem switch_pos {K X : ℝ} (hK : 0 < K) (hX : K < X) : 0 < switch K X := by
 theorem profile_first_jet_neg {h z : ℝ} (hh : 0 < h) (hz : 0 ≤ z) :
     RadialHeatProfile.profileJet (1 + h) 1 z < 0 := by
   have hg : 0 < (Real.Gamma (1 + h))⁻¹ :=
-    inv_pos.mpr (Real.Gamma_pos_of_pos (by linarith))
-  have hm := RadialHeatProfile.moment_pos (a := 1 + h) (by linarith) 1 hz
+    inv_pos.mpr (Real.Gamma_pos_of_pos (by linarith only [hh]))
+  have hm := RadialHeatProfile.moment_pos (a := 1 + h) (by linarith only [hh]) 1 hz
   have he : RadialHeatProfile.profileJet (1 + h) 1 z =
       ((Real.Gamma (1 + h))⁻¹ * (-h)) * RadialHeatProfile.moment (1 + h) 1 z := by
     simp only [RadialHeatProfile.profileJet, RadialHeatProfile.derivativeCoeff,

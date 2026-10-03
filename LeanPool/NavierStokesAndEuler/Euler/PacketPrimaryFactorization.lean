@@ -40,7 +40,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 /-- Physical generator, bundling `toFun`, `continuous_toFun`, `have`, `have`. -/
 def physicalGenerator (D : Data U) (x : Space) : C(Icc (0 : ℝ) D.T,Space →L[ℝ] Space) where
   toFun t := -(D.M.field t x)+(2/‖D.normal.field t x‖^2) •
-    ((rankOne ℝ (D.normal.field t x) (D.normal.field t x)).comp (D.M.field t x))
+    ((rankOne ℝ (E := Space) (F := Space) (D.normal.field t x) (D.normal.field t x)).comp
+      (D.M.field t x))
   continuous_toFun := by
     have hM : Continuous (fun t => D.M.field t x) := by
       convert! (pointPath D.M x).continuous using 1
@@ -52,7 +53,7 @@ def physicalGenerator (D : Data U) (x : Space) : C(Icc (0 : ℝ) D.T,Space →L[
       exact (pointPath_apply D.normal x t).symm
     exact hM.neg.add ((continuous_const.div (hm.norm.pow 2)
       (fun t => pow_ne_zero 2 (norm_ne_zero_iff.mpr (HistoryData.normal_ne_zero t x)))).smul
-        ((((rankOne ℝ).continuous.comp hm).clm_apply hm).clm_comp hM))
+        ((((rankOne ℝ (E := Space) (F := Space)).continuous.comp hm).clm_apply hm).clm_comp hM))
 
 theorem physicalGenerator_apply (D : Data U) (x : Space) (t : Icc (0 : ℝ) D.T) (v : Space) :
     physicalGenerator D x t v = -D.M.field t x v +

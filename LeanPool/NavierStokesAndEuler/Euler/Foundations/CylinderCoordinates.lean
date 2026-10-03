@@ -28,22 +28,22 @@ noncomputable def coordinateLinearEquiv : Domain 4 ≃ₗ[ℝ] LiftTangent where
   invFun p := WithLp.toLp 2 (Fin.cons p.2 (fun i => p.1 i))
   left_inv z := by
     ext i
-    cases i using Fin.cases <;> simp
+    cases i using Fin.cases <;> simp only [Fin.isValue, Fin.cons_zero, Fin.cons_succ]
   right_inv p := by
     apply Prod.ext
     · ext i
-      simp
-    · simp
+      simp only [Fin.cons_succ]
+    · simp only [Fin.isValue, Fin.cons_zero]
   map_add' z w := by
     apply Prod.ext
     · ext i
-      simp
-    · simp
+      simp only [PiLp.add_apply, Fin.isValue, Prod.mk_add_mk]
+    · simp only [Fin.isValue, PiLp.add_apply, Prod.mk_add_mk]
   map_smul' c z := by
     apply Prod.ext
     · ext i
-      simp
-    · simp
+      simp only [PiLp.smul_apply, smul_eq_mul, RingHom.id_apply, Fin.isValue, Prod.smul_mk]
+    · simp only [Fin.isValue, PiLp.smul_apply, smul_eq_mul, RingHom.id_apply, Prod.smul_mk]
 
 /-- The coordinate isomorphism, continuous in both directions. -/
 noncomputable def coordinateEquiv : Domain 4 ≃L[ℝ] LiftTangent :=
@@ -97,7 +97,8 @@ theorem coordinateEquiv_fundamental_measurePreserving (a : ℝ) :
   have he : coordinateEquiv ⁻¹' ((Set.univ : Set Vector3) ×ˢ Set.Ioc a (a + period)) =
       {z : Domain 4 | z 0 ∈ Set.Ioc a (a + period)} := by
     ext z
-    simp
+    simp only [Set.mem_preimage, coordinateEquiv_apply, Fin.isValue, Set.mem_prod, Set.mem_univ,
+        Set.mem_Ioc, true_and, Set.mem_ofPred_eq]
   rw [he] at h
   simpa only [stripMeasure, fundamentalMeasure, ← Measure.prod_restrict,
     Measure.restrict_univ] using h
@@ -135,22 +136,22 @@ theorem chartSupport_cover : ({z : EulerSobolev.Domain 4 | |z 0| ≤ 2 * period}
   by_cases h₀ : z 0 ≤ -2 * period
   · apply Set.mem_iUnion.2 ⟨0, ?_⟩
     norm_num
-    constructor <;> linarith
+    constructor <;> linarith only [hT, hz', h₀]
   by_cases h₁ : z 0 ≤ -period
   · apply Set.mem_iUnion.2 ⟨1, ?_⟩
     norm_num
-    constructor <;> linarith
+    constructor <;> linarith only [h₀, h₁]
   by_cases h₂ : z 0 ≤ 0
   · apply Set.mem_iUnion.2 ⟨2, ?_⟩
     norm_num
-    constructor <;> linarith
+    constructor <;> linarith only [h₁, h₂]
   by_cases h₃ : z 0 ≤ period
   · apply Set.mem_iUnion.2 ⟨3, ?_⟩
     norm_num
-    constructor <;> linarith
+    constructor <;> linarith only [h₂, h₃]
   · apply Set.mem_iUnion.2 ⟨4, ?_⟩
     norm_num
-    constructor <;> linarith
+    constructor <;> linarith only [h₃, hz']
 
 theorem chartSupport_measure_le :
     volume.restrict (({z : EulerSobolev.Domain 4 | |z 0| ≤ 2 * period})) ≤ chartMeasure period :=

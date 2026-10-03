@@ -49,12 +49,25 @@ def FiniteFamily.rawSourceTower (F : FiniteFamily period hT A)
     (Icc (0 : ℝ) T) (F.rawSourcePath period (q+6) (by omega))
   value_eq q t := F.rawSourcePath_value_base period C (q+6) (by omega) t
 
+theorem compLeftContinuous_coe_apply {X M N : Type*} [TopologicalSpace X]
+    [NormedAddCommGroup M] [NormedSpace ℝ M] [NormedAddCommGroup N] [NormedSpace ℝ N]
+    (g : M →L[ℝ] N) (f : C(X, M)) (x : X) :
+    (g.compLeftContinuous ℝ X f) x = g (f x) := rfl
+
+theorem valueOperator_apply_eq_value (q : ℕ) (u : SobolevSpace period q) :
+    valueOperator period q u = value period u := rfl
+
+theorem FiniteFamily.rawSourceTower_field_apply (F : FiniteFamily period hT A)
+    (C : ComparisonData period hT A) (t : Icc (0 : ℝ) T) :
+    (F.rawSourceTower period C).field t = value period (F.rawSourcePath period 6 le_rfl t) := by
+  rw [FiniteFamily.rawSourceTower, compLeftContinuous_coe_apply, valueOperator_apply_eq_value]
+
 theorem FiniteFamily.rawSourcePath_eq_realization (F : FiniteFamily period hT A)
     (C : ComparisonData period hT A) (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     F.rawSourcePath period q hq t = (F.rawSourceTower period C).realization q t := by
   apply value_injective period
-  exact (F.rawSourcePath_value_base period C q hq t).trans
-    ((F.rawSourceTower period C).value_eq q t).symm
+  rw [(F.rawSourceTower period C).value_eq q t, FiniteFamily.rawSourceTower_field_apply]
+  exact F.rawSourcePath_value_base period C q hq t
 
 /-- The literal signed pressure equation defines a continuous all-order
 field, subsequently identified with the genuine time derivative. -/
@@ -75,16 +88,21 @@ def FiniteFamily.timeDerivativeTower (F : FiniteFamily period hT A)
       (F.pressureTower period C).value_eq]
     rfl
 
+theorem coefficientSobolevOperator_atOrder_jet (A : Data period T) (q : ℕ)
+    (t : Icc (0 : ℝ) T) :
+    coefficientSobolevOperator period ((A.atOrder period q).metric.jet t) =
+      coefficientSobolevOperator period (A.metric.jet q t) := rfl
+
 /-- The source returned by the constructed finite solver is exactly the
 corresponding realization of the common derivative field. -/
 theorem FiniteFamily.source_eq_timeDerivativeTower (F : FiniteFamily period hT A)
     (C : ComparisonData period hT A) (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     ((A.atOrder period q).coefficients period hq).apply t (F.solution q hq t) =
       (F.timeDerivativeTower period C).realization q t := by
-  rw [CorrectionData.source_sobolev]
-  change -F.rawSourcePath period q hq t -
-    coefficientSobolevOperator period (A.metric.jet q t) (F.signedPressurePath period q hq t) = _
-  rw [F.rawSourcePath_eq_realization period C q hq t,
+  rw [CorrectionData.source_sobolev, coefficientSobolevOperator_atOrder_jet,
+    ← F.rawSourcePath_apply period q hq t,
+    ← F.signedPressurePath_apply period q hq t,
+    F.rawSourcePath_eq_realization period C q hq t,
     F.signedPressurePath_eq_realization period C q hq]
   rfl
 
@@ -112,8 +130,10 @@ theorem Budget.rawSource_eq_realization (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     (A.atOrder period q).rawSource period hq t ((B.fieldTower period).realization (q+1) t) =
       (B.rawSourceTower period).realization q t := by
-  rw [← B.solution_eq_realization period q hq]
-  exact (B.family period).rawSourcePath_eq_realization period (B.comparisonData period) q hq t
+  rw [← B.solution_eq_realization period q hq, Budget.rawSourceTower,
+    ← (B.family period).rawSourcePath_eq_realization period (B.comparisonData period) q hq t,
+    FiniteFamily.rawSourcePath_apply]
+  rfl
 
 theorem Budget.source_eq_timeDerivativeTower (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :

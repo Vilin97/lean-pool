@@ -71,16 +71,29 @@ def normalizedVelocityDerivative : C(Icc (0 : ℝ) T,Supported P E S hS) :=
     (normalizedCoordinates P T hT S hS Q Q₁ c hc hQ g hg f a₀)
 
 theorem velocityDerivative_weight_eq :
-    velocityDerivative P S hS T hT Q Q₁ c hc hQ (weight g f) a₀ =
-      weight g (normalizedVelocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ g hg) := by
-  rw [velocityDerivative_eq_physicalRhs,coordinates_weight_eq]
-  exact physicalRhs_weight P S hS Q Q₁ c hc hQ f _ g
+    velocityDerivative P S hS T hT Q Q₁ c hc hQ
+        (weight (K := Icc (0 : ℝ) T) (E := Supported P E S hS) g f) a₀ =
+      weight (K := Icc (0 : ℝ) T) (E := Supported P E S hS) g
+        (normalizedVelocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ g hg) :=
+  (velocityDerivative_eq_physicalRhs P S hS T hT Q Q₁ c hc hQ _ a₀).trans
+    ((congrArg (physicalRhs P S hS Q Q₁ c hc hQ
+      (weight (K := Icc (0 : ℝ) T) (E := Supported P E S hS) g f))
+    (coordinates_weight_eq P S hS T hT Q Q₁ c hc hQ g hg f a₀)).trans
+    (physicalRhs_weight P S hS Q Q₁ c hc hQ f
+      (normalizedCoordinates P T hT S hS Q Q₁ c hc hQ g hg f a₀) g))
 
 theorem normalized_full_velocityDerivative_eq :
-    normalize g hg (includePath P S hS
-      (velocityDerivative P S hS T hT Q Q₁ c hc hQ (weight g f) a₀)) =
-      includePath P S hS (normalizedVelocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ g hg) := by
-  rw [velocityDerivative_weight_eq,include_weight,normalize_weight]
+    EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) T) (E := CylinderL2 P E) g hg
+        (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS
+          (velocityDerivative P S hS T hT Q Q₁ c hc hQ
+            (weight (K := Icc (0 : ℝ) T) (E := Supported P E S hS) g f) a₀)) =
+      includePath (K := Icc (0 : ℝ) T) (V := E) P S hS
+        (normalizedVelocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ g hg) :=
+  (congrArg (fun u => EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) T)
+      (E := CylinderL2 P E) g hg (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS u))
+    (velocityDerivative_weight_eq P S hS T hT Q Q₁ c hc hQ f a₀ g hg)).trans
+    (normalize_weight g hg (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS
+      (normalizedVelocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ g hg)))
 
 end EulerSourceCylinderEquation
 
@@ -120,10 +133,12 @@ local instance instSourceCylinderDerivativeBounds2 : NormedRing (Space →ᵇ U 
     inferInstance
 
 theorem normalizedCoordinates_contDiff (hSc : IsCompact S)
-    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (includePath P S hS f)))
-    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a (a₀ : CylinderL2 P U))) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (includePath P S hS
-      (normalizedCoordinates P T hT S hS Q Q₁ c hc hQ g hg f a₀))) :=
+    (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a
+      (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS f)))
+    (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a (a₀ : CylinderL2 P U))) :
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a
+      (includePath (K := Icc (0 : ℝ) T) (V := U) P S hS
+        (normalizedCoordinates P T hT S hS Q Q₁ c hc hQ g hg f a₀))) :=
   EulerLpCylinderRegularForward.source_solution_contDiff P T hT univ MeasurableSet.univ
     (sourceGenerator Q Q₁ c hc hQ) (sourceGenerator_translation_contDiff Q Q₁ c hc hQ)
     S hS hSc isOpen_univ (subset_univ _) g hg (projectedForcing P S hS Q c hc hQ f) a₀
@@ -133,8 +148,9 @@ variable (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hSc : IsCompact S) (hΩo : IsOpen Ω) (hsub : S ⊆ Ω)
   (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
   (hg₀ : g ⟨0, le_rfl, hT⟩ = 1)
-  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (includePath P S hS f)))
-  (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a (a₀ : CylinderL2 P U)))
+  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a
+    (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS f)))
+  (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a (a₀ : CylinderL2 P U)))
   (C A D Rc C₀ C₁ Ri R : ℝ)
   (hC : 0 ≤ C) (hA : 0 ≤ A) (hD : 0 ≤ D) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
   (hRi : 2 * gramCost c C₀ 1 * (Rc + 1) ≤ Ri)
@@ -148,20 +164,24 @@ variable (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1
       ((fundamentalPath T hT (sourceGenerator Q Q₁ c hc hQ)).backward s x)‖ ≤ C * g t / g s)
   (d : ℕ)
   (hforce : ∀ n, block directions q
-    (fun a : LiftTangent => pathTranslate P a (includePath P S hS f)) n 0 ≤ D * majorant R d n)
+    (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a
+      (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS f)) n 0 ≤ D * majorant R d n)
   (hinitial : ∀ n, block directions q
-    (fun a : LiftTangent => translate P a (a₀ : CylinderL2 P U)) n 0 ≤ A * majorant R d n)
+    (fun a : LiftTangent => translate (V := U) P a (a₀ : CylinderL2 P U)) n 0 ≤
+      A * majorant R d n)
 
 include hd hΩ hSc hΩo hsub hΩball hg₀ hf ha₀ hC hA hD hRc hC₀ hC₁ hRi hbQ hbQ₁ hRforcing hR hH3
     hforce hinitial
 
 theorem coordinate_forward_block_bound (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate P a (includePath P S hS
-      (normalizedCoordinates P T hT S hS Q Q₁ c hc hQ g hg f a₀))) n 0 ≤ majorant R (d+1) n := by
-  obtain ⟨hi,-⟩ := EulerTransverseForwardCoefficientGevrey.inverseRadius_bounds c C₀ Rc Ri hc hRc
-      hRi
+    block directions q (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P a
+      (includePath (K := Icc (0 : ℝ) T) (V := U) P S hS
+        (normalizedCoordinates P T hT S hS Q Q₁ c hc hQ g hg f a₀))) n 0 ≤ majorant R (d+1) n := by
+  have hi := (EulerTransverseForwardCoefficientGevrey.inverseRadius_bounds c C₀ Rc Ri hc hRc
+      hRi).1
   have hcost : 0 ≤ forcingCost ι q Ri C₀ := mul_nonneg (by norm_num)
-    (sobolevCoefficientAmplitude_nonneg q (4*Ri) (3*Ri*C₀) (by positivity) (by positivity))
+    (sobolevCoefficientAmplitude_nonneg q (4*Ri) (3*Ri*C₀) (mul_nonneg zero_le_four hi)
+      (mul_nonneg (mul_nonneg zero_le_three hi) hC₀))
   exact source_forward_block_bound P directions hd q T hT Q Q₁ c hc hQ Ω S hΩ hS hSc hΩo hsub hΩball
     g hg hg₀ (projectedForcing P S hS Q c hc hQ f) a₀
     (projectedForcing_contDiff P S hS Q c hc hQ f hf) ha₀
@@ -173,14 +193,16 @@ theorem coordinate_forward_block_bound (n : ℕ) :
 /-- The bounded field is the actual time derivative divided by g, by
 normalized_full_velocityDerivative_eq. No profile derivative appears. -/
 theorem derivative_forward_block_bound (hRone : 1 ≤ R) (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate P a (includePath P S hS
-      (normalizedVelocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ g hg))) n 0 ≤
+    block directions q (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a
+      (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS
+        (normalizedVelocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ g hg))) n 0 ≤
       physicalCost ι q Ri C₀ C₁ D 1*majorant R (d+1) n := by
   have hub := coordinate_forward_block_bound P T hT S hS Q Q₁ c hc hQ g hg f a₀
     directions hd q Ω hΩ hSc hΩo hsub hΩball hg₀ hf ha₀ C A D Rc C₀ C₁ Ri R
     hC hA hD hRc hC₀ hC₁ hRi hbQ hbQ₁ hRforcing hR hH3 d hforce hinitial
   have hforce' (j : ℕ) : block directions q
-      (fun a : LiftTangent => pathTranslate P a (includePath P S hS f)) j 0 ≤ D*majorant R (d+1) j
+      (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a
+        (includePath (K := Icc (0 : ℝ) T) (V := E) P S hS f)) j 0 ≤ D*majorant R (d+1) j
           :=
     (hforce j).trans (mul_le_mul_of_nonneg_left
       (majorant_mono_shift R hRone d (d+1) j (by omega)) hD)
@@ -188,7 +210,7 @@ theorem derivative_forward_block_bound (hRone : 1 ≤ R) (n : ℕ) :
     (normalizedCoordinates P T hT S hS Q Q₁ c hc hQ g hg f a₀) directions hd q hf
     (normalizedCoordinates_contDiff P T hT S hS Q Q₁ c hc hQ g hg f a₀ hSc hf ha₀)
     Rc C₀ C₁ Ri R D 1 hRc hC₀ hC₁ hD zero_le_one hRi hRforcing hbQ hbQ₁
-    (d+1) hforce' (fun j => by simpa only [one_mul] using hub j) n
+    (d+1) hforce' (fun j => (hub j).trans_eq (one_mul _).symm) n
 
 end EulerSourceCylinderForwardSobolev
 
@@ -221,6 +243,64 @@ local instance instTransversePacketForwardBounds1 : NormedRing (U →L[ℝ] U) :
 synthesis. -/
 local instance instTransversePacketForwardBounds2 : NormedRing (Space →ᵇ U →L[ℝ] U) := inferInstance
 
+omit [CompleteSpace U] in
+theorem normalize_path_orbit {D : Data U} {raw : VectorField} (G : Forcing P D raw)
+    (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t) :
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+        (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T)
+          (E := Supported P Space D.support D.support_measurable) g hg G.path))) := by
+  rw [include_normalize]
+  exact normalize_orbit_contDiff P g hg _ G.path_orbit
+
+/-- The forward velocity divided by g is the normalized velocity of the normalized forcing. -/
+theorem normalized_velocityPath_eq {D : Data U} {raw : VectorField} (G : Forcing P D raw)
+    (I : InitialData P D) (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t) :
+    EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T) (E := CylinderL2 P Space) g hg
+        (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+          (G.velocityPath I)) =
+      includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+        (normalizedVelocity P D.T D.T_pos.le D.support D.support_measurable
+          D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower g hg
+          (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T)
+            (E := Supported P Space D.support D.support_measurable) g hg G.path) I.value) := by
+  have hw := weight_normalize (K := Icc (0 : ℝ) D.T)
+    (E := Supported P Space D.support D.support_measurable) g hg G.path
+  exact (congrArg (fun p =>
+      EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T) (E := CylinderL2 P Space) g hg
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+        (velocity P D.support D.support_measurable D.T D.T_pos.le
+          D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower p I.value)))
+    hw.symm).trans
+    (normalized_full_velocity_eq P D.support D.support_measurable D.T D.T_pos.le
+      D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower g hg
+      (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T)
+        (E := Supported P Space D.support D.support_measurable) g hg G.path) I.value)
+
+/-- The time derivative divided by g is the normalized derivative of the normalized forcing. -/
+theorem normalized_derivativePath_eq {D : Data U} {raw : VectorField} (G : Forcing P D raw)
+    (I : InitialData P D) (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t) :
+    EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T) (E := CylinderL2 P Space) g hg
+        (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+          (G.derivativePath I)) =
+      includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+        (normalizedVelocityDerivative P D.support D.support_measurable D.T D.T_pos.le
+          D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
+          (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T)
+            (E := Supported P Space D.support D.support_measurable) g hg G.path) I.value g hg) := by
+  have hw := weight_normalize (K := Icc (0 : ℝ) D.T)
+    (E := Supported P Space D.support D.support_measurable) g hg G.path
+  exact (congrArg (fun p =>
+      EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T) (E := CylinderL2 P Space) g hg
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+        (velocityDerivative P D.support D.support_measurable D.T D.T_pos.le
+          D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower p I.value)))
+    hw.symm).trans
+    (normalized_full_velocityDerivative_eq P D.support D.support_measurable D.T D.T_pos.le
+      D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
+      (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T)
+        (E := Supported P Space D.support D.support_measurable) g hg G.path) I.value g hg)
+
 variable
   {D : Data U} {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
   (g : C(Icc (0 : ℝ) D.T, ℝ)) (hg : ∀ t, 0 < g t)
@@ -248,11 +328,13 @@ variable
         (sourceGenerator D.frame D.frameDerivative D.frameLower D.frameLower_pos
             D.frame_lower)).backward s x)‖ ≤ C * g t / g s)
   (d : ℕ)
-  (hforce : ∀ n, block directions q (fun a => pathTranslate P a
-    (normalize g hg (includePath P D.support D.support_measurable G.path))) n 0 ≤ Cf * majorant R d
-        n)
+  (hforce : ∀ n, block directions q
+    (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T) (E := CylinderL2 P Space) g hg
+        (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+          G.path))) n 0 ≤ Cf * majorant R d n)
   (hinitial : ∀ n, block directions q
-    (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤ A * majorant R d n)
+    (fun a => translate (V := U) P a (I.value : CylinderL2 P U)) n 0 ≤ A * majorant R d n)
 
 include hdir hΩ hΩo hsub hΩball hg0 hC hA hCf hRc hC₀ hC₁ hRi hbF hbF₁ hRforcing hR hH3 hforce
     hinitial
@@ -260,23 +342,18 @@ include hdir hΩ hΩo hsub hΩball hg0 hC hA hCf hRc hC₀ hC₁ hRi hbF hbF₁ 
 /-- The literal forward packet velocity divided by g, at the input radius. -/
 theorem source_velocity_normalized_bound
     (hRframe : sobolevCoefficientRadius ι Rc ≤ R) (n : ℕ) :
-    block directions q (fun a => pathTranslate P a
-      (normalize g hg (includePath P D.support D.support_measurable (G.velocityPath I)))) n 0 ≤
+    block directions q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T) (E := CylinderL2 P Space) g hg
+        (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+          (G.velocityPath I)))) n 0 ≤
         (3*sobolevCoefficientAmplitude ι q Rc C₀)*majorant R (d+1) n := by
-  have he := normalized_full_velocity_eq P D.support D.support_measurable D.T D.T_pos.le
-    D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower g hg
-    (normalize g hg G.path) I.value
-  rw [weight_normalize] at he
-  change block directions q (fun a => pathTranslate P a
-    (normalize g hg (includePath P D.support D.support_measurable
-      (velocity P D.support D.support_measurable D.T D.T_pos.le
-        D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value)))) n
-            0 ≤ _
-  rw [he]
+  rw [G.normalized_velocityPath_eq I g hg]
   exact physical_forward_block_bound P D.T D.T_pos.le D.support D.support_measurable
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower g hg
-    (normalize g hg G.path) I.value directions hdir q Ω hΩ D.support_compact hΩo hsub hΩball hg0
-    (normalize_orbit_contDiff P g hg _ G.path_orbit) I.orbit C A Cf Rc C₀ C₁ Ri R
+    (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T)
+      (E := Supported P Space D.support D.support_measurable) g hg G.path)
+    I.value directions hdir q Ω hΩ D.support_compact hΩo hsub hΩball hg0
+    (G.normalize_path_orbit g hg) I.orbit C A Cf Rc C₀ C₁ Ri R
     hC hA hCf hRc hC₀ hC₁ hRi
     (fun j => D.frame_spatial_bound j _ (hbF j))
     (fun j => D.frameDerivative_spatial_bound j _ (hbF₁ j))
@@ -284,23 +361,18 @@ theorem source_velocity_normalized_bound
 
 /-- This is A_t/g for the actual raw solution, not a derivative of A/g. -/
 theorem source_derivative_normalized_bound (hRone : 1 ≤ R) (n : ℕ) :
-    block directions q (fun a => pathTranslate P a
-      (normalize g hg (includePath P D.support D.support_measurable (G.derivativePath I)))) n 0 ≤
+    block directions q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T) (E := CylinderL2 P Space) g hg
+        (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+          (G.derivativePath I)))) n 0 ≤
         physicalCost ι q Ri C₀ C₁ Cf 1*majorant R (d+1) n := by
-  have he := normalized_full_velocityDerivative_eq P D.support D.support_measurable D.T D.T_pos.le
-    D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
-    (normalize g hg G.path) I.value g hg
-  rw [weight_normalize] at he
-  change block directions q (fun a => pathTranslate P a
-    (normalize g hg (includePath P D.support D.support_measurable
-      (velocityDerivative P D.support D.support_measurable D.T D.T_pos.le
-        D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower G.path I.value)))) n
-            0 ≤ _
-  rw [he]
+  rw [G.normalized_derivativePath_eq I g hg]
   exact derivative_forward_block_bound P D.T D.T_pos.le D.support D.support_measurable
     D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower g hg
-    (normalize g hg G.path) I.value directions hdir q Ω hΩ D.support_compact hΩo hsub hΩball hg0
-    (normalize_orbit_contDiff P g hg _ G.path_orbit) I.orbit C A Cf Rc C₀ C₁ Ri R
+    (EulerContinuousTimeWeight.normalize (K := Icc (0 : ℝ) D.T)
+      (E := Supported P Space D.support D.support_measurable) g hg G.path)
+    I.value directions hdir q Ω hΩ D.support_compact hΩo hsub hΩball hg0
+    (G.normalize_path_orbit g hg) I.orbit C A Cf Rc C₀ C₁ Ri R
     hC hA hCf hRc hC₀ hC₁ hRi
     (fun j => D.frame_spatial_bound j _ (hbF j))
     (fun j => D.frameDerivative_spatial_bound j _ (hbF₁ j))

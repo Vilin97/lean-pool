@@ -11,6 +11,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.MeanOrbitSobolev
 public import LeanPool.NavierStokesAndEuler.Euler.SobolevPointEvaluation
 import LeanPool.NavierStokesAndEuler.Euler.LpSmoothFieldJets
 import LeanPool.NavierStokesAndEuler.Euler.MeanSpatialEvaluation
+public import LeanPool.NavierStokesAndEuler.ForMathlib.BoundedContinuousFunctionShortcuts
 
 /-!
 # Actual bounded continuous representatives from smooth L² jets
@@ -84,8 +85,8 @@ theorem continuous_spaceField {K : Type*} [TopologicalSpace K]
       fun t => multilinearBundling (P := Space) (V := Space) volume n ((A t).jetLp n) := by
     funext t
     have h := (A t).iteratedFDeriv_translation_eq n 0
-    rw [EulerLpTranslation.translation_zero] at h
-    simpa only [EulerLpTranslation.translation, EulerMeanSolenoidal.translation] using h
+    simpa only [EulerLpTranslation.translation, EulerMeanSolenoidal.translation] using
+      h.trans (congrArg _ (EulerLpTranslation.translation_zero _))
   rw [he]
   exact (multilinearBundling (P := Space) (V := Space) volume n).continuous.comp (hA n)
 
@@ -118,7 +119,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimension
 
 /-- Coordinate, given by `((Module.finBasis ℝ V).coord i).toContinuousLinearMap`. -/
 def coordinate (i : Fin (Module.finrank ℝ V)) : V →L[ℝ] ℝ :=
-  ((Module.finBasis ℝ V).coord i).toContinuousLinearMap
+  (LinearMap.toContinuousLinearMap : (V →ₗ[ℝ] ℝ) ≃ₗ[ℝ] V →L[ℝ] ℝ) ((Module.finBasis ℝ V).coord i)
 
 /-- Coordinate vector, given by `(ContinuousLinearMap.id ℝ ℝ).smulRight (Module.finBasis ℝ V
 i)`. -/

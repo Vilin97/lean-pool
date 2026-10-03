@@ -48,11 +48,13 @@ section Forward
 variable {P : ParentFrame (A.transverseData m hm J support hSupport) 0} (G : ForwardGuards P)
     (hball : (1 / 2 : ℝ) ≤ G.radius)
 
-local notation "Geo" => ForwardGuards.lowGeometry G hball
-local notation "tNext" => PhysicalGeometryData.targetTime (ForwardGuards.lowGeometry G hball)
+-- The notations below are parenthesized so that no pretty-printing unexpander is generated
+-- for them; elaborating such an unexpander for a long application is expensive.
+local notation "Geo" => (ForwardGuards.lowGeometry G hball)
+local notation "tNext" => (PhysicalGeometryData.targetTime (ForwardGuards.lowGeometry G hball))
 
 variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
-  (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
+  (hMK : CM ≤ K) (hHK : CM ^ (2 : ℕ) + CH ≤ K ^ (2 : ℕ))
   (hM : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerStrain t‖ ≤ CM)
   (hH : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerCurvature t‖ ≤ CH)
   (hδ : 0 < G.δ) (k : ℝ)
@@ -60,7 +62,7 @@ variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error
     ‖fderiv ℝ (S.velocityIncrement T t) 0 -
       (G.primaryAmplitude hball * deriv (profile G.δ)
         (k * ⟪m, S.evolution.inverse.normalized t 0⟫_ℝ)) •
-        rankOne ℝ (EulerPacketForwardFactorization.canonicalVelocity
+        rankOne ℝ (E := Space) (F := Space) (EulerPacketForwardFactorization.canonicalVelocity
           (A.transverseData m hm J support hSupport) G.initialCoordinate t
               (S.evolution.inverse.normalized t 0))
           ((A.transverseData m hm J support hSupport).normal.field t
@@ -75,9 +77,9 @@ def forwardTargetRenewal : ParentFrame DNext tNext :=
     hCM hK he hMK hHK hM hH G.δ hδ (G.primaryAmplitude hball) k
     G.initialCoordinate G.initialCoordinate_ne_zero hsource
 
-local notation "Q" => forwardTargetRenewal S T hTime m hm J support hSupport
+local notation "Q" => (forwardTargetRenewal S T hTime m hm J support hSupport
   mNext hmNext JNext supportNext hSupportNext G hball CM CH K error
-  hCM hK he hMK hHK hM hH hδ k hsource
+  hCM hK he hMK hHK hM hH hδ k hsource)
 
 /-- In particular, the new ray and primary are the old source's actual
 physical ray and primary at the target, not freely chosen frame vectors. -/
@@ -103,7 +105,7 @@ theorem forwardTargetRenewal_constants : (Q).G=K ∧ (Q).error=error := ⟨rfl,r
 include hTime hCM hK he hMK hHK hM hH hδ hsource in
 theorem forwardTargetRenewal_remainder (hT : tNext ≤ N.T) :
     ‖(DNext).M.field ((DNext).clamp tNext) 0-(Geo).M (Geo).center tNext -
-      G.hchild • rankOne ℝ (unit ((Geo).w (Geo).center tNext))
+      G.hchild • rankOne ℝ (E := Space) (F := Space) (unit ((Geo).w (Geo).center tNext))
         (unit ((Geo).r (Geo).center tNext))‖ ≤ error := by
   have H := forwardTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext G hball CM CH K error
@@ -114,8 +116,8 @@ theorem forwardTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1 / 2) :
     (Q).shear=G.hchild ∧ 0 < (Q).a ∧
     |(Q).a/P.a-1| ≤ (Geo).couplingError ∧
     0 < (Q).sigma ∧
-    |(G.y⁻¹)^2*(Q).sigma^2-1| ≤ (Geo).tiltError ∧
-    1/2 ≤ (G.y⁻¹)^2*(Q).sigma^2 ∧ (G.y⁻¹)^2*(Q).sigma^2 ≤ 3/2 := by
+    |(G.y⁻¹) ^ (2 : ℕ)*(Q).sigma ^ (2 : ℕ)-1| ≤ (Geo).tiltError ∧
+    1/2 ≤ (G.y⁻¹) ^ (2 : ℕ)*(Q).sigma ^ (2 : ℕ) ∧ (G.y⁻¹) ^ (2 : ℕ)*(Q).sigma ^ (2 : ℕ) ≤ 3/2 := by
   have H := forwardTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext G hball CM CH K error
     hCM hK he hMK hHK hM hH hδ k hsource
@@ -130,7 +132,8 @@ theorem forwardTargetRenewal_compression
   have H := forwardTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext G hball CM CH K error
     hCM hK he hMK hHK hM hH hδ k hsource
-  exact H.activation_compression ht hT hmargin
+  have h := H.activation_compression ht hT hmargin
+  with_reducible exact h
 
 theorem forwardTargetRenewal_compression_of_error_le_one
     (hT : tNext < N.T) (herror : error ≤ 1) :
@@ -139,7 +142,8 @@ theorem forwardTargetRenewal_compression_of_error_le_one
   have H := forwardTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext G hball CM CH K error
     hCM hK he hMK hHK hM hH hδ k hsource
-  exact H.activation_compression_of_error_le_one ((Geo).targetTime_pos le_rfl) hT herror
+  have h := H.activation_compression_of_error_le_one ((Geo).targetTime_pos le_rfl) hT herror
+  with_reducible exact h
 
 end Forward
 
@@ -151,11 +155,11 @@ variable (s : ℝ) (hs : 0 < s) (hsT : s < A.T)
   (G : Guards hs hsT P H) (hball : (1 / 2 : ℝ) ≤ G.radius)
   (hcut : tsupport innerCutoff ⊆ support)
 
-local notation "Geo" => Guards.lowGeometry G hball
-local notation "tNext" => PhysicalGeometryData.targetTime (Guards.lowGeometry G hball)
+local notation "Geo" => (Guards.lowGeometry G hball)
+local notation "tNext" => (PhysicalGeometryData.targetTime (Guards.lowGeometry G hball))
 
 variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error)
-  (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
+  (hMK : CM ≤ K) (hHK : CM ^ (2 : ℕ) + CH ≤ K ^ (2 : ℕ))
   (hM : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerStrain t‖ ≤ CM)
   (hH : ∀ t ∈ Icc (G.lowGeometry hball).targetTime N.T, ‖A.centerCurvature t‖ ≤ CH)
   (hδ : 0 < G.δ) (k : ℝ)
@@ -163,7 +167,7 @@ variable (CM CH K error : ℝ) (hCM : 0 ≤ CM) (hK : 1 ≤ K) (he : 0 ≤ error
     ‖fderiv ℝ (S.velocityIncrement T t) 0 -
       (G.primaryAmplitude hball * deriv (profile G.δ)
         (k * ⟪m, S.evolution.inverse.normalized t 0⟫_ℝ)) •
-        rankOne ℝ (EulerPacketPrimaryFactorization.canonicalVelocity
+        rankOne ℝ (E := Space) (F := Space) (EulerPacketPrimaryFactorization.canonicalVelocity
           s hs hsT H G.terminal hcut t (S.evolution.inverse.normalized t 0))
           ((A.transverseData m hm J support hSupport).normal.field t
               (S.evolution.inverse.normalized t 0))‖ ≤ error)
@@ -177,9 +181,9 @@ def joinedTargetRenewal : ParentFrame DNext tNext :=
     hCM hK he hMK hHK hM hH G.δ hδ (G.primaryAmplitude hball) k
     s hs hsT H G.terminal G.terminal_properties.1 hcut hsource
 
-local notation "Q" => joinedTargetRenewal S T hTime m hm J support hSupport
+local notation "Q" => (joinedTargetRenewal S T hTime m hm J support hSupport
   mNext hmNext JNext supportNext hSupportNext s hs hsT H G hball hcut CM CH K error
-  hCM hK he hMK hHK hM hH hδ k hsource
+  hCM hK he hMK hHK hM hH hδ k hsource)
 
 theorem joinedTargetRenewal_matches : RenewalAtTarget Geo Q := by
   let t : Icc (0 : ℝ) A.T :=
@@ -205,7 +209,7 @@ theorem joinedTargetRenewal_constants : (Q).G=K ∧ (Q).error=error := ⟨rfl,rf
 include hTime hCM hK he hMK hHK hM hH hδ hsource in
 theorem joinedTargetRenewal_remainder (hT : tNext ≤ N.T) :
     ‖(DNext).M.field ((DNext).clamp tNext) 0-(Geo).M (Geo).center tNext -
-      G.hchild • rankOne ℝ (unit ((Geo).w (Geo).center tNext))
+      G.hchild • rankOne ℝ (E := Space) (F := Space) (unit ((Geo).w (Geo).center tNext))
         (unit ((Geo).r (Geo).center tNext))‖ ≤ error := by
   have E := joinedTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext s hs hsT H G hball hcut CM CH K error
@@ -216,8 +220,8 @@ theorem joinedTargetRenewal_parameters (hTilt : (Geo).tiltError ≤ 1 / 2) :
     (Q).shear=G.hchild ∧ 0 < (Q).a ∧
     |(Q).a/P.a-1| ≤ (Geo).couplingError ∧
     0 < (Q).sigma ∧
-    |(G.y⁻¹)^2*(Q).sigma^2-1| ≤ (Geo).tiltError ∧
-    1/2 ≤ (G.y⁻¹)^2*(Q).sigma^2 ∧ (G.y⁻¹)^2*(Q).sigma^2 ≤ 3/2 := by
+    |(G.y⁻¹) ^ (2 : ℕ)*(Q).sigma ^ (2 : ℕ)-1| ≤ (Geo).tiltError ∧
+    1/2 ≤ (G.y⁻¹) ^ (2 : ℕ)*(Q).sigma ^ (2 : ℕ) ∧ (G.y⁻¹) ^ (2 : ℕ)*(Q).sigma ^ (2 : ℕ) ≤ 3/2 := by
   have E := joinedTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext s hs hsT H G hball hcut CM CH K error
     hCM hK he hMK hHK hM hH hδ k hsource
@@ -232,7 +236,8 @@ theorem joinedTargetRenewal_compression
   have E := joinedTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext s hs hsT H G hball hcut CM CH K error
     hCM hK he hMK hHK hM hH hδ k hsource
-  exact E.activation_compression ht hT hmargin
+  have h := E.activation_compression ht hT hmargin
+  with_reducible exact h
 
 theorem joinedTargetRenewal_compression_of_error_le_one
     (hT : tNext < N.T) (herror : error ≤ 1) :
@@ -241,7 +246,8 @@ theorem joinedTargetRenewal_compression_of_error_le_one
   have E := joinedTargetRenewal_matches S T hTime m hm J support hSupport
     mNext hmNext JNext supportNext hSupportNext s hs hsT H G hball hcut CM CH K error
     hCM hK he hMK hHK hM hH hδ k hsource
-  exact E.activation_compression_of_error_le_one ((Geo).targetTime_pos hs.le) hT herror
+  have h := E.activation_compression_of_error_le_one ((Geo).targetTime_pos hs.le) hT herror
+  with_reducible exact h
 
 end Joined
 end EulerParentPacketFrames.SmoothState
@@ -264,15 +270,13 @@ variable {A : Parent} (E : Evolution A)
 theorem centerStrain_bound (CM : ℝ)
     (hCM : ∀ (t : Icc (0 : ℝ) A.T) x, ‖fderiv ℝ (fun y => E.velocity (t, y)) x‖ ≤ CM)
     (t : ℝ) : ‖A.centerStrain t‖ ≤ CM := by
-  change ‖A.strain.field (projIcc 0 A.T A.T_pos.le t) 0‖ ≤ CM
-  rw [E.strain_eq]
+  rw [Parent.centerStrain, Parent.extendPath_field, E.strain_eq]
   exact hCM _ _
 
 theorem centerCurvature_bound (CH : ℝ)
     (hCH : ∀ (t : Icc (0 : ℝ) A.T) x, ‖fderiv ℝ (E.force t) x‖ ≤ CH)
     (t : ℝ) : ‖A.centerCurvature t‖ ≤ CH := by
-  change ‖A.curvature.field (projIcc 0 A.T A.T_pos.le t) 0‖ ≤ CH
-  rw [E.curvature_eq]
+  rw [Parent.centerCurvature, Parent.extendPath_field, E.curvature_eq]
   exact hCH _ _
 
 end EulerParentPacketFrames.Evolution
@@ -289,7 +293,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   {nextEll : ℝ} {hnext : 0 < nextEll} {hnext1 : nextEll ≤ 1}
   (F : GeometryForwardChoice I S k hk nextEll hnext hnext1)
   (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
-  (CM CH K : ℝ) (hCM0 : 0 ≤ CM) (hK : 1 ≤ K) (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
+  (CM CH K : ℝ) (hCM0 : 0 ≤ CM) (hK : 1 ≤ K) (hMK : CM ≤ K) (hHK : CM ^ (2 : ℕ) + CH ≤ K ^ (2 : ℕ))
   (hCM : ∀ (t : Icc (0 : ℝ) I.parent.T) x, ‖fderiv ℝ (fun y => S.evolution.velocity (t, y)) x‖ ≤ CM)
   (hCH : ∀ (t : Icc (0 : ℝ) I.parent.T) x, ‖fderiv ℝ (S.evolution.force t) x‖ ≤ CH)
   {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
@@ -319,7 +323,8 @@ theorem renewal_parameters (hTilt : (I.geometry.lowGeometry I.halfBall).tiltErro
     (Pnew).shear=I.geometry.hchild ∧ 0 < (Pnew).a ∧
     |(Pnew).a/I.frame.a-1| ≤ (I.geometry.lowGeometry I.halfBall).couplingError ∧
     0 < (Pnew).sigma ∧
-    |(I.geometry.y⁻¹)^2*(Pnew).sigma^2-1| ≤ (I.geometry.lowGeometry I.halfBall).tiltError := by
+    |(I.geometry.y⁻¹) ^ (2 : ℕ) * (Pnew).sigma ^ (2 : ℕ) - 1| ≤
+      (I.geometry.lowGeometry I.halfBall).tiltError := by
   have H := F.renewal_matches hSym CM CH K hCM0 hK hMK hHK hCM hCH m hm R support hSupport
   exact ⟨H.shear_eq I.delta_pos,H.coupling_pos,H.coupling_error,H.sigma_pos hTilt,H.tilt_error
       hTilt⟩
@@ -348,7 +353,7 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   {nextEll : ℝ} {hnext : 0 < nextEll} {hnext1 : nextEll ≤ 1}
   (F : GeometryJoinedChoice I S k hk nextEll hnext hnext1)
   (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
-  (CM CH K : ℝ) (hCM0 : 0 ≤ CM) (hK : 1 ≤ K) (hMK : CM ≤ K) (hHK : CM ^ 2 + CH ≤ K ^ 2)
+  (CM CH K : ℝ) (hCM0 : 0 ≤ CM) (hK : 1 ≤ K) (hMK : CM ≤ K) (hHK : CM ^ (2 : ℕ) + CH ≤ K ^ (2 : ℕ))
   (hCM : ∀ (t : Icc (0 : ℝ) I.parent.T) x, ‖fderiv ℝ (fun y => S.evolution.velocity (t, y)) x‖ ≤ CM)
   (hCH : ∀ (t : Icc (0 : ℝ) I.parent.T) x, ‖fderiv ℝ (S.evolution.force t) x‖ ≤ CH)
   {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
@@ -379,7 +384,8 @@ theorem renewal_parameters (hTilt : (I.geometry.lowGeometry I.halfBall).tiltErro
     (Pnew).shear=I.geometry.hchild ∧ 0 < (Pnew).a ∧
     |(Pnew).a/I.frame.a-1| ≤ (I.geometry.lowGeometry I.halfBall).couplingError ∧
     0 < (Pnew).sigma ∧
-    |(I.geometry.y⁻¹)^2*(Pnew).sigma^2-1| ≤ (I.geometry.lowGeometry I.halfBall).tiltError := by
+    |(I.geometry.y⁻¹) ^ (2 : ℕ) * (Pnew).sigma ^ (2 : ℕ) - 1| ≤
+      (I.geometry.lowGeometry I.halfBall).tiltError := by
   have H := F.renewal_matches hSym CM CH K hCM0 hK hMK hHK hCM hCH m hm R support hSupport
   exact ⟨H.shear_eq I.delta_pos,H.coupling_pos,H.coupling_error,H.sigma_pos hTilt,H.tilt_error
       hTilt⟩

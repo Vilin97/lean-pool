@@ -39,14 +39,14 @@ theorem partialX_eq_slice {f : InnerProfile} {w : InnerPoint}
     (hf : DifferentiableAt ℝ f w) :
     partialX f w = deriv (fun x => f (x, w.2)) w.1 := by
   symm
-  exact (hf.hasFDerivAt.comp_hasDerivAt w.1
+  exact (hf.hasFDerivAt.comp_hasDerivAt (F := InnerPoint) w.1
     ((hasDerivAt_id w.1).prodMk (hasDerivAt_const w.1 w.2))).deriv
 
 theorem partialEta_eq_slice {f : InnerProfile} {w : InnerPoint}
     (hf : DifferentiableAt ℝ f w) :
     partialEta f w = deriv (fun η => f (w.1, η)) w.2 := by
   symm
-  exact (hf.hasFDerivAt.comp_hasDerivAt w.2
+  exact (hf.hasFDerivAt.comp_hasDerivAt (F := InnerPoint) w.2
     ((hasDerivAt_const w.2 w.1).prodMk (hasDerivAt_id w.2))).deriv
 
 theorem secondX_eq_slice {f : InnerProfile} {w : InnerPoint}
@@ -291,8 +291,8 @@ theorem initialBand_mem_domain {Λ : ℝ} (hΛ : 0 < Λ) {w : InnerPoint}
   have hlo := mul_nonneg hΛ.le hw.1.1
   have hhi : Λ * w.1 ≤ 4 := by
     have ht := (le_div_iff₀ hΛ).mp hw.1.2
-    nlinarith
-  exact ⟨⟨by linarith, by linarith⟩, hw.2⟩
+    nlinarith only [ht]
+  exact ⟨⟨by linarith only [hlo], by linarith only [hhi]⟩, hw.2⟩
 
 theorem radialFlux_congr_germ (h lam : ℝ) {U V : InnerProfile} {w : InnerPoint}
     (hu : U =ᶠ[𝓝 w] V)
@@ -460,7 +460,7 @@ theorem hierarchy_flux_zero {X η : ℝ}
   have hs := SlowRecursion.core_lt_radius (core := ActualSlowAxis.axisRadius N δ)
     (buffer := 1) zero_lt_one 0
   have hsq : X < SlowRecursion.radius (ActualSlowAxis.axisRadius N δ) 1 0 ^ 2 := by
-    nlinarith [hX.2]
+    nlinarith only [hX, hr, hs, hX.2]
   change X * SlowRecursion.profile (A.coefficients 0 4) (X, η) = _
   rw [A.starts]
   rw [ActualSlowAxis.base_beta_value E hT hδ hδT κ hP0 C _ ⟨hX.1, hsq⟩ hη]
@@ -484,9 +484,9 @@ theorem radial_densities_zero {R η : ℝ} (hR : R ∈ Icc (0 : ℝ) a) (hη : �
   · subst R
     simp [SlowResidualMatching.thetaDensity, SlowResidualMatching.zDensity]
   · have hp : 0 < R := lt_of_le_of_ne hR.1 (Ne.symm hz)
-    have hsum : 0 ≤ a + R := by linarith [hR.2]
+    have hsum : 0 ≤ a + R := by linarith only [hp, hR, hR.2]
     have hsq : R ^ 2 / 2 < r := by
-      nlinarith [mul_nonneg (sub_nonneg.mpr hR.2) hsum]
+      nlinarith only [ha, hR, hsum, mul_nonneg (sub_nonneg.mpr hR.2) hsum]
     have he := hzero (R ^ 2 / 2, η) ⟨⟨by positivity, hsq⟩, hη⟩
     simp only [SlowResidualMatching.thetaDensity, SlowResidualMatching.zDensity,
       SlowResidualMatching.radiusPoint, he.1, he.2, mul_zero, and_self]
@@ -621,7 +621,7 @@ theorem fromNatural_primitives_and_stresses_zero {R η : ℝ}
   have hpos : 0 < (4 : ℝ) / Λ := div_pos (by norm_num) hΛ
   have ha : Real.sqrt (4 / Λ) ^ 2 / 2 < 4 / Λ := by
     rw [Real.sq_sqrt hpos.le]
-    linarith
+    linarith only [hpos]
   obtain ⟨hθ, hz'⟩ := radial_primitives_zero (C := C) ha hz hR hη
   obtain ⟨hsθ, hsz⟩ := radial_stresses_zero (C := C) ha hz hR.2 hη
   exact ⟨hθ, hz', hsθ, hsz⟩

@@ -167,9 +167,9 @@ def initialTailInput (i : ℕ) :
     EulerPacketInitial.Input (referencePlane ((P (1+i)).joinedNormal (by omega))) :=
   (P (1+i)).joinedInput (by omega) hq hB
 
-local notation "A" => initialTailInput P hq hB
+local notation "A" => (initialTailInput P hq hB)
 local notation "J" => S.J+1
-local notation "X" => scaleSequence S.J S.X 1
+local notation "X" => (scaleSequence S.J S.X 1)
 
 theorem initialTail_parameter (i : ℕ) :
     (A i).parameterSize ≤ parameterEnvelope J (sourceConstant 4) 320 20 1000 X i := by

@@ -51,7 +51,7 @@ def classicalAcceleration (f : C(Icc (0 : ℝ) T, E)) : C(Icc (0 : ℝ) T,U) :=
 /-- Displacement path, given by `terminalPrimitive T hT (velocityLp T hT Q Q₁ H c hc hQ hd K hK
 hH hsmall f)`. -/
 def displacementPath (f : TimeLp T E) : C(Icc (0 : ℝ) T,U) :=
-  terminalPrimitive T hT (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f)
+  terminalPrimitive (E := U) T hT (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f)
 
 /-- Physical velocity path, given by `multiplier Q (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH
 hsmall (pathLp T hT f))`. -/
@@ -73,7 +73,7 @@ theorem displacementPath_terminal (f : TimeLp T E) :
 
 theorem classicalAcceleration_equation (f : C(Icc (0 : ℝ) T, E)) (t : Icc (0 : ℝ) T) :
     gram (Q t) (classicalAcceleration T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t) =
-      (Q t).adjoint (f t-(2 : ℝ) • Q₁ t
+      adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t) (f t-(2 : ℝ) • Q₁ t
         (velocityPath T hT Q Q₁ H c hc hQ hd K hK hH hsmall (pathLp T hT f) t)) :=
   EulerContinuousGramAcceleration.accelerationPath_equation T Q Q₁ c hc hQ _ f t
 

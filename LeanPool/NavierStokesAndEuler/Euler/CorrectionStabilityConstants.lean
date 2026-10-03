@@ -75,7 +75,7 @@ theorem differenceRemainder_uniform {q : ℕ} {T : Type*} [TopologicalSpace T]
     (add_le_add hzu hzv) (add_nonneg (norm_nonneg _) (norm_nonneg _))
     (mul_nonneg ha20 (sobolevEmbeddingConstant_nonneg period q))
   unfold lowerConstant
-  nlinarith
+  nlinarith only [hA0, h1, h2]
 
 omit [Fact (0 < period)] in
 /-- The actual fixed growth coefficient is nonnegative. -/

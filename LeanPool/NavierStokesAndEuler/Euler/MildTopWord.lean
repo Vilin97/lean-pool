@@ -32,10 +32,7 @@ theorem truncate_mild_integral {q : ℕ} (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT
       (∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r (extendPath T hT f (t.val-r))) =
       duhamel period ν T hT f t.val := by
   have h := truncate_heatConvolution period ν hν T hT f t
-  rw [convolution_eq_interval T hT (heatKernel period q ν hν) (parabolicKernelBound ν)
-    (heatKernel_joint_continuous period q ν hν) (parabolicKernelBound_integrable ν T hT)
-    (fun r hr => parabolicKernelBound_nonneg ν r hr.1)
-    (fun r hr y => heatKernel_bound period q ν hν r hr.1 y) f t] at h
+  rw [convolution_eq_interval] at h
   exact h
 
 /-- An actual continuous H¹ path is the gained-kernel mild solution as soon as its genuine L²
@@ -50,11 +47,10 @@ theorem mild_of_truncated_formula (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 �
         ∫ r in (0 : ℝ)..t.val, heatKernel period 0 ν hν r (extendPath T hT f (t.val-r)) := by
   intro t
   apply value_injective period
-  have h := hsol t
-  change truncateOperator period 0 (u t) = heatOperator period 0 (2*ν*t.val).toNNReal
-      (truncateOperator period 0 u₀) + _ at h
-  rw [← truncate_heatOperator, ← truncate_mild_integral period ν hν T hT f t, ← map_add] at h
-  exact congrArg (fun x : SobolevSpace period 0 => value period x) h
+  have h := (hsol t).trans (congrArg₂ (· + ·) (truncate_heatOperator period _ u₀).symm
+    (truncate_mild_integral period ν hν T hT f t).symm)
+  exact congrArg (fun x : SobolevSpace period 0 => value period x)
+    (h.trans ((truncateOperator period 0).map_add _ _).symm)
 
 /-- A genuine bounded derivative block with an arbitrary available Sobolev margin. -/
 def boundedWordBlock (p n : ℕ) {q : ℕ} (h : p + n ≤ q) (w : Fin n → Fin 4) :
@@ -97,8 +93,10 @@ theorem truncated_formula {q : ℕ} (ν : ℝ) (hν : 0 < ν) (T : ℝ) (hT : 0 
     (t : Icc (0 : ℝ) T) :
     truncateOperator period q (u t) = heatFlow period q ν t.val (truncateOperator period q u₀) +
       duhamel period ν T hT f t.val := by
-  rw [hsol t, map_add, truncate_heatOperator, truncate_mild_integral]
-  rfl
+  exact (congrArg (truncateOperator period q) (hsol t)).trans
+    (((truncateOperator period q).map_add _ _).trans
+      (congrArg₂ (· + ·) (truncate_heatOperator period _ u₀)
+        (truncate_mild_integral period ν hν T hT f t)))
 
 /-- Actual highest derivative blocks satisfy the lower-order Duhamel identity. -/
 theorem top_word_truncated {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
@@ -112,20 +110,13 @@ theorem top_word_truncated {q : ℕ} (ν T : ℝ) (hT : 0 ≤ T)
           omega) w u₀)) +
       duhamel period ν T hT (mapPath period T (boundedWordBlock period 0 q (by
           omega) w) f) t.val := by
-  let B : SobolevSpace period q →L[ℝ] SobolevSpace period 0 := boundedWordBlock period 0 q (by
-      omega) w
-  have hh := congrArg B (hsol t)
-  have hadd := map_add B (heatFlow period q ν t.val (truncateOperator period q u₀)) (duhamel period
-      ν T hT f t.val)
-  have hheat := boundedWordBlock_heat period 0 q (by
-      omega) w (2*ν*t.val).toNNReal (truncateOperator period q u₀)
-  have hduh := map_duhamel period B (boundedWordBlock_heat period 0 q (by omega) w) ν T hT f t.val
-  rw [hadd, hduh] at hh
-  change B (truncateOperator period q (u t)) = B (heatOperator period q (2*ν*t.val).toNNReal
-      (truncateOperator period q u₀)) + _ at hh
-  rw [hheat] at hh
-  rw [boundedWordBlock_truncate, boundedWordBlock_truncate]
-  exact hh
+  have hduh := map_duhamel period (boundedWordBlock period 0 q (by omega) w)
+    (boundedWordBlock_heat period 0 q (by omega) w) ν T hT f t.val
+  refine (boundedWordBlock_truncate period q w (u t)).trans
+    ((congrArg (boundedWordBlock period 0 q (by omega) w) (hsol t)).trans
+      (((boundedWordBlock period 0 q (by omega) w).map_add _ _).trans ?_))
+  exact congrArg₂ (· + ·) ((boundedWordBlock_heat period 0 q (by omega) w _ _).trans
+    (congrArg (heatFlow period 0 ν t.val) (boundedWordBlock_truncate period q w u₀).symm)) hduh
 
 /-- Every highest-order derivative word of an actual H^(q+1) mild solution is itself an actual H¹
 mild solution with its differentiated L² source. -/

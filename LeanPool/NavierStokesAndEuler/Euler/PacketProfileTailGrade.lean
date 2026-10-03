@@ -71,7 +71,7 @@ theorem knownJet_bound (O : Operators) (hp : 2 ≤ p) (hR : 1 ≤ R)
       have hj := (J.value_eq t x θ).symm
       change J.raw (t,(x,θ)) = _ at hj
       rw [hj]
-      simp [knownJets,history,velocityJet,show 0 < p by omega]
+      simp only [knownJets, history, show 0 < p by omega, ↓reduceIte, velocityJet, Prod.fst_zero]
     exact (Field.wordBound_of_zero J.field hz 6 R (highShift 0)).mono_amplitude
       (zero_le_one.trans hR) (by norm_num : (0 : ℝ) ≤ 3*S.H0^(2*0))
   · have hi : 1 ≤ i := by omega
@@ -255,30 +255,31 @@ variable {P T : ℝ} [Fact (0 < P)]
 theorem wordBound_convolution (M n : ℕ) (f : ℕ → ℕ → VectorField)
     (G : ∀ i j, Field P T (f i j)) (q : ℕ) (R A : ℝ) (d : ℕ)
     (hR : 0 ≤ R) (hA : 0 ≤ A)
-    (hG : ∀ i ∈ range (M + 1), ∀ j ∈ range (M + 1), i + j = n → (G i j).WordBound q R A d) :
+    (hG : ∀ i ∈ Finset.range (M + 1), ∀ j ∈ Finset.range (M + 1), i + j = n →
+      (G i j).WordBound q R A d) :
     (Field.convolution M n f G).WordBound q R (((M+1 : ℕ) : ℝ)^2*A) d := by
   classical
   let K : ∀ i j, Field P T (if i+j=n then f i j else 0) := fun i j => by
     by_cases hij : i+j=n
     · exact (G i j).congr (fun _ _ _ => by rw [ite_eq_left hij])
     · exact (Field.zero P T).congr (fun _ _ _ => by rw [ite_eq_right hij])
-  have hK : ∀ i ∈ range (M+1), ∀ j ∈ range (M+1), (K i j).WordBound q R A d := by
+  have hK : ∀ i ∈ Finset.range (M+1), ∀ j ∈ Finset.range (M+1), (K i j).WordBound q R A d := by
     intro i hi j hj
     by_cases hij : i+j=n
     · exact (hG i hi j hj hij).ofRawEq (K i j) (fun _ _ _ => by rw [ite_eq_left hij])
     · exact (wordBound_of_zero (K i j) (fun _ _ _ => by
         rw [ite_eq_right hij]; rfl) q R d).mono_amplitude hR hA
-  let row : (i : ℕ) → Field P T (∑ j ∈ range (M+1), if i+j=n then f i j else 0) := fun i =>
-    Field.finsetSum (range (M+1)) (fun j => if i+j=n then f i j else 0) (K i)
-  have hr : ∀ i ∈ range (M+1), (row i).WordBound q R (((M+1 : ℕ) : ℝ)*A) d := by
+  let row : (i : ℕ) → Field P T (∑ j ∈ Finset.range (M+1), if i+j=n then f i j else 0) := fun i =>
+    Field.finsetSum (Finset.range (M+1)) (fun j => if i+j=n then f i j else 0) (K i)
+  have hr : ∀ i ∈ Finset.range (M+1), (row i).WordBound q R (((M+1 : ℕ) : ℝ)*A) d := by
     intro i hi
-    have h := wordBound_finsetSum (range (M+1)) (fun j => if i+j=n then f i j else 0) (K i)
+    have h := wordBound_finsetSum (Finset.range (M+1)) (fun j => if i+j=n then f i j else 0) (K i)
       (fun _ => A) (hK i hi)
     simpa only [sum_const,card_range,nsmul_eq_mul] using h
-  have ht := wordBound_finsetSum (range (M+1))
-    (fun i => ∑ j ∈ range (M+1), if i+j=n then f i j else 0) row
+  have ht := wordBound_finsetSum (Finset.range (M+1))
+    (fun i => ∑ j ∈ Finset.range (M+1), if i+j=n then f i j else 0) row
     (fun _ => ((M+1 : ℕ) : ℝ)*A) hr
-  have he : ∑ _i ∈ range (M+1), ((M+1 : ℕ) : ℝ)*A = ((M+1 : ℕ) : ℝ)^2*A := by
+  have he : ∑ _i ∈ Finset.range (M+1), ((M+1 : ℕ) : ℝ)*A = ((M+1 : ℕ) : ℝ)^2*A := by
     simp only [sum_const,card_range,nsmul_eq_mul]
     ring
   rw [he] at ht
@@ -390,12 +391,12 @@ theorem tail_linear_bound (hTime : 0 < T) (hN : 1 ≤ N) (hR : 1 ≤ R)
       (by simpa only [Field.WordBound,Field.normalized_path,Nat.add_sub_cancel] using hC)
       (by
           simpa only [Field.WordBound,Field.normalized_path,Nat.add_sub_cancel] using hCtB) hRc (by
-              simp)
+              simp only [add_tsub_cancel_right, Scales.high_apply, Std.le_refl, implies_true])
     have hQ := BC.previousPressure_bound hTime S (N+1) (S.high N) (S.high_pos N)
       (a N).highPressure pressure
       (by
           simpa only [Field.WordBound,Field.normalized_path,Nat.add_sub_cancel] using hpB) hRc (by
-              simp)
+              simp only [add_tsub_cancel_right, Scales.high_apply, Std.le_refl, implies_true])
     have hL' := hL.remove_profile hTime.le (S.high N) (S.high_pos N)
       (S.H0^(2*N)) (pow_nonneg S.H0_pos.le _) (S.high_le_coarse N hN)
     have hQ' := hQ.remove_profile hTime.le (S.high N) (S.high_pos N)

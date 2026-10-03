@@ -97,7 +97,7 @@ def updateLowBounds {N : Parent} (F : Evolution N) (H : LowBounds A)
   F.lowBoundsFromPhysical (H.Be+e) (H.Bc+e)
     (boundaryLocalizationC1*(H.Bc+e)+1) H.r K
     (add_nonneg H.Be_nonneg he) (add_nonneg H.Bc_nonneg he)
-    (by linarith) H.r_nonneg H.r_le_quarter hK
+    (by linarith only) H.r_nonneg H.r_le_quarter hK
     (fun x hx z => quadratic_lower_of_difference _ _ H.Be e
       (E.initial_gradient_lower_exterior H x hx) (herror x) z)
     (fun x hx z => quadratic_lower_of_difference _ _ H.Bc e

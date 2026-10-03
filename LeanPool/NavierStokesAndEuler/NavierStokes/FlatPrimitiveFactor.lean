@@ -22,6 +22,10 @@ without truncating subtraction in the natural numbers.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -49,7 +53,7 @@ def factor (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x : ℝ) : ℝ :=
 
 theorem denominator_inner_pos (x : ℝ) {t : ℝ} (ht : 0 ≤ t) : 0 < 1 + x ^ 2 * t := by
   have := mul_nonneg (sq_nonneg x) ht
-  linarith
+  linarith only [this]
 
 theorem denominator_pos (x : ℝ) {t : ℝ} (ht : 0 ≤ t) : 0 < denominator x t :=
   Real.sqrt_pos.mpr (denominator_inner_pos x ht)
@@ -89,14 +93,14 @@ theorem coordinate_mem_Ioo {x t : ℝ} (hx : 0 < x) (ht : 0 < t) :
     coordinate x t ∈ Ioo 0 x := by
   have hinner : 1 < 1 + x ^ 2 * t := by
     have := mul_pos (sq_pos_of_pos hx) ht
-    linarith
+    linarith only [this]
   have hd : 1 < denominator x t := by
     simpa only [denominator, Real.sqrt_one] using Real.sqrt_lt_sqrt (by
         norm_num : (0 : ℝ) ≤ 1) hinner
   constructor
   · exact coordinate_pos hx ht.le
   · apply (div_lt_iff₀ (denominator_pos x ht.le)).mpr
-    nlinarith
+    nlinarith only [hx, hd]
 
 theorem coordinate_injOn {x : ℝ} (hx : 0 < x) : InjOn (coordinate x) (Ioi 0) := by
   intro t ht s hs h
@@ -105,7 +109,7 @@ theorem coordinate_injOn {x : ℝ} (hx : 0 < x) : InjOn (coordinate x) (Ioi 0) :
   have hd : denominator x t = denominator x s := (mul_left_cancel₀ hx.ne' hcross).symm
   have hsq := congrArg (fun a : ℝ => a ^ 2) hd
   rw [denominator_sq x ht.le, denominator_sq x hs.le] at hsq
-  have hmul : x ^ 2 * t = x ^ 2 * s := by linarith
+  have hmul : x ^ 2 * t = x ^ 2 * s := by linarith only [hsq]
   exact mul_left_cancel₀ (pow_ne_zero 2 hx.ne') hmul
 
 theorem coordinate_image {x : ℝ} (hx : 0 < x) : coordinate x '' Ioi 0 = Ioo 0 x := by
@@ -117,11 +121,11 @@ theorem coordinate_image {x : ℝ} (hx : 0 < x) : coordinate x '' Ioi 0 = Ioo 0 
     let t : ℝ := (x ^ 2 - u ^ 2) / (x ^ 2 * u ^ 2)
     have ht : 0 < t := by
       apply div_pos
-      · nlinarith [hu.1, hu.2]
+      · nlinarith only [hx, hu, hu.1, hu.2]
       · exact mul_pos (sq_pos_of_pos hx) (sq_pos_of_pos hu.1)
     refine ⟨t, ht, ?_⟩
     have ha : 1 + x ^ 2 * t = (x / u) ^ 2 := by
-      dsimp [t]
+      dsimp only [t]
       field_simp [hx.ne', hu.1.ne']; ring
     have hd : denominator x t = x / u := by
       rw [denominator, ha, Real.sqrt_sq (div_nonneg hx.le hu.1.le)]
@@ -134,7 +138,7 @@ theorem edge_coordinate (c : ℝ) {x t : ℝ} (hx : 0 < x) (ht : 0 ≤ t) :
   congr 1
   calc
     -c / coordinate x t ^ 2 = (-c / x ^ 2) * denominator x t ^ 2 := by
-      dsimp [coordinate]
+      dsimp only [coordinate]
       field_simp
     _ = (-c / x ^ 2) * (1 + x ^ 2 * t) := by rw [denominator_sq x ht]
     _ = -c / x ^ 2 + -c * t := by field_simp; ring
@@ -147,7 +151,7 @@ theorem transformed_integrand (c : ℝ) (j : ℕ) (b : ℝ → ℝ)
   have hd : 0 < denominator x t := denominator_pos x ht
   rw [abs_neg, abs_of_pos (div_pos (pow_pos hx 3) (mul_pos (by norm_num) (pow_pos hd 3)))]
   simp only [integrand, scale, kernel, edge_coordinate c hx ht]
-  dsimp [coordinate]
+  dsimp only [coordinate]
   rw [div_pow]
   field_simp
 
@@ -181,7 +185,9 @@ theorem factor_eq_normalized_primitive (c : ℝ) (j : ℕ) (b : ℝ → ℝ)
 
 theorem kernel_at_zero (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (t : ℝ) :
     kernel c j b 0 t = (b 0 / 2) * Real.exp (-c * t) := by
-  simp [kernel, denominator, coordinate]
+  simp only [kernel, one_div, neg_mul, denominator, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+      zero_pow, zero_mul, add_zero, Real.sqrt_one, one_pow, one_ne_zero, div_self, mul_one,
+      coordinate, div_one]
   ring
 
 /-- The transformed integral has the predicted endpoint value directly,
@@ -190,7 +196,7 @@ theorem factor_at_zero {c : ℝ} (hc : 0 < c) (j : ℕ) (b : ℝ → ℝ) :
     factor c j b 0 = b 0 / (2 * c) := by
   simp only [factor, kernel_at_zero]
   rw [integral_const_mul, integral_exp_mul_Ioi (neg_lt_zero.mpr hc) 0]
-  simp
+  simp only [mul_zero, Real.exp_zero, neg_div_neg_eq, one_div]
   ring
 
 /-- Every fixed polynomial majorant is integrable against the decaying
@@ -202,7 +208,7 @@ theorem polynomial_exp_integrable {c : ℝ} (hc : 0 < c) (N : ℕ) :
     apply tendsto_atTop.2
     intro r
     filter_upwards [eventually_ge_atTop r] with t ht
-    linarith
+    linarith only [ht]
   have hbase : Tendsto (fun t : ℝ => (1 + t) ^ N * Real.exp (-(c / 2) * (1 + t)))
       atTop (𝓝 0) := by
     simpa only [Function.comp_def, Real.rpow_natCast] using
@@ -261,7 +267,7 @@ theorem kernel_locallyDominated {c : ℝ} (hc : 0 < c) (j : ℕ) {b : ℝ → �
   have hyR : |y| ≤ |x| + 1 := by
     have htri : |y| ≤ |y - x| + |x| := by
       simpa only [sub_add_cancel] using abs_add_le (y - x) x
-    linarith
+    linarith only [hdist, htri]
   simpa only [Real.norm_eq_abs, kernel, FlatKernelBounds.kernel, coordinate, denominator,
       FlatKernelBounds.coordinate, FlatKernelBounds.denominator] using hbound y t hyR ht.le
 
@@ -292,7 +298,7 @@ theorem exists_smooth_factor {c : ℝ} (hc : 0 < c) (j : ℕ) {b : ℝ → ℝ}
   intro x hx
   rcases eq_or_lt_of_le hx with hzero | hpos
   · subst x
-    simp
+    simp only [primitive_zero, scale_zero, zero_mul]
   · exact primitive_eq_scale_mul_factor c j b hpos
 
 theorem integral_exp_eq_primitive (c : ℝ) (j : ℕ) (b : ℝ → ℝ)

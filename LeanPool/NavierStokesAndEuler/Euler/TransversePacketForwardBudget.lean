@@ -137,18 +137,21 @@ theorem derivativeCost_le_common : L.derivativeCost ≤ L.commonCost := le_add_o
 
 variable {P : ℝ} [Fact (0 < P)] {raw : VectorField} (G : Forcing P D raw) (I : InitialData P D)
   (directions : ι → LiftTangent) (hdir : ∀ i, ‖directions i‖ ≤ 1) (d : ℕ)
-  (hforce : ∀ n, block directions q (fun a => pathTranslate P a
-    (normalize L.g L.positive (includePath P D.support D.support_measurable G.path))) n 0 ≤
-        majorant L.R d n)
-  (hinitial : ∀ n, block directions q (fun a => translate P a (I.value : CylinderL2 P U)) n 0 ≤
-      majorant L.R d n)
+  (hforce : ∀ n, block directions q
+    (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Space) L.g L.positive
+        (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+          G.path))) n 0 ≤ majorant L.R d n)
+  (hinitial : ∀ n, block directions q
+    (fun a => translate (V := U) P a (I.value : CylinderL2 P U)) n 0 ≤ majorant L.R d n)
 
 include hdir hforce hinitial
 
 theorem velocity_unit_bound (n : ℕ) :
-    block directions q (fun a => pathTranslate P a
-      (normalize L.g L.positive (G.fullVelocityPath I))) n 0 ≤ L.velocityCost*majorant L.R (d+1) n
-          :=
+    block directions q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Space) L.g L.positive
+          (G.fullVelocityPath I))) n 0 ≤
+        L.velocityCost*majorant L.R (d+1) n :=
   G.source_velocity_normalized_bound I L.g L.positive directions hdir q
     L.neighborhood L.neighborhood_measurable L.neighborhood_open L.support_subset
         L.neighborhood_halfball
@@ -159,9 +162,10 @@ theorem velocity_unit_bound (n : ℕ) :
     (fun j => by simpa only [one_mul] using hinitial j) L.frame_radius n
 
 theorem derivative_unit_bound (n : ℕ) :
-    block directions q (fun a => pathTranslate P a
-      (normalize L.g L.positive (G.fullDerivativePath I))) n 0 ≤ L.derivativeCost*majorant L.R
-          (d+1) n :=
+    block directions q (fun a => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (EulerContinuousTimeWeight.normalize (E := CylinderL2 P Space) L.g L.positive
+          (G.fullDerivativePath I))) n 0 ≤
+        L.derivativeCost*majorant L.R (d+1) n :=
   G.source_derivative_normalized_bound I L.g L.positive directions hdir q
     L.neighborhood L.neighborhood_measurable L.neighborhood_open L.support_subset
         L.neighborhood_halfball

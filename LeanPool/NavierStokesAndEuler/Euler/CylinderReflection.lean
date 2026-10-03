@@ -72,7 +72,8 @@ omit [Fact (0 < period)] in
 /-- Negating a translation parameter negates its point on the cylinder. -/
 @[simp] theorem translationPath_neg (a : LiftTangent) (t : ℝ) :
     translationPath period a (-t) = -translationPath period a t := by
-  simp [translationPath, coveringMap, neg_smul]
+  simp only [translationPath, coveringMap, neg_smul, Prod.fst_neg, Prod.smul_fst, Prod.snd_neg,
+      Prod.smul_snd, smul_eq_mul, QuotientAddGroup.mk_neg, Prod.neg_mk]
 
 /-- Strong translation derivatives reverse sign under actual reflection. -/
 theorem reflection_hasDerivAt (a : LiftTangent) {f g : LiftL2 period}
@@ -81,7 +82,7 @@ theorem reflection_hasDerivAt (a : LiftTangent) {f g : LiftL2 period}
       (-reflection period g) 0 := by
   have h0 : HasDerivAt (fun t => translation period (translationPath period a t) f) g ((-id) (0 :
       ℝ)) := by
-    simpa using h
+    simpa only [Pi.neg_apply, id_eq, neg_zero] using h
   have hn := h0.scomp 0 ((hasDerivAt_id (0 : ℝ)).neg)
   have hr := (reflection period).toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt 0 hn
   convert! hr using 1
@@ -89,7 +90,7 @@ theorem reflection_hasDerivAt (a : LiftTangent) {f g : LiftL2 period}
     change translation period (translationPath period a t) (reflection period f) =
       reflection period (translation period (translationPath period a (-t)) f)
     rw [reflection_translation, translationPath_neg, neg_neg]
-  · simp
+  · simp only [neg_smul, one_smul, LinearIsometry.coe_toContinuousLinearMap, map_neg]
 
 /-- A scalar test pulled back by joint negation. -/
 def reflectedTest (φ : LiftDomain period → ℝ) : LiftDomain period → ℝ := fun x => φ (-x)
@@ -99,7 +100,8 @@ omit [Fact (0 < period)] in
 theorem localLift_reflected (φ : LiftDomain period → ℝ) (x : LiftDomain period) :
     localLift period (reflectedTest period φ) x = fun h => localLift period φ (-x) (-h) := by
   funext h
-  simp [localLift, reflectedTest, neg_add_rev, add_comm]
+  simp only [localLift, reflectedTest, Prod.neg_mk, neg_add_rev, add_comm, Prod.fst_neg,
+      Prod.snd_neg, QuotientAddGroup.mk_neg]
 
 omit [Fact (0 < period)] in
 /-- Reflection preserves the class of smooth compact scalar tests. -/
@@ -116,16 +118,19 @@ omit [Fact (0 < period)] in
 theorem liftedGradient_reflected (κ : ℝ) (m : Vector3) (φ : LiftDomain period → ℝ)
     (hφ : ∀ x, ContDiff ℝ ∞ (localLift period φ x)) (x : LiftDomain period) :
     liftedGradient period κ m (reflectedTest period φ) x = -liftedGradient period κ m φ (-x) := by
-  have hd := ((hφ (-x)).differentiable (by simp) (0 : LiftTangent)).hasFDerivAt
+  have hd := ((hφ (-x)).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) (0 : LiftTangent)).hasFDerivAt
   have hn := (hasFDerivAt_id (𝕜 := ℝ) (0 : LiftTangent)).neg
   have hd0 : HasFDerivAt (localLift period φ (-x)) (fderiv ℝ (localLift period φ (-x)) 0)
-      ((-id) (0 : LiftTangent)) := by simpa using hd
+      ((-id) (0 : LiftTangent)) := by simpa only [Pi.neg_apply, id_eq, neg_zero] using hd
   have hh := hd0.comp (0 : LiftTangent) hn
   have hder : fderiv ℝ (localLift period (reflectedTest period φ) x) 0 =
       -fderiv ℝ (localLift period φ (-x)) 0 := by
     rw [localLift_reflected]
-    simpa [Function.comp_def] using hh.fderiv
+    simpa only [Function.comp_def, Pi.neg_apply, id_eq, ContinuousLinearMap.comp_neg,
+        ContinuousLinearMap.comp_id] using hh.fderiv
   ext i
-  simp [liftedGradient, hder, add_comm]
+  simp only [liftedGradient, hder, neg_apply, mul_neg, PiLp.neg_apply, neg_add_rev]
+  exact add_comm _ _
 
 end EulerCylinderReflection

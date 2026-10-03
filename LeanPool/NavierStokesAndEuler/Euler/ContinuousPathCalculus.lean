@@ -84,7 +84,8 @@ def coefficientMap : C(K,E →L[ℝ] F) →L[ℝ] (C(K,E) →L[ℝ] C(K,F)) wher
       change ‖multiplier A‖ ≤ (1 : ℝ)*‖A‖
       simpa only [one_mul] using multiplier_norm A)
 
-@[simp] theorem coefficientMap_apply (A : C(K, E →L[ℝ] F)) : coefficientMap A = multiplier A := rfl
+@[simp] theorem coefficientMap_apply (A : C(K, E →L[ℝ] F)) :
+    coefficientMap (K := K) (E := E) (F := F) A = multiplier A := rfl
 
 /-- Coefficient lifting to continuous paths is a norm contraction. -/
 theorem coefficientMap_norm : ‖coefficientMap (K := K) (E := E) (F := F)‖ ≤ 1 := by

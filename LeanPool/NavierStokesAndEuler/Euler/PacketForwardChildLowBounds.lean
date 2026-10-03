@@ -35,7 +35,7 @@ theorem forwardPressureTerm_eq_coefficient (t : Icc (0 : ℝ) D.T) (x : Space) :
     pressureTerm a slope (D.M.field t x) (D.normal.field t x)
       (canonicalVelocity D ξ t x) =
     (EulerPacketForwardShear.pressureCoefficient D ξ a t x*slope) •
-      rankOne ℝ (D.normal.field t x) (D.normal.field t x) := by
+      rankOne ℝ (E := Space) (F := Space) (D.normal.field t x) (D.normal.field t x) := by
   unfold pressureTerm EulerPacketForwardShear.pressureCoefficient
   congr 1
   ring
@@ -93,7 +93,8 @@ theorem forwardSourceErrors_of_global (ev ep : ℝ)
     (herr : ∀ (t : Icc (0 : ℝ) A.T) (x : Space),
       ‖fderiv ℝ (A.normalizedPacketVelocity m hm J support hSupport B residual k E.inverse t) x -
         (G.primaryAmplitude hball * deriv (profile G.δ) (k * ⟪m, E.inverse.normalized t x⟫_ℝ)) •
-          rankOne ℝ (canonicalVelocity (A.transverseData m hm J support hSupport)
+          rankOne ℝ (E := Space) (F := Space)
+            (canonicalVelocity (A.transverseData m hm J support hSupport)
               G.initialCoordinate t (E.inverse.normalized t x))
             ((A.transverseData m hm J support hSupport).normal.field t (E.inverse.normalized t x))‖
                 < ev ∧
@@ -103,7 +104,8 @@ theorem forwardSourceErrors_of_global (ev ep : ℝ)
             G.initialCoordinate (G.primaryAmplitude hball) t
             (E.inverse.normalized t x) *
  deriv (profile G.δ) (k * ⟪m, E.inverse.normalized t x⟫_ℝ)) •
-          rankOne ℝ ((A.transverseData m hm J support hSupport).normal.field t
+          rankOne ℝ (E := Space) (F := Space)
+            ((A.transverseData m hm J support hSupport).normal.field t
               (E.inverse.normalized t x))
             ((A.transverseData m hm J support hSupport).normal.field t (E.inverse.normalized t x))‖
                 < ep) :
@@ -130,9 +132,9 @@ theorem exactForwardPacket_good_low_bounds
     ∀ z, ⟪fderiv ℝ (gradient (fun y => A.exactPacketPressure m hm J support hSupport B residual k
         E.inverse.field E.pressure (t,y))) x z,z⟫_ℝ ≤
       (Kupper+2*CM*G.δ*(G.hchild*goodRatio)+ep)*‖z‖^2 := by
-  let y := E.inverse.normalized t (A.ell⁻¹ • x)
   have herr' := herr t (A.ell⁻¹ • x)
   have he := E.exactPacket_derivative_split m hm J support hSupport B residual k hk t x
+  set y := E.inverse.normalized t (A.ell⁻¹ • x)
   have hm' : (A.transverseData m hm J support hSupport).M.field t y =
       fderiv ℝ (fun y => E.velocity (t,y)) x := E.strain_at_normalized_inverse t x
   apply good_step_bounds _ _ _ _ ((A.transverseData m hm J support hSupport).M.field t y)
@@ -145,10 +147,10 @@ theorem exactForwardPacket_good_low_bounds
   · exact hCM
   · exact hCH
   · rw [he.1,add_sub_cancel_left]
-    exact herr'.1
+    apply herr'.1
   · rw [he.2,add_sub_cancel_left]
-    exact herr'.2
-  · exact G.good_primary_flux hball t ht y
+    apply herr'.2
+  · apply G.good_primary_flux hball t ht y
   · exact hupper
 
 include hk hδ hδ1 in
@@ -168,9 +170,9 @@ theorem exactForwardPacket_early_low_bounds
     ∀ z, ⟪fderiv ℝ (gradient (fun y => A.exactPacketPressure m hm J support hSupport B residual k
         E.inverse.field E.pressure (t,y))) x z,z⟫_ℝ ≤
       (Kupper+2*CM*(G.hchild*G.earlyRatio)+ep)*‖z‖^2 := by
-  let y := E.inverse.normalized t (A.ell⁻¹ • x)
   have herr' := herr t (A.ell⁻¹ • x)
   have he := E.exactPacket_derivative_split m hm J support hSupport B residual k hk t x
+  set y := E.inverse.normalized t (A.ell⁻¹ • x)
   have hm' : (A.transverseData m hm J support hSupport).M.field t y =
       fderiv ℝ (fun y => E.velocity (t,y)) x := E.strain_at_normalized_inverse t x
   apply absolute_step_bounds _ _ _ _ ((A.transverseData m hm J support hSupport).M.field t y)
@@ -183,9 +185,9 @@ theorem exactForwardPacket_early_low_bounds
   · exact hCM
   · exact hCH
   · rw [he.1,add_sub_cancel_left]
-    exact herr'.1
+    apply herr'.1
   · rw [he.2,add_sub_cancel_left]
-    exact herr'.2
+    apply herr'.2
   · exact hupper
 
 include hk hδ hδ1 in

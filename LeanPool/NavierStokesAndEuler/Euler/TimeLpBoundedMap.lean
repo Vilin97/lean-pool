@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TerminalTimePrimitive
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 public import Mathlib.MeasureTheory.Function.L2Space
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # Spatial bounded maps on genuine Bochner time spaces
@@ -105,16 +106,17 @@ theorem realPrimitive_timeLift [CompleteSpace E] [CompleteSpace F] (T : ℝ) (A 
 /-- The terminal-zero normalization is preserved by every bounded spatial map. -/
 theorem initialTrace_timeLift [CompleteSpace E] [CompleteSpace F] (T : ℝ) (hT : 0 ≤ T)
     (A : E →L[ℝ] F) (u : TimeLp T E) :
-    initialTrace T hT (timeLift T A u) = A (initialTrace T hT u) :=
+    initialTrace (E := F) T hT (timeLift T A u) = A (initialTrace (E := E) T hT u) :=
   realPrimitive_timeLift T A u 0
 
 /-- Commutation also holds as an equality of actual Bochner L² fields. -/
 theorem primitiveTimeLp_timeLift [CompleteSpace E] [CompleteSpace F] (T : ℝ) (hT : 0 ≤ T)
     (A : E →L[ℝ] F) (u : TimeLp T E) :
-    primitiveTimeLp T hT (timeLift T A u) = timeLift T A (primitiveTimeLp T hT u) := by
+    primitiveTimeLp (E := F) T hT (timeLift T A u) =
+      timeLift T A (primitiveTimeLp (E := E) T hT u) := by
   apply Lp.ext
   filter_upwards [primitiveTimeLp_ae T hT (timeLift T A u),
-    primitiveTimeLp_ae T hT u, timeLift_ae T A (primitiveTimeLp T hT u)] with t hAu hu ha
+    primitiveTimeLp_ae T hT u, timeLift_ae T A (primitiveTimeLp (E := E) T hT u)] with t hAu hu ha
   exact hAu.trans ((realPrimitive_timeLift T A u t).trans ((congrArg A hu).symm.trans ha.symm))
 
 section Adjoint
@@ -125,14 +127,16 @@ variable {H K : Type*}
 
 /-- The genuine time-space adjoint acts by the spatial adjoint at each time. -/
 theorem timeLift_adjoint (T : ℝ) (A : H →L[ℝ] K) :
-    (timeLift T A).adjoint = timeLift T A.adjoint := by
+    adjoint (𝕜 := ℝ) (E := TimeLp T H) (F := TimeLp T K) (timeLift T A) =
+      timeLift T (adjoint (𝕜 := ℝ) (E := H) (F := K) A) := by
   apply ContinuousLinearMap.ext
   intro u
   apply ext_inner_right ℝ
   intro v
   rw [adjoint_inner_left, MeasureTheory.L2.inner_def, MeasureTheory.L2.inner_def]
   apply integral_congr_ae
-  filter_upwards [timeLift_ae T A v, timeLift_ae T A.adjoint u] with t ha hadj
+  filter_upwards [timeLift_ae T A v,
+    timeLift_ae T (adjoint (𝕜 := ℝ) (E := H) (F := K) A) u] with t ha hadj
   rw [ha, hadj, adjoint_inner_left]
 
 end Adjoint

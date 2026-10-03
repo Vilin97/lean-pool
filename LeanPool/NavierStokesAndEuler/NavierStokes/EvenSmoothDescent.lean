@@ -114,7 +114,8 @@ theorem iteratedDeriv_average_zero {f : ℝ → E} (hf : ContDiff ℝ ∞ f) (n 
   rw [iteratedDeriv_average hf]
   simp only [mul_zero]
   rw [intervalIntegral.integral_smul_const, integral_pow]
-  simp
+  simp only [one_pow, ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false, not_false_eq_true,
+      zero_pow, sub_zero, one_div]
 
 theorem average_deriv_identity {f : ℝ → E} (hf : ContDiff ℝ ∞ f) (x : ℝ) :
     x • average (deriv f) x = f x - f 0 := by
@@ -139,7 +140,7 @@ theorem even_iteratedDeriv_two {f : ℝ → E} (he : Function.Even f) :
   intro x
   have h := iteratedDeriv_comp_neg 2 f x
   rw [heq] at h
-  simpa using h.symm
+  simpa only [even_two, Even.neg_pow, one_pow, one_smul] using h.symm
 
 omit [CompleteSpace E] in
 theorem even_average {f : ℝ → E} (he : Function.Even f) : Function.Even (average f) := by
@@ -161,7 +162,8 @@ theorem deriv_zero_of_even {f : ℝ → E} (he : Function.Even f) : deriv f 0 = 
   have heq : (fun x => f (-x)) = f := funext he
   have h := iteratedDeriv_comp_neg 1 f 0
   rw [heq] at h
-  have hn : deriv f 0 = -(deriv f 0) := by simpa using h
+  have hn : deriv f 0 = -(deriv f 0) := by simpa only [iteratedDeriv_one, pow_one, neg_zero,
+      neg_smul, one_smul] using h
   have hz : (2 : ℝ) • deriv f 0 = 0 := by
     calc
       (2 : ℝ) • deriv f 0 = deriv f 0 + deriv f 0 := two_smul ℝ (deriv f 0)
@@ -303,7 +305,8 @@ theorem radialIterate_at_zero (n : ℕ) {f : ℝ → E} (hf : ContDiff ℝ ∞ f
     radialIterate f n 0 =
       ((n.factorial : ℝ) / ((2 * n).factorial : ℝ)) • iteratedDeriv (2 * n) f 0 := by
   induction n generalizing f with
-  | zero => simp [radialIterate_zero]
+  | zero => simp only [radialIterate_zero, Nat.factorial_zero, Nat.cast_one, mul_zero, ne_eq,
+      one_ne_zero, not_false_eq_true, div_self, iteratedDeriv_zero, one_smul]
   | succ n ih =>
     rw [radialIterate_succ_right, ih (contDiff_radialDerivative hf),
       iteratedDeriv_radialDerivative_zero hf, smul_smul]
@@ -320,7 +323,8 @@ theorem iteratedDerivWithin_descent_zero {f : ℝ → E} (hf : ContDiff ℝ ∞ 
     (he : Function.Even f) (n : ℕ) :
     iteratedDerivWithin n (descent f) (Ici 0) 0 =
       ((n.factorial : ℝ) / ((2 * n).factorial : ℝ)) • iteratedDeriv (2 * n) f 0 := by
-  rw [iteratedDerivWithin_descent hf he n (show (0 : ℝ) ∈ Ici 0 from by simp)]
+  rw [iteratedDerivWithin_descent hf he n (show (0 : ℝ) ∈ Ici 0 from by simp only [mem_Ici,
+      Std.le_refl])]
   simpa only [descent, Real.sqrt_zero] using radialIterate_at_zero n hf
 
 /-! The local theorem uses an explicit cutoff extension. This extension is
@@ -346,7 +350,7 @@ theorem even_evenCutoff (r : ℝ) : Function.Even (evenCutoff r) := by
 theorem evenCutoff_eventually_one (r : ℝ) : evenCutoff r =ᶠ[𝓝 0] (fun _ => 1) := by
   have hn : (fun x => SmoothCutoffs.scaledCutoff (2 / r) (-x)) =ᶠ[𝓝 0] (fun _ => 1) :=
     (SmoothCutoffs.scaledCutoff_eventually_one_at_zero (2 / r)).comp_tendsto
-      (by simpa using (continuous_neg.tendsto (0 : ℝ)))
+      (by simpa only [neg_zero] using (continuous_neg.tendsto (0 : ℝ)))
   filter_upwards [SmoothCutoffs.scaledCutoff_eventually_one_at_zero (2 / r), hn]
     with x hx hn
   simp only [evenCutoff, hx, hn, mul_one]
@@ -408,7 +412,7 @@ theorem contDiffWithinAt_descent_zero {r : ℝ} (hr : 0 < r) {f : ℝ → E}
     ContDiffWithinAt ℝ ∞ (descent f) (Ici 0) 0 := by
   have hg := contDiffOn_descent (contDiff_localized hr hf) (even_localized hr he)
   have hEq := descent_localized_eventuallyEq r f
-  exact (hg 0 (by simp)).congr_of_eventuallyEq
+  exact (hg 0 (by simp only [mem_Ici, Std.le_refl])).congr_of_eventuallyEq
     (hEq.symm.filter_mono nhdsWithin_le_nhds) hEq.eq_of_nhds.symm
 
 theorem contDiffOn_descent_local {r : ℝ} (hr : 0 < r) {f : ℝ → E}
@@ -422,8 +426,8 @@ theorem contDiffOn_descent_local {r : ℝ} (hr : 0 < r) {f : ℝ → E}
   · have hpos : 0 < X := lt_of_le_of_ne hX.1 (Ne.symm hz)
     have hsqrt : Real.sqrt X ∈ Ioo (-r) r := by
       constructor
-      · linarith [Real.sqrt_nonneg X]
-      · nlinarith [Real.sq_sqrt hX.1, Real.sqrt_nonneg X, hX.2]
+      · linarith only [hr, Real.sqrt_nonneg X]
+      · nlinarith only [hX, hr, Real.sq_sqrt hX.1, Real.sqrt_nonneg X, hX.2]
     exact ((hf.contDiffAt (isOpen_Ioo.mem_nhds hsqrt)).comp X
       (Real.contDiffAt_sqrt hz)).contDiffWithinAt
 

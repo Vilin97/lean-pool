@@ -66,11 +66,13 @@ theorem sourceMeanPullback_divergence (A : SourceCoefficientAgreement M D)
   · subst p
     simp only [sourceProfiles,profiles_zero]
     change divergence (fun y : Space => (sourceOperators P M D I).inverseFrame (t,(y,0)) 0) x = 0
-    simp [divergence]
+    simp only [divergence, map_zero, fderiv_fun_const, Pi.zero_apply,
+        ContinuousLinearMap.toLinearMap_zero]
   by_cases hp1 : p = 1
   · subst p
     simp only [sourceProfiles,profiles_one,homogeneousPrimary,primaryProfile]
-    simp [divergence]
+    simp only [divergence, Pi.zero_apply, map_zero, fderiv_fun_const,
+        ContinuousLinearMap.toLinearMap_zero]
   have hp : 2 ≤ p := by omega
   let h : Nonempty (EulerMeanPacketProvider.Forcing M
       (meanForce (sourceOperators P M D I) p (sourceProfiles P M D I Iprimary))) :=

@@ -209,6 +209,7 @@ theorem direction_average {f : SpaceTime → E}
         (fderiv ℝ f (angularShift q a)) q := by
       simpa only [angularShift, Function.comp_def, id_eq, ContinuousLinearMap.comp_id] using
         ((hf.differentiable (by simp)) (angularShift q a)).hasFDerivAt.comp q
+          (f := fun x => id x + a • angularVector)
           ((hasFDerivAt_id q).add_const (a • angularVector))
     exact congrArg (fun L : SpaceTime →L[ℝ] E => L v)
       ((TransportPrimitive.parameter_hasFDerivAt hg q a).unique hchain)
@@ -281,7 +282,7 @@ theorem direction_mul {f g : Scalar} (hf : ContDiff ℝ ∞ f)
     direction v (fun y => f y * g y) q = direction v f q * g q + f q * direction v g q := by
   unfold direction
   rw [fderiv_fun_mul (hf.differentiable (by simp) q) (hg.differentiable (by simp) q)]
-  simp
+  simp only [_root_.add_apply, _root_.smul_apply, smul_eq_mul]
   ring
 
 theorem direction_map (L : E →L[ℝ] F) {f : SpaceTime → E} (hf : ContDiff ℝ ∞ f)
@@ -606,9 +607,15 @@ theorem average_conservativeAngular {w : Components} {p : Scalar}
     ((angularContinuous_direction (hw 0) _).const_mul 2).div_radius 2
   have h8 : AngularContinuous (fun y => dtheta p y / radius y) :=
     (angularContinuous_direction hp _).div_r
+  have h12 := h1.add h2
+  have h13 := h12.add h3
+  have h14 := h13.add h4
+  have h15 := h14.sub h5
+  have h16 := h15.add h6
+  have h17 := h16.sub h7
   unfold conservativeAngular
-  simp (disch := solve_by_elim (maxDepth := 20) [AngularContinuous.add, AngularContinuous.sub])
-    only [average_add, average_sub]
+  rw [average_add h17 h8, average_sub h16 h7, average_add h15 h6, average_sub h14 h5,
+    average_add h13 h4, average_add h12 h3, average_add h1 h2]
   rw [average_radialDivergence ((hw 0).mul (hw 1)),
     average_laplacian (hw 1) (hwper 1)]
   rw [average_dt (hw 1), average_dz ((hw 2).mul (hw 1))]
@@ -636,9 +643,16 @@ theorem average_conservativeRadial {w : Components} {p : Scalar}
   have h8 : AngularContinuous (fun y => 2 * dtheta (w 1) y / radius y ^ 2) :=
     ((angularContinuous_direction (hw 1) _).const_mul 2).div_radius 2
   have h9 : AngularContinuous (dr p) := angularContinuous_direction hp _
+  have h12 := h1.add h2
+  have h13 := h12.add h3
+  have h14 := h13.add h4
+  have h15 := h14.sub h5
+  have h16 := h15.sub h6
+  have h17 := h16.add h7
+  have h18 := h17.add h8
   unfold conservativeRadial
-  simp (disch := solve_by_elim (maxDepth := 20) [AngularContinuous.add, AngularContinuous.sub])
-    only [average_add, average_sub]
+  rw [average_add h18 h9, average_add h17 h8, average_add h16 h7, average_sub h15 h6,
+    average_sub h14 h5, average_add h13 h4, average_add h12 h3, average_add h1 h2]
   rw [average_radialDivergence ((hw 0).mul (hw 0)), average_laplacian (hw 0) (hwper 0),
     average_dt (hw 0), average_dz ((hw 2).mul (hw 0)), average_dr hp]
   simp only [average_div_r, average_div_radius, average_const_mul,
@@ -658,9 +672,13 @@ theorem average_conservativeAxial {w : Components} {p : Scalar}
     angularContinuous_direction ((hw 2).mul (hw 2)) _
   have h5 := angularContinuous_laplacian (hw 2)
   have h6 : AngularContinuous (dz p) := angularContinuous_direction hp _
+  have h12 := h1.add h2
+  have h13 := h12.add h3
+  have h14 := h13.add h4
+  have h15 := h14.sub h5
   unfold conservativeAxial
-  simp (disch := solve_by_elim (maxDepth := 20) [AngularContinuous.add, AngularContinuous.sub])
-    only [average_add, average_sub]
+  rw [average_add h15 h6, average_sub h14 h5, average_add h13 h4, average_add h12 h3,
+    average_add h1 h2]
   rw [average_radialDivergence ((hw 0).mul (hw 2)), average_laplacian (hw 2) (hwper 2),
     average_dt (hw 2), average_dz ((hw 2).mul (hw 2)), average_dz hp]
   simp only [average_div_r,

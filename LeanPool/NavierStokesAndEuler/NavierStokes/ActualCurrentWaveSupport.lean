@@ -96,13 +96,13 @@ theorem profileRadius_mem_iff_active {w : SpaceTime} (ht : w.1 < 1) :
   · intro hs
     have hl := (sq_le_sq₀ ha.le hr).mpr hs.1
     have hu := (sq_le_sq₀ hr hb.le).mpr hs.2
-    constructor <;> linarith
+    constructor <;> linarith only [hsq, hasq, hl, hbsq, hu]
   · intro hs
     constructor
     · apply (sq_le_sq₀ ha.le hr).mp
-      linarith [hs.1]
+      linarith only [hsq, hasq, hs, hs.1]
     · apply (sq_le_sq₀ hr hb.le).mp
-      linarith [hs.2]
+      linarith only [hsq, hbsq, hs, hs.2]
 
 /-- The normalized radius of the actual scaled graph agrees with the
 band-independent physical ratio, also at the axis. -/
@@ -119,7 +119,7 @@ theorem graph_profileRadius_eq {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       (PhysicalMeanJetBounds.graph_length_pos hh hh1 n d ht).le
   have hr : 0 ≤ profileRadius h w :=
     div_nonneg (AnnularEndpoint.radius_nonneg w) (Real.sqrt_nonneg _)
-  nlinarith
+  nlinarith only [hleft, hright, hl, hr]
 
 section BandSupport
 
@@ -236,7 +236,7 @@ theorem rightRadius_le_actualOuterConstant :
   have hs : 1 ≤ Real.sqrt 2 := by
     apply (Real.le_sqrt (by norm_num) (by norm_num)).mpr
     norm_num
-  nlinarith
+  nlinarith only [hb, hs]
 
 section RefinedExterior
 

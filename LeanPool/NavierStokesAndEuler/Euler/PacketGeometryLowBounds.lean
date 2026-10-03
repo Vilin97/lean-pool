@@ -38,7 +38,7 @@ theorem cutoff_le (x : Space) : innerCutoff x ≤ cutoffBound := by
   simp only [norm_iteratedFDeriv_zero,majorant,Nat.zero_add,Nat.factorial_zero,
     Nat.cast_one,pow_zero,one_pow,mul_one] at h
   have he := (le_abs_self (innerCutoff x)).trans (by simpa only [Real.norm_eq_abs] using h)
-  exact he.trans (by unfold cutoffBound; linarith)
+  exact he.trans (by unfold cutoffBound; linarith only)
 
 /-- Good ratio, given by `cutoffBound*(64*Real.exp 6)`. -/
 def goodRatio : ℝ := cutoffBound*(64*Real.exp 6)
@@ -251,9 +251,10 @@ theorem badRatio_formula : A.badRatio = cutoffBound *
 theorem history_uncut_size (t : Icc (0 : ℝ) D.T) (ht : (t : ℝ) ≤ τ) (x : Space) :
     ‖D.normal.field t x‖*‖uncutVelocity τ hτ hτT H A.terminal t x‖ ≤ A.historySizeCost := by
   have hn : ‖D.normal.field t x‖ ≤ D.inverseBound := by
-    change ‖(D.FInv.field t x).adjoint D.m₀‖ ≤ _
+    change ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) D.m₀‖ ≤ _
     calc
-      _ ≤ ‖(D.FInv.field t x).adjoint‖*‖D.m₀‖ := (D.FInv.field t x).adjoint.le_opNorm _
+      _ ≤ ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x)‖*‖D.m₀‖ :=
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x)).le_opNorm _
       _ = ‖D.FInv.field t x‖ := by rw [ContinuousLinearMap.adjoint.norm_map,D.m₀_unit,mul_one]
       _ ≤ _ := D.inverse_norm t x
   have hv : ‖uncutVelocity τ hτ hτT H A.terminal t x‖ ≤

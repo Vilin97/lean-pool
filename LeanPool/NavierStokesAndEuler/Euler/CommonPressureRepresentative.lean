@@ -137,6 +137,12 @@ def signedPressurePath {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget pe
     (q : ℕ) (hq : 6 ≤ q) : C(Icc (0 : ℝ) T,SobolevSpace period q) :=
   pressurePath period hq (A.atOrder period q) (solution period hT A B q hq)
 
+theorem rawSourcePath_apply {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
+    (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
+    rawSourcePath period hT A B q hq t =
+      (A.atOrder period q).rawSource period hq t (solution period hT A B q hq t) :=
+  congrFun (ContinuousMap.coe_mk _ _) t
+
 /-- The genuine raw sources of the constructed solutions restrict exactly across adjacent orders. -/
 theorem rawSourcePath_truncate {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
@@ -151,14 +157,17 @@ theorem rawSourcePath_truncate {T : ℝ} (hT : 0 < T) (A : Data period T) (B : B
   change truncateOperator period (q+1) (solution period hT A B (q+1) (hq.trans (Nat.le_succ q)) t) =
     solution period hT A B q hq t at he
   rw [he] at h
-  exact h
+  rw [rawSourcePath_apply, rawSourcePath_apply]
+  -- Only the order proofs differ, so compare argument-wise instead of unfolding the operators.
+  with_reducible exact h
 
 /-- Adjacent genuine raw sources represent the same actual L² field. -/
 theorem rawSourcePath_value_succ {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     value period (rawSourcePath period hT A B (q+1) (hq.trans (Nat.le_succ q)) t) =
       value period (rawSourcePath period hT A B q hq t) :=
-  congrArg (value period (q := q)) (rawSourcePath_truncate period hT A B q hq t)
+  (value_truncateOperator period _).symm.trans
+    (congrArg (value period (q := q)) (rawSourcePath_truncate period hT A B q hq t))
 
 /-- The actual signed coercive pressures represent the same L² field at adjacent Sobolev orders. -/
 theorem signedPressurePath_value_succ {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period
@@ -346,6 +355,15 @@ def pressureJet {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT
   exact EulerH6Pressure.SpatialJet.restrict
     (toJet period (signedPressurePath period hT A B (n+6) (by omega) t)) n (by omega)
 
+theorem signedPressurePath_apply {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT A)
+    (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
+    signedPressurePath period hT A B q hq t =
+      (A.atOrder period q).pressure period hq t (solution period hT A B q hq t) :=
+  congrFun (ContinuousMap.coe_mk _ _) t
+
+theorem atOrder_metric_coefficient {T : ℝ} (A : Data period T) (q : ℕ) :
+    (A.atOrder period q).metric.coefficient = A.metric.coefficient := rfl
+
 /-- The common nonlinear correction satisfies its actual signed-pressure equation in L². -/
 theorem commonPath_pressure_equation {T : ℝ} (hT : 0 < T) (A : Data period T) (B : Budget period hT
     A)
@@ -355,7 +373,9 @@ theorem commonPath_pressure_equation {T : ℝ} (hT : 0 < T) (A : Data period T) 
         (A.metric.coefficient ⟨t,ht.1.le,ht.2.le⟩).operator
           (commonPressure period hT A B ⟨t,ht.1.le,ht.2.le⟩)) t := by
   have h := commonPath_hasDerivAt period hT A B t ht
-  rw [(A.atOrder period 6).source_value period le_rfl] at h
+  rw [(A.atOrder period 6).source_value period le_rfl, atOrder_metric_coefficient] at h
+  rw [rawSourcePath_apply, ← signedPressurePath_value_common period hT A B 6 le_rfl,
+    signedPressurePath_apply]
   exact h
 
 /-- The constructed signed pressure has a genuine smooth spatial representative at every time. -/

@@ -164,7 +164,8 @@ theorem cutoffCurl_norm_le (χ : Cutoff) : ‖cutoffCurl χ‖ ≤ cutoffBound �
       χ)
 
 /-- The Riesz/weak-Newtonian representation of the cutoff curl functional. -/
-def weakPotential (χ : Cutoff) : L2 →L[ℝ] homogeneousSpace := (cutoffCurl χ).adjoint
+def weakPotential (χ : Cutoff) : L2 →L[ℝ] homogeneousSpace :=
+  ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := homogeneousSpace) (F := L2) (cutoffCurl χ)
 
 /-- The represented functional agrees exactly with the source's distributional pairing. -/
 theorem weakPotential_pairing (χ : Cutoff) (z : L2) (f : Test) :
@@ -180,7 +181,8 @@ theorem weakPotential_norm_le (χ : Cutoff) (z : L2) :
     ‖weakPotential χ z‖ ≤ cutoffBound χ * ‖z‖ := by
   refine ((weakPotential χ).le_opNorm z).trans ?_
   apply mul_le_mul_of_nonneg_right _ (norm_nonneg z)
-  change ‖(cutoffCurl χ).adjoint‖ ≤ cutoffBound χ
+  change ‖ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := homogeneousSpace) (F := L2)
+    (cutoffCurl χ)‖ ≤ cutoffBound χ
   rw [LinearIsometryEquiv.norm_map]
   exact cutoffCurl_norm_le χ
 
@@ -222,7 +224,8 @@ theorem boundaryOperator_energy (χ : Cutoff) (z : L2) :
 theorem boundaryOperator_norm_le (χ : Cutoff) :
     ‖boundaryOperator χ‖ ≤ cutoffBound χ ^ 2 := by
   refine (ContinuousLinearMap.opNorm_comp_le _ _).trans ?_
-  change ‖cutoffCurl χ‖ * ‖(cutoffCurl χ).adjoint‖ ≤ _
+  change ‖cutoffCurl χ‖ * ‖ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := homogeneousSpace) (F := L2)
+    (cutoffCurl χ)‖ ≤ _
   rw [LinearIsometryEquiv.norm_map]
   exact (mul_le_mul (cutoffCurl_norm_le χ) (cutoffCurl_norm_le χ)
     (norm_nonneg (cutoffCurl χ)) (cutoffBound_nonneg χ)).trans_eq (sq (cutoffBound χ)).symm

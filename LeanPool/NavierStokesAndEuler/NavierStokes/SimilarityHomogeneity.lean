@@ -83,21 +83,21 @@ theorem coordinateQ_scale_h {h Q τ z : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     coordinateQ (2 * h) (Q * τ, Q ^ D h * z) =
       Q * coordinateQ (2 * h) (τ, z) := by
   simpa only [SimilarityProfile.D_eq] using
-    coordinateQ_scale (a := 2 * h) (by linarith) (by linarith) hQ hτ
+    coordinateQ_scale (a := 2 * h) (by linarith only [hh]) (by linarith only [hh1]) hQ hτ
 
 theorem coordinateEta_scale_h {h Q τ z : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (hQ : 0 < Q) (hτ : 0 < τ) :
     coordinateEta (2 * h) (Q * τ, Q ^ D h * z) =
       coordinateEta (2 * h) (τ, z) := by
   simpa only [SimilarityProfile.D_eq] using
-    coordinateEta_scale (a := 2 * h) (by linarith) (by linarith) hQ hτ
+    coordinateEta_scale (a := 2 * h) (by linarith only [hh]) (by linarith only [hh1]) hQ hτ
 
 theorem coordinateX_scale_h {h Q τ z s : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (hQ : 0 < Q) (hτ : 0 < τ) :
     coordinateX (2 * h) (Q * s) (Q * τ, Q ^ D h * z) =
       coordinateX (2 * h) s (τ, z) := by
   simpa only [SimilarityProfile.D_eq] using
-    coordinateX_scale (a := 2 * h) (s := s) (by linarith) (by linarith) hQ hτ
+    coordinateX_scale (a := 2 * h) (s := s) (by linarith only [hh]) (by linarith only [hh1]) hQ hτ
 
 /-- Physical time is `t=1-τ`; physical points have layout `(t,(s,z))`. -/
 noncomputable def physicalScale (h Q : ℝ) (p : SimilarityProfile.PhysicalPoint) :
@@ -113,7 +113,7 @@ theorem physicalScale_time_lt_one {h Q : ℝ} (hQ : 0 < Q)
     {p : SimilarityProfile.PhysicalPoint} (hp : p.1 < 1) :
     (physicalScale h Q p).1 < 1 := by
   change 1 - Q * (1 - p.1) < 1
-  linarith [mul_pos hQ (sub_pos.mpr hp)]
+  linarith only [hQ, hp, mul_pos hQ (sub_pos.mpr hp)]
 
 theorem q_physicalScale {h Q : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (hQ : 0 < Q) {p : SimilarityProfile.PhysicalPoint} (hp : p.1 < 1) :
@@ -229,7 +229,7 @@ theorem chartToPhysical_smooth (h Q : ℝ) : ContDiff ℝ ∞ (chartToPhysical h
 theorem chartToPhysical_time_lt_one {h Q : ℝ} (hQ : 0 < Q)
     {p : ChartPoint} (hp : 0 < p.2.2) : (chartToPhysical h Q p).1 < 1 := by
   change 1 - Q * p.2.2 < 1
-  linarith [mul_pos hQ hp]
+  linarith only [hQ, hp, mul_pos hQ hp]
 
 /-- The radial component really is obtained from `r = sqrt(Q) R`. -/
 theorem chartToPhysical_radial {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (p : ChartPoint) :
@@ -280,18 +280,19 @@ theorem chartToPhysical_transition {h Q Q' : ℝ} (hQ : 0 < Q) (hQ' : 0 < Q')
     congr 1
     field_simp
   apply Prod.ext
-  · dsimp [chartToPhysical, chartTransition]
+  · dsimp only [chartToPhysical, chartTransition]
     field_simp
   · apply Prod.ext
-    · dsimp [chartToPhysical, chartTransition]
+    · dsimp only [chartTransition, chartToPhysical]
       rw [mul_pow, hs]
       field_simp
-    · dsimp [chartToPhysical, chartTransition]
+    · dsimp only [chartTransition, chartToPhysical]
       rw [← mul_assoc, hz]
 
 theorem chartTransition_refl {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (p : ChartPoint) :
     chartTransition h Q Q p = p := by
-  simp [chartTransition, hQ.ne']
+  simp only [chartTransition, ne_eq, hQ.ne', not_false_eq_true, div_self, one_div, Real.one_rpow,
+      one_mul, Prod.mk.eta]
 
 theorem chartTransition_comp {h Q Q' Q'' : ℝ}
     (hQ : 0 < Q) (hQ' : 0 < Q') (hQ'' : 0 < Q'') (p : ChartPoint) :
@@ -301,12 +302,12 @@ theorem chartTransition_comp {h Q Q' Q'' : ℝ}
   have hpow (a : ℝ) : (Q' / Q'') ^ a * (Q / Q') ^ a = (Q / Q'') ^ a := by
     rw [← Real.mul_rpow (div_pos hQ' hQ'').le (div_pos hQ hQ').le, hr]
   apply Prod.ext
-  · dsimp [chartTransition]
+  · dsimp only [chartTransition]
     rw [← mul_assoc, hpow]
   · apply Prod.ext
-    · dsimp [chartTransition]
+    · dsimp only [chartTransition]
       rw [← mul_assoc, hpow]
-    · dsimp [chartTransition]
+    · dsimp only [chartTransition]
       rw [← mul_assoc, hr]
 
 theorem chartTransition_inverse {h Q Q' : ℝ} (hQ : 0 < Q) (hQ' : 0 < Q')
@@ -334,11 +335,11 @@ theorem chartInner_smoothAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hm : ContDiffAt ℝ ∞ (fun x : ChartPoint => (x.2.2, x.2.1)) p :=
     contDiffAt_snd.snd.prodMk contDiffAt_snd.fst
   have hq : ContDiffAt ℝ ∞ (chartQ h) p :=
-    (coordinateQ_smooth (by linarith) (by linarith) (p := (p.2.2, p.2.1)) hp).comp p hm
+    (coordinateQ_smooth (by linarith) (by linarith only [hh1]) (p := (p.2.2, p.2.1)) hp).comp p hm
   have he : ContDiffAt ℝ ∞ (chartEta h) p :=
-    (coordinateEta_smooth (by linarith) (by linarith) (p := (p.2.2, p.2.1)) hp).comp p hm
+    (coordinateEta_smooth (by linarith) (by linarith only [hh1]) (p := (p.2.2, p.2.1)) hp).comp p hm
   have hqp : 0 < chartQ h p :=
-    (coordinateQ_spec (by linarith) (by linarith) (p := (p.2.2, p.2.1)) hp).1
+    (coordinateQ_spec (by linarith only [hh]) (by linarith only [hh1]) (p := (p.2.2, p.2.1)) hp).1
   exact (((contDiffAt_fst.pow 2).div_const 2).div hq hqp.ne').prodMk he
 
 theorem chartX_mem_transition {h Q Q' : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)

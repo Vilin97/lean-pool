@@ -85,12 +85,12 @@ theorem D_eq (h : ℝ) : (1 - 2 * h) / 2 = D h := by unfold D CoordinateAlgebra.
 
 theorem q_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) : 0 < q h p :=
-  (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith)
+  (SimilarityCoordinates.coordinateQ_spec (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - p.1, p.2.2)) (sub_pos.mpr hp)).1
 
 theorem eta_sq_lt_one {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) : eta h p ^ 2 < 1 :=
-  SimilarityCoordinates.coordinateEta_sq_lt_one (by linarith) (by linarith)
+  SimilarityCoordinates.coordinateEta_sq_lt_one (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - p.1, p.2.2)) (sub_pos.mpr hp)
 
 theorem L_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -99,13 +99,13 @@ theorem L_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
 
 theorem q_smoothAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) : ContDiffAt ℝ ∞ (q h) p := by
-  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith) (by linarith)
+  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - p.1, p.2.2)) (sub_pos.mpr hp)).comp p
       ((contDiffAt_const.sub contDiffAt_fst).prodMk contDiffAt_snd.snd)
 
 theorem eta_smoothAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) : ContDiffAt ℝ ∞ (eta h) p := by
-  exact (SimilarityCoordinates.coordinateEta_smooth (by linarith) (by linarith)
+  exact (SimilarityCoordinates.coordinateEta_smooth (by linarith only [hh]) (by linarith only [hh1])
     (p := (1 - p.1, p.2.2)) (sub_pos.mpr hp)).comp p
       ((contDiffAt_const.sub contDiffAt_fst).prodMk contDiffAt_snd.snd)
 
@@ -133,7 +133,7 @@ theorem q_hasDerivAt_time {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     HasDerivAt (fun t => q h (t, p.2)) (CoordinateAlgebra.qTime h (eta h p)) p.1 := by
   simpa only [q, eta, CoordinateAlgebra.qTime, CoordinateAlgebra.L] using
     SimilarityCoordinates.coordinateQ_hasDerivAt_time_L (a := 2 * h)
-      (z := p.2.2) (by linarith) (by linarith) hp
+      (z := p.2.2) (by linarith only [hh]) (by linarith only [hh1]) hp
 
 theorem eta_hasDerivAt_time {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) :
@@ -141,7 +141,7 @@ theorem eta_hasDerivAt_time {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       (CoordinateAlgebra.etaTime (q h p) h (eta h p)) p.1 := by
   simpa only [q, eta, CoordinateAlgebra.etaTime, CoordinateAlgebra.L, D_eq] using
     SimilarityCoordinates.coordinateEta_hasDerivAt_time (a := 2 * h)
-      (z := p.2.2) (by linarith) (by linarith) hp
+      (z := p.2.2) (by linarith only [hh]) (by linarith only [hh1]) hp
 
 theorem X_hasDerivAt_time {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) :
@@ -150,7 +150,7 @@ theorem X_hasDerivAt_time {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   simpa only [q, eta, X, CoordinateAlgebra.xTime, CoordinateAlgebra.L,
     SimilarityCoordinates.coordinateX] using
     SimilarityCoordinates.coordinateX_hasDerivAt_time (a := 2 * h)
-      (s := p.2.1) (z := p.2.2) (by linarith) (by linarith) hp
+      (s := p.2.1) (z := p.2.2) (by linarith only [hh]) (by linarith only [hh1]) hp
 
 theorem q_hasDerivAt_z {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) :
@@ -159,7 +159,7 @@ theorem q_hasDerivAt_z {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   rw [CoordinateAlgebra.qAxial_rpow (q_pos hh hh1 hp)]
   simpa only [q, eta, CoordinateAlgebra.L, D_eq] using
     SimilarityCoordinates.coordinateQ_hasDerivAt_z_L (a := 2 * h)
-      (τ := 1 - p.1) (z := p.2.2) (by linarith) (by linarith) (sub_pos.mpr hp)
+      (τ := 1 - p.1) (z := p.2.2) (by linarith only [hh]) (by linarith only [hh1]) (sub_pos.mpr hp)
 
 theorem eta_hasDerivAt_z {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) :
@@ -168,7 +168,7 @@ theorem eta_hasDerivAt_z {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   simpa only [q, eta, CoordinateAlgebra.etaAxial, CoordinateAlgebra.L,
     CoordinateAlgebra.d, D_eq] using
     SimilarityCoordinates.coordinateEta_hasDerivAt_z_L (a := 2 * h)
-      (τ := 1 - p.1) (z := p.2.2) (by linarith) (by linarith) (sub_pos.mpr hp)
+      (τ := 1 - p.1) (z := p.2.2) (by linarith only [hh]) (by linarith only [hh1]) (sub_pos.mpr hp)
 
 theorem X_hasDerivAt_z {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) :
@@ -178,7 +178,7 @@ theorem X_hasDerivAt_z {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     SimilarityCoordinates.coordinateX, D_eq] using
     SimilarityCoordinates.coordinateX_hasDerivAt_z (a := 2 * h)
       (s := p.2.1) (τ := 1 - p.1) (z := p.2.2)
-      (by linarith) (by linarith) (sub_pos.mpr hp)
+      (by linarith only [hh]) (by linarith only [hh1]) (sub_pos.mpr hp)
 
 theorem fderiv_inner_apply (f : InnerProfile) (w v : InnerPoint) :
     fderiv ℝ f w v = partialX f w * v.1 + partialEta f w * v.2 := by
@@ -194,7 +194,8 @@ theorem hasDerivAt_pullback_time {h b : ℝ} {f : InnerProfile}
     (hf : DifferentiableAt ℝ f (inner h p)) :
     HasDerivAt (fun t => pullback h b f (t, p.2))
       (pullback h (b - 1) (T h b f) p) p.1 := by
-  have hc := hf.hasFDerivAt.comp_hasDerivAt p.1
+  have hc := hf.hasFDerivAt.comp_hasDerivAt (F := InnerPoint)
+    (f := fun t => (X h (t, p.2), eta h (t, p.2))) p.1
     ((X_hasDerivAt_time hh hh1 hp).prodMk (eta_hasDerivAt_time hh hh1 hp))
   have hm := ((q_hasDerivAt_time hh hh1 hp).rpow_const
     (p := b) (Or.inl (q_pos hh hh1 hp).ne')).mul hc
@@ -214,7 +215,8 @@ theorem hasDerivAt_pullback_z {h b : ℝ} {f : InnerProfile}
     (hf : DifferentiableAt ℝ f (inner h p)) :
     HasDerivAt (fun z => pullback h b f (p.1, (p.2.1, z)))
       (pullback h (b - D h) (Z h b f) p) p.2.2 := by
-  have hc := hf.hasFDerivAt.comp_hasDerivAt p.2.2
+  have hc := hf.hasFDerivAt.comp_hasDerivAt (F := InnerPoint)
+    (f := fun z => (X h (p.1, (p.2.1, z)), eta h (p.1, (p.2.1, z)))) p.2.2
     ((X_hasDerivAt_z hh hh1 hp).prodMk (eta_hasDerivAt_z hh hh1 hp))
   have hm := ((q_hasDerivAt_z hh hh1 hp).rpow_const
     (p := b) (Or.inl (q_pos hh hh1 hp).ne')).mul hc
@@ -235,7 +237,9 @@ theorem hasDerivAt_pullback_s {h b : ℝ} {f : InnerProfile}
       (pullback h (b - 1) (partialX f) p) p.2.1 := by
   have hx : HasDerivAt (fun s => s / q h p) (1 / q h p) p.2.1 :=
     (hasDerivAt_id p.2.1).div_const _
-  have hc := hf.hasFDerivAt.comp_hasDerivAt p.2.1 (hx.prodMk (hasDerivAt_const p.2.1 (eta h p)))
+  have hc := hf.hasFDerivAt.comp_hasDerivAt (F := InnerPoint)
+    (f := fun s => (s / q h p, eta h p)) p.2.1
+    (hx.prodMk (hasDerivAt_const p.2.1 (eta h p)))
   have hm := hc.const_mul (q h p ^ b)
   rw [fderiv_inner_apply] at hm
   have he : q h p ^ b * (partialX f (inner h p) * (1 / q h p) + partialEta f (inner h p) * 0) =
@@ -249,7 +253,8 @@ theorem partialT_pullback {h b : ℝ} {f : InnerProfile}
     (hh : 0 < h) (hh1 : h < 1 / 2) {p : PhysicalPoint} (hp : p.1 < 1)
     (hf : DifferentiableAt ℝ f (inner h p)) :
     partialT (pullback h b f) p = pullback h (b - 1) (T h b f) p := by
-  have hc := (pullback_differentiableAt (b := b) hh hh1 hp hf).hasFDerivAt.comp_hasDerivAt p.1
+  have hc := (pullback_differentiableAt (b := b) hh hh1 hp hf).hasFDerivAt.comp_hasDerivAt
+    (F := PhysicalPoint) (f := fun t => (id t, p.2)) p.1
     ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))
   exact hc.unique (hasDerivAt_pullback_time hh hh1 hp hf)
 
@@ -257,7 +262,8 @@ theorem partialS_pullback {h b : ℝ} {f : InnerProfile}
     (hh : 0 < h) (hh1 : h < 1 / 2) {p : PhysicalPoint} (hp : p.1 < 1)
     (hf : DifferentiableAt ℝ f (inner h p)) :
     partialS (pullback h b f) p = pullback h (b - 1) (partialX f) p := by
-  have hc := (pullback_differentiableAt (b := b) hh hh1 hp hf).hasFDerivAt.comp_hasDerivAt p.2.1
+  have hc := (pullback_differentiableAt (b := b) hh hh1 hp hf).hasFDerivAt.comp_hasDerivAt
+    (F := PhysicalPoint) (f := fun s => (p.1, (id s, p.2.2))) p.2.1
     ((hasDerivAt_const p.2.1 p.1).prodMk
       ((hasDerivAt_id p.2.1).prodMk (hasDerivAt_const p.2.1 p.2.2)))
   exact hc.unique (hasDerivAt_pullback_s hh hh1 hp hf)
@@ -266,7 +272,8 @@ theorem partialZ_pullback {h b : ℝ} {f : InnerProfile}
     (hh : 0 < h) (hh1 : h < 1 / 2) {p : PhysicalPoint} (hp : p.1 < 1)
     (hf : DifferentiableAt ℝ f (inner h p)) :
     partialZ (pullback h b f) p = pullback h (b - D h) (Z h b f) p := by
-  have hc := (pullback_differentiableAt (b := b) hh hh1 hp hf).hasFDerivAt.comp_hasDerivAt p.2.2
+  have hc := (pullback_differentiableAt (b := b) hh hh1 hp hf).hasFDerivAt.comp_hasDerivAt
+    (F := PhysicalPoint) (f := fun z => (p.1, (p.2.1, id z))) p.2.2
     ((hasDerivAt_const p.2.2 p.1).prodMk
       ((hasDerivAt_const p.2.2 p.2.1).prodMk (hasDerivAt_id p.2.2)))
   exact hc.unique (hasDerivAt_pullback_z hh hh1 hp hf)
@@ -287,10 +294,15 @@ theorem Z_smoothAt {h b : ℝ} {f : InnerProfile} {w : InnerPoint}
   have hf₁ : ContDiffAt ℝ 1 f w := hf.of_le (by norm_num)
   have hx : ContDiffAt ℝ 1 (partialX f) w := partialX_smoothAt hf (by norm_num)
   have hη : ContDiffAt ℝ 1 (partialEta f) w := partialEta_smoothAt hf (by norm_num)
-  exact ((((contDiffAt_const.mul contDiffAt_snd).mul contDiffAt_const).mul hf₁).add
-    ((contDiffAt_const.sub (contDiffAt_snd.pow 2)).mul hη) |>.sub
-    (((contDiffAt_const.mul contDiffAt_snd).mul contDiffAt_fst).mul hx)).div
-    (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))) hL
+  exact (((((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).mul contDiffAt_snd).mul
+      contDiffAt_const).mul hf₁).add
+    (((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).sub
+      (contDiffAt_snd.pow 2)).mul hη) |>.sub
+    ((((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).mul contDiffAt_snd).mul
+      contDiffAt_fst).mul hx)).div
+    ((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).sub
+      ((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).mul
+        ((contDiffAt_snd (𝕜 := ℝ) (E := ℝ) (F := ℝ)).pow 2))) hL
 
 theorem T_smoothAt {h b : ℝ} {f : InnerProfile} {w : InnerPoint}
     (hf : ContDiffAt ℝ 2 f w) (hL : L h w.2 ≠ 0) :
@@ -298,9 +310,12 @@ theorem T_smoothAt {h b : ℝ} {f : InnerProfile} {w : InnerPoint}
   have hf₁ : ContDiffAt ℝ 1 f w := hf.of_le (by norm_num)
   have hx : ContDiffAt ℝ 1 (partialX f) w := partialX_smoothAt hf (by norm_num)
   have hη : ContDiffAt ℝ 1 (partialEta f) w := partialEta_smoothAt hf (by norm_num)
-  exact (((contDiffAt_const.mul hf₁).add ((contDiffAt_const.mul contDiffAt_snd).mul hη)).add
-    (contDiffAt_fst.mul hx)).div
-    (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))) hL
+  exact ((((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).mul hf₁).add
+      (((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).mul contDiffAt_snd).mul hη)).add
+    ((contDiffAt_fst (𝕜 := ℝ) (E := ℝ) (F := ℝ)).mul hx)).div
+    ((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).sub
+      ((contDiffAt_const (𝕜 := ℝ) (E := InnerPoint) (F := ℝ)).mul
+        ((contDiffAt_snd (𝕜 := ℝ) (E := ℝ) (F := ℝ)).pow 2))) hL
 
 theorem eventually_C2_inner {h : ℝ} {f : InnerProfile}
     (hh : 0 < h) (hh1 : h < 1 / 2) {p : PhysicalPoint} (hp : p.1 < 1)

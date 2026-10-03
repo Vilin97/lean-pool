@@ -65,7 +65,7 @@ theorem switch_zero {K X : ℝ} (hK : 0 < K) (hX : 0 < X) (hXK : X ≤ K) :
 
 theorem switch_one {K X : ℝ} (h : 3 / 10 ≤ Real.log (X / K)) : switch K X = 1 := by
   apply OutgoingSchedule.sigma_one
-  exact (le_div_iff₀ (by norm_num : (0 : ℝ) < 3 / 10)).mpr (by simpa using h)
+  exact (le_div_iff₀ (by norm_num : (0 : ℝ) < 3 / 10)).mpr (by simpa only [one_mul] using h)
 
 theorem edit_before (E : ℝ → ℝ) (h ν : ℝ) {K X : ℝ}
     (hK : 0 < K) (hX : 0 < X) (hXK : X ≤ K) : edit E h ν K X = E X := by
@@ -79,13 +79,13 @@ theorem edit_after (E : ℝ → ℝ) (h ν : ℝ) {K X : ℝ}
 theorem multiplier_bounds {h ν K X : ℝ} (hh : 0 < h) (hν : 0 ≤ ν) (hX : 0 < X) :
     0 < multiplier h ν K X ∧ multiplier h ν K X ≤ 1 := by
   have hz : 0 ≤ 2 * ν / X := div_nonneg (mul_nonneg (by norm_num) hν) hX.le
-  have hH := RadialHeatProfile.profile_pos (a := 1 + h) (by linarith) hz
-  have hH1 := RadialHeatProfile.profile_le_one (a := 1 + h) (by linarith) hz
+  have hH := RadialHeatProfile.profile_pos (a := 1 + h) (by linarith only [hh]) hz
+  have hH1 := RadialHeatProfile.profile_le_one (a := 1 + h) (by linarith only [hh]) hz
   have hs := switch_bounds K X
   have hp := mul_nonneg (sub_nonneg.mpr hs.2) (sub_nonneg.mpr hH1)
   have hn := mul_nonpos_of_nonneg_of_nonpos hs.1 (sub_nonpos.mpr hH1)
-  dsimp [multiplier]
-  constructor <;> nlinarith
+  dsimp only [multiplier]
+  constructor <;> nlinarith only [hH, hp, hn]
 
 theorem edit_pos {E : ℝ → ℝ} {h ν K X : ℝ} (hh : 0 < h) (hν : 0 ≤ ν)
     (hX : 0 < X) (hE : 0 < E X) : 0 < edit E h ν K X :=
@@ -104,7 +104,7 @@ theorem multiplier_contDiffOn {h ν K : ℝ} (hh : 0 < h) (hν : 0 < ν) (hK : 0
   apply contDiffOn_const.add
   apply (switch_contDiffOn hK).mul
   apply ContDiffOn.sub _ contDiffOn_const
-  apply (RadialHeatProfile.profile_contDiffOn (a := 1 + h) (by linarith)).comp
+  apply (RadialHeatProfile.profile_contDiffOn (a := 1 + h) (by linarith only [hh])).comp
     (contDiffOn_const.div contDiffOn_id (fun X hX => (show 0 < X from hX).ne'))
   intro X hX
   exact (div_pos (mul_pos (by norm_num) hν) hX).le
@@ -148,7 +148,7 @@ theorem squareChange_bound {E : ℝ → ℝ} {h ν K X : ℝ} (hh : 0 < h) (hν 
     (hX : 0 < X) : |squareChange E h ν K X| ≤
       2 * heatConstant h ν * E X ^ 2 / X := by
   have hm := multiplier_bounds (K := K) hh hν hX
-  have hs : multiplier h ν K X ^ 2 ≤ 1 := by nlinarith
+  have hs : multiplier h ν K X ^ 2 ≤ 1 := by nlinarith only [hm]
   have he : squareChange E h ν K X = E X ^ 2 * (multiplier h ν K X ^ 2 - 1) := by
     unfold squareChange edit
     ring
@@ -156,7 +156,7 @@ theorem squareChange_bound {E : ℝ → ℝ} {h ν K X : ℝ} (hh : 0 < h) (hν 
   have hb := multiplier_sub_one_bound (K := K) hh hν hX
   rw [abs_of_nonpos (sub_nonpos.mpr hm.2)] at hb
   have hsq : -(multiplier h ν K X ^ 2 - 1) ≤ 2 * (heatConstant h ν / X) := by
-    nlinarith [sq_nonneg (multiplier h ν K X - 1)]
+    nlinarith only [hb, sq_nonneg (multiplier h ν K X - 1)]
   calc
     _ ≤ E X ^ 2 * (2 * (heatConstant h ν / X)) :=
       mul_le_mul_of_nonneg_left hsq (sq_nonneg _)
@@ -177,7 +177,7 @@ theorem weightedKernel_eq {K X : ℝ} (hK : 0 < K) (hX : 0 < X) (p q : ℝ) :
 
 theorem weightedKernel_integrable {K p q : ℝ} (hK : 0 < K) (hpq : p + q < 0) :
     IntegrableOn (weightedKernel K p q) (Ioi K) := by
-  apply ((integrableOn_Ioi_rpow_of_lt (a := p + q - 1) (by linarith) hK).div_const
+  apply ((integrableOn_Ioi_rpow_of_lt (a := p + q - 1) (by linarith only [hpq]) hK).div_const
     (K ^ p)).congr
   filter_upwards [ae_restrict_mem measurableSet_Ioi] with X hX
   exact (weightedKernel_eq hK (hK.trans hX) p q).symm
@@ -190,13 +190,13 @@ theorem integral_weightedKernel {K p q : ℝ} (hK : 0 < K) (hpq : p + q < 0) :
       intro X hX
       exact weightedKernel_eq hK (hK.trans hX) p q
     _ = (-K ^ (p + q) / (p + q)) / K ^ p := by
-      rw [integral_div, integral_Ioi_rpow_of_lt (by linarith) hK]
+      rw [integral_div, integral_Ioi_rpow_of_lt (by linarith only [hpq]) hK]
       rw [show p + q - 1 + 1 = p + q by ring]
     _ = K ^ q / (-p - q) := by
       rw [Real.rpow_add hK]
       have hk : K ^ p ≠ 0 := (Real.rpow_pos_of_pos hK p).ne'
       have hd : p + q ≠ 0 := hpq.ne
-      have hd' : -p - q ≠ 0 := by linarith
+      have hd' : -p - q ≠ 0 := by linarith only [hpq]
       field_simp [hk, hd, hd']; ring
 
 theorem weighted_integral_bound {K p q B : ℝ} {g : ℝ → ℝ} (hK : 0 < K)
@@ -274,7 +274,7 @@ theorem powerTail_weighted_change {h ν K e M q : ℝ} (hh : 0 < h) (hν : 0 < �
     (Ioi_subset_Ioi hK.le)
   have hC := (heatConstant_pos hh hν).le
   have hres := weighted_integral_bound (p := -exponent h) (q := q)
-    (B := heatConstant h ν * e * M) hK (by linarith) hg ?_
+    (B := heatConstant h ν * e * M) hK (by linarith only [hq]) hg ?_
   · unfold change
     simpa only [neg_neg] using hres
   · intro X hX
@@ -299,7 +299,7 @@ theorem powerTail_weighted_squareChange {h ν K e M q : ℝ} (hh : 0 < h) (hν :
   have hC : 0 ≤ 2 * heatConstant h ν :=
     mul_nonneg (by norm_num) (heatConstant_pos hh hν).le
   have hres := weighted_integral_bound (p := -2 * exponent h) (q := q)
-    (B := 2 * heatConstant h ν * e ^ 2 * M ^ 2) hK (by linarith) hg ?_
+    (B := 2 * heatConstant h ν * e ^ 2 * M ^ 2) hK (by linarith only [hq]) hg ?_
   · unfold squareChange
     simpa only [neg_mul, neg_neg] using hres
   · intro X hX
@@ -344,7 +344,7 @@ theorem powerTail_pressure {h ν K e M : ℝ} (hh : 0 < h) (hν : 0 < ν)
       |pressureDebt (powerTail h e K f) h ν K| ≤
         2 * heatConstant h ν * e ^ 2 * M ^ 2 / (K * (2 * exponent h + 1)) := by
   rcases powerTail_weighted_squareChange (q := -1) hh hν hK he hM hf hbound
-    (by unfold exponent; linarith) with ⟨hi, hb⟩
+    (by unfold exponent; linarith only [hh]) with ⟨hi, hb⟩
   constructor
   · simpa only [Real.rpow_neg_one, div_eq_mul_inv, mul_comm] using hi
   · rw [pressureDebt_eq]
@@ -359,7 +359,7 @@ theorem powerTail_energy {h ν K e M : ℝ} (hh : 0 < h) (hν : 0 < ν)
         2 * heatConstant h ν * e ^ 2 * M ^ 2 / (2 * exponent h) := by
   simpa only [energyDebt, Real.rpow_zero, one_mul, mul_one, sub_zero] using
     (powerTail_weighted_squareChange (q := 0) hh hν hK he hM hf hbound
-      (by unfold exponent; linarith))
+      (by unfold exponent; linarith only [hh]))
 
 theorem powerTail_angular {h ν K e M : ℝ} (hh : 0 < h) (hν : 0 < ν)
     (hK : 0 < K) (he : 0 ≤ e) {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
@@ -368,7 +368,7 @@ theorem powerTail_angular {h ν K e M : ℝ} (hh : 0 < h) (hν : 0 < ν)
       |angularDebt (powerTail h e K f) h ν K| ≤
         Real.sqrt 2 * heatConstant h ν * e * M * Real.sqrt K / h := by
   rcases powerTail_weighted_change (q := 1 / 2) hh hν hK he hf hbound
-    (by unfold exponent; linarith) with ⟨hi, hb⟩
+    (by unfold exponent; linarith only [hh]) with ⟨hi, hb⟩
   constructor
   · have hi' := hi.const_mul (Real.sqrt 2)
     have heq : (fun X => Real.sqrt (2 * X) * change (powerTail h e K f) h ν K X) =
@@ -428,7 +428,7 @@ theorem outgoingProfile_eq_powerTail_of_log (d : TailData) {K X : ℝ}
       powerTail d.h (outgoingAmplitude d) K (outgoingShape d) X := by
   have hy : tailStart d ≤ switchStart d + Real.log (X / K) := by
     unfold switchStart
-    linarith
+    linarith only [hlog]
   have hshape : switchStart d + Real.log (X / K) - tailStart d = Real.log (X / K) + 1 / 5 := by
     unfold switchStart
     ring
@@ -486,8 +486,8 @@ theorem outgoingEdit_full (d : TailData) (ν eta : ℝ) {K X : ℝ}
         tailShape d (Real.log (X / K) + 1 / 5) *
           RadialHeatProfile.profile (1 + d.h) (2 * ν / X) := by
   unfold outgoingEdit
-  rw [edit_after _ _ _ (by linarith),
-    outgoingProfile_eq_powerTail_of_log d hK hX (by linarith) eta]
+  rw [edit_after _ _ _ (by linarith only [hfull]),
+    outgoingProfile_eq_powerTail_of_log d hK hX (by linarith only [hfull]) eta]
   rfl
 
 theorem outgoing_change_eq (d : TailData) (ν eta : ℝ) {K X : ℝ}
@@ -589,7 +589,7 @@ theorem outgoingEdit_eventual_heat (d : TailData) (ν eta : ℝ) {K X : ℝ}
     outgoingEdit d ν K eta X =
       (outgoingAmplitude d * K ^ exponent d.h) *
         RadialHeatProfile.spatialProfile (1 + d.h) ν X := by
-  rw [outgoingEdit_heat_factorization d ν eta hK hX (by linarith),
+  rw [outgoingEdit_heat_factorization d ν eta hK hX (by linarith only [htail]),
     tailShape_late d htail, mul_one]
 
 /-- The actual switch amplitude is fixed by the schedule and comparable to
@@ -658,7 +658,7 @@ theorem outgoing_pressure_jet_bound (d : TailData) {ν K : ℝ} (hν : 0 < ν) (
   | succ n =>
     rw [outgoing_pressure_eta_jet_zero d ν hK n eta, abs_zero]
     have hc := heatConstant_pos d.h_pos hν
-    have he : 0 < exponent d.h := by unfold exponent; linarith [d.h_pos]
+    have he : 0 < exponent d.h := by unfold exponent; linarith only [d.h_pos]
     positivity
 
 /-- The energy estimate holds with every fixed slow-variable jet. -/
@@ -671,7 +671,7 @@ theorem outgoing_energy_jet_bound (d : TailData) {ν K : ℝ} (hν : 0 < ν) (hK
   | succ n =>
     rw [outgoing_energy_eta_jet_zero d ν hK n eta, abs_zero]
     have hc := heatConstant_pos d.h_pos hν
-    have he : 0 < exponent d.h := by unfold exponent; linarith [d.h_pos]
+    have he : 0 < exponent d.h := by unfold exponent; linarith only [d.h_pos]
     positivity
 
 /-- The renormalized angular estimate holds with every fixed slow-variable jet. -/

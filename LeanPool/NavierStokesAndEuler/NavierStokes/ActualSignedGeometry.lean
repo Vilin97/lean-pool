@@ -223,7 +223,7 @@ theorem unweighted {f : ι → D → E} (hf : PolynomialJets V.toDomain f) :
     c.index c.linear c.shift K (fun _ _ _ _ => zero_le_one) c.maps c.growth_one c.linear_one
     c.growthDegree c.linearDegree c.growth_bound c.linear_bound
   intro l n i x hx hi
-  simp
+  simp only [Real.rpow_zero, mul_one, Std.le_refl]
 
 theorem weighted {f : ι → D → E} (hf : NativeJets V ζ f) :
     UniformLocalJets s (fun _ _ x => s.zeta x) 0 K (c.pull f) := by
@@ -492,12 +492,12 @@ theorem rescale_margins {r R dg eb il ζ c clo rlo rhi : ℝ} {H : Mat2} {T : Ve
   · intro i j
     have hentry : R * H i j = (R / r) * (r * H i j) := by field_simp
     rw [hentry, abs_mul, abs_of_pos hratio]
-    exact mul_le_mul hhi (h.entries i j) (abs_nonneg _) (by linarith [hratio, hhi])
+    exact mul_le_mul hhi (h.entries i j) (abs_nonneg _) (by linarith only [hrlo, hlo, hhi, hratio])
   · intro j
     rw [PhysicalSignedWave.weights_smul_target, Pi.smul_apply, smul_eq_mul]
     have hbase : il * ζ ≤ SmoothCovariance.weights H T j := by
       apply le_trans _ (h.weights j)
-      nlinarith [mul_nonneg hil hζ]
+      nlinarith only [hr, hil, hζ, mul_nonneg hil hζ]
     have hh := mul_le_mul (pow_le_pow_left₀ hclo.le hc 2) hbase
       (mul_nonneg hil hζ) (sq_nonneg c)
     simpa only [mul_assoc] using hh
@@ -837,7 +837,9 @@ theorem exists_actual_signed_control
   have hb := hr.copied_coefficients_jets copy scale normal clock base dirs
     (LocalSignedRequest.fullRequest s P coord ctx u) hζ
     (fullRequest_localJets s P coord ctx u hrequest K) hW j henv hnormal hfrequency
-  exact ⟨⟨hr.nativeCovariance copy scale hζ⟩, hb.1, hb.2, copy.unweighted hr.cutoff_jets⟩
+  refine ⟨⟨hr.nativeCovariance copy scale hζ⟩, ?_, ?_, copy.unweighted hr.cutoff_jets⟩
+  · apply hb.1
+  · apply hb.2
 
 end Combined
 
@@ -878,11 +880,11 @@ noncomputable def standardSlowRegion {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
     rw [isOpen_iff_mem_nhds]
     intro z hz
     have hq := (SimilarityCoordinates.coordinateQ_smooth
-      (by linarith : 0 < 2 * h) (by linarith : 2 * h < 1) hz.1).continuousAt
+      (by linarith only [hh] : 0 < 2 * h) (by linarith only [hh1] : 2 * h < 1) hz.1).continuousAt
     exact inter_mem (isOpen_lt continuous_const continuous_fst |>.mem_nhds hz.1)
       (hq.preimage_mem_nhds (isOpen_Ioo.mem_nhds hz.2))
-  coord_pos := by linarith
-  coord_lt_one := by linarith
+  coord_pos := by linarith only [hh]
+  coord_lt_one := by linarith only [hh1]
   qlo := 1 / 2
   qhi := 2
   qlo_pos := by norm_num
@@ -940,8 +942,8 @@ theorem nativeSlow_positive (L : Label H v a) {p : Slow}
   have hq : SimilarityHomogeneity.chartQ F.data.h p ∈ Icc (1 / 2 : ℝ) 2 :=
     ⟨hs.1.2.1.le, hs.1.2.2.le⟩
   have hspec := SimilarityCoordinates.coordinateQ_spec
-    (by linarith [F.data.h_pos] : 0 < 2 * F.data.h)
-    (by linarith [F.data.h_lt_half] : 2 * F.data.h < 1) (p := (p.2.2, p.2.1)) ht
+    (by linarith only [F.data.h_pos] : 0 < 2 * F.data.h)
+    (by linarith only [F.data.h_lt_half] : 2 * F.data.h < 1) (p := (p.2.2, p.2.1)) ht
   have hactive := (BaseContextAssembly.nativeStrip_active W _ hp.2).1
   refine ⟨subset_closure ?_, ht⟩
   refine ⟨(BaseContextAssembly.nativeStrip_radius W _ hp.2).le, ht.le,
@@ -1036,7 +1038,7 @@ theorem radialDelta_le_edge {r : ℝ}
   have hp := WeightedRadialPrimitive.logPosition_mem ha hr
   change min 1 (min _ _) ≤ min 1 (min _ _)
   rw [hl, hu]
-  exact min_le_min le_rfl (min_le_min (by linarith [hp.1]) (by linarith [hp.2]))
+  exact min_le_min le_rfl (min_le_min (by linarith only [hp, hp.1]) (by linarith only [hp, hp.2]))
 
 theorem nativeSlow_inverse_edge (L : Label H v a) {p : Slow}
     (hp : p ∈ (nativeSlow H v a).carrier L) :
@@ -1128,7 +1130,7 @@ theorem dyadic_ratioPower_le {n m : ℕ} (hnm : n ≤ m + 4) (hmn : m ≤ n + 4)
     have h1 : (n : ℝ) ≤ (m : ℝ) + 4 := by exact_mod_cast hnm
     have h2 : (m : ℝ) ≤ (n : ℝ) + 4 := by exact_mod_cast hmn
     rw [abs_le]
-    constructor <;> linarith
+    constructor <;> linarith only [h1, h2]
   calc
     _ ≤ |((m : ℝ) - (n : ℝ)) * exponent| := le_abs_self _
     _ = |(m : ℝ) - (n : ℝ)| * |exponent| := abs_mul _ _
@@ -1161,7 +1163,7 @@ theorem S_window_le {n m : ℕ} (hn : 1 ≤ n) (hmn : m ≤ n + 4) :
   have h0 : (0 : ℝ) ≤ m := Nat.cast_nonneg _
   have hn0 : (0 : ℝ) ≤ n := Nat.cast_nonneg _
   unfold ChartScales.S
-  nlinarith [sq_nonneg (5 * (n : ℝ) - m)]
+  nlinarith only [hm, sq_nonneg (5 * (n : ℝ) - m)]
 
 theorem sqrt_S_window {n m : ℕ} (hn : 1 ≤ n) (hm : 1 ≤ m)
     (hnm : n ≤ m + 4) (hmn : m ≤ n + 4) :
@@ -1172,7 +1174,7 @@ theorem sqrt_S_window {n m : ℕ} (hn : 1 ≤ n) (hm : 1 ≤ m)
   have hn5 : (n : ℝ) ≤ 5 * (m : ℝ) := by exact_mod_cast (show n ≤ 5 * m by omega)
   have hm5 : (m : ℝ) ≤ 5 * (n : ℝ) := by exact_mod_cast (show m ≤ 5 * n by omega)
   simp only [ChartScales.S, Real.sqrt_sq (le_of_lt hn0), Real.sqrt_sq (le_of_lt hm0)]
-  exact ⟨(le_div_iff₀ hm0).mpr (by linarith), (div_le_iff₀ hm0).mpr hn5⟩
+  exact ⟨(le_div_iff₀ hm0).mpr (by linarith only [hm5]), (div_le_iff₀ hm0).mpr hn5⟩
 
 theorem common_native_gap {h : ℝ} (hh : 0 ≤ h) {index : ℕ → ℕ} {budget : ℕ}
     (hi : CommonBaseContext.IndexBounds h index budget) {n m : ℕ}
@@ -1265,14 +1267,14 @@ theorem clock_outer_in_slot (hh : 0 ≤ h) {l : SlotColoring.Label} (hl : 4 ≤ 
   have hz1 : |z.1| ≤ 2 * sys.radius := by
     have he : -sys.radius - 2 * (clockWindow sys l.1).padding ≤ z.1 ∧
         z.1 ≤ sys.radius + 2 * (clockWindow sys l.1).padding := hz.1
-    exact abs_le.mpr ⟨by linarith [he.1], by linarith [he.2]⟩
+    exact abs_le.mpr ⟨by linarith only [he.1, hpad, hr], by linarith only [he.2, hpad, hr]⟩
   have hprodpad : ChartScales.timeCoefficient h l.1 * (clockWindow sys l.1).padding ≤ sys.radius /
       16 :=
     (mul_le_of_le_one_left hpad0.le hci1).trans hpad
   have htime : ChartScales.timeCoefficient h l.1 * ChartScales.slotLength sys.radius h l.1 =
       2 * sys.radius := by
     unfold ChartScales.slotLength
-    field_simp
+    exact mul_div_cancel₀ _ hci.ne'
   have hz2 : |ChartScales.timeCoefficient h l.1 * z.2 - sys.radius| ≤ 2 * sys.radius := by
     have he : -(2 * (clockWindow sys l.1).padding) ≤ z.2 ∧
         z.2 ≤ ChartScales.slotLength sys.radius h l.1 + 2 * (clockWindow sys l.1).padding := by
@@ -1281,7 +1283,8 @@ theorem clock_outer_in_slot (hh : 0 ≤ h) {l : SlotColoring.Label} (hl : 4 ≤ 
       exact he
     have hlo := mul_le_mul_of_nonneg_left he.1 hci.le
     have hhi := mul_le_mul_of_nonneg_left he.2 hci.le
-    exact abs_le.mpr ⟨by nlinarith, by nlinarith⟩
+    exact abs_le.mpr ⟨by linarith only [hlo, hprodpad, hr],
+      by linarith only [hhi, htime, hprodpad, hr]⟩
   refine ⟨z.1, ChartScales.timeCoefficient h l.1 * z.2 - sys.radius, hz1, hz2, ?_⟩
   dsimp only
   rw [slotGeometry_basis]
@@ -1322,7 +1325,7 @@ theorem slotGeometry_common_cost (hh : 0 ≤ h) {index : ℕ → ℕ} {budget : 
   have hc := CommonCoverClass.bandArgumentCost_one_le (TorusAverages.slotChart vr vt hdet)
     (budget + SlotColoring.nativeGap h)
   have he := mul_le_mul_of_nonneg_left (S_window_le hn hln) (zero_le_one.trans hc)
-  nlinarith
+  nlinarith only [hdet, he]
 
 end Slots
 
@@ -1375,7 +1378,7 @@ theorem profileRadius_slowChange {F : OutgoingProfile.Profile}
   have he := congrArg Prod.fst (normalized_inner_slowChange (F := F) hQ hQr ht)
   rw [← PrimaryTargetBounds.profileRadius_sq (F := F) htp,
     ← PrimaryTargetBounds.profileRadius_sq (F := F) ht] at he
-  nlinarith
+  nlinarith only [he, hp, hp']
 
 theorem movingWeight_slowChange {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) {p : Slow} (ht : 0 < p.2.2) (hr : 0 < p.1) :
@@ -1391,7 +1394,7 @@ noncomputable def slowChangeCost (h : ℝ) : ℝ :=
 
 theorem slowChangeCost_one (h : ℝ) : 1 ≤ slowChangeCost h := by
   unfold slowChangeCost
-  linarith [powerBound_one (1 / 2), powerBound_one (CoordinateAlgebra.D h), powerBound_one 1]
+  linarith only [powerBound_one (1 / 2), powerBound_one (CoordinateAlgebra.D h), powerBound_one 1]
 
 theorem norm_slowChange_le (h : ℝ) {n m : ℕ} (hnm : n ≤ m + 4) (hmn : m ≤ n + 4) :
     ‖slowChange h (ChartScales.Q n) (ChartScales.Q m)‖ ≤ slowChangeCost h := by
@@ -1482,7 +1485,8 @@ theorem copyPoint_affine (l : SlotColoring.Label) (chart common : ℕ)
     copyPoint sys hdet l chart common k x =
       copyLinear sys hdet l chart common x + copyPoint sys hdet l chart common k 0 := by
   apply Prod.ext
-  · simp [copyPoint, copyLinear]
+  · simp only [copyPoint, slowChange_apply, one_div, copyLinear, ContinuousLinearMap.coe_prodMap',
+      Prod.fst_zero, mul_zero, Prod.snd_zero, Prod.fst_add, Prod.map_fst, Prod.mk_add_mk, add_zero]
   · change (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - common)).coordinates k x.2 =
       (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - common)).coordinateLinear x.2 +
         (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - common)).coordinates k 0
@@ -1501,34 +1505,40 @@ theorem norm_copyLinear_le (hh : 0 ≤ h) {index : ℕ → ℕ} {budget : ℕ}
       CommonCoverClass.argumentCost (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - index
           n)) := by
     unfold CommonCoverClass.argumentCost
-    have hp : 0 ≤ ‖(slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - index n)).pointLinear‖
-        *
-        (1 + ‖(slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - index
-            n)).coordinateLinear‖) := by
-            positivity
-    linarith
+    have hp := mul_nonneg
+      (norm_nonneg (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - index n)).pointLinear)
+      (add_nonneg zero_le_one (norm_nonneg
+        (slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - index n)).coordinateLinear))
+    linarith only [hp]
   have hS : 1 ≤ BaseContextAssembly.slowScale n := BaseContextAssembly.one_le_slowScale _
   have hSs : ChartScales.S n ≤ BaseContextAssembly.slowScale n := le_max_right _ _
   have hC := CommonCoverClass.bandArgumentCost_one_le (TorusAverages.slotChart vr vt hdet)
     (budget + SlotColoring.nativeGap h)
   have hA := slowChangeCost_one h
   have hSn : 0 ≤ ChartScales.S n := sq_nonneg _
-  apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)
+  have hA0 := zero_le_one.trans hA
+  have hC0 := mul_nonneg (by norm_num : (0 : ℝ) ≤ 25) (zero_le_one.trans hC)
+  have hS0 := zero_le_one.trans hS
+  apply ContinuousLinearMap.opNorm_le_bound _ (mul_nonneg (add_nonneg hA0 hC0) hS0)
   intro x
   change max ‖slowChange h (ChartScales.Q n) (ChartScales.Q l.1) x.1‖
     ‖(slotGeometry sys hdet l (ChartScales.nativeIndex h l.1 - index n)).coordinateLinear x.2‖ ≤ _
   apply max_le
   · calc
       _ ≤ slowChangeCost h * ‖x‖ :=
-        ((slowChange h _ _).le_opNorm _).trans (mul_le_mul hc (norm_fst_le x) (norm_nonneg _) (by
-            linarith))
-      _ ≤ _ := mul_le_mul_of_nonneg_right (by nlinarith) (norm_nonneg _)
+        ((slowChange h _ _).le_opNorm _).trans (mul_le_mul hc (norm_fst_le x) (norm_nonneg _) hA0)
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        ((le_add_of_nonneg_right hC0).trans (le_mul_of_one_le_right (add_nonneg hA0 hC0) hS))
+        (norm_nonneg _)
   · calc
       _ ≤ (25 * CommonCoverClass.bandArgumentCost (TorusAverages.slotChart vr vt hdet)
           (budget + SlotColoring.nativeGap h) * ChartScales.S n) * ‖x‖ :=
         ((slotGeometry sys hdet l _).coordinateLinear.le_opNorm _).trans
-          (mul_le_mul (hd.trans hg) (norm_snd_le x) (norm_nonneg _) (by positivity))
-      _ ≤ _ := mul_le_mul_of_nonneg_right (by nlinarith) (norm_nonneg _)
+          (mul_le_mul (hd.trans hg) (norm_snd_le x) (norm_nonneg _) (mul_nonneg hC0 hSn))
+      _ ≤ _ := mul_le_mul_of_nonneg_right
+        ((mul_le_mul_of_nonneg_left hSs hC0).trans
+          (mul_le_mul_of_nonneg_right (le_add_of_nonneg_left hA0) hS0))
+        (norm_nonneg _)
 
 end CopyMap
 
@@ -1557,7 +1567,7 @@ theorem roundedCarrier_bounds {h : ℝ} (hh : 0 ≤ h) (n : ℕ) :
   obtain ⟨hl, hu⟩ := Scaling.carrier_frequency_sqrt_bounds (ChartScales.epsilon_pos h n)
   have hs : Real.sqrt (ChartScales.epsilon h n) ≤ 1 := by
     simpa only [Real.sqrt_one] using Real.sqrt_le_sqrt (ChartScales.epsilon_le_one h hh n)
-  exact ⟨hl, hu.trans (by linarith)⟩
+  exact ⟨hl, hu.trans (by linarith only [hs])⟩
 
 section PhysicalScales
 
@@ -1593,7 +1603,7 @@ noncomputable def carrierRatioScale {h : ℝ} (hh : 0 ≤ h) : ActualSignedContr
     have h1 := roundedCarrier_bounds hh (reference l n)
     have h2 := roundedCarrier_bounds hh (chart n)
     have hpos : 0 < roundedCarrier h (chart n) := zero_lt_one.trans_le h2.1
-    exact ⟨(le_div_iff₀ hpos).mpr (by linarith), (div_le_iff₀ hpos).mpr (by linarith)⟩
+    exact ⟨(le_div_iff₀ hpos).mpr (by linarith), (div_le_iff₀ hpos).mpr (by linarith only [h1, h2])⟩
 
 /-- Normal scale, given by `(carrierRatioScale chart reference hh).mul (bandPowerScale chart
 reference hnear (h / 2 + 1 / 2))`. -/
@@ -1690,7 +1700,7 @@ theorem copy_growth_le
       25 * BaseContextAssembly.slowScale (chart n) := by
     unfold BaseContextAssembly.slowScale
     rw [max_eq_right hSn]
-    exact max_le (by linarith) hSm
+    exact max_le (by linarith only [hSn]) hSm
   change BaseContextAssembly.slowScale (BaseChartJets.cellBand (reference l n)) *
     max 1 ((BaseContextAssembly.nativeStrip W _).delta
       (BaseContextAssembly.insertSlow (slowChange F.data.h (ChartScales.Q (chart n))
@@ -1730,7 +1740,7 @@ noncomputable def copyChart (hr0 : 0 < r0)
     have h1 := slowChangeCost_one F.data.h
     have h2 := CommonCoverClass.bandArgumentCost_one_le (TorusAverages.slotChart vr vt hdet)
       (budget + SlotColoring.nativeGap F.data.h)
-    linarith
+    linarith only [hdet, h1, h2]
   growthDegree := 1
   linearDegree := 1
   growth_bound l n k x hx _ := by
@@ -1783,15 +1793,16 @@ noncomputable def temporalVector : Plane := TorusInverse.vector .temporal
 
 theorem vectors_det : radialVector.1 * temporalVector.2 - radialVector.2 * temporalVector.1 ≠ 0 :=
     by
-  dsimp [radialVector, temporalVector, TorusInverse.vector]
+  dsimp only [radialVector, TorusInverse.vector, temporalVector, ne_eq]
   nlinarith [sq_nonneg (Real.sqrt 2 - 1)]
 
 /-- Slot linear, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def slotLinear (g : CommonCoverSolve.Geometry) : Cylinder →L[ℝ] PhaseCalculus.Slot
     where
   toFun x := ((x.1.1, x.1.2.1), (x.2, (g.coordinateLinear x.1.2.2).2))
-  map_add' x y := by ext <;> simp
-  map_smul' c x := by ext <;> simp
+  map_add' x y := by ext <;> simp only [Prod.fst_add, Prod.mk_add_mk, Prod.snd_add, map_add]
+  map_smul' c x := by ext <;> simp only [Prod.smul_fst, smul_eq_mul, RingHom.id_apply, Prod.smul_mk,
+      Prod.smul_snd, map_smul]
   cont := (continuous_fst.fst.prodMk continuous_fst.snd.fst).prodMk
     (continuous_snd.prodMk ((g.coordinateLinear.continuous.comp continuous_fst.snd.snd).snd))
 
@@ -1804,9 +1815,11 @@ theorem slotCoordinates_affine (g : CommonCoverSolve.Geometry) (k : TorusInverse
     slotCoordinates g k = fun x => slotLinear g x + ((0, 0), (0, (g.coordinates k 0).2)) := by
   funext x
   apply Prod.ext
-  · simp [slotCoordinates, slotLinear]
+  · simp only [slotCoordinates, slotLinear, ContinuousLinearMap.coe_mk', LinearMap.coe_mk,
+      AddHom.coe_mk, Prod.mk_add_mk, add_zero]
   · apply Prod.ext
-    · simp [slotCoordinates, slotLinear]
+    · simp only [slotCoordinates, slotLinear, ContinuousLinearMap.coe_mk', LinearMap.coe_mk,
+        AddHom.coe_mk, Prod.mk_add_mk, add_zero]
     · change (g.coordinates k x.1.2.2).2 =
         (g.coordinateLinear x.1.2.2).2 + (g.coordinates k 0).2
       rw [g.coordinates_eq_affine]
@@ -1829,13 +1842,13 @@ theorem slot_coordinate_radial (l : SlotColoring.Label) (gap : ℕ) :
   let g := slotGeometry sys vectors_det l gap
   have hb : g.basis (1, 0) = radialVector := by
     rw [slotGeometry_basis]
-    simp
+    simp only [one_smul, mul_zero, zero_smul, add_zero]
   have he : g.basis.symm radialVector = (1, 0) := (g.basis.symm_apply_eq).mpr hb.symm
   change g.basis.symm (CommonCoverSolve.coverPower gap radialVector) = _
   rw [show CommonCoverSolve.coverPower gap radialVector = ChartScales.Lambda ^ gap • radialVector
       from
     CommonBaseContext.coverPower_radial gap, map_smul, he]
-  simp
+  simp only [Prod.smul_mk, smul_eq_mul, mul_one, mul_zero]
 
 theorem slot_coordinates_radial (l : SlotColoring.Label) (gap i : ℕ) (Q : ℝ) (x : Cylinder) :
     slotLinear (slotGeometry sys vectors_det l gap)
@@ -1843,18 +1856,19 @@ theorem slot_coordinates_radial (l : SlotColoring.Label) (gap i : ℕ) (Q : ℝ)
   change ((1, (0, 0)), (0, ((slotGeometry sys vectors_det l gap).coordinateLinear
     ((_ * _) • radialVector)).2)) = _
   rw [map_smul, slot_coordinate_radial]
-  simp [PhaseCalculus.eR]
+  simp only [Prod.smul_mk, smul_eq_mul, mul_zero, PhaseCalculus.eR]
 
 theorem slot_coordinates_angular (g : CommonCoverSolve.Geometry) (x : Cylinder) :
     slotLinear g (PhysicalResidualBridge.ScaledGraph.angular x) = PhaseCalculus.eTheta := by
   change ((0, (0, 0)), (1, (g.coordinateLinear 0).2)) = _
-  simp [PhaseCalculus.eTheta]
+  simp only [map_zero, Prod.snd_zero, PhaseCalculus.eTheta]
 
 theorem slot_coordinates_axial (g : CommonCoverSolve.Geometry) (Q h : ℝ) (i : ℕ) (x : Cylinder) :
     slotLinear g ((PhysicalResidualBridge.commonGraph Q h i).axial x) =
       Q ^ h • PhaseCalculus.eZ := by
   change ((0, (Q ^ h, 0)), (0, (g.coordinateLinear 0).2)) = _
-  simp [PhaseCalculus.eZ]
+  simp only [map_zero, Prod.snd_zero, PhaseCalculus.eZ, Prod.smul_mk, smul_eq_mul, mul_zero,
+      mul_one]
 
 /-- Periodic phase, constructed using `PhaseCalculus.phase`. -/
 noncomputable def periodicPhase (l : SlotColoring.Label) (gap : ℕ)
@@ -1894,8 +1908,10 @@ private theorem normal_pullback {X : Type} [NormedAddCommGroup X] [NormedSpace �
   have hd := fderiv_comp x
     (PrimaryMaterialDefect.differentiableAt_phase epsilon p pz x0 F G (chi x) hF hG) hchi
   ext i
-  fin_cases i <;> simp [HarmonicCalculus.phaseNormal, PhaseCalculus.phaseNormal,
-    HarmonicCalculus.along, hd, hr, ht, hz]
+  fin_cases i <;> simp only [HarmonicCalculus.phaseNormal, HarmonicCalculus.along, hd,
+      ContinuousLinearMap.comp_apply, hr, ht, hz, map_smul, smul_eq_mul, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val_zero, PhaseCalculus.phaseNormal, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 theorem nativePhase_normal (l : SlotColoring.Label) (gap i : ℕ) {Q : ℝ} (hQ : 0 < Q)
     (p pz x0 : ℝ) (F G : Slow → ℝ) (k : TorusInverse.Frequency) (theta : ℝ)
@@ -1921,8 +1937,12 @@ theorem nativePhase_normal (l : SlotColoring.Label) (gap i : ℕ) {Q : ℝ} (hQ 
       gap) k y).1.1)
     _ _ _ _ _ = _
   rw [he]
-  rw [PhaseCalculus.phaseNormal_formula _ _ _ _ _ _ _ (Real.rpow_pos_of_pos hQ _).ne' hF hG,
-    PhaseCalculus.phaseNormal_formula _ _ _ _ _ _ _ (Real.rpow_pos_of_pos hQ _).ne' hF hG]
+  rw [PhaseCalculus.phaseNormal_formula _ _ _ _ _ _
+      (slotCoordinates (slotGeometry sys vectors_det l gap) k x)
+      (Real.rpow_pos_of_pos hQ _).ne' hF hG,
+    PhaseCalculus.phaseNormal_formula _ _ _ _ _ _
+      ((x.1.1, x.1.2.1), (theta, ((slotGeometry sys vectors_det l gap).coordinates k x.1.2.2).2))
+      (Real.rpow_pos_of_pos hQ _).ne' hF hG]
   rfl
 
 theorem periodicPhase_differentiableAt (l : SlotColoring.Label) (gap : ℕ)
@@ -1931,13 +1951,16 @@ theorem periodicPhase_differentiableAt (l : SlotColoring.Label) (gap : ℕ)
     (hG : DifferentiableAt ℝ G (x.1.1, x.1.2.1)) :
     DifferentiableAt ℝ (periodicPhase sys l gap epsilon p pz x0 F G) x := by
   have hc := (PeriodicPhaseAssembly.periodicClock_contDiff
-    (slotGeometry sys vectors_det l gap) (clockWindow sys l.1)).differentiable (by simp)
+    (slotGeometry sys vectors_det l gap) (clockWindow sys l.1)).differentiable
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hchi : DifferentiableAt ℝ (fun y : Cylinder =>
       ((y.1.1, y.1.2.1), (y.2, PeriodicPhaseAssembly.periodicClock
-        (slotGeometry sys vectors_det l gap) (clockWindow sys l.1).cutoff y.1.2.2))) x :=
-    (differentiableAt_fst.fst.prodMk differentiableAt_fst.snd.fst).prodMk
-      (differentiableAt_snd.prodMk (hc.differentiableAt.comp x differentiableAt_fst.snd.snd))
-  exact (PrimaryMaterialDefect.differentiableAt_phase epsilon p pz x0 F G _ hF hG).comp x hchi
+        (slotGeometry sys vectors_det l gap) (clockWindow sys l.1).cutoff y.1.2.2))) x := by
+    fun_prop
+  exact DifferentiableAt.comp x (f := fun y : Cylinder =>
+      ((y.1.1, y.1.2.1), (y.2, PeriodicPhaseAssembly.periodicClock
+        (slotGeometry sys vectors_det l gap) (clockWindow sys l.1).cutoff y.1.2.2)))
+    (PrimaryMaterialDefect.differentiableAt_phase epsilon p pz x0 F G _ hF hG) hchi
 
 theorem periodicPhase_normal_germ (hh : 0 ≤ h) {l : SlotColoring.Label} (hl : 4 ≤ l.1)
     (gap i : ℕ) {Q : ℝ} (hQ : 0 < Q) (p pz x0 : ℝ) (F G : Slow → ℝ)
@@ -1970,8 +1993,8 @@ theorem periodicPhase_normal_germ (hh : 0 ≤ h) {l : SlotColoring.Label} (hl : 
           gap) k) y := by
     simp only [HarmonicCalculus.phaseNormal, hyr, hyt, hyz]
   exact he.trans (nativePhase_normal sys l gap i hQ p pz x0 F G k theta
-    ((hF.contDiffAt (hS.mem_nhds hy)).differentiableAt (by simp))
-    ((hG.contDiffAt (hS.mem_nhds hy)).differentiableAt (by simp)))
+    ((hF.contDiffAt (hS.mem_nhds hy)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+    ((hG.contDiffAt (hS.mem_nhds hy)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)))
 
 theorem phase_normal_view_germ (hh : 0 ≤ h) {l : SlotColoring.Label} (hl : 4 ≤ l.1)
     (i gap : ℕ) {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr)
@@ -2001,8 +2024,10 @@ theorem phase_normal_view_germ (hh : 0 ≤ h) {l : SlotColoring.Label} (hl : 4 �
     (hS.preimage ((slowChange h Q Qr).continuous.comp
       (continuous_fst.fst.prodMk continuous_fst.snd.fst))).mem_nhds hxS
   filter_upwards [hp.eventually hn, hR, hslow] with y hyN hyR hyS
-  have hFd := (hF.contDiffAt (hS.mem_nhds hyS)).differentiableAt (by simp)
-  have hGd := (hG.contDiffAt (hS.mem_nhds hyS)).differentiableAt (by simp)
+  have hFd := (hF.contDiffAt (hS.mem_nhds hyS)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have hGd := (hG.contDiffAt (hS.mem_nhds hyS)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hd := periodicPhase_differentiableAt sys l 0 (Qr ^ h) p pz x0 F G
     (x := changeMap y) hFd hGd
   exact (PhysicalParticularWave.phaseNormal_chartChange hQ hQr h i gap K Kr hyR hd).trans
@@ -2019,7 +2044,8 @@ variable {D h : ℝ} {vr vt : Plane}
 theorem slotGeometry_refine (l : SlotColoring.Label) (gap : ℕ) :
     CopySolveCompatibility.refineGeometry (slotGeometry sys hdet l 0) gap =
       slotGeometry sys hdet l gap := by
-  simp [CopySolveCompatibility.refineGeometry, slotGeometry, CommonCoverClass.bandGeometry]
+  simp only [CopySolveCompatibility.refineGeometry, slotGeometry, CommonCoverClass.bandGeometry,
+      zero_add]
 
 theorem slot_coordinates_from_zero (l : SlotColoring.Label) (gap : ℕ)
     (k : TorusInverse.Frequency) (Y : Plane) :
@@ -2352,7 +2378,7 @@ theorem nativeCutoff_nonzero_mem (hr0 : 0 < r0) (L : Label H v a) {x : Native}
   have hdiv : 0 < x.2.2 / ChartScales.slotLength r0 F.data.h (BaseChartJets.cellBand L) ∧
       x.2.2 / ChartScales.slotLength r0 F.data.h (BaseChartJets.cellBand L) < 1 := by
     dsimp only [pulseCoordinates] at hgauss
-    constructor <;> linarith [(abs_lt.mp hgauss).1, (abs_lt.mp hgauss).2]
+    constructor <;> linarith only [H, hgauss, (abs_lt.mp hgauss).1, (abs_lt.mp hgauss).2]
   have hL : 0 < ChartScales.slotLength r0 F.data.h (BaseChartJets.cellBand L) :=
     div_pos (mul_pos (by norm_num) hr0) (ChartScales.timeCoefficient_pos _ _)
   have hv : x.2.2 ∈ Ioo 0 (ChartScales.slotLength r0 F.data.h (BaseChartJets.cellBand L)) := by
@@ -2372,7 +2398,7 @@ theorem nativeCutoff_zero_germ_outside_q (L : Label H v a) {x : Native}
         simpa only [SquaredPartition.dyadicProfile_tsupport] using hq)
   have hc : ContinuousAt (fun y : Native => SimilarityHomogeneity.chartQ F.data.h y.1) x := by
     exact ((SimilarityCoordinates.coordinateQ_smooth
-      (by linarith [F.data.h_pos]) (by linarith [F.data.h_lt_half]) ht).continuousAt).comp
+      (by linarith only [F.data.h_pos]) (by linarith only [F.data.h_lt_half]) ht).continuousAt).comp
         (continuousAt_fst.snd.snd.prodMk continuousAt_fst.snd.fst)
   filter_upwards [hc.eventually he] with y hy
   simp only [nativeCutoff, hy, zero_mul]

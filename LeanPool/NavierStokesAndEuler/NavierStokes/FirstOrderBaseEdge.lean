@@ -741,7 +741,7 @@ theorem actual_viscosity_eq_terminal (F : OutgoingProfile.Profile) {XR cost L : 
     simp [SlowStressSupport.orderExponent, SlowExpansionResidual.slowOrder,
       PositiveAxisSystem.a, CoordinateAlgebra.A]
   rw [hexp]
-  linarith
+  linarith only [hf]
 
 theorem actual_viscosity_total_zero (F : OutgoingProfile.Profile) {XR cost L : ℝ}
     (w : HeatedOutgoing.CompensationWitness F XR cost) {E G : ℝ × ℝ → ℝ}
@@ -786,7 +786,7 @@ theorem full_switch_monotone (F : OutgoingProfile.Profile) {XR R r : ℝ}
   have hs : R ^ 2 ≤ r ^ 2 := (sq_le_sq₀ hR.le (hR.le.trans hr)).mpr hr
   have hl := Real.log_le_log hp (div_le_div_of_nonneg_right
     (div_le_div_of_nonneg_right hs (by norm_num)) hK.le)
-  linarith
+  linarith only [hf, hl]
 
 /-- The forward first-order primitive equals the backward terminal one.
 The total viscosity moment is derived from the same original reset row. -/
@@ -835,7 +835,7 @@ theorem first_angular_eq_backward (F : OutgoingProfile.Profile) {XR cost L C : �
   congr 1
   unfold SlowStressSupport.moment
   rw [intervalIntegral.integral_of_le hRp.le]
-  linarith
+  linarith only [hsplit]
 
 /-! ## Identifying the common extension with its actual radial primitive -/
 
@@ -942,7 +942,7 @@ theorem nominal_first_angular_eq {p : ℝ × ℝ} (hX : nominalOuterX W < p.1)
     rw [← Real.sqrt_sq (nominalOuterRadius_pos W).le]
     apply Real.sqrt_le_sqrt
     have hb := nominalOuterRadius_square W
-    linarith
+    linarith only [hX, hb]
   · exact heta
   · rwa [hs]
   · rwa [hs]
@@ -1000,7 +1000,7 @@ theorem switch_lt_terminalInner {F : OutgoingProfile.Profile} (W : NominalProfil
   rw [terminalInner, ← Real.exp_log hK]
   apply Real.exp_lt_exp.mpr
   unfold terminalShift TerminalHistoryBridge.shift
-  linarith
+  linarith only
 
 theorem terminalInner_full {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F)
     {X : ℝ} (hX : terminalInner W < X) :
@@ -1012,7 +1012,7 @@ theorem terminalInner_full {F : OutgoingProfile.Profile} (W : NominalProfile.Wit
   have hl : terminalShift W + 1 < Real.log X := (Real.lt_log_iff_exp_lt hp).mpr hX
   rw [Real.log_div hp.ne' hK.ne']
   unfold terminalShift TerminalHistoryBridge.shift at hl
-  linarith
+  linarith only [hl]
 
 theorem nominal_first_pair_eq {F : OutgoingProfile.Profile} (W : NominalProfile.Witness F) :
     EqOn (BaseResidual.stressPair (nominalCoefficients W) 1)
@@ -1037,7 +1037,7 @@ theorem edgeJets_of_interior_equality {F : OutgoingProfile.Profile} (W : Nominal
       (BaseResidual.activeDelta left (terminalShift W + 3)) f := by
   have hs := BaseResidual.firstOrder_pair_outer_edgeJets
     (terminalAmplitude W) F.data (terminalShift W) hc (by norm_num : (0 : ℝ) < 1)
-    (by linarith : left < terminalShift W + 3 - 1)
+    (by linarith only [hl] : left < terminalShift W + 3 - 1)
     (F := fun p => (SlowFirstOrderEdge.stressX (terminalAmplitude W) F.data (terminalShift W) p, 0))
     (fun _ _ => Filter.EventuallyEq.rfl)
   intro m
@@ -1046,7 +1046,7 @@ theorem edgeJets_of_interior_equality {F : OutgoingProfile.Profile} (W : Nominal
   intro p hp
   have hpi : terminalInner W < p.1 := by
     apply lt_of_lt_of_le _ hp.1.1
-    exact Real.exp_lt_exp.mpr (by linarith)
+    exact Real.exp_lt_exp.mpr (by linarith only)
   rw [iteratedFDeriv_eq_closed_parameter (terminalInner_pos W).le
     (fun _ _ => hf.contDiffAt)
     (fun q hq => ((SlowFirstOrderEdge.stressX_contDiffOn (terminalAmplitude W) F.data
@@ -1195,7 +1195,7 @@ theorem modified_angular_moment_eq
   apply modified_angular_history W Q M hI _ heta
   have hb := nominalOuterRadius_square W
   have hs := (sq_le_sq₀ (nominalOuterRadius_pos W).le hRp).mpr hR
-  linarith
+  linarith only [hb, hs]
 
 theorem modified_angular_zero_eq {R eta : ℝ} (hR : 0 ≤ R) (heta : eta ∈ S) :
     angularHistory (modifiedScheme W Q M) 0 (R, eta) = Q.E (R ^ 2 / 2, eta) := by
@@ -1211,7 +1211,7 @@ theorem modified_angular_zero_germ {R eta : ℝ} (hR : nominalOuterRadius W < R)
   have hX : nominalOuterX W < p.1 ^ 2 / 2 := by
     have hh := (sq_lt_sq₀ (nominalOuterRadius_pos W).le hRp.le).mpr hp.1
     rw [← nominalOuterRadius_square W]
-    linarith
+    linarith only [hh]
   rw [modified_angular_zero_eq W Q M hRp.le hp.2,
     nominal_angular_zero_eq W hRp (M.subset hp.2)]
   change Real.sqrt (2 * (p.1 ^ 2 / 2)) * Q.f (p.1 ^ 2 / 2, p.2) = _
@@ -1238,7 +1238,7 @@ theorem outerRadius_lt_sqrt {X : ℝ} (hX : nominalOuterX W < X) :
   have hp : 0 < X := (nominalOuterX_pos W).trans hX
   have hs := Real.sq_sqrt (show 0 ≤ 2 * X by positivity)
   have hb := nominalOuterRadius_square W
-  nlinarith [Real.sqrt_nonneg (2 * X), nominalOuterRadius_pos W]
+  nlinarith only [hX, hs, hb, Real.sqrt_nonneg (2 * X), nominalOuterRadius_pos W]
 
 theorem modified_first_theta_eq_nominal
     (hI : ∀ eta ∈ S, Q.I (nominalOuterX W, eta) = W.profiles.I (nominalOuterX W, eta))

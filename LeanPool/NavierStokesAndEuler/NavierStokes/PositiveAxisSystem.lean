@@ -24,6 +24,10 @@ identity or existence of a transformed system is assumed.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -222,7 +226,9 @@ theorem A1_high_parameters_irrelevant (h r eta : K) (b : BaseJet K)
     (A1 h r eta b).mulVec (parameterJetVector phi u k p q₄ q₅) =
       (A1 h r eta b).mulVec (parameterJetVector phi u k p q₄' q₅') := by
   ext i
-  fin_cases i <;> simp [A1, parameterJetVector, Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
+  simp only [Matrix.mulVec, dotProduct, Fin.sum_univ_six,
+    A1_shape h r eta b i 4 (Or.inr le_rfl), A1_shape h r eta b i 5 (Or.inr (by decide)),
+    zero_mul, add_zero, parameterJetVector, Fin.isValue, Matrix.cons_val]
 
 /-- Direct multiplication of the displayed matrices reproduces the expanded
 right sides, with the pressure radial derivative explicitly substituted. -/
@@ -273,6 +279,8 @@ theorem jetSystem_iff_expanded {h lam C r eta : K} (hr : r ≠ 0)
       ExpandedEquations h lam C eta (r ^ 2) b s phi u k p := by
   unfold JetSystem
   rw [matrixRHS_jet]
+  have h31 : ((3 : K) + 1) / 2 = 2 := by norm_num
+  have h11 : ((1 : K) + 1) / 2 = 1 := by norm_num
   constructor
   · intro hh
     have h2 := congrFun hh 2
@@ -293,29 +301,34 @@ theorem jetSystem_iff_expanded {h lam C r eta : K} (hr : r ≠ 0)
       (axialRHS h lam eta (r ^ 2) b s phi u k {p with radial := pressureValue C b s phi}) 1).mp (by
           simpa only [one_div] using h5)
     have hpjet : {p with radial := pressureValue C b s phi} = p := by
-      cases p
-      simp_all
+      rw [← hp]
     rw [hpjet] at hu
-    refine ⟨hk, hp, ?_, ?_⟩
-    · convert! hphi using 1; norm_num
-    · convert! hu using 1; norm_num
+    rw [h31] at hphi
+    rw [h11, one_mul] at hu
+    exact ⟨hk, hp, hphi, hu⟩
   · rintro ⟨hk, hp, hphi, hu⟩
     have hpjet : {p with radial := pressureValue C b s phi} = p := by
-      cases p
-      simp_all
+      rw [← hp]
     ext i
     fin_cases i
-    · simp [radialJetVector, diagonal, jetVector]
-    · simp [radialJetVector, diagonal, jetVector]
-    · simpa [radialJetVector, diagonal, jetVector] using (average_row_iff hr _ _ _).mpr hk
-    · simp [radialJetVector, diagonal, jetVector, hp]
-    · simpa [radialJetVector, diagonal, jetVector] using
+    · simp only [radialJetVector, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, diagonal,
+        zero_div, jetVector, zero_mul, add_zero, Nat.succ_eq_add_one, Nat.reduceAdd, neg_mul]
+    · simp only [radialJetVector, Fin.mk_one, Fin.isValue, Matrix.cons_val_one,
+        Matrix.cons_val_zero, diagonal, zero_div, jetVector, zero_mul, add_zero,
+        Nat.succ_eq_add_one, Nat.reduceAdd, neg_mul]
+    · simpa only [radialJetVector, Fin.reduceFinMk, Matrix.cons_val, diagonal, jetVector,
+        Nat.succ_eq_add_one, Nat.reduceAdd, neg_mul] using (average_row_iff hr _ _ _).mpr hk
+    · simp only [radialJetVector, hp, Fin.reduceFinMk, Matrix.cons_val, diagonal, zero_div,
+        jetVector, zero_mul, add_zero, Nat.succ_eq_add_one, Nat.reduceAdd, neg_mul]
+    · simpa only [radialJetVector, Fin.reduceFinMk, Matrix.cons_val, diagonal, jetVector,
+        Nat.succ_eq_add_one, Nat.reduceAdd, neg_mul] using
         (second_row_iff hr phi.radial phi.radial2 (angularRHS h lam eta (r ^ 2) b s phi u k) 3).mpr
-          (by convert! hphi using 1; norm_num)
+          (by rwa [h31])
     · rw [hpjet]
-      simpa [radialJetVector, diagonal, jetVector] using
+      simpa only [radialJetVector, Fin.reduceFinMk, Matrix.cons_val, diagonal, one_div, jetVector,
+          Nat.succ_eq_add_one, Nat.reduceAdd, neg_mul] using
         (second_row_iff hr u.radial u.radial2 (axialRHS h lam eta (r ^ 2) b s phi u k p) 1).mpr
-          (by convert! hu using 1; norm_num)
+          (by rwa [h11, one_mul])
 
 
 /-- Slow exponent at order `n`. -/
@@ -515,10 +528,11 @@ theorem partialX_contDiffAt {f : InnerProfile} {w : InnerPoint}
 theorem hasDerivAt_squareProfile {f : InnerProfile} {r eta : ℝ}
     (hf : DifferentiableAt ℝ f (r ^ 2, eta)) :
     HasDerivAt (fun s => f (s ^ 2, eta)) (2 * r * partialX f (r ^ 2, eta)) r := by
-  have hc := hf.hasFDerivAt.comp_hasDerivAt r
-    (((hasDerivAt_id r).pow 2).prodMk (hasDerivAt_const r eta))
+  have hp := ((hasDerivAt_id r).pow 2).prodMk (hasDerivAt_const r eta)
+  have hc := hf.hasFDerivAt.comp_hasDerivAt r hp
   convert! hc using 1
-  simp [fderiv_inner_apply]
+  simp only [Nat.cast_ofNat, id_eq, Nat.add_one_sub_one, pow_one, mul_one, fderiv_inner_apply,
+      mul_zero, add_zero]
   ring
 
 theorem hasDerivAt_parameterProfile {f : InnerProfile} {X eta : ℝ}
@@ -526,7 +540,7 @@ theorem hasDerivAt_parameterProfile {f : InnerProfile} {X eta : ℝ}
     HasDerivAt (fun z => f (X, z)) (partialEta f (X, eta)) eta := by
   have hc := hf.hasFDerivAt.comp_hasDerivAt eta
     ((hasDerivAt_const eta X).prodMk (hasDerivAt_id eta))
-  simpa [fderiv_inner_apply, Function.comp_def] using hc
+  simpa only [Function.comp_def, fderiv_inner_apply, mul_zero, mul_one, zero_add] using hc
 
 theorem hasDerivAt_squareProfile_radial {f : InnerProfile} {r eta : ℝ}
     (hf : ContDiffAt ℝ 2 f (r ^ 2, eta)) :
@@ -618,7 +632,8 @@ theorem precedingDiffusion_congr (h power : ℝ) {F G : ℕ → InnerProfile} {n
     precedingDiffusion h power F n = precedingDiffusion h power G n := by
   cases n with
   | zero => rfl
-  | succ k => simp [precedingDiffusion, hFG k (Nat.lt_succ_self k)]
+  | succ k => simp only [precedingDiffusion, Nat.add_eq_zero_iff, one_ne_zero, and_false,
+      ↓reduceIte, add_tsub_cancel_right, hFG k (Nat.lt_succ_self k)]
 
 /-- Fully specified source from lower-order profile jets and a supplied
 regular representative of the preceding `Ω/X`. -/
@@ -708,9 +723,10 @@ theorem averageDefect_smooth (Ω : ProfileHistories.RadialDomain) {u : InnerProf
 theorem averageDefect_radial (Ω : ProfileHistories.RadialDomain) {u : InnerProfile}
     (hu : ContDiffOn ℝ ∞ u Ω.carrier) {w : InnerPoint} (hw : w ∈ Ω.carrier) :
     w.1 * (partialX u w + partialX (averageDefect u) w) + averageDefect u w = 0 := by
-  have hua := (hu.contDiffAt (Ω.isOpen.mem_nhds hw)).differentiableAt (by simp)
+  have hua := (hu.contDiffAt (Ω.isOpen.mem_nhds hw)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have haa := ((ProfileHistories.average_smooth Ω hu).contDiffAt
-    (Ω.isOpen.mem_nhds hw)).differentiableAt (by simp)
+    (Ω.isOpen.mem_nhds hw)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hdx : partialX (averageDefect u) w =
       partialX (ProfileHistories.average u) w - partialX u w := by
     change (fderiv ℝ (fun v => ProfileHistories.average u v - u v) w) (1, 0) = _
@@ -739,9 +755,10 @@ theorem betaValue_averageDefect (Ω : ProfileHistories.RadialDomain) {u : InnerP
     (hw : w ∈ Ω.carrier) (hX : w.1 ≠ 0) :
     betaValue h lam w.2 (actualJet u w) (actualJet (averageDefect u) w) =
       SlowDivergence.radialFlux h lam u w / w.1 := by
-  have hua := (hu.contDiffAt (Ω.isOpen.mem_nhds hw)).differentiableAt (by simp)
+  have hua := (hu.contDiffAt (Ω.isOpen.mem_nhds hw)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have haa := ((ProfileHistories.average_smooth Ω hu).contDiffAt
-    (Ω.isOpen.mem_nhds hw)).differentiableAt (by simp)
+    (Ω.isOpen.mem_nhds hw)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hde : partialEta (averageDefect u) w =
       partialEta (ProfileHistories.average u) w - partialEta u w := by
     change (fderiv ℝ (fun v => ProfileHistories.average u v - u v) w) (0, 1) = _
@@ -772,7 +789,7 @@ theorem averageDefect_unique (Ω : ProfileHistories.RadialDomain) {u k : InnerPr
     {w : InnerPoint} (hw : w ∈ Ω.carrier) : k w = averageDefect u w := by
   by_cases hX : w.1 = 0
   · have hk0 := hrow w hw
-    have hw0 : w = (0, w.2) := by ext <;> simp [hX]
+    have hw0 : w = (0, w.2) := by ext <;> simp only [hX]
     rw [hw0] at hk0 ⊢
     simpa [averageDefect, ProfileHistories.average_at_axis] using hk0
   have hd : ∀ x ∈ uIcc (0 : ℝ) w.1,
@@ -846,28 +863,50 @@ theorem coefficient0_parity (h lam C : ℂ) (F : CoefficientData) :
   intro r z i j
   simp only [coefficient0, neg_sq, Complex.ofReal_neg]
   fin_cases i <;> fin_cases j <;>
-    simp only [A0, mul_neg, neg_mul, axialValue, even_two, Even.neg_pow, neg_add_rev, Fin.zero_eta,
-      Fin.isValue, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_zero,
-      Matrix.cons_val_fin_one, paritySign, Nat.ofNat_pos, ite_true, mul_one, mul_zero, Fin.mk_one,
-      Matrix.cons_val_one, Nat.one_lt_ofNat, Fin.reduceFinMk, Matrix.cons_val, Nat.reduceLT,
-      Nat.lt_add_one, lt_self_iff_false, neg_neg, one_mul, ite_false]
+    simp only [paritySign, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue,
+      Nat.ofNat_pos, ite_true, Nat.one_lt_ofNat, Nat.reduceLT, Nat.lt_add_one,
+      lt_self_iff_false, ite_false] <;>
+    simp only [A0, ↓Matrix.of_apply, ↓Matrix.cons_val', ↓Matrix.cons_val_zero,
+      ↓Matrix.cons_val_one, ↓Matrix.cons_val, ↓Matrix.cons_val_fin_one] <;>
+    simp only [mul_neg, neg_mul, axialValue, even_two, Even.neg_pow, neg_add_rev, mul_one,
+      mul_zero, neg_neg, one_mul]
+
+theorem lowerBlock_parity (a b c d e f : ℂ) (i j : Fin 6) :
+    (!![0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0;
+      a, b, c, 0, 0, 0; 0, d, e, f, 0, 0] : Matrix (Fin 6) (Fin 6) ℂ) i j =
+      -(paritySign i * paritySign j) *
+        (!![0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0; 0, 0, 0, 0, 0, 0;
+          a, b, c, 0, 0, 0; 0, d, e, f, 0, 0] : Matrix (Fin 6) (Fin 6) ℂ) i j := by
+  fin_cases i <;>
+    simp only [paritySign, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue,
+      Nat.ofNat_pos, ite_true, Nat.one_lt_ofNat, Nat.reduceLT, Nat.lt_add_one,
+      lt_self_iff_false, ite_false, ↓Matrix.of_apply, ↓Matrix.cons_val_zero,
+      ↓Matrix.cons_val_one, ↓Matrix.cons_val, ← Matrix.zero_empty, Matrix.cons_zero_zero,
+      Pi.zero_apply, mul_zero] <;>
+    fin_cases j <;>
+    simp only [Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue,
+      Nat.ofNat_pos, ite_true, Nat.one_lt_ofNat, Nat.reduceLT, Nat.lt_add_one,
+      lt_self_iff_false, ite_false, ↓Matrix.cons_val_zero, ↓Matrix.cons_val_one, ↓Matrix.cons_val,
+      Pi.zero_apply, mul_one, mul_zero, mul_neg, neg_neg, one_mul]
 
 theorem coefficient1_parity (h : ℂ) (F : CoefficientData) :
     CoefficientParity (coefficient1 h F) := by
   intro r z i j
   simp only [coefficient1, neg_sq, Complex.ofReal_neg]
-  fin_cases i <;> fin_cases j <;>
-    simp only [A1, neg_mul, even_two, Even.neg_pow, Fin.zero_eta, Fin.isValue, Matrix.of_apply,
-      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, paritySign, Nat.ofNat_pos,
-      ite_true, mul_one, mul_zero, Fin.mk_one, Matrix.cons_val_one, Nat.one_lt_ofNat,
-      Fin.reduceFinMk, Matrix.cons_val, Nat.reduceLT, Nat.lt_add_one, lt_self_iff_false, mul_neg,
-      neg_neg, one_mul, ite_false]
+  have hA : A1 h (-(r : ℂ)) z (coefficientBase F (r ^ 2) z) =
+      A1 h (r : ℂ) z (coefficientBase F (r ^ 2) z) := by
+    simp only [A1, even_two, Even.neg_pow]
+  rw [hA]
+  exact lowerBlock_parity _ _ _ _ _ _ i j
 
 theorem sourceField_parity (h C : ℂ) (F : CoefficientData) :
     ForcingParity (sourceField h C F) := by
   intro r z i
   simp only [sourceField, neg_sq, Complex.ofReal_neg]
-  fin_cases i <;> simp [forcing, paritySign]
+  fin_cases i <;> simp only [forcing, mul_neg, neg_mul, even_two, Even.neg_pow, Fin.zero_eta,
+      Fin.isValue, Matrix.cons_val_zero, paritySign, Nat.ofNat_pos, ↓reduceIte, mul_zero,
+      Fin.mk_one, Matrix.cons_val_one, Nat.one_lt_ofNat, Fin.reduceFinMk, Matrix.cons_val,
+      Nat.reduceLT, Nat.lt_add_one, one_mul, lt_self_iff_false, neg_neg]
 
 private theorem data_square_contDiffAt {n : WithTop ℕ∞} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (F i) (w.1 ^ 2, w.2)) (i : Fin 11) :
@@ -885,162 +924,203 @@ theorem inverse_ell_analyticAt {h z : ℂ} (hL : ell h z ≠ 0) :
   change 1 - 2 * h * z ^ 2 ≠ 0 at hL
   exact (analyticAt_const.sub (analyticAt_const.mul (analyticAt_id.pow 2))).inv hL
 
+/- Closure rules at a point, stated with the instances of the statements below, so that the
+entrywise proofs unify syntactically instead of comparing instance paths at every step. -/
+private theorem pointContDiff_const {n : WithTop ℕ∞} {w : ℝ × ℂ} (c : ℂ) :
+    ContDiffAt ℝ n (fun _ : ℝ × ℂ => c) w := contDiffAt_const
+
+private theorem pointContDiff_add {n : WithTop ℕ∞} {w : ℝ × ℂ} {f g : ℝ × ℂ → ℂ}
+    (hf : ContDiffAt ℝ n f w) (hg : ContDiffAt ℝ n g w) :
+    ContDiffAt ℝ n (fun v => f v + g v) w := hf.add hg
+
+private theorem pointContDiff_sub {n : WithTop ℕ∞} {w : ℝ × ℂ} {f g : ℝ × ℂ → ℂ}
+    (hf : ContDiffAt ℝ n f w) (hg : ContDiffAt ℝ n g w) :
+    ContDiffAt ℝ n (fun v => f v - g v) w := hf.sub hg
+
+private theorem pointContDiff_mul {n : WithTop ℕ∞} {w : ℝ × ℂ} {f g : ℝ × ℂ → ℂ}
+    (hf : ContDiffAt ℝ n f w) (hg : ContDiffAt ℝ n g w) :
+    ContDiffAt ℝ n (fun v => f v * g v) w := hf.mul hg
+
+private theorem pointContDiff_neg {n : WithTop ℕ∞} {w : ℝ × ℂ} {f : ℝ × ℂ → ℂ}
+    (hf : ContDiffAt ℝ n f w) : ContDiffAt ℝ n (fun v => -f v) w := hf.neg
+
+private theorem pointContDiff_pow {n : WithTop ℕ∞} {w : ℝ × ℂ} {f : ℝ × ℂ → ℂ}
+    (hf : ContDiffAt ℝ n f w) (k : ℕ) : ContDiffAt ℝ n (fun v => f v ^ k) w := hf.pow k
+
 theorem coefficient0_contDiffAt_of_pullback {n : WithTop ℕ∞} {h lam C : ℂ} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w)
     (hL : ell h w.2 ≠ 0) (i j : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => coefficient0 h lam C F v.1 v.2 i j) w := by
-  have hdata := hF
-  have hlinv := inverse_ell_contDiffAt (n := n) (w := w) hL
+  have hlinv : ContDiffAt ℝ n (fun v : ℝ × ℂ => (1 - 2 * h * v.2 ^ 2)⁻¹) w :=
+    inverse_ell_contDiffAt hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
+  have hsnd : ContDiffAt ℝ n (fun v : ℝ × ℂ => v.2) w := contDiffAt_snd
   fin_cases i <;>
     simp only [coefficient0, A0, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
-    (first | exact contDiffAt_const | skip) <;>
+    (first | with_reducible exact pointContDiff_const _ | skip) <;>
     fin_cases j <;>
     simp only [coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
         edge, neg_mul, neg_add_rev, Fin.zero_eta,
             Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
                 Fin.reduceFinMk, Matrix.cons_val] <;>
-    (repeat' first
-      | exact contDiffAt_const
-      | exact hdata _
-      | exact contDiffAt_snd
-      | exact hcoe
+    (with_reducible repeat' first
       | exact hlinv
-      | apply ContDiffAt.add
-      | apply ContDiffAt.sub
-      | apply ContDiffAt.mul
-      | apply ContDiffAt.neg)
+      | apply pointContDiff_mul
+      | apply pointContDiff_add
+      | apply pointContDiff_sub
+      | apply pointContDiff_neg
+      | apply pointContDiff_pow
+      | exact hF _
+      | exact pointContDiff_const _
+      | exact hsnd
+      | exact hcoe)
 
 theorem coefficient1_contDiffAt_of_pullback {n : WithTop ℕ∞} {h : ℂ} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w)
     (hL : ell h w.2 ≠ 0) (i j : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => coefficient1 h F v.1 v.2 i j) w := by
-  have hdata := hF
-  have hlinv := inverse_ell_contDiffAt (n := n) (w := w) hL
+  have hlinv : ContDiffAt ℝ n (fun v : ℝ × ℂ => (1 - 2 * h * v.2 ^ 2)⁻¹) w :=
+    inverse_ell_contDiffAt hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
-  have hphi : ContDiffAt ℝ n (fun v : ℝ × ℂ =>
-      (v.1 : ℂ) ^ 2 * F 1 (v.1 ^ 2, v.2) + F 0 (v.1 ^ 2, v.2)) w :=
-    ((hcoe.pow 2).mul (hdata 1)).add (hdata 0)
-  have hu : ContDiffAt ℝ n (fun v : ℝ × ℂ =>
-      (v.1 : ℂ) ^ 2 * F 4 (v.1 ^ 2, v.2)) w := (hcoe.pow 2).mul (hdata 4)
-  have htransport : ContDiffAt ℝ n (fun v : ℝ × ℂ =>
-      dScale h * v.2 + (1 - v.2 ^ 2) * F 3 (v.1 ^ 2, v.2)) w :=
-    (contDiffAt_const.mul contDiffAt_snd).add
-      ((contDiffAt_const.sub (contDiffAt_snd.pow 2)).mul (hdata 3))
+  have hsnd : ContDiffAt ℝ n (fun v : ℝ × ℂ => v.2) w := contDiffAt_snd
   fin_cases i <;>
     simp only [coefficient1, A1, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
-    (first | exact contDiffAt_const | skip) <;>
+    (first | with_reducible exact pointContDiff_const _ | skip) <;>
     fin_cases j <;>
     simp only [edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
         Fin.zero_eta, Matrix.cons_val_zero,
             Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
                 Matrix.cons_val] <;>
-    (repeat' first
-      | exact contDiffAt_const
-      | exact hphi
-      | exact hu
-      | exact htransport
-      | exact hdata _
-      | exact contDiffAt_snd
-      | exact hcoe
+    (with_reducible repeat' first
       | exact hlinv
-      | apply ContDiffAt.add
-      | apply ContDiffAt.sub
-      | apply ContDiffAt.mul
-      | apply ContDiffAt.neg)
+      | apply pointContDiff_mul
+      | apply pointContDiff_add
+      | apply pointContDiff_sub
+      | apply pointContDiff_neg
+      | apply pointContDiff_pow
+      | exact hF _
+      | exact pointContDiff_const _
+      | exact hsnd
+      | exact hcoe)
 
 theorem sourceField_contDiffAt_of_pullback {n : WithTop ℕ∞} {h C : ℂ} {F : CoefficientData}
     {w : ℝ × ℂ} (hF : ∀ i, ContDiffAt ℝ n (fun v : ℝ × ℂ => F i (v.1 ^ 2, v.2)) w)
     (hL : ell h w.2 ≠ 0) (i : Fin 6) :
     ContDiffAt ℝ n (fun v : ℝ × ℂ => sourceField h C F v.1 v.2 i) w := by
-  have hdata := hF
-  have hlinv := inverse_ell_contDiffAt (n := n) (w := w) hL
+  have hlinv : ContDiffAt ℝ n (fun v : ℝ × ℂ => (1 - 2 * h * v.2 ^ 2)⁻¹) w :=
+    inverse_ell_contDiffAt hL
   have hcoe : ContDiffAt ℝ n (fun v : ℝ × ℂ => (v.1 : ℂ)) w :=
     Complex.ofRealCLM.contDiff.contDiffAt.comp w contDiffAt_fst
+  have hsnd : ContDiffAt ℝ n (fun v : ℝ × ℂ => v.2) w := contDiffAt_snd
   fin_cases i <;>
     simp only [sourceField, forcing, pressureSource, coefficientSource, Fin.isValue,
         div_eq_mul_inv, ell, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
             Fin.reduceFinMk, Matrix.cons_val] <;>
-    (repeat' first
-      | exact contDiffAt_const
-      | exact hdata _
-      | exact contDiffAt_snd
-      | exact hcoe
+    (with_reducible repeat' first
       | exact hlinv
-      | apply ContDiffAt.add
-      | apply ContDiffAt.sub
-      | apply ContDiffAt.mul)
+      | apply pointContDiff_mul
+      | apply pointContDiff_add
+      | apply pointContDiff_sub
+      | apply pointContDiff_pow
+      | exact hF _
+      | exact pointContDiff_const _
+      | exact hsnd
+      | exact hcoe)
+
+private theorem pointAnalytic_add {z : ℂ} {f g : ℂ → ℂ} (hf : AnalyticAt ℂ f z)
+    (hg : AnalyticAt ℂ g z) : AnalyticAt ℂ (fun v => f v + g v) z := hf.fun_add hg
+
+private theorem pointAnalytic_sub {z : ℂ} {f g : ℂ → ℂ} (hf : AnalyticAt ℂ f z)
+    (hg : AnalyticAt ℂ g z) : AnalyticAt ℂ (fun v => f v - g v) z := hf.fun_sub hg
+
+private theorem pointAnalytic_mul {z : ℂ} {f g : ℂ → ℂ} (hf : AnalyticAt ℂ f z)
+    (hg : AnalyticAt ℂ g z) : AnalyticAt ℂ (fun v => f v * g v) z := hf.fun_mul hg
+
+private theorem pointAnalytic_neg {z : ℂ} {f : ℂ → ℂ} (hf : AnalyticAt ℂ f z) :
+    AnalyticAt ℂ (fun v => -f v) z := hf.fun_neg
+
+private theorem pointAnalytic_pow {z : ℂ} {f : ℂ → ℂ} (hf : AnalyticAt ℂ f z) (k : ℕ) :
+    AnalyticAt ℂ (fun v => f v ^ k) z := hf.fun_pow k
 
 theorem coefficient0_analyticAt {h lam C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i j : Fin 6) :
     AnalyticAt ℂ (fun v => coefficient0 h lam C F r v i j) z := by
-  have hlinv := inverse_ell_analyticAt hL
+  have hlinv : AnalyticAt ℂ (fun v => (1 - 2 * h * v ^ 2)⁻¹) z := inverse_ell_analyticAt hL
+  have hconst (c : ℂ) : AnalyticAt ℂ (fun _ : ℂ => c) z := analyticAt_const
+  have hid : AnalyticAt ℂ (fun v : ℂ => v) z := analyticAt_id
   fin_cases i <;>
     simp only [coefficient0, A0, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
-    (first | exact analyticAt_const | skip) <;>
+    (first | with_reducible exact hconst _ | skip) <;>
     fin_cases j <;>
     simp only [coefficientBase, Fin.isValue, ell, div_eq_mul_inv, axialValue,
         edge, neg_mul, neg_add_rev, Fin.zero_eta,
             Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
                 Fin.reduceFinMk, Matrix.cons_val] <;>
-    (repeat' first
-      | exact analyticAt_const
-      | exact hF _
-      | exact analyticAt_id
+    (with_reducible repeat' first
       | exact hlinv
-      | apply AnalyticAt.fun_add
-      | apply AnalyticAt.fun_sub
-      | apply AnalyticAt.fun_mul
-      | apply AnalyticAt.fun_neg)
+      | exact hconst _
+      | apply pointAnalytic_mul
+      | apply pointAnalytic_add
+      | apply pointAnalytic_sub
+      | apply pointAnalytic_neg
+      | apply pointAnalytic_pow
+      | exact hF _
+      | exact hid)
 
 theorem coefficient1_analyticAt {h : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i j : Fin 6) :
     AnalyticAt ℂ (fun v => coefficient1 h F r v i j) z := by
-  have hlinv := inverse_ell_analyticAt hL
+  have hlinv : AnalyticAt ℂ (fun v => (1 - 2 * h * v ^ 2)⁻¹) z := inverse_ell_analyticAt hL
+  have hconst (c : ℂ) : AnalyticAt ℂ (fun _ : ℂ => c) z := analyticAt_const
+  have hid : AnalyticAt ℂ (fun v : ℂ => v) z := analyticAt_id
   fin_cases i <;>
     simp only [coefficient1, A1, Matrix.of_apply, Fin.zero_eta, Fin.isValue,
       Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_fin_one, Fin.mk_one,
       Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;>
-    (first | exact analyticAt_const | skip) <;>
+    (first | with_reducible exact hconst _ | skip) <;>
     fin_cases j <;>
     simp only [edge, coefficientBase, Fin.isValue, ell, div_eq_mul_inv, neg_mul,
         Fin.zero_eta, Matrix.cons_val_zero,
             Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
                 Matrix.cons_val] <;>
-    (repeat' first
-      | exact analyticAt_const
-      | exact hF _
-      | exact analyticAt_id
+    (with_reducible repeat' first
       | exact hlinv
-      | apply AnalyticAt.fun_add
-      | apply AnalyticAt.fun_sub
-      | apply AnalyticAt.fun_mul
-      | apply AnalyticAt.fun_neg)
+      | exact hconst _
+      | apply pointAnalytic_mul
+      | apply pointAnalytic_add
+      | apply pointAnalytic_sub
+      | apply pointAnalytic_neg
+      | apply pointAnalytic_pow
+      | exact hF _
+      | exact hid)
 
 theorem sourceField_analyticAt {h C : ℂ} {F : CoefficientData} {r : ℝ} {z : ℂ}
     (hF : ∀ i, AnalyticAt ℂ (fun v => F i (r ^ 2, v)) z) (hL : ell h z ≠ 0) (i : Fin 6) :
     AnalyticAt ℂ (fun v => sourceField h C F r v i) z := by
-  have hlinv := inverse_ell_analyticAt hL
+  have hlinv : AnalyticAt ℂ (fun v => (1 - 2 * h * v ^ 2)⁻¹) z := inverse_ell_analyticAt hL
+  have hconst (c : ℂ) : AnalyticAt ℂ (fun _ : ℂ => c) z := analyticAt_const
+  have hid : AnalyticAt ℂ (fun v : ℂ => v) z := analyticAt_id
   fin_cases i <;>
     simp only [sourceField, forcing, pressureSource, coefficientSource, Fin.isValue,
         div_eq_mul_inv, ell, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
             Fin.reduceFinMk, Matrix.cons_val] <;>
-    (repeat' first
-      | exact analyticAt_const
-      | exact hF _
-      | exact analyticAt_id
+    (with_reducible repeat' first
       | exact hlinv
-      | apply AnalyticAt.fun_add
-      | apply AnalyticAt.fun_sub
-      | apply AnalyticAt.fun_mul)
+      | exact hconst _
+      | apply pointAnalytic_mul
+      | apply pointAnalytic_add
+      | apply pointAnalytic_sub
+      | apply pointAnalytic_pow
+      | exact hF _
+      | exact hid)
 
 
 /-- One-sided smooth X data suffice for a smooth signed square pullback. -/
@@ -1131,6 +1211,17 @@ noncomputable def complexBase (b : BaseJet ℝ) : BaseJet ℂ :=
 noncomputable def complexSource (s : SourceJet ℝ) : SourceJet ℂ :=
   ⟨s.angular, s.axial, s.pressureProduct, s.omegaQuotient⟩
 
+theorem comp_vecCons6 {α β : Type*} (f : α → β) (a₀ a₁ a₂ a₃ a₄ a₅ : α) :
+    f ∘ ![a₀, a₁, a₂, a₃, a₄, a₅] = ![f a₀, f a₁, f a₂, f a₃, f a₄, f a₅] := by
+  ext i
+  fin_cases i <;> rfl
+
+theorem map_of_vecCons6 {α β : Type*} (f : α → β) (r₀ r₁ r₂ r₃ r₄ r₅ : Fin 6 → α) :
+    (Matrix.of ![r₀, r₁, r₂, r₃, r₄, r₅]).map f =
+      Matrix.of ![f ∘ r₀, f ∘ r₁, f ∘ r₂, f ∘ r₃, f ∘ r₄, f ∘ r₅] := by
+  ext i j
+  fin_cases i <;> rfl
+
 theorem A0_ofReal (h lam C r eta : ℝ) (b : BaseJet ℝ) :
     A0 (h : ℂ) (lam : ℂ) (C : ℂ) (r : ℂ) (eta : ℂ) (complexBase b) =
       (A0 h lam C r eta b).map Complex.ofReal := by
@@ -1141,9 +1232,8 @@ theorem A0_ofReal (h lam C r eta : ℝ) (b : BaseJet ℝ) :
     ← Complex.ofReal_add, ← Complex.ofReal_sub, ← Complex.ofReal_mul,
     ← Complex.ofReal_div, ← Complex.ofReal_neg, ← Complex.ofReal_pow,
     ← Complex.ofReal_inv]
-  apply Matrix.ext
-  intro i j
-  fin_cases i <;> fin_cases j <;> rfl
+  rw [map_of_vecCons6]
+  simp only [comp_vecCons6]
 
 theorem A1_ofReal (h r eta : ℝ) (b : BaseJet ℝ) :
     A1 (h : ℂ) (r : ℂ) (eta : ℂ) (complexBase b) =
@@ -1152,16 +1242,19 @@ theorem A1_ofReal (h r eta : ℝ) (b : BaseJet ℝ) :
     ← Complex.ofReal_zero, ← Complex.ofReal_one, ← Complex.ofReal_ofNat,
     ← Complex.ofReal_add, ← Complex.ofReal_sub, ← Complex.ofReal_mul,
     ← Complex.ofReal_div, ← Complex.ofReal_neg, ← Complex.ofReal_pow]
-  apply Matrix.ext
-  intro i j
-  fin_cases i <;> fin_cases j <;> rfl
+  rw [map_of_vecCons6]
+  simp only [comp_vecCons6]
 
 theorem forcing_ofReal (h C r eta : ℝ) (s : SourceJet ℝ) :
     forcing (h : ℂ) (C : ℂ) (r : ℂ) (eta : ℂ) (complexSource s) =
       fun i => ((forcing h C r eta s i : ℝ) : ℂ) := by
   ext i
   fin_cases i <;>
-    simp [forcing, complexSource, pressureSource, inverseSquare, ell]
+    simp only [forcing, pressureSource, inverseSquare, complexSource, ell, Fin.zero_eta,
+        Fin.isValue, Matrix.cons_val_zero, Complex.ofReal_zero, Fin.mk_one, Matrix.cons_val_one,
+        Fin.reduceFinMk, Matrix.cons_val, Complex.ofReal_mul, Complex.ofReal_ofNat,
+        Complex.ofReal_sub, Complex.ofReal_inv, Complex.ofReal_pow, Complex.ofReal_div,
+        Complex.ofReal_one]
 
 theorem diagonal_ofReal (i : Fin 6) :
     (diagonal i : ℂ) = ((diagonal i : ℝ) : ℂ) := by
@@ -1174,7 +1267,8 @@ theorem matrixRHS_realPart (h lam C r eta : ℝ) (b : BaseJet ℝ) (s : SourceJe
       (complexBase b) (complexSource s) w v i).re =
     matrixRHS h lam C r eta b s (fun j => (w j).re) (fun j => (v j).re) i := by
   simp only [matrixRHS, A0_ofReal, A1_ofReal, forcing_ofReal, Pi.add_apply, Complex.add_re]
-  simp [Matrix.mulVec, dotProduct, Matrix.map, Complex.mul_re]
+  simp only [Matrix.mulVec, dotProduct, Matrix.map, Matrix.of_apply, Complex.re_sum, Complex.mul_re,
+      Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
 
 /-- Real trace, given by `(W r (eta : ℂ) i).re`. -/
 noncomputable def realTrace (W : Field) (r eta : ℝ) (i : Fin 6) : ℝ :=

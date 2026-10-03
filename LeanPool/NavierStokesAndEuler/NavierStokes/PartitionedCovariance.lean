@@ -21,6 +21,10 @@ by an independence assumption about their angular frequencies.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -61,7 +65,7 @@ theorem cutoff_sq_integral_pos {r : ℝ} (hr : 0 < r) : 0 < ∫ ξ : ℝ, cutoff
     rw [← cutoff_support hr]
     simp only [mem_support, ne_eq, pow_eq_zero_iff (by norm_num : (2 : ℕ) ≠ 0)]
   rw [hs]
-  exact isOpen_Ioo.measure_pos volume (nonempty_Ioo.mpr (by linarith))
+  exact isOpen_Ioo.measure_pos volume (nonempty_Ioo.mpr (by linarith only [hr]))
 
 /-- Native prefactor, given by `(|vr.1 * vt.2 - vr.2 * vt.1| / 2) * ∫ ξ : ℝ, cutoff r ξ ^ 2`. -/
 noncomputable def nativePrefactor (vr vt : Plane) (r : ℝ) : ℝ :=
@@ -306,12 +310,12 @@ theorem native_cutoff_support (vr vt center : Plane)
     have hm : w.1 ∈ support (cutoff r) := hχ
     rw [cutoff_support hr] at hm
     rw [abs_le]
-    constructor <;> linarith [hm.1, hm.2]
+    constructor <;> linarith only [hr, hm, hm.1, hm.2]
   have hη : |w.2| ≤ 2 * r := by
     have hl : 0 ≤ w.2 + r := by simpa only [zero_mul] using (le_div_iff₀ hci).mp hψv.1
     have hu : w.2 + r ≤ 2 * r := (div_le_div_iff_of_pos_right hci).mp hψv.2
     rw [abs_le]
-    constructor <;> linarith
+    constructor <;> linarith only [hr, hl, hu]
   refine ⟨w.1, w.2, hξ, hη, ?_⟩
   have hw := (TorusAverages.slotChart vr vt hdet).apply_symm_apply (z - center)
   change TorusAverages.slotChart vr vt hdet w = z - center at hw
@@ -342,11 +346,11 @@ theorem masks_force_adjacency {D q : ℝ} {x : SlotColoring.Position} {L M : Slo
   simp only [Int.cast_natCast] at hl hm
   have hLM : L.1 ≤ M.1 + 4 := by
     have he : (L.1 : ℝ) ≤ (M.1 : ℝ) + 4 := by
-      linarith [hl.1, hm.2]
+      linarith only [hl, hm, hl.1, hm.2]
     exact_mod_cast he
   have hML : M.1 ≤ L.1 + 4 := by
     have he : (M.1 : ℝ) ≤ (L.1 : ℝ) + 4 := by
-      linarith [hm.1, hl.2]
+      linarith only [hm, hl, hm.1, hl.2]
     exact_mod_cast he
   exact ⟨hL, hM, hne, hLM, hML, x,
     SquaredPartition.physicalSlowMask_tsupport_subset_physicalBox D hL L.2.1 L.2.2
@@ -409,7 +413,7 @@ theorem cutoff_zero_outside_slot {r a A b B c₀ s₀ slope E : ℝ}
   apply P.bounds.cutoff_zero
   intro hmid
   apply hv
-  constructor <;> nlinarith [hmid.1, hmid.2, sq_nonneg r]
+  constructor <;> nlinarith only [hmid, hmid.1, hmid.2, sq_nonneg r]
 
 /-- Clamping the tangent component outside the pulse interval changes neither
 the cut-off velocity nor its actual covariance column. -/

@@ -30,17 +30,22 @@ variable (P : ℝ) [Fact (0 < P)]
 
 theorem pathMap_block_bound (directions : ι → LiftTangent) (q : ℕ) (L : E →L[ℝ] F)
     (p : C(K, CylinderL2 P E))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b : LiftTangent => pathTranslate P b (pathMap P L p)) n a ≤
-      ‖L‖ * block directions q (fun b : LiftTangent => pathTranslate P b p) n a := by
-  have he : (fun b : LiftTangent => pathTranslate P b (pathMap P L p)) =
-      pathMap P L ∘ (fun b : LiftTangent => pathTranslate P b p) :=
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := E) P a p))
+    (n : ℕ) (a : LiftTangent) :
+    block directions q (fun b : LiftTangent =>
+        pathTranslate (K := K) (V := F) P b (pathMap (K := K) P L p)) n a ≤
+      ‖L‖ * block directions q (fun b : LiftTangent =>
+        pathTranslate (K := K) (V := E) P b p) n a := by
+  have he : (fun b : LiftTangent =>
+        pathTranslate (K := K) (V := F) P b (pathMap (K := K) P L p)) =
+      pathMap (K := K) P L ∘ (fun b : LiftTangent => pathTranslate (K := K) (V := E) P b p) :=
     funext (fun b => (pathMap_translation P L b p).symm)
   rw [he]
   have h := block_comp_clm_le (P := LiftTangent) (E := C(K,CylinderL2 P E))
     (F := C(K,CylinderL2 P F)) directions q (pathMap (K := K) P L)
-    (fun b : LiftTangent => pathTranslate P b p) hp n a
+    (fun b : LiftTangent => pathTranslate (K := K) (V := E) P b p) hp n a
   exact h.trans (mul_le_mul_of_nonneg_right (pathMap_norm (K := K) P L)
-    (block_nonneg directions q (fun b : LiftTangent => pathTranslate P b p) n a))
+    (block_nonneg directions q
+      (fun b : LiftTangent => pathTranslate (K := K) (V := E) P b p) n a))
 
 end EulerCylinderConstantMap

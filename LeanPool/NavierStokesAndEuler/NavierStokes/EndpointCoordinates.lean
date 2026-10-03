@@ -55,7 +55,7 @@ theorem endpointRoot_slope {a z : ℝ} (ha1 : a < 1) (hz : z ≠ 0) :
   have he := endpointRoot_equation ha1 hz
   have hprod : z ^ 2 * endpointRoot a z ^ a = endpointRoot a z := by
     dsimp only [forwardScalar] at he
-    linarith
+    linarith only [he]
   rw [scalarSlope, Real.rpow_sub_one hp.ne']
   rw [show z ^ 2 * a * (endpointRoot a z ^ a / endpointRoot a z) =
       a * (z ^ 2 * endpointRoot a z ^ a) / endpointRoot a z by ring,
@@ -69,7 +69,7 @@ theorem zeroTime_mem_stableTarget {a z : ℝ} (_ha : 0 < a) (ha1 : a < 1) (hz : 
     Prod.ext (endpointRoot_equation ha1 hz) rfl⟩
   change 0 < scalarSlope a z (endpointRoot a z)
   rw [endpointRoot_slope ha1 hz]
-  linarith
+  linarith only [ha1]
 
 theorem stableInverse_zeroTime {a z : ℝ} (ha : 0 < a) (ha1 : a < 1) (hz : z ≠ 0) :
     PositiveRepresentatives.stableInverse a (0, z) = (endpointRoot a z, z) := by
@@ -77,7 +77,7 @@ theorem stableInverse_zeroTime {a z : ℝ} (ha : 0 < a) (ha1 : a < 1) (hz : z �
     refine ⟨endpointRoot_pos a hz, ?_⟩
     change 0 < scalarSlope a z (endpointRoot a z)
     rw [endpointRoot_slope ha1 hz]
-    linarith
+    linarith only [ha1]
   have he := PositiveRepresentatives.stableInverse_forwardMap ha.le ha1.le hs
   have hf : forwardMap a (endpointRoot a z, z) = (0, z) :=
     Prod.ext (endpointRoot_equation ha1 hz) rfl
@@ -118,8 +118,8 @@ theorem domain_open (h : ℝ) : IsOpen (domain h) :=
 theorem endpoint_mem_domain {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (s : ℝ) {z : ℝ} (hz : z ≠ 0) : (1, (s, z)) ∈ domain h := by
   change (1 - 1, z) ∈ PositiveRepresentatives.stableTarget (2 * h)
-  simpa only [sub_self] using zeroTime_mem_stableTarget (by linarith : 0 < 2 * h)
-    (by linarith : 2 * h < 1) hz
+  simpa only [sub_self] using zeroTime_mem_stableTarget (by linarith only [hh] : 0 < 2 * h)
+    (by linarith only [hh1] : 2 * h < 1) hz
 
 theorem past_mem_domain {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) : p ∈ domain h :=
@@ -140,7 +140,7 @@ theorem qExtension_equation {h : ℝ} {p : PhysicalPoint} (hp : p ∈ domain h) 
 
 theorem qExtension_smoothAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p ∈ domain h) : ContDiffAt ℝ ∞ (qExtension h) p :=
-  ((PositiveRepresentatives.stableInverse_smoothAt (by linarith) (by linarith) hp).comp p
+  ((PositiveRepresentatives.stableInverse_smoothAt (by linarith) (by linarith only [hh1]) hp).comp p
     timeAxial_smooth.contDiffAt).fst
 
 theorem innerExtension_smoothAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -162,7 +162,7 @@ theorem qExtension_endpoint {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (s : ℝ) {z : ℝ} (hz : z ≠ 0) : qExtension h (1, (s, z)) = endpointRoot (2 * h) z := by
   simpa only [qExtension, timeAxial, sub_self] using
     congrArg (fun x : ℝ × ℝ => x.1)
-      (stableInverse_zeroTime (by linarith : 0 < 2 * h) (by linarith : 2 * h < 1) hz)
+      (stableInverse_zeroTime (by linarith : 0 < 2 * h) (by linarith only [hh1] : 2 * h < 1) hz)
 
 theorem chartExtension_endpoint {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (s : ℝ) {z : ℝ} (hz : z ≠ 0) :
@@ -177,7 +177,7 @@ theorem qExtension_eq_physical {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   simpa only [qExtension, timeAxial, SimilarityProfile.q, inverseMap] using
     congrArg (fun x : ℝ × ℝ => x.1)
       (PositiveRepresentatives.stableInverse_eq_inverseMap
-        (by linarith : 0 < 2 * h) (by linarith : 2 * h < 1) (sub_pos.mpr hp))
+        (by linarith only [hh] : 0 < 2 * h) (by linarith only [hh1] : 2 * h < 1) (sub_pos.mpr hp))
 
 theorem innerExtension_eq_physical {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : PhysicalPoint} (hp : p.1 < 1) : innerExtension h p = SimilarityProfile.inner h p := by
@@ -239,7 +239,7 @@ theorem endpoint_neighborhood {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     refine ⟨endpoint_mem_domain hh hh1 s hz, ?_⟩
     change endpointRoot (2 * h) z / 2 < qExtension h (1, (s, z))
     rw [qExtension_endpoint hh hh1 s hz]
-    linarith
+    linarith only [hq]
   refine ⟨U, lowerDomain_open hh hh1 _, hu, inter_subset_left,
     (chartExtension_smoothOn hh hh1).mono inter_subset_left, half_pos hq, ?_⟩
   intro p hp

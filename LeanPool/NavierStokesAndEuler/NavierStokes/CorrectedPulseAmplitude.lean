@@ -33,6 +33,10 @@ constructed reset's small coefficients to bound that difference.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 open Set Filter Function MeasureTheory
@@ -74,7 +78,7 @@ noncomputable def resetDensity (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) 
 theorem resetDensity_eq (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) :
     resetDensity d c eta y = energyDensity d eta y *
       ((1 + relative (c eta) (y - correctionCenter d)) ^ 2 - 1) := by
-  dsimp [resetDensity, correctedAngular, energyDensity]
+  dsimp only [resetDensity, correctedAngular, energyDensity]
   ring
 
 theorem resetDensity_reference (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) :
@@ -82,12 +86,12 @@ theorem resetDensity_reference (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) 
       ((1 + relative (c eta) (y - correctionCenter d)) ^ 2 - 1) := by
   unfold resetDensity
   rw [corrected_pressure_reference]
-  dsimp [modifiedE]
+  dsimp only [modifiedE]
   ring
 
 theorem resetDensity_zero (d : TailData) (c : ℝ → Coeff) (eta : ℝ) {y : ℝ}
     (hy : y ∉ Ioo (d.releaseStart - 4) d.releaseStart) : resetDensity d c eta y = 0 := by
-  simp [resetDensity, correctedAngular_unchanged d c eta hy]
+  simp only [resetDensity, correctedAngular_unchanged d c eta hy, sub_self, mul_zero]
 
 theorem resetDensity_support (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
     support (resetDensity d c eta) ⊆ Icc (d.releaseStart - 4) d.releaseStart := by
@@ -125,7 +129,7 @@ noncomputable def resetEnergy (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : �
 
 theorem resetEnergy_eq_interval (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
     resetEnergy d c eta = ∫ y in (d.releaseStart - 4)..d.releaseStart, resetDensity d c eta y := by
-  rw [intervalIntegral.integral_of_le (by linarith : d.releaseStart - 4 ≤ d.releaseStart)]
+  rw [intervalIntegral.integral_of_le (by linarith only : d.releaseStart - 4 ≤ d.releaseStart)]
   symm
   apply setIntegral_eq_integral_of_forall_compl_eq_zero
   intro y hy
@@ -149,7 +153,8 @@ noncomputable def resetDensityEta (d : TailData) (c : ℝ → Coeff) (eta y : �
 theorem resetDensity_hasDerivAt (d : TailData) {c : ℝ → Coeff}
     (hc : ContDiff ℝ ∞ c) (eta y : ℝ) :
     HasDerivAt (fun q => resetDensity d c q y) (resetDensityEta d c eta y) eta := by
-  have hr := relative_coeff_hasDerivAt ((hc.differentiable (by simp) eta).hasDerivAt)
+  have hr := relative_coeff_hasDerivAt ((hc.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) eta).hasDerivAt)
     (y - correctionCenter d)
   have hd := (((hr.const_add 1).pow 2).sub_const 1).const_mul
     (Real.exp y * (baseE d.core.lam (referenceAmplitude d) y) ^ 2)
@@ -159,7 +164,7 @@ theorem resetDensity_hasDerivAt (d : TailData) {c : ℝ → Coeff}
     funext (fun q => resetDensity_reference d c q y)
   rw [he]
   convert! hd using 1
-  simp [resetDensityEta]
+  simp only [resetDensityEta, Nat.cast_ofNat, Nat.add_one_sub_one, pow_one]
 
 theorem resetDensityEta_joint_continuous (d : TailData) {c : ℝ → Coeff}
     (hc : ContDiff ℝ ∞ c) : Continuous (Function.uncurry (resetDensityEta d c)) := by
@@ -225,18 +230,18 @@ theorem resetDensity_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) {y : ℝ}
   have h2 : |2 + r| ≤ 3 := by
     have := abs_add_le (2 : ℝ) r
     norm_num at this
-    linarith
+    linarith only [hr, this]
   have hq : |(1 + r) ^ 2 - 1| ≤ 6 * (K * d.core.lam ^ (28 : ℕ)) := by
     rw [show (1 + r) ^ 2 - 1 = r * (2 + r) by ring, abs_mul]
     have h := mul_le_mul_of_nonneg_left h2 (abs_nonneg r)
-    linarith
+    linarith only [hr', h]
   have hS : d.core.endpoint ≤ y :=
     (flattenEnd_gt_core d).le.trans ((last_four_after_flatten d).le.trans hy.1)
   have hE := energyDensity_prefix_le d eta heta hS hy.2
   rw [resetDensity_eq, abs_mul, abs_of_pos (energyDensity_pos d eta y)]
   change energyDensity d eta y * |(1 + r) ^ 2 - 1| ≤ _
   have h := mul_le_mul hE hq (abs_nonneg _) (energyDensity_pos d eta d.core.endpoint).le
-  linarith
+  linarith only [h]
 
 theorem resetDensityEta_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) {y : ℝ}
     (hy : y ∈ Icc (d.releaseStart - 4) d.releaseStart) :
@@ -249,21 +254,21 @@ theorem resetDensityEta_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) {y : ℝ}
   have h1 : 2 * |1 + r| ≤ 3 := by
     have := abs_add_le (1 : ℝ) r
     norm_num at this
-    linarith
+    linarith only [hr, this]
   have hq : |2 * (1 + r) * r'| ≤ 6 * (K * d.core.lam ^ (28 : ℕ)) := by
     rw [abs_mul, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
     have h := mul_le_mul_of_nonneg_right h1 (abs_nonneg r')
-    linarith
+    linarith only [hr', h]
   have hS : d.core.endpoint ≤ y :=
     (flattenEnd_gt_core d).le.trans ((last_four_after_flatten d).le.trans hy.1)
   have hE := energyDensity_prefix_le d eta heta hS hy.2
   have hid : resetDensityEta d w.coefficients eta y = energyDensity d eta y * (2 * (1 + r) * r') :=
       by
-    dsimp [resetDensityEta, energyDensity, r, r']
+    dsimp only [resetDensityEta, energyDensity, r, r']
     rw [original_matches_reference d eta hy]
   rw [hid, abs_mul, abs_of_pos (energyDensity_pos d eta y)]
   have h := mul_le_mul hE hq (abs_nonneg _) (energyDensity_pos d eta d.core.endpoint).le
-  linarith
+  linarith only [h]
 
 theorem resetEnergy_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     |resetEnergy d w.coefficients eta| ≤
@@ -273,11 +278,11 @@ theorem resetEnergy_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     (f := resetDensity d w.coefficients eta)
     (C := 6 * (K * d.core.lam ^ (28 : ℕ)) * energyDensity d eta d.core.endpoint)
     (fun y (hy : y ∈ uIoc (d.releaseStart - 4) d.releaseStart) => by
-      have hy' := uIoc_of_le (show d.releaseStart - 4 ≤ d.releaseStart by linarith) ▸ hy
+      have hy' := uIoc_of_le (show d.releaseStart - 4 ≤ d.releaseStart by linarith only) ▸ hy
       simpa only [Real.norm_eq_abs] using resetDensity_abs_le w eta heta ⟨hy'.1.le, hy'.2⟩)
   rw [Real.norm_eq_abs, show d.releaseStart - (d.releaseStart - 4) = 4 by ring] at h
   norm_num at h
-  linarith
+  linarith only [h]
 
 theorem resetEnergy_deriv_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     |deriv (resetEnergy d w.coefficients) eta| ≤
@@ -287,11 +292,11 @@ theorem resetEnergy_deriv_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     (f := resetDensityEta d w.coefficients eta)
     (C := 6 * (K * d.core.lam ^ (28 : ℕ)) * energyDensity d eta d.core.endpoint)
     (fun y (hy : y ∈ uIoc (d.releaseStart - 4) d.releaseStart) => by
-      have hy' := uIoc_of_le (show d.releaseStart - 4 ≤ d.releaseStart by linarith) ▸ hy
+      have hy' := uIoc_of_le (show d.releaseStart - 4 ≤ d.releaseStart by linarith only) ▸ hy
       simpa only [Real.norm_eq_abs] using resetDensityEta_abs_le w eta heta ⟨hy'.1.le, hy'.2⟩)
   rw [Real.norm_eq_abs, show d.releaseStart - (d.releaseStart - 4) = 4 by ring] at h
   norm_num at h
-  linarith
+  linarith only [h]
 
 end Bounds
 
@@ -300,7 +305,7 @@ end Bounds
 theorem corrected_energy_eq (d : TailData) (c : ℝ → Coeff) (eta y : ℝ) :
     Real.exp y * correctedAngular d c (y, eta) ^ 2 =
       energyDensity d eta y + resetDensity d c eta y := by
-  dsimp [energyDensity, resetDensity]
+  dsimp only [energyDensity, resetDensity]
   ring
 
 theorem corrected_energy_integrable_postPulse (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
@@ -375,7 +380,8 @@ theorem normalizedResetEnergy_hasDerivAt (d : TailData) {c : ℝ → Coeff}
     HasDerivAt (normalizedResetEnergy d c)
       (d.core.lam * deriv (resetEnergy d c) eta / (pulseNormalization d * shape eta ^ 2) +
         (4 * eta / (1 + eta ^ 2)) * normalizedResetEnergy d c eta) eta := by
-  have hE := ((resetEnergy_contDiff d hc).differentiable (by simp) eta).hasDerivAt
+  have hE := ((resetEnergy_contDiff d hc).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) eta).hasDerivAt
   have hp : HasDerivAt (fun q : ℝ => (1 + q ^ 2) ^ 2) (4 * eta * (1 + eta ^ 2)) eta := by
     convert! (((hasDerivAt_id eta).fun_pow 2).const_add 1).fun_pow 2 using 1
     simp only [id_eq]
@@ -404,7 +410,7 @@ theorem normalizedResetEnergy_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     (mul_le_mul_of_nonneg_left (energyDensity_endpoint_le d eta)
       (mul_nonneg (by norm_num : (0 : ℝ) ≤ 24) (coefficient_scale_nonneg w)))
   have h := mul_le_mul_of_nonneg_left hb d.core.lam_pos.le
-  dsimp [pulseNormalization]
+  dsimp only [pulseNormalization]
   convert! h using 1
   ring
 
@@ -418,7 +424,7 @@ theorem normalized_resetEnergy_deriv_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
     (mul_le_mul_of_nonneg_left (energyDensity_endpoint_le d eta)
       (mul_nonneg (by norm_num : (0 : ℝ) ≤ 24) (coefficient_scale_nonneg w)))
   have h := mul_le_mul_of_nonneg_left hb d.core.lam_pos.le
-  dsimp [pulseNormalization]
+  dsimp only [pulseNormalization]
   convert! h using 1
   ring
 
@@ -429,7 +435,7 @@ theorem normalizedResetEnergy_deriv_abs_le (eta : ℝ) (heta : eta ^ 2 ≤ 1) :
   have hcoef : |4 * eta / (1 + eta ^ 2)| ≤ 2 := by
     rw [show 4 * eta / (1 + eta ^ 2) = 2 * (2 * eta / (1 + eta ^ 2)) by ring,
       abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-    linarith [logShape_deriv_bound eta]
+    linarith only [logShape_deriv_bound eta]
   have hfirst : |d.core.lam * deriv (resetEnergy d w.coefficients) eta /
       (pulseNormalization d * shape eta ^ 2)| ≤ 24 * K * d.core.lam ^ (29 : ℕ) := by
     simpa only [abs_div, abs_mul, abs_of_pos d.core.lam_pos, abs_of_pos hden] using
@@ -468,7 +474,7 @@ theorem exists_scheduled_reset_energy_bounds :
   constructor
   · have h := normalizedResetEnergy_abs_le w eta heta
     have hp := pow_nonneg d.core.lam_pos.le (29 : ℕ)
-    linarith [mul_nonneg hK.le hp]
+    linarith only [h, hK, hp, mul_nonneg hK.le hp]
   · exact normalizedResetEnergy_deriv_abs_le w eta heta
 
 /-- The constructed reset has arbitrarily small normalized energy and first
@@ -486,15 +492,15 @@ theorem exists_scheduled_reset_small_energy (epsilon : ℝ) (hepsilon : 0 < epsi
   obtain ⟨w, hw, hbounds⟩ := hreset d (lt_of_lt_of_le hd (min_le_left _ _))
   have hpow : d.core.lam ^ (29 : ℕ) ≤ d.core.lam := by
     have hp : d.core.lam ^ (28 : ℕ) ≤ 1 :=
-      pow_le_one₀ d.core.lam_pos.le (by linarith [d.core.lam_lt])
+      pow_le_one₀ d.core.lam_pos.le (by linarith only [d.core.lam_lt])
     have h := mul_le_mul_of_nonneg_left hp d.core.lam_pos.le
     calc
       _ = d.core.lam * d.core.lam ^ (28 : ℕ) := by ring
-      _ ≤ _ := by simpa using h
+      _ ≤ _ := by simpa only [mul_one] using h
   have hlim : C * d.core.lam ^ (29 : ℕ) < epsilon := by
     apply lt_of_le_of_lt (mul_le_mul_of_nonneg_left hpow hC.le)
     have hsmall := (lt_div_iff₀ hC).mp (lt_of_lt_of_le hd (min_le_right _ _))
-    linarith
+    linarith only [hsmall]
   exact ⟨w, hw, fun eta heta =>
     ⟨(hbounds eta heta).1.trans_lt hlim, (hbounds eta heta).2.trans_lt hlim⟩⟩
 
@@ -588,7 +594,8 @@ theorem discriminant_pos (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : 0 < di
   unfold discriminant
   have ha := PulseAmplitude.quadraticCoefficient_pos d.core
   have hc := PulseAmplitude.negativeClamp_neg (constantTerm d c eta)
-  linarith [sq_nonneg (PulseAmplitude.linearTerm d.core eta), mul_neg_of_pos_of_neg ha hc]
+  linarith only [ha, hc, sq_nonneg (PulseAmplitude.linearTerm d.core eta),
+      mul_neg_of_pos_of_neg ha hc]
 
 /-- Amplitude, given by `(-PulseAmplitude.linearTerm d.core eta + Real.sqrt (discriminant d c
 eta)) / (2 * PulseAmplitude.quadraticCoefficient d.core)`. -/
@@ -611,8 +618,8 @@ theorem amplitude_pos (d : TailData) (c : ℝ → Coeff) (eta : ℝ) : 0 < ampli
   have hs := Real.sqrt_nonneg (discriminant d c eta)
   have hb : PulseAmplitude.linearTerm d.core eta < Real.sqrt (discriminant d c eta) := by
     dsimp only [discriminant] at hd hs ⊢
-    nlinarith [mul_neg_of_pos_of_neg ha hc]
-  exact div_pos (by linarith) (mul_pos (by norm_num) ha)
+    nlinarith only [hd, ha, hc, hs, mul_neg_of_pos_of_neg ha hc]
+  exact div_pos (by linarith only [hb]) (mul_pos (by norm_num) ha)
 
 theorem amplitude_clamped_equation (d : TailData) (c : ℝ → Coeff) (eta : ℝ) :
     PulseAmplitude.quadraticCoefficient d.core * amplitude d c eta ^ 2 +
@@ -653,20 +660,20 @@ def combinedScale (d : TailData) (K : ℝ) : ℝ :=
 theorem combinedConstant_pos {P : ℝ} (hP : 0 < P) (m K : ℝ) (hK : 0 < K) :
     0 < combinedConstant P m K := by
   unfold combinedConstant
-  linarith [PulseAmplitude.errorConstant_pos hP m]
+  linarith only [hK, hP, PulseAmplitude.errorConstant_pos hP m]
 
 theorem oldScale_le (d : TailData) (K : ℝ) (hK : 0 < K) :
     PulseAmplitude.errorScale d.core ≤ combinedScale d K := by
   apply mul_le_mul_of_nonneg_right _ (PulseAmplitude.logarithmicRate_pos d.core).le
   unfold combinedConstant
-  linarith
+  linarith only [hK]
 
 theorem power29_le_lambda (d : TailData) : d.core.lam ^ (29 : ℕ) ≤ d.core.lam := by
   have hpow : d.core.lam ^ (28 : ℕ) ≤ 1 :=
-    pow_le_one₀ d.core.lam_pos.le (by linarith [d.core.lam_lt])
+    pow_le_one₀ d.core.lam_pos.le (by linarith only [d.core.lam_lt])
   calc
     _ = d.core.lam * d.core.lam ^ (28 : ℕ) := by ring
-    _ ≤ _ := by linarith [mul_le_mul_of_nonneg_left hpow d.core.lam_pos.le]
+    _ ≤ _ := by linarith only [hpow, mul_le_mul_of_nonneg_left hpow d.core.lam_pos.le]
 
 theorem energyShift_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K) (hK : 0 < K) (eta : ℝ)
     (heta : eta ^ 2 ≤ 1) :
@@ -683,16 +690,16 @@ theorem energyShift_bounds {d : TailData} {K : ℝ} (w : ResetWitness d K) (hK :
       _ ≤ combinedScale d K := by
         apply mul_le_mul_of_nonneg_right _ (PulseAmplitude.logarithmicRate_pos d.core).le
         unfold combinedConstant
-        linarith [PulseAmplitude.errorConstant_pos d.core.P_pos d.core.m]
+        linarith only [PulseAmplitude.errorConstant_pos d.core.P_pos d.core.m]
   have hd := (((ResetEnergyBounds.normalizedResetEnergy_contDiff d w.smooth).differentiable
     (by simp) eta).hasDerivAt.div_const 2).deriv
   constructor
   · unfold energyShift
     rw [abs_div, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-    linarith [mul_nonneg hK.le (pow_nonneg d.core.lam_pos.le (29 : ℕ))]
+    linarith only [h0, hcap, hK, mul_nonneg hK.le (pow_nonneg d.core.lam_pos.le (29 : ℕ))]
   · change |deriv (fun t => ResetEnergyBounds.normalizedResetEnergy d w.coefficients t / 2) eta| ≤ _
     rw [hd, abs_div, abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-    linarith
+    linarith only [h1, hcap]
 
 theorem old_error_bounds (d : TailData) (K : ℝ) (hK : 0 < K)
     (hsmall : d.core.lam ≤ 1 / 120) (hwait : d.core.wait = 60 * Real.log (1 / d.core.lam))
@@ -716,7 +723,7 @@ theorem numerical_coefficient_bounds (d : TailData) (c : ℝ → Coeff) (eta e :
   have hq := (PulseAmplitude.etaPolynomial_bounds heta).1
   have hq2 : PulseAmplitude.etaPolynomial eta ^ 2 ≤ 4 := by
     have hbq := abs_le.mp hq
-    nlinarith
+    nlinarith only [hbq]
   have hprod0 : 0 ≤ (PulseAmplitude.constantCorrection d.core +
       PulseAmplitude.normalizedPrefixAxial d.core) * PulseAmplitude.etaPolynomial eta ^ 2 :=
     mul_nonneg (add_nonneg h.correction_nonneg h.prefix_axial_nonneg) (sq_nonneg _)
@@ -724,15 +731,15 @@ theorem numerical_coefficient_bounds (d : TailData) (c : ℝ → Coeff) (eta e :
       d.core) *
       PulseAmplitude.etaPolynomial eta ^ 2 ≤ 8 * e := by
     have hm := mul_le_mul (add_le_add h.correction_error h.prefix_axial_error) hq2
-      (sq_nonneg (PulseAmplitude.etaPolynomial eta)) (by linarith [h.scale_nonneg])
-    linarith
+      (sq_nonneg (PulseAmplitude.etaPolynomial eta)) (by linarith only [h, h.scale_nonneg])
+    linarith only [hm]
   have hD := RadialSchedule.pulse_energy_debt_bounds
   obtain ⟨hsl, hsu⟩ := abs_le.mp hshift
   refine ⟨ha, ha', hb, ?_, ?_⟩
   · unfold constantTerm PulseAmplitude.constantTerm
-    linarith [h.prefix_angular_error, h.tail_error]
+    linarith only [he, hprod0, hD, hsu, h, h.prefix_angular_error, h.tail_error]
   · unfold constantTerm PulseAmplitude.constantTerm
-    linarith [h.prefix_angular_nonneg, h.tail_nonneg]
+    linarith only [he, hprod, hD, hsl, h, h.prefix_angular_nonneg, h.tail_nonneg]
 
 theorem amplitude_spec_of_bounds (d : TailData) (c : ℝ → Coeff) (eta e : ℝ)
     (heta : eta ^ 2 ≤ 1) (h : PulseAmplitude.EnergyErrorBounds d eta e)
@@ -740,7 +747,7 @@ theorem amplitude_spec_of_bounds (d : TailData) (c : ℝ → Coeff) (eta e : ℝ
     9 / 10 < amplitude d c eta ∧ amplitude d c eta < 6 / 5 ∧ totalEnergy d c (amplitude d c eta)
         eta = 0 := by
   obtain ⟨ha, ha', hb, hc, hc'⟩ := numerical_coefficient_bounds d c eta e heta h hshift he
-  have hneg : constantTerm d c eta ≤ -(1 / 5) := by linarith
+  have hneg : constantTerm d c eta ≤ -(1 / 5) := by linarith only [hc']
   have hr := PulseAmplitude.quadratic_root_bracket ha ha' hb hc hc' (amplitude_pos d c eta)
     (amplitude_energy_equation d c eta hneg)
   exact ⟨hr.1, hr.2, amplitude_totalEnergy_zero d c eta hneg⟩
@@ -758,9 +765,12 @@ theorem amplitude_derivative_identity (d : TailData) {c : ℝ → Coeff}
       with t ht
     exact amplitude_energy_equation d c t ht.le
   have hz : deriv F eta = 0 := by rw [he.deriv_eq]; exact deriv_const _ _
-  have hA := ((amplitude_contDiff d hc).differentiable (by simp) eta).hasDerivAt
-  have hb := ((PulseAmplitude.linearTerm_contDiff d.core).differentiable (by simp) eta).hasDerivAt
-  have hcc := ((constantTerm_contDiff d hc).differentiable (by simp) eta).hasDerivAt
+  have hA := ((amplitude_contDiff d hc).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) eta).hasDerivAt
+  have hb := ((PulseAmplitude.linearTerm_contDiff d.core).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) eta).hasDerivAt
+  have hcc := ((constantTerm_contDiff d hc).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) eta).hasDerivAt
   have hd := (((hA.pow 2).const_mul (PulseAmplitude.quadraticCoefficient d.core)).add (hb.mul
       hA)).add hcc
   change HasDerivAt F _ eta at hd
@@ -779,11 +789,12 @@ theorem coefficient_derivative_bounds (d : TailData) {c : ℝ → Coeff}
   refine ⟨hb.1, ?_⟩
   have hd := (((PulseAmplitude.constantTerm_contDiff d).differentiable (by
       simp) eta).hasDerivAt).sub
-    (((energyShift_contDiff d hc).differentiable (by simp) eta).hasDerivAt)
+    (((energyShift_contDiff d hc).differentiable
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero) eta).hasDerivAt)
   change HasDerivAt (constantTerm d c) _ eta at hd
   rw [hd.deriv]
   have ha := abs_sub (deriv (PulseAmplitude.constantTerm d) eta) (deriv (energyShift d c) eta)
-  linarith
+  linarith only [hs, hb, ha]
 
 theorem amplitude_derivative_bound (d : TailData) {c : ℝ → Coeff}
     (hc : ContDiff ℝ ∞ c) (eta e : ℝ) (heta : eta ^ 2 ≤ 1)
@@ -797,12 +808,12 @@ theorem amplitude_derivative_bound (d : TailData) {c : ℝ → Coeff}
       PulseAmplitude.linearTerm d.core eta := by
     have hm := mul_le_mul_of_nonneg_right ha (amplitude_pos d c eta).le
     have hbl := (abs_le.mp hb).1
-    linarith
-  have hid := amplitude_derivative_identity d hc eta (by linarith)
+    linarith only [hm, hbl, hr]
+  have hid := amplitude_derivative_identity d hc eta (by linarith only [hconst])
   have heq : (2 * PulseAmplitude.quadraticCoefficient d.core * amplitude d c eta +
       PulseAmplitude.linearTerm d.core eta) * deriv (amplitude d c) eta =
         -(deriv (PulseAmplitude.linearTerm d.core) eta * amplitude d c eta +
-          deriv (constantTerm d c) eta) := by linarith
+          deriv (constantTerm d c) eta) := by linear_combination hid
   have hbound : (2 * PulseAmplitude.quadraticCoefficient d.core * amplitude d c eta +
       PulseAmplitude.linearTerm d.core eta) * |deriv (amplitude d c) eta| ≤
         |deriv (PulseAmplitude.linearTerm d.core) eta| * amplitude d c eta +
@@ -811,16 +822,16 @@ theorem amplitude_derivative_bound (d : TailData) {c : ℝ → Coeff}
       _ = |(2 * PulseAmplitude.quadraticCoefficient d.core * amplitude d c eta +
           PulseAmplitude.linearTerm d.core eta) * deriv (amplitude d c) eta| := by
         rw [abs_mul, abs_of_nonneg (show 0 ≤ 2 * PulseAmplitude.quadraticCoefficient d.core *
-          amplitude d c eta + PulseAmplitude.linearTerm d.core eta by linarith)]
+          amplitude d c eta + PulseAmplitude.linearTerm d.core eta by linarith only [hden])]
       _ = |deriv (PulseAmplitude.linearTerm d.core) eta * amplitude d c eta +
           deriv (constantTerm d c) eta| := by rw [heq, abs_neg]
       _ ≤ |deriv (PulseAmplitude.linearTerm d.core) eta * amplitude d c eta| +
           |deriv (constantTerm d c) eta| := abs_add_le _ _
       _ = _ := by rw [abs_mul, abs_of_pos (amplitude_pos d c eta)]
   have hupper := mul_le_mul hdb hr'.le (amplitude_pos d c eta).le
-    (by linarith [h.scale_nonneg] : 0 ≤ 4 * e)
+    (by linarith only [h.scale_nonneg] : 0 ≤ 4 * e)
   have hlower := mul_le_mul_of_nonneg_right hden (abs_nonneg (deriv (amplitude d c) eta))
-  linarith [h.scale_nonneg]
+  linarith only [hbound, hupper, hdc, hlower, h.scale_nonneg]
 
 theorem energyPolynomial_strictMonoOn (d : TailData) (c : ℝ → Coeff) (eta e : ℝ)
     (heta : eta ^ 2 ≤ 1) (h : PulseAmplitude.EnergyErrorBounds d eta e)
@@ -828,13 +839,13 @@ theorem energyPolynomial_strictMonoOn (d : TailData) (c : ℝ → Coeff) (eta e 
     StrictMonoOn (fun A => energyPolynomial d c A eta) (Ici (9 / 10 : ℝ)) := by
   obtain ⟨ha, _, hb, _, _⟩ := numerical_coefficient_bounds d c eta e heta h hshift he
   intro A hA B hB hAB
-  have hsum : 0 ≤ A + B := by simp only [mem_Ici] at hA hB; linarith
+  have hsum : 0 ≤ A + B := by simp only [mem_Ici] at hA hB; linarith only [hAB, hA]
   have hm := mul_le_mul_of_nonneg_right ha hsum
   have hcoef : 0 < PulseAmplitude.quadraticCoefficient d.core * (A + B) +
       PulseAmplitude.linearTerm d.core eta := by
     have hbl := (abs_le.mp hb).1
     simp only [mem_Ici] at hA hB
-    linarith
+    linarith only [hAB, hm, hbl, hA]
   have hp := mul_pos (sub_pos.mpr hAB) hcoef
   change PulseAmplitude.quadraticCoefficient d.core * A ^ 2 +
       PulseAmplitude.linearTerm d.core eta * A + constantTerm d c eta <

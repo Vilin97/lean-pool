@@ -193,17 +193,30 @@ def rawPath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc
 /-- The actual projected nonlinear mild forcing along the continuous solution. -/
 def forcingPath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period q) :=
-  ⟨fun t => (D.coefficients period hq).apply t (e t),
-    ((D.coefficients period hq).projection.continuous.clm_apply (rawPath period hq D
-        e).continuous).neg⟩
+  ⟨fun t => (D.coefficients period hq).apply t (e t), by
+    refine Continuous.fun_neg (Continuous.clm_apply ?_ ?_)
+    · exact (D.coefficients period hq).projection.continuous
+    · exact ((D.coefficients period hq).forcing.continuous.fun_add
+        ((D.coefficients period hq).linear.continuous.clm_apply e.continuous)).fun_add
+        (((D.coefficients period hq).quadratic.continuous.clm_apply e.continuous).clm_apply
+          e.continuous)⟩
 
 /-- The actual signed coercive pressure along the continuous solution is continuous. -/
 def pressurePath {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
     (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) : C(Icc (0 : ℝ) T, SobolevSpace period q) :=
-  ⟨fun t => D.pressure period hq t (e t),
-    ((positivePressurePath period T D.metric D.κ D.direction D.coercivity D.coercivity_pos
-        D.metric_pos).continuous.clm_apply
-      (rawPath period hq D e).continuous).neg⟩
+  ⟨fun t => D.pressure period hq t (e t), by
+    refine Continuous.fun_neg (Continuous.clm_apply ?_ ?_)
+    · exact (positivePressurePath period T D.metric D.κ D.direction D.coercivity D.coercivity_pos
+        D.metric_pos).continuous
+    · exact ((D.coefficients period hq).forcing.continuous.fun_add
+        ((D.coefficients period hq).linear.continuous.clm_apply e.continuous)).fun_add
+        (((D.coefficients period hq).quadratic.continuous.clm_apply e.continuous).clm_apply
+          e.continuous)⟩
+
+theorem rawPath_apply {q : ℕ} (hq : 6 ≤ q) {T : ℝ} (D : CorrectionData period q (Icc (0 : ℝ) T))
+    (e : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (t : Icc (0 : ℝ) T) :
+    rawPath period hq D e t = D.rawSource period hq t (e t) :=
+  congrFun (ContinuousMap.coe_mk _ _) t
 
 /-- The actual lower raw source is exactly the lower restriction used by the constructed Bochner
 source. -/
@@ -220,8 +233,9 @@ theorem rawPath_lower {q : ℕ} (hq : 6 ≤ q) {T : ℝ}
       lowerRawValue period hq T (EulerSobolevTransport.velocityComponents D.κ D.direction)
         (EulerSobolevTransport.velocityComponents_norm D.κ D.direction D.scale_bound
             D.direction_bound)
-        D.linear D.quadratic KL KQ D.approximation D.residual e t :=
-  correctionData_rawSource_split period (lowerData period D KG KL KQ hG hL hQ) hq t (e t)
+        D.linear D.quadratic KL KQ D.approximation D.residual e t := by
+  rw [rawPath_apply]
+  apply correctionData_rawSource_split
 
 /-- The actual continuous pressure path lies in the genuine lifted gradient space at every time. -/
 theorem pressurePath_gradient {q : ℕ} (hq : 6 ≤ q) {T : ℝ}

@@ -42,15 +42,24 @@ def curlLinear : (Space →L[ℝ] Space) →L[ℝ] Space :=
 
 @[simp] theorem curlLinear_apply_zero (L : Space →L[ℝ] Space) :
     (curlLinear L) 0 = (L (coordinateVector 1)) 2 - (L (coordinateVector 2)) 1 := by
-  simp [curlLinear, coordinateVector]
+  simp only [Fin.isValue, curlLinear, coordinateVector, add_apply,
+      ContinuousLinearMap.smulRight_apply, sub_apply, derivativeEntry_apply, PiLp.add_apply,
+      PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+      not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq]
 
 @[simp] theorem curlLinear_apply_one (L : Space →L[ℝ] Space) :
     (curlLinear L) 1 = (L (coordinateVector 2)) 0 - (L (coordinateVector 0)) 2 := by
-  simp [curlLinear, coordinateVector]
+  simp only [Fin.isValue, curlLinear, coordinateVector, add_apply,
+      ContinuousLinearMap.smulRight_apply, sub_apply, derivativeEntry_apply, PiLp.add_apply,
+      PiLp.smul_apply, ne_eq, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul,
+      mul_zero, PiLp.single_eq_same, mul_one, zero_add, Fin.reduceEq, add_zero]
 
 @[simp] theorem curlLinear_apply_two (L : Space →L[ℝ] Space) :
     (curlLinear L) 2 = (L (coordinateVector 0)) 1 - (L (coordinateVector 1)) 0 := by
-  simp [curlLinear, coordinateVector]
+  simp only [Fin.isValue, curlLinear, coordinateVector, add_apply,
+      ContinuousLinearMap.smulRight_apply, sub_apply, derivativeEntry_apply, PiLp.add_apply,
+      PiLp.smul_apply, ne_eq, Fin.reduceEq, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul,
+      mul_zero, add_zero, PiLp.single_eq_same, mul_one, zero_add]
 
 /-- Curl of a potential on physical Euclidean three-space. -/
 def curl (A : Space → Space) (x : Space) : Space := curlLinear (fderiv ℝ A x)
@@ -86,7 +95,7 @@ theorem divergence_curl {A : Space → Space} {x : Space}
   have h01 := congrArg (fun v : Space => v 2) (mixed_partial_symmetry hA 0 1)
   have h02 := congrArg (fun v : Space => v 1) (mixed_partial_symmetry hA 0 2)
   have h12 := congrArg (fun v : Space => v 0) (mixed_partial_symmetry hA 1 2)
-  dsimp at h01 h02 h12
+  dsimp only [Fin.isValue] at h01 h02 h12
   rw [h01, h02, h12]
   abel
 
@@ -145,7 +154,8 @@ theorem contDiffOn_spatialCurl {A : VelocityField} {times : Set ℝ}
   have hd : ContDiffWithinAt ℝ m
       (fun w : SpaceTime => fderivWithin ℝ (fun y : Space => A (w.1, y)) univ w.2)
       (times ×ˢ (univ : Set Space)) z :=
-    hp.fderivWithin contDiffWithinAt_snd uniqueDiffOn_univ hmn hz (by simp)
+    hp.fderivWithin contDiffWithinAt_snd uniqueDiffOn_univ hmn hz (by simp only [preimage_univ,
+        subset_univ])
   have hd' : ContDiffWithinAt ℝ m
       (fun w : SpaceTime => fderiv ℝ (fun y : Space => A (w.1, y)) w.2)
       (times ×ˢ (univ : Set Space)) z := by
@@ -189,7 +199,7 @@ theorem spatialCurl_periodic {A : VelocityField} {times : Set ℝ}
   exact curl_periodic (fun y => hA t ht y i) x
 
 @[simp] theorem curl_zero (x : Space) : curl (fun _ => (0 : Space)) x = 0 := by
-  simp [curl]
+  simp only [curl, fderiv_fun_const, Pi.zero_apply, map_zero]
 
 theorem spatialCurl_eq_zero_of_timeSlice {A : VelocityField} {t : ℝ}
     (hA : ∀ x : Space, A (t, x) = 0) (x : Space) : spatialCurl A (t, x) = 0 := by
@@ -204,7 +214,7 @@ theorem compactFutureTimeSupport_spatialCurl {A : VelocityField}
 
 theorem curl_eq_zero_of_not_mem_tsupport {A : Space → Space} {x : Space}
     (hx : x ∉ tsupport A) : curl A x = 0 := by
-  simp [curl, fderiv_of_notMem_tsupport ℝ hx]
+  simp only [curl, fderiv_of_notMem_tsupport ℝ hx, map_zero]
 
 /-- Taking a curl cannot enlarge closed spatial support. -/
 theorem tsupport_curl_subset (A : Space → Space) : tsupport (curl A) ⊆ tsupport A := by
@@ -237,6 +247,6 @@ theorem curl_cutoff_eq {χ : Space → ℝ} {A : Space → Space} {x : Space}
     (hχ : ∀ᶠ y in 𝓝 x, χ y = 1) : curl (fun y => χ y • A y) x = curl A x := by
   apply curl_eq_of_eventuallyEq
   filter_upwards [hχ] with y hy
-  simp [hy]
+  simp only [hy, one_smul]
 
 end NavierStokes.SpatialCurl

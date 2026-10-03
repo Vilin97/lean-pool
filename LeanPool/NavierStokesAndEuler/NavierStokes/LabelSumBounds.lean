@@ -86,7 +86,8 @@ theorem zero (hw : ∀ l n x, x ∈ s.domain → 0 ≤ w l n x) :
   intro m
   refine ⟨0, le_rfl, 0, ?_⟩
   intro l n x hx j hj
-  simp [majorant]
+  simp only [iteratedFDeriv_fun_zero, Pi.zero_apply, norm_zero, majorant, zero_mul, pow_zero,
+      mul_one, Std.le_refl]
 
 theorem congr (hf : UniformClass s w α f) (hfg : ∀ l n, EqOn (f l n) (g l n) s.domain) :
     UniformClass s w α g := by
@@ -256,7 +257,7 @@ theorem uniform_wave_bilinear_mean {s : StripData D} {P : ι → ℕ → D → �
     _ = (Real.sqrt (s.zeta x) * Real.sqrt (s.zeta x)) * (P l n x * P l n x) := by ring
     _ = s.zeta x * (P l n x * P l n x) := by rw [hs]
     _ ≤ s.zeta x * 1 := mul_le_mul_of_nonneg_left
-      (by nlinarith [hP0 l n x hx, hP1 l n x hx]) (s.zeta_nonneg x hx)
+      (by nlinarith only [hP1, hx, hP0, hP0 l n x hx, hP1 l n x hx]) (s.zeta_nonneg x hx)
     _ = _ := mul_one _
 
 /-! ## Closed, enlarged label windows -/
@@ -288,10 +289,10 @@ theorem closedWindow_adjacency {d : ℝ} {l k : SlotColoring.Label} {x : WindowP
     (hl : 1 ≤ l.1) (hk : 1 ≤ k.1) (hne : l ≠ k)
     (hxl : x ∈ closedWindow d l) (hxk : x ∈ closedWindow d k) : SlotColoring.Adj d l k := by
   have hlk : l.1 ≤ k.1 + 4 := by
-    have h : (l.1 : ℝ) ≤ (k.1 : ℝ) + 4 := by linarith [hxl.1.1, hxk.1.2]
+    have h : (l.1 : ℝ) ≤ (k.1 : ℝ) + 4 := by linarith only [hxl, hxk, hxl.1.1, hxk.1.2]
     exact_mod_cast h
   have hkl : k.1 ≤ l.1 + 4 := by
-    have h : (k.1 : ℝ) ≤ (l.1 : ℝ) + 4 := by linarith [hxk.1.1, hxl.1.2]
+    have h : (k.1 : ℝ) ≤ (l.1 : ℝ) + 4 := by linarith only [hxk, hxl, hxk.1.1, hxl.1.2]
     exact_mod_cast h
   exact ⟨hl, hk, hne, hlk, hkl, x.2, hxl.2, hxk.2⟩
 
@@ -320,7 +321,7 @@ theorem labelRegion_subset_closedWindow {d : ℝ} {l : SlotColoring.Label} {x : 
     (SquaredPartition.logCoordinate x.1, x.2) ∈ closedWindow d l := by
   have ht := PhysicalWaveSum.logCoordinate_in_band hq
     (PhysicalWaveSum.labelRegion_band hx).1 (PhysicalWaveSum.labelRegion_band hx).2
-  refine ⟨⟨by linarith [ht.1], by linarith [ht.2]⟩, ?_⟩
+  refine ⟨⟨by linarith only [ht, ht.1], by linarith only [ht, ht.2]⟩, ?_⟩
   exact SquaredPartition.physicalSlowMask_tsupport_subset_physicalBox d hl _ _ hx.2
 
 theorem physicalMask_tsupport_closedWindow {d : ℝ} {l : SlotColoring.Label} {x : WindowPoint}
@@ -447,7 +448,7 @@ theorem uniform_angularProduct {s : StripData D} {P : ι → ℕ → D → ℝ} 
   apply Finset.sum_subset (hF l n)
   intro j _ hj
   rw [Finsupp.notMem_support_iff.mp hj]
-  simp
+  simp only [Pi.zero_apply, zero_mul]
 
 /-- Real projection includes the conjugate harmonics. Angular integration
 is evaluated before taking slow derivatives, so no phase derivative or
@@ -958,7 +959,7 @@ theorem SignedFamily.uniform_remainder {s : StripData D} {P : ι → ℕ → D �
       rw [(f.tangent_carrier l).angular]
       exact f.angular_ne_zero l n) i j
   have hall := ((hd.mono_exponent hγd).add (hc.mono_exponent hγc)).add
-    (hi.mono_exponent (by linarith : γ ≤ β + β))
+    (hi.mono_exponent (by linarith only [hγs] : γ ≤ β + β))
   apply hall.congr
   intro l n x _
   have he := congrArg (fun T : Tensor D => T i j n x)
@@ -1137,7 +1138,7 @@ theorem harmonic_covariance_increment_sum_mem
   have hbb := harmonic_covariance_sum_mem labels label hinj hlevel χ hχ Y b b N hNb
     (fun _ => rfl) (fun _ => rfl) (fun _ => rfl) hb hb hP0 hP1
     (fun l n => by rw [(hcarrier l).angular]; exact hkp l n) hsv hsv i j
-  have hall := ((hab i j).add hba).add (hbb.mono_exponent (by linarith : α + β ≤ β + β))
+  have hall := ((hab i j).add hba).add (hbb.mono_exponent (by linarith only [hαβ] : α + β ≤ β + β))
   apply WaveInteractionBounds.class_congr hall
   intro n x _
   exact (congrArg (fun T : Tensor D => T i j n x)
@@ -1204,7 +1205,8 @@ theorem uniformClass_of_polynomialJets {s : StripData D}
     (hdom : ∀ n l, s.domain ⊆ V.carrier (n, l)) :
     UniformClass s (fun _ _ _ => 1) 0 (fun l n => a (n, l)) :=
   uniformClass_of_envelopeJets (PrimaryPulseBounds.EnvelopeJets.of_polynomial ha)
-    hK hscale hdom (fun _ _ _ _ => zero_le_one) (by intro l n x hx; simp)
+    hK hscale hdom (fun _ _ _ _ => zero_le_one) (by intro l n x hx; simp only [Real.rpow_zero,
+        mul_one, Std.le_refl])
 
 theorem slotSet_isCompact (h r : ℝ) (vr vt : TorusInverse.Plane) (l : SlotColoring.Label) :
     IsCompact (PartitionedCovariance.slotSet h r vr vt l) := by

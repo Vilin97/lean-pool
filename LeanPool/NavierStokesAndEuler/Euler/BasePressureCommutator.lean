@@ -64,7 +64,8 @@ theorem base_order_bound {A : SmoothCoefficient period} {p : LiftL2 period}
     have hc : (r.choose (l+1) : ℝ) ≤ 64 := by
       have h1 : (r.choose (l+1) : ℝ) ≤ (2 : ℝ)^r := by exact_mod_cast Nat.choose_le_two_pow r (l+1)
       exact h1.trans ((pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hr).trans_eq (by norm_num))
-    simpa [coefficientBlock, blockNorm] using
+    simpa only [coefficientBlock, pow_zero, zero_add, Finset.range_one, Finset.sum_singleton,
+        add_zero, one_mul, blockNorm, ge_iff_le] using
       (mul_le_mul (mul_le_mul_of_nonneg_right hc (boundLevel_nonneg K))
         (pressure_level_le_five period J hj) (levelNorm_nonneg J)
         (mul_nonneg (by norm_num : (0 : ℝ) ≤ 64) (boundLevel_nonneg K)))

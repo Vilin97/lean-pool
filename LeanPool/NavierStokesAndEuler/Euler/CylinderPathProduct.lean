@@ -66,20 +66,20 @@ local instance instCylinderPathProduct10 : NormedSpace ℝ (C(K,F) →L[ℝ] C(K
 
 /-- A genuine bounded bilinear map acts pointwise on continuous paths. -/
 def pathBilinear (B : E →L[ℝ] F →L[ℝ] G) : C(K,E) →L[ℝ] C(K,F) →L[ℝ] C(K,G) :=
-  coefficientMap.comp (B.compLeftContinuous ℝ K)
+  (coefficientMap (K := K) (E := F) (F := G)).comp (B.compLeftContinuous ℝ K)
 
 @[simp] theorem pathBilinear_apply (B : E →L[ℝ] F →L[ℝ] G)
-    (p : C(K, E)) (q : C(K, F)) (t : K) : pathBilinear B p q t = B (p t) (q t) := rfl
+    (p : C(K, E)) (q : C(K, F)) (t : K) : pathBilinear (K := K) B p q t = B (p t) (q t) := rfl
 
 theorem pathBilinear_norm (B : E →L[ℝ] F →L[ℝ] G) :
     ‖pathBilinear (K := K) B‖ ≤ ‖B‖ :=
-  (opNorm_comp_le _ _).trans ((mul_le_mul coefficientMap_norm (postcomposition_norm B)
+  (opNorm_comp_le _ _).trans ((mul_le_mul coefficientMap_norm (postcomposition_norm (K := K) B)
     (norm_nonneg _) (by norm_num)).trans_eq (one_mul _))
 
 theorem contDiff_pathBilinear {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
     (B : E →L[ℝ] F →L[ℝ] G) (f : X → C(K, E)) (g : X → C(K, F))
     (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) :
-    ContDiff ℝ ∞ (fun x => pathBilinear B (f x) (g x)) :=
+    ContDiff ℝ ∞ (fun x => pathBilinear (K := K) B (f x) (g x)) :=
   ((ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
     (E := C(K,E)) (F := C(K,F) →L[ℝ] C(K,G)) (pathBilinear (K := K) B)).comp hf).clm_apply hg
 
@@ -87,13 +87,13 @@ end Bilinear
 
 variable (P : ℝ) [Fact (0 < P)] (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1)
   (p q : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a q))
 
 /-- The actual continuous L² product, constructed in the complete H6 algebra. -/
 def scalarProductPath : C(K,LiftL2 P) :=
   (valueOperator P 6).compLeftContinuous ℝ K
-    (pathBilinear (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
+    (pathBilinear (K := K) (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
       (sobolevPath P 6 p hp) (sobolevPath P 6 q hq))
 
 theorem scalarProductPath_apply (t : K) :
@@ -104,13 +104,13 @@ theorem scalarProductPath_apply (t : K) :
   rw [productHq_value, sobolevPath_value]
 
 theorem scalarProductPath_orbit_formula (a : LiftTangent) :
-    pathTranslate P a (scalarProductPath P L hL p q hp hq) =
+    pathTranslate (K := K) (V := Vector3) P a (scalarProductPath P L hL p q hp hq) =
       (valueOperator P 6).compLeftContinuous ℝ K
-        (pathBilinear (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
+        (pathBilinear (K := K) (productHqBilinear P (by norm_num : 6 ≤ 6) L hL)
           (sobolevOrbit P 6 p hp a) (sobolevOrbit P 6 q hq a)) := by
   apply ContinuousMap.ext
   intro t
-  change translate P a (scalarProductPath P L hL p q hp hq t) =
+  change translate (V := Vector3) P a (scalarProductPath P L hL p q hp hq t) =
     value P (productHq P (by norm_num : 6 ≤ 6) L hL
       (sobolevOrbit P 6 p hp a t) (sobolevOrbit P 6 q hq a t))
   rw [scalarProductPath_apply, productHq_value, sobolevOrbit_value]
@@ -119,8 +119,8 @@ theorem scalarProductPath_orbit_formula (a : LiftTangent) :
 
 /-- Smoothness is for the actual output translation orbit, not an auxiliary family. -/
 theorem scalarProductPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (scalarProductPath P L hL p q hp hq)) :=
-        by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (scalarProductPath P L hL p q hp hq)) := by
   have he := funext (scalarProductPath_orbit_formula P L hL p q hp hq)
   rw [he]
   apply (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)

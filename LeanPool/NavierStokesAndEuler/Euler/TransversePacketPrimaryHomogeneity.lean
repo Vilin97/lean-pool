@@ -49,26 +49,28 @@ include h
 theorem forwardInitial_eq_smul : (forwardInitial τ hτ hτT B Z).value =
     a • (forwardInitial τ hτ hτT B Y).value := by
   apply Subtype.ext
-  change B.coefficients.endpointCoordinate P (Z.value : CylinderL2 P U) ⟨τ,hτ.le,le_rfl⟩ =
-    a • B.coefficients.endpointCoordinate P (Y.value : CylinderL2 P U) ⟨τ,hτ.le,le_rfl⟩
   have he : (Z.value : CylinderL2 P U) = a • (Y.value : CylinderL2 P U) := congrArg Subtype.val h
+  rw [Submodule.coe_smul_of_tower]
+  simp only [forwardInitial, EulerTransversePacketEndpoint.terminalInitial,
+    EulerTransversePacketEndpoint.coordinatePath, endpointData]
   rw [he,map_smul,ContinuousMap.smul_apply]
 
 theorem pastVelocity_eq_smul : pastVelocity τ hτ hτT B Z = a • pastVelocity τ hτ hτT B Y := by
-  change B.coefficients.endpointVelocity P (Z.value : CylinderL2 P U) =
-    a • B.coefficients.endpointVelocity P (Y.value : CylinderL2 P U)
   have he : (Z.value : CylinderL2 P U) = a • (Y.value : CylinderL2 P U) := congrArg Subtype.val h
+  simp only [pastVelocity, EulerTransversePacketEndpoint.velocityPath, endpointData]
   rw [he,map_smul]
+  rfl
 
 theorem pastDerivative_eq_smul : pastDerivative τ hτ hτT B Z = a • pastDerivative τ hτ hτT B Y := by
-  change B.coefficients.endpointDerivative P (Z.value : CylinderL2 P U) =
-    a • B.coefficients.endpointDerivative P (Y.value : CylinderL2 P U)
   have he : (Z.value : CylinderL2 P U) = a • (Y.value : CylinderL2 P U) := congrArg Subtype.val h
+  simp only [pastDerivative, EulerTransversePacketEndpoint.derivativePath, endpointData]
   rw [he,map_smul]
+  rfl
 
 theorem futureVelocity_eq_smul : futureVelocity τ hτ hτT B Z = a • futureVelocity τ hτ hτT B Y := by
   unfold futureVelocity
-  rw [(zeroForcing (D.tail τ hτ.le hτT)).velocityPath_eq_smul
+  exact (congrArg (includePath (K := Icc (0 : ℝ) (D.T - τ)) (V := Vector3) P D.support
+    D.support_measurable) ((zeroForcing (D.tail τ hτ.le hτT)).velocityPath_eq_smul
     (zeroForcing (D.tail τ hτ.le hτT))
     (forwardInitial τ hτ hτT B Y) (forwardInitial τ hτ hτT B Z) a
     (by
@@ -76,13 +78,14 @@ theorem futureVelocity_eq_smul : futureVelocity τ hτ hτT B Z = a • futureVe
       intro t
       apply Subtype.ext
       change (0 : CylinderL2 P Space) = a • 0
-      exact (smul_zero a).symm) (forwardInitial_eq_smul τ hτ hτT B Y Z a h)]
-  exact (includePath P D.support D.support_measurable).map_smul a _
+      exact (smul_zero a).symm) (forwardInitial_eq_smul τ hτ hτT B Y Z a h))).trans
+    (map_smul _ a _)
 
 theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B Z = a • futureDerivative τ hτ hτT B
     Y := by
   unfold futureDerivative
-  rw [(zeroForcing (D.tail τ hτ.le hτT)).derivativePath_eq_smul
+  exact (congrArg (includePath (K := Icc (0 : ℝ) (D.T - τ)) (V := Vector3) P D.support
+    D.support_measurable) ((zeroForcing (D.tail τ hτ.le hτT)).derivativePath_eq_smul
     (zeroForcing (D.tail τ hτ.le hτT))
     (forwardInitial τ hτ hτT B Y) (forwardInitial τ hτ hτT B Z) a
     (by
@@ -90,8 +93,8 @@ theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B Z = a • futu
       intro t
       apply Subtype.ext
       change (0 : CylinderL2 P Space) = a • 0
-      exact (smul_zero a).symm) (forwardInitial_eq_smul τ hτ hτT B Y Z a h)]
-  exact (includePath P D.support D.support_measurable).map_smul a _
+      exact (smul_zero a).symm) (forwardInitial_eq_smul τ hτ hτT B Y Z a h))).trans
+    (map_smul _ a _)
 
 theorem velocityPath_eq_smul : velocityPath τ hτ hτT B Z = a • velocityPath τ hτ hτT B Y := by
   apply ContinuousMap.ext

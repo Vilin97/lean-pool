@@ -46,7 +46,8 @@ def fullWave (α k : ℝ) (t : Icc (0 : ℝ) D.T) (y : Space) : Space :=
 
 theorem fullWave_hasFDerivAt (α k : ℝ) (hk : k ≠ 0) (t : Icc (0 : ℝ) D.T) :
     HasFDerivAt (fullWave τ hτ hτT B δ hδ ξ hs α k t)
-      ((α/δ) • rankOne ℝ (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0) D.m₀) 0 := by
+      ((α/δ) • rankOne ℝ (E := Space) (F := Space)
+        (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0) D.m₀) 0 := by
   let A : Space × ℝ → Space := fun z =>
     vector τ hτ hτT B (initialData D δ hδ ξ hs) (t,z)
   have hA : DifferentiableAt ℝ A (0,0) :=
@@ -81,18 +82,19 @@ theorem fullWave_physical_hasFDerivAt (α k : ℝ) (hk : k ≠ 0)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
     (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     HasFDerivAt (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x))
-      ((α/δ) • rankOne ℝ (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0)
+      ((α/δ) • rankOne ℝ (E := Space) (F := Space) (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0)
         (D.normal.field t 0)) (X 0) := by
   have he : (Y ∘ X) = id := funext hleft
   have hdY := EulerLagrangian.derivative_pullback_inverse Y X (D.deformationEquiv t 0) 0 hX hY
-  rw [he,fderiv_id,id_comp] at hdY
+  simp only [he, fderiv_id, id_comp] at hdY
   have hy : HasFDerivAt Y (D.deformationEquiv t 0).symm.toContinuousLinearMap (X 0) :=
     hdY ▸ hY.hasFDerivAt
   have hp : HasFDerivAt (fullWave τ hτ hτT B δ hδ ξ hs α k t)
-      ((α/δ) • rankOne ℝ (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0) D.m₀) (Y (X 0)) := by
+      ((α/δ) • rankOne ℝ (E := Space) (F := Space)
+        (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0) D.m₀) (Y (X 0)) := by
     rw [hleft]
     exact fullWave_hasFDerivAt τ hτ hτT B δ hδ ξ hs α k hk t
-  convert! hp.comp (X 0) hy using 1
+  refine (hp.comp (X 0) hy).congr_fderiv (Eq.symm ?_)
   apply ContinuousLinearMap.ext
   intro v
   simp only [smul_apply,comp_apply,rankOne_apply]
@@ -118,7 +120,8 @@ theorem fullWave_physical_normalized_gradient (α k : ℝ) (hk : k ≠ 0)
     (hv : envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0 ≠ 0) :
     fderiv ℝ (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x)) (X 0) =
       ((α/δ)*(‖D.normal.field t 0‖*‖envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0‖)) •
-        rankOne ℝ (unit (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0)) (unit (D.normal.field t 0))
+        rankOne ℝ (E := Space) (F := Space) (unit (envelopedVelocity τ hτ hτT B δ hδ ξ hs t 0))
+          (unit (D.normal.field t 0))
             := by
   rw [(fullWave_physical_hasFDerivAt τ hτ hτT B δ hδ ξ hs α k hk t X Y hX hY hleft).fderiv]
   exact rankOne_normalized _ _ _ hv (HistoryData.normal_ne_zero t 0)
@@ -128,7 +131,8 @@ theorem fullWave_physical_canonical_gradient (α k : ℝ) (hk : k ≠ 0)
     (hX : HasFDerivAt X (D.F.field t 0) 0)
     (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     fderiv ℝ (fun x => fullWave τ hτ hτT B δ hδ ξ hs α k t (Y x)) (X 0) =
-      (α/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0) := by
+      (α/δ) • rankOne ℝ (E := Space) (F := Space) (canonicalVelocity τ hτ hτT B ξ hs t 0)
+        (D.normal.field t 0) := by
   rw [(fullWave_physical_hasFDerivAt τ hτ hτT B δ hδ ξ hs α k hk t X Y hX hY hleft).fderiv,
     envelopedVelocity_independent_profile τ hτ hτT B δ 1 hδ zero_lt_one]
   rfl
@@ -237,7 +241,8 @@ theorem scaled_terminal_physical_gradient (a k : ℝ) (hk : k ≠ 0)
     (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     fderiv ℝ (fun x => k⁻¹ • vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs)
       (t,(Y x,k*⟪D.m₀,Y x⟫_ℝ))) (X 0) =
-      (a/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0) := by
+      (a/δ) • rankOne ℝ (E := Space) (F := Space) (canonicalVelocity τ hτ hτT B ξ hs t 0)
+        (D.normal.field t 0) := by
   have he := scaled_terminal_wave_eq τ hτ hτT B δ hδ ξ hs a k t
   change fderiv ℝ ((fun x : Space => k⁻¹ • vector τ hτ hτT B
     (initialData D δ hδ (a • ξ) hs) (t,(x,k*⟪D.m₀,x⟫_ℝ))) ∘ Y) (X 0) = _

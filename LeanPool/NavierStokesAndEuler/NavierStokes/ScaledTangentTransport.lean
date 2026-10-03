@@ -74,7 +74,7 @@ theorem current_slot_iff (g : Geometry) (gap : ℕ) (shift rate : ℝ)
     exact ⟨CopySolveCompatibility.time_interval_mono shift hrate h.1,
       CopySolveCompatibility.time_interval_mono shift hrate h.2⟩
   · intro h
-    constructor <;> nlinarith [h.1, h.2]
+    constructor <;> nlinarith only [hrate, h, h.1, h.2]
 
 /-- A compact reference cutoff still has only finitely many active
 transported copies, uniformly on each common-coordinate ball. -/

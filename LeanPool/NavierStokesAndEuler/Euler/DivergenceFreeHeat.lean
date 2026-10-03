@@ -149,7 +149,8 @@ theorem mild_solution_preserves_gradient_zero {q : ℕ} (κ : ℝ) (m : Vector3)
     (fun r hr => parabolicKernelBound_nonneg ν r hr.1)
     (fun r hr y => heatKernel_bound period q ν hν r hr.1 y) f t
   rw [hci] at hconv
-  rw [hsol t, map_add, gradientEvaluation_heat, hu₀, map_zero, zero_add]
+  rw [hsol t]
+  simp only [map_add, gradientEvaluation_heat, hu₀, map_zero, zero_add]
   exact hconv
 
 end EulerDivergenceFreeHeat

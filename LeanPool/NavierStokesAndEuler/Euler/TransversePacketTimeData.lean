@@ -43,24 +43,28 @@ Space) (E := ℝ))`. -/
 def normalVector : (Space →L[ℝ] ℝ) →L[ℝ] Space :=
   (ContinuousLinearMap.apply ℝ Space (1 : ℝ)).comp (realAdjoint (U := Space) (E := ℝ))
 
-@[simp] theorem normalVector_apply (N : Space →L[ℝ] ℝ) : normalVector N = N.adjoint 1 := rfl
+@[simp] theorem normalVector_apply (N : Space →L[ℝ] ℝ) :
+    normalVector N = ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N 1 := rfl
 
 /-- Normal potential map, given by `-(crossOperator.comp normalVector)`. -/
 def normalPotentialMap : (Space →L[ℝ] ℝ) →L[ℝ] (Space →L[ℝ] Space) :=
   -(crossOperator.comp normalVector)
 
 @[simp] theorem normalPotentialMap_apply (N : Space →L[ℝ] ℝ) :
-    normalPotentialMap N = -crossLeft (N.adjoint 1) := rfl
+    normalPotentialMap N =
+      -crossLeft (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N 1) := rfl
 
 theorem normalPotentialMap_norm : ‖normalPotentialMap‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
   intro N
   simp only [normalPotentialMap_apply, norm_neg, one_mul]
-  apply (crossLeft_norm_le (N.adjoint 1)).trans
-  simpa only [norm_one, mul_one, LinearIsometryEquiv.norm_map] using N.adjoint.le_opNorm 1
+  apply (crossLeft_norm_le (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N 1)).trans
+  simpa only [norm_one, mul_one, LinearIsometryEquiv.norm_map] using
+    (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N).le_opNorm 1
 
 theorem normalVector_eq (m : Space) (N : Space →L[ℝ] ℝ)
-    (hN : ∀ v, N v = ⟪m, v⟫_ℝ / (‖m‖ ^ 2)) : N.adjoint 1 = ((‖m‖^2)⁻¹) • m := by
+    (hN : ∀ v, N v = ⟪m, v⟫_ℝ / (‖m‖ ^ 2)) :
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N 1 = ((‖m‖^2)⁻¹) • m := by
   apply ext_inner_right ℝ
   intro v
   rw [N.adjoint_inner_left, real_inner_smul_left]
@@ -70,7 +74,8 @@ theorem normalVector_eq (m : Space) (N : Space →L[ℝ] ℝ)
 -/
 theorem normalPotentialMap_eq (m : Space) (N : Space →L[ℝ] ℝ)
     (hN : ∀ v, N v = ⟪m, v⟫_ℝ / (‖m‖ ^ 2)) : normalPotentialMap N = potentialMultiplier m := by
-  change -(crossOperator (N.adjoint 1)) = potentialMultiplier m
+  change -(crossOperator (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N 1)) =
+    potentialMultiplier m
   rw [normalVector_eq m N hN, map_smul, crossOperator_apply]
   apply ContinuousLinearMap.ext
   intro v
@@ -135,26 +140,22 @@ def potentialPathMap : C(K,NormalField) →L[ℝ] C(K,PotentialField) :=
 
 omit [CompactSpace K] in
 @[simp] theorem potentialPathMap_apply (N : C(K, NormalField)) (t : K) (x : Space) :
-    potentialPathMap N t x = normalPotentialMap (N t x) := rfl
+    potentialPathMap (K := K) N t x = normalPotentialMap (N t x) := rfl
 
 theorem potentialPathMap_norm : ‖potentialPathMap (K := K)‖ ≤ 1 := by
-  apply opNorm_le_bound _ zero_le_one
-  intro N
-  rw [one_mul]
-  apply (ContinuousMap.norm_le _ (norm_nonneg N)).mpr
-  intro t
-  apply (BoundedContinuousFunction.norm_le (norm_nonneg N)).mpr
-  intro x
-  change ‖normalPotentialMap (N t x)‖ ≤ ‖N‖
+  refine (potentialPathMap (K := K)).opNorm_le_bound zero_le_one fun N => ?_
+  refine ((ContinuousMap.norm_le _ (norm_nonneg N)).mpr fun t => ?_).trans_eq (one_mul _).symm
+  refine (BoundedContinuousFunction.norm_le (norm_nonneg N)).mpr fun x => ?_
+  rw [potentialPathMap_apply]
   exact (normalPotentialMap.le_of_opNorm_le normalPotentialMap_norm (N t x)).trans
-    (by simpa only [one_mul] using ((N t).norm_coe_le_norm x).trans (N.norm_coe_le_norm t))
+    ((one_mul _).trans_le (((N t).norm_coe_le_norm x).trans (N.norm_coe_le_norm t)))
 
 variable (m : SmoothCoefficientPath K Space) (c : ℝ) (hc : 0 < c)
   (hm : ∀ t x, c ≤ ‖m.field t x‖ ^ 2)
 
 /-- Potential coefficient, given by `potentialPathMap (normalFunctional m c hc hm)`. -/
 def potentialCoefficient : C(K,PotentialField) :=
-  potentialPathMap (normalFunctional m c hc hm)
+  potentialPathMap (K := K) (normalFunctional m c hc hm)
 
 theorem potentialCoefficient_apply (t : K) (x : Space) :
     potentialCoefficient m c hc hm t x = potentialMultiplier (m.field t x) :=
@@ -163,7 +164,7 @@ theorem potentialCoefficient_apply (t : K) (x : Space) :
 
 theorem potentialCoefficient_translated (a : Space) :
     translateCoefficientPath (potentialCoefficient m c hc hm) a =
-      potentialPathMap (translateCoefficientPath (normalFunctional m c hc hm) a) := by
+      potentialPathMap (K := K) (translateCoefficientPath (normalFunctional m c hc hm) a) := by
   apply ContinuousMap.ext
   intro t
   apply BoundedContinuousFunction.ext
@@ -172,12 +173,9 @@ theorem potentialCoefficient_translated (a : Space) :
 
 theorem potentialCoefficient_translation_contDiff :
     ContDiff ℝ ∞ (translateCoefficientPath (potentialCoefficient m c hc hm)) := by
-  have he : translateCoefficientPath (potentialCoefficient m c hc hm) =
-      fun a => potentialPathMap (translateCoefficientPath (normalFunctional m c hc hm) a) :=
-    funext (potentialCoefficient_translated m c hc hm)
-  rw [he]
-  exact (potentialPathMap (K := K)).contDiff.comp
-    (normalFunctional_translation_contDiff m c hc hm)
+  rw [funext (potentialCoefficient_translated m c hc hm)]
+  exact (normalFunctional_translation_contDiff m c hc hm).continuousLinearMap_comp
+    (potentialPathMap (K := K))
 
 /-- The source coefficient passes through a linear contraction, with no radius or shift change. -/
 theorem potentialCoefficient_translation_bound (Rc C Ri : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C)
@@ -186,13 +184,11 @@ theorem potentialCoefficient_translation_bound (Rc C Ri : ℝ) (hRc : 0 ≤ Rc) 
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (potentialCoefficient m c hc hm)) a‖ ≤
       (3*Ri*C)*majorant (4*Ri) 0 n := by
-  have he : translateCoefficientPath (potentialCoefficient m c hc hm) =
-      fun a => potentialPathMap (translateCoefficientPath (normalFunctional m c hc hm) a) :=
-    funext (potentialCoefficient_translated m c hc hm)
-  rw [he]
+  rw [funext (potentialCoefficient_translated m c hc hm)]
   have h := (potentialPathMap (K := K)).norm_iteratedFDeriv_comp_left
     ((normalFunctional_translation_contDiff m c hc hm).contDiffAt (x := a)) (n := n) (by simp)
-  exact h.trans ((mul_le_mul_of_nonneg_right (potentialPathMap_norm (K := K)) (norm_nonneg _)).trans
+  exact h.trans ((mul_le_mul_of_nonneg_right (potentialPathMap_norm (K := K))
+    (ContinuousMultilinearMap.opNorm_nonneg _)).trans
     (by
         simpa only [one_mul] using normalFunctional_translation_bound m c hc hm Rc C Ri hRc hC hRi
             hbm n a))
@@ -218,7 +214,9 @@ open ContinuousLinearMap InnerProductSpace EulerSmoothLimit
 
 /-- Differentiate the normal functional using only itself and the normal's derivative column. -/
 def normalTimeMap (N : Space →L[ℝ] ℝ) (Q₁ : ℝ →L[ℝ] Space) : Space →L[ℝ] ℝ :=
-  (N.comp N.adjoint).comp Q₁.adjoint - (2 : ℝ) • (N.comp Q₁).comp N
+  (N.comp (adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N)).comp
+      (adjoint (𝕜 := ℝ) (E := ℝ) (F := Space) Q₁) -
+    (2 : ℝ) • (N.comp Q₁).comp N
 
 theorem normalTimeMap_apply (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠ 0)
     (hN : ∀ v, N v = ⟪m, v⟫_ℝ / ‖m‖ ^ 2) (v : Space) :
@@ -226,10 +224,12 @@ theorem normalTimeMap_apply (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠
       ⟪mt,v⟫_ℝ / ‖m‖^2 - (2*⟪m,mt⟫_ℝ/(‖m‖^2)^2)*⟪m,v⟫_ℝ := by
   have hd : ‖m‖^2 ≠ 0 := pow_ne_zero 2 (norm_ne_zero_iff.mpr hm)
   have hNm : N m = 1 := by rw [hN, real_inner_self_eq_norm_sq, div_self hd]
-  have hAdj (s : ℝ) : N.adjoint s = s • (((‖m‖^2)⁻¹) • m) := by
+  have hAdj (s : ℝ) : adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N s = s • (((‖m‖^2)⁻¹) • m) := by
     calc
-      N.adjoint s = N.adjoint (s • (1 : ℝ)) := by simp
-      _ = s • N.adjoint 1 := map_smul N.adjoint s 1
+      adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N s =
+          adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N (s • (1 : ℝ)) := by simp
+      _ = s • adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N 1 :=
+        map_smul (adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) N) s 1
       _ = _ := by rw [normalVector_eq m N hN]
   simp only [normalTimeMap, sub_apply, smul_apply, comp_apply, adjoint_toSpanSingleton,
     innerSL_apply_apply, toSpanSingleton_apply]
@@ -239,7 +239,7 @@ theorem normalTimeMap_apply (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠
 
 theorem normalTimeMap_vector (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m ≠ 0)
     (hN : ∀ v, N v = ⟪m, v⟫_ℝ / ‖m‖ ^ 2) :
-    (normalTimeMap N (toSpanSingleton ℝ mt)).adjoint 1 =
+    adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) (normalTimeMap N (toSpanSingleton ℝ mt)) 1 =
       ((‖m‖^2)⁻¹) • mt - (2*⟪m,mt⟫_ℝ/(‖m‖^2)^2) • m := by
   apply ext_inner_right ℝ
   intro v
@@ -252,7 +252,8 @@ theorem normalTimeMap_potential (m mt : Space) (N : Space →L[ℝ] ℝ) (hm : m
     (hN : ∀ v, N v = ⟪m, v⟫_ℝ / ‖m‖ ^ 2) :
     normalPotentialMap (normalTimeMap N (toSpanSingleton ℝ mt)) =
       potentialMultiplierDerivative m mt := by
-  change -crossOperator ((normalTimeMap N (toSpanSingleton ℝ mt)).adjoint 1) = _
+  change -crossOperator
+    (adjoint (𝕜 := ℝ) (E := Space) (F := ℝ) (normalTimeMap N (toSpanSingleton ℝ mt)) 1) = _
   rw [normalTimeMap_vector m mt N hm hN, map_sub, map_smul, map_smul, neg_sub]
   rfl
 
@@ -360,12 +361,12 @@ local instance instSourcePotentialTimeCoefficient24 : NormedSpace ℝ C(K,Potent
 
 /-- Time normal path, constructed using `pathCompositionMap`. -/
 def timeNormalPath (N : C(K, NormalField)) (Q₁ : C(K, Space →ᵇ ℝ →L[ℝ] Space)) : C(K,NormalField) :=
-  pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
-    (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ)
-      N (pathAdjointMap (U := Space) (E := ℝ) N))
-    (pathAdjointMap (U := ℝ) (E := Space) Q₁) -
-      (2 : ℝ) • pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
-        (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) N Q₁) N
+  pathCompositionMap (α := Space) (K := K) (E := ℝ) (F := ℝ) (U := Space)
+    (pathCompositionMap (α := Space) (K := K) (E := Space) (F := ℝ) (U := ℝ)
+      N (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ) N))
+    (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space) Q₁) -
+      (2 : ℝ) • pathCompositionMap (α := Space) (K := K) (E := ℝ) (F := ℝ) (U := Space)
+        (pathCompositionMap (α := Space) (K := K) (E := Space) (F := ℝ) (U := ℝ) N Q₁) N
 
 theorem timeNormalPath_apply (N : C(K, NormalField)) (Q₁ : C(K, Space →ᵇ ℝ →L[ℝ] Space))
     (t : K) (y : Space) : timeNormalPath N Q₁ t y = normalTimeMap (N t y) (Q₁ t y) := rfl
@@ -387,18 +388,29 @@ variable {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
 
 include hN hQ₁ in
 theorem timeNormalPath_contDiff : ContDiff ℝ ∞ (fun a => timeNormalPath (N a) (Q₁ a)) := by
-  have hNa := (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ)).contDiff.comp hN
-  have hQa := (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space)).contDiff.comp hQ₁
+  have hNa := hN.continuousLinearMap_comp
+    (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ))
+  have hQa := hQ₁.continuousLinearMap_comp
+    (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space))
   have hNN := pathComposition_contDiff N
-    (fun x => pathAdjointMap (U := Space) (E := ℝ) (N x)) hN hNa
+    (fun x => pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ) (N x)) hN hNa
   have hNQ := pathComposition_contDiff N Q₁ hN hQ₁
   have hA := pathComposition_contDiff (E := ℝ) (F := ℝ) (U := Space)
-    (fun x => pathCompositionMap (E := Space) (F := ℝ) (U := ℝ)
-      (N x) (pathAdjointMap (U := Space) (E := ℝ) (N x)))
-    (fun x => pathAdjointMap (U := ℝ) (E := Space) (Q₁ x)) hNN hQa
+    (fun x => pathCompositionMap (α := Space) (K := K) (E := Space) (F := ℝ) (U := ℝ)
+      (N x) (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ) (N x)))
+    (fun x => pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space) (Q₁ x)) hNN hQa
   have hB := pathComposition_contDiff (E := ℝ) (F := ℝ) (U := Space)
-    (fun x => pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) (N x) (Q₁ x)) N hNQ hN
+    (fun x => pathCompositionMap (α := Space) (K := K) (E := Space) (F := ℝ) (U := ℝ)
+      (N x) (Q₁ x)) N hNQ hN
   exact hA.sub (hB.const_smul (2 : ℝ))
+
+theorem const_smul_majorant_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (f : X → E) (hf : ContDiff ℝ ∞ f) (c R A : ℝ) (hc : 0 ≤ c) (d : ℕ)
+    (hb : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ A * majorant R d n) (n : ℕ) (x : X) :
+    ‖iteratedFDeriv ℝ n (fun y => c • f y) x‖ ≤ (c * A) * majorant R d n := by
+  rw [iteratedFDeriv_const_smul_apply' (hf.contDiffAt.of_le (by simp)), norm_smul,
+    Real.norm_of_nonneg hc, mul_assoc]
+  exact mul_le_mul_of_nonneg_left (hb n x) hc
 
 include hN hQ₁ in
 theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D)
@@ -408,17 +420,19 @@ theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0
     ‖iteratedFDeriv ℝ n (fun x => timeNormalPath (N x) (Q₁ x)) a‖ ≤
       (27*C^2*D)*majorant R 0 n := by
   let A : X → C(K,NormalField) := fun x =>
-    pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
-      (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ)
-        (N x) (pathAdjointMap (U := Space) (E := ℝ) (N x)))
-      (pathAdjointMap (U := ℝ) (E := Space) (Q₁ x))
+    pathCompositionMap (α := Space) (K := K) (E := ℝ) (F := ℝ) (U := Space)
+      (pathCompositionMap (α := Space) (K := K) (E := Space) (F := ℝ) (U := ℝ)
+        (N x) (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ) (N x)))
+      (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space) (Q₁ x))
   let B : X → C(K,NormalField) := fun x =>
-    pathCompositionMap (E := ℝ) (F := ℝ) (U := Space)
-      (pathCompositionMap (E := Space) (F := ℝ) (U := ℝ) (N x) (Q₁ x)) (N x)
-  have hNa := (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ)).contDiff.comp hN
-  have hQa := (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space)).contDiff.comp hQ₁
+    pathCompositionMap (α := Space) (K := K) (E := ℝ) (F := ℝ) (U := Space)
+      (pathCompositionMap (α := Space) (K := K) (E := Space) (F := ℝ) (U := ℝ) (N x) (Q₁ x)) (N x)
+  have hNa := hN.continuousLinearMap_comp
+    (pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ))
+  have hQa := hQ₁.continuousLinearMap_comp
+    (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space))
   have hNN := pathComposition_contDiff N
-    (fun x => pathAdjointMap (U := Space) (E := ℝ) (N x)) hN hNa
+    (fun x => pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ) (N x)) hN hNa
   have hNQ := pathComposition_contDiff N Q₁ hN hQ₁
   have hA : ContDiff ℝ ∞ A := pathComposition_contDiff _ _ hNN hQa
   have hB : ContDiff ℝ ∞ B := pathComposition_contDiff _ _ hNQ hN
@@ -426,21 +440,16 @@ theorem timeNormalPath_bound (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0
     pathAdjointMap_norm N hN R C hR hC 0 hbN
   have hbQa := contraction_bound (pathAdjointMap (α := Space) (K := K) (U := ℝ) (E := Space))
     pathAdjointMap_norm Q₁ hQ₁ R D hR hD 0 hbQ₁
-  have hbNN := pathComposition_bound N (fun x => pathAdjointMap (U := Space) (E := ℝ) (N x)) hN hNa
+  have hbNN := pathComposition_bound N
+    (fun x => pathAdjointMap (α := Space) (K := K) (U := Space) (E := ℝ) (N x)) hN hNa
     R C C hR hC hC 0 0 hbN hbNa
   have hbNQ := pathComposition_bound N Q₁ hN hQ₁ R C D hR hC hD 0 0 hbN hbQ₁
   have hbA : ∀ j x, ‖iteratedFDeriv ℝ j A x‖ ≤ (3*(3*C*C)*D)*majorant R 0 j :=
     pathComposition_bound _ _ hNN hQa R (3*C*C) D hR (by positivity) hD 0 0 hbNN hbQa
   have hbB : ∀ j x, ‖iteratedFDeriv ℝ j B x‖ ≤ (3*(3*C*D)*C)*majorant R 0 j :=
     pathComposition_bound _ _ hNQ hN R (3*C*D) C hR (by positivity) hC 0 0 hbNQ hbN
-  have hb₂B (j : ℕ) (x : X) :
-      ‖iteratedFDeriv ℝ j (fun y => (2 : ℝ) • B y) x‖ ≤
-        (2*(3*(3*C*D)*C))*majorant R 0 j := by
-    rw [iteratedFDeriv_const_smul_apply' (a := (2 : ℝ))
-      (hB.contDiffAt.of_le (by simp)), norm_smul]
-    norm_num only [Real.norm_ofNat]
-    exact (mul_le_mul_of_nonneg_left (hbB j x) (by norm_num : (0 : ℝ) ≤ 2)).trans_eq (by ring)
-  have h := sub_bound A (fun y => (2 : ℝ) • B y) hA (hB.const_smul (2 : ℝ))
+  have hb₂B := const_smul_majorant_bound B hB 2 R (3*(3*C*D)*C) zero_le_two 0 hbB
+  have h := sub_bound A _ hA (hB.const_smul (2 : ℝ))
     R (3*(3*C*C)*D) (2*(3*(3*C*D)*C)) 0 hbA hb₂B n a
   exact h.trans_eq (by ring)
 
@@ -452,7 +461,8 @@ variable (m m₁ : SmoothCoefficientPath K Space) (c : ℝ) (hc : 0 < c)
 /-- Potential time coefficient, given by `potentialPathMap (timeNormalPath (normalFunctional m c
 hc hm) (normalColumn m₁).field)`. -/
 def potentialTimeCoefficient : C(K,PotentialField) :=
-  potentialPathMap (timeNormalPath (normalFunctional m c hc hm) (normalColumn m₁).field)
+  potentialPathMap (K := K)
+    (timeNormalPath (normalFunctional m c hc hm) (normalColumn m₁).field)
 
 theorem potentialTimeCoefficient_apply (t : K) (y : Space) :
     potentialTimeCoefficient m m₁ c hc hm t y =
@@ -462,12 +472,14 @@ theorem potentialTimeCoefficient_apply (t : K) (y : Space) :
     have h := hm t y
     rw [hz, norm_zero, zero_pow (by decide : 2 ≠ 0)] at h
     linarith
-  exact normalTimeMap_potential (m.field t y) (m₁.field t y)
-    (normalFunctional m c hc hm t y) hn (normalFunctional_apply m c hc hm t y)
+  -- The left side is unfolded once by `rfl` rather than at every unification attempt.
+  refine Eq.trans ?_ (normalTimeMap_potential (m.field t y) (m₁.field t y)
+    (normalFunctional m c hc hm t y) hn (normalFunctional_apply m c hc hm t y))
+  rfl
 
 theorem potentialTimeCoefficient_translation :
     translateCoefficientPath (potentialTimeCoefficient m m₁ c hc hm) =
-      fun a => potentialPathMap (timeNormalPath
+      fun a => potentialPathMap (K := K) (timeNormalPath
         (translateCoefficientPath (normalFunctional m c hc hm) a)
         (translateCoefficientPath (normalColumn m₁).field a)) := by
   funext a
@@ -482,7 +494,7 @@ theorem potentialTimeCoefficient_translation_contDiff :
   rw [potentialTimeCoefficient_translation]
   have h := timeNormalPath_contDiff _ _
     (normalFunctional_translation_contDiff m c hc hm) (normalColumn m₁).translation_contDiff
-  exact (potentialPathMap (K := K)).contDiff.comp h
+  exact h.continuousLinearMap_comp (potentialPathMap (K := K))
 
 /-- The derivative coefficient is polynomial in the already constructed normal functional. -/
 theorem potentialTimeCoefficient_translation_bound (R C D : ℝ)
@@ -542,20 +554,17 @@ def columnPath : C(K,Space →ᵇ Space) →L[ℝ] C(K,Space →ᵇ ℝ →L[ℝ
       Space).toLinearIsometry.toContinuousLinearMap
 
 theorem columnPath_norm : ‖columnPath (K := K)‖ ≤ 1 := by
-  apply opNorm_le_bound _ zero_le_one
-  intro A
-  rw [one_mul]
-  apply (ContinuousMap.norm_le _ (norm_nonneg A)).mpr
-  intro t
-  apply (BoundedContinuousFunction.norm_le (norm_nonneg A)).mpr
-  intro y
+  refine (columnPath (K := K)).opNorm_le_bound zero_le_one fun A => ?_
+  refine ((ContinuousMap.norm_le _ (norm_nonneg A)).mpr fun t => ?_).trans_eq (one_mul _).symm
+  refine (BoundedContinuousFunction.norm_le (norm_nonneg A)).mpr fun y => ?_
   change ‖(ContinuousLinearMap.toSpanSingletonLIE ℝ Space) (A t y)‖ ≤ ‖A‖
   rw [LinearIsometryEquiv.norm_map]
   exact ((A t).norm_coe_le_norm y).trans (A.norm_coe_le_norm t)
 
 omit [CompactSpace K] in
 theorem columnPath_translation (A : C(K, Space →ᵇ Space)) (a : Space) :
-    translateCoefficientPath (columnPath A) a = columnPath (translateCoefficientPath A a) := by
+    translateCoefficientPath (columnPath (K := K) A) a =
+      columnPath (K := K) (translateCoefficientPath A a) := by
   apply ContinuousMap.ext
   intro t
   apply BoundedContinuousFunction.ext
@@ -570,7 +579,8 @@ variable (m : SmoothCoefficientPath K Space) (m₁ : C(K, Space →ᵇ Space))
 /-- Potential time path, given by `potentialPathMap (timeNormalPath (normalFunctional m c hc hm)
 (columnPath m₁))`. -/
 def potentialTimePath : C(K,PotentialField) :=
-  potentialPathMap (timeNormalPath (normalFunctional m c hc hm) (columnPath m₁))
+  potentialPathMap (K := K)
+    (timeNormalPath (normalFunctional m c hc hm) (columnPath (K := K) m₁))
 
 theorem potentialTimePath_apply (t : K) (y : Space) :
     potentialTimePath m m₁ c hc hm t y = potentialMultiplierDerivative (m.field t y) (m₁ t y) := by
@@ -579,13 +589,16 @@ theorem potentialTimePath_apply (t : K) (y : Space) :
     have h := hm t y
     rw [hz, norm_zero, zero_pow (by decide : 2 ≠ 0)] at h
     linarith
-  exact normalTimeMap_potential (m.field t y) (m₁ t y)
-    (normalFunctional m c hc hm t y) hn (normalFunctional_apply m c hc hm t y)
+  -- The left side is unfolded once by `rfl` rather than at every unification attempt.
+  refine Eq.trans ?_ (normalTimeMap_potential (m.field t y) (m₁ t y)
+    (normalFunctional m c hc hm t y) hn (normalFunctional_apply m c hc hm t y))
+  rfl
 
 theorem potentialTimePath_translation :
     translateCoefficientPath (potentialTimePath m m₁ c hc hm) = fun a =>
-      potentialPathMap (timeNormalPath (translateCoefficientPath (normalFunctional m c hc hm) a)
-        (columnPath (translateCoefficientPath m₁ a))) := by
+      potentialPathMap (K := K)
+        (timeNormalPath (translateCoefficientPath (normalFunctional m c hc hm) a)
+        (columnPath (K := K) (translateCoefficientPath m₁ a))) := by
   funext a
   apply ContinuousMap.ext
   intro t
@@ -596,9 +609,9 @@ theorem potentialTimePath_translation :
 theorem potentialTimePath_orbit (h₁ : ContDiff ℝ ∞ (translateCoefficientPath m₁)) :
     ContDiff ℝ ∞ (translateCoefficientPath (potentialTimePath m m₁ c hc hm)) := by
   rw [potentialTimePath_translation]
-  have hcol := (columnPath (K := K)).contDiff.comp h₁
+  have hcol := h₁.continuousLinearMap_comp (columnPath (K := K))
   have h := timeNormalPath_contDiff _ _ (normalFunctional_translation_contDiff m c hc hm) hcol
-  exact (potentialPathMap (K := K)).contDiff.comp h
+  exact h.continuousLinearMap_comp (potentialPathMap (K := K))
 
 theorem potentialTimePath_bound (h₁ : ContDiff ℝ ∞ (translateCoefficientPath m₁))
     (R C D : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C) (hD : 0 ≤ D)
@@ -609,7 +622,7 @@ theorem potentialTimePath_bound (h₁ : ContDiff ℝ ∞ (translateCoefficientPa
     ‖iteratedFDeriv ℝ n (translateCoefficientPath (potentialTimePath m m₁ c hc hm)) a‖ ≤
       (27*C^2*D)*majorant R 0 n := by
   rw [potentialTimePath_translation]
-  have hcol := (columnPath (K := K)).contDiff.comp h₁
+  have hcol := h₁.continuousLinearMap_comp (columnPath (K := K))
   have hbcol := contraction_bound (columnPath (K := K)) columnPath_norm
     (translateCoefficientPath m₁) h₁ R D hR hD 0 hb₁
   have h := timeNormalPath_contDiff _ _ (normalFunctional_translation_contDiff m c hc hm) hcol
@@ -721,11 +734,15 @@ theorem normal_hasDerivWithinAt (s : Set ℝ) (t : ℝ) (ht : t ∈ s)
     (hFG : ∀ r ∈ s, (F r).comp (G r) = ContinuousLinearMap.id ℝ Space)
     (hGF : ∀ r ∈ s, (G r).comp (F r) = ContinuousLinearMap.id ℝ Space)
     (hF : HasDerivWithinAt F (M.comp (F t)) s t) :
-    HasDerivWithinAt (fun r => (G r).adjoint m₀) (-(M.adjoint ((G t).adjoint m₀))) s t := by
+    HasDerivWithinAt (fun r => adjoint (𝕜 := ℝ) (E := Space) (F := Space) (G r) m₀)
+      (-(adjoint (𝕜 := ℝ) (E := Space) (F := Space) M
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (G t) m₀))) s t := by
   have h := (adjointVector m₀).hasFDerivAt.comp_hasDerivWithinAt t
     (inverse_strain_hasDerivWithinAt s t ht F G M hFG hGF hF)
   convert h using 1 <;> try rfl
-  change -(M.adjoint ((G t).adjoint m₀)) = (-((G t).comp M)).adjoint m₀
+  change -(adjoint (𝕜 := ℝ) (E := Space) (F := Space) M
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (G t) m₀)) =
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) (-((G t).comp M)) m₀
   simp only [map_neg, adjoint_comp, neg_apply, comp_apply]
 
 end EulerDeformationTime
@@ -794,15 +811,18 @@ def inverseDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space →L[ℝ] Space) 
 
 /-- The derivative of the transported normal is the fixed adjoint-vector map of that path. -/
 def normalDerivative : C(Icc (0 : ℝ) D.T,Space →ᵇ Space) :=
-  mapCoefficientPath (normalMap D.m₀) D.inverseDerivative
+  mapCoefficientPath (K := Icc (0 : ℝ) D.T) (normalMap D.m₀) D.inverseDerivative
 
 @[simp] theorem inverseDerivative_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     D.inverseDerivative t x = -((D.FInv.field t x).comp (D.M.field t x)) := rfl
 
 @[simp] theorem normalDerivative_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
-    D.normalDerivative t x = -((D.M.field t x).adjoint (D.normal.field t x)) := by
-  change (-((D.FInv.field t x).comp (D.M.field t x))).adjoint D.m₀ =
-    -((D.M.field t x).adjoint ((D.FInv.field t x).adjoint D.m₀))
+    D.normalDerivative t x =
+      -(adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.M.field t x) (D.normal.field t x)) := by
+  change adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (-((D.FInv.field t x).comp (D.M.field t x))) D.m₀ =
+    -(adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.M.field t x)
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) D.m₀))
   simp only [map_neg, adjoint_comp, neg_apply, comp_apply]
 
 /-- No differentiability of F⁻¹ is assumed: it follows from the actual inverse identities and
@@ -855,7 +875,8 @@ theorem inverseDerivative_translation :
 
 theorem normalDerivative_translation :
     translateCoefficientPath D.normalDerivative = fun a =>
-      mapCoefficientPath (normalMap D.m₀) (translateCoefficientPath D.inverseDerivative a) := by
+      mapCoefficientPath (K := Icc (0 : ℝ) D.T) (normalMap D.m₀)
+        (translateCoefficientPath D.inverseDerivative a) := by
   funext a
   apply ContinuousMap.ext
   intro t
@@ -869,23 +890,18 @@ theorem inverseDerivative_orbit : ContDiff ℝ ∞ (translateCoefficientPath D.i
 
 theorem normalDerivative_orbit : ContDiff ℝ ∞ (translateCoefficientPath D.normalDerivative) := by
   rw [D.normalDerivative_translation]
-  exact (mapCoefficientPath (K := Icc (0 : ℝ) D.T) (normalMap D.m₀)).contDiff.comp
-    D.inverseDerivative_orbit
+  exact D.inverseDerivative_orbit.continuousLinearMap_comp
+    (mapCoefficientPath (K := Icc (0 : ℝ) D.T) (normalMap D.m₀))
 
 theorem normalPathMap_norm :
     ‖mapCoefficientPath (K := Icc (0 : ℝ) D.T) (normalMap D.m₀)‖ ≤ 1 := by
-  apply opNorm_le_bound _ zero_le_one
-  intro A
-  rw [one_mul]
-  apply (ContinuousMap.norm_le _ (norm_nonneg A)).mpr
-  intro t
-  apply (BoundedContinuousFunction.norm_le (norm_nonneg A)).mpr
-  intro x
-  change ‖normalMap D.m₀ (A t x)‖ ≤ ‖A‖
-  calc
-    _ ≤ ‖normalMap D.m₀‖ * ‖A t x‖ := (normalMap D.m₀).le_opNorm _
-    _ ≤ 1 * ‖A t x‖ := mul_le_mul_of_nonneg_right (normalMap_norm D.m₀ D.m₀_unit) (norm_nonneg _)
-    _ ≤ ‖A‖ := by simpa only [one_mul] using ((A t).norm_coe_le_norm x).trans (A.norm_coe_le_norm t)
+  refine (mapCoefficientPath (K := Icc (0 : ℝ) D.T) (normalMap D.m₀)).opNorm_le_bound zero_le_one
+    fun A => ?_
+  refine ((ContinuousMap.norm_le _ (norm_nonneg A)).mpr fun t => ?_).trans_eq (one_mul _).symm
+  refine (BoundedContinuousFunction.norm_le (norm_nonneg A)).mpr fun x => ?_
+  rw [mapCoefficientPath_apply]
+  exact ((normalMap D.m₀).le_of_opNorm_le (normalMap_norm D.m₀ D.m₀_unit) (A t x)).trans
+    ((one_mul _).trans_le (((A t).norm_coe_le_norm x).trans (A.norm_coe_le_norm t)))
 
 theorem inverseDerivative_bound (R CI CM : ℝ) (hR : 0 ≤ R) (hCI : 0 ≤ CI) (hCM : 0 ≤ CM)
     (hI : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ CI * majorant R 0

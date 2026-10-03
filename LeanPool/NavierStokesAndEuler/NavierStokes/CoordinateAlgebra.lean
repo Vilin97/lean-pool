@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Algebra of the manuscript coordinates
@@ -164,9 +165,9 @@ theorem time_rates (q h η : ℝ) :
     inverseQ q h η (-1) 0 = qTime h η ∧
       inverseEta q h η (-1) 0 = etaTime q h η := by
   constructor
-  · simp [inverseQ, qTime]
+  · simp only [inverseQ, mul_zero, zero_div, add_zero, qTime]
   · unfold inverseEta etaTime
-    simp
+    simp only [mul_zero, zero_div, mul_neg, mul_one, zero_sub]
     ring
 
 theorem axial_rates (q h η : ℝ) :
@@ -188,9 +189,9 @@ theorem xTime_from_qTime (q h η X : ℝ) :
 theorem xAxial_from_qAxial {q : ℝ} (hq : q ≠ 0) (h η X : ℝ) :
     xAxial q h η X = -(X / q) * qAxial q h η := by
   by_cases hL : L h η = 0
-  · simp [xAxial, qAxial, hL]
+  · simp only [xAxial, neg_mul, hL, mul_zero, div_zero, qAxial]
   by_cases hp : q ^ D h = 0
-  · simp [xAxial, qAxial, hp]
+  · simp only [xAxial, neg_mul, hp, zero_mul, div_zero, qAxial, mul_zero]
   unfold xAxial qAxial
   field_simp [hq, hL, hp]
 
@@ -221,7 +222,8 @@ theorem axial_chain_coefficient {q : ℝ} (hq : 0 < q)
         q ^ b * (FX * xAxial q h η X + Fη * etaAxial q h η) =
       q ^ (b - D h) * axialCoeff b h η X F FX Fη := by
   by_cases hL : L h η = 0
-  · simp [qAxial, xAxial, etaAxial, axialCoeff, hL]
+  · simp only [qAxial, hL, mul_zero, div_zero, zero_mul, xAxial, neg_mul, etaAxial, add_zero,
+      axialCoeff]
   have hpow : q ^ D h ≠ 0 := (Real.rpow_pos_of_pos hq _).ne'
   rw [Real.rpow_sub_one hq.ne', Real.rpow_sub hq]
   unfold qAxial xAxial etaAxial axialCoeff

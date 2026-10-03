@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 Convergence estimates for the actual quadratic scale recurrence in (37).
@@ -17,6 +18,10 @@ The sequence is reindexed so that `x 0 = x_{J-1}` and
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 noncomputable section
 
@@ -57,7 +62,8 @@ theorem polynomial_over_growth_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → �
         ((((J + n : ℕ) : ℝ))⁻¹) ^ 2) atTop (𝓝 0) := by
     have h := (((tendsto_const_nhds (x := (1 : ℝ))).add (stage_inv_tendsto_zero J)).pow A).mul
       ((stage_inv_tendsto_zero J).pow 2)
-    simpa using h
+    simpa only [Nat.cast_add, inv_pow, add_zero, one_pow, ne_eq, OfNat.ofNat_ne_zero,
+        not_false_eq_true, zero_pow, mul_zero] using h
   apply summable_of_ratio_test_tendsto_lt_one (l := 0) (by norm_num)
   · exact Eventually.of_forall fun n => ne_of_gt (div_pos (pow_pos (hjp n) _) (hxp n))
   · apply hlim.congr'
@@ -77,7 +83,7 @@ theorem polynomial_over_growth_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → �
 /-- A simple exponential majorization requiring no numerical approximations. -/
 theorem exp_neg_le_reciprocal (t : ℝ) (ht : 0 < t) :
     Real.exp (-t) ≤ 1 / t := by
-  have he : t ≤ Real.exp t := by linarith [Real.add_one_le_exp t]
+  have he : t ≤ Real.exp t := by linarith only [Real.add_one_le_exp t]
   simpa only [Real.exp_neg, one_div] using one_div_le_one_div_of_le ht he
 
 /-- Every exponential decay in a scale divided by a fixed natural power is summable. -/
@@ -113,7 +119,7 @@ theorem exponential_decay_real_power_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ 
     simpa only [Real.rpow_natCast] using Real.rpow_le_rpow_of_exponent_le hj hN.le
   apply Real.exp_le_exp.mpr
   exact mul_le_mul_of_nonpos_left
-    (div_le_div_of_nonneg_left (hxp n).le (Real.rpow_pos_of_pos hjp A) hpow) (by linarith)
+    (div_le_div_of_nonneg_left (hxp n).le (Real.rpow_pos_of_pos hjp A) hpow) (by linarith only [hb])
 
 /-- The logarithm of the rapidly growing scale still has a quadratic polynomial bound. -/
 theorem abs_log_growth_le (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
@@ -127,7 +133,7 @@ theorem abs_log_growth_le (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
       have hJr : (1 : ℝ) ≤ J := by exact_mod_cast hJ
       have hJ2 : (1 : ℝ) ≤ (J : ℝ) ^ 2 := one_le_pow₀ hJr
       calc
-        _ ≤ |Real.log (x 0)| + 2 := by linarith
+        _ ≤ |Real.log (x 0)| + 2 := by linarith only
         _ ≤ _ := by
             simpa using mul_le_mul_of_nonneg_left hJ2 (by positivity : 0 ≤ |Real.log (x 0)| + 2)
   | succ n ih =>
@@ -135,7 +141,7 @@ theorem abs_log_growth_le (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
       have hjp : (0 : ℝ) < (J + n : ℕ) := lt_of_lt_of_le zero_lt_one hj1
       have hlog : 0 ≤ Real.log ((J + n : ℕ) : ℝ) := Real.log_nonneg hj1
       have hlogle : Real.log ((J + n : ℕ) : ℝ) ≤ (J + n : ℕ) :=
-        (Real.log_le_sub_one_of_pos hjp).trans (by linarith)
+        (Real.log_le_sub_one_of_pos hjp).trans (by linarith only)
       have hjnext : (((J + (n + 1) : ℕ) : ℝ)) = ((J + n : ℕ) : ℝ) + 1 := by push_cast; ring
       rw [hx, Real.log_mul (pow_ne_zero _ hjp.ne') (hxp n).ne', Real.log_pow]
       calc
@@ -143,11 +149,11 @@ theorem abs_log_growth_le (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
         _ = 2 * Real.log ((J + n : ℕ) : ℝ) + |Real.log (x n)| := by
             rw [abs_of_nonneg (by positivity)]
         _ ≤ 2 * ((J + n : ℕ) : ℝ) +
-            (|Real.log (x 0)| + 2) * ((J + n : ℕ) : ℝ) ^ 2 := by linarith
+            (|Real.log (x 0)| + 2) * ((J + n : ℕ) : ℝ) ^ 2 := by linarith only [ih, hlogle]
         _ ≤ _ := by
           rw [hjnext]
-          nlinarith [abs_nonneg (Real.log (x 0)),
-            mul_nonneg (abs_nonneg (Real.log (x 0))) hjp.le]
+          nlinarith only [hj1, hjp, abs_nonneg (Real.log (x 0)),
+              mul_nonneg (abs_nonneg (Real.log (x 0))) hjp.le]
 
 /-- Every polynomial weight times `|log x|/x` is summable. -/
 theorem polynomial_log_over_growth_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ → ℝ)
@@ -172,7 +178,7 @@ theorem polynomial_log_over_growth_tendsto_zero (J : ℕ) (hJ : 1 ≤ J) (x : �
     Tendsto (fun n => ((J + n : ℕ) : ℝ) ^ A * Real.log (x n) / x n) atTop (𝓝 0) := by
   have hs := polynomial_log_over_growth_summable J hJ x hx0 hx A
   have hn : Tendsto (fun n => -(((J + n : ℕ) : ℝ) ^ A * |Real.log (x n)| / x n))
-      atTop (𝓝 0) := by simpa using hs.tendsto_atTop_zero.neg
+      atTop (𝓝 0) := by simpa only [Nat.cast_add, neg_zero] using hs.tendsto_atTop_zero.neg
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le hn hs.tendsto_atTop_zero
   · intro n
     have hxp := quadratic_growth_pos J hJ x hx0 hx n
@@ -199,7 +205,7 @@ theorem polynomial_stage_log_over_growth_summable (J : ℕ) (hJ : 1 ≤ J) (x : 
   · intro n
     have hjp : (0 : ℝ) < (J + n : ℕ) := lt_of_lt_of_le zero_lt_one (hj1 n)
     have hl : Real.log ((J + n : ℕ) : ℝ) ≤ (J + n : ℕ) :=
-      (Real.log_le_sub_one_of_pos hjp).trans (by linarith)
+      (Real.log_le_sub_one_of_pos hjp).trans (by linarith only)
     simpa only [pow_succ] using div_le_div_of_nonneg_right
       (mul_le_mul_of_nonneg_left hl (show 0 ≤ ((J + n : ℕ) : ℝ) ^ A by positivity)) (hxp n).le
 
@@ -269,7 +275,7 @@ theorem log_sum_exp_bounds {ι : Type*} [Fintype ι] [Nonempty ι]
           apply Finset.sum_le_sum
           intro i _hi
           exact Real.exp_monotone (Finset.single_le_sum (fun j _ => ha j) (Finset.mem_univ i))
-        _ = _ := by simp
+        _ = _ := by simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
     calc
       _ ≤ Real.log ((Fintype.card ι : ℝ) * Real.exp (∑ i, a i)) := Real.log_le_log hpos hs
       _ = _ := by rw [Real.log_mul hcard.ne' (Real.exp_ne_zero _), Real.log_exp]
@@ -282,7 +288,7 @@ theorem log_sum_exp_mul_tendsto_zero {ι : Type*} [Fintype ι] [Nonempty ι]
     Tendsto (fun n => Real.log (∑ i, Real.exp (a i n)) * r n) atTop (𝓝 0) := by
   classical
   have hs : Tendsto (fun n => ∑ i, a i n * r n) atTop (𝓝 0) := by
-    simpa using tendsto_finsetSum Finset.univ (fun i _ => halim i)
+    simpa only [Finset.sum_const_zero] using tendsto_finsetSum Finset.univ (fun i _ => halim i)
   have hu : Tendsto (fun n => (Real.log (Fintype.card ι : ℝ) + ∑ i, a i n) * r n)
       atTop (𝓝 0) := by
     have h := (hrlim.const_mul (Real.log (Fintype.card ι : ℝ))).add hs
@@ -337,7 +343,8 @@ theorem sourceParameterExponent_nonneg (J : ℕ) (hJ : 2 ≤ J)
   have hprod : 1 ≤ ((J + n : ℕ) : ℝ) ^ 2 * x n :=
     one_le_mul_of_one_le_of_one_le (one_le_pow₀ hj) hxn
   fin_cases i
-  · simpa [sourceParameterExponent] using Real.log_nonneg hCbase
+  · simpa only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, ge_iff_le] using Real.log_nonneg hCbase
   · simp only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
       Fin.mk_one, Fin.isValue,
       Matrix.cons_val_one, Matrix.cons_val_zero, ge_iff_le]
@@ -358,8 +365,10 @@ theorem sourceParameterExponent_nonneg (J : ℕ) (hJ : 2 ≤ J)
       Fin.reduceFinMk,
       Matrix.cons_val, ge_iff_le]
     positivity
-  · simpa [sourceParameterExponent] using Real.log_nonneg hprod
-  · simpa [sourceParameterExponent] using Real.log_nonneg hxn
+  · simpa only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.reduceFinMk, Matrix.cons_val, ge_iff_le] using Real.log_nonneg hprod
+  · simpa only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.reduceFinMk, Matrix.cons_val, ge_iff_le] using Real.log_nonneg hxn
 
 /-- Every explicitly defined parameter term is negligible on the logarithmic frequency scale. -/
 theorem sourceParameterExponent_relative_tendsto_zero (J : ℕ) (hJ : 2 ≤ J)
@@ -375,7 +384,8 @@ theorem sourceParameterExponent_relative_tendsto_zero (J : ℕ) (hJ : 2 ≤ J)
     exact_mod_cast (show 0 < J + n by omega)
   have hlx := polynomial_log_over_growth_tendsto_zero J hJ1 x hx0 hx 2
   fin_cases i
-  · simpa [sourceParameterExponent] using
+  · simpa only [sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd, Nat.cast_add,
+      Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, mul_zero] using
       ((polynomial_over_growth_summable J hJ1 x hx0 hx 2).tendsto_atTop_zero.const_mul (Real.log
           Cbase))
   · have h := (stage_sq_div_predecessor_power_tendsto_zero J hJ 4 (by omega)).const_mul Cstar
@@ -436,7 +446,7 @@ theorem sourceParameterExponent_relative_tendsto_zero (J : ℕ) (hJ : 2 ≤ J)
     simp only [Nat.cast_add, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
         Fin.reduceFinMk,
       Matrix.cons_val]
-    have hjp' : (0 : ℝ) < (J : ℝ) + n := by simpa using hjp n
+    have hjp' : (0 : ℝ) < (J : ℝ) + n := by simpa only [Nat.cast_add] using hjp n
     rw [Real.log_mul (pow_ne_zero _ hjp'.ne') (hxp n).ne', Real.log_pow]
     push_cast
     ring
@@ -461,9 +471,12 @@ theorem sourceParameterAggregate_eq (J : ℕ) (hJ : 1 ≤ J) (Cbase Cstar : ℝ)
       ((J + n : ℕ) : ℝ) ^ 2 * x n + x n := by
   have hj : (0 : ℝ) < (J + n : ℕ) := by exact_mod_cast (show 0 < J + n by omega)
   have hprod : 0 < ((J + n : ℕ) : ℝ) ^ 2 * x n := mul_pos (pow_pos hj _) (hxp n)
-  have hprod' : 0 < ((J : ℝ) + n) ^ 2 * x n := by simpa using hprod
-  simp [sourceParameterAggregate, sourceParameterExponent, Fin.sum_univ_succ,
-    Real.exp_log hCbase, Real.exp_log (hxp n), Real.exp_log hprod']
+  have hprod' : 0 < ((J : ℝ) + n) ^ 2 * x n := by simpa only [Nat.cast_add] using hprod
+  simp only [sourceParameterAggregate, sourceParameterExponent, Nat.succ_eq_add_one, Nat.reduceAdd,
+      Nat.cast_add, Fin.sum_univ_succ, Fin.isValue, Matrix.cons_val_zero, Real.exp_log hCbase,
+      Matrix.cons_val_succ, Real.exp_log hprod', Finset.univ_unique, Fin.default_eq_zero,
+      Matrix.cons_val_fin_one, Real.exp_log (hxp n), Finset.sum_const, Finset.card_singleton,
+      one_smul]
   ring
 
 /--
@@ -500,7 +513,7 @@ theorem perturbed_exponential_decay_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ �
     (he : Tendsto (fun n => e n / (x n / ((J + n : ℕ) : ℝ) ^ A)) atTop (𝓝 0)) :
     Summable (fun n => Real.exp (-b * (x n / ((J + n : ℕ) : ℝ) ^ A) + e n)) := by
   have hxp := quadratic_growth_pos J hJ x hx0 hx
-  have hb2 : 0 < b / 2 := by linarith
+  have hb2 : 0 < b / 2 := by linarith only [hb]
   apply (exponential_decay_real_power_summable J hJ x hx0 hx A (b / 2)
       hb2).of_norm_bounded_eventually_nat
   filter_upwards [he.eventually_le_const hb2] with n hn
@@ -509,7 +522,7 @@ theorem perturbed_exponential_decay_summable (J : ℕ) (hJ : 1 ≤ J) (x : ℕ �
   have herror := (div_le_iff₀ hy).mp hn
   rw [Real.norm_of_nonneg (Real.exp_pos _).le]
   apply Real.exp_le_exp.mpr
-  linarith
+  linarith only [herror]
 
 /--
 Both initial-increment exponential bounds after (22) are summable. In particular,

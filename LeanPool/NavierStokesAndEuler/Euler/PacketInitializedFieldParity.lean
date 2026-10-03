@@ -206,7 +206,7 @@ theorem initializedNormalizedResidualField_odd (Cagree : SourceCoefficientAgreem
     (initializedNormalizedResidualField M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree N hN k hk).ReflectionOdd := by
   have h := initializedResidualField_odd M D hTime τ hτ hτT B δ hδ ξ hs α
-    eM hSym hF hDM hBH Cagree N hN k⁻¹ (inv_ne_zero (by linarith))
+    eM hSym hF hDM hBH Cagree N hN k⁻¹ (inv_ne_zero (by linarith only [hk]))
   exact ((h.multiply (joinedSourceCoefficientData period M D τ hτ hτT B hTime).inverse
     (joinedSourceCoefficientEven period M D τ hτ hτT B hF hDM).inverse).smul k).changeTime hTime
 

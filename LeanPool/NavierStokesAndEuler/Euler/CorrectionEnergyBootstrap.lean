@@ -111,10 +111,7 @@ theorem correction_mild_bootstrap {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤
       (loss_nonneg period S hN K e τ) S.residual_pos.le
       (add_nonneg (inv_nonneg.mpr (S.radius_pos τ).le) S.Rc_nonneg) S.B0_nonneg
     have hh := h.trans h'
-    change A (projIcc 0 T hT t) ≤ C*(X (projIcc 0 T hT t)+(X (projIcc 0 T hT t))^2+S.residual) +
-      ((-2*C*(S.B0+Δ))/(ρ0-2*C*(S.B0+Δ)*t)+C*((ρ0-2*C*(S.B0+Δ)*t)⁻¹+S.Rc) *
-        (S.B0+X (projIcc 0 T hT t)))*Y (projIcc 0 T hT t)
-    rw [projIcc_of_mem hT ⟨ht.1,ht.2.le⟩]
+    simp only [extendPath, projIcc_of_mem hT ⟨ht.1,ht.2.le⟩]
     simpa only [hR τ,hRdot τ] using hh
   have hclosed := close_integral_energy_estimate (extendPath T hT X) (extendPath T hT A)
       (extendPath T hT Y)

@@ -144,8 +144,8 @@ theorem orderedKernel_eq_cancelled
   have hang := lifted_amplitude_angularIndependent G ha hj n 1 (x,0) hx
   have hswitch := switched_longitudinal (G'.radius n) (G'.radial n) (G'.angular n) (G'.axial n)
     (a.frequency n*(j:ℝ)) (a.frequency n*(m:ℝ)) hnu hphase had' hang hd
-  have hratio : (a.frequency n*(m:ℝ))/(a.frequency n*(j:ℝ)) = (m:ℝ)/(j:ℝ) := by
-    field_simp [hk n]
+  have hratio : (a.frequency n*(m:ℝ))/(a.frequency n*(j:ℝ)) = (m:ℝ)/(j:ℝ) :=
+    mul_div_mul_left _ _ (hk n)
   have ht : strippedTransport G'
       (fun n p => amplitude a j n p.1) (fun n p => amplitude b m n p.1) n (x,0) i =
       strippedTransport G (amplitude a j) (amplitude b m) n x i := by

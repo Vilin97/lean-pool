@@ -101,7 +101,7 @@ theorem realLineHeat_hasDerivAt_moment (a : LiftTangent) (f g : LiftL2 period)
   have hbound : ∀ x s : ℝ, s ∈ Set.Ioi (t/2) → ‖F' s x‖ ≤ B x := by
     intro x s hs
     have hspos : 0 < s := hhalf.trans hs
-    dsimp [F', B]
+    dsimp only [Real.norm_eq_abs, F', B]
     rw [norm_smul, lineOrbit_norm, Real.norm_eq_abs, abs_div,
       abs_of_pos (mul_pos (by norm_num) (Real.sqrt_pos.mpr hspos))]
     exact mul_le_mul_of_nonneg_right
@@ -231,8 +231,8 @@ theorem hasDerivAt_apply (A : ℝ → E →L[ℝ] F) (u : ℝ → E) (t : ℝ) (
     HasDerivAt (fun s => A s (u s)) (A t u' + a') t := by
   apply hasDerivAt_iff_tendsto_slope.mpr
   have hfirst : Tendsto (fun s => A s (slope u t s)) (𝓝[≠] t) (𝓝 (A t u')) :=
-    hc.tendsto.comp ((show Tendsto (fun r : ℝ => r) (𝓝[≠] t) (𝓝 t) from
-        nhdsWithin_le_nhds).prodMk_nhds hu.tendsto_slope)
+    (hc.tendsto.comp ((show Tendsto (fun r : ℝ => r) (𝓝[≠] t) (𝓝 t) from
+        nhdsWithin_le_nhds).prodMk_nhds hu.tendsto_slope) :)
   exact (hfirst.add ha.tendsto_slope).congr'
     (Filter.Eventually.of_forall (fun s => (slope_apply A u t s).symm))
 
@@ -243,9 +243,9 @@ theorem hasDerivWithinAt_apply (A : ℝ → E →L[ℝ] F) (u : ℝ → E) (t : 
     HasDerivWithinAt (fun r => A r (u r)) (A t u' + a') s t := by
   apply hasDerivWithinAt_iff_tendsto_slope.mpr
   have hfirst : Tendsto (fun r => A r (slope u t r)) (𝓝[s \ {t}] t) (𝓝 (A t u')) :=
-    hc.tendsto.comp ((show Tendsto (fun r : ℝ => r) (𝓝[s \ {t}] t) (𝓝 t) from
+    (hc.tendsto.comp ((show Tendsto (fun r : ℝ => r) (𝓝[s \ {t}] t) (𝓝 t) from
         nhdsWithin_le_nhds).prodMk_nhds
-      (hasDerivWithinAt_iff_tendsto_slope.mp hu))
+      (hasDerivWithinAt_iff_tendsto_slope.mp hu)) :)
   exact (hfirst.add (hasDerivWithinAt_iff_tendsto_slope.mp ha)).congr'
     (Filter.Eventually.of_forall (fun r => (slope_apply A u t r).symm))
 
@@ -610,7 +610,8 @@ theorem laplacianEvaluation_bound {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpace per
   calc
     _ ≤ ∑ _i : Fin 4, ‖u‖ := Finset.sum_le_sum fun i _ =>
       word_norm_le period u ⟨⟨2, Nat.lt_succ_of_le hq⟩, fun _ : Fin 2 => i⟩
-    _ = _ := by simp
+    _ = _ := by simp only [← ClosedSubmodule.norm_coe, Finset.sum_const, Finset.card_univ,
+        Fintype.card_fin, nsmul_eq_mul, Nat.cast_ofNat]
 
 /-- Bounded Laplacian evaluation agrees exactly with the existing genuine strong-jet Laplacian. -/
 theorem laplacianEvaluation_eq_jet {q : ℕ} (hq : 2 ≤ q) (u : SobolevSpace period q) :

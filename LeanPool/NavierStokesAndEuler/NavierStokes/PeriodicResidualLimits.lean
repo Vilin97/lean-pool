@@ -363,9 +363,7 @@ theorem boundaryLimits_hasFDerivAt {A : VelocityField} {p : PressureField}
       ((boundaryLimits A p eA ep x (n + 1)).curryLeft.comp
         (ContinuousLinearMap.inr ℝ ℝ Space)) x := by
   have hd := extendedJets_compatible hA hp hz eA ep n (1, x) ⟨le_refl (1 : ℝ), mem_univ x⟩
-  have hi : HasFDerivAt (fun y : Space => ((1 : ℝ), y))
-      (ContinuousLinearMap.inr ℝ ℝ Space) x :=
-    (hasFDerivAt_const (1 : ℝ) x).prodMk (hasFDerivAt_id x)
+  have hi := hasFDerivAt_prodMk_right (𝕜 := ℝ) (1 : ℝ) x
   have hc := hd.comp x (hi.hasFDerivWithinAt (s := univ))
     (fun y _ => show ((1 : ℝ), y) ∈ SpacetimeEndpoint.closedPast 1 from
       ⟨le_refl (1 : ℝ), mem_univ y⟩)

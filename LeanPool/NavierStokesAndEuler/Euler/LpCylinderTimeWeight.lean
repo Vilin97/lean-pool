@@ -31,32 +31,44 @@ variable (period : ℝ) [Fact (0 < period)]
 
 theorem supportedMultiplier_weight (A : C(K, Space →ᵇ E →L[ℝ] F))
     (u : C(K, Supported period E S hS)) :
-    supportedMultiplierMap period S hS A (weight g u) =
-      weight g (supportedMultiplierMap period S hS A u) := by
+    supportedMultiplierMap (K := K) (E := E) (F := F) period S hS A
+        (weight (E := Supported period E S hS) g u) =
+      weight (E := Supported period F S hS) g
+        (supportedMultiplierMap (K := K) (E := E) (F := F) period S hS A u) := by
   apply ContinuousMap.ext
   intro t
-  exact (supportedOperatorMap period S hS (A t)).map_smul (g t) (u t)
+  exact (supportedOperatorMap (E := E) (F := F) period S hS (A t)).map_smul (g t) (u t)
 
 theorem supportedMultiplier_normalize (hg : ∀ t, 0 < g t)
     (A : C(K, Space →ᵇ E →L[ℝ] F)) (u : C(K, Supported period E S hS)) :
-    supportedMultiplierMap period S hS A (normalize g hg u) =
-      normalize g hg (supportedMultiplierMap period S hS A u) :=
+    supportedMultiplierMap (K := K) (E := E) (F := F) period S hS A
+        (EulerContinuousTimeWeight.normalize (E := Supported period E S hS) g hg u) =
+      EulerContinuousTimeWeight.normalize (E := Supported period F S hS) g hg
+        (supportedMultiplierMap (K := K) (E := E) (F := F) period S hS A u) :=
   supportedMultiplier_weight period S hS (reciprocal g hg) A u
 
 theorem include_weight (u : C(K, Supported period E S hS)) :
-    includePath period S hS (weight g u) = weight g (includePath period S hS u) := rfl
+    includePath (V := E) (K := K) period S hS (weight (E := Supported period E S hS) g u) =
+      weight (E := CylinderL2 period E) g (includePath (V := E) (K := K) period S hS u) := rfl
 
 theorem include_normalize (hg : ∀ t, 0 < g t) (u : C(K, Supported period E S hS)) :
-    includePath period S hS (normalize g hg u) = normalize g hg (includePath period S hS u) := rfl
+    includePath (V := E) (K := K) period S hS
+        (EulerContinuousTimeWeight.normalize (E := Supported period E S hS) g hg u) =
+      EulerContinuousTimeWeight.normalize (E := CylinderL2 period E) g hg
+          (includePath (V := E) (K := K) period S hS u) := rfl
 
 theorem translate_weight (a : LiftTangent) (u : C(K, CylinderL2 period E)) :
-    pathTranslate period a (weight g u) = weight g (pathTranslate period a u) := by
+    pathTranslate (V := E) (K := K) period a (weight (E := CylinderL2 period E) g u) =
+      weight (E := CylinderL2 period E) g (pathTranslate (V := E) (K := K) period a u) := by
   apply ContinuousMap.ext
   intro t
-  exact (translate period a).map_smul (g t) (u t)
+  exact (translate (V := E) period a).map_smul (g t) (u t)
 
 theorem translate_normalize (hg : ∀ t, 0 < g t) (a : LiftTangent) (u : C(K, CylinderL2 period E)) :
-    pathTranslate period a (normalize g hg u) = normalize g hg (pathTranslate period a u) :=
+    pathTranslate (V := E) (K := K) period a
+        (EulerContinuousTimeWeight.normalize (E := CylinderL2 period E) g hg u) =
+      EulerContinuousTimeWeight.normalize (E := CylinderL2 period E) g hg
+          (pathTranslate (V := E) (K := K) period a u) :=
   translate_weight period (reciprocal g hg) a u
 
 end EulerLpCylinderRectangular

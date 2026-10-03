@@ -91,14 +91,15 @@ theorem primitive_norm : ‖primitive period‖ ≤ period := by
 
 /-- All mixed translations commute with the actual scalar primitive. -/
 theorem primitive_translation (a : LiftTangent) (u : CylinderL2 period ℝ) :
-    primitive period (translate period a u) = translate period a (primitive period u) := by
+    primitive period (translate (V := ℝ) period a u) =
+      translate (V := ℝ) period a (primitive period u) := by
   change EulerCylinderConstantMap.map period scalarProject
       (EulerCylinderAnglePrimitive.primitive period (EulerCylinderConstantMap.map period scalarEmbed
-        (translate period a u))) = _
+        (translate (V := ℝ) period a u))) = _
   rw [map_translation]
   have hv : EulerCylinderAnglePrimitive.primitive period
-      (translate period a (EulerCylinderConstantMap.map period scalarEmbed u)) =
-      translate period a (EulerCylinderAnglePrimitive.primitive period
+      (translate (V := Vector3) period a (EulerCylinderConstantMap.map period scalarEmbed u)) =
+      translate (V := Vector3) period a (EulerCylinderAnglePrimitive.primitive period
           (EulerCylinderConstantMap.map period scalarEmbed u)) :=
     EulerCylinderAnglePrimitive.primitive_translation period (coveringMap period a)
       (EulerCylinderConstantMap.map period scalarEmbed u)
@@ -139,36 +140,41 @@ theorem pathPrimitive_norm : ‖pathPrimitive (K := K) period‖ ≤ period := b
 
 omit [CompactSpace K] in
 theorem pathPrimitive_translation (a : LiftTangent) (u : C(K, CylinderL2 period ℝ)) :
-    pathPrimitive period (pathTranslate period a u) = pathTranslate period a (pathPrimitive period
-        u) := by
+    pathPrimitive (K := K) period (pathTranslate (K := K) (V := ℝ) period a u) =
+      pathTranslate (K := K) (V := ℝ) period a (pathPrimitive (K := K) period u) := by
   apply ContinuousMap.ext
   intro t
   exact primitive_translation period a (u t)
 
 theorem pathPrimitive_orbit_contDiff (u : C(K, CylinderL2 period ℝ))
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (pathPrimitive period u)) := by
-  have he : (fun a : LiftTangent => pathTranslate period a (pathPrimitive period u)) =
-      (fun a => pathPrimitive period (pathTranslate period a u)) :=
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := ℝ) period a u)) :
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := ℝ) period a (pathPrimitive (K := K) period u)) := by
+  have he : (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := ℝ) period a (pathPrimitive (K := K) period u)) =
+      (fun a => pathPrimitive (K := K) period (pathTranslate (K := K) (V := ℝ) period a u)) :=
     funext (fun a => (pathPrimitive_translation period a u).symm)
   rw [he]
-  exact (pathPrimitive period).contDiff.comp hu
+  exact (pathPrimitive (K := K) period).contDiff.comp hu
 
 theorem pathPrimitive_block_le {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
-    (u : C(K, CylinderL2 period ℝ)) (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period
-        a u))
+    (u : C(K, CylinderL2 period ℝ))
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := ℝ) period a u))
     (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b : LiftTangent => pathTranslate period b (pathPrimitive period u)) n a
-        ≤
-      period*block directions q (fun b : LiftTangent => pathTranslate period b u) n a := by
-  have he : (fun b : LiftTangent => pathTranslate period b (pathPrimitive period u)) =
-      (fun b => pathPrimitive period (pathTranslate period b u)) :=
+    block directions q (fun b : LiftTangent =>
+        pathTranslate (K := K) (V := ℝ) period b (pathPrimitive (K := K) period u)) n a ≤
+      period*block directions q
+        (fun b : LiftTangent => pathTranslate (K := K) (V := ℝ) period b u) n a := by
+  have he : (fun b : LiftTangent =>
+      pathTranslate (K := K) (V := ℝ) period b (pathPrimitive (K := K) period u)) =
+      (fun b => pathPrimitive (K := K) period (pathTranslate (K := K) (V := ℝ) period b u)) :=
     funext (fun b => (pathPrimitive_translation period b u).symm)
   rw [he]
   exact (block_comp_clm_le (P := LiftTangent) (E := C(K,CylinderL2 period ℝ))
     (F := C(K,CylinderL2 period ℝ)) directions q (pathPrimitive (K := K) period)
-    (fun b : LiftTangent => pathTranslate period b u) hu n a).trans
+    (fun b : LiftTangent => pathTranslate (K := K) (V := ℝ) period b u) hu n a).trans
     (mul_le_mul_of_nonneg_right (pathPrimitive_norm (K := K) period)
-      (block_nonneg directions q (fun b : LiftTangent => pathTranslate period b u) n a))
+      (block_nonneg directions q
+        (fun b : LiftTangent => pathTranslate (K := K) (V := ℝ) period b u) n a))
 
 end EulerCylinderScalarPrimitive

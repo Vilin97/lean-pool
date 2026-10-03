@@ -141,16 +141,14 @@ end LinearCutoffOperation
 theorem cutoffCurl_hasFDerivAt (χ : Cutoff) (a : Space) :
     HasFDerivAt (fun b : Space => cutoffCurl (χ.translate b))
       (cutoffDirectionalMap cutoffCurl cutoffCurl_add cutoffCurl_scale (χ.translate a)) a :=
-  cutoffOperation_hasFDerivAt cutoffCurl cutoffCurl_add cutoffCurl_scale cutoffCurl_sub
-    cutoffCurl_norm_le χ a
+  cutoffOperation_hasFDerivAt _ _ _ cutoffCurl_sub cutoffCurl_norm_le χ a
 
 /-- Actual Fréchet derivative of the weak Newtonian potential. -/
 theorem weakPotential_hasFDerivAt (χ : Cutoff) (a : Space) :
     HasFDerivAt (fun b : Space => weakPotential (χ.translate b))
       (cutoffDirectionalMap weakPotential weakPotential_add weakPotential_scale (χ.translate a)) a
           :=
-  cutoffOperation_hasFDerivAt weakPotential weakPotential_add weakPotential_scale weakPotential_sub
-    weakPotential_operatorNorm_le χ a
+  cutoffOperation_hasFDerivAt _ _ _ weakPotential_sub weakPotential_operatorNorm_le χ a
 
 theorem cutoffCurl_contDiff (χ : Cutoff) :
     ContDiff ℝ ∞ (fun a : Space => cutoffCurl (χ.translate a)) :=

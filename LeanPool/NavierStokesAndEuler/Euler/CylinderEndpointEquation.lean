@@ -36,37 +36,49 @@ variable (P : ℝ) [Fact (0 < P)] {T : ℝ} {U E : Type*}
 theorem endpoint_coordinate_equation_ae (t : Icc (0 : ℝ) T) :
     ∀ᵐ x ∂liftMeasure P,
       gram (D.Q t x.1) (D.endpointAcceleration P Y t x) =
-        (D.Q t x.1).adjoint ((-2 : ℝ) • D.Q₁ t x.1 (D.endpointCoordinate P Y t x)) := by
+        adjoint (𝕜 := ℝ) (E := U) (F := E) (D.Q t x.1)
+          ((-2 : ℝ) • D.Q₁ t x.1 (D.endpointCoordinate P Y t x)) := by
   let v := D.endpointCoordinate P Y t
   let a := D.endpointAcceleration P Y t
-  let r := (-2 : ℝ) • fullOperatorMap P (D.Q₁ t) v
-  have he : (fullOperatorMap P (D.Q t)).adjoint (fullOperatorMap P (D.Q t) a) =
-      (fullOperatorMap P (D.Q t)).adjoint r := D.endpoint_projected_equation P Y t
+  let r := (-2 : ℝ) • fullOperatorMap (E := U) (F := E) P (D.Q₁ t) v
+  have he : adjoint (𝕜 := ℝ) (E := CylinderL2 P U) (F := CylinderL2 P E)
+        (fullOperatorMap (E := U) (F := E) P (D.Q t))
+        (fullOperatorMap (E := U) (F := E) P (D.Q t) a) =
+      adjoint (𝕜 := ℝ) (E := CylinderL2 P U) (F := CylinderL2 P E)
+        (fullOperatorMap (E := U) (F := E) P (D.Q t)) r := D.endpoint_projected_equation P Y t
   rw [fullOperatorMap_adjoint] at he
   filter_upwards [
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (adjointMap (D.Q t)))
-      (fullOperatorMap P (D.Q t) a),
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (D.Q t)) a,
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (adjointMap (D.Q t))) r,
-    Lp.coeFn_smul (-2 : ℝ) (fullOperatorMap P (D.Q₁ t) v),
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (D.Q₁ t)) v]
+    EulerLpOperatorField.full_ae (liftMeasure P)
+      (fieldLift (W := E →L[ℝ] U) P (adjointMap (α := Space) (U := U) (E := E) (D.Q t)))
+      (fullOperatorMap (E := U) (F := E) P (D.Q t) a),
+    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift (W := U →L[ℝ] E) P (D.Q t)) a,
+    EulerLpOperatorField.full_ae (liftMeasure P)
+      (fieldLift (W := E →L[ℝ] U) P (adjointMap (α := Space) (U := U) (E := E) (D.Q t))) r,
+    Lp.coeFn_smul (-2 : ℝ) (fullOperatorMap (E := U) (F := E) P (D.Q₁ t) v),
+    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift (W := U →L[ℝ] E) P (D.Q₁ t)) v]
     with x hl hq hr hs hq₁
   have hp := congrArg (fun w : CylinderL2 P U => w x) he
-  change fullOperatorMap P (adjointMap (D.Q t)) (fullOperatorMap P (D.Q t) a) x =
-    fullOperatorMap P (adjointMap (D.Q t)) r x at hp
-  change fullOperatorMap P (adjointMap (D.Q t)) (fullOperatorMap P (D.Q t) a) x =
-    (D.Q t x.1).adjoint (fullOperatorMap P (D.Q t) a x) at hl
-  change fullOperatorMap P (D.Q t) a x = D.Q t x.1 (a x) at hq
-  change fullOperatorMap P (adjointMap (D.Q t)) r x = (D.Q t x.1).adjoint (r x) at hr
-  change r x = (-2 : ℝ) • (fullOperatorMap P (D.Q₁ t) v x) at hs
-  change fullOperatorMap P (D.Q₁ t) v x = D.Q₁ t x.1 (v x) at hq₁
-  rw [hl,hq,hr,hs,hq₁] at hp
-  exact hp
+  change fullOperatorMap (E := E) (F := U) P (adjointMap (α := Space) (U := U) (E := E) (D.Q t))
+      (fullOperatorMap (E := U) (F := E) P (D.Q t) a) x =
+    fullOperatorMap (E := E) (F := U) P (adjointMap (α := Space) (U := U) (E := E) (D.Q t))
+      r x at hp
+  change fullOperatorMap (E := E) (F := U) P (adjointMap (α := Space) (U := U) (E := E) (D.Q t))
+      (fullOperatorMap (E := U) (F := E) P (D.Q t) a) x =
+    adjoint (𝕜 := ℝ) (E := U) (F := E) (D.Q t x.1)
+      (fullOperatorMap (E := U) (F := E) P (D.Q t) a x) at hl
+  change fullOperatorMap (E := U) (F := E) P (D.Q t) a x = D.Q t x.1 (a x) at hq
+  change fullOperatorMap (E := E) (F := U) P (adjointMap (α := Space) (U := U) (E := E) (D.Q t))
+      r x = adjoint (𝕜 := ℝ) (E := U) (F := E) (D.Q t x.1) (r x) at hr
+  change r x = (-2 : ℝ) • (fullOperatorMap (E := U) (F := E) P (D.Q₁ t) v x) at hs
+  change fullOperatorMap (E := U) (F := E) P (D.Q₁ t) v x = D.Q₁ t x.1 (v x) at hq₁
+  have hA {u w : E} (h : u = w) := congrArg (adjoint (𝕜 := ℝ) (E := U) (F := E) (D.Q t x.1)) h
+  exact (hA hq).symm.trans (hl.symm.trans (hp.trans (hr.trans
+    (hA (hs.trans (congrArg ((-2 : ℝ) • ·) hq₁))))))
 
 theorem endpointVelocity_ae (t : Icc (0 : ℝ) T) :
     D.endpointVelocity P Y t =ᵐ[liftMeasure P] fun x =>
       D.Q t x.1 (D.endpointCoordinate P Y t x) :=
-  EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (D.Q t)) _
+  EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift (W := U →L[ℝ] E) P (D.Q t)) _
 
 theorem endpointDerivative_ae (t : Icc (0 : ℝ) T) :
     D.endpointDerivative P Y t =ᵐ[liftMeasure P] fun x =>
@@ -74,9 +86,10 @@ theorem endpointDerivative_ae (t : Icc (0 : ℝ) T) :
   let v := D.endpointCoordinate P Y t
   let a := D.endpointAcceleration P Y t
   filter_upwards [
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (D.Q₁ t)) v,
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (D.Q t)) a,
-    Lp.coeFn_add (fullOperatorMap P (D.Q₁ t) v) (fullOperatorMap P (D.Q t) a)] with x h₁ h₂ hs
+    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift (W := U →L[ℝ] E) P (D.Q₁ t)) v,
+    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift (W := U →L[ℝ] E) P (D.Q t)) a,
+    Lp.coeFn_add (fullOperatorMap (E := U) (F := E) P (D.Q₁ t) v)
+      (fullOperatorMap (E := U) (F := E) P (D.Q t) a)] with x h₁ h₂ hs
   exact hs.trans (congrArg₂ (·+·) h₁ h₂)
 
 theorem endpoint_physical_balance_ae

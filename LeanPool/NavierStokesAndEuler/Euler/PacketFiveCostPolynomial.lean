@@ -15,6 +15,10 @@ primitive source bounds, not a per-parent eventual-frequency assertion. -/
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -173,22 +177,60 @@ theorem drift_mono {R H C X : ℝ} (hR : 0 ≤ R) (hH : 0 ≤ H) (hC : 0 ≤ C)
   unfold fixedVelocityGradeCost
   gcongr
 
+private theorem pair_add {a a' b b' : ℝ} (ha : 0 ≤ a ∧ a ≤ a') (hb : 0 ≤ b ∧ b ≤ b') :
+    0 ≤ a + b ∧ a + b ≤ a' + b' :=
+  ⟨add_nonneg ha.1 hb.1, add_le_add ha.2 hb.2⟩
+
+private theorem pair_mul {a a' b b' : ℝ} (ha : 0 ≤ a ∧ a ≤ a') (hb : 0 ≤ b ∧ b ≤ b') :
+    0 ≤ a * b ∧ a * b ≤ a' * b' :=
+  ⟨mul_nonneg ha.1 hb.1, mul_le_mul ha.2 hb.2 hb.1 (ha.1.trans ha.2)⟩
+
+private theorem pair_pow {a a' : ℝ} (ha : 0 ≤ a ∧ a ≤ a') (n : ℕ) :
+    0 ≤ a ^ n ∧ a ^ n ≤ a' ^ n :=
+  ⟨pow_nonneg ha.1 n, pow_le_pow_left₀ ha.1 ha.2 n⟩
+
+private theorem pair_div {a a' c : ℝ} (ha : 0 ≤ a ∧ a ≤ a') (hc : 0 ≤ c) :
+    0 ≤ a / c ∧ a / c ≤ a' / c :=
+  ⟨div_nonneg ha.1 hc, div_le_div_of_nonneg_right ha.2 hc⟩
+
+private theorem pair_const {c : ℝ} (hc : 0 ≤ c) : 0 ≤ c ∧ c ≤ c := ⟨hc, le_rfl⟩
+
 private theorem rawGrowth_mono {i m f t B M A0 A2 B0 B1 X Y0 Y1 : ℝ}
     (hi : 0 ≤ i) (_hm : 0 ≤ m) (hf : 0 ≤ f) (_ht : 0 ≤ t) (hB : 0 ≤ B) (hM : 0 ≤ M)
     (hA0 : 0 ≤ A0) (hA2 : 0 ≤ A2) (hB0 : 0 ≤ B0) (hB1 : 0 ≤ B1)
     (hiX : i ≤ X) (hmX : m ≤ X) (hfX : f ≤ X) (htX : t ≤ X) (hBX : B ≤ X)
     (hMX : M ≤ X) (hA0X : A0 ≤ X) (hA2X : A2 ≤ X) (hB0X : B0 ≤ Y0) (hB1X : B1 ≤ Y1) :
     rawGrowth P i m f t B M A0 A2 B0 B1 ≤ rawGrowth P X X X X X X X X Y0 Y1 := by
-  have hX : 0 ≤ X := hi.trans hiX
-  have hY0 : 0 ≤ Y0 := hB0.trans hB0X
-  have hY1 : 0 ≤ Y1 := hB1.trans hB1X
-  have hp := productConstant_nonneg P 3
+  have hp := pair_const (productConstant_nonneg P 3)
   have hb := baseTransportConstant_nonneg P
   have hl := lowerProductConstant_nonneg P 3
-  have he := sobolevEmbeddingConstant_nonneg P 6
+  have he := pair_const (sobolevEmbeddingConstant_nonneg P 6)
+  have Pi : 0 ≤ i ∧ i ≤ X := ⟨hi, hiX⟩
+  have Pμ := pair_add (pair_const zero_le_one) (pair_mul (pair_const (Real.sqrt_nonneg 5461)) Pi)
+  have Pi2 := pair_pow Pi 2
+  have Pfi := pair_mul (pair_mul ⟨hf, hfX⟩ Pi2) he
+  have Pg0 := pair_add (pair_div (pair_mul (pair_add ⟨_ht, htX⟩
+    (pair_mul (pair_mul (pair_const (by norm_num : (0 : ℝ) ≤ 4)) (pair_pow ⟨hf, hfX⟩ 2)) Pi2))
+      Pi2) zero_le_two) (pair_mul Pfi ⟨hB0, hB0X⟩)
+  have Pk := pair_mul ⟨_hm, hmX⟩ Pi
+  have PM : 0 ≤ M ∧ M ≤ X := ⟨hM, hMX⟩
+  have Ps := pair_add (pair_const zero_le_one) (pair_mul (pair_mul (pair_const zero_le_two) PM)
+    (pair_add (pair_mul (pair_const (by norm_num : (0 : ℝ) ≤ 3136)) ⟨hB, hBX⟩)
+      (pair_const zero_le_one)))
+  have Ptr := pair_add (pair_const (mul_nonneg (by norm_num : (0 : ℝ) ≤ 5461) hb))
+    (pair_mul (pair_mul (pair_const (by norm_num : (0 : ℝ) ≤ 2688)) ⟨hB, hBX⟩)
+      (pair_mul (pair_mul (pair_const (by norm_num : (0 : ℝ) ≤ 8)) PM)
+        (pair_const (mul_nonneg (by norm_num : (0 : ℝ) ≤ 5460) hl))))
+  have P1 := pair_mul (pair_add (pair_mul Ps (pair_add (pair_add (pair_mul hp ⟨hB1, hB1X⟩)
+    ⟨hA0, hA0X⟩) (pair_mul (pair_mul (pair_mul (pair_const zero_le_two) ⟨hA2, hA2X⟩) hp)
+      ⟨hB0, hB0X⟩))) (pair_mul Ptr ⟨hB0, hB0X⟩)) Pμ
+  have P2 := pair_mul (pair_add (pair_mul (pair_mul Ps ⟨hA2, hA2X⟩) hp) Ptr) (pair_pow Pμ 2)
+  have P3 := pair_mul (pair_mul (pair_add (pair_const (by norm_num : (0 : ℝ) ≤ 4))
+    (pair_mul (pair_const (by norm_num : (0 : ℝ) ≤ 32)) PM)) hp) (pair_pow Pμ 2)
   unfold rawGrowth sourceConstant transportConstant lossConstant
   dsimp only
-  gcongr
+  exact (pair_add (pair_add (pair_add (pair_add (pair_add (pair_add (pair_const zero_le_one) Pg0)
+    (pair_mul Pfi Pμ)) (pair_mul Pk Ps)) (pair_mul Pk P1)) (pair_mul Pk P2)) (pair_mul Pk P3)).2
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U) (Kc : CorrectionCoefficientBudget D P)

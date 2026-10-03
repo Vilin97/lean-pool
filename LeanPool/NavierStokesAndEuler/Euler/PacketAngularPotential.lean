@@ -51,7 +51,7 @@ theorem primitive_bound (P M : ℝ) (hP : 0 < P) (hM : 0 ≤ M) (f : ℝ → E)
     calc
       _ ≤ P⁻¹*((M*P)*P) := mul_le_mul_of_nonneg_left hint (inv_nonneg.mpr hP.le)
       _ = M*P := by field_simp
-  exact (norm_sub_le _ _).trans (by linarith [hraw θ hθ, hmean])
+  exact (norm_sub_le _ _).trans (by linarith only [hmean, hraw, hθ, hraw θ hθ])
 
 end EulerAngleMeanZeroPrimitive
 

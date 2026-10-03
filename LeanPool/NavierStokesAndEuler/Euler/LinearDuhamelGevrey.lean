@@ -65,26 +65,34 @@ theorem derivative_recurrence
   have hfreeze : u = (H ∘ a) + (K ∘ q) := funext heq
   have hzero : ‖iteratedFDeriv ℝ 0 C x‖ = 0 := by
     rw [norm_iteratedFDeriv_zero]
-    simp [C]
+    simp only [sub_self, norm_zero, C]
   have hpositive (j : ℕ) : iteratedFDeriv ℝ (j+1) C x = iteratedFDeriv ℝ (j+1) B x := by
-    change iteratedFDeriv ℝ (j+1) (B - fun _ => B x) x = _
-    rw [iteratedFDeriv_sub_apply (hB.contDiffAt.of_le (by simp)) contDiffAt_const]
+    have hCB : C = B - fun _ => B x := rfl
+    rw [hCB, iteratedFDeriv_sub_apply (hB.contDiffAt.of_le (by simp only [Nat.cast_add,
+        Nat.cast_one, WithTop.le_coe_top, ne_eq, WithTop.add_eq_top, WithTop.natCast_ne_top,
+        WithTop.one_ne_top, or_self, not_false_eq_true])) contDiffAt_const]
     simp only [iteratedFDeriv_succ_const, Pi.zero_apply, sub_zero]
-  have hprod := norm_iteratedFDeriv_clm_apply hC hu x (n := n) (by simp)
+  have hprod := norm_iteratedFDeriv_clm_apply hC hu x (n := n) (by simp only [WithTop.le_coe_top,
+      ne_eq, WithTop.natCast_ne_top, not_false_eq_true])
   rw [sum_range_succ'] at hprod
   simp only [hzero, mul_zero, zero_mul, add_zero, hpositive] at hprod
   have hqnorm : ‖iteratedFDeriv ℝ n q x‖ ≤
       ‖iteratedFDeriv ℝ n f x‖ + ‖iteratedFDeriv ℝ n p x‖ := by
     change ‖iteratedFDeriv ℝ n (f+p) x‖ ≤ _
-    rw [iteratedFDeriv_add_apply (hf.contDiffAt.of_le (by simp)) (hp.contDiffAt.of_le (by simp))]
+    rw [iteratedFDeriv_add_apply (hf.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true])) (hp.contDiffAt.of_le (by simp))]
     exact norm_add_le _ _
-  have hH := H.norm_iteratedFDeriv_comp_left (x := x) ha.contDiffAt (n := n) (by simp)
-  have hK := K.norm_iteratedFDeriv_comp_left (x := x) hq.contDiffAt (n := n) (by simp)
+  have hH := H.norm_iteratedFDeriv_comp_left (x := x) ha.contDiffAt (n := n) (by simp only [
+      WithTop.le_coe_top, ne_eq, WithTop.natCast_ne_top, not_false_eq_true])
+  have hK := K.norm_iteratedFDeriv_comp_left (x := x) hq.contDiffAt (n := n) (by simp only [
+      WithTop.le_coe_top, ne_eq, WithTop.natCast_ne_top, not_false_eq_true])
   have hsum : ‖iteratedFDeriv ℝ n u x‖ ≤
       ‖iteratedFDeriv ℝ n (H ∘ a) x‖ + ‖iteratedFDeriv ℝ n (K ∘ q) x‖ := by
     conv_lhs => rw [hfreeze]
-    rw [iteratedFDeriv_add_apply ((H.contDiff.comp ha).contDiffAt.of_le (by simp))
-      ((K.contDiff.comp hq).contDiffAt.of_le (by simp))]
+    rw [iteratedFDeriv_add_apply ((H.contDiff.comp ha).contDiffAt.of_le (by simp only [
+        WithTop.le_coe_top, ne_eq, WithTop.natCast_ne_top, not_false_eq_true]))
+      ((K.contDiff.comp hq).contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+          WithTop.natCast_ne_top, not_false_eq_true]))]
     exact norm_add_le _ _
   exact hsum.trans (add_le_add hH (hK.trans (mul_le_mul_of_nonneg_left
     (hqnorm.trans (add_le_add le_rfl hprod)) (norm_nonneg K))))
@@ -145,15 +153,13 @@ local instance instLinearDuhamelGevrey8 : NormedSpace ℝ (C(Icc (0 : ℝ) T,E) 
 theorem weightedSolution_contDiff {n : ℕ∞ω} (hB : ContDiff ℝ n B)
     (hf : ContDiff ℝ n f) (ha₀ : ContDiff ℝ n a₀) :
     ContDiff ℝ n (fun x => (U x).weightedSolution g hg (f x) (a₀ x)) := by
-  have hw : ContDiff ℝ n (fun x => weight g (f x)) := by
+  have hw : ContDiff ℝ n (fun x => weight (E := E) g (f x)) := by
     change ContDiff ℝ n ((weight (E := E) g) ∘ f)
-    exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
-      (E := C(Icc (0 : ℝ) T,E)) (F := C(Icc (0 : ℝ) T,E)) (weight g)).comp hf
-  have hs := solution_contDiff T hT B U (fun x => weight g (f x)) a₀ hB hw ha₀
-  change ContDiff ℝ n ((normalize (E := E) g hg) ∘
-    (fun x => (U x).solution (weight g (f x)) (a₀ x)))
-  exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
-    (E := C(Icc (0 : ℝ) T,E)) (F := C(Icc (0 : ℝ) T,E)) (normalize g hg)).comp hs
+    exact (weight (E := E) g).contDiff.comp hf
+  have hs := solution_contDiff T hT B U (fun x => weight (E := E) g (f x)) a₀ hB hw ha₀
+  change ContDiff ℝ n ((EulerContinuousTimeWeight.normalize (E := E) g hg) ∘
+    (fun x => (U x).solution (weight (E := E) g (f x)) (a₀ x)))
+  exact (EulerContinuousTimeWeight.normalize (E := E) g hg).contDiff.comp hs
 
 /-- The exact differentiated ODE yields a triangular estimate in the fixed
 profile norm, with the same homogeneous and Green operators at every order. -/
@@ -164,7 +170,7 @@ theorem weightedSolution_derivative_recurrence
     (x : P) (n : ℕ) :
     ‖iteratedFDeriv ℝ n (fun y => (U y).weightedSolution g hg (f y) (a₀ y)) x‖ ≤
       C*‖iteratedFDeriv ℝ n a₀ x‖ + (C*T) *
-        (‖iteratedFDeriv ℝ n f x‖ + ∑ j ∈ range n,
+        (‖iteratedFDeriv ℝ n f x‖ + ∑ j ∈ Finset.range n,
           (n.choose (j+1) : ℝ) * ‖iteratedFDeriv ℝ (j+1) (fun y => multiplier (B y)) x‖ *
             ‖iteratedFDeriv ℝ (n-(j+1))
               (fun y => (U y).weightedSolution g hg (f y) (a₀ y)) x‖) := by
@@ -182,7 +188,9 @@ theorem weightedSolution_derivative_recurrence
     ((U x).weightedInitial g hg) ((U x).weightedForcing g hg) hfreeze n
   exact hr.trans (add_le_add
     (mul_le_mul_of_nonneg_right ((U x).weightedInitial_norm g hg hg₀ C hC (hU x)) (norm_nonneg _))
-    (mul_le_mul_of_nonneg_right ((U x).weightedForcing_norm g hg hg₀ C hC (hU x)) (by positivity)))
+    (mul_le_mul_of_nonneg_right ((U x).weightedForcing_norm g hg hg₀ C hC (hU x))
+      (add_nonneg (norm_nonneg _) (Finset.sum_nonneg fun _ _ =>
+        mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (norm_nonneg _)) (norm_nonneg _)))))
 
 /-- The fixed polynomial amplitude controlling the differentiated forward solve. -/
 def forwardCost (T C A D CB : ℝ) : ℝ := 1 + C*A + C*T*(D+CB)
@@ -206,22 +214,23 @@ theorem weightedSolution_gevrey
   let M := forwardCost T C A D CB
   have hCT : 0 ≤ C*T := mul_nonneg hC hT
   have hM : 1 ≤ M := by
-    dsimp [M,forwardCost]
-    linarith [mul_nonneg hC hA, mul_nonneg hCT (add_nonneg hD hCB)]
+    dsimp only [forwardCost, M]
+    linarith only [mul_nonneg hC hA, mul_nonneg hCT (add_nonneg hD hCB)]
   have hR0 : 0 ≤ R := le_trans
-    (mul_nonneg (mul_nonneg (by norm_num) (le_trans zero_le_one hM)) (by linarith)) hR
+    (mul_nonneg (mul_nonneg (by norm_num) (le_trans zero_le_one hM)) (by linarith only [hRc])) hR
   have htop : C*A + C*T*D ≤ M := by
-    dsimp [M,forwardCost]
-    linarith [mul_nonneg hCT hCB]
+    dsimp only [forwardCost, M]
+    linarith only [mul_nonneg hCT hCB]
   have hcoef : C*T*CB ≤ M := by
-    dsimp [M,forwardCost]
-    linarith [mul_nonneg hC hA, mul_nonneg hCT hD]
+    dsimp only [forwardCost, M]
+    linarith only [mul_nonneg hC hA, mul_nonneg hCT hD]
   apply triangular_inverse_majorant M Rc R hM hRc hR d
     (fun k => majorant R d k) (fun k => ‖iteratedFDeriv ℝ k u x‖) (fun _ => le_rfl) _ n
   intro k
-  let S : ℝ := ∑ j ∈ range k, (k.choose (j+1) : ℝ) * Rc^(j+1) *
+  let S : ℝ := ∑ j ∈ Finset.range k, (k.choose (j+1) : ℝ) * Rc^(j+1) *
     ((j+1).factorial : ℝ)^2 * ‖iteratedFDeriv ℝ (k-(j+1)) u x‖
-  have hS : 0 ≤ S := by dsimp [S]; positivity
+  have hS : 0 ≤ S := Finset.sum_nonneg fun j _ => mul_nonneg
+    (mul_nonneg (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg hRc _)) (sq_nonneg _)) (norm_nonneg _)
   have hmajor : 0 ≤ majorant R d k := majorant_nonneg R hR0 d k
   have hcoeffOp (j : ℕ) :
       ‖iteratedFDeriv ℝ (j+1) (fun y => multiplier (B y)) x‖ ≤
@@ -230,18 +239,20 @@ theorem weightedSolution_gevrey
       (𝕜 := ℝ) (E := P) (F := C(Icc (0 : ℝ) T,E →L[ℝ] E))
       (G := C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))
       (coefficientMap (K := Icc (0 : ℝ) T) (E := E) (F := E))
-      (x := x) hB.contDiffAt (n := j+1) (by simp)
+      (x := x) hB.contDiffAt (n := j+1) (by simp only [Nat.cast_add, Nat.cast_one,
+          WithTop.le_coe_top, ne_eq, WithTop.add_eq_top, WithTop.natCast_ne_top, WithTop.one_ne_top,
+          or_self, not_false_eq_true])
     exact hl.trans ((mul_le_mul_of_nonneg_right coefficientMap_norm (norm_nonneg _)).trans
       (by simpa only [one_mul] using hcoeff j x))
-  have hsum : (∑ j ∈ range k, (k.choose (j+1) : ℝ) *
+  have hsum : (∑ j ∈ Finset.range k, (k.choose (j+1) : ℝ) *
       ‖iteratedFDeriv ℝ (j+1) (fun y => multiplier (B y)) x‖ *
       ‖iteratedFDeriv ℝ (k-(j+1)) u x‖) ≤ CB*S := by
-    dsimp [S]
+    dsimp only [S]
     rw [mul_sum]
     apply sum_le_sum
     intro j _
     have hh := mul_le_mul_of_nonneg_right
-      (mul_le_mul_of_nonneg_left (hcoeffOp j) (by positivity : (0 : ℝ) ≤ k.choose (j+1)))
+      (mul_le_mul_of_nonneg_left (hcoeffOp j) (Nat.cast_nonneg (k.choose (j+1))))
       (norm_nonneg (iteratedFDeriv ℝ (k-(j+1)) u x))
     convert hh using 1
     ring

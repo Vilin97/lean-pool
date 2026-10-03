@@ -35,7 +35,8 @@ def labelFrameDerivative (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathE
 /-- Label frame second, given by `pathEvaluation x D.Q₂`. -/
 def labelFrameSecond (x : Space) : C(Icc (0 : ℝ) T,U →L[ℝ] E) := pathEvaluation x D.Q₂
 /-- Label hessian, given by `pathEvaluation x D.H`. -/
-def labelHessian (x : Space) : C(Icc (0 : ℝ) T,E →L[ℝ] E) := pathEvaluation x D.H
+def labelHessian (x : Space) : C(Icc (0 : ℝ) T,E →L[ℝ] E) :=
+  pathEvaluation (K := Icc (0 : ℝ) T) (V := E →L[ℝ] E) x D.H
 
 omit [CompleteSpace U] [CompleteSpace E] in
 theorem labelFrame_lower (x : Space) (t : Icc (0 : ℝ) T) (v : U) :

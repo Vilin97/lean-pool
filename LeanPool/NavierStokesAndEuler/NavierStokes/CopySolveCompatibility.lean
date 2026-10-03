@@ -495,7 +495,7 @@ theorem localizedCopy_timeData (d : LinearData P V E) (g : Geometry)
     have hbounds := (hκ hz).2
     have ht := congrArg Prod.snd (coordinates_timeGeometry g τ rate hrate.ne' j Y)
     change τ + rate * ((timeGeometry g τ rate hrate.ne').coordinates j Y).2 = _ at ht
-    constructor <;> nlinarith [hbounds.1, hbounds.2]
+    constructor <;> nlinarith only [hrate, ht, hbounds, hbounds.1, hbounds.2]
 
 theorem commonSolve_timeData (d : LinearData P V E) (g : Geometry)
     (τ rate : ℝ) (hrate : 0 < rate) (hab : a ≤ b) {U : Set P}

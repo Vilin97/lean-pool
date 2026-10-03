@@ -404,7 +404,7 @@ theorem changeRow_integral_zero (eta : ℝ) (i : Fin 3) (heta : eta ∈ paramete
         HeatedOutgoing.patchRow_integral F XR w.coefficients eta i w.radius_pos]
       have h := congrFun (w.moments eta (parameterDomain_subset heta)) i
       simp only [Pi.add_apply, Pi.zero_apply] at h
-      linarith
+      linarith only [h]
 
 theorem positive (eta X : ℝ) (heta : eta ∈ parameterDomain) (hX : 0 < X) :
     0 < E F XR w.coefficients (X, eta) := by
@@ -627,7 +627,7 @@ theorem Pi_exp_primitive (eta y : ℝ) (heta : eta ∈ parameterDomain) :
   rw [Real.exp_log (OutgoingDilation.patchRadius_pos F XR w.radius_pos), he] at hp
   rw [Pi_exp]
   simp_rw [freeLogE_eq]
-  linarith
+  linarith only [hy, ha, hd, hp]
 
 theorem Pi_log_contDiffOn : ContDiffOn ℝ ∞
     (fun p : ℝ × ℝ => Pi F XR w.coefficients (Real.exp p.1, p.2)) (univ ×ˢ parameterDomain) := by
@@ -804,7 +804,7 @@ theorem exists_scheduled_profile (P m : ℝ) (hP : 0 < P) (hm : 0 < m) :
     mul_pos (by norm_num) (CorrectedPulseAmplitude.combinedConstant_pos hP m K hK), ?_⟩
   intro h hh htail
   let d : OutgoingTail.TailData := ⟨OutgoingSchedule.paperParameters P m lam hP hm hlam (by
-      linarith), h, hh, htail⟩
+      linarith only [hsmall, hh, htail]), h, hh, htail⟩
   obtain ⟨r⟩ := hreset d hreset'
   let F : Profile := ⟨d, K, r⟩
   have b : ScheduleBounds F := {
@@ -826,8 +826,8 @@ theorem E_full_switch (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ)
   rw [E_after_switch F XR c eta X hXR (HeatedOutgoing.full_switch_above_radius hK hX hfull)]
   unfold ExtendedHeatDebts.physicalEdit ExtendedHeatDebts.edit ExtendedHeatDebts.multiplier
       ExtendedHeatDebts.correction
-  rw [HeatTailEdit.switch_one (by linarith), one_mul, add_sub_cancel,
-    HeatTailEdit.outgoingProfile_eq_powerTail_of_log F.data hK hX (by linarith)]
+  rw [HeatTailEdit.switch_one (by linarith only [hfull]), one_mul, add_sub_cancel,
+    HeatTailEdit.outgoingProfile_eq_powerTail_of_log F.data hK hX (by linarith only [hfull])]
   change HeatTailEdit.outgoingAmplitude F.data * (X / switchRadius F XR) ^ (-HeatTailEdit.exponent
       F.data.h) *
     OutgoingTail.tailShape F.data (Real.log (X / switchRadius F XR) + 1 / 5) *
@@ -844,7 +844,7 @@ theorem E_eventual_extended_heat (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (e
         X ^ (-HeatTailEdit.exponent F.data.h) * HeatProfileExtension.physicalProfile (1 + F.data.h)
             X eta := by
   rw [E_full_switch F XR c eta X hXR hX (by
-      linarith), OutgoingTail.tailShape_late F.data hlate, mul_one]
+      linarith only [hlate]), OutgoingTail.tailShape_late F.data hlate, mul_one]
 
 theorem E_eventual_heat (F : Profile) (XR : ℝ) (c : ℝ → Coeff) (eta X : ℝ)
     (hXR : 0 < XR) (hX : 0 < X) (heta : eta ∈ HeatedOutgoing.parameterDomain)
@@ -876,16 +876,16 @@ theorem exists_symmetric_neighborhood {V : Set ℝ} (hV : IsOpen V)
   have hdr : d < r := hdmin.trans_le ((min_le_left _ _).trans (min_le_left _ _))
   have hds : d < s := hdmin.trans_le ((min_le_left _ _).trans (min_le_right _ _))
   have hdhalf : d < 1 / 2 := hdmin.trans_le (min_le_right _ _)
-  refine ⟨1 + d, by linarith, by linarith, ?_⟩
+  refine ⟨1 + d, by linarith only [hd], by linarith only [hdhalf], ?_⟩
   intro eta heta
   by_cases hlow : eta < -1
   · apply hL
-    rw [Metric.mem_ball, Real.dist_eq, abs_of_neg (by linarith : eta - -1 < 0)]
-    linarith [heta.1]
+    rw [Metric.mem_ball, Real.dist_eq, abs_of_neg (by linarith only [hlow] : eta - -1 < 0)]
+    linarith only [hdr, heta, heta.1]
   · by_cases hhigh : 1 < eta
     · apply hR
-      rw [Metric.mem_ball, Real.dist_eq, abs_of_pos (by linarith : 0 < eta - 1)]
-      linarith [heta.2]
+      rw [Metric.mem_ball, Real.dist_eq, abs_of_pos (by linarith only [hhigh] : 0 < eta - 1)]
+      linarith only [hds, heta, heta.2]
     · exact hband ⟨le_of_not_gt hlow, le_of_not_gt hhigh⟩
 
 theorem ScheduleBounds.exists_parameter_interval {F : Profile} (b : ScheduleBounds F) :

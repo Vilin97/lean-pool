@@ -30,7 +30,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [CompleteSpace V
 
 /-- Angle curve, given by `translate P (0,s) u`. -/
 def angleCurve (u : CylinderL2 P V) (s : ℝ) : CylinderL2 P V :=
-  translate P (0,s) u
+  translate (V := V) P (0,s) u
 
 omit [CompleteSpace V] in
 theorem angleCurve_continuous (u : CylinderL2 P V) : Continuous (angleCurve P u) :=
@@ -86,13 +86,13 @@ def averageLinear : CylinderL2 P V →ₗ[ℝ] CylinderL2 P V where
 
 /-- The Bochner average of genuine angular translations. -/
 def average : CylinderL2 P V →L[ℝ] CylinderL2 P V :=
-  (averageLinear P).mkContinuous 1 (fun u => by
+  (averageLinear (V := V) P).mkContinuous 1 (fun u => by
     change ‖averageIntegral P u‖ ≤ (1 : ℝ)*‖u‖
     simpa only [one_mul] using averageIntegral_norm P u)
 
 omit [CompleteSpace V] in
 @[simp] theorem average_apply (u : CylinderL2 P V) :
-    average P u = averageIntegral P u := rfl
+    average (V := V) P u = averageIntegral P u := rfl
 
 omit [CompleteSpace V] in
 theorem average_norm : ‖average (V := V) P‖ ≤ 1 :=
@@ -101,28 +101,30 @@ theorem average_norm : ‖average (V := V) P‖ ≤ 1 :=
     simpa only [one_mul] using averageIntegral_norm P u)
 
 theorem average_translation (a : LiftTangent) (u : CylinderL2 P V) :
-    average P (translate P a u) = translate P a (average P u) := by
-  change P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P (translate P a u) s) =
-    translate P a (P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s))
+    average (V := V) P (translate (V := V) P a u) =
+      translate (V := V) P a (average (V := V) P u) := by
+  change P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P (translate (V := V) P a u) s) =
+    translate (V := V) P a (P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s))
   rw [map_smul]
-  change P⁻¹ • _ = P⁻¹ • (translate P a).toContinuousLinearMap _
-  rw [← (translate P a).toContinuousLinearMap.intervalIntegral_comp_comm
+  change P⁻¹ • _ = P⁻¹ • (translate (V := V) P a).toContinuousLinearMap _
+  rw [← (translate (V := V) P a).toContinuousLinearMap.intervalIntegral_comp_comm
     ((angleCurve_continuous P u).intervalIntegrable 0 P)]
   congr 1
   apply intervalIntegral.integral_congr
   intro s _
-  change translate P (0,s) (translate P a u) = translate P a (translate P (0,s) u)
+  change translate (V := V) P (0,s) (translate (V := V) P a u) =
+    translate (V := V) P a (translate (V := V) P (0,s) u)
   rw [translate_add, translate_add, add_comm (0,s) a]
 
 variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Path average, given by `(average P).compLeftContinuous ℝ K`. -/
 def pathAverage : C(K,CylinderL2 P V) →L[ℝ] C(K,CylinderL2 P V) :=
-  (average P).compLeftContinuous ℝ K
+  (average (V := V) P).compLeftContinuous ℝ K
 
 omit [CompactSpace K] [CompleteSpace V] in
 @[simp] theorem pathAverage_apply (u : C(K, CylinderL2 P V)) (t : K) :
-    pathAverage P u t = average P (u t) := rfl
+    pathAverage (K := K) (V := V) P u t = average (V := V) P (u t) := rfl
 
 omit [CompleteSpace V] in
 theorem pathAverage_norm : ‖pathAverage (K := K) (V := V) P‖ ≤ 1 := by
@@ -135,7 +137,8 @@ theorem pathAverage_norm : ‖pathAverage (K := K) (V := V) P‖ ≤ 1 := by
 
 omit [CompactSpace K] in
 theorem pathAverage_translation (a : LiftTangent) (u : C(K, CylinderL2 P V)) :
-    pathAverage P (pathTranslate P a u) = pathTranslate P a (pathAverage P u) := by
+    pathAverage (K := K) (V := V) P (pathTranslate (K := K) (V := V) P a u) =
+      pathTranslate (K := K) (V := V) P a (pathAverage (K := K) (V := V) P u) := by
   apply ContinuousMap.ext
   intro t
   exact average_translation P a (u t)
@@ -149,8 +152,8 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace
 
 /-- Every actual angular intertwiner commutes with the constructed average. -/
 theorem average_intertwines (L : CylinderL2 P E →L[ℝ] CylinderL2 P F)
-    (hL : ∀ s u, L (translate P (0, s) u) = translate P (0, s) (L u))
-    (u : CylinderL2 P E) : average P (L u) = L (average P u) := by
+    (hL : ∀ s u, L (translate (V := E) P (0, s) u) = translate (V := F) P (0, s) (L u))
+    (u : CylinderL2 P E) : average (V := F) P (L u) = L (average (V := E) P u) := by
   change P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P (L u) s) =
     L (P⁻¹ • (∫ s in (0 : ℝ)..P, angleCurve P u s))
   rw [map_smul, ← L.intervalIntegral_comp_comm
@@ -169,7 +172,8 @@ variable {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Complet
 
 /-- Spatial rectangular coefficients preserve angular means exactly. -/
 theorem average_fullOperator (A : Space →ᵇ E →L[ℝ] F) (u : CylinderL2 P E) :
-    average P (fullOperatorMap P A u) = fullOperatorMap P A (average P u) := by
+    average (V := F) P (fullOperatorMap (E := E) (F := F) P A u) =
+      fullOperatorMap (E := E) (F := F) P A (average (V := E) P u) := by
   apply average_intertwines P
   intro s v
   simpa only [Prod.fst, translated_zero] using fullOperator_translation P (0,s) A v
@@ -178,7 +182,8 @@ variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 theorem pathAverage_fullMultiplier (A : C(K, Space →ᵇ E →L[ℝ] F))
     (u : C(K, CylinderL2 P E)) :
-    pathAverage P (fullMultiplierMap P A u) = fullMultiplierMap P A (pathAverage P u) := by
+    pathAverage (K := K) (V := F) P (fullMultiplierMap (K := K) (E := E) (F := F) P A u) =
+      fullMultiplierMap (K := K) (E := E) (F := F) P A (pathAverage (K := K) (V := E) P u) := by
   apply ContinuousMap.ext
   intro t
   exact average_fullOperator P (A t) (u t)
@@ -192,17 +197,18 @@ variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteS
 
 /-- Angular averaging preserves the actual spatial support subspace. -/
 theorem average_mem (u : Supported P V S hS) :
-    average P (u : CylinderL2 P V) ∈ Supported P V S hS := by
-  have hs (s : ℝ) : translate P (0,s) (u : CylinderL2 P V) ∈ Supported P V S hS := by
+    average (V := V) P (u : CylinderL2 P V) ∈ Supported P V S hS := by
+  have hs (s : ℝ) : translate (V := V) P (0,s) (u : CylinderL2 P V) ∈ Supported P V S hS := by
     apply translate_mem P (0,s) S S hS hS _ u
     intro x hx
     change x+(0 : Space) ∈ S at hx
     simpa only [add_zero] using hx
-  let f : ℝ → Supported P V S hS := fun s => ⟨translate P (0,s) (u : CylinderL2 P V), hs s⟩
+  let f : ℝ → Supported P V S hS := fun s =>
+    ⟨translate (V := V) P (0,s) (u : CylinderL2 P V), hs s⟩
   have hf : Continuous f := Continuous.subtype_mk
     (angleCurve_continuous P (u : CylinderL2 P V)) _
   let v : Supported P V S hS := P⁻¹ • (∫ s in (0 : ℝ)..P, f s)
-  have he : (v : CylinderL2 P V) = average P (u : CylinderL2 P V) := by
+  have he : (v : CylinderL2 P V) = average (V := V) P (u : CylinderL2 P V) := by
     change (Supported P V S hS).subtypeL (P⁻¹ • (∫ s in (0 : ℝ)..P, f s)) = _
     rw [map_smul, ← (Supported P V S hS).subtypeL.intervalIntegral_comp_comm
       (hf.intervalIntegrable 0 P)]
@@ -217,7 +223,8 @@ def supportedAverage : Supported P V S hS →L[ℝ] Supported P V S hS :=
     (Supported P V S hS) (average_mem P S hS)
 
 @[simp] theorem supportedAverage_coe (u : Supported P V S hS) :
-    (supportedAverage P S hS u : CylinderL2 P V) = average P (u : CylinderL2 P V) := rfl
+    (supportedAverage (V := V) P S hS u : CylinderL2 P V) =
+      average (V := V) P (u : CylinderL2 P V) := rfl
 
 theorem supportedAverage_norm : ‖supportedAverage (V := V) P S hS‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one

@@ -22,6 +22,10 @@ from the normalized quadratic system.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -46,13 +50,13 @@ noncomputable def Patch.mid (P : Patch) : ℝ := (P.left + P.right) / 2
 /-- Left half, given by `⟨P.left, P.mid, P.left_pos, by dsimp [Patch.mid]; linarith
 [P.ordered]⟩`. -/
 noncomputable def Patch.leftHalf (P : Patch) : Patch :=
-  ⟨P.left, P.mid, P.left_pos, by dsimp [Patch.mid]; linarith [P.ordered]⟩
+  ⟨P.left, P.mid, P.left_pos, by dsimp only [mid]; linarith only [P.ordered]⟩
 
 /-- Right half, given by `⟨P.mid, P.right, by dsimp [Patch.mid]; linarith [P.left_pos,
 P.ordered], by dsimp [Patch.mid]; linarith [P.ordered]⟩`. -/
 noncomputable def Patch.rightHalf (P : Patch) : Patch :=
-  ⟨P.mid, P.right, by dsimp [Patch.mid]; linarith [P.left_pos, P.ordered],
-    by dsimp [Patch.mid]; linarith [P.ordered]⟩
+  ⟨P.mid, P.right, by dsimp only [mid]; linarith only [P.left_pos, P.ordered],
+    by dsimp only [mid]; linarith only [P.ordered]⟩
 
 section Family
 
@@ -93,14 +97,14 @@ theorem bump_support_patch (P : Patch) (j : Fin n) : support (bump P j) ⊆ Icc 
 theorem bumps_disjoint (P : Patch) (i j : Fin n) (hij : i ≠ j) (x : ℝ) :
     bump P i x * bump P j x = 0 := by
   by_cases hi : bump P i x = 0
-  · simp [hi]
+  · simp only [hi, zero_mul]
   by_cases hj : bump P j x = 0
-  · simp [hj]
+  · simp only [hj, mul_zero]
   have hix := bump_tsupport P i (subset_tsupport _ hi)
   have hjx := bump_tsupport P j (subset_tsupport _ hj)
   rcases lt_or_gt_of_ne hij with h | h
-  · linarith [intervals_separated P i j h, hix.2, hjx.1]
-  · linarith [intervals_separated P j i h, hjx.2, hix.1]
+  · linarith only [h, hix, hjx, intervals_separated P i j h, hix.2, hjx.1]
+  · linarith only [h, hjx, hix, intervals_separated P j i h, hjx.2, hix.1]
 
 /-- Correction, given by `∑ j, c j * bump P j x`. -/
 noncomputable def correction (P : Patch) (c : Fin n → ℝ) (x : ℝ) : ℝ := ∑ j, c j * bump P j x
@@ -118,7 +122,7 @@ theorem correction_support (P : Patch) (c : Fin n → ℝ) :
   have hb : bump P j x = 0 := by
     by_contra hn
     exact hnot (bump_support_patch P j hn)
-  simp [hb]
+  simp only [hb, mul_zero]
 
 theorem correction_tsupport (P : Patch) (c : Fin n → ℝ) :
     tsupport (correction P c) ⊆ Ioo P.left P.right := by
@@ -133,7 +137,7 @@ theorem correction_tsupport (P : Patch) (c : Fin n → ℝ) :
       by_contra hn
       exact hnot (mem_iUnion.mpr ⟨j,
         LocalizedMomentRepair.bump_support_subset _ _ (lower_lt_upper P j) hn⟩)
-    simp [hb]
+    simp only [hb, mul_zero]
   have ht := closure_minimal hs (LocalizedMomentRepair.repairRegion_isCompact (lower (n := n) P)
       (upper P)).isClosed
   intro x hx
@@ -153,7 +157,7 @@ theorem weighted_integrable (P : Patch) (s : ℝ) (g : ℝ → ℝ)
     intro x hx
     apply hs
     intro hz
-    exact hx (by simp [hz])
+    exact hx (by simp only [hz, mul_zero])
   apply (integrableOn_iff_integrable_of_support_subset hsupport).mp
   apply ContinuousOn.integrableOn_Icc
   apply ContinuousOn.mul _ hg.continuousOn
@@ -225,7 +229,8 @@ theorem correction_square_moment (P : Patch) (s : ℝ) (c : Fin n → ℝ) :
     intro x hx
     apply bump_support_patch P j
     intro hz
-    exact hx (by simp [hz])
+    exact hx (by simp only [Pi.pow_apply, hz, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+        zero_pow])
 
 /-- Moment matrix, given by `LocalizedMomentRepair.matrix a (lower P) (upper P)`. -/
 noncomputable def momentMatrix (P : Patch) (a : Fin n → ℝ) : Matrix (Fin n) (Fin n) ℝ :=
@@ -304,8 +309,8 @@ theorem good_initial : GoodExponent (1 / 10 : ℝ) := by norm_num [GoodExponent]
 theorem good_outgoing (lam : ℝ) (hlam : 0 < lam) : GoodExponent (-1 / 2 - lam) := by
   unfold GoodExponent
   constructor
-  · linarith
-  constructor <;> linarith
+  · linarith only [hlam]
+  constructor <;> linarith only [hlam]
 
 /-- Axial powers, given by `![0, b + 1 / 2]`. -/
 noncomputable def axialPowers (b : ℝ) : Fin 2 → ℝ := ![0, b + 1 / 2]
@@ -316,13 +321,24 @@ theorem axialPowers_injective (b : ℝ) (hb : GoodExponent b) : Injective (axial
   intro i j hij
   by_contra hne
   fin_cases i <;> fin_cases j <;> norm_num [axialPowers] at hij <;> norm_num at hne
-  all_goals exact hb.1 (by linarith)
+  all_goals exact hb.1 (by linarith only [hij])
 
 theorem angularPowers_injective (b : ℝ) (hb : GoodExponent b) : Injective (angularPowers b) := by
+  have h01 : (1 / 2 : ℝ) ≠ b := fun h => hb.2.1 h.symm
+  have h02 : (1 / 2 : ℝ) ≠ b - 1 := fun h =>
+    hb.2.2 ((eq_add_of_sub_eq h.symm).trans (by norm_num))
+  have h12 : b ≠ b - 1 := (sub_lt_self b one_pos).ne'
   intro i j hij
-  by_contra hne
-  fin_cases i <;> fin_cases j <;> norm_num [angularPowers] at hij <;> norm_num at hne
-  all_goals first | exact hb.2.1 (by linarith) | exact hb.2.2 (by linarith)
+  fin_cases i <;> fin_cases j
+  · rfl
+  · exact absurd hij h01
+  · exact absurd hij h02
+  · exact absurd hij.symm h01
+  · rfl
+  · exact absurd hij h12
+  · exact absurd hij.symm h02
+  · exact absurd hij.symm h12
+  · rfl
 
 /-- U, given by `correction P.leftHalf c.1`. -/
 noncomputable def u (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.leftHalf c.1
@@ -331,9 +347,9 @@ noncomputable def e (P : Patch) (c : Coeff) : ℝ → ℝ := correction P.rightH
 
 theorem u_mul_e (P : Patch) (c d : Coeff) (x : ℝ) : u P c x * e P d x = 0 := by
   by_cases hu : u P c x = 0
-  · simp [hu]
+  · simp only [hu, zero_mul]
   by_cases he : e P d x = 0
-  · simp [he]
+  · simp only [he, mul_zero]
   have hu' := correction_tsupport P.leftHalf c.1 (subset_tsupport _ hu)
   have he' := correction_tsupport P.rightHalf d.2 (subset_tsupport _ he)
   exact False.elim ((not_lt_of_ge he'.1.le) hu'.2)
@@ -342,6 +358,16 @@ theorem u_mul_e (P : Patch) (c d : Coeff) (x : ℝ) : u P c x * e P d x = 0 := b
 noncomputable def linearEquiv (P : Patch) (b : ℝ) (hb : GoodExponent b) : Coeff ≃L[ℝ] Coeff :=
   (matrixEquiv P.leftHalf (axialPowers b) (axialPowers_injective b hb)).prodCongr
     (matrixEquiv P.rightHalf (angularPowers b) (angularPowers_injective b hb))
+
+theorem sum_mul_smul_right {ι : Type*} [Fintype ι] (s c d : ι → ℝ) (r : ℝ) :
+    ∑ j, s j * c j * (r * d j) = r * ∑ j, s j * c j * d j := by
+  rw [Finset.mul_sum]
+  exact Finset.sum_congr rfl fun j _ => mul_left_comm _ _ _
+
+theorem sum_mul_smul_left {ι : Type*} [Fintype ι] (s c d : ι → ℝ) (r : ℝ) :
+    ∑ j, s j * (r * c j) * d j = r * ∑ j, s j * c j * d j := by
+  rw [Finset.mul_sum]
+  exact Finset.sum_congr rfl fun j _ => by rw [mul_left_comm, mul_assoc, mul_assoc]
 
 /-- Quadratic bilin, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
 compatibility proofs. -/
@@ -353,27 +379,24 @@ noncomputable def quadraticBilin (P : Patch) : Coeff →ₗ[ℝ] Coeff →ₗ[�
             ∑ i, squareMoment P.leftHalf 0 i * c.1 i * d.1 i,
           (1 / 2) * ∑ j, squareMoment P.rightHalf (-1) j * c.2 j * d.2 j])
       map_add' := fun d f => by
-        apply Prod.ext
-        · ext i; simp
-        · ext i; fin_cases i <;> simp [Pi.add_apply, Fin.sum_univ_two, Fin.sum_univ_three] <;> ring
+        refine Prod.ext (add_zero (0 : Fin 2 → ℝ)).symm ?_
+        simp only [Prod.snd_add, Prod.fst_add, Pi.add_apply, Matrix.cons_add_cons,
+          Matrix.empty_add_empty, add_zero, mul_add, Finset.sum_add_distrib, add_sub_add_comm]
       map_smul' := fun r d => by
-        apply Prod.ext
-        · ext i; simp
-        · ext i; fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_two,
-            Fin.sum_univ_three] <;> ring }
+        refine Prod.ext (smul_zero r).symm ?_
+        simp only [Prod.smul_fst, Prod.smul_snd, Pi.smul_apply, smul_eq_mul, RingHom.id_apply,
+          Matrix.smul_cons, Matrix.smul_empty, mul_zero, sum_mul_smul_right, mul_sub,
+          mul_left_comm r (1 / 2 : ℝ)] }
   map_add' c d := by
-    apply LinearMap.ext
-    intro f
-    apply Prod.ext
-    · ext i; simp
-    · ext i; fin_cases i <;> simp [Pi.add_apply, Fin.sum_univ_two, Fin.sum_univ_three] <;> ring
+    refine LinearMap.ext fun f => Prod.ext (add_zero (0 : Fin 2 → ℝ)).symm ?_
+    simp only [LinearMap.add_apply, LinearMap.coe_mk, AddHom.coe_mk, Prod.snd_add, Prod.fst_add,
+      Pi.add_apply, Matrix.cons_add_cons, Matrix.empty_add_empty, add_zero, mul_add, add_mul,
+      Finset.sum_add_distrib, add_sub_add_comm]
   map_smul' r c := by
-    apply LinearMap.ext
-    intro f
-    apply Prod.ext
-    · ext i; simp
-    · ext i; fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_two,
-        Fin.sum_univ_three] <;> ring
+    refine LinearMap.ext fun f => Prod.ext (smul_zero r).symm ?_
+    simp only [LinearMap.smul_apply, LinearMap.coe_mk, AddHom.coe_mk, RingHom.id_apply,
+      Prod.smul_fst, Prod.smul_snd, Pi.smul_apply, smul_eq_mul, Matrix.smul_cons, Matrix.smul_empty,
+      mul_zero, sum_mul_smul_left, mul_sub, mul_left_comm r (1 / 2 : ℝ)]
 
 /-- Quadratic continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def quadraticCLM (P : Patch) : Coeff →L[ℝ] Coeff →L[ℝ] Coeff :=
@@ -396,11 +419,25 @@ theorem linearEquiv_apply (P : Patch) (b : ℝ) (hb : GoodExponent b) (c : Coeff
   · ext i
     change matrixEquiv P.leftHalf (axialPowers b) (axialPowers_injective b hb) c.1 i = _
     rw [matrixEquiv_apply]
-    fin_cases i <;> simp [axialPowers, u]
+    fin_cases i <;> simp only [axialPowers, one_div, Fin.zero_eta, Fin.isValue,
+        Matrix.cons_val_zero, Real.rpow_zero, one_mul, Nat.succ_eq_add_one, Nat.reduceAdd, u,
+        Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one]
   · ext i
     change matrixEquiv P.rightHalf (angularPowers b) (angularPowers_injective b hb) c.2 i = _
     rw [matrixEquiv_apply]
-    fin_cases i <;> simp [angularPowers, e]
+    fin_cases i <;> simp only [angularPowers, one_div, Fin.zero_eta, Fin.isValue,
+        Matrix.cons_val_zero, Nat.succ_eq_add_one, Nat.reduceAdd, e, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
+
+theorem quadraticCLM_apply (P : Patch) (c d : Coeff) :
+    quadraticCLM P c d = (0, ![0,
+      (1 / 2) * ∑ j, squareMoment P.rightHalf 0 j * c.2 j * d.2 j -
+        ∑ i, squareMoment P.leftHalf 0 i * c.1 i * d.1 i,
+      (1 / 2) * ∑ j, squareMoment P.rightHalf (-1) j * c.2 j * d.2 j]) := rfl
+
+theorem sum_mul_self_eq {ι : Type*} [Fintype ι] (s c : ι → ℝ) :
+    ∑ j, s j * c j * c j = ∑ j, c j ^ 2 * s j :=
+  Finset.sum_congr rfl fun j _ => by ring
 
 theorem normalizedMap_identity (P : Patch) (b : ℝ) (hb : GoodExponent b) (c : Coeff) :
     linearEquiv P b hb c + quadraticCLM P c c = normalizedMap P b c := by
@@ -408,24 +445,20 @@ theorem normalizedMap_identity (P : Patch) (b : ℝ) (hb : GoodExponent b) (c : 
   have hES := correction_square_moment P.rightHalf 0 c.2
   have hEP := correction_square_moment P.rightHalf (-1) c.2
   simp only [Real.rpow_zero, one_mul] at hUS hES
-  rw [linearEquiv_apply]
-  apply Prod.ext
-  · ext i
-    fin_cases i <;> simp [quadraticCLM, quadraticBilin, normalizedMap]
-  · ext i
-    fin_cases i <;> simp [quadraticCLM, quadraticBilin, normalizedMap,
-      u, e, hUS, hES, hEP, Fin.sum_univ_two, Fin.sum_univ_three] <;> ring
+  rw [linearEquiv_apply, quadraticCLM_apply, normalizedMap]
+  simp only [u, e, hUS, hES, hEP, Prod.mk_add_mk, Matrix.cons_add_cons, Matrix.empty_add_empty,
+    add_zero, sum_mul_self_eq, add_sub_assoc]
 
 theorem spatial_jet_bound (P : Patch) (k : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ (c : Coeff) (x : ℝ),
       |iteratedDeriv k (u P c) x| ≤ C * ‖c‖ ∧ |iteratedDeriv k (e P c) x| ≤ C * ‖c‖ := by
   obtain ⟨CU, hCU, hU⟩ := correction_derivative_bound (n := 2) P.leftHalf k
   obtain ⟨CE, hCE, hE⟩ := correction_derivative_bound (n := 3) P.rightHalf k
-  refine ⟨CU + CE + 1, by linarith, fun c x => ⟨?_, ?_⟩⟩
+  refine ⟨CU + CE + 1, by linarith only [hCU, hCE], fun c x => ⟨?_, ?_⟩⟩
   · exact (hU c.1 x).trans ((mul_le_mul_of_nonneg_left (norm_fst_le c) hCU).trans
-      (mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg c)))
+      (mul_le_mul_of_nonneg_right (by linarith only [hCE]) (norm_nonneg c)))
   · exact (hE c.2 x).trans ((mul_le_mul_of_nonneg_left (norm_snd_le c) hCE).trans
-      (mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg c)))
+      (mul_le_mul_of_nonneg_right (by linarith only [hCU]) (norm_nonneg c)))
 
 theorem finite_spatial_jet_bound (P : Patch) (N : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ k ≤ N, ∀ (c : Coeff) (x : ℝ),
@@ -434,15 +467,15 @@ theorem finite_spatial_jet_bound (P : Patch) (N : ℕ) :
   let K : ℝ := 1 + ∑ k ∈ Finset.range (N + 1), C k
   have hK : 0 < K := by
     have hs : 0 ≤ ∑ k ∈ Finset.range (N + 1), C k := Finset.sum_nonneg (fun k _ => (hC k).le)
-    dsimp [K]
-    linarith
+    dsimp only [K]
+    linarith only [hs]
   refine ⟨K, hK, ?_⟩
   intro k hk c x
   have hCK : C k ≤ K := by
     have h := Finset.single_le_sum (fun j _ => (hC j).le)
       (Finset.mem_range.mpr (Nat.lt_succ_of_le hk))
-    dsimp [K]
-    linarith
+    dsimp only [K]
+    linarith only [h]
   exact ⟨(hbound k c x).1.trans (mul_le_mul_of_nonneg_right hCK (norm_nonneg c)),
     (hbound k c x).2.trans (mul_le_mul_of_nonneg_right hCK (norm_nonneg c))⟩
 
@@ -468,29 +501,31 @@ theorem exists_normalized_repair (P : Patch) (b : ℝ) (hb : GoodExponent b) :
   let β : ℝ := ‖B.symm.toContinuousLinearMap‖ + 1
   let K : ℝ := ‖A‖ + 1
   let r : ℝ := 1 / (4 * β * K)
-  have hβ : 0 < β := by dsimp [β]; positivity
-  have hK : 0 < K := by dsimp [K]; positivity
-  have hr : 0 < r := by dsimp [r]; positivity
+  have hβ : 0 < β := add_pos_of_nonneg_of_pos (norm_nonneg _) one_pos
+  have hK : 0 < K := add_pos_of_nonneg_of_pos (norm_nonneg _) one_pos
+  have hr : 0 < r := one_div_pos.mpr (mul_pos (mul_pos four_pos hβ) hK)
   have hinv : ∀ v, ‖B.symm v‖ ≤ β * ‖v‖ := by
     intro v
     exact (B.symm.toContinuousLinearMap.le_opNorm v).trans
-      (mul_le_mul_of_nonneg_right (by dsimp [β]; linarith) (norm_nonneg v))
-  have hA : ‖A‖ ≤ K := by dsimp [K]; linarith
-  have hsmall : 4 * β * K * r ≤ 1 := by dsimp [r]; field_simp ; rfl
+      (mul_le_mul_of_nonneg_right (le_add_of_nonneg_right zero_le_one) (norm_nonneg v))
+  have hA : ‖A‖ ≤ K := le_add_of_nonneg_right zero_le_one
+  have hsmall : 4 * β * K * r ≤ 1 := by dsimp only [r]; field_simp ; rfl
   obtain ⟨g, hg, hgeq, hglip⟩ := UniformAngularReset.exists_smooth_solver_on_ball
     B A β K r hβ hK.le hr hinv hA hsmall
   obtain ⟨D, hD, hjet⟩ := spatial_jet_bound P 0
   obtain ⟨m, hm, hmin⟩ := power_lower_bound P.rightHalf b
   let C : ℝ := (1 + D) * (2 * β)
   let ε : ℝ := min (r / (4 * β)) (m / (2 * C))
-  have hC : 0 < C := mul_pos (by linarith) (by positivity)
-  have hε : 0 < ε := lt_min (div_pos hr (by positivity)) (div_pos hm (by positivity))
+  have h2β : 0 < 2 * β := mul_pos two_pos hβ
+  have h4β : 0 < 4 * β := mul_pos four_pos hβ
+  have hC : 0 < C := mul_pos (by linarith only [hD]) h2β
+  have hε : 0 < ε := lt_min (div_pos hr h4β) (div_pos hm (mul_pos two_pos hC))
   have hsub : Metric.ball (0 : Coeff) ε ⊆ Metric.ball 0 (r / (4 * β)) :=
     Metric.ball_subset_ball (min_le_left _ _)
-  have hC₀ : 2 * β ≤ C := by dsimp [C]; nlinarith
-  have hC₁ : D * (2 * β) ≤ C := by dsimp [C]; linarith
+  have hC₀ : 2 * β ≤ C := le_mul_of_one_le_left h2β.le (le_add_of_nonneg_right hD.le)
+  have hC₁ : D * (2 * β) ≤ C := by dsimp only [C]; linarith only [h2β]
   have hzero : g 0 = 0 := by
-    have hz := (hgeq 0 (Metric.mem_ball_self (div_pos hr (by positivity)))).2
+    have hz := (hgeq 0 (Metric.mem_ball_self (div_pos hr h4β))).2
     simpa only [norm_zero, mul_zero, norm_le_zero_iff] using hz
   refine ⟨g, ε, C, hε, hC, hg.mono hsub, hzero, ?_⟩
   intro d hd
@@ -503,7 +538,7 @@ theorem exists_normalized_repair (P : Patch) (b : ℝ) (hb : GoodExponent b) :
   rw [normalizedMap_identity] at heq
   refine ⟨heq, hnorm.trans (mul_le_mul_of_nonneg_right hC₀ (norm_nonneg d)), ?_, ?_⟩
   · apply le_trans _ hC₀
-    apply norm_fderiv_le_of_lip' ℝ (by positivity : 0 ≤ 2 * β)
+    apply norm_fderiv_le_of_lip' ℝ h2β.le
     filter_upwards [Metric.isOpen_ball.mem_nhds (hsub hd)] with f hf
     exact hglip f hf d (hsub hd)
   · intro x hx
@@ -517,7 +552,7 @@ theorem exists_normalized_repair (P : Patch) (b : ℝ) (hb : GoodExponent b) :
       have hcancel : C * (m / (2 * C)) = m / 2 := by field_simp
       rwa [hcancel] at ht
     have hlow := neg_abs_le (e P (g d) x)
-    linarith
+    linarith only [hm, hbase, hval, hsize, hlow]
 
 /-- Physical U, given by `G + A * u P c x`. -/
 noncomputable def physicalU (P : Patch) (A G : ℝ) (c : Coeff) (x : ℝ) : ℝ := G + A * u P c x
@@ -553,7 +588,9 @@ theorem physical_normalized_debt (A G : ℝ) (hA : A ≠ 0) (d : Debt) :
     physicalDebt A G (normalizedDebt A G d) = d := by
   have hs : Real.sqrt 2 ≠ 0 := (Real.sqrt_pos.2 (by norm_num : (0 : ℝ) < 2)).ne'
   ext i
-  fin_cases i <;> simp [physicalDebt, normalizedDebt] <;> field_simp
+  fin_cases i <;> simp only [physicalDebt, normalizedDebt, Fin.isValue, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val, Fin.zero_eta, Fin.mk_one,
+      Fin.reduceFinMk] <;> field_simp
   all_goals ring
 
 theorem normalized_physical_debt (A G : ℝ) (hA : A ≠ 0) (c : Coeff) :
@@ -561,9 +598,13 @@ theorem normalized_physical_debt (A G : ℝ) (hA : A ≠ 0) (c : Coeff) :
   have hs : Real.sqrt 2 ≠ 0 := (Real.sqrt_pos.2 (by norm_num : (0 : ℝ) < 2)).ne'
   apply Prod.ext
   · ext i
-    fin_cases i <;> simp [physicalDebt, normalizedDebt] <;> field_simp
+    fin_cases i <;> simp only [normalizedDebt, physicalDebt, Fin.isValue, Matrix.cons_val_zero,
+        Matrix.cons_val, Matrix.cons_val_one, add_sub_cancel_right, Fin.zero_eta, Fin.mk_one,
+        Matrix.cons_val_fin_one] <;> field_simp
   · ext i
-    fin_cases i <;> simp [physicalDebt, normalizedDebt] <;> field_simp
+    fin_cases i <;> simp only [normalizedDebt, physicalDebt, Fin.isValue, Matrix.cons_val_zero,
+        Matrix.cons_val, Matrix.cons_val_one, add_sub_cancel_right, Fin.zero_eta, Fin.mk_one,
+        Fin.reduceFinMk] <;> field_simp
     all_goals ring
 
 /-- Physical equiv, constructed using `LinearEquiv.toContinuousLinearEquiv`. -/
@@ -573,8 +614,13 @@ noncomputable def physicalEquiv (A G : ℝ) (hA : A ≠ 0) : Coeff ≃L[ℝ] Deb
       invFun := normalizedDebt A G
       left_inv := normalized_physical_debt A G hA
       right_inv := physical_normalized_debt A G hA
-      map_add' := fun c d => by ext i; fin_cases i <;> simp [physicalDebt] <;> ring
-      map_smul' := fun r c => by ext i; fin_cases i <;> simp [physicalDebt, smul_eq_mul] <;> ring }
+      map_add' := fun c d => by ext i; fin_cases i <;> simp only [physicalDebt, Fin.isValue,
+          Prod.fst_add, Pi.add_apply, Prod.snd_add, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one,
+          Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;> ring
+      map_smul' := fun r c => by ext i; fin_cases i <;> simp only [physicalDebt, Fin.isValue,
+          Prod.smul_fst, Pi.smul_apply, smul_eq_mul, Prod.smul_snd, Fin.zero_eta,
+          Matrix.cons_val_zero, RingHom.id_apply, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+          Matrix.cons_val] <;> ring }
 
 /-- Normalized density as an element of `Coeff`. -/
 noncomputable def normalizedDensity (P : Patch) (b : ℝ) (c : Coeff) (x : ℝ) : Coeff :=
@@ -602,8 +648,12 @@ theorem physicalDensity_eq (P : Patch) (b A G : ℝ) (c : Coeff) (x : ℝ) :
         _ = _ := by rw [u_mul_e]; ring
     ext i
     fin_cases i
-    · simp [physicalDensity, physicalDebt, normalizedDensity, physicalU]
-    · simp [physicalDensity, physicalDebt, normalizedDensity, physicalE, hs]
+    · simp only [physicalDensity, physicalU, add_sub_cancel_left, Nat.ofNat_nonneg, Real.sqrt_mul,
+        Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, physicalDebt, normalizedDensity, one_div,
+        Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val]
+    · simp only [physicalDensity, hs, one_div, physicalE, Fin.mk_one, Fin.isValue,
+        Matrix.cons_val_one, Matrix.cons_val_zero, physicalDebt, normalizedDensity,
+        Matrix.cons_val_fin_one, Matrix.cons_val]
       ring
     · simp only [physicalDensity, physicalDebt, normalizedDensity]
       change physicalU P A G c x * Real.sqrt (2 * x) * physicalE P b A c x -
@@ -612,26 +662,32 @@ theorem physicalDensity_eq (P : Patch) (b A G : ℝ) (c : Coeff) (x : ℝ) :
             G * (Real.sqrt 2 * A * (x ^ (1 / 2 : ℝ) * e P c x))
       rw [hJ, hs, hplus]
       ring
-    · simp [physicalDensity, physicalDebt, normalizedDensity, physicalU, physicalE]
+    · simp only [physicalDensity, physicalU, add_sub_cancel_left, Nat.ofNat_nonneg, Real.sqrt_mul,
+        physicalE, Fin.reduceFinMk, Matrix.cons_val, physicalDebt, normalizedDensity, one_div,
+        Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one]
       ring
-    · simp [physicalDensity, physicalDebt, normalizedDensity, physicalE, hminus, Real.rpow_neg_one]
-      field_simp [hx.ne']; ring
+    · simp only [physicalDensity, Nat.ofNat_nonneg, Real.sqrt_mul, physicalE, Fin.reduceFinMk,
+        Matrix.cons_val, physicalDebt, normalizedDensity, one_div, hminus, Real.rpow_neg_one,
+        Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one]
+      ring
   · have hu : u P c x = 0 := by
       exact Classical.byContradiction (fun hn =>
         hx (P.leftHalf.left_pos.trans_le (correction_support P.leftHalf c.1 hn).1))
     have he : e P c x = 0 := by
       exact Classical.byContradiction (fun hn =>
         hx (P.rightHalf.left_pos.trans_le (correction_support P.rightHalf c.2 hn).1))
-    ext i
-    fin_cases i <;> simp [physicalDensity, physicalDebt, normalizedDensity, physicalU, physicalE,
-        hu, he]
+    simp only [physicalDensity, physicalU, hu, mul_zero, add_zero, sub_self, Nat.ofNat_nonneg,
+      Real.sqrt_mul, physicalE, he, zero_div, physicalDebt, normalizedDensity, one_div, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, Fin.isValue, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val]
 
 theorem integrable_fin_vector {n : ℕ} (f : ℝ → Fin n → ℝ)
     (hf : ∀ i, Integrable (fun x => f x i)) : Integrable f := by
   classical
   have heq : f = fun x => ∑ i, f x i • (Pi.single i (1 : ℝ) : Fin n → ℝ) := by
     funext x j
-    simp [Finset.sum_apply, Pi.smul_apply, Pi.single_apply]
+    simp only [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one,
+        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
   rw [heq]
   exact MeasureTheory.integrable_finsetSum _ (fun i _ => (hf i).smul_const (Pi.single i 1))
 
@@ -723,12 +779,14 @@ theorem physicalMoments_hasFDerivAt_zero (P : Patch) (b A G : ℝ) (hb : GoodExp
     funext (fun c => (normalizedMap_identity P b hb c).symm)
   have hd : HasFDerivAt (normalizedMap P b) (linearEquiv P b hb).toContinuousLinearMap 0 := by
     rw [hn]
-    simpa [UniformAngularReset.tangent] using
+    simpa only [UniformAngularReset.tangent, ContinuousLinearMap.map_zero, add_zero] using
       UniformAngularReset.quadraticMap_hasFDerivAt (linearEquiv P b hb) (quadraticCLM P) 0
   have hp : physicalMoments P b A G = fun c => physicalEquiv A G hA (normalizedMap P b c) :=
     funext (physicalMoments_eq P b A G hA)
   rw [hp]
-  exact (physicalEquiv A G hA).hasFDerivAt.comp 0 hd
+  exact (physicalEquiv A G hA).hasFDerivAt.comp (f := normalizedMap P b)
+    (f' := (linearEquiv P b hb).toContinuousLinearMap)
+    (g' := (physicalEquiv A G hA).toContinuousLinearMap) 0 hd
 
 theorem physicalDensity_zero_outside (P : Patch) (b A G : ℝ) (c : Coeff) {x : ℝ}
     (hx : x ∉ Ioo P.left P.right) : physicalDensity P b A G c x = 0 := by
@@ -737,18 +795,21 @@ theorem physicalDensity_zero_outside (P : Patch) (b A G : ℝ) (c : Coeff) {x : 
     intro hn
     have hs := correction_tsupport P.leftHalf c.1 (subset_tsupport _ hn)
     apply hx
-    exact ⟨hs.1, hs.2.trans (by dsimp [Patch.leftHalf, Patch.mid]; linarith [P.ordered])⟩
+    exact ⟨hs.1, hs.2.trans (by dsimp only [Patch.leftHalf, Patch.mid]; linarith only [P.ordered])⟩
   have he : e P c x = 0 := by
     apply Classical.byContradiction
     intro hn
     have hs := correction_tsupport P.rightHalf c.2 (subset_tsupport _ hn)
     apply hx
     have hl : P.left < P.rightHalf.left := by
-        dsimp [Patch.rightHalf, Patch.mid]; linarith [P.ordered]
+        dsimp only [Patch.rightHalf, Patch.mid]; linarith only [P.ordered]
     exact ⟨hl.trans hs.1, hs.2⟩
   rw [physicalDensity_eq]
   ext i
-  fin_cases i <;> simp [physicalDebt, normalizedDensity, hu, he]
+  fin_cases i <;> simp only [physicalDebt, normalizedDensity, hu, one_div, mul_zero, he, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, add_zero, sub_self, Fin.isValue,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_fin_one, Matrix.cons_val,
+      Fin.zero_eta, Pi.zero_apply, Fin.mk_one, Fin.reduceFinMk]
 
 theorem physicalMoments_positive_axis (P : Patch) (b A G : ℝ) (c : Coeff) (i : Fin 5) :
     (∫ x in Ioi (0 : ℝ), physicalDensity P b A G c x i) = physicalMoments P b A G c i := by
@@ -771,12 +832,22 @@ noncomputable def normalizationLinearMap (A G : ℝ) : Debt →ₗ[ℝ] Coeff wh
   toFun := normalizedDebt A G
   map_add' c d := by
     apply Prod.ext
-    · ext i; fin_cases i <;> simp [normalizedDebt] <;> ring
-    · ext i; fin_cases i <;> simp [normalizedDebt] <;> ring
+    · ext i; fin_cases i <;> simp only [normalizedDebt, Fin.isValue, Pi.add_apply, Fin.zero_eta,
+        Matrix.cons_val_zero, Prod.mk_add_mk, Matrix.add_cons, Matrix.head_cons, Matrix.tail_cons,
+        Matrix.empty_add_empty, Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one] <;> ring
+    · ext i; fin_cases i <;> simp only [normalizedDebt, Fin.isValue, Pi.add_apply, Fin.zero_eta,
+        Matrix.cons_val_zero, Prod.mk_add_mk, Matrix.add_cons, Matrix.head_cons, Matrix.tail_cons,
+        Matrix.empty_add_empty, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val] <;> ring
   map_smul' r c := by
     apply Prod.ext
-    · ext i; fin_cases i <;> simp [normalizedDebt, smul_eq_mul] <;> ring
-    · ext i; fin_cases i <;> simp [normalizedDebt, smul_eq_mul] <;> ring
+    · ext i; fin_cases i <;> simp only [normalizedDebt, Fin.isValue, Pi.smul_apply, smul_eq_mul,
+        Fin.zero_eta, Matrix.cons_val_zero, RingHom.id_apply, Prod.smul_mk, Matrix.smul_cons,
+        Matrix.smul_empty, Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one] <;> ring
+    · ext i; fin_cases i <;> simp only [normalizedDebt, Fin.isValue, Pi.smul_apply, smul_eq_mul,
+        Fin.zero_eta, Matrix.cons_val_zero, RingHom.id_apply, Prod.smul_mk, Matrix.smul_cons,
+        Matrix.smul_empty, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val] <;> ring
 
 theorem normalizedDebt_contDiffOn {S : Set ℝ} {A G : ℝ → ℝ} {d : ℝ → Debt}
     (hA : ContDiffOn ℝ ∞ A S) (hG : ContDiffOn ℝ ∞ G S) (hd : ContDiffOn ℝ ∞ d S)
@@ -810,7 +881,8 @@ theorem normalizedDebt_eq_sum (A G : ℝ) (d : Debt) :
     normalizedDebt A G d = ∑ i, d i • normalizedDebt A G (Pi.single i 1) := by
   have h : (∑ i, d i • (Pi.single i (1 : ℝ) : Debt)) = d := by
     ext j
-    simp [Finset.sum_apply, Pi.smul_apply, Pi.single_apply]
+    simp only [Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one,
+        mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
   have he := congrArg (normalizationLinearMap A G) h
   rw [map_sum] at he
   simp only [map_smul] at he
@@ -830,8 +902,8 @@ theorem compact_normalization_bound (S : Set ℝ) (hS : IsCompact S) {A G : ℝ 
   let K : ℝ := 1 + ∑ i, B i
   have hK : 0 < K := by
     have hs := Finset.sum_nonneg (s := Finset.univ) (fun i _ => hB i)
-    dsimp [K]
-    linarith
+    dsimp only [K]
+    linarith only [hs]
   refine ⟨K, hK, ?_⟩
   intro p hp d
   rw [normalizedDebt_eq_sum]
@@ -843,7 +915,7 @@ theorem compact_normalization_bound (S : Set ℝ) (hS : IsCompact S) {A G : ℝ 
       rw [norm_smul]
       exact mul_le_mul (norm_le_pi_norm d i) (hbound i p hp) (norm_nonneg _) (norm_nonneg _)
     _ = (∑ i, B i) * ‖d‖ := by rw [← Finset.mul_sum, mul_comm]
-    _ ≤ K * ‖d‖ := mul_le_mul_of_nonneg_right (by dsimp [K]; linarith) (norm_nonneg d)
+    _ ≤ K * ‖d‖ := mul_le_mul_of_nonneg_right (by dsimp only [K]; linarith only) (norm_nonneg d)
 
 theorem correction_family_contDiffOn {n : ℕ} (P : Patch) {S : Set ℝ} {c : ℝ → Fin n → ℝ}
     (hc : ContDiffOn ℝ ∞ c S) :
@@ -857,8 +929,8 @@ theorem physicalU_family_contDiffOn (P : Patch) {S : Set ℝ} {A G : ℝ → ℝ
     (hA : ContDiffOn ℝ ∞ A S) (hG : ContDiffOn ℝ ∞ G S) (hc : ContDiffOn ℝ ∞ c S) :
     ContDiffOn ℝ ∞ (fun z : ℝ × ℝ => physicalU P (A z.1) (G z.1) (c z.1) z.2) (S ×ˢ univ) :=
   (hG.comp contDiffOn_fst (fun _ hz => hz.1)).add
-    ((hA.comp contDiffOn_fst (fun _ hz => hz.1)).mul (correction_family_contDiffOn P.leftHalf
-        hc.fst))
+    ((hA.comp contDiffOn_fst (fun _ hz => hz.1)).mul
+      (correction_family_contDiffOn (c := fun p => (c p).1) P.leftHalf hc.fst))
 
 theorem physicalE_family_contDiffOn (P : Patch) (b : ℝ) {S : Set ℝ} {A : ℝ → ℝ} {c : ℝ → Coeff}
     (hA : ContDiffOn ℝ ∞ A S) (hc : ContDiffOn ℝ ∞ c S) :
@@ -888,18 +960,17 @@ theorem compact_parameter_repair (P : Patch) (b : ℝ) (hb : GoodExponent b)
   obtain ⟨J, hJ, hjets⟩ := finite_spatial_jet_bound P N
   obtain ⟨L₀, hL₀⟩ := hS.exists_bound_of_continuousOn hA.continuous.continuousOn
   let L : ℝ := 1 + |L₀|
-  have hL : 0 < L := by dsimp [L]; positivity
+  have hL : 0 < L := add_pos_of_pos_of_nonneg one_pos (abs_nonneg L₀)
   have hAbound : ∀ p ∈ S, |A p| ≤ L := by
     intro p hp
-    exact (hL₀ p hp).trans (by dsimp [L]; linarith [le_abs_self L₀])
+    exact (hL₀ p hp).trans (by dsimp only [L]; linarith only [le_abs_self L₀])
   let K : ℝ := (1 + L) * (1 + J) * (C * D)
-  have hK : 0 < K := by dsimp [K]; positivity
-  have hKC : C * D ≤ K := by
-    dsimp [K]
-    nlinarith [mul_pos hC hD, mul_pos hL hJ]
-  have hKJ : L * J * (C * D) ≤ K := by
-    dsimp [K]
-    linarith [mul_pos hC hD, mul_pos hL (mul_pos hC hD), mul_pos hJ (mul_pos hC hD)]
+  have hK : 0 < K := mul_pos (mul_pos (add_pos one_pos hL) (add_pos one_pos hJ)) (mul_pos hC hD)
+  have hKC : C * D ≤ K := le_mul_of_one_le_left (mul_pos hC hD).le
+    (one_le_mul_of_one_le_of_one_le (le_add_of_nonneg_right hL.le) (le_add_of_nonneg_right hJ.le))
+  have hKJ : L * J * (C * D) ≤ K := mul_le_mul_of_nonneg_right
+    (mul_le_mul (le_add_of_nonneg_left zero_le_one) (le_add_of_nonneg_left zero_le_one) hJ.le
+      (add_pos one_pos hL).le) (mul_pos hC hD).le
   refine ⟨ε₀ / D, K, div_pos hε₀ hD, hK, ?_⟩
   intro d hd hsmall
   let f : ℝ → Coeff := fun p => normalizedDebt (A p) (G p) (d p)
@@ -913,7 +984,7 @@ theorem compact_parameter_repair (P : Patch) (b : ℝ) (hb : GoodExponent b)
     calc
       ‖f p‖ ≤ D * ‖d p‖ := hnorm p hp (d p)
       _ < D * (ε₀ / D) := mul_lt_mul_of_pos_left (hsmall p hp) hD
-      _ = ε₀ := by field_simp
+      _ = ε₀ := mul_div_cancel₀ ε₀ hD.ne'
   let c : ℝ → Coeff := g ∘ f
   have hc : ContDiffOn ℝ ∞ c V := hg.comp hf.contDiffOn (fun p hp => hp)
   refine ⟨c, V, hV, hSV, hc, ?_, ?_⟩
@@ -938,19 +1009,20 @@ theorem compact_parameter_repair (P : Patch) (b : ℝ) (hb : GoodExponent b)
     have he := (hjets k hk (c p) x).2
     have hbound : |A p| * (J * ‖c p‖) ≤ K * ‖d p‖ := by
       calc
-        _ ≤ L * (J * ‖c p‖) := mul_le_mul_of_nonneg_right (hAbound p hp) (by positivity)
+        _ ≤ L * (J * ‖c p‖) :=
+          mul_le_mul_of_nonneg_right (hAbound p hp) (mul_nonneg hJ.le (norm_nonneg _))
         _ ≤ L * (J * (C * D * ‖d p‖)) :=
           mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hcp hJ.le) hL.le
         _ = (L * J * (C * D)) * ‖d p‖ := by ring
         _ ≤ _ := mul_le_mul_of_nonneg_right hKJ (norm_nonneg _)
     constructor
     · unfold u
-      rw [iteratedDeriv_const_mul _ ((correction_contDiff P.leftHalf (c p).1).of_le
-        (by exact_mod_cast (le_top : (k : ℕ∞) ≤ ⊤))).contDiffAt, abs_mul]
+      rw [iteratedDeriv_const_mul _
+        (contDiff_infty.mp (correction_contDiff P.leftHalf (c p).1) k).contDiffAt, abs_mul]
       exact (mul_le_mul_of_nonneg_left hu (abs_nonneg _)).trans hbound
     · unfold e
-      rw [iteratedDeriv_const_mul _ ((correction_contDiff P.rightHalf (c p).2).of_le
-        (by exact_mod_cast (le_top : (k : ℕ∞) ≤ ⊤))).contDiffAt, abs_mul]
+      rw [iteratedDeriv_const_mul _
+        (contDiff_infty.mp (correction_contDiff P.rightHalf (c p).2) k).contDiffAt, abs_mul]
       exact (mul_le_mul_of_nonneg_left he (abs_nonneg _)).trans hbound
 
 theorem smooth_solver_jet_bound {g : Coeff → Coeff} {r : ℝ} (hr : 0 < r)
@@ -958,7 +1030,7 @@ theorem smooth_solver_jet_bound {g : Coeff → Coeff} {r : ℝ} (hr : 0 < r)
     ∃ B : ℝ, 0 < B ∧ ∀ k ≤ N, ∀ z ∈ Metric.closedBall (0 : Coeff) (r / 2),
       ‖iteratedFDeriv ℝ k g z‖ ≤ B := by
   have hsub : Metric.closedBall (0 : Coeff) (r / 2) ⊆ Metric.ball 0 r :=
-    Metric.closedBall_subset_ball (by linarith)
+    Metric.closedBall_subset_ball (by linarith only [hr])
   have hsingle : ∀ k : ℕ, ∃ B : ℝ, 0 ≤ B ∧
       ∀ z ∈ Metric.closedBall (0 : Coeff) (r / 2), ‖iteratedFDeriv ℝ k g z‖ ≤ B := by
     intro k
@@ -973,10 +1045,10 @@ theorem smooth_solver_jet_bound {g : Coeff → Coeff} {r : ℝ} (hr : 0 < r)
   choose B hB hbound using hsingle
   refine ⟨1 + ∑ k ∈ Finset.range (N + 1), B k, ?_, ?_⟩
   · have hs := Finset.sum_nonneg (s := Finset.range (N + 1)) (fun k _ => hB k)
-    linarith
+    linarith only [hs]
   · intro k hk z hz
     have hs := Finset.single_le_sum (fun j _ => hB j) (Finset.mem_range.mpr (Nat.lt_succ_of_le hk))
-    exact (hbound k z hz).trans (by linarith)
+    exact (hbound k z hz).trans (by linarith only [hs])
 
 /-- Genuine higher parameter jets of the nonlinear branch are small when
 the corresponding normalized-debt jets are small. The stronger input scale
@@ -991,7 +1063,8 @@ theorem smooth_solver_parameter_jets {g : Coeff → Coeff} {r C : ℝ}
         ∀ k ≤ N, ‖iteratedFDeriv ℝ k (g ∘ f) x‖ ≤ K * tau := by
   obtain ⟨B, hB, hgb⟩ := smooth_solver_jet_bound hr hg N
   let K : ℝ := C + (N.factorial : ℝ) * B
-  have hK : 0 < K := by dsimp [K]; positivity
+  have hNB : 0 ≤ (N.factorial : ℝ) * B := mul_nonneg (Nat.cast_nonneg _) hB.le
+  have hK : 0 < K := add_pos_of_pos_of_nonneg hC hNB
   refine ⟨K, hK, ?_⟩
   intro f hf tau x htau hmax hfj k hk
   have ht1 : tau ≤ 1 := hmax.trans (min_le_left _ _)
@@ -1003,14 +1076,13 @@ theorem smooth_solver_parameter_jets {g : Coeff → Coeff} {r C : ℝ}
   have hxclosed : f x ∈ Metric.closedBall (0 : Coeff) (r / 2) := by
     simpa only [Metric.mem_closedBall, dist_zero_right] using hfx.trans htr
   have hxball : f x ∈ Metric.ball (0 : Coeff) r := by
-    simpa only [Metric.mem_ball, dist_zero_right] using hfx.trans_lt (lt_of_le_of_lt htr (by
-        linarith))
+    simpa only [Metric.mem_ball, dist_zero_right] using
+      hfx.trans_lt (lt_of_le_of_lt htr (half_lt_self hr))
   by_cases hk0 : k = 0
   · subst k
     rw [norm_iteratedFDeriv_zero]
     exact ((hvalue _ hxball).trans (mul_le_mul_of_nonneg_left hfx hC.le)).trans
-      (mul_le_mul_of_nonneg_right (by
-          dsimp [K]; exact le_add_of_nonneg_right (by positivity)) htau.le)
+      (mul_le_mul_of_nonneg_right (le_add_of_nonneg_right hNB) htau.le)
   let V : Set ℝ := f ⁻¹' Metric.ball (0 : Coeff) r
   have hV : IsOpen V := Metric.isOpen_ball.preimage hf.continuous
   have hxV : x ∈ V := hxball
@@ -1023,8 +1095,8 @@ theorem smooth_solver_parameter_jets {g : Coeff → Coeff} {r C : ℝ}
       mul_le_mul_of_nonneg_right (by exact_mod_cast Nat.factorial_le hk) hB.le
     have hp : tau ^ k ≤ tau := by
       simpa only [pow_one] using pow_le_pow_of_le_one htau.le ht1 (show 1 ≤ k by omega)
-    exact (hchain.trans (mul_le_mul hfac hp (pow_nonneg htau.le k) (by positivity))).trans
-      (mul_le_mul_of_nonneg_right (by dsimp [K]; linarith) htau.le)
+    exact (hchain.trans (mul_le_mul hfac hp (pow_nonneg htau.le k) hNB)).trans
+      (mul_le_mul_of_nonneg_right (le_add_of_nonneg_left hC.le) htau.le)
   · rw [iteratedFDerivWithin_of_isOpen j Metric.isOpen_ball hxball]
     exact hgb j (hj.trans hk) _ hxclosed
   · rw [iteratedFDerivWithin_of_isOpen j hV hxV]
@@ -1035,8 +1107,9 @@ theorem smooth_solver_parameter_jets {g : Coeff → Coeff} {r C : ℝ}
 noncomputable def jetEval {n : ℕ} (P : Patch) (k : ℕ) (x : ℝ) : (Fin n → ℝ) →L[ℝ] ℝ :=
   LinearMap.toContinuousLinearMap
     { toFun := fun c => ∑ i, c i * iteratedDeriv k (bump P i) x
-      map_add' := fun c d => by simp [Pi.add_apply, add_mul, Finset.sum_add_distrib]
-      map_smul' := fun r c => by simp [Pi.smul_apply, smul_eq_mul, Finset.mul_sum, mul_assoc] }
+      map_add' := fun c d => by simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
+      map_smul' := fun r c => by simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, RingHom.id_apply,
+          Finset.mul_sum] }
 
 /-- U jet eval, given by `(jetEval P.leftHalf k x).comp (ContinuousLinearMap.fst ℝ _ _)`. -/
 noncomputable def uJetEval (P : Patch) (k : ℕ) (x : ℝ) : Coeff →L[ℝ] ℝ :=
@@ -1108,7 +1181,9 @@ theorem physical_mixed_jets_small (P : Patch) {g : Coeff → Coeff} {r C : ℝ}
   obtain ⟨D, hD, hparam⟩ := smooth_solver_parameter_jets hr hC hg hvalue N
   let L : ℝ →L[ℝ] Coeff →L[ℝ] Coeff := ContinuousLinearMap.lsmul ℝ ℝ
   let K : ℝ := J * (‖L‖ + 1) * (2 : ℝ) ^ N * D
-  have hK : 0 < K := by dsimp [K]; positivity
+  have hK : 0 < K :=
+    mul_pos (mul_pos (mul_pos hJ (add_pos_of_nonneg_of_pos (norm_nonneg L) one_pos))
+      (pow_pos two_pos N)) hD
   refine ⟨K, hK, ?_⟩
   intro V hV f A hf hA B tau hB htau hmax hAb hfb eta heta k hk m hm x
   have hmap : MapsTo f V (Metric.ball (0 : Coeff) r) := by
@@ -1120,7 +1195,7 @@ theorem physical_mixed_jets_small (P : Patch) {g : Coeff → Coeff} {r C : ℝ}
     have hpow : tau ^ (N + 1) ≤ tau := by
       simpa only [pow_one] using pow_le_pow_of_le_one htau.le ht1 (show 1 ≤ N + 1 by omega)
     simpa only [Metric.mem_ball, dist_zero_right] using
-      (hz.trans hpow).trans_lt (lt_of_le_of_lt htr (by linarith : r / 2 < r))
+      (hz.trans hpow).trans_lt (lt_of_le_of_lt htr (half_lt_self hr))
   let c : ℝ → Coeff := g ∘ f
   have hc : ContDiffOn ℝ ∞ c V := hg.comp hf.contDiffOn hmap
   have hcb : JetBounds.FiniteJetBound N c V (D * tau) := by
@@ -1133,21 +1208,26 @@ theorem physical_mixed_jets_small (P : Patch) {g : Coeff → Coeff} {r C : ℝ}
       (hA.of_le (by exact_mod_cast (le_top : (N : ℕ∞) ≤ ⊤)))
       (hc.of_le (by exact_mod_cast (le_top : (N : ℕ∞) ≤ ⊤))) hAb hcb
   have hcost : J * (‖L‖ * (2 : ℝ) ^ N * B * (D * tau)) ≤ K * B * tau := by
-    dsimp [K]
-    linarith [show 0 ≤ J * (2 : ℝ) ^ N * B * D * tau by positivity]
+    have h0 : 0 ≤ J * (2 : ℝ) ^ N * B * D * tau :=
+      mul_nonneg (mul_nonneg (mul_nonneg (mul_nonneg hJ.le (pow_nonneg zero_le_two N)) hB) hD.le)
+        htau.le
+    dsimp only [K]
+    linarith only [h0]
   have huFun : (fun p => iteratedDeriv k (fun y => A p * u P (g (f p)) y) x) =
       fun p => iteratedDeriv k (u P (v p)) x := by
     funext p
     congr 1
     funext y
-    simp [v, c, u, correction, Pi.smul_apply, smul_eq_mul, mul_assoc]
+    simp only [u, correction, Fin.sum_univ_two, Fin.isValue, comp_apply, Prod.smul_fst,
+        Pi.smul_apply, smul_eq_mul, mul_assoc, v, c]
     ring
   have heFun : (fun p => iteratedDeriv k (fun y => A p * e P (g (f p)) y) x) =
       fun p => iteratedDeriv k (e P (v p)) x := by
     funext p
     congr 1
     funext y
-    simp [v, c, e, correction, Pi.smul_apply, smul_eq_mul, Finset.mul_sum, mul_assoc]
+    simp only [e, correction, Finset.mul_sum, comp_apply, Prod.smul_snd, Pi.smul_apply, smul_eq_mul,
+        mul_assoc, v, c]
   rw [huFun, heFun]
   have hjet := hjets k hk m v eta (hv.contDiffAt (hV.mem_nhds heta)) x
   exact ⟨hjet.1.trans ((mul_le_mul_of_nonneg_left (hvb m hm eta heta) hJ.le).trans hcost),
@@ -1156,13 +1236,15 @@ theorem physical_mixed_jets_small (P : Patch) {g : Coeff → Coeff} {r C : ℝ}
 theorem u_tsupport_patch (P : Patch) (c : Coeff) : tsupport (u P c) ⊆ Ioo P.left P.right := by
   intro x hx
   have hs := correction_tsupport P.leftHalf c.1 hx
-  have hm : P.leftHalf.right < P.right := by dsimp [Patch.leftHalf, Patch.mid]; linarith [P.ordered]
+  have hm : P.leftHalf.right < P.right := by dsimp only [Patch.leftHalf, Patch.mid]; linarith only [
+      P.ordered]
   exact ⟨hs.1, hs.2.trans hm⟩
 
 theorem e_tsupport_patch (P : Patch) (c : Coeff) : tsupport (e P c) ⊆ Ioo P.left P.right := by
   intro x hx
   have hs := correction_tsupport P.rightHalf c.2 hx
-  have hm : P.left < P.rightHalf.left := by dsimp [Patch.rightHalf, Patch.mid]; linarith [P.ordered]
+  have hm : P.left < P.rightHalf.left := by dsimp only [Patch.rightHalf, Patch.mid]; linarith only [
+      P.ordered]
   exact ⟨hm.trans hs.1, hs.2⟩
 
 theorem u_zero_outside (P : Patch) (c : Coeff) {x : ℝ} (hx : x ∉ Ioo P.left P.right) : u P c x = 0
@@ -1175,7 +1257,8 @@ theorem e_zero_outside (P : Patch) (c : Coeff) {x : ℝ} (hx : x ∉ Ioo P.left 
 
 theorem physical_profiles_unchanged (P : Patch) (b A G : ℝ) (c : Coeff) {x : ℝ}
     (hx : x ∉ Ioo P.left P.right) : physicalU P A G c x = G ∧ physicalE P b A c x = A * x ^ b := by
-  simp [physicalU, physicalE, u_zero_outside P c hx, e_zero_outside P c hx]
+  simp only [physicalU, u_zero_outside P c hx, mul_zero, add_zero, physicalE, e_zero_outside P c hx,
+      and_self]
 
 theorem physical_edits_tsupport (P : Patch) (A : ℝ) (c : Coeff) :
     tsupport (fun x => A * u P c x) ⊆ Ioo P.left P.right ∧
@@ -1184,11 +1267,11 @@ theorem physical_edits_tsupport (P : Patch) (A : ℝ) (c : Coeff) :
   · apply Set.Subset.trans _ (u_tsupport_patch P c)
     apply closure_mono
     intro x hx hu
-    exact hx (by simp [hu])
+    exact hx (by simp only [hu, mul_zero])
   · apply Set.Subset.trans _ (e_tsupport_patch P c)
     apply closure_mono
     intro x hx he
-    exact hx (by simp [he])
+    exact hx (by simp only [he, mul_zero])
 
 /-- Profile change density as an element of `Debt`. -/
 noncomputable def profileChangeDensity (U E dU dE : ℝ → ℝ) (x : ℝ) : Debt :=
@@ -1210,7 +1293,10 @@ theorem local_profile_change (P : Patch) (b A G : ℝ) (c : Coeff) (U E : ℝ �
       hU x hx, hE x hx, mul_add]
   · rw [physicalDensity_zero_outside P b A G c hx]
     ext i
-    fin_cases i <;> simp [profileChangeDensity, u_zero_outside P c hx, e_zero_outside P c hx]
+    fin_cases i <;> simp only [profileChangeDensity, u_zero_outside P c hx, mul_zero, add_zero,
+        sub_self, Nat.ofNat_nonneg, Real.sqrt_mul, e_zero_outside P c hx, zero_div, Fin.zero_eta,
+        Fin.isValue, Matrix.cons_val_zero, Pi.zero_apply, Fin.mk_one, Matrix.cons_val_one,
+        Fin.reduceFinMk, Matrix.cons_val]
 
 theorem local_profile_moments (P : Patch) (b A G : ℝ) (c : Coeff) (U E : ℝ → ℝ)
     (hU : ∀ x ∈ Ioo P.left P.right, U x = G)
@@ -1251,11 +1337,11 @@ theorem compact_global_jet_bound {F : Type*} [NormedAddCommGroup F] [NormedSpace
   choose B hB hbound using hb
   refine ⟨1 + ∑ j ∈ Finset.range (N + 1), B j, ?_, ?_⟩
   · have hs := Finset.sum_nonneg (s := Finset.range (N + 1)) (fun j _ => hB j)
-    linarith
+    linarith only [hs]
   · intro j hj p hp
     have hsum := Finset.single_le_sum (fun j _ => hB j) (Finset.mem_range.mpr (Nat.lt_succ_of_le
         hj))
-    exact (hbound j p hp).trans (by linarith)
+    exact (hbound j p hp).trans (by linarith only [hsum])
 
 /-- The fixed smooth weights in the normalization preserve smallness of every
 finite parameter jet. This bridges physical row estimates to the nonlinear
@@ -1267,23 +1353,21 @@ theorem compact_normalizedDebt_jets (S : Set ℝ) (hS : IsCompact S) {A G : ℝ 
       JetBounds.FiniteJetBound N (fun p => normalizedDebt (A p) (G p) (d p)) S (K * D) := by
   have hF := normalizationCLM_contDiff hA hG hAn
   obtain ⟨B, hB, hFb⟩ := compact_global_jet_bound S hS hF N
-  refine ⟨(2 : ℝ) ^ N * B, by positivity, ?_⟩
+  refine ⟨(2 : ℝ) ^ N * B, mul_pos (pow_pos two_pos N) hB, ?_⟩
   intro d hd D hD hdb n hn p hp
   have heq : (fun p => normalizedDebt (A p) (G p) (d p)) =
       fun p => normalizationCLM (A p) (G p) (d p) :=
     funext (fun p => (normalizationCLM_apply (A p) (G p) (d p)).symm)
   rw [heq]
   calc
-    _ ≤ ∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ) *
-        ‖iteratedFDeriv ℝ i (fun p => normalizationCLM (A p) (G p)) p‖ *
-          ‖iteratedFDeriv ℝ (n - i) d p‖ :=
-      norm_iteratedFDeriv_clm_apply hF hd p (by exact_mod_cast (le_top : (n : ℕ∞) ≤ ⊤))
+    _ ≤ _ := norm_iteratedFDeriv_clm_apply hF hd p (by exact_mod_cast (le_top : (n : ℕ∞) ≤ ⊤))
     _ ≤ ∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ) * B * D := by
       apply Finset.sum_le_sum
       intro i hi
       have hin : i ≤ n := Nat.le_of_lt_succ (Finset.mem_range.mp hi)
       exact mul_le_mul (mul_le_mul_of_nonneg_left (hFb i (hin.trans hn) p hp) (Nat.cast_nonneg _))
-        (hdb (n - i) ((Nat.sub_le _ _).trans hn) p hp) (norm_nonneg _) (by positivity)
+        (hdb (n - i) ((Nat.sub_le _ _).trans hn) p hp) (norm_nonneg _)
+        (mul_nonneg (Nat.cast_nonneg _) hB.le)
     _ = (2 : ℝ) ^ n * B * D := by
       rw [← Finset.sum_mul, ← Finset.sum_mul]
       congr 2

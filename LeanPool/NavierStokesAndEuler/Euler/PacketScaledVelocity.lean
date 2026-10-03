@@ -36,7 +36,7 @@ theorem frameSkew_antisymm (B : Fin 3 → Fin 3 → ℝ) (i j : Fin 3) :
   fin_cases i <;> fin_cases j <;> simp [frameSkew, Fin.ext_iff]
 
 theorem frameMatrix_adjoint (B : Space →L[ℝ] Space) (p q : Space) (i j : Fin 3) :
-    frameMatrix B.adjoint p q i j = frameMatrix B p q j i := by
+    frameMatrix (adjoint (𝕜 := ℝ) (E := Space) (F := Space) B) p q i j = frameMatrix B p q j i := by
   unfold frameMatrix
   rw [adjoint_inner_right, real_inner_comm (frame p q j) (B (frame p q i))]
 
@@ -44,8 +44,11 @@ theorem frame_action (M : Space →L[ℝ] Space) (p q x : Space)
     (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0) (i : Fin 3) :
     (∑ j : Fin 3, frameMatrix M p q i j * ⟪frame p q j,x⟫_ℝ) =
       ⟪frame p q i,M x⟫_ℝ := by
-  have h := frame_inner_expand p q hp hq hpq (M.adjoint (frame p q i)) x
-  have hm (j : Fin 3) : ⟪frame p q j,M.adjoint (frame p q i)⟫_ℝ = frameMatrix M p q i j := by
+  have h := frame_inner_expand p q hp hq hpq
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) M (frame p q i)) x
+  have hm (j : Fin 3) :
+      ⟪frame p q j,adjoint (𝕜 := ℝ) (E := Space) (F := Space) M (frame p q i)⟫_ℝ =
+        frameMatrix M p q i j := by
     rw [adjoint_inner_right, real_inner_comm (frame p q i) (M (frame p q j))]
     rfl
   simp only [hm, adjoint_inner_left] at h
@@ -68,7 +71,8 @@ theorem movingVelocityRate_identity (B M : Space →L[ℝ] Space) (p q w : Space
     -⟪frame p q i,M w⟫_ℝ + ⟪frameRate B p q i,w⟫_ℝ =
       -(∑ j : Fin 3, (frameMatrix M p q i j + frameSkew (frameMatrix B p q) i j) *
         ⟪frame p q j,w⟫_ℝ) := by
-  have h := movingRayRate_identity B M.adjoint p q w hp hq hpq i
+  have h := movingRayRate_identity B (adjoint (𝕜 := ℝ) (E := Space) (F := Space) M) p q w
+    hp hq hpq i
   rw [adjoint_inner_left] at h
   simpa only [frameMatrix_adjoint, frameSkew_antisymm (frameMatrix B p q) i,
     sub_neg_eq_add] using h
@@ -109,7 +113,7 @@ theorem moving_pairing (m v r w : ℝ → Space) (t : ℝ)
 equation, with its actual scalar pressure flux and denominator. -/
 theorem movingVelocity_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     {m v r w : ℝ → Space} {t : ℝ} {S : Set ℝ}
-    (hm : HasDerivWithinAt m (-B.adjoint (m t)) S t)
+    (hm : HasDerivWithinAt m (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) B (m t)) S t)
     (hv : HasDerivWithinAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hw : HasDerivWithinAt w (-M (w t) + (2 * ⟪r t, M (w t)⟫_ℝ / ‖r t‖ ^ 2) • r t) S t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i : Fin 3) :
@@ -225,7 +229,10 @@ theorem scaledVelocity_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     {m v r w : ℝ → Space} {s₀ t₀ a ε τ : ℝ} {S U : Set ℝ}
     (ha : a ≠ 0) (hε : ε ≠ 0) (hs₀ : s₀ ≠ 0)
     (hmap : MapsTo (physicalTime t₀ a ε) U S)
-    (hm : HasDerivWithinAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
+    (hm : HasDerivWithinAt m
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B
+        (m (physicalTime t₀ a ε τ))) S
+      (physicalTime t₀ a ε τ))
     (hv : HasDerivWithinAt v (-B (v (physicalTime t₀ a ε τ)) +
       (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
         ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))

@@ -11,6 +11,8 @@ public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-!
 # The whole-space assertion of Part II, Theorem 1.1
@@ -187,7 +189,7 @@ theorem candidateStatement_iff_nonempty (ν : ℝ) :
     (t : ℝ) (x : Space) :
     navierStokesResidual 1 u p t x =
       NavierStokes.ProblemStatement.navierStokesResidual u p t x := by
-  simp [navierStokesResidual, NavierStokes.ProblemStatement.navierStokesResidual]
+  simp only [navierStokesResidual, one_smul, NavierStokes.ProblemStatement.navierStokesResidual]
 
 /-- The support convention really excludes forcing at every nonpositive time. -/
 theorem CompactPositiveTimeSupport.eq_zero_of_nonpos {f : VelocityField}
@@ -219,19 +221,22 @@ theorem zero_force_has_global_solution (ν : ℝ) :
     energy_bounded := ?_
   }⟩
   · intro t ht x
-    simp [NavierStokes.ProblemStatement.spatialDivergence,
-      NavierStokes.ProblemStatement.spatialDerivative]
+    simp only [NavierStokes.ProblemStatement.spatialDivergence,
+        NavierStokes.ProblemStatement.spatialDerivative, fderiv_fun_const, Pi.zero_apply,
+        zero_apply, PiLp.zero_apply, Finset.sum_const_zero]
   · intro t ht x
-    simp [navierStokesResidual, NavierStokes.ProblemStatement.temporalDerivative,
-      NavierStokes.ProblemStatement.advection,
-      NavierStokes.ProblemStatement.spatialLaplacian,
-      NavierStokes.ProblemStatement.spatialDerivative,
-      NavierStokes.ProblemStatement.pressureGradient]
+    simp only [navierStokesResidual, NavierStokes.ProblemStatement.temporalDerivative,
+        fderiv_fun_const, Pi.zero_apply, zero_apply, NavierStokes.ProblemStatement.advection,
+        NavierStokes.ProblemStatement.spatialDerivative, add_zero,
+        NavierStokes.ProblemStatement.spatialLaplacian, Finset.sum_const_zero, smul_zero, sub_self,
+        NavierStokes.ProblemStatement.pressureGradient, zero_smul]
   · refine ⟨0, le_refl 0, ?_⟩
     intro t ht
     constructor
-    · simp [SquareIntegrableAtTime]
-    · simp [kineticEnergy]
+    · simp only [SquareIntegrableAtTime, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+        zero_pow, integrable_fun_zero]
+    · simp only [kineticEnergy, one_div, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+        zero_pow, integral_zero, mul_zero, Std.le_refl]
 
 /-- The full target contains the primary candidate-existence target. -/
 theorem breakdown_implies_core (h : breakdownStatement) : coreBreakdownStatement := by

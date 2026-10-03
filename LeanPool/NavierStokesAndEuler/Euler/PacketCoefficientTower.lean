@@ -147,7 +147,7 @@ local instance instCoefficientPathSobolev4 : NormedSpace ℝ (Space →ᵇ Space
 
 variable (P : ℝ) [Fact (0 < P)]
   (A : C(K, Space →ᵇ Space →L[ℝ] Space))
-  (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
+  (hA : ContDiff ℝ ∞ (translateCoefficientPath (V := Space →L[ℝ] Space) A))
 
 /-- Sobolev operator, given by `coefficientSobolevOperator P (coefficientJet P A hA q t)`. -/
 def sobolevOperator (q : ℕ) (t : K) : SobolevSpace P q →L[ℝ] SobolevSpace P q :=
@@ -165,33 +165,31 @@ theorem sobolevOperator_value_comp (q : ℕ) (t : K) :
   intro u
   exact sobolevOperator_value P A hA q t u
 
+theorem value_add_eq {q : ℕ} (u v : SobolevSpace P q) :
+    value P (u + v) = value P u + value P v := rfl
+
 theorem sobolevOperator_derivative (q : ℕ) (t : K) (i : Fin 4)
     (u : SobolevSpace P (q + 1)) :
     derivativeOperator P q i (sobolevOperator P A hA (q+1) t u) =
       sobolevOperator P A hA q t (derivativeOperator P q i u) +
-      sobolevOperator P (orbitDerivativePath A (standardDirection i).1)
-        (orbitDerivativePath_orbit A hA (standardDirection i).1) q t (truncateOperator P q u) := by
+      sobolevOperator P (orbitDerivativePath (V := Space →L[ℝ] Space) A (standardDirection i).1)
+        (orbitDerivativePath_orbit (V := Space →L[ℝ] Space) A hA (standardDirection i).1) q t
+          (truncateOperator P q u) := by
   apply value_injective P
   have h₁ := derivativeOperator_hasDerivAt P i (sobolevOperator P A hA (q+1) t u)
   rw [sobolevOperator_value] at h₁
-  have h₂ := (smoothCoefficient P A hA t).product_hasDerivAt
-    (smoothCoefficient P (orbitDerivativePath A (standardDirection i).1)
-      (orbitDerivativePath_orbit A hA (standardDirection i).1) t)
+  simp only [value_add_eq, sobolevOperator_value, value_truncateOperator]
+  exact h₁.unique ((smoothCoefficient P A hA t).product_hasDerivAt _
     (standardDirection i) (fun x => (cylinder_fieldDerivative P A hA t (standardDirection i)
         x).symm)
-    (value P u) (value P (derivativeOperator P q i u)) (derivativeOperator_hasDerivAt P i u)
-  change value P (derivativeOperator P q i (sobolevOperator P A hA (q+1) t u)) =
-    value P (sobolevOperator P A hA q t (derivativeOperator P q i u)) +
-    value P (sobolevOperator P (orbitDerivativePath A (standardDirection i).1)
-      (orbitDerivativePath_orbit A hA (standardDirection i).1) q t (truncateOperator P q u))
-  simp only [sobolevOperator_value,value_truncateOperator]
-  exact h₁.unique h₂
+    (value P u) (value P (derivativeOperator P q i u)) (derivativeOperator_hasDerivAt P i u))
 
 theorem sobolevOperator_derivative_comp (q : ℕ) (t : K) (i : Fin 4) :
     (derivativeOperator P q i).comp (sobolevOperator P A hA (q+1) t) =
       (sobolevOperator P A hA q t).comp (derivativeOperator P q i) +
-      (sobolevOperator P (orbitDerivativePath A (standardDirection i).1)
-        (orbitDerivativePath_orbit A hA (standardDirection i).1) q t).comp (truncateOperator P q)
+      (sobolevOperator P (orbitDerivativePath (V := Space →L[ℝ] Space) A (standardDirection i).1)
+        (orbitDerivativePath_orbit (V := Space →L[ℝ] Space) A hA (standardDirection i).1) q t).comp
+          (truncateOperator P q)
             := by
   apply ContinuousLinearMap.ext
   intro u
@@ -199,7 +197,7 @@ theorem sobolevOperator_derivative_comp (q : ℕ) (t : K) (i : Fin 4) :
 
 private theorem sobolevOperator_continuous_aux (q : ℕ) :
     ∀ (A : C(K, Space →ᵇ Space →L[ℝ] Space))
-      (hA : ContDiff ℝ ∞ (translateCoefficientPath A)),
+      (hA : ContDiff ℝ ∞ (translateCoefficientPath (V := Space →L[ℝ] Space) A)),
       Continuous (fun t => sobolevOperator P A hA q t) := by
   induction q with
   | zero =>
@@ -215,9 +213,7 @@ private theorem sobolevOperator_continuous_aux (q : ℕ) :
     · intro i
       simp_rw [sobolevOperator_derivative_comp]
       exact ((ih A hA).clm_comp_const (derivativeOperator P q i)).add
-        ((ih (orbitDerivativePath A (standardDirection i).1)
-          (orbitDerivativePath_orbit A hA (standardDirection i).1)).clm_comp_const
-              (truncateOperator P q))
+        ((ih _ _).clm_comp_const (truncateOperator P q))
 
 theorem sobolevOperator_continuous (q : ℕ) :
     Continuous (fun t => sobolevOperator P A hA q t) :=
@@ -260,7 +256,8 @@ theorem toCoefficientTower_raw (A : MatrixCoefficient T raw)
 
 theorem toCoefficientTower_operator (A : MatrixCoefficient T raw)
     (t : Icc (0 : ℝ) T) :
-    ((A.toCoefficientTower P).coefficient t).operator = fullOperatorMap P (A.path t) :=
+    ((A.toCoefficientTower P).coefficient t).operator =
+      fullOperatorMap (E := Space) (F := Space) P (A.path t) :=
   smoothCoefficient_operator P A.path A.orbit t
 
 theorem toCoefficientTower_operator_continuous (A : MatrixCoefficient T raw) :
@@ -270,7 +267,7 @@ theorem toCoefficientTower_operator_continuous (A : MatrixCoefficient T raw) :
 theorem toCoefficientTower_sobolev_value (A : MatrixCoefficient T raw)
     (q : ℕ) (t : Icc (0 : ℝ) T) (u : SobolevSpace P q) :
     value P (coefficientSobolevOperator P ((A.toCoefficientTower P).jet q t) u) =
-      fullOperatorMap P (A.path t) (value P u) := by
+      fullOperatorMap (E := Space) (F := Space) P (A.path t) (value P u) := by
   rw [coefficientSobolevOperator_value]
   exact congrArg (fun L => L (value P u)) (toCoefficientTower_operator P A t)
 

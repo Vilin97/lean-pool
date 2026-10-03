@@ -100,7 +100,7 @@ theorem exists_window_at {coord a b : ℝ} (hc : 0 < coord) (hc1 : coord < 1)
       s ∈ PositiveRepresentatives.stableTarget coord ∧
       L / 2 < stableLength coord s ∧ stableLength coord s < 2 * L := by
     filter_upwards [(PositiveRepresentatives.stableTarget_open coord).mem_nhds hs,
-      hl (lt_mem_nhds (half_lt_self hL)), hl (gt_mem_nhds (show L < 2 * L by linarith))]
+      hl (lt_mem_nhds (half_lt_self hL)), hl (gt_mem_nhds (show L < 2 * L by linarith only [hL]))]
       with s hst hlo hhi
     exact ⟨hst, hlo, hhi⟩
   obtain ⟨U, hUsub, hU, hzU⟩ := mem_nhds_iff.mp hnear
@@ -108,7 +108,7 @@ theorem exists_window_at {coord a b : ℝ} (hc : 0 < coord) (hc1 : coord < 1)
     mul_pos (half_pos hL) ha, ?_, ?_, ?_⟩, hzU⟩
   · have hprod := mul_lt_mul_of_pos_left hab hL
     have hprodpos := mul_pos hL ha
-    nlinarith
+    nlinarith only [hprod, hprodpos]
   · intro s hsU
     exact mul_le_mul_of_nonneg_right (hUsub hsU).2.1.le ha.le
   · intro s hsU
@@ -820,9 +820,9 @@ theorem radius_contDiffAt {w : SpaceTime} (hw : PhysicalGraphBounds.radialProjec
     apply hw
     apply Prod.ext
     · change w.2 0 = 0
-      nlinarith [sq_nonneg (w.2 1), sq_nonneg (w.2 0)]
+      nlinarith only [hz, sq_nonneg (w.2 1), sq_nonneg (w.2 0)]
     · change w.2 1 = 0
-      nlinarith [sq_nonneg (w.2 1), sq_nonneg (w.2 0)]
+      nlinarith only [hz, sq_nonneg (w.2 1), sq_nonneg (w.2 0)]
   change ContDiffAt ℝ ∞ (fun z : SpaceTime => Real.sqrt (z.2 0 ^ 2 + z.2 1 ^ 2)) w
   exact ((((AxisymmetricFields.projection 0).contDiff.comp contDiff_snd).contDiffAt.pow 2).add
     (((AxisymmetricFields.projection 1).contDiff.comp contDiff_snd).contDiffAt.pow 2)).sqrt hs
@@ -959,8 +959,8 @@ theorem mean_model_extensions {h a b d : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     Nonempty (JointResidualLimits.OneSidedExtension
       (SpatialCurl.spatialCurl (azimuthalPotential h n (VariableGaugeMean.streamPotential d a b M
         (VariableGaugeMean.qLength (2 * h)) v (physicalSource (2 * h) F)))) x) := by
-  have hc : 0 < 2 * h := by linarith
-  have hc1 : 2 * h < 1 := by linarith
+  have hc : 0 < 2 * h := by linarith only [hh]
+  have hc1 : 2 * h < 1 := by linarith only [hh1]
   obtain ⟨W, hw⟩ := exists_endpoint_window hc hc1 ha hab hx
   let e : SupportedContinuation W (physicalSource (2 * h) F) :=
     SupportedContinuation.ofModel hc hc1 F hF hs
@@ -979,8 +979,8 @@ theorem temporal_mean_model_extension {h a b d : ℝ} (hh : 0 < h) (hh1 : h < 1 
       (azimuthalPotential h n (VariableGaugeMean.streamPotential d a b M
         (VariableGaugeMean.qLength (2 * h)) v
         (MeanChartCompatibility.temporalAtIndex h n i (physicalSource (2 * h) F)))) x) := by
-  have hc : 0 < 2 * h := by linarith
-  have hc1 : 2 * h < 1 := by linarith
+  have hc : 0 < 2 * h := by linarith only [hh]
+  have hc1 : 2 * h < 1 := by linarith only [hh1]
   obtain ⟨W, hw⟩ := exists_endpoint_window hc hc1 ha hab hx
   let e : SupportedContinuation W (physicalSource (2 * h) F) :=
     SupportedContinuation.ofModel hc hc1 F hF hs
@@ -1144,7 +1144,7 @@ theorem mean_diagonal_awayExtensions {h a b d : ℝ} (hh : 0 < h) (hh1 : h < 1 /
         (PhysicalWaveSum.physicalQ h) A) ∧
     JointResidualLimits.AwayExtensions (SolenoidalDiagonal.velocitySum scale
         (PhysicalWaveSum.physicalQ h) A) := by
-  have hsup j := mean_models_supported (by linarith : 0 < 2 * h) (by linarith : 2 * h < 1)
+  have hsup j := mean_models_supported (by linarith only [hh] : 0 < 2 * h) (by linarith : 2 * h < 1)
     ha hab hd (M j) (v j) (F j) (hF j) (hs j)
   have hps := AnnularEndpoint.ShrinkingSupport.potentialSum
     (fun j => physicalScalar_shrinkingSupport h (n j) (hsup j).1) scale (PhysicalWaveSum.physicalQ

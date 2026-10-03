@@ -410,8 +410,8 @@ theorem radialFrequency_band_transport (h d M : ℝ) (n m k i ir : ℕ) (hi : i 
     rw [show (1 / 2 : ℝ) * d = d / 2 by ring]
     exact Real.div_rpow (ChartScales.Q_pos n).le (ChartScales.Q_pos m).le (d / 2)
   rw [MeanChartCompatibility.radialFrequency, MeanChartCompatibility.radialFrequency, hp, ← hi,
-      pow_add]
-  field_simp [(Real.rpow_pos_of_pos (ChartScales.Q_pos m) (d / 2)).ne']
+      pow_add, mul_div_assoc', eq_div_iff (Real.rpow_pos_of_pos (ChartScales.Q_pos m) (d / 2)).ne']
+  ring
 
 /-- The similarity gauge satisfies all primitive transport laws with the
 actual band scales and actual common-index gap. -/
@@ -423,7 +423,7 @@ theorem similarityGaugeOn {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       (VariableGaugeMean.similarityGauge h d a b M hab index) n m := by
   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_⟩
   · intro s hs
-    exact VariableGaugeMean.qLength_pos (by linarith) (by linarith) (hV s hs)
+    exact VariableGaugeMean.qLength_pos (by linarith only [hh]) (by linarith only [hh1]) (hV s hs)
   · intro s hs
     exact qLength_bandSlowEquiv hh hh1 n m (hV s hs)
   · change MeanChartCompatibility.radialFrequency h n (index n) d M •

@@ -66,7 +66,7 @@ theorem eq_of_dense_inner_eq {D : Set H} (hD : Dense D) {x y : H}
     (heq : ∀ φ ∈ D, inner ℝ φ x = inner ℝ φ y) : x = y := by
   have hz : ‖x - y‖ ≤ 0 := norm_le_of_dense_inner_bound hD le_rfl (by
     intro φ hφ
-    simp [inner_sub_right, heq φ hφ])
+    simp only [inner_sub_right, heq φ hφ, sub_self, norm_zero, zero_mul, Std.le_refl])
   exact sub_eq_zero.mp (norm_eq_zero.mp (le_antisymm hz (norm_nonneg _)))
 
 /-- Bounded scalar derivatives on the open interval give a strong Lipschitz
@@ -90,8 +90,8 @@ theorem lipschitzOnWith_of_dense_scalar_derivative
         obtain ⟨d, hd, hdb⟩ := hderiv φ hφ t ht
         rw [hd.deriv]
         exact_mod_cast hdb
-    have hclosure := hopen.closure (by simpa [closure_Ioo hac.ne] using hcont φ hφ)
-    simpa [closure_Ioo hac.ne] using hclosure
+    have hclosure := hopen.closure (by simpa only [closure_Ioo hac.ne] using hcont φ hφ)
+    simpa only [closure_Ioo hac.ne] using hclosure
   rw [lipschitzOnWith_iff_norm_sub_le]
   intro t ht s hs
   apply norm_le_of_dense_inner_bound hD (mul_nonneg C.coe_nonneg (norm_nonneg _))

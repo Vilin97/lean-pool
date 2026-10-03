@@ -70,10 +70,8 @@ def precompLinear (A : SmoothTimeField K E V) (L : F →L[ℝ] E) :
     (mapPath (ContinuousMultilinearMap.compContinuousLinearMapL (F := V) (fun _ : Fin n => L))
         (A.jet n))
   jet_eq n t x := by
-    change (A.jet n t (L x)).compContinuousLinearMap (fun _ : Fin n => L) =
-      iteratedFDeriv ℝ n ((A.field t : E → V) ∘ L) x
-    rw [A.jet_eq]
-    exact (L.iteratedFDeriv_comp_right (A.smooth t) x (by simp)).symm
+    exact (congrArg (fun M => M.compContinuousLinearMap fun _ : Fin n => L)
+      (A.jet_eq n t (L x))).trans (L.iteratedFDeriv_comp_right (A.smooth t) x (by simp)).symm
 
 @[simp] theorem precompLinear_apply (A : SmoothTimeField K E V) (L : F →L[ℝ] E)
     (t : K) (x : F) : (A.precompLinear L).field t x = A.field t (L x) := rfl

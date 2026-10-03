@@ -117,7 +117,7 @@ theorem weighted_root_integral_of_deriv_bound (Q a F w w' : ℝ → ℝ) (s t : 
   · intro u hu
     rw [((hwd u hu).fun_mul (hregd δ hδ u hu).hasDerivAt).deriv]
     have h := mul_le_mul_of_nonneg_left (hreg δ hδ u hu) (hw u hu)
-    nlinarith
+    nlinarith only [h]
 
 end EulerWeightedRootLimit
 

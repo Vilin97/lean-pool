@@ -39,7 +39,7 @@ theorem normalized_tail_exponential {R B k X : ℝ} (N : ℕ)
     (hX : 6 ≤ X) (hN : X - 1 ≤ (N : ℝ)) :
     ((C.inverse.multiply G).smul k).WordBound 6 R
       (Real.exp (-(7/10)*X*Real.log k)) 0 := by
-  have hk0 : 0 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
   have hA : 0 ≤ 2*B*(k⁻¹*B)^(N+1) :=
     mul_nonneg (mul_nonneg (by norm_num) hB0) (pow_nonneg (mul_nonneg (inv_nonneg.mpr hk0) hB0) _)
   have h := BC.normalized_inverse_bound G hG hA hRc k hk0

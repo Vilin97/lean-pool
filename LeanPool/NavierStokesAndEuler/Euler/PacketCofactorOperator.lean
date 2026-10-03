@@ -152,9 +152,15 @@ theorem operatorMatrix_adjugate (A : EndSpace) :
     operatorMatrix (adjugate A) = (operatorMatrix A).adjugate := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [operatorMatrix,adjugate,cofactorValue,rowOperator_apply,
-      crossLeft_apply,cross,basis,EuclideanSpace.inner_single_right,
-      cross_apply,Matrix.adjugate_fin_three,Matrix.cons_val_two] <;> ring
+    simp only [operatorMatrix, adjugate, cofactorBilinear_apply, cofactorValue, Fin.isValue, basis,
+      rowOperator_apply, EuclideanSpace.inner_single_right, Matrix.cons_val_one,
+      Matrix.cons_val_zero, Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons, conj_trivial,
+      crossOperator_apply, crossLeft_apply, cross, cross_apply, Nat.succ_eq_add_one, Nat.reduceAdd,
+      Fin.zero_eta, Fin.reduceFinMk, Fin.mk_one, add_apply, PiLp.add_apply, PiLp.smul_apply, ne_eq,
+      zero_ne_one, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, PiLp.single_eq_same,
+      smul_eq_mul, mul_zero, add_zero, mul_one, zero_add, one_mul, Fin.reduceEq,
+      Matrix.adjugate_fin_three, Matrix.of_apply, Matrix.cons_val', Matrix.cons_val_fin_one,
+      Matrix.head_fin_const] <;> ring
 
 theorem operatorMatrix_injective : Function.Injective operatorMatrix := by
   intro A B h

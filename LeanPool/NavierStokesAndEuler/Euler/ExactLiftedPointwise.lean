@@ -133,14 +133,13 @@ theorem pointField_hasDerivAt (x : LiftDomain P) (t : ℝ) (ht : t ∈ Ioo 0 T) 
       fun r => S.velocity.pointField (projIcc 0 T hT.le r) x := by
     funext r
     exact (S.velocity.pointField_eq_high 6 (by omega) _ x).symm
-  change HasDerivAt (fun r => (pointEvaluation P x).comp (restrictOperator P (by omega : 3 ≤ 6))
-    (extendPath T hT.le (S.velocity.realization 6) r)) _ t at h
-  rw [hfun] at h
-  simp only [comp_apply,map_sub,map_neg] at h
+  rw [← hfun]
+  refine h.congr_deriv ?_
+  simp only [comp_apply,map_sub,map_neg]
   rw [pointEvaluation_nonlinearity P A S.velocity 6 le_rfl,
     pointEvaluation_coefficient P (by omega : 3 ≤ 6),
-    ← S.pressure.pointField_eq_high 6 (by omega)] at h
-  exact h
+    ← S.pressure.pointField_eq_high 6 (by omega)]
+  rfl
 
 /-- The canonical fields satisfy the literal normalized pointwise equation. -/
 theorem pointwise_equation (t : Icc (0 : ℝ) T) (x : LiftDomain P) :

@@ -106,20 +106,11 @@ theorem operatorPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
     HasDerivWithinAt (extendPath T hT (operatorPath μ S hS T A))
       (operatorPath μ S hS T A' t) (Icc (0 : ℝ) T) t := by
   have hfield := EulerBoundedFieldTimeDerivative.hasDerivWithinAt T hT A A' hpoint t t.property
-  have hlinear : HasFDerivAt (fun A : Field (α := α) (V := V) => operatorMap μ S hS A)
-      (operatorMap μ S hS) (extendPath (Y := Field (α := α) (V := V)) T hT A t) :=
-    ContinuousLinearMap.hasFDerivAt (𝕜 := ℝ) (E := Field (α := α) (V := V))
-      (F := supportedSpace (V := V) μ S hS →L[ℝ] supportedSpace (V := V) μ S hS)
-      (operatorMap μ S hS)
-  have hd : HasDerivWithinAt
-      (fun s => operatorMap μ S hS (extendPath (Y := Field (α := α) (V := V)) T hT A s))
-      (operatorMap μ S hS (extendPath (Y := Field (α := α) (V := V)) T hT A' t))
-      (Icc (0 : ℝ) T) t := hlinear.comp_hasDerivWithinAt (t : ℝ) hfield
-  change HasDerivWithinAt (fun s => operatorMap μ S hS (A (projIcc 0 T hT s)))
-    (operatorMap μ S hS (A' t)) (Icc (0 : ℝ) T) t
-  change HasDerivWithinAt (fun s => operatorMap μ S hS (A (projIcc 0 T hT s)))
-    (operatorMap μ S hS (A' (projIcc 0 T hT t))) (Icc (0 : ℝ) T) t at hd
-  rwa [projIcc_of_mem hT t.property] at hd
+  have hd := (operatorMap (V := V) μ S hS).hasFDerivAt.comp_hasDerivWithinAt (t : ℝ) hfield
+  have e := congrArg (fun y => operatorMap (V := V) μ S hS (A' y)) (projIcc_val hT t)
+  change HasDerivWithinAt (fun s => operatorMap (V := V) μ S hS (A (projIcc 0 T hT s)))
+    (operatorMap (V := V) μ S hS (A' t)) (Icc (0 : ℝ) T) t
+  exact hd.congr_deriv e
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (B Φ Ψ : C(Icc (0 : ℝ) T, Field (α := α) (V := V)))
@@ -137,29 +128,20 @@ def liftEvolution : Evolution T hT (operatorPath μ S hS T B) where
   backward := operatorPath μ S hS T Ψ
   forward_backward := by
     intro t
-    change (operator μ S hS (Φ t)).comp (operator μ S hS (Ψ t)) = _
-    rw [← operator_mul]
-    calc
-      operator μ S hS (Φ t * Ψ t) = operator μ S hS (1 : Field (α := α) (V := V)) :=
-        operator_congr_on μ S hS _ _ (fun x hx => hRight t x hx)
-      _ = _ := operator_one μ S hS
+    exact (operator_mul μ S hS (Φ t) (Ψ t)).symm.trans
+      ((operator_congr_on μ S hS (Φ t * Ψ t) 1 (fun x hx => hRight t x hx)).trans
+        (operator_one μ S hS))
   backward_forward := by
     intro t
-    change (operator μ S hS (Ψ t)).comp (operator μ S hS (Φ t)) = _
-    rw [← operator_mul]
-    calc
-      operator μ S hS (Ψ t * Φ t) = operator μ S hS (1 : Field (α := α) (V := V)) :=
-        operator_congr_on μ S hS _ _ (fun x hx => hLeft t x hx)
-      _ = _ := operator_one μ S hS
+    exact (operator_mul μ S hS (Ψ t) (Φ t)).symm.trans
+      ((operator_congr_on μ S hS (Ψ t * Φ t) 1 (fun x hx => hLeft t x hx)).trans
+        (operator_one μ S hS))
   derivative := by
     intro t
     let D : C(Icc (0 : ℝ) T,Field (α := α) (V := V)) :=
       ⟨fun s => B s * Φ s, B.continuous.mul Φ.continuous⟩
     have hd := operatorPath_hasDerivWithinAt μ S hS T hT Φ D hΦ t
-    change HasDerivWithinAt (extendPath T hT (operatorPath μ S hS T Φ))
-      (operator μ S hS (B t * Φ t)) (Icc (0 : ℝ) T) t at hd
-    rw [operator_mul] at hd
-    exact hd
+    exact hd.congr_deriv (operator_mul μ S hS (B t) (Φ t))
 
 /-- The pointwise localized (H3) estimate is the actual L² propagator norm,
 with the identical relative profile factor. -/
@@ -248,7 +230,7 @@ theorem fundamental_pointwise_derivative (t : ℝ) (ht : t ∈ Icc (0 : ℝ) T) 
       ((extendPath (Y := Field (α := α) (V := V)) T hT B t x).comp
         (extendPath (Y := Field (α := α) (V := V)) T hT (fundamentalPath T hT B).forward t x))
       (Icc (0 : ℝ) T) t := by
-  let ev : Field (α := α) (V := V) →L[ℝ] (V →L[ℝ] V) := BoundedContinuousFunction.evalCLM ℝ x
+  let ev := BoundedContinuousFunction.evalCLM (β := V →L[ℝ] V) ℝ x
   have hd := (ContinuousLinearMap.hasFDerivAt (𝕜 := ℝ)
     (E := Field (α := α) (V := V)) (F := V →L[ℝ] V) ev).comp_hasDerivWithinAt t
       ((fundamentalPath T hT B).derivative ⟨t,ht⟩)

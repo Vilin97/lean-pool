@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.InnerProductSpace.PiL2
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanSpaceShortcuts
 
 /-!
 # The actual slot phase and its material defect
@@ -78,7 +79,7 @@ theorem fderiv_phase_apply (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q w : Slot)
   simp only [_root_.sub_apply, _root_.add_apply,
     _root_.smul_apply, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.id_apply, smul_eq_mul]
-  dsimp
+  dsimp only [ContinuousLinearMap.coe_snd', ContinuousLinearMap.coe_fst']
   ring
 
 theorem phase_dR (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot)
@@ -128,9 +129,12 @@ theorem phaseNormal_formula (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot)
         pz - ε * q.2.2 * (p * slowZ F q.1 + pz * slowZ G q.1)] := by
   ext i
   fin_cases i
-  · simp [phaseNormal, phase_dR ε p pz x0 F G q hF hG]
-  · simp [phaseNormal, phase_dTheta ε p pz x0 F G q hF hG]
-  · simp [phaseNormal, phase_dZ ε p pz x0 F G q hF hG]
+  · simp only [phaseNormal, phase_dR ε p pz x0 F G q hF hG, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val_zero]
+  · simp only [phaseNormal, phase_dTheta ε p pz x0 F G q hF hG, Fin.mk_one, Fin.isValue,
+      Matrix.cons_val_one, Matrix.cons_val_zero]
+  · simp only [phaseNormal, phase_dZ ε p pz x0 F G q hF hG, Fin.reduceFinMk, Fin.isValue,
+      Matrix.cons_val]
     field_simp
 
 /-- Joint regularity in every slot coordinate, at any differentiability order. -/
@@ -196,7 +200,7 @@ def angularShift (h : ℝ) (q : Slot) : Slot := (q.1, (q.2.1 + h, q.2.2))
 theorem phase_angularShift (ε p pz x0 h : ℝ) (F G : Slow → ℝ) (q : Slot) :
     phase ε p pz x0 F G (angularShift h q) = phase ε p pz x0 F G q + p * h := by
   unfold phase angularShift
-  dsimp
+  dsimp only
   ring
 
 /-- The actual complex carrier `exp(i k j Φ)`, with integer harmonic `j`. -/
@@ -244,7 +248,8 @@ theorem contDiffAt_phaseNormal (ε p pz x0 : ℝ) (F G : Slow → ℝ) (q : Slot
     (hR : q.1.1 ≠ 0) (hF : ContDiff ℝ ∞ F) (hG : ContDiff ℝ ∞ G) :
     ContDiffAt ℝ ∞ (phaseNormal ε p pz x0 F G) q := by
   have hD : ContDiff ℝ ∞ (fderiv ℝ (phase ε p pz x0 F G)) :=
-    (contDiff_phase ε p pz x0 F G hF hG).fderiv_right (by simp)
+    (contDiff_phase ε p pz x0 F G hF hG).fderiv_right (by simp only [ENat.coe_top_add_one,
+        Std.le_refl])
   have hp (w : Slot) : ContDiff ℝ ∞ (fun z => fderiv ℝ (phase ε p pz x0 F G) z w) :=
     hD.clm_apply contDiff_const
   apply (EuclideanSpace.equiv (Fin 3) ℝ).comp_contDiffAt_iff.mp
@@ -273,7 +278,10 @@ theorem hasDerivAt_phaseNormal_slot (ε p pz x0 θ v : ℝ) (F G : Slow → ℝ)
     funext w
     rw [phaseNormal_formula ε p pz x0 F G (s, (θ, w)) hε hF hG]
     ext i
-    fin_cases i <;> simp [n0, normalSlotDerivative] <;> ring
+    fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+        normalSlotDerivative, neg_add_rev, neg_mul, PiLp.add_apply, PiLp.smul_apply, smul_eq_mul,
+        n0, Fin.mk_one, Matrix.cons_val_one, mul_zero, add_zero, Fin.reduceFinMk, Matrix.cons_val,
+        mul_neg] <;> ring
   rw [heq]
   simpa only [one_smul, zero_add, id_eq] using (hasDerivAt_const v n0).fun_add
     ((hasDerivAt_id v).smul_const (normalSlotDerivative ε p pz F G s))
@@ -291,14 +299,15 @@ theorem referenceNormal_norm_ge (B s Kθ Kz : ℝ)
     B ≤ ‖referenceNormal B s Kθ Kz‖ := by
   have hn : ‖referenceNormal B s Kθ Kz‖ ^ 2 =
       (B * s) ^ 2 + (B * Kθ) ^ 2 + (B * Kz) ^ 2 := by
-    simpa [referenceNormal] using vec3_norm_sq (referenceNormal B s Kθ Kz)
+    simpa only [referenceNormal, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.cons_val] using vec3_norm_sq (referenceNormal B s Kθ Kz)
   have htan : (B * Kθ) ^ 2 + (B * Kz) ^ 2 = B ^ 2 := by
     calc
       (B * Kθ) ^ 2 + (B * Kz) ^ 2 = B ^ 2 * (Kθ ^ 2 + Kz ^ 2) := by ring
       _ = B ^ 2 := by rw [hK, mul_one]
   have hsq : B ^ 2 ≤ ‖referenceNormal B s Kθ Kz‖ ^ 2 := by
-    nlinarith [sq_nonneg (B * s)]
-  nlinarith [norm_nonneg (referenceNormal B s Kθ Kz)]
+    nlinarith only [hn, htan, sq_nonneg (B * s)]
+  nlinarith only [hn, htan, norm_nonneg (referenceNormal B s Kθ Kz)]
 
 /-- An explicit reference-vector error bound gives a quantitative lower bound
 for the actual phase normal. The comparison estimate itself is a hypothesis. -/
@@ -310,7 +319,7 @@ theorem phaseNormal_norm_lower (ε p pz x0 B s Kθ Kz δ : ℝ)
   have htriangle := norm_sub_norm_le (referenceNormal B s Kθ Kz)
     (phaseNormal ε p pz x0 F G q)
   rw [norm_sub_rev] at htriangle
-  linarith
+  linarith only [hclose, href, htriangle]
 
 /-- Half-scale closeness ensures the denominator in the projected pulse
 equation is nonzero for this actual phase normal. -/
@@ -321,6 +330,6 @@ theorem phaseNormal_ne_zero_of_close (ε p pz x0 B s Kθ Kz : ℝ)
   have hlow := phaseNormal_norm_lower ε p pz x0 B s Kθ Kz (B / 2) F G q hK hclose
   intro hz
   rw [hz, norm_zero] at hlow
-  linarith
+  linarith only [hB, hlow]
 
 end NavierStokes.PhaseCalculus

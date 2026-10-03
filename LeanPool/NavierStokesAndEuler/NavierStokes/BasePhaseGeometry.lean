@@ -137,7 +137,7 @@ theorem column_scale_bounds (H : Mat2) (T : Vec2) (c : Vec2)
   have hdn : H.det ≠ 0 := by
     intro hd
     rw [hd, abs_zero] at hdet
-    linarith
+    linarith only [hdelta, hdet]
   refine ⟨?_, ?_, ?_⟩
   · rw [normalized_columns, FlatCovariance.determinant_columns, abs_mul, abs_mul,
       abs_of_pos (mul_pos hR (hcpos 0)), abs_of_pos (mul_pos hR (hcpos 1))]
@@ -176,11 +176,11 @@ theorem slotCutoff_bounds {r : ℝ} (hr : 1 ≤ r) :
     by_contra h
     have hb := abs_lt.mp (lt_of_not_ge h)
     apply hv
-    constructor <;> linarith [hb.1, hb.2]
+    constructor <;> linarith only [hb, hb.1, hb.2]
   · intro v hv
     apply GaussianTailFlat.slotCutoff_one hr2
     apply abs_le.mpr
-    constructor <;> linarith [hv.1, hv.2]
+    constructor <;> linarith only [hr2, hv, hv.1, hv.2]
 
 /-! ## Native chart scale and the positive scalar column sizes -/
 
@@ -223,9 +223,9 @@ theorem chart_scalar_factor_bounds {r0 h : ℝ} (hr0 : 0 < r0) (hh : 0 ≤ h)
     · apply (div_le_iff₀ ChartScales.Tg_pos).mpr
       have ht := (div_le_iff₀ (mul_pos ChartScales.Tg_pos hS)).mp hb.1
       dsimp [S, c] at *
-      linarith
+      linarith only [ht]
     · have ht := (le_div_iff₀ hS).mp hb.2
-      linarith
+      linarith only [ht]
   have hRsq : R ^ 2 = 2 * r0 * (S * c) := by
     dsimp [R]
     calc
@@ -241,14 +241,10 @@ theorem chart_scalar_factor_bounds {r0 h : ℝ} (hr0 : 0 < r0) (hh : 0 ≤ h)
     rw [hRsq]
     simpa only [mul_one] using mul_le_mul_of_nonneg_left hSc.2 (by positivity : 0 ≤ 2 * r0)
   constructor
-  · have hs := Real.sq_sqrt (show 0 ≤ 2 * r0 / ChartScales.Tg by positivity)
-    have hspos := Real.sqrt_nonneg (2 * r0 / ChartScales.Tg)
-    change Real.sqrt (2 * r0 / ChartScales.Tg) ≤ R
-    nlinarith
-  · have hs := Real.sq_sqrt (show 0 ≤ 2 * r0 by positivity)
-    have hspos := Real.sqrt_nonneg (2 * r0)
-    change R ≤ Real.sqrt (2 * r0)
-    nlinarith
+  · change Real.sqrt (2 * r0 / ChartScales.Tg) ≤ R
+    exact (Real.sqrt_le_sqrt hlow).trans_eq (Real.sqrt_sq hR)
+  · change R ≤ Real.sqrt (2 * r0)
+    exact (Real.sqrt_sq hR).symm.trans_le (Real.sqrt_le_sqrt hhigh)
 
 /-- Scalar lower, given by `kappa * PulseCovariance.PulseBounds.lowerMassConstant a B *
 Real.sqrt (2 * r0 / ChartScales.Tg)`. -/
@@ -316,14 +312,14 @@ theorem eventually_slotRadius_large {r0 h : ℝ} (hr0 : 0 < r0) (hh : 0 ≤ h) (
   have hRn : R ≤ Real.sqrt (2 * r0) * n := by
     have hd : R / Real.sqrt (2 * r0) ≤ n := (le_max_right _ _).trans (hN.trans hnN)
     have hx := (div_le_iff₀ hroot).mp hd
-    linarith
+    linarith only [hx]
   apply hRn.trans
   have hlen := (ChartScales.slotLength_bounds r0 h hr0.le hh hn4).1
   have hsq := slotRadius_sq hr0 h n
   have hr := (slotRadius_pos hr0 h n).le
   have hs := Real.sq_sqrt (show 0 ≤ 2 * r0 by positivity)
   dsimp [ChartScales.S] at hlen
-  nlinarith [sq_nonneg (Real.sqrt (2 * r0) * n - slotRadius r0 h n)]
+  nlinarith only [hlen, hsq, hs, hr, sq_nonneg (Real.sqrt (2 * r0) * n - slotRadius r0 h n)]
 
 /-! ## The actual pair matrix -/
 
@@ -455,7 +451,7 @@ theorem compact_chart_pair_bounds {X : Type*} [TopologicalSpace X] {K : Set X}
   have hsmall : Q / slotRadius r0 h n ≤ rho := by
     apply (div_le_iff₀ hr).mpr
     have ht := (div_le_iff₀ hrho).mp hrlarge
-    linarith
+    linarith only [ht]
   have hclose (i j : Fin 2) : |normalizedPair P i j - H0 p i j| ≤ rho := by
     have he := normalizedPair_entry_error P hP (H0 p) hE hD
       (by simpa only [slotRadius_sq hr0] using hratio) i j
@@ -517,7 +513,7 @@ theorem compact_reference_bounds {X : Type*} [TopologicalSpace X] {K : Set X}
   have hBbound : bhi p ≤ 1 + |B0| := by
     have ht := hB0 p hp
     rw [Real.norm_eq_abs] at ht
-    exact (le_abs_self _).trans (ht.trans (by linarith [le_abs_self B0]))
+    exact (le_abs_self _).trans (ht.trans (by linarith only [le_abs_self B0]))
   have hbounds := GaussianEnvelope.reference_gaussian_bounds (hlampos p hp) (hupos p hp) hL hv
   have hfactor : 0 ≤ (v - L / 2) ^ 2 / L := div_nonneg (sq_nonneg _) hL.le
   refine ⟨(hgapbound p hp).trans
@@ -542,7 +538,7 @@ theorem eventually_slow_large (C : ℝ) :
   have hn1 : (1 : ℝ) ≤ n := (le_max_left _ _).trans (hN.trans hNn)
   have hCn : C ≤ n := (le_max_right _ _).trans (hN.trans hNn)
   change C ≤ (n : ℝ) ^ 2
-  nlinarith
+  nlinarith only [hCn, hn1]
 
 /-- Primary lower, given by `Real.exp (-(D + 2 * C) * L) / 2`. -/
 noncomputable def primaryLower (C D L : ℝ) : ℝ := Real.exp (-(D + 2 * C) * L) / 2
@@ -822,7 +818,7 @@ theorem dampingDenominator_pos (u : ℝ) : 0 < dampingDenominator u :=
 theorem dampingDenominator_one_le (u : ℝ) : 1 ≤ dampingDenominator u := by
   have hs : 1 ≤ Real.sqrt (1 + u ^ 2) := (PhaseJetBounds.radius_bounds u).1
   unfold dampingDenominator
-  nlinarith [sq_nonneg u, Real.sqrt_nonneg (1 + u ^ 2)]
+  nlinarith only [hs, sq_nonneg u, Real.sqrt_nonneg (1 + u ^ 2)]
 
 theorem referenceScale_pos {lam viscosity u : ℝ} (hlam : 0 < lam) (hv : 0 < viscosity) :
     0 < referenceScale lam viscosity u :=
@@ -895,7 +891,7 @@ theorem derivative_norm_of_error {F F0 : Slow → ℝ} {q : Slow} {M ε : ℝ}
   have hnorm := norm_sub_le_norm_sub_add_norm_sub (fderiv ℝ F q) (fderiv ℝ F0 q) 0
   simp only [sub_zero] at hnorm
   have he := mul_le_mul_of_nonneg_left hε hM
-  linarith
+  linarith only [href, herr, hnorm, he]
 
 /-- Primitive normalized-base C1 errors and fixed reference C2 bounds give
 all local hypotheses used by the phase estimate. -/
@@ -916,7 +912,7 @@ theorem localBase_of_normalized_error
     PhaseEstimates.LocalBaseBounds F G F0 G0 U (2 * M) ε := by
   have hgradF x hx := derivative_norm_of_error hM hε (hDF0 x hx) (hDF x hx)
   have hgradG x hx := derivative_norm_of_error hM hε (hDG0 x hx) (hDG x hx)
-  have hM2 : M ≤ 2 * M := by linarith
+  have hM2 : M ≤ 2 * M := by linarith only [hM]
   have hdir (f : Slow → ℝ) (x : Slow) (e : Slow) (he : ‖e‖ ≤ 1)
       (hf : ‖fderiv ℝ f x‖ ≤ 2 * M) : |fderiv ℝ f x e| ≤ 2 * M := by
     rw [← Real.norm_eq_abs]
@@ -972,11 +968,8 @@ theorem frame_errors_of_normal_close
   have hr := PhaseEstimates.radialSlope_uniform_bound hB hK hsmall hn hs
   let E := η + 8 * (1 + A) * δ / b
   have hE : 0 ≤ E := by dsimp [E]; positivity
-  have hηE : η ≤ E := by
-    have : 0 ≤ 8 * (1 + A) * δ / b := by positivity
-    dsimp [E]
-    linarith
-  have hfac : 8 * (1 + A) * δ / b ≤ E := by dsimp [E]; linarith
+  have hηE : η ≤ E := le_add_of_nonneg_right (by positivity)
+  have hfac : 8 * (1 + A) * δ / b ≤ E := le_add_of_nonneg_left hη
   have h0 : PrimaryODE.localFrame n 0 = MovingFrameODE.normalDirection n := by
     rw [PrimaryODE.localFrame_eq hne, MovingFrameODE.normalFrame_zero]
   have h1 : PrimaryODE.localFrame n 1 = MovingFrameODE.quarterTurn (MovingFrameODE.normalDirection
@@ -985,29 +978,33 @@ theorem frame_errors_of_normal_close
   have hKerr : ‖PrimaryODE.localFrame n 0 - K‖ ≤ E := by
     rw [h0]
     exact (PhaseEstimates.normalDirection_close hB hK hsmall hn).trans
-      ((scaled_div_mono hδ hb hbB (by norm_num : (0 : ℝ) ≤ 4) (by linarith)).trans hfac)
+      ((scaled_div_mono hδ hb hbB (by norm_num : (0 : ℝ) ≤ 4) (by linarith only [hA])).trans hfac)
   have hNerr : ‖PrimaryODE.localFrame n 1 - MovingFrameODE.quarterTurn K‖ ≤ E := by
     rw [h1]
     exact (PhaseEstimates.transverseDirection_close hB hK hsmall hn).trans
-      ((scaled_div_mono hδ hb hbB (by norm_num : (0 : ℝ) ≤ 4) (by linarith)).trans hfac)
+      ((scaled_div_mono hδ hb hbB (by norm_num : (0 : ℝ) ≤ 4) (by linarith only [hA])).trans hfac)
   have hrerr : |MovingFrameODE.radialSlope n - s| ≤ E :=
     (PhaseEstimates.radialSlope_close hB hK hsmall hn).trans
-      ((scaled_div_mono hδ hb hbB (by positivity) (by linarith [abs_nonneg s])).trans hfac)
+      ((scaled_div_mono hδ hb hbB (by positivity) (by linarith only [hs, abs_nonneg s])).trans
+        hfac)
   have hrderr : |PhaseEstimates.slopeDerivative n nDot| ≤ E :=
     (PhaseEstimates.slopeDerivative_bound hB hlow hnd).trans
       ((scaled_div_mono hδ hb hbB (by positivity)
-        (by linarith [abs_nonneg (MovingFrameODE.radialSlope n)])).trans hfac)
+        (by linarith only [hr, hA, abs_nonneg (MovingFrameODE.radialSlope n)])).trans hfac)
   have hωerr : |PhaseEstimates.angularVelocity n nDot| ≤ E :=
     (PhaseEstimates.angularVelocity_bound hB hlow hnd).trans
-      ((scaled_div_mono hδ hb hbB (by norm_num : (0 : ℝ) ≤ 4) (by linarith)).trans hfac)
+      ((scaled_div_mono hδ hb hbB (by norm_num : (0 : ℝ) ≤ 4) (by linarith only [hA])).trans hfac)
   have h := MovingFrameODE.frame_coefficients_close
     (B := PrimaryODE.localFrame n) (B0 := MovingFrameODE.frameOfUnit K hK)
     (g := g) (g0 := g0) (F := F) (F0 := F0) (ρ := MovingFrameODE.radialSlope n)
     (s := s) (ρ' := PhaseEstimates.slopeDerivative n nDot)
     (rot := PhaseEstimates.angularVelocity n nDot) (M := M + 2 + 2 * A) (η := E)
-    (by linarith) hE (hr.trans (by linarith)) (hs.trans (by linarith))
-    (hF0.trans (by linarith)) (hg0.trans (by linarith)) (by simpa using horth)
-    (hF.trans hηE) (hg.trans hηE) (by simpa using hKerr) (by simpa using hNerr) hrerr hrderr hωerr
+    (by linarith only [hM, hA]) hE (hr.trans (by linarith only [hM]))
+    (hs.trans (by linarith only [hM, hA])) (hF0.trans (by linarith only [hA]))
+    (hg0.trans (by linarith only [hA]))
+    (by simpa only [MovingFrameODE.frameOfUnit_zero] using horth)
+    (hF.trans hηE) (hg.trans hηE) (by simpa only [MovingFrameODE.frameOfUnit_zero] using hKerr)
+    (by simpa only [MovingFrameODE.frameOfUnit_one] using hNerr) hrerr hrderr hωerr
   simpa only [MovingFrameODE.frameOfUnit_one, E] using h
 
 theorem norm_pack_sq (x : ℝ) (w : Plane) :
@@ -1029,8 +1026,8 @@ theorem reference_normal_bound {K : Plane} {B s A : ℝ}
   have hn := PhaseEstimates.vec3_norm_le_sum (MovingFrameODE.pack (B * s) (B • K))
   change ‖MovingFrameODE.pack (B * s) (B • K)‖ ≤ |B * s| + |B * K 0| + |B * K 1| at hn
   simp only [abs_mul, abs_of_nonneg hB] at hn
-  linarith [mul_le_mul_of_nonneg_left hs hB,
-    mul_le_mul_of_nonneg_left (hc 0) hB, mul_le_mul_of_nonneg_left (hc 1) hB]
+  linarith only [hn, hs, hB, hc, mul_le_mul_of_nonneg_left hs hB,
+      mul_le_mul_of_nonneg_left (hc 0) hB, mul_le_mul_of_nonneg_left (hc 1) hB]
 
 /-- The damping error is two-sided. It follows from normal comparison and
 the actual bounded viscosity coefficient, including all high harmonics. -/
@@ -1050,7 +1047,7 @@ theorem damping_error_of_normal_close
   have hn' : ‖n‖ ≤ M * (A + 3) := by
     have hh := norm_sub_le_norm_sub_add_norm_sub n r 0
     simp only [sub_zero] at hh
-    linarith
+    linarith only [hB, hBM, hsmall, hn, hr, hh]
   have hdiff : |‖n‖ - ‖r‖| ≤ δ := (abs_norm_sub_norm_le n r).trans hn
   have hsq : |‖n‖ ^ 2 - ‖r‖ ^ 2| ≤ δ * (M * (2 * A + 5)) := by
     calc
@@ -1058,7 +1055,7 @@ theorem damping_error_of_normal_close
         rw [← abs_of_nonneg (add_nonneg (norm_nonneg n) (norm_nonneg r)), ← abs_mul]
         congr 1
         ring
-      _ ≤ δ * (M * (2 * A + 5)) := mul_le_mul hdiff (by linarith)
+      _ ≤ δ * (M * (2 * A + 5)) := mul_le_mul hdiff (by linarith only [hr, hn'])
         (add_nonneg (norm_nonneg n) (norm_nonneg r)) hδ
   calc
     _ = ν * |‖n‖ ^ 2 - ‖r‖ ^ 2| := by
@@ -1102,27 +1099,27 @@ theorem phase_errors_on_mesh
       PhaseEstimates.referenceNormal B sigma u L v K‖ ≤ normalConstant M / S ∧
     ‖PhaseCalculus.normalSlotDerivative ε (PhaseEstimates.roundedFrequency k target) pz F G q‖ ≤
       normalConstant M / S := by
-  have hS0 : 0 < S := by linarith
-  have hk0 : 0 < k := by linarith
-  have hM0 : 0 ≤ M := by linarith
-  have hM2 : M ≤ 2 * M := by linarith
+  have hS0 : 0 < S := by linarith only [hS]
+  have hk0 : 0 < k := by linarith only [hk]
+  have hM0 : 0 ≤ M := by linarith only [hM]
+  have hM2 : M ≤ 2 * M := by linarith only [hM0]
   have hd : ‖q - q0‖ ≤ 1 / (S / 2) ^ 3 := hdiameter.trans (by
     apply (div_le_div_iff₀ (pow_pos hS0 3) (pow_pos (half_pos hS0) 3)).2
-    linarith [pow_pos hS0 3])
+    linarith only [pow_pos hS0 3])
   have hL' : 1 / |L| ≤ (2 * M) / (S / 2) := hL.trans (by
     apply (div_le_div_iff₀ hS0 (half_pos hS0)).2
-    nlinarith)
+    linarith only [mul_nonneg hM0 hS0.le])
   have he := PhaseEstimates.actual_phase_estimates
     (v := v) (θ := θ) (localBase_mono hbase hM2) hq hq0 hd hR hR0 hg horth hfreq
-    (by linarith) (by linarith) hk hε (htarget.trans hM2) (hpz.trans hM2) (hB.trans hM2)
-    hsigma (hu.trans hM2) (hgi.trans hM2) hL' (by linarith [hv])
+    (by linarith only [hM]) (by linarith only [hS]) hk hε (htarget.trans hM2) (hpz.trans hM2)
+    (hB.trans hM2) hsigma (hu.trans hM2) (hgi.trans hM2) hL' (by linarith only [hv])
     (hRi.trans hM2) (hR0i.trans hM2)
   have hband := PhaseEstimates.phaseError_le_four_div (S := S / 2) (ε := ε) (k := k)
-    (half_pos hS0) (by linarith [sq_nonneg (S * ε)])
+    (half_pos hS0) (by linarith only [hε2, sq_nonneg (S * ε)])
     ((div_le_iff₀ hk0).2 (by
       have h := (div_le_iff₀ hk0).1 hk2
-      linarith [sq_nonneg S]))
-    (by linarith [mul_nonneg hε.le (sq_nonneg S)])
+      linarith only [h, sq_nonneg S]))
+    (by linarith only [hε1, mul_nonneg hε.le (sq_nonneg S)])
   have hc : 0 ≤ PhaseEstimates.phaseConstant (2 * M) := by
     unfold PhaseEstimates.phaseConstant
     positivity
@@ -1136,7 +1133,7 @@ theorem phase_errors_on_mesh
 
 theorem signedSlot_sq {sigma : ℝ} (hsigma : |sigma| = 1) (u L v : ℝ) :
     PhaseEstimates.signedSlot sigma u L v ^ 2 = PulseGrowth.slotMagnitude u L v ^ 2 := by
-  have hh : sigma ^ 2 = 1 := by nlinarith [sq_abs sigma]
+  have hh : sigma ^ 2 = 1 := by nlinarith only [hsigma, sq_abs sigma]
   simp only [PhaseEstimates.signedSlot, PulseGrowth.slotMagnitude, mul_pow, hh, one_mul]
 
 /-- Exact reference diagonalization; its scalar identities are supplied by
@@ -1172,7 +1169,7 @@ theorem reference_profile_bounds {c0 u L v c M A : ℝ}
     hcl.trans (le_mul_of_one_le_right (abs_nonneg _) hb.1)
   constructor
   · simpa only [PrimaryODE.referenceProfile, abs_mul, abs_of_pos hr] using
-      mul_le_mul hch (hb.2.trans (by linarith)) (Real.sqrt_nonneg _) hM
+      mul_le_mul hch (hb.2.trans (by linarith only [hs])) (Real.sqrt_nonneg _) hM
   · rw [abs_div, abs_one, PrimaryODE.referenceProfile, abs_mul, abs_of_pos hr]
     exact one_div_le_one_div_of_le hc hlow
 
@@ -1182,7 +1179,7 @@ theorem reference_profile_rate_bound {u L v A M S : ℝ}
     (huL : |u / L| ≤ M / S) :
     |PrimaryODE.referenceProfileRate u L v| ≤ A * M / S := by
   have hden : 1 ≤ 1 + PulseGrowth.slotMagnitude u L v ^ 2 := by
-      linarith [sq_nonneg (PulseGrowth.slotMagnitude u L v)]
+      linarith only [sq_nonneg (PulseGrowth.slotMagnitude u L v)]
   have hdenpos : 0 < 1 + PulseGrowth.slotMagnitude u L v ^ 2 := by positivity
   rw [PrimaryODE.referenceProfileRate, abs_div, abs_mul, abs_of_pos hdenpos]
   calc
@@ -1197,17 +1194,17 @@ noncomputable def frequencyBound (M : ℝ) : ℝ := M + M * (M + M ^ 4) + (M + M
 theorem frequencyBound_bounds {M : ℝ} (hM : 1 ≤ M) :
     M ≤ frequencyBound M ∧ M * (M + M ^ 4) + 1 ≤ frequencyBound M ∧
     M + M ^ 4 ≤ frequencyBound M ∧ M ^ 2 ≤ frequencyBound M ∧ 4 ≤ frequencyBound M := by
-  have h0 : 0 ≤ M := by linarith
+  have h0 : 0 ≤ M := by linarith only [hM]
   have h4 : 0 ≤ M ^ 4 := pow_nonneg h0 _
   have hprod : 0 ≤ M * (M + M ^ 4) := mul_nonneg h0 (add_nonneg h0 h4)
   unfold frequencyBound
   constructor
-  · linarith [sq_nonneg M]
+  · linarith only [hM, h4, hprod, sq_nonneg M]
   constructor
-  · linarith [sq_nonneg M]
+  · linarith only [hM, h4, sq_nonneg M]
   constructor
-  · linarith [sq_nonneg M]
-  constructor <;> linarith [sq_nonneg M]
+  · linarith only [hM, hprod, sq_nonneg M]
+  constructor <;> linarith only [hM, h4, hprod, sq_nonneg M]
 
 /-- Normal lower, given by `Real.sqrt ((1 / M) / (4 * dampingDenominator u))`. -/
 noncomputable def normalLower (M u : ℝ) : ℝ :=
@@ -1243,7 +1240,7 @@ noncomputable def dampingConstant (M : ℝ) : ℝ :=
 
 theorem error_constants_nonneg {M u : ℝ} (hM : 1 ≤ M) :
     0 ≤ coordinateConstant M u ∧ 0 ≤ modalConstant M u ∧ 0 ≤ dampingConstant M := by
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   have hD := (phaseConstant_pos hM).le
   have hb := (normalLower_pos (u := u) hM).le
   have hc : 0 ≤ coordinateConstant M u := by unfold coordinateConstant; positivity
@@ -1272,13 +1269,13 @@ theorem exists_large_band (h M u T : ℝ) (hh : 0 < h) (hM : 1 ≤ M) (N0 : ℕ)
     filter_upwards [PhaseEstimates.eventually_band_conditions h hh, hs,
       (eventually_ge_atTop (4 : ℕ))] with n hn hscale hn4
     have hS2 : 2 ≤ ChartScales.S n := (le_max_left _ _).trans ((le_max_right _ _).trans hscale)
-    have hS0 : 0 < ChartScales.S n := by linarith
+    have hS0 : 0 < ChartScales.S n := by linarith only [hS2]
     have hcut : 2 * phaseConstant M / normalLower M u ≤ ChartScales.S n :=
       (le_max_right _ _).trans ((le_max_right _ _).trans hscale)
     refine ⟨⟨hn4, hS2, hn.2.1, hn.2.2.1, hn.2.2.2, ?_⟩, (le_max_left _ _).trans hscale⟩
     apply (div_le_iff₀ hS0).2
     have ht := (div_le_iff₀ hb).1 hcut
-    linarith
+    linarith only [ht]
   obtain ⟨N, hN⟩ := eventually_atTop.1 hall
   exact ⟨max N N0, le_max_right _ _, fun n hn => hN n ((le_max_left _ _).trans hn)⟩
 
@@ -1287,12 +1284,12 @@ theorem base_error_on_mesh {S ε M : ℝ} (hS : 1 ≤ S) (hM : 1 ≤ M)
     M * (3 / S ^ 3 + ε ^ 2) ≤ 16 * M ^ 2 / S ∧
     4 * M ^ 2 * (3 / S ^ 3 + ε ^ 2) ≤ 16 * M ^ 2 / S := by
   have hS0 : 0 < S := zero_lt_one.trans_le hS
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   have he : ε ^ 2 ≤ 1 / S := by
     apply (le_div_iff₀ hS0).2
-    have hsq : S ≤ S ^ 2 := by nlinarith
+    have hsq : S ≤ S ^ 2 := by nlinarith only [hS]
     have hm := mul_le_mul_of_nonneg_right hsq (sq_nonneg ε)
-    linarith
+    linarith only [hε, hm]
   have hcube := (PhaseEstimates.inverse_cube_bounds hS).1
   have hsum : 3 / S ^ 3 + ε ^ 2 ≤ 4 / S := by
     calc
@@ -1305,7 +1302,7 @@ theorem base_error_on_mesh {S ε M : ℝ} (hS : 1 ≤ S) (hM : 1 ≤ M)
       _ ≤ 4 * M ^ 2 * (4 / S) := mul_le_mul_of_nonneg_left hsum (by positivity)
       _ = _ := by ring
   refine ⟨?_, h4⟩
-  exact (mul_le_mul_of_nonneg_right (by nlinarith : M ≤ 4 * M ^ 2)
+  exact (mul_le_mul_of_nonneg_right (by nlinarith only [hM] : M ≤ 4 * M ^ 2)
     (by positivity : 0 ≤ 3 / S ^ 3 + ε ^ 2)).trans h4
 
 /-- Fixed normalized-base data and frozen representative data.  The
@@ -1429,8 +1426,8 @@ theorem B_bounds (hh : 0 ≤ h) (hM : 1 ≤ M) (i : ι) :
     (one_div_pos.mpr (zero_lt_one.trans_le hM)) (a.lambda_bound i).1 (a.lambda_bound i).2 hv.1 hv.2
   refine ⟨hb.1, hb.2.trans ?_⟩
   calc
-    Real.sqrt M ≤ Real.sqrt (M ^ 2) := Real.sqrt_le_sqrt (by nlinarith)
-    _ = M := Real.sqrt_sq (by linarith)
+    Real.sqrt M ≤ Real.sqrt (M ^ 2) := Real.sqrt_le_sqrt (by nlinarith only [hM])
+    _ = M := Real.sqrt_sq (by linarith only [hM])
 
 theorem B_pos (hh : 0 ≤ h) (hM : 1 ≤ M) (i : ι) : 0 < a.B i :=
   (normalLower_pos hM).trans_le (a.B_bounds hh hM i).1
@@ -1443,7 +1440,7 @@ theorem reciprocal_bound {x : ℝ} (hM : 1 ≤ M) (hx : 1 / M ≤ x) : 1 / x ≤
   have hx0 := (one_div_pos.mpr hM0).trans_le hx
   apply (div_le_iff₀ hx0).2
   have hi := (div_le_iff₀ hM0).1 hx
-  linarith
+  linarith only [hi]
 
 theorem length_inverse (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 / (2 * r0) ≤ M)
     (i : ι) (hn : 4 ≤ a.band i) : 1 / |a.length i| ≤ M / D.scale i := by
@@ -1460,7 +1457,7 @@ theorem length_inverse (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 / (2 * r0) ≤ M)
 theorem slot_abs (hr : 0 < r0) {i : ι} {v : ℝ} (hv : v ∈ a.slot i) :
     |v| ≤ 2 * a.length i := by
   have hL := a.length_pos hr i
-  exact abs_le.mpr ⟨by dsimp [slot] at hv; linarith [hv.1], le_of_lt hv.2⟩
+  exact abs_le.mpr ⟨by dsimp [slot] at hv; linarith only [hL, hv, hv.1], le_of_lt hv.2⟩
 
 theorem slot_bound (hh : 0 ≤ h) (hr : 0 < r0) (hslot : 4 * r0 * ChartScales.Tg ≤ M)
     {i : ι} (hn : 4 ≤ a.band i) {v : ℝ} (hv : v ∈ a.slot i) :
@@ -1470,7 +1467,7 @@ theorem slot_bound (hh : 0 ≤ h) (hr : 0 < r0) (hslot : 4 * r0 * ChartScales.Tg
   change a.length i ≤ 2 * r0 * ChartScales.Tg * D.scale i at hl
   have hS : 0 ≤ D.scale i := (zero_lt_one.trans_le (D.one_le_scale i)).le
   have hm := mul_le_mul_of_nonneg_right hslot hS
-  linarith [a.slot_abs hr hv]
+  linarith only [hl, hm, hr, hv, a.slot_abs hr hv]
 
 theorem magnitude_bound (hr : 0 < r0) (hu : 0 ≤ u) (huM : u ≤ M)
     {i : ι} {v : ℝ} (hv : v ∈ a.slot i) :
@@ -1480,12 +1477,12 @@ theorem magnitude_bound (hr : 0 < r0) (hu : 0 ≤ u) (huM : u ≤ M)
   have hmul : |u * v / a.length i| ≤ 2 * u := by
     rw [abs_div, abs_mul, abs_of_nonneg hu, abs_of_pos hL]
     apply (div_le_iff₀ hL).2
-    linarith [mul_le_mul_of_nonneg_left hv' hu]
+    linarith only [hv', hu, mul_le_mul_of_nonneg_left hv' hu]
   have ha := abs_add_le (u / 2) (u * v / a.length i)
   rw [abs_div, abs_of_nonneg hu] at ha
   norm_num at ha
   dsimp [PulseGrowth.slotMagnitude]
-  linarith
+  linarith only [hu, huM, hmul, ha]
 
 theorem slope_bound (hr : 0 < r0) (hu : 0 ≤ u) (huM : u ≤ M)
     {i : ι} {q : Slow} {v : ℝ} (hv : v ∈ a.slot i) : |a.slope i (q, v)| ≤ 3 * M := by
@@ -1509,7 +1506,7 @@ theorem frequencies_bounded (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     |a.target i| ≤ M * (M + M ^ 4) ∧ |a.frequency i 1| ≤ M + M ^ 4 := by
   have hr0 : (a.q0 i).1 ≠ 0 := abs_pos.mp
     ((one_div_pos.mpr (zero_lt_one.trans_le hM)).trans_le (a.representative_radius i).1)
-  exact PhaseEstimates.representative_uniform_frequency_bounds hr0 (by linarith)
+  exact PhaseEstimates.representative_uniform_frequency_bounds hr0 (by linarith only [hM])
     (D.one_le_scale i) (by simpa only [abs_of_pos (a.B_pos hh hM i)] using (a.B_bounds hh hM i).2)
     (a.sign i) hu (reciprocal_bound hM (a.shear_inv i))
     (a.length_inverse hh hr hL i hn) (a.unit i) (a.representative_radius i).2
@@ -1534,12 +1531,12 @@ theorem frozen_constants (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
       (a.target i)) (a.target i) 0
     simp only [sub_zero] at htri
     change |PhaseEstimates.roundedFrequency (ChartScales.carrier h (a.band i)) (a.target i)| ≤ _
-    linarith [hb.2.1]
+    linarith only [hb, hf, hround, hinv, htri, hb.2.1]
   · change |a.sigma i * a.B i * u / 2| ≤ _
     rw [abs_div, abs_mul, abs_mul, a.sign i, one_mul, abs_of_pos (a.B_pos hh hM i)]
     norm_num
-    have hm := mul_le_mul (a.B_bounds hh hM i).2 hu (abs_nonneg u) (by linarith : 0 ≤ M)
-    linarith [hb.2.2.2.1, sq_nonneg M]
+    have hm := mul_le_mul (a.B_bounds hh hM i).2 hu (abs_nonneg u) (by linarith only [hM] : 0 ≤ M)
+    linarith only [hb, hm, hb.2.2.2.1, sq_nonneg M]
 
 /-- Actual phase-normal and normal-motion estimates for every enlarged
 slot point.  These follow from the normalized base error and rounding. -/
@@ -1568,7 +1565,7 @@ theorem phase_estimates (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     (a.distance i q hq) hR hR0 hg (a.orthogonal i) (a.frequency_identity hM i)
     (hM.trans hb.1) (by simpa only [a.scale_eq i] using hn.two_le_scale)
     (PhaseEstimates.chart_carrier_ge_one h (a.band i)) (ChartScales.epsilon_pos h (a.band i))
-    (hf.1.trans (by linarith [hb.2.1])) (hf.2.trans hb.2.2.1)
+    (hf.1.trans (by linarith only [hb, hb.2.1])) (hf.2.trans hb.2.2.1)
     (by simpa only [abs_of_pos (a.B_pos hh hM i)] using (a.B_bounds hh hM i).2.trans hb.1)
     (a.sign i) (hu.trans hb.1) ((reciprocal_bound hM (a.shear_inv i)).trans hb.1)
     ((a.length_inverse hh hr hL i hn.four_le).trans (div_le_div_of_nonneg_right hb.1 hS0))
@@ -1586,7 +1583,7 @@ theorem base_estimates (hM : 1 ≤ M) (i : ι) (hn : LargeBand h M u (a.band i))
       PhaseEstimates.shearVector (a.F0 i) (a.G0 i) (a.q0 i)‖ ≤ 16 * M ^ 2 / D.scale i := by
   have hb := base_error_on_mesh (D.one_le_scale i) hM
     (by simpa only [a.scale_eq i] using hn.epsilon_square)
-  exact ⟨(PhaseEstimates.localBase_value_error (a.base i) (by linarith)
+  exact ⟨(PhaseEstimates.localBase_value_error (a.base i) (by linarith only [hM])
     (a.inside i hq) (a.representative_inside i) (a.distance i q hq)).trans hb.1,
     (PhaseEstimates.localBase_shear_error (a.base i) hM (a.inside i hq)
       (a.representative_inside i) (a.distance i q hq) (a.representative_radius i).2).trans hb.2⟩
@@ -1604,7 +1601,7 @@ theorem quotient_rate_bound (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
   calc
     _ = |u| * (1 / |a.length i|) := by rw [abs_div]; ring
     _ ≤ M * (M / D.scale i) := mul_le_mul hu hi
-      (one_div_nonneg.mpr (abs_nonneg _)) (by linarith)
+      (one_div_nonneg.mpr (abs_nonneg _)) (by linarith only [hM])
     _ = _ := by ring
 
 /-- The three coordinate errors of the actual constructed tangent frame
@@ -1618,7 +1615,7 @@ theorem coordinate_errors (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     |(a.frame i).errorB (q, v)| ≤ coordinateConstant M u / D.scale i ∧
     |(a.frame i).errorC (q, v)| ≤ coordinateConstant M u / D.scale i := by
   have hS : 0 < D.scale i := zero_lt_one.trans_le (D.one_le_scale i)
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   have he := a.phase_estimates hh hr hM (by simpa only [abs_of_pos hu] using huM)
     hL hslot i hn hq hv
   have hb := a.base_estimates hM i hn hq
@@ -1662,7 +1659,7 @@ theorem modal_errors (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     |(a.frame i).error12 (q, v)| ≤ modalConstant M u / D.scale i ∧
     |(a.frame i).error21 (q, v)| ≤ modalConstant M u / D.scale i ∧
     |(a.frame i).error22 (q, v)| ≤ modalConstant M u / D.scale i := by
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   have hS : 0 < D.scale i := zero_lt_one.trans_le (D.one_le_scale i)
   have hc := a.coordinate_errors hh hr hM hu huM hL hslot i hn hq hv
   have hmag := a.magnitude_bound hr hu.le huM hv
@@ -1672,8 +1669,8 @@ theorem modal_errors (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     (sq_nonneg M) hS hmag (a.quotient_rate_bound hh hr hM
       (by simpa only [abs_of_pos hu] using huM) hL i hn.four_le)
   have hH : 0 ≤ eigenBound M := by unfold eigenBound; positivity
-  have hH1 : M * (1 + 3 * M) ≤ eigenBound M := by unfold eigenBound; linarith
-  have hH2 : M ≤ eigenBound M := by unfold eigenBound; nlinarith
+  have hH1 : M * (1 + 3 * M) ≤ eigenBound M := by unfold eigenBound; linarith only [hM]
+  have hH2 : M ≤ eigenBound M := by unfold eigenBound; nlinarith only [hM]
   have hhi : |1 / PrimaryODE.referenceProfile (a.c0 i) u (a.length i) v| ≤ eigenBound M := by
     simpa only [one_div_one_div] using hprof.2.trans (by simpa only [one_div_one_div] using hH2)
   have hout := MovingFrameODE.modal_errors_le hH hc.1 hc.2.1 hc.2.2
@@ -1717,7 +1714,7 @@ theorem damping_error (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
 theorem interval_subset_slot (hr : 0 < r0) (i : ι) : Icc 0 (a.length i) ⊆ a.slot i := by
   intro v hv
   have hL := a.length_pos hr i
-  exact ⟨by linarith [hv.1], by linarith [hv.2]⟩
+  exact ⟨by linarith only [hL, hv, hv.1], by linarith only [hL, hv, hv.2]⟩
 
 theorem normal_nonzero (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     (hu : |u| ≤ M) (hL : 1 / (2 * r0) ≤ M) (hslot : 4 * r0 * ChartScales.Tg ≤ M)
@@ -1778,7 +1775,7 @@ theorem energy_bound (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     exact div_nonneg (a.lambda_pos hM i).le (Real.sqrt_nonneg _)
   have hd := a.damping_error hh hr hM hu huM hL hslot i hn hq hv
   apply (a.frame i).energy_bound (q, v) hj hl hν
-  · linarith [(abs_le.mp hd).1]
+  · linarith only [hd, (abs_le.mp hd).1]
   · exact a.modal_errors hh hr hM hu huM hL hslot i hn hq hv
 
 /-- Output bound, given by `frequencyBound M + 3 * M + M ^ 2 + 4`. -/
@@ -1790,10 +1787,10 @@ theorem outputBound_bounds (hM : 1 ≤ M) :
     frequencyBound M ≤ outputBound M ∧ 3 * M ≤ outputBound M ∧
     M ^ 2 ≤ outputBound M ∧ 4 ≤ outputBound M ∧ M ≤ outputBound M := by
   have hb := frequencyBound_bounds hM
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   unfold outputBound
-  exact ⟨by linarith [sq_nonneg M], by linarith [sq_nonneg M],
-    by linarith, by linarith [sq_nonneg M], by linarith [sq_nonneg M]⟩
+  exact ⟨by linarith only [hM, sq_nonneg M], by linarith only [hb, sq_nonneg M],
+    by linarith, by linarith only [hM, hb, sq_nonneg M], by linarith only [hM, hb, sq_nonneg M]⟩
 
 theorem outputLower_pos (hM : 1 ≤ M) : 0 < outputLower M u :=
   lt_min (half_pos (normalLower_pos hM)) (one_div_pos.mpr (zero_lt_one.trans_le hM))
@@ -1837,7 +1834,7 @@ noncomputable def construction (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     epsilon_ne := fun i => (ChartScales.epsilon_pos h (a.band i)).ne'
     radius := fun i q hq => ⟨(a.radius i q hq).1, (a.radius i q hq).2.trans hb.2.2.2.2⟩
     slot := fun i v hv => (a.slot_bound hh hr hslot (hlarge i).four_le hv).trans
-      (mul_le_mul_of_nonneg_right hb.2.2.2.2 (by linarith [D.one_le_scale i]))
+      (mul_le_mul_of_nonneg_right hb.2.2.2.2 (by linarith only [D.one_le_scale i]))
     lam_bound := ?_
     c0_bound := ?_
     u_bound := fun _ => huabs.trans hb.2.2.2.2
@@ -1879,7 +1876,7 @@ noncomputable def construction (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
         i hv)
     change ViscousPropagator.referenceViscosity (a.lam i) u (a.length i) v -
       dampingConstant M / D.scale i ≤ (a.frame i).viscosity (q, v)
-    linarith [(abs_le.mp hd).1]
+    linarith only [hd, (abs_le.mp hd).1]
 
 theorem construction_frame (hh : 0 ≤ h) (hr : 0 < r0) (hM : 1 ≤ M)
     (hu : 0 < u) (huM : u ≤ M) (hL : 1 / (2 * r0) ≤ M)

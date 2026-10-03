@@ -60,7 +60,8 @@ theorem exists_limit_with_constraints {s q : ℕ} (hqs : q < s) (T : ℝ) (hT : 
   have hul (n : ℕ) : ‖ul n‖ ≤ M := (restrict_path_norm period hqs.le T (u n)).trans (huM n)
   have hi : e ⟨0,le_rfl,hT⟩=0 := limit_zero_trace period T ⟨0,le_rfl,hT⟩ ul e hlimit (fun n => by
     change restrictOperator period hqs.le (u n ⟨0,le_rfl,hT⟩)=0
-    rw [hu0 n,map_zero])
+    rw [hu0 n]
+    exact (restrictOperator period hqs.le).map_zero)
   have hd : ∀ t, value period (e t) ∈ divergenceFreeSpace period κ m :=
     limit_divergenceFree period T κ m ul e hlimit hud
   exact ⟨e,hlimit,hi,hd,limit_norm_bound period T M ul e hlimit hul⟩

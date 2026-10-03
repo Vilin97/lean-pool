@@ -38,8 +38,8 @@ section Paths
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 theorem timeComp_orbit_contDiff (p : C(K, CylinderL2 P V))
-    (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p)) (φ : C(L, K)) :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (p.comp φ)) :=
+    (hp : ContDiff ℝ ∞ (fun a => pathTranslate (K := K) (V := V) P a p)) (φ : C(L, K)) :
+    ContDiff ℝ ∞ (fun a => pathTranslate (K := L) (V := V) P a (p.comp φ)) :=
   (ContinuousMap.compCLM ℝ (CylinderL2 P V) φ).contDiff.comp hp
 
 theorem timeComp_norm (φ : C(L, K)) :
@@ -52,10 +52,11 @@ theorem timeComp_norm (φ : C(L, K)) :
   exact p.norm_coe_le_norm (φ t)
 
 theorem timeComp_block_le {ι : Type*} [Fintype ι] (directions : ι → LiftTangent) (q : ℕ)
-    (p : C(K, CylinderL2 P V)) (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p))
+    (p : C(K, CylinderL2 P V))
+    (hp : ContDiff ℝ ∞ (fun a => pathTranslate (K := K) (V := V) P a p))
     (φ : C(L, K)) (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b => pathTranslate P b (p.comp φ)) n a ≤
-      block directions q (fun b => pathTranslate P b p) n a :=
+    block directions q (fun b => pathTranslate (K := L) (V := V) P b (p.comp φ)) n a ≤
+      block directions q (fun b => pathTranslate (K := K) (V := V) P b p) n a :=
   (block_comp_clm_le directions q (ContinuousMap.compCLM ℝ (CylinderL2 P V) φ) _ hp n a).trans
     ((mul_le_mul_of_nonneg_right (timeComp_norm P φ) (block_nonneg directions q _ n a)).trans_eq
       (one_mul _))
@@ -63,7 +64,8 @@ theorem timeComp_block_le {ι : Type*} [Fintype ι] (directions : ι → LiftTan
 end Paths
 
 theorem pointField_timeComp (p : C(K, CylinderL2 P Space))
-    (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p)) (φ : C(L, K)) (t : L) :
+    (hp : ContDiff ℝ ∞ (fun a => pathTranslate (K := K) (V := Space) P a p)) (φ : C(L, K))
+    (t : L) :
     pointField P (p.comp φ) (timeComp_orbit_contDiff P p hp φ) t = pointField P p hp (φ t) := by
   apply Measure.eq_of_ae_eq
     ((pointField_ae P (p.comp φ) (timeComp_orbit_contDiff P p hp φ) t).symm.trans
@@ -73,7 +75,8 @@ theorem pointField_timeComp (p : C(K, CylinderL2 P Space))
   · exact smoothField_continuous P _ (pointField_smooth P p hp (φ t))
 
 theorem scalarPointField_timeComp (p : C(K, CylinderL2 P ℝ))
-    (hp : ContDiff ℝ ∞ (fun a => pathTranslate P a p)) (φ : C(L, K)) (t : L) :
+    (hp : ContDiff ℝ ∞ (fun a => pathTranslate (K := K) (V := ℝ) P a p)) (φ : C(L, K))
+    (t : L) :
     scalarPointField P (p.comp φ) (timeComp_orbit_contDiff P p hp φ) t =
       scalarPointField P p hp (φ t) :=
   Measure.eq_of_ae_eq
@@ -115,11 +118,13 @@ variable (G : Forcing P D raw)
 def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : Forcing P (D.initial τ hτ hτT) raw where
   path := G.path.comp (initialInclusion D.T τ hτT)
   path_orbit := timeComp_orbit_contDiff P
-    (includePath P D.support D.support_measurable G.path) G.path_orbit (initialInclusion D.T τ hτT)
+    (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable G.path)
+    G.path_orbit (initialInclusion D.T τ hτT)
   raw_eq t x θ := by
     have h := G.raw_eq (initialInclusion D.T τ hτT t) x θ
     have he := congrFun (pointField_timeComp P
-      (includePath P D.support D.support_measurable G.path) G.path_orbit
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable G.path)
+      G.path_orbit
       (initialInclusion D.T τ hτT) t) (x,(θ : AddCircle P))
     exact h.trans he.symm
   mean_zero t := G.mean_zero (initialInclusion D.T τ hτT t)
@@ -129,11 +134,13 @@ def tail (τ : ℝ) (hτ : 0 ≤ τ) (hτT : τ < D.T) :
     Forcing P (D.tail τ hτ hτT) (shiftedRaw τ raw) where
   path := G.path.comp (tailInclusion D.T τ hτ)
   path_orbit := timeComp_orbit_contDiff P
-    (includePath P D.support D.support_measurable G.path) G.path_orbit (tailInclusion D.T τ hτ)
+    (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable G.path)
+    G.path_orbit (tailInclusion D.T τ hτ)
   raw_eq t x θ := by
     have h := G.raw_eq (tailInclusion D.T τ hτ t) x θ
     have he := congrFun (pointField_timeComp P
-      (includePath P D.support D.support_measurable G.path) G.path_orbit
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable G.path)
+      G.path_orbit
       (tailInclusion D.T τ hτ) t) (x,(θ : AddCircle P))
     exact h.trans he.symm
   mean_zero t := G.mean_zero (tailInclusion D.T τ hτ t)

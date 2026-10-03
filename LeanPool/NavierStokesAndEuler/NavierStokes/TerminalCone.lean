@@ -86,7 +86,7 @@ theorem edgeDistance_bounds (F : OutgoingProfile.Profile) {y : ℝ}
     (hy : terminalStart F.data ≤ y) (hy' : y < OutgoingTail.tailEnd F.data) :
     0 < edgeDistance F y ∧ edgeDistance F y ≤ 5 / 2 := by
   dsimp [terminalStart, edgeDistance, OutgoingTail.tailEnd] at *
-  constructor <;> linarith
+  constructor <;> linarith only [hy', hy]
 
 theorem shift_log (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) :
     shift F XR = Real.log XR + OutgoingTail.tailStart F.data := by
@@ -107,7 +107,7 @@ theorem profileS_ge_switch {K δ : ℝ} (hK : 0 < K) (hδ : δ ≤ 5 / 2) :
   rw [TerminalEdgeFactor.profileS,
     show Real.log K - 1 / 5 + 3 - δ = Real.log K + (14 / 5 - δ) by ring,
     Real.exp_add, Real.exp_log hK]
-  exact le_mul_of_one_le_right hK.le (Real.one_le_exp (by linarith))
+  exact le_mul_of_one_le_right hK.le (Real.one_le_exp (by linarith only [hδ]))
 
 theorem profileRadius_le_outer (y0 : ℝ) {δ : ℝ} (hδ : 0 ≤ δ) :
     TerminalEdgeFactor.profileRadius y0 δ ≤ TerminalEdgeFactor.profileRadius y0 0 := by
@@ -122,8 +122,8 @@ theorem profileRadius_annulus (y0 : ℝ) {δ : ℝ} (hδ : δ ≤ 5 / 2) :
   unfold TerminalEdgeFactor.profileS annulusRatio
   have he : Real.exp (y0 + 3 - 0) ≤ Real.exp 3 * Real.exp (y0 + 3 - δ) := by
     rw [← Real.exp_add]
-    exact Real.exp_le_exp.mpr (by linarith)
-  linarith
+    exact Real.exp_le_exp.mpr (by linarith only [hδ])
+  linarith only [he]
 
 theorem le_on_closed_band {f g : ℝ → ℝ} (hf : Continuous f) (hg : Continuous g)
     (h : ∀ eta ∈ Ioo (-1 : ℝ) 1, f eta ≤ g eta) {eta : ℝ} (heta : eta ∈ Icc (-1 : ℝ) 1) :
@@ -132,8 +132,8 @@ theorem le_on_closed_band {f g : ℝ → ℝ} (hf : Continuous f) (hg : Continuo
   simpa only [closure_Ioo (by norm_num : (-1 : ℝ) ≠ 1)] using heta
 
 theorem eta_sq_lt_one {eta : ℝ} (heta : eta ∈ Ioo (-1 : ℝ) 1) : eta ^ 2 < 1 := by
-  linarith [mul_pos (show 0 < eta + 1 by linarith [heta.1])
-    (show 0 < 1 - eta by linarith [heta.2])]
+  linarith only [heta,
+      mul_pos (show 0 < eta + 1 by linarith [heta.1]) (show 0 < 1 - eta by linarith [heta.2])]
 
 /-! ## Uniform small-argument heat slope, including zero diffusion -/
 
@@ -147,47 +147,51 @@ theorem extension_deriv_eq (d : OutgoingTail.TailData) {z : ℝ} (hz : 0 ≤ z) 
     deriv (HeatProfileExtension.extension (1 + d.h)) z =
       derivWithin (RadialHeatProfile.profile (1 + d.h)) (Ici 0) z := by
   rw [← iteratedDeriv_one, HeatProfileExtension.iteratedDeriv_extension_eq_profileJet
-    (by linarith [d.h_pos]) 1 hz, ← RadialHeatProfile.iteratedDerivWithin_profile
-      (by linarith [d.h_pos]) 1 hz, iteratedDerivWithin_one]
+    (by linarith only [d.h_pos]) 1 hz, ← RadialHeatProfile.iteratedDerivWithin_profile
+      (by linarith only [d.h_pos]) 1 hz, iteratedDerivWithin_one]
 
 theorem heatSlope_bounds (d : OutgoingTail.TailData) (hh : d.h ≤ 1 / 4)
     {z : ℝ} (hz : 0 ≤ z) (hz1 : z ≤ 1 / 16) :
     0 ≤ heatSlope d z ∧ heatSlope d z ≤ d.h / 4 := by
-  have hH := HeatProfileExtension.extension_pos (a := 1 + d.h) (by linarith [d.h_pos]) hz
-  have hder := RadialHeatProfile.profile_first_derivative_bound (a := 1 + d.h) (by
-      linarith [d.h_pos]) hz
-  have hneg := RadialHeatProfile.profile_derivWithin_neg (a := 1 + d.h) (by linarith [d.h_pos]) hz
+  have ha : 1 < 1 + d.h := lt_add_of_pos_right 1 d.h_pos
+  have hH := HeatProfileExtension.extension_pos (a := 1 + d.h) ha hz
+  have hder := RadialHeatProfile.profile_first_derivative_bound (a := 1 + d.h) ha hz
+  have hneg := RadialHeatProfile.profile_derivWithin_neg (a := 1 + d.h) ha hz
   rw [← extension_deriv_eq d hz] at hder hneg
   have hdev := RadialHeatProfile.profile_h_sub_one_bound d.h_pos hz
   rw [← HeatProfileExtension.extension_eq_profile (1 + d.h) hz] at hdev
-  have hdh : (1 + d.h) * d.h ≤ 2 * d.h := by nlinarith [d.h_pos]
+  have hdh : (1 + d.h) * d.h ≤ 2 * d.h :=
+    mul_le_mul_of_nonneg_right (by linarith only [hh]) d.h_pos.le
   have hn : -deriv (HeatProfileExtension.extension (1 + d.h)) z ≤ 2 * d.h := by
     have he := (abs_le.mp hder).1
-    linarith
-  have hprod : 2 * d.h * z ≤ d.h / 8 := by nlinarith [d.h_pos]
+    linarith only [he, hdh]
+  have hprod : 2 * d.h * z ≤ d.h / 8 := by
+    have h2 := mul_le_mul_of_nonneg_left hz1 (mul_nonneg zero_le_two d.h_pos.le)
+    linarith only [h2]
   have hhprod : d.h * (1 + d.h) * z ≤ d.h / 8 :=
-    (mul_le_mul_of_nonneg_right (by linarith : d.h * (1 + d.h) ≤ 2 * d.h) hz).trans hprod
+    (mul_le_mul_of_nonneg_right ((mul_comm _ _).trans_le hdh) hz).trans hprod
   have hHhalf : 1 / 2 ≤ HeatProfileExtension.extension (1 + d.h) z := by
     have hl := (abs_le.mp hdev).1
-    linarith
+    linarith only [hl, hhprod, hh]
   unfold heatSlope
   constructor
   · exact div_nonneg (mul_nonneg_of_nonpos_of_nonpos (neg_nonpos.mpr hz) hneg.le) hH.le
   · apply (div_le_iff₀ hH).mpr
     have hnprod := mul_le_mul_of_nonneg_left hn hz
-    linarith [mul_le_mul_of_nonneg_left hHhalf (div_nonneg d.h_pos.le (by norm_num : (0 : ℝ) ≤ 4))]
+    have hmul := mul_le_mul_of_nonneg_left hHhalf (div_nonneg d.h_pos.le zero_le_four)
+    linarith only [hnprod, hprod, hmul]
 
 theorem profileZ_small (_d : OutgoingTail.TailData) {K δ eta : ℝ}
     (hK : 32 ≤ K) (hδ : δ ≤ 5 / 2) (heta : eta ^ 2 ≤ 1) :
     0 ≤ TerminalEdgeFactor.profileZ (Real.log K - 1 / 5) (eta, δ) ∧
       TerminalEdgeFactor.profileZ (Real.log K - 1 / 5) (eta, δ) ≤ 1 / 16 := by
-  have hKp : 0 < K := by linarith
+  have hKp : 0 < K := by linarith only [hK]
   have hS := profileS_ge_switch hKp hδ
   refine ⟨TerminalEdgeFactor.profileZ_nonneg _ heta, ?_⟩
   unfold TerminalEdgeFactor.profileZ
   apply (div_le_iff₀ (TerminalEdgeFactor.profileS_pos _ _)).mpr
   dsimp only
-  linarith [sq_nonneg eta]
+  linarith only [hK, hS, sq_nonneg eta]
 
 theorem profileSpeed_eq {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailData) (y0 : ℝ)
     {eta δ : ℝ} (heta : eta ^ 2 ≤ 1) :
@@ -195,7 +199,7 @@ theorem profileSpeed_eq {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailData) (y0 :
       2 + 2 * d.h - 2 * heatSlope d (TerminalEdgeFactor.profileZ y0 (eta, δ)) -
         2 * OutgoingTail.tailShapeDeriv d (3 - δ) / OutgoingTail.tailShape d (3 - δ) := by
   have hs := TerminalEdgeFactor.profileS_pos y0 δ
-  have hH := HeatProfileExtension.extension_pos (a := 1 + d.h) (by linarith [d.h_pos])
+  have hH := HeatProfileExtension.extension_pos (a := 1 + d.h) (by linarith only [d.h_pos])
     (TerminalEdgeFactor.profileZ_nonneg y0 (y := (eta, δ)) heta)
   have hp := Real.rpow_pos_of_pos hs (RadialHeatProfile.spatialExponent (1 + d.h))
   unfold TerminalEdgeFactor.profileSpeed TerminalEdgeFactor.profileCarrierRadial
@@ -204,7 +208,6 @@ theorem profileSpeed_eq {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailData) (y0 :
   rw [Real.rpow_sub hs, Real.rpow_one]
   field_simp [hC.ne', hs.ne', hp.ne', hH.ne', (OutgoingTail.tailShape_pos d (3 - δ)).ne']
   unfold RadialHeatProfile.spatialExponent
-  ring_nf
   rw [TerminalEdgeFactor.profileRadius_square]
   ring
 
@@ -219,7 +222,7 @@ theorem profileSpeed_bounds {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailData) (
   have he : 2 * OutgoingTail.tailShapeDeriv d (3 - δ) / OutgoingTail.tailShape d (3 - δ) =
       2 * (OutgoingTail.tailShapeDeriv d (3 - δ) / OutgoingTail.tailShape d (3 - δ)) := by ring
   rw [he]
-  constructor <;> linarith
+  constructor <;> linarith only [hheat, hf]
 
 /-! ## Physical-section identities and extension to the closed band -/
 
@@ -324,7 +327,7 @@ theorem profileAngularStress_pos {C : ℝ} (hC : 0 < C) (d : OutgoingTail.TailDa
   apply lt_of_lt_of_le _ (profileMass_le_stress hC d y0 hδ heta)
   have ht : OutgoingTail.tailShape d (3 - δ) < 1 := by
     simpa only [TerminalPressure.outgoingTaper, sub_zero] using
-      TerminalPressure.outgoingTaper_lt_one d (y0 := 0) (y := 3 - δ) (by linarith)
+      TerminalPressure.outgoingTaper_lt_one d (y0 := 0) (y := 3 - δ) (by linarith only [hδ])
   unfold profileMass
   exact mul_pos (div_pos (mul_pos (TerminalEdgeFactor.profileRadius_pos y0 δ)
     (TerminalEdgeFactor.profileCarrier_pos hC d y0 (y := (eta, 0))
@@ -345,14 +348,14 @@ theorem releaseBudget_nonneg (c : OutgoingSchedule.Parameters) : 0 ≤ releaseBu
 theorem release_small (d : OutgoingTail.TailData) (hsmall : SmallTail d) :
     releaseBudget d.core * d.h ^ 4 ≤ 1 := by
   have hB := releaseBudget_nonneg d.core
-  have hh1 : d.h ≤ 1 := by linarith [hsmall.1]
+  have hh1 : d.h ≤ 1 := by linarith only [hsmall, hsmall.1]
   have hhpow : d.h ^ 4 ≤ d.h := by
     calc
       _ = d.h * d.h ^ 3 := by ring
       _ ≤ d.h * 1 ^ 3 := mul_le_mul_of_nonneg_left (pow_le_pow_left₀ d.h_pos.le hh1 3) d.h_pos.le
       _ = _ := by ring
-  have hs := (le_div_iff₀ (show 0 < 1 + releaseBudget d.core by linarith)).mp hsmall.2
-  linarith [mul_le_mul_of_nonneg_left hhpow hB, d.h_pos]
+  have hs := (le_div_iff₀ (show 0 < 1 + releaseBudget d.core by linarith only [hB])).mp hsmall.2
+  linarith only [hs, hhpow, hB, mul_le_mul_of_nonneg_left hhpow hB, d.h_pos]
 
 theorem profileAxialStress_le_angular (d : OutgoingTail.TailData) (hsmall : SmallTail d)
     {K δ eta : ℝ} (hK : 0 < K) (hδ : 0 < δ) (hδ' : δ ≤ 5 / 2)
@@ -382,7 +385,7 @@ theorem profileAxialStress_le_angular (d : OutgoingTail.TailData) (hsmall : Smal
   have hins : Real.log (SimilarityProfile.X d.h (TerminalStress.radiusPoint (e ^ 2)
       (TerminalEdgeFactor.profileRadius y0 δ) e)) < y0 + 3 := by
     rw [normalized_logX d y0 δ he2]
-    linarith
+    linarith only [hδ]
   have hb := TerminalPressure.released_terminal_tilt d hK hsmall.1 he2
     (TerminalEdgeFactor.profileRadius_pos y0 δ) (profileRadius_le_outer y0 hδ.le)
     annulusRatio_gt_one.le (profileRadius_annulus y0 hδ') hX hR hins
@@ -436,7 +439,7 @@ theorem profile_cone_margin (d : OutgoingTail.TailData) (hsmall : SmallTail d)
       (Real.log K - 1 / 5) (eta, δ) ≤ 2 + 2 * d.h ∧
     3 / 2 ≤ TerminalEdgeFactor.profileConeGap (TerminalPressure.releasedNormalization d K) d
       (Real.log K - 1 / 5) (eta, δ) := by
-  have hKp : 0 < K := by linarith
+  have hKp : 0 < K := by linarith only [hK]
   have hs := profileSpeed_bounds (TerminalPressure.releasedNormalization_pos d hKp) d
     hsmall.1 hK hδ' (TerminalEdgeFactor.eta_sq_le_one heta)
   have ht := profileTilt_abs_le_one d hsmall hKp hδ hδ' heta
@@ -444,12 +447,12 @@ theorem profile_cone_margin (d : OutgoingTail.TailData) (hsmall : SmallTail d)
   have ht2 : TerminalEdgeFactor.profileTilt (TerminalPressure.releasedNormalization d K) d
       (Real.log K - 1 / 5) (eta, δ) ^ 2 ≤ 1 := by
     rcases abs_le.mp ht with ⟨hl, hu⟩
-    nlinarith
+    nlinarith only [hl, hu]
   have hv : 0 ≤ TerminalEdgeFactor.profileSpeed (TerminalPressure.releasedNormalization d K) d
-      (Real.log K - 1 / 5) (eta, δ) - 2 := by linarith [d.h_pos]
+      (Real.log K - 1 / 5) (eta, δ) - 2 := by linarith only [hs, d.h_pos]
   have hm := mul_le_mul_of_nonneg_left ht2 hv
   unfold TerminalEdgeFactor.profileConeGap
-  linarith [hsmall.1]
+  linarith only [hs, hm, hsmall, hsmall.1]
 
 theorem profile_relative_cone (d : OutgoingTail.TailData) (hsmall : SmallTail d)
     {K δ eta : ℝ} (hK : 32 ≤ K) (hδ : 0 < δ) (hδ' : δ ≤ 5 / 2)
@@ -462,11 +465,11 @@ theorem profile_relative_cone (d : OutgoingTail.TailData) (hsmall : SmallTail d)
       TerminalEdgeFactor.profileAxialStress C d y0 (eta, δ) ^ 2 <
         2 * TerminalEdgeFactor.profileAngularStress C d y0 (eta, δ) ^ 2 := by
   dsimp only
-  have hKp : 0 < K := by linarith
+  have hKp : 0 < K := by linarith only [hK]
   have hT := profileAngularStress_pos (TerminalPressure.releasedNormalization_pos d hKp)
     d (Real.log K - 1 / 5) hδ heta
   obtain ⟨hs, _, hg⟩ := profile_cone_margin d hsmall hK hδ.le hδ' heta
-  refine ⟨hT, by linarith [d.h_pos], ?_⟩
+  refine ⟨hT, by linarith only [d.h_pos, hs], ?_⟩
   have hnorm : (TerminalEdgeFactor.profileSpeed (TerminalPressure.releasedNormalization d K) d
       (Real.log K - 1 / 5) (eta, δ) - 2) *
       (TerminalEdgeFactor.profileAxialStress (TerminalPressure.releasedNormalization d K) d
@@ -475,7 +478,7 @@ theorem profile_relative_cone (d : OutgoingTail.TailData) (hsmall : SmallTail d)
           (Real.log K - 1 / 5) (eta, δ)) ^ 2 < 2 := by
     rw [TerminalEdgeFactor.profileTilt_eq_ratio _ d _ eta hδ]
     unfold TerminalEdgeFactor.profileConeGap at hg
-    linarith
+    linarith only [hg]
   apply (div_lt_iff₀ (sq_pos_of_pos hT)).mp
   simpa only [div_pow, mul_div_assoc] using hnorm
 
@@ -492,7 +495,7 @@ theorem profile_full_true_cone (d : OutgoingTail.TailData) (hsmall : SmallTail d
         (TerminalEdgeFactor.profileJ C d y0 (eta, δ)) := by
   dsimp only
   obtain ⟨hT, hv, hm⟩ := profile_relative_cone d hsmall hK hδ hδ' heta
-  have hKp : 0 < K := by linarith
+  have hKp : 0 < K := by linarith only [hK]
   have hF := TerminalEdgeFactor.profileSwirlCoefficient_pos
     (TerminalPressure.releasedNormalization_pos d hKp) d (Real.log K - 1 / 5)
     (y := (eta, δ)) heta
@@ -514,7 +517,7 @@ theorem tailTime_clock (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) (
   rw [OutgoingDilation.clock_radius XR y hXR] at hc
   change OutgoingTail.tailStart F.data + 1 / 5 +
     Real.log ((XR * Real.exp y) / OutgoingDilation.switchRadius F XR) = y at hc
-  linarith
+  linarith only [hc]
 
 theorem E_eq_profileAngularVelocity (F : OutgoingProfile.Profile) {XR : ℝ}
     (c : ℝ → TerminalCompensation.Coeff) (hXR : 0 < XR) {y eta : ℝ}
@@ -527,7 +530,7 @@ theorem E_eq_profileAngularVelocity (F : OutgoingProfile.Profile) {XR : ℝ}
       by
     rw [tailTime_clock F hXR y]
     dsimp only [terminalStart] at hy
-    linarith
+    linarith only [hy]
   rw [HeatedOutgoing.E_full_switch F XR c eta (XR * Real.exp y) hXR hX hfull,
     tailTime_clock F hXR y]
   simp only [TerminalEdgeFactor.profileAngularVelocity, TerminalEdgeFactor.profileCarrier,
@@ -552,7 +555,7 @@ theorem U_eq_zero (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR) {y eta
     (mul_pos hXR (Real.exp_pos y))
   rw [tailTime_clock F hXR y]
   dsimp only [terminalStart] at hy
-  linarith
+  linarith only [hy]
 
 /-- Chosen only after the core schedule and `h`.  This bound contains no
 compensation coefficient or data-dependent edge-collar width. -/
@@ -596,7 +599,7 @@ theorem full_interval_direction_margin (F : OutgoingProfile.Profile) {XR y eta :
   have hδ' : edgeDistance F y ≤ 5 / 2 := by
     dsimp only [terminalStart] at hy
     dsimp only [edgeDistance, OutgoingTail.tailEnd]
-    linarith
+    linarith only [hy]
   exact profile_cone_margin F.data hsmall (switchRadius_ge_32 F hXR) hδ hδ' heta
 
 /-- The actual compensated velocity uses precisely the terminal field whose

@@ -201,7 +201,7 @@ theorem indexed_gaussian_tail_bound {s : StripData D} {K : ℕ → J → Set D}
   have hPg : W n i x ≤ Real.exp (-(c * ell / 25) * ChartScales.S n) := by
     apply (hW n i x hx hi).trans
     apply (Real.exp_le_exp.2 ?_).trans (gaussian_length_comparison hc.le (hLell n i))
-    nlinarith [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (hL n i).le)]
+    linarith only [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (hL n i).le)]
   have hslow0 : 0 ≤ s.slow n := zero_le_one.trans (s.one_le_slow n)
   have hK0 : 0 ≤ scales.boundConstant := zero_le_one.trans scales.constant_one_le
   have hslowp : s.slow n ^ p ≤
@@ -692,7 +692,7 @@ theorem envelope_uniform_bound {lam0 u0 : ℝ} (_hlam0 : 0 < lam0) (hu0 : 0 < u0
   have hm := mul_le_mul_of_nonneg_right
     (mul_le_mul_of_nonneg_right hcoeff (sq_nonneg (theta F clock l n v - 1 / 2)))
     (ScaledActualParticularControl.length_pos F clock l n).le
-  nlinarith
+  nlinarith only [hm]
 
 theorem length_uniform_lower {ell : ℝ}
     (hL : ∀ l n, ell * ChartScales.S n ≤ F.L (l, n)) (l : Label) (n : ℕ) :
@@ -784,7 +784,7 @@ theorem mem_outerCell {r L c : ℝ} (hr : 0 < r) (hL : 0 < L) (hc : 0 < c) (z : 
 theorem sourceCell_time {r L c : ℝ} (hL : 0 < L) (hc : 0 < c) {z : Plane}
     (hz : z ∈ sourceCell r L c) : z.2 ∈ Ioo 0 (L / c) := by
   have hp := div_pos hL hc
-  exact ⟨by linarith [hz.2.1], by linarith [hz.2.2]⟩
+  exact ⟨by linarith only [hp, hz, hz.2.1], by linarith only [hp, hz, hz.2.2]⟩
 
 theorem sourceCell_subset_outer {r L c : ℝ} (hr : 0 < r) (hL : 0 < L) (hc : 0 < c) :
     sourceCell r L c ⊆ outerCell r L c := by
@@ -829,12 +829,12 @@ theorem nativeCutoff_time_zero_germ {r L c : ℝ} (hr : 0 < r) (hL : 0 < L) (hc 
   have hlen := div_pos hL hc
   have hdist : 1 / 3 < |z.2 / (L / c) - 1 / 2| := by
     by_cases hlo : z.2 ≤ 0
-    · rw [abs_of_nonpos (by linarith [div_nonpos_of_nonpos_of_nonneg hlo hlen.le])]
-      linarith [div_nonpos_of_nonpos_of_nonneg hlo hlen.le]
+    · rw [abs_of_nonpos (by linarith only [hlo, hlen, div_nonpos_of_nonpos_of_nonneg hlo hlen.le])]
+      linarith only [hlo, hlen, div_nonpos_of_nonpos_of_nonneg hlo hlen.le]
     · have hhi : L / c ≤ z.2 := le_of_not_gt (fun h => hz ⟨lt_of_not_ge hlo, h⟩)
       have hdiv : 1 ≤ z.2 / (L / c) := (le_div_iff₀ hlen).mpr (by simpa using hhi)
-      rw [abs_of_nonneg (by linarith)]
-      linarith
+      rw [abs_of_nonneg (by linarith only [hdiv])]
+      linarith only [hdiv]
   have hd : 1 / 3 < |c * z.2 / L - 1 / 2| := by
     rw [normalized_clock hL.ne' hc.ne']
     exact hdist
@@ -1228,7 +1228,7 @@ theorem normalizedLinear_norm (g : Geometry) {L : ℝ} (hL : 0 < L) :
   have hc : ‖g.coordinateLinear‖ ≤ CommonCoverClass.argumentCost g := by
     unfold CommonCoverClass.argumentCost
     have h : 0 ≤ ‖g.pointLinear‖ * (1 + ‖g.coordinateLinear‖) := by positivity
-    linarith
+    linarith only [h]
   apply ContinuousLinearMap.opNorm_le_bound _
     (mul_nonneg (inv_nonneg.mpr hL.le) (zero_le_one.trans (CommonCoverClass.one_le_argumentCost g)))
   intro x
@@ -1268,7 +1268,7 @@ theorem gaussian_clock_uniform_jets
         mul_le_mul (inverse_length_bound F clock hu0 hu l n) (hcost l n)
           (zero_le_one.trans (CommonCoverClass.one_le_argumentCost _)) hc
       _ ≤ (1 + (clock.upper * F.M / u0) * K) * s.slow n ^ p := by
-        nlinarith [pow_nonneg (zero_le_one.trans (s.one_le_slow n)) p]
+        nlinarith only [pow_nonneg (zero_le_one.trans (s.one_le_slow n)) p]
   have hj := affine_profile_uniform_jets s C
     (fun l n => normalizedLinear (P := P) (g l n) (ScaledActualParticularControl.length F clock l
         n))
@@ -1584,8 +1584,8 @@ theorem referenceCutoff_support {r L : ℝ} (hr : 0 < r) (hL : 0 < L) :
   have hg : GaussianTailFlat.profile (z.2 / L) ≠ 0 := (mul_ne_zero_iff.mp hz).2
   have hd : |z.2 / L - 1 / 2| < 1 / 3 := by
     exact lt_of_not_ge (fun h => hg (GaussianTailFlat.profile_zero h))
-  have hlo : 0 ≤ z.2 / L := by linarith [(abs_lt.mp hd).1]
-  have hhi : z.2 / L ≤ 1 := by linarith [(abs_lt.mp hd).2]
+  have hlo : 0 ≤ z.2 / L := by linarith only [hd, (abs_lt.mp hd).1]
+  have hhi : z.2 / L ≤ 1 := by linarith only [hd, (abs_lt.mp hd).2]
   exact ⟨mem_univ _, by simpa only [zero_mul] using (le_div_iff₀ hL).mp hlo,
     (div_le_one hL).mp hhi⟩
 
@@ -1698,10 +1698,10 @@ theorem actualMask_support (L : PrimaryGeometryAssembly.Index W a.N) :
     lt_of_not_ge (fun h => hx.2 (GaussianTailFlat.profile_zero h))
   have hlow : (1 / 6 : ℝ) < x.2.2 / ChartScales.slotLength r0 profile.data.h
       (BaseChartJets.cellBand L) := by
-    linarith [(abs_lt.mp hg).1]
+    linarith only [H, hg, (abs_lt.mp hg).1]
   have hhigh : x.2.2 / ChartScales.slotLength r0 profile.data.h (BaseChartJets.cellBand L) < 5 / 6
       := by
-    linarith [(abs_lt.mp hg).2]
+    linarith only [H, hg, (abs_lt.mp hg).2]
   refine ⟨hs, ⟨htrans.1.le, htrans.2.le⟩, ?_, ?_⟩
   · change (ChartScales.slotLength r0 profile.data.h (BaseChartJets.cellBand L) / 1) / 6 ≤ x.2.2
     simpa only [div_eq_mul_inv, inv_one, mul_one, one_mul, mul_comm] using (lt_div_iff₀ hL).mp hlow
@@ -1822,7 +1822,7 @@ theorem indexed_gaussian_weighted_all_gains {s : StripData X} {K : ℕ → I →
   have hPg : W n i x ≤ Real.exp (-(c * ell / 25) * ChartScales.S n) := by
     apply (hW n i x hx hi).trans
     apply (Real.exp_le_exp.2 ?_).trans (gaussian_length_comparison hc.le (hLell n i))
-    nlinarith [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (hL n i).le)]
+    nlinarith only [hsq, hc, hL, mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (hL n i).le)]
   have hweight : s.epsilon n ^ α * W n i x ≤ B * s.epsilon n ^ β :=
     (mul_le_mul_of_nonneg_left hPg (Real.rpow_pos_of_pos (s.epsilon_pos n) α).le).trans (hshift n)
   calc

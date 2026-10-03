@@ -28,11 +28,19 @@ open Set EulerSmoothLimit EulerParentPacketFrames EulerPacketSupport
 variable {q : ℕ} {B : ℝ} {S : Scales (q : ℝ) B} (P : Stage S 0)
   (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
 
+theorem forwardNext_state : (P.forwardNext hq hB).state = P.forwardState hq hB := rfl
+
+theorem forwardState_eq :
+    P.forwardState hq hB = GeometryForwardChoice.state (P.forwardInput hq hB)
+      P.restrictedState (frequency S.J S.X 0) (S.normal_frequency 0) (supportScale S.J S.X 1)
+      (S.support_pos 1) (S.support_one 1) (P.chooseForward hq hB) symmetric := rfl
+
 theorem forwardNext_initial_support
     (hP : tsupport (fun x => P.state.evolution.velocity (0, x)) ⊆ Metric.closedBall 0 2) :
     tsupport (fun x => (P.forwardNext hq hB).state.evolution.velocity (0, x)) ⊆
-      Metric.closedBall 0 2 :=
-  GeometryForwardChoice.initial_support (P.forwardInput hq hB) P.restrictedState
+      Metric.closedBall 0 2 := by
+  rw [forwardNext_state, forwardState_eq]
+  exact GeometryForwardChoice.initial_support (P.forwardInput hq hB) P.restrictedState
     (frequency S.J S.X 0) (S.normal_frequency 0) (supportScale S.J S.X 1)
     (S.support_pos 1) (S.support_one 1) (P.chooseForward hq hB) symmetric hP
 

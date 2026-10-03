@@ -9,6 +9,7 @@ module
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! The mean of a genuine derivative of a periodic field is zero. -/
 

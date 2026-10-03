@@ -223,7 +223,7 @@ theorem width_on_core (label : SlotColoring.Label) (gap : ℕ) (k : Frequency) (
       2 * sys.radius := by
     unfold ChartScales.slotLength
     field_simp
-  exact abs_le.mpr ⟨by nlinarith [mul_nonneg hci.le hv.1], by nlinarith⟩
+  exact abs_le.mpr ⟨by nlinarith only [hci, hv, mul_nonneg hci.le hv.1], by nlinarith only [hb, he]⟩
 
 /-- Native mask, given by `PartitionedCovariance.cutoff sys.radius z.1 *
 PrimaryCopyBounds.outerCutoff (z.2 / ChartScales.slotLength sys.radius h label.1)`. -/
@@ -247,10 +247,10 @@ theorem nativeMask_support (label : SlotColoring.Label) :
   have hL : 0 < ChartScales.slotLength sys.radius h label.1 :=
     div_pos (mul_pos (by norm_num) sys.radius_pos) (ChartScales.timeCoefficient_pos _ _)
   have hv0 : 0 ≤ z.2 := by
-    have he := (le_div_iff₀ hL).mp (show 0 ≤ z.2 / _ by linarith [hv.1])
+    have he := (le_div_iff₀ hL).mp (show 0 ≤ z.2 / _ by linarith only [hv, hv.1])
     simpa only [zero_mul] using he
   have hv1 : z.2 ≤ ChartScales.slotLength sys.radius h label.1 :=
-    (div_le_one hL).mp (by linarith [hv.2])
+    (div_le_one hL).mp (by linarith only [hv, hv.2])
   exact ⟨⟨hu.1.le, hu.2.le⟩, hv0, hv1⟩
 
 /-- The concrete compact native layout used to periodize the same signed
@@ -442,7 +442,9 @@ noncomputable def rotateCoefficient (Y : Plane) (v : ComplexVector) : ComplexVec
 
 theorem rotateCoefficient_zero (Y : Plane) : rotateCoefficient Y 0 = 0 := by
   ext i
-  fin_cases i <;> simp [rotateCoefficient]
+  fin_cases i <;> simp only [rotateCoefficient, Pi.zero_apply, smul_zero, sub_self, add_zero,
+      Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 
 /-- Rotation map, constructed using `ContinuousLinearMap.pi`. -/
@@ -457,7 +459,10 @@ noncomputable def rotationMap (Y : Plane) : ComplexVector →L[ℝ] ComplexVecto
 theorem rotationMap_apply (Y : Plane) (v : ComplexVector) : rotationMap Y v = rotateCoefficient Y v
     := by
   ext i
-  fin_cases i <;> simp [rotationMap, rotateCoefficient]
+  fin_cases i <;> simp only [rotationMap, Fin.isValue, Fin.zero_eta, ContinuousLinearMap.coe_pi',
+      Matrix.cons_val_zero, sub_apply, smul_apply, ContinuousLinearMap.proj_apply,
+      Complex.real_smul, Complex.ofReal_div, rotateCoefficient, Fin.mk_one, Matrix.cons_val_one,
+      add_apply, Fin.reduceFinMk, Matrix.cons_val]
 
 theorem rotateCoefficient_real_smul (Y : Plane) (c : ℝ) (v : ComplexVector) :
     rotateCoefficient Y (c • v) = c • rotateCoefficient Y v := by
@@ -466,14 +471,17 @@ theorem rotateCoefficient_real_smul (Y : Plane) (c : ℝ) (v : ComplexVector) :
 theorem rotateCoefficient_complex_smul (Y : Plane) (c : ℂ) (v : ComplexVector) :
     rotateCoefficient Y (c • v) = c • rotateCoefficient Y v := by
   ext i
-  fin_cases i <;> simp [rotateCoefficient, Complex.real_smul, Pi.smul_apply, smul_eq_mul] <;> ring
+  fin_cases i <;> simp only [rotateCoefficient, Fin.isValue, Pi.smul_apply, smul_eq_mul,
+      Complex.real_smul, Complex.ofReal_div, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one,
+      Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val] <;> ring
 
 theorem rotateCoefficient_vectorMode (Y : Plane) (K : ℝ) (Phi : Cylinder → ℝ)
     (v : Cylinder → ComplexVector) (x : Cylinder) (i : Fin 3) :
     rotateCoefficient Y (HarmonicCalculus.vectorMode K Phi v x) i =
       rotateCoefficient Y (v x) i * HarmonicCalculus.carrier K Phi x := by
-  fin_cases i <;> simp [rotateCoefficient, HarmonicCalculus.vectorMode, HarmonicCalculus.mode,
-    Complex.real_smul] <;> ring
+  fin_cases i <;> simp only [rotateCoefficient, vectorMode, mode, Fin.isValue, Complex.real_smul,
+      Complex.ofReal_div, Fin.zero_eta, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val] <;> ring
 
 theorem chart_radius {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) {Y : Plane}
     (hY : Y ∈ PolarCharts.chartDomain a j) :
@@ -500,9 +508,13 @@ theorem rotateCoefficient_chart_re {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index
   have hsin : Y.2 / PolarCharts.radius Y = Real.sin (PolarCharts.chart a j Y).2 := by
     rw [← hs]
     field_simp
-  fin_cases i <;> simp [rotateCoefficient, hcos, hsin, CylindricalResidual.frame_apply,
-    PhysicalCurlCovariance.realVector, AxisymmetricResidual.pack, coordinateVector,
-    -Complex.ofReal_cos, -Complex.ofReal_sin]
+  fin_cases i <;> simp only [rotateCoefficient, hcos, Fin.isValue, Complex.real_smul, hsin,
+      Fin.zero_eta, Matrix.cons_val_zero, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
+      Complex.ofReal_im, zero_mul, sub_zero, PhysicalCurlCovariance.realVector,
+      AxisymmetricResidual.pack, coordinateVector, CylindricalResidual.frame_apply, PiLp.add_apply,
+      PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one,
+      not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, one_ne_zero,
+      zero_add, Fin.mk_one, Matrix.cons_val_one, Complex.add_re, Fin.reduceFinMk, Matrix.cons_val]
 
 theorem cylinderAt_fst {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) {x : LiftPoint}
     (hx : PhysicalGraphBounds.liftXY x ∈ PolarCharts.chartDomain a j) :
@@ -520,8 +532,12 @@ theorem radiusPower_eq_radius (d : ℝ) (Y : Plane) :
 theorem scaledRadial_forward (n : ℕ) (z : SpaceTime) :
     PhysicalGraphBounds.scaledRadial n (z.1, CylindricalResidual.chart z.2) =
       PolarCharts.polar (ChartScales.Q n ^ (-(1 / 2 : ℝ)) * z.2 0, z.2 1) := by
-  ext <;> simp [PhysicalGraphBounds.scaledRadial, PhysicalGraphBounds.radialProjection_apply,
-    CylindricalResidual.chart, PolarCharts.polar, AxisymmetricResidual.pack, coordinateVector] <;>
+  ext <;> simp only [PhysicalGraphBounds.scaledRadial, one_div, CylindricalResidual.chart,
+      AxisymmetricResidual.pack, Fin.isValue, coordinateVector, smul_apply,
+      PhysicalGraphBounds.radialProjection_apply, PiLp.add_apply, PiLp.smul_apply,
+      PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true,
+      PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, one_ne_zero, zero_add, Prod.smul_mk,
+      PolarCharts.polar] <;>
         ring
 
 /-- The exact physical Cartesian lift and the common cylindrical graph
@@ -578,9 +594,14 @@ theorem cylinderAt_physical_forward (h : ℝ) (n : ℕ) {a : ℝ} (ha : 0 < a)
           PhysicalGraphBounds.nativeGraph h n (z.1, CylindricalResidual.chart z.2))), z.2 1) := by
     unfold cylinderAt
     rw [PhysicalGraphBounds.liftXY_physicalLift, hp]
-    ext <;> simp [PhysicalGraphBounds.liftZT, PhysicalGraphBounds.physicalLift,
-      PhysicalGraphBounds.physicalChart, PhysicalGraphBounds.chartLinear_apply,
-      CylindricalResidual.chart, AxisymmetricResidual.pack, coordinateVector]
+    simp only [one_div, PhysicalGraphBounds.liftZT, PhysicalGraphBounds.physicalLift,
+      PhysicalGraphBounds.physicalChart, CylindricalResidual.chart, AxisymmetricResidual.pack,
+      coordinateVector, PhysicalGraphBounds.chartLinear_apply, neg_mul, Prod.mk_add_mk, add_zero,
+      ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_fst', ContinuousLinearMap.prod_apply,
+      ContinuousLinearMap.coe_snd']
+    ext <;> simp only [Fin.isValue, PiLp.add_apply, PiLp.smul_apply, ne_eq, Fin.reduceEq,
+      not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, add_zero,
+      PiLp.single_eq_same, mul_one, zero_add]
     ring
   rw [hc, hn]
   simp only [PhysicalResidualBridge.ScaledGraph.map, PhysicalResidualBridge.commonGraph,
@@ -724,7 +745,8 @@ theorem potential_amplitude_mem (i : Fin 3) (k : Frequency)
     apply hx
     simp only [potentialFamily, dite_eq_left hL, hz, Complex.ofReal_zero, mul_zero, zero_mul,
         ite_self]
-  · exact False.elim (hx (by simp [potentialFamily, hL]))
+  · exact False.elim (hx (by simp only [potentialFamily, Int.cast_ofNat_Int, Int.reduceNeg,
+      PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte]))
 
 theorem pressure_amplitude_mem (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1) (x : LiftPoint)
     (hx : (pressureFamily sys hh f).amplitude k I x ≠ 0) :
@@ -736,7 +758,8 @@ theorem pressure_amplitude_mem (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1)
     apply hx
     simp only [pressureFamily, dite_eq_left hL, hz, Complex.ofReal_zero, mul_zero, zero_mul,
         ite_self]
-  · exact False.elim (hx (by simp [pressureFamily, hL]))
+  · exact False.elim (hx (by simp only [pressureFamily, Int.cast_ofNat_Int, Int.reduceNeg, hL,
+      ↓reduceDIte]))
 
 /-- Potential cells, constructed using `PhysicalCopyBounds.nativeSupportCells`. -/
 noncomputable def potentialCells (i : Fin 3) : PhysicalCopyBounds.SupportCells (potentialFamily sys
@@ -906,7 +929,8 @@ theorem invariant_angle_zero {E : Type} (F : Cylinder → E)
     (hF : CopyAngularInvariance.Invariant ((0, 1) : Cylinder) F) (x : Cylinder) :
     F x = F (x.1, 0) := by
   have he : (x.1, (0 : ℝ)) + x.2 • ((0, 1) : Cylinder) = x := by
-    ext <;> simp
+    ext <;> simp only [Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, Prod.mk_add_mk, add_zero,
+        zero_add, Prod.mk.eta]
   simpa only [he] using hF (x.1, 0) x.2
 
 theorem phase_eq_native (L : NativeLabel f.active) (k : Frequency)
@@ -935,7 +959,9 @@ theorem phase_eq_native (L : NativeLabel f.active) (k : Frequency)
 omit sys hh f G in
 theorem commonLift_zero (h : ℝ) (n : ℕ) (w : SpaceTime) :
     PhysicalWaveSum.commonLift h n 0 w = PhysicalGraphBounds.physicalLift h n w := by
-  simp [PhysicalWaveSum.commonLift, CommonCoverSolve.coverPower]
+  simp only [PhysicalWaveSum.commonLift, comp_apply, PhysicalWaveSum.downLift_apply,
+      CommonCoverSolve.coverPower, ContinuousLinearEquiv.refl_symm,
+      ContinuousLinearEquiv.refl_apply, Prod.mk.eta]
 
 theorem rawPotential_cylinderAt (L : NativeLabel f.active) (k : Frequency)
     {a : ℝ} (ha : 0 < a) (chart : PolarCharts.Index) {x : LiftPoint}
@@ -978,7 +1004,7 @@ theorem pressure_commonWave (L : NativeLabel f.active) (k : Frequency)
   rw [← rawPressure_cylinderAt sys hh f G L k ha chart hc]
   by_cases hz : waveMask sys L.val ((geometry sys L.val 0).coordinates k
       (PhysicalGraphBounds.physicalLift h L.val.1 w).2) = 0
-  · simp [hz]
+  · simp only [hz, Complex.ofReal_zero, mul_zero, zero_mul, zero_smul, smul_zero]
   · rw [← phase_eq_native sys hh f G L k a chart _ (waveMask_support sys L.val hz), G.frequency L]
     simp only [PhysicalGraphBounds.character, HarmonicCalculus.carrier,
       HarmonicCalculus.phaseFactor, PhysicalGraphBounds.phaseFactor, Complex.real_smul]
@@ -1035,7 +1061,8 @@ theorem potential_commonWave (L : NativeLabel f.active) (k : Frequency) (i : Fin
   rw [← rawPotential_cylinderAt sys hh f G L k ha chart hc]
   by_cases hz : waveMask sys L.val ((geometry sys L.val 0).coordinates k
       (PhysicalGraphBounds.physicalLift h L.val.1 w).2) = 0
-  · simp [hz]
+  · simp only [hz, Complex.ofReal_zero, mul_zero, PhysicalGraphBounds.liftXY_apply, zero_mul,
+      zero_smul, smul_zero]
   · rw [← phase_eq_native sys hh f G L k a chart _ (waveMask_support sys L.val hz), G.frequency L]
     simp only [PhysicalGraphBounds.character, HarmonicCalculus.carrier,
       HarmonicCalculus.phaseFactor, PhysicalGraphBounds.phaseFactor, Complex.real_smul]
@@ -1108,7 +1135,7 @@ theorem angular_integer (L : NativeLabel f.active) (k : Frequency) :
       one_smul, zero_add, mul_zero,
     mul_one, add_zero] at he
   have hp : ((f.primary L).pulse (f.column L)).phase.p L.val.1 =
-      (G.angular L).mode / (f.primary L).base.frequency L.val.1 := by linarith
+      (G.angular L).mode / (f.primary L).base.frequency L.val.1 := by linarith only [he]
   change (ChartScales.carrier h L.val.1 : ℝ) *
     ((f.primary L).pulse (f.column L)).phase.p L.val.1 = _
   rw [hp, G.frequency L]
@@ -1363,8 +1390,11 @@ theorem potential_amplitude_eq_source (i : Fin 3) (k : Frequency)
         ite_true, nativeCylinder_map, rotateCoefficient_real_smul, Pi.smul_apply]
       simp only [Complex.real_smul, mul_assoc]
       rfl
-    · simp [potentialFamily, nativePotentialSource, hL, hI, rotateCoefficient_zero]
-  · simp [potentialFamily, nativePotentialSource, hL, rotateCoefficient_zero]
+    · simp only [potentialFamily, Int.cast_ofNat_Int, Int.reduceNeg,
+        PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte, hI, ↓reduceIte, nativePotentialSource,
+        and_true, rotateCoefficient_zero, Pi.zero_apply, smul_zero]
+  · simp only [potentialFamily, Int.cast_ofNat_Int, Int.reduceNeg, PhysicalGraphBounds.liftXY_apply,
+      hL, ↓reduceDIte, nativePotentialSource, rotateCoefficient_zero, Pi.zero_apply, smul_zero]
 
 theorem pressure_amplitude_eq_source (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1) (x :
     LiftPoint) :
@@ -1377,15 +1407,18 @@ theorem pressure_amplitude_eq_source (k : Frequency) (I : PhysicalWaveSum.WaveIn
         ite_true, nativeCylinder_map]
       simp only [Complex.real_smul, mul_assoc]
       rfl
-    · simp [pressureFamily, nativePressureSource, hL, hI]
-  · simp [pressureFamily, nativePressureSource, hL]
+    · simp only [pressureFamily, Int.cast_ofNat_Int, Int.reduceNeg, hL, ↓reduceDIte, hI, ↓reduceIte,
+        nativePressureSource, and_true, smul_zero]
+  · simp only [pressureFamily, Int.cast_ofNat_Int, Int.reduceNeg, hL, ↓reduceDIte,
+      nativePressureSource, smul_zero]
 
 omit sys hh f in
 theorem increment_zero_target (H : Mat2) (R : Vec2) (j : Fin 2) :
     SignedCovariance.increment H 0 R j = 0 := by
-  fin_cases j <;> simp [SignedCovariance.increment, SmoothCovariance.amplitudes,
-      SmoothCovariance.weights,
-    SmoothCovariance.cramerNumerator]
+  fin_cases j <;> simp only [SignedCovariance.increment, Fin.zero_eta, Fin.isValue,
+      SmoothCovariance.amplitudes, SmoothCovariance.weights, SmoothCovariance.cramerNumerator,
+      Pi.zero_apply, zero_mul, mul_zero, sub_self, Matrix.cons_val_zero, zero_div, Real.sqrt_zero,
+      div_zero, Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one]
 
 theorem rawPotential_zero (L : NativeLabel f.active) (k : Frequency) (x : Cylinder)
     (hx : (f.primary L).mask L.val.1 x = 0 ∨ (f.primary L).target L.val.1 x = 0) :
@@ -1393,11 +1426,12 @@ theorem rawPotential_zero (L : NativeLabel f.active) (k : Frequency) (x : Cylind
   have hr : ActualPeriodizedSignedRealization.referenceScalar (f.primary L)
       (f.state L).referenceRequest (f.column L) L.val.1 x = 0 := by
     rcases hx with hm | ht
-    · simp [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar, hm]
-    · simp [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar, ht,
-        increment_zero_target]
-  simp [rawPotential, rawSignedAmplitude, hr, CurlClassBounds.normalCoefficient,
-      CurlClassBounds.normalCross]
+    · simp only [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar,
+        hm, mul_zero]
+    · simp only [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar,
+        ht, increment_zero_target, mul_zero, zero_mul]
+  simp only [rawPotential, CurlClassBounds.normalCoefficient, CurlClassBounds.normalCross,
+      rawSignedAmplitude, hr, zero_smul, map_zero, smul_zero]
 
 theorem rawPressure_zero (L : NativeLabel f.active) (k : Frequency) (x : Cylinder)
     (hx : (f.primary L).mask L.val.1 x = 0 ∨ (f.primary L).target L.val.1 x = 0) :
@@ -1405,9 +1439,10 @@ theorem rawPressure_zero (L : NativeLabel f.active) (k : Frequency) (x : Cylinde
   have hr : ActualPeriodizedSignedRealization.referenceScalar (f.primary L)
       (f.state L).referenceRequest (f.column L) L.val.1 x = 0 := by
     rcases hx with hm | ht
-    · simp [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar, hm]
-    · simp [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar, ht,
-        increment_zero_target]
+    · simp only [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar,
+        hm, mul_zero]
+    · simp only [ActualPeriodizedSignedRealization.referenceScalar, SignedWaveUpdate.signedScalar,
+        ht, increment_zero_target, mul_zero, zero_mul]
   simp only [rawPressure, hr, zero_smul]
 
 theorem potential_amplitude_inputs (i : Fin 3) (k : Frequency)
@@ -1422,13 +1457,19 @@ theorem potential_amplitude_inputs (i : Fin 3) (k : Frequency)
       · intro hm
         have hr := rawPotential_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x)
             (Or.inl hm)
-        exact hx (by simp [potentialFamily, hL, hI, hr, rotateCoefficient_zero])
+        exact hx (by simp only [potentialFamily, Int.cast_ofNat_Int, Int.reduceNeg,
+            PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte, hI, ↓reduceIte, hr,
+            rotateCoefficient_zero, Pi.zero_apply, mul_zero])
       · intro ht
         have hr := rawPotential_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x)
             (Or.inr ht)
-        exact hx (by simp [potentialFamily, hL, hI, hr, rotateCoefficient_zero])
-    · exact False.elim (hx (by simp [potentialFamily, hL, hI]))
-  · exact False.elim (hx (by simp [potentialFamily, hL]))
+        exact hx (by simp only [potentialFamily, Int.cast_ofNat_Int, Int.reduceNeg,
+            PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte, hI, ↓reduceIte, hr,
+            rotateCoefficient_zero, Pi.zero_apply, mul_zero])
+    · exact False.elim (hx (by simp only [potentialFamily, Int.cast_ofNat_Int, Int.reduceNeg,
+        PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte, hI, ↓reduceIte]))
+  · exact False.elim (hx (by simp only [potentialFamily, Int.cast_ofNat_Int, Int.reduceNeg,
+      PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte]))
 
 theorem pressure_amplitude_inputs (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1) (x : LiftPoint)
     (hx : (pressureFamily sys hh f).amplitude k I x ≠ 0) :
@@ -1441,13 +1482,17 @@ theorem pressure_amplitude_inputs (k : Frequency) (I : PhysicalWaveSum.WaveIndex
       · intro hm
         have hr := rawPressure_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x) (Or.inl
             hm)
-        exact hx (by simp [pressureFamily, hL, hI, hr])
+        exact hx (by simp only [pressureFamily, Int.cast_ofNat_Int, Int.reduceNeg, hL, ↓reduceDIte,
+            hI, ↓reduceIte, hr, mul_zero])
       · intro ht
         have hr := rawPressure_zero sys hh f ⟨I.1.val, I.1.property, hL⟩ k (cylinderZero x) (Or.inr
             ht)
-        exact hx (by simp [pressureFamily, hL, hI, hr])
-    · exact False.elim (hx (by simp [pressureFamily, hL, hI]))
-  · exact False.elim (hx (by simp [pressureFamily, hL]))
+        exact hx (by simp only [pressureFamily, Int.cast_ofNat_Int, Int.reduceNeg, hL, ↓reduceDIte,
+            hI, ↓reduceIte, hr, mul_zero])
+    · exact False.elim (hx (by simp only [pressureFamily, Int.cast_ofNat_Int, Int.reduceNeg, hL,
+        ↓reduceDIte, hI, ↓reduceIte]))
+  · exact False.elim (hx (by simp only [pressureFamily, Int.cast_ofNat_Int, Int.reduceNeg, hL,
+      ↓reduceDIte]))
 
 
 /-- Localization facts about the original shared mask and target.  The
@@ -1474,8 +1519,8 @@ omit sys hh f in
 theorem normalized_slow_norm {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) {p : Plane}
     (ht : 0 < p.1) (hlo : 1 / 2 ≤ SimilarityCoordinates.coordinateQ (2 * h) p)
     (hhi : SimilarityCoordinates.coordinateQ (2 * h) p ≤ 2) : ‖p‖ ≤ 2 := by
-  have he := SimilarityCoordinates.coordinateQ_spec (by linarith : 0 < 2 * h)
-    (by linarith : 2 * h < 1) ht
+  have he := SimilarityCoordinates.coordinateQ_spec (by linarith only [hh] : 0 < 2 * h)
+    (by linarith only [hh1] : 2 * h < 1) ht
   have hq : 0 < SimilarityCoordinates.coordinateQ (2 * h) p := he.1
   dsimp only [SimilarityCoordinates.forwardScalar] at he
   have hp : 1 / 2 ≤ SimilarityCoordinates.coordinateQ (2 * h) p ^ (2 * h) := by
@@ -1483,15 +1528,16 @@ theorem normalized_slow_norm {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) {p : Plane
     · calc
         1 / 2 ≤ SimilarityCoordinates.coordinateQ (2 * h) p := hlo
         _ = SimilarityCoordinates.coordinateQ (2 * h) p ^ (1 : ℝ) := (Real.rpow_one _).symm
-        _ ≤ _ := Real.rpow_le_rpow_of_exponent_ge hq h1 (by linarith)
+        _ ≤ _ := Real.rpow_le_rpow_of_exponent_ge hq h1 (by linarith only [hh1])
     · exact (by norm_num : (1 / 2 : ℝ) ≤ 1).trans
         (Real.one_le_rpow (le_of_not_ge h1) (by positivity))
   have hprod : 0 ≤ p.2 ^ 2 * SimilarityCoordinates.coordinateQ (2 * h) p ^ (2 * h) :=
     mul_nonneg (sq_nonneg _) (Real.rpow_nonneg hq.le _)
-  have hT : |p.1| ≤ 2 := by rw [abs_of_pos ht]; linarith [he.2]
+  have hT : |p.1| ≤ 2 := by rw [abs_of_pos ht]; linarith only [he.2, hhi, hprod]
   have hZ : |p.2| ≤ 2 := by
-    have hs : p.2 ^ 2 ≤ 4 := by nlinarith [he.2, sq_nonneg p.2]
-    nlinarith [sq_abs p.2, abs_nonneg p.2]
+    have hm := mul_le_mul_of_nonneg_left hp (sq_nonneg p.2)
+    have hs : p.2 ^ 2 ≤ 2 ^ 2 := by linarith only [hm, he.2, hhi, ht]
+    exact abs_le_of_sq_le_sq hs zero_le_two
   simpa only [Prod.norm_def, Real.norm_eq_abs] using max_le hT hZ
 
 variable {a b : ℝ} {s : StripData Native}
@@ -1507,13 +1553,13 @@ theorem primitive_annulus (hh0 : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < a) (hb : 0 <
       ‖PhysicalGraphBounds.liftZT x‖ ≤ 2 := by
   let y := PhysicalClassBounds.cylindricalMap x
   have hy := hloc.normalized L y (Real.sqrt_nonneg _) hm hT
-  have hq : 0 < SimilarityCoordinates.coordinateQ (2 * h) y.2.1 := by linarith [hy.2.1]
+  have hq : 0 < SimilarityCoordinates.coordinateQ (2 * h) y.2.1 := one_half_pos.trans_le hy.2.1
   have hs := Real.sqrt_pos.mpr hq
   have hslow := normalized_slow_norm hh0 hh1 hy.1 hy.2.1 hy.2.2.1
   have hlo : 1 / 2 ≤ Real.sqrt (SimilarityCoordinates.coordinateQ (2 * h) y.2.1) :=
-    (Real.le_sqrt (by norm_num) hq.le).mpr (by nlinarith [hy.2.1])
+    (Real.le_sqrt (by norm_num) hq.le).mpr (by linarith only [hy.2.1])
   have hhi : Real.sqrt (SimilarityCoordinates.coordinateQ (2 * h) y.2.1) ≤ 2 :=
-    (Real.sqrt_le_left (by norm_num)).mpr (by linarith [hy.2.2.1])
+    (Real.sqrt_le_left (by norm_num)).mpr (by linarith only [hy.2.2.1])
   have hradlo := (le_div_iff₀ hs).mp hy.2.2.2.1
   have hradhi := (div_le_iff₀ hs).mp hy.2.2.2.2
   have hR : y.1 = PolarCharts.radius (PhysicalGraphBounds.liftXY x) := rfl
@@ -1524,7 +1570,7 @@ theorem primitive_annulus (hh0 : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < a) (hb : 0 <
   have hnormlo : a / 4 ≤ ‖PhysicalGraphBounds.liftXY x‖ := by
     have hradius := PolarCharts.radius_le_two_norm (PhysicalGraphBounds.liftXY x)
     have hmul := mul_le_mul_of_nonneg_left hlo ha.le
-    linarith
+    linarith only [hradlo, hradius, hmul]
   constructor
   · exact ⟨by simpa only [Metric.mem_closedBall, dist_zero_right] using hnorm, hnormlo⟩
   · change max ‖x.1.2.2.2‖ ‖x.1.1‖ ≤ 2
@@ -1549,7 +1595,9 @@ theorem potential_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h <
     · refine ⟨(G.angular ⟨L.val, L.property, hL⟩).mode, ?_⟩
       simpa only [potentialFamily, extendedCarrier, dite_eq_left hL] using
         angular_integer sys f G ⟨L.val, L.property, hL⟩ k
-    · exact ⟨0, by simp [potentialFamily, extendedCarrier, hL, carrier]⟩
+    · exact ⟨0, by simp only [potentialFamily, extendedCarrier, carrier, Fin.isValue,
+        Int.cast_ofNat_Int, Int.reduceNeg, PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte,
+        mul_zero, Int.cast_zero]⟩
   geometry_support k I w hw := by
     change (potentialFamily sys hh f i).amplitude k I (PhysicalWaveSum.commonLift h I.1.val.1 0 w)
         ≠ 0 at hw
@@ -1585,7 +1633,8 @@ theorem pressure_support (G : ReferenceGeometry sys f) (hh0 : 0 < h) (hh1 : h < 
     · refine ⟨(G.angular ⟨L.val, L.property, hL⟩).mode, ?_⟩
       simpa only [pressureFamily, extendedCarrier, dite_eq_left hL] using
         angular_integer sys f G ⟨L.val, L.property, hL⟩ k
-    · exact ⟨0, by simp [pressureFamily, extendedCarrier, hL, carrier]⟩
+    · exact ⟨0, by simp only [pressureFamily, extendedCarrier, carrier, Fin.isValue,
+        Int.cast_ofNat_Int, Int.reduceNeg, hL, ↓reduceDIte, mul_zero, Int.cast_zero]⟩
   geometry_support k I w hw := by
     change (pressureFamily sys hh f).amplitude k I (PhysicalWaveSum.commonLift h I.1.val.1 0 w) ≠ 0
         at hw
@@ -1646,8 +1695,8 @@ noncomputable def carrierRegion (h a b : ℝ) : Set PhysicalGraphBounds.Slow :=
 theorem carrierRegion_open {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (a b : ℝ) :
     IsOpen (carrierRegion h a b) :=
   (isOpen_Ioo.preimage continuous_fst).inter
-    ((PhysicalMeanDomain.normalizedSlowDomain_open (by linarith : 0 < 2 * h)
-      (by linarith : 2 * h < 1) (1 / 4) 4).preimage
+    ((PhysicalMeanDomain.normalizedSlowDomain_open (by linarith only [hh] : 0 < 2 * h)
+      (by linarith only [hh1] : 2 * h < 1) (1 / 4) 4).preimage
       (continuous_snd.snd.prodMk continuous_snd.fst))
 
 /-- Carrier profile arguments lie in a fixed open native region. The
@@ -1677,7 +1726,7 @@ theorem carrierRegion_contains {h a b : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (ha 
   rw [PhysicalGraphBounds.slotMap_formula, PhysicalGraphBounds.liftXY_physicalLift,
     chart_radius ha4 j hj]
   constructor
-  · exact ⟨by linarith, by linarith⟩
+  · exact ⟨by linarith only [ha, hl, hrlo], by linarith only [hh, hh1, hn, hrhi]⟩
   · simpa only [LocalPhysicalCopyBounds.slotSlow, PhysicalGraphBounds.slotMap_formula,
       PhysicalMeanJetBounds.graph, Function.comp_apply, commonLift_zero,
       PhysicalClassBounds.cylindricalMap, PhysicalClassBounds.slowFast_apply] using hs
@@ -1879,7 +1928,7 @@ theorem commonLift_mem_liftedNativePast (n : ℕ) {w : SpaceTime}
     have hb' : ‖PhysicalGraphBounds.scaledRadial n w‖ ≤ 2 * b := by
       simpa only [Metric.mem_closedBall, dist_zero_right] using hann.1
     have ha' : a / 4 ≤ ‖PhysicalGraphBounds.scaledRadial n w‖ := hann.2
-    exact ⟨by linarith, by linarith⟩
+    exact ⟨by linarith only [ha, ha'], by linarith only [hb']⟩
   · exact PhysicalMeanJetBounds.graph_time_pos h n 0 hw
 
 variable {s : StripData Native} (hloc : PrimitiveLocalization (h := h) f a b s)
@@ -1993,7 +2042,8 @@ noncomputable def identitySourceChart {N : ℕ} {K I : Type}
     intro k J x hx j hj hjm
     simp only [pow_zero, mul_one]
     exact (PhysicalGraphBounds.norm_positive_jet_linear_le
-        (ContinuousLinearMap.id ℝ LiftPoint) x hj).trans (by simp)
+        (ContinuousLinearMap.id ℝ LiftPoint) x hj).trans (by simp only [ContinuousLinearMap.norm_id,
+            Std.le_refl])
   amplitude_eq k J x _ := he k J x
   contains k J z _ _ _ _ hz := by
     have hrad := (hs.tsupport_geometry J k hz).1
@@ -2024,7 +2074,7 @@ theorem potential_source_domain (i : Fin 3) (k : Frequency) (I : PhysicalWaveSum
   have hu : ‖PhysicalGraphBounds.liftXY x‖ ≤ 2 * b := by
     simpa only [Metric.mem_closedBall, dist_zero_right] using hg.1.1
   have hl : a / 4 ≤ ‖PhysicalGraphBounds.liftXY x‖ := hg.1.2
-  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith⟩
+  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith only [hh0, hh1, hu]⟩
 
 theorem pressure_source_domain (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1)
     (x : LiftPoint) (hx : (pressureFamily sys hh f).amplitude k I x ≠ 0) :
@@ -2035,7 +2085,7 @@ theorem pressure_source_domain (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1)
   have hu : ‖PhysicalGraphBounds.liftXY x‖ ≤ 2 * b := by
     simpa only [Metric.mem_closedBall, dist_zero_right] using hg.1.1
   have hl : a / 4 ≤ ‖PhysicalGraphBounds.liftXY x‖ := hg.1.2
-  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith⟩
+  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith only [hh0, hh1, hu]⟩
 
 omit sys hh hloc G hh0 hh1 ha hb in
 theorem carrier_frequencies {P : ℝ} (hP : 1 ≤ P)
@@ -2188,15 +2238,23 @@ theorem polarCoordinates_backward {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
   refine Prod.ext rfl ?_
   ext i
   fin_cases i
-  · simpa [PhysicalCurlCovariance.polarCoordinates, PhysicalCurlCovariance.polarInput,
-      CylindricalResidual.chart, AxisymmetricResidual.pack, coordinateVector,
-      PiLp.single_apply, PolarCharts.polar, PhysicalGraphBounds.radialProjection_apply]
+  · simpa only [CylindricalResidual.chart, AxisymmetricResidual.pack, Fin.isValue,
+      PhysicalCurlCovariance.polarCoordinates, PhysicalCurlCovariance.polarInput,
+      PhysicalGraphBounds.radialProjection_apply, coordinateVector, PiLp.add_apply, PiLp.smul_apply,
+      PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true,
+      PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, one_ne_zero, zero_add, Fin.zero_eta,
+      PolarCharts.polar]
       using congrArg Prod.fst hp
-  · simpa [PhysicalCurlCovariance.polarCoordinates, PhysicalCurlCovariance.polarInput,
-      CylindricalResidual.chart, AxisymmetricResidual.pack, coordinateVector,
-      PiLp.single_apply, PolarCharts.polar, PhysicalGraphBounds.radialProjection_apply]
+  · simpa only [CylindricalResidual.chart, AxisymmetricResidual.pack, Fin.isValue,
+      PhysicalCurlCovariance.polarCoordinates, PhysicalCurlCovariance.polarInput,
+      PhysicalGraphBounds.radialProjection_apply, coordinateVector, PiLp.add_apply, PiLp.smul_apply,
+      PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true,
+      PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, one_ne_zero, zero_add, Fin.mk_one,
+      PolarCharts.polar]
       using congrArg Prod.snd hp
-  · simp [PhysicalCurlCovariance.polarCoordinates, CylindricalResidual.chart]
+  · simp only [CylindricalResidual.chart, Fin.isValue, PhysicalCurlCovariance.polarCoordinates,
+      AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, AxisymmetricResidual.pack_two,
+      Fin.reduceFinMk]
 
 theorem polarCoordinates_valid {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     {x : SpaceTime} (hx : PhysicalGraphBounds.radialProjection x ∈ PolarCharts.chartDomain a j) :
@@ -2206,7 +2264,7 @@ theorem polarCoordinates_valid {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     rw [← PolarCharts.radius_rotate j]
     apply PolarCharts.radius_pos_of_fst_pos
     have hx' : a / 4 < (PolarCharts.rotate j (PhysicalGraphBounds.radialProjection x)).1 := hx
-    linarith
+    linarith only [ha, hx']
   change 0 < (PhysicalCurlCovariance.polarCoordinates a j x).2 0 ∧ _
   refine ⟨?_, ?_, ?_⟩
   · rwa [PhysicalCurlCovariance.polarCoordinates_radius ha j hx]

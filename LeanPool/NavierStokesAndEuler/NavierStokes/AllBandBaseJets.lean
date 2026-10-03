@@ -40,7 +40,7 @@ theorem slowStage_eq_zero_of_one_le {a : ℕ → ℕ} (ha : ∀ j, 0 < a j)
     (h : ℝ) (f : ℕ → Inner → V) (j : ℕ) {y : Chart} (hy : 1 ≤ y.1) :
     SlowBorelBase.slowStage a h f j y = 0 := by
   have haj : (1 : ℝ) ≤ a j := by exact_mod_cast ha j
-  have hprod : 1 ≤ (a j : ℝ) * y.1 := by nlinarith
+  have hprod : 1 ≤ (a j : ℝ) * y.1 := by nlinarith only [haj, hy]
   have hz := SmoothCutoffs.scaledCutoff_zero_of_one_le_abs
     (a := (a j : ℝ)) (q := y.1) (hprod.trans (le_abs_self _))
   simp only [SlowBorelBase.slowStage, SolenoidalDiagonal.cutStage, hz, zero_smul]
@@ -155,7 +155,7 @@ theorem normalized_error_envelope {ι : Type*} {h qlo qhi lo hi : ℝ}
     have hw : y.2 ∈ SlowBorelBase.innerBox lo hi :=
       ⟨⟨hy.2.1.1.le, hy.2.1.2.le⟩, hy.2.2.1.le, hy.2.2.2.le⟩
     have hr : y.1 ^ (2 * h) ≤ qhi ^ (2 * h) :=
-      Real.rpow_le_rpow hrho.le hy.1.2.le (by linarith)
+      Real.rpow_le_rpow hrho.le hy.1.2.le (by linarith only [hh])
     calc
       _ ≤ ‖SlowBorelBase.blownJet j f (Q i * y.1, y.2)‖ * K ^ j := hscaled
       _ ≤ (B * (Q i * y.1) ^ (2 * h)) * K ^ j :=
@@ -227,7 +227,7 @@ theorem actual_estimates {ι : Type*} {D : Domain ι Slow}
     simp only [axial, leadingAxial, axialError, Function.comp_apply, smul_eq_mul, mul_sub,
         SlowBorelBase.scaleMap_apply]
   have hw i p (_hp : p ∈ (unitScale D).carrier i) : Q i ^ (2 * h) ≤ 1 :=
-    Real.rpow_le_one (hQ i).le (hQ1 i) (by linarith)
+    Real.rpow_le_one (hQ i).le (hQ1 i) (by linarith only [hh])
   refine ⟨hF, hG, h0.1, h0.2, ?_, ?_⟩
   · exact ((hF.to_polynomial hw).add h0.1).congr (fun _ _ _ => sub_add_cancel _ _)
   · exact ((hG.to_polynomial hw).add h0.2).congr (fun _ _ _ => sub_add_cancel _ _)
@@ -285,7 +285,7 @@ theorem scaled_sum_polynomial {ι : Type*} {D : Domain ι Slow}
     have heta := abs_lt.mp (normalizedCoordinates_eta hh hh1 (H.time i p hp))
     exact ⟨⟨(H.x_range i p hp).1.le, (H.x_range i p hp).2.le⟩, heta.1.le, heta.2.le⟩
   have hep := hec.to_polynomial (fun i _ _ =>
-    Real.rpow_le_one (hQ i).le (hQ1 i) (show 0 ≤ 2 * h by linarith))
+    Real.rpow_le_one (hQ i).le (hQ1 i) (show 0 ≤ 2 * h by linarith only [hh]))
   apply (hep.add hlead).congr
   intro i p hp
   simp only [err, Function.comp_apply, SlowBorelBase.scaleMap_apply, sub_add_cancel]

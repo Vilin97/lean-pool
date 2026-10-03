@@ -35,7 +35,7 @@ variable {P : ℝ} [Fact (0 < P)]
   (C : ℝ) (W : GradeGuards (P := P) L N C) (Y : InitialData P D)
   (α : ℝ) (hα : 0 < α)
   (hYb : ∀ n, block standardDirection 6
-    (fun a => translate P a (Y.value : CylinderL2 P U)) n 0 ≤ (α * C) * majorant L.R 0 n)
+    (fun a => translate (V := U) P a (Y.value : CylinderL2 P U)) n 0 ≤ (α * C) * majorant L.R 0 n)
 
 include W hα hYb
 
@@ -43,11 +43,14 @@ theorem primary_profile_budget (O : Operators) (hcorrector : O.curlCorrector = D
     (S : Scales (Icc (0 : ℝ) D.T)) (hgrowth : S.growth = α • L.g) :
     ProfileBudget (EulerPacketForwardPrimary.regularity D Y O hcorrector) S L.R 1 := by
   let G := EulerPacketForwardPrimary.forcing (P := P) D
-  have hf (n : ℕ) : block standardDirection 6 (fun a => pathTranslate P a
-      (normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤ (α*C)*majorant L.R 0 n := by
+  have hf (n : ℕ) : block standardDirection 6 (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+        (EulerContinuousTimeWeight.normalize L.g L.positive (HistoryData.forcingPath G))) n 0 ≤
+            (α*C)*majorant L.R 0 n := by
     have hh : HistoryData.forcingPath G = 0 := by
       unfold HistoryData.forcingPath
-      rw [EulerPacketForwardPrimary.forcing_path_zero,map_zero]
+      rw [EulerPacketForwardPrimary.forcing_path_zero]
+      exact map_zero _
     simpa only [hh,map_zero,block_zero_function] using
       mul_nonneg (mul_nonneg hα.le W.data_nonneg)
         (majorant_nonneg L.R (zero_le_one.trans L.radius_one) 0 n)
@@ -60,21 +63,21 @@ theorem primary_profile_budget (O : Operators) (hcorrector : O.curlCorrector = D
   have hz := Field.wordBound_normalized_of_zero (Field.zero P D.T)
     (fun _ _ _ => rfl) D.T_pos.le (S.mean 1) (S.mean_pos 1) 6 L.R (meanShift 1)
   refine ⟨?_,?_,?_,?_,?_,?_,?_⟩
-  · exact Field.normalized_wordBound_congr (G.vectorField Y) D.T_pos.le
+  · apply Field.normalized_wordBound_congr (G.vectorField Y) D.T_pos.le
       (S.high 1) (α • L.g) (S.high_pos 1)
       (smul_profile_pos L.g L.positive α hα) he 6 (highShift 1) L.R 1 hv
-  · exact Field.normalized_wordBound_congr (G.vectorDerivativeField Y) D.T_pos.le
+  · apply Field.normalized_wordBound_congr (G.vectorDerivativeField Y) D.T_pos.le
       (S.high 1) (α • L.g) (S.high_pos 1)
       (smul_profile_pos L.g L.positive α hα) he 6 (highShift 1) L.R 1 ht
   · exact hz.mono_amplitude (zero_le_one.trans L.radius_one) zero_le_one
   · exact hz.mono_amplitude (zero_le_one.trans L.radius_one) zero_le_one
-  · exact Field.normalized_wordBound_congr (G.curlCorrectorField Y) D.T_pos.le
+  · apply Field.normalized_wordBound_congr (G.curlCorrectorField Y) D.T_pos.le
       (S.high 1) (α • L.g) (S.high_pos 1)
       (smul_profile_pos L.g L.positive α hα) he 6 (highShift 1) L.R 1 hc
-  · exact Field.normalized_wordBound_congr (G.correctorDerivativeField Y) D.T_pos.le
+  · apply Field.normalized_wordBound_congr (G.correctorDerivativeField Y) D.T_pos.le
       (S.high 1) (α • L.g) (S.high_pos 1)
       (smul_profile_pos L.g L.positive α hα) he 6 (highShift 1) L.R 1 hct
-  · exact Field.normalized_wordBound_congr (G.scalarGradientField Y) D.T_pos.le
+  · apply Field.normalized_wordBound_congr (G.scalarGradientField Y) D.T_pos.le
       (S.high 1) (α • L.g) (S.high_pos 1)
       (smul_profile_pos L.g L.positive α hα) he 6 (highShift 1) L.R 1 hp
 
@@ -105,7 +108,9 @@ theorem forwardPrimary_profile_budget (O : Operators) (hcorrector : O.curlCorrec
   apply L.primary_profile_budget N _ W (initialData D δ hδ (α • ξ) hs) α hα _ O hcorrector S hgrowth
   intro n
   have hh := initialData_common_radius D δ hδ (α • ξ) hs standardDirection
-    (fun i => by cases i using Fin.cases <;> simp [Prod.norm_def]) 6 hδ1 L.R hR n
+    (fun i => by cases i using Fin.cases <;> simp only [Fin.isValue, standardDirection_zero,
+        Prod.norm_def, norm_zero, norm_one, zero_le_one, sup_of_le_right, Std.le_refl,
+        standardDirection_succ, PiLp.norm_single, sup_of_le_left]) 6 hδ1 L.R hR n
   simpa only [norm_smul,Real.norm_eq_abs,abs_of_pos hα,mul_assoc,mul_left_comm,mul_comm] using hh
 
 end EulerPacketTerminalDatum

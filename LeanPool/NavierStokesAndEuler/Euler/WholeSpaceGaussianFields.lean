@@ -74,7 +74,8 @@ theorem scaledAverage_eq {t : ℝ} (ht : 0 < t) (f : Space → V) (x : Space) :
     simpa only [Real.sq_sqrt ht.le] using kernel_sq_smul hc y
   have h := Measure.integral_comp_smul_of_nonneg (volume : Measure Space)
     (fun y : Space => kernel t y • f (x+y)) (Real.sqrt t) (hR := hc.le)
-  have hdim : Module.finrank ℝ Space = 3 := by simp [Space]
+  have hdim : Module.finrank ℝ Space = 3 := by simp only [Space, finrank_euclideanSpace,
+      Fintype.card_fin]
   simp only [he, mul_smul, integral_smul, hdim] at h
   change (Real.sqrt t ^ 3)⁻¹ • scaledAverage t f x =
     (Real.sqrt t ^ 3)⁻¹ • average t f x at h
@@ -170,7 +171,8 @@ theorem secondAverage_directional_bound {t : ℝ} (ht : 0 < t)
       simpa only [he] using norm_sum_le Finset.univ (fun i : Fin 3 => average t (wordField A (w
           i)).field x)
     _ ≤ ∑ _i : Fin 3, t^(-(3:ℝ)/4)*‖A.jetLp 3‖ := Finset.sum_le_sum (fun i _ => h i)
-    _ = _ := by simp; ring
+    _ = _ := by simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+        Nat.cast_ofNat]; ring
 
 section Bounded
 
@@ -182,8 +184,7 @@ theorem field_sup_bound (A : SmoothL2Field V) (x : Space) :
 
 theorem average_field_hasDerivAt {t : ℝ} (ht : 0 < t) (A : SmoothL2Field V) (x : Space) :
     HasDerivAt (fun s : ℝ => average s A.field x) ((1/4:ℝ) • secondAverage t A.field x) t :=
-  average_hasDerivAt ht A.field A.smooth ‖finiteField A‖ ‖finiteField A.derivative‖
-    ‖finiteField A.derivative.derivative‖ (field_sup_bound A)
+  average_hasDerivAt ht A.field A.smooth _ _ _ (field_sup_bound A)
     (field_sup_bound A.derivative) (field_sup_bound A.derivative.derivative) x
 
 theorem scaledAverage_field_hasDerivAt {t : ℝ} (ht : 0 < t) (A : SmoothL2Field V) (x : Space) :
@@ -196,15 +197,13 @@ theorem scaledAverage_field_hasDerivAt {t : ℝ} (ht : 0 < t) (A : SmoothL2Field
 theorem average_field_first_bound (A : SmoothL2Field V) (a x : Space) :
     ‖average 1 (fun y => fderiv ℝ A.field y a) x‖ ≤ lowCost*‖a‖*‖A.toLp‖ := by
   simpa only [field_norm] using average_first_L2_bound A.field A.smooth A.memLp
-    ‖finiteField A‖ ‖finiteField A.derivative‖ (field_sup_bound A) (field_sup_bound A.derivative) a
-        x
+    _ _ (field_sup_bound A) (field_sup_bound A.derivative) a x
 
 theorem average_field_second_bound {t : ℝ} (ht : 0 < t)
     (A : SmoothL2Field V) (W : ℝ) (hW : ∀ x, ‖A.field x‖ ≤ W) (a b x : Space) :
     ‖average t (fun z => fderiv ℝ (fun y => fderiv ℝ A.field y b) z a) x‖ ≤
       (10*(2:ℝ)^((3:ℝ)/2))*t⁻¹*‖a‖*‖b‖*W :=
-  average_second_bound ht A.field A.smooth W ‖finiteField A.derivative‖
-    ‖finiteField A.derivative.derivative‖ hW (field_sup_bound A.derivative)
+  average_second_bound ht A.field A.smooth W _ _ hW (field_sup_bound A.derivative)
     (field_sup_bound A.derivative.derivative) a b x
 
 end Bounded

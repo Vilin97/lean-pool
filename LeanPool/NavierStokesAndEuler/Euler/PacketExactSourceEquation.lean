@@ -35,7 +35,7 @@ theorem source_frame_time (F : ℝ × Space → Space →L[ℝ] Space)
       (fun s => extendPath D.T D.T_pos.le D.F.field s x) := by
     filter_upwards [Icc_mem_nhds ht.1 ht.2] with s hs
     simpa only [extendPath,projIcc_of_mem D.T_pos.le hs] using hmatch ⟨s,hs⟩ x
-  have hf := hF.comp_hasDerivAt t
+  have hf := hF.comp_hasDerivAt (F := ℝ × Space) (f := fun s => (s, x)) t
     ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
   have hd := (D.frame_time t ⟨ht.1.le,ht.2.le⟩ x).hasDerivAt (Icc_mem_nhds ht.1 ht.2)
   simpa only [extendPath,projIcc_of_mem D.T_pos.le ⟨ht.1.le,ht.2.le⟩] using
@@ -78,7 +78,8 @@ theorem source_equation (t : ℝ) (ht : t ∈ Ioo 0 D.T) (z : LiftTangent) :
         (fderiv ℝ (D.F.field ⟨t,ht.1.le,ht.2.le⟩ : Space → Space →L[ℝ] Space)
           z.1 (S.rawVelocity (t,z)) (S.rawVelocity (t,z))) +
       D.FInv.field ⟨t,ht.1.le,ht.2.le⟩ z.1
-        ((D.FInv.field ⟨t,ht.1.le,ht.2.le⟩ z.1).adjoint (S.rawPressure (t,z))) = 0 := by
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field ⟨t,ht.1.le,ht.2.le⟩ z.1)
+          (S.rawPressure (t,z))) = 0 := by
   have h := S.raw_normalized_equation t ht z
   simp only [correctionData_linear,correctionData_quadratic,correctionData_metric,
     coveringMap,smul_apply,comp_apply] at h
@@ -100,7 +101,8 @@ theorem source_equation_of_frame (F : ℝ × Space → Space →L[ℝ] Space)
       κ • (D.deformationEquiv ⟨t,ht.1.le,ht.2.le⟩ z.1).symm
         (DF (0,S.rawVelocity (t,z)) (S.rawVelocity (t,z))) +
       (D.deformationEquiv ⟨t,ht.1.le,ht.2.le⟩ z.1).symm
-        ((D.deformationEquiv ⟨t,ht.1.le,ht.2.le⟩ z.1).symm.toContinuousLinearMap.adjoint
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+          (D.deformationEquiv ⟨t,ht.1.le,ht.2.le⟩ z.1).symm.toContinuousLinearMap
           (S.rawPressure (t,z))) = 0 := by
   rw [EulerPacketPhysicalTransform.source_frame_time D F hmatch t ht z.1 DF hF,
     EulerPacketPhysicalTransform.source_frame_spatial D F hmatch

@@ -136,7 +136,7 @@ theorem clock_inside_wait (F : Profile) (s : Slot) :
     F.data.core.holdStart < leftClock F s ∧ rightClock F s < F.data.core.pulseStart := by
   obtain ⟨hlo, _, hhi⟩ := offset_bounds s
   dsimp only [leftClock, rightClock, OutgoingSchedule.Parameters.pulseStart]
-  constructor <;> linarith [F.data.core.wait_gt]
+  constructor <;> linarith only [hlo, hhi, F.data.core.wait_gt]
 
 theorem window_inside_wait (F : Profile) (XR : ℝ) (hXR : 0 < XR)
     (s : Slot) {X : ℝ} (hX : X ∈ window F XR s) :
@@ -151,7 +151,7 @@ theorem canonical_wait_gt_54 {lam : ℝ} (hlam : 0 < lam) (hlam' : lam < 1 / 10)
     54 < 60 * Real.log (1 / lam) := by
   have h := Real.one_sub_inv_le_log_of_pos (one_div_pos.mpr hlam)
   simp only [one_div, inv_inv] at h ⊢
-  nlinarith
+  nlinarith only [hlam', h]
 
 /-- The earliest reserved boundary has over twenty-nine log units of
 entrance margin. The latest boundary has three log units before the pulse. -/
@@ -163,7 +163,7 @@ theorem canonical_margins (F : Profile)
   rw [← hw] at hwait
   obtain ⟨hlo, _, hhi⟩ := offset_bounds s
   dsimp only [leftClock, rightClock, OutgoingSchedule.Parameters.pulseStart]
-  constructor <;> linarith
+  constructor <;> linarith only [hwait, hlo, hhi]
 
 theorem pulse_before_switch (F : Profile) :
     F.data.core.pulseStart < HeatTailEdit.switchStart F.data := by
@@ -173,7 +173,7 @@ theorem pulse_before_switch (F : Profile) :
   have ht := OutgoingTail.tailStart_gt_release F.data
   dsimp only [OutgoingSchedule.Parameters.endpoint] at hf
   dsimp only [HeatTailEdit.switchStart]
-  linarith
+  linarith only [hp, hf, hr, ht]
 
 theorem right_before_switch (F : Profile) (XR : ℝ) (hXR : 0 < XR) (s : Slot) :
     right F XR s < OutgoingDilation.switchRadius F XR := by
@@ -219,7 +219,7 @@ theorem inner_bounds (s : Slot) :
       TerminalCompensation.upper_lt_right OutgoingDilation.compensationPatch 2⟩
     have h := OutgoingDilation.compensationPatch.ordered
     norm_num [innerLower, innerUpper, TerminalCompensation.lower, TerminalCompensation.upper] at *
-    linarith
+    linarith only [h]
   | modulation | positive | mean =>
     simp only [innerLower, innerUpper]
     exact ⟨by simpa only [Real.exp_zero] using Real.exp_lt_exp.mpr (show (0 : ℝ) < 1 by norm_num),
@@ -322,7 +322,7 @@ theorem clean_E_shaped (F : Profile) (XR eta X : ℝ) (hXR : 0 < XR) (hX : 0 < X
       xAmplitude F XR eta * X ^ (-(1 / 2 + F.data.core.lam)) := by
   have he : OutgoingDilation.clock XR X ≤ F.data.core.endpoint := by
     dsimp only [OutgoingSchedule.Parameters.endpoint]
-    linarith [F.data.core.pulseLength_pos]
+    linarith only [hhi, F.data.core.pulseLength_pos]
   change F.logE (OutgoingDilation.clock XR X, eta) = _
   rw [F.logE_before eta he, OutgoingSchedule.angular_shaped_wait F.data.core eta hlo]
   unfold xAmplitude
@@ -398,11 +398,11 @@ theorem witness_fields {F : Profile} {XR C : ℝ}
 
 theorem terminal_lower_min (P : TerminalCompensation.Patch) (j : Fin 3) :
     TerminalCompensation.lower P 0 ≤ TerminalCompensation.lower P j := by
-  fin_cases j <;> norm_num [TerminalCompensation.lower] <;> linarith [P.ordered]
+  fin_cases j <;> norm_num [TerminalCompensation.lower] <;> linarith only [P.ordered]
 
 theorem terminal_upper_max (P : TerminalCompensation.Patch) (j : Fin 3) :
     TerminalCompensation.upper P j ≤ TerminalCompensation.upper P 2 := by
-  fin_cases j <;> norm_num [TerminalCompensation.upper] <;> linarith [P.ordered]
+  fin_cases j <;> norm_num [TerminalCompensation.upper] <;> linarith only [P.ordered]
 
 theorem terminal_correction_inner_support (P : TerminalCompensation.Patch)
     (c : TerminalCompensation.Coeff) :
@@ -488,9 +488,9 @@ theorem radial_support_margins (F : Profile) (XR : ℝ) (hXR : 0 < XR) (s : Slot
   have ha := left_pos F XR hXR s
   have hb := ha.trans hl
   have hc := hb.trans hm
-  exact ⟨Real.sqrt_lt_sqrt (by positivity) (by nlinarith),
-    Real.sqrt_lt_sqrt (by positivity) (by nlinarith),
-    Real.sqrt_lt_sqrt (by positivity) (by nlinarith)⟩
+  exact ⟨Real.sqrt_lt_sqrt (by positivity) (by nlinarith only [hl]),
+    Real.sqrt_lt_sqrt (by positivity) (by nlinarith only [hm]),
+    Real.sqrt_lt_sqrt (by positivity) (by nlinarith only [hr])⟩
 
 theorem radialSupportLeft_pos (F : Profile) (XR : ℝ) (hXR : 0 < XR) (s : Slot) :
     0 < radialSupportLeft F XR s :=
@@ -503,12 +503,12 @@ theorem square_half_mem_Ioo {a b R : ℝ} (ha : 0 < a)
   have hb : 0 < b := by
     have hsb : 0 < Real.sqrt (2 * b) := hRp.trans hR.2
     have h2b := Real.sqrt_pos.mp hsb
-    linarith
+    linarith only [h2b]
   have hl := (sq_lt_sq₀ (Real.sqrt_nonneg (2 * a)) hRp.le).mpr hR.1
   have hr := (sq_lt_sq₀ hRp.le (Real.sqrt_nonneg (2 * b))).mpr hR.2
   rw [Real.sq_sqrt (by positivity)] at hl
   rw [Real.sq_sqrt (by positivity)] at hr
-  constructor <;> nlinarith
+  constructor <;> nlinarith only [hl, hr]
 
 theorem square_half_mem_Icc {a b R : ℝ} (ha : 0 < a)
     (hR : R ∈ Icc (Real.sqrt (2 * a)) (Real.sqrt (2 * b))) :
@@ -517,12 +517,12 @@ theorem square_half_mem_Icc {a b R : ℝ} (ha : 0 < a)
   have hb : 0 < b := by
     have hsb : 0 < Real.sqrt (2 * b) := hRp.trans_le hR.2
     have h2b := Real.sqrt_pos.mp hsb
-    linarith
+    linarith only [h2b]
   have hl := (sq_le_sq₀ (Real.sqrt_nonneg (2 * a)) hRp.le).mpr hR.1
   have hr := (sq_le_sq₀ hRp.le (Real.sqrt_nonneg (2 * b))).mpr hR.2
   rw [Real.sq_sqrt (by positivity)] at hl
   rw [Real.sq_sqrt (by positivity)] at hr
-  constructor <;> nlinarith
+  constructor <;> nlinarith only [hl, hr]
 
 theorem radial_mem_window (F : Profile) (XR : ℝ) (hXR : 0 < XR) (s : Slot)
     {R : ℝ} (hR : R ∈ radialWindow F XR s) : R ^ 2 / 2 ∈ window F XR s :=

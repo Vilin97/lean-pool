@@ -42,7 +42,7 @@ theorem frameMatrix_abs_le (B : Space →L[ℝ] Space) (p q : Space)
 /-- The shear is exactly the `(q,p)` entry in the actual orthonormal frame. -/
 theorem frameMatrix_parent (B E : Space →L[ℝ] Space) (h : ℝ) (p q : Space)
     (hp : ⟪p, p⟫_ℝ = 1) (hq : ⟪q, q⟫_ℝ = 1) (hpq : ⟪p, q⟫_ℝ = 0) :
-    frameMatrix (B + h • rankOne ℝ q p + E) p q =
+    frameMatrix (B + h • rankOne (E := Space) (F := Space) ℝ q p + E) p q =
       parentEntry (frameMatrix B p q) (frameMatrix E p q) h := by
   have horth := orthonormal_iff_ite.mp (frame_orthonormal p q hp hq hpq)
   have hi (i : Fin 3) : ⟪frame p q i,q⟫_ℝ = if i = 1 then 1 else 0 := by
@@ -57,10 +57,12 @@ theorem frameMatrix_parent (B E : Space →L[ℝ] Space) (h : ℝ) (p q : Space)
 
 theorem rayRate_norm_le (B : Space →L[ℝ] Space) {p : Space} (hp : ‖p‖ = 1) :
     ‖rayRate B p‖ ≤ 2*‖B‖ := by
-  have hB : ‖B.adjoint p‖ ≤ ‖B‖ := by
-    simpa only [hp, mul_one, LinearIsometryEquiv.norm_map] using B.adjoint.le_opNorm p
+  have hB : ‖ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B p‖ ≤ ‖B‖ := by
+    simpa only [hp, mul_one, LinearIsometryEquiv.norm_map] using
+      (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B).le_opNorm p
   have hi := abs_inner_map_le B hp hp
-  have h := norm_add_le (-B.adjoint p) (⟪p,B p⟫_ℝ • p)
+  have h := norm_add_le (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B p)
+    (⟪p,B p⟫_ℝ • p)
   simp only [norm_neg, norm_smul, Real.norm_eq_abs, hp, mul_one] at h
   exact h.trans (by linarith only [hB, hi])
 
@@ -101,7 +103,8 @@ def frameMatrixRate (B B₁ : Space →L[ℝ] Space) (p q : Space) (i j : Fin 3)
 theorem frameMatrix_hasDerivWithinAt {B : ℝ → Space →L[ℝ] Space}
     {B₁ : Space →L[ℝ] Space} {m v : ℝ → Space} {t : ℝ} {S : Set ℝ}
     (hB : HasDerivWithinAt B B₁ S t)
-    (hm : HasDerivWithinAt m (-(B t).adjoint (m t)) S t)
+    (hm : HasDerivWithinAt m
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (B t) (m t)) S t)
     (hv : HasDerivWithinAt v (-(B t) (v t) +
       (2 * ⟪m t, (B t) (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i j : Fin 3) :
@@ -125,7 +128,7 @@ theorem frameMatrixRate_abs_le (B B₁ : Space →L[ℝ] Space) (p q : Space)
       simpa only [hn, mul_one] using B₁.le_opNorm (frame p q j)
   have hBr := B.le_opNorm (frameRate B p q j)
   have h1 := (abs_real_inner_le_norm (frameRate B p q i) (B (frame p q j))).trans
-    (mul_le_mul hr hBj (norm_nonneg _) (by positivity : 0 ≤ 6*‖B‖))
+    (mul_le_mul hr hBj (norm_nonneg _) (mul_nonneg (Nat.ofNat_nonneg 6) (norm_nonneg B)))
   have h2 := abs_real_inner_le_norm (frame p q i) (B₁ (frame p q j)+B (frameRate B p q j))
   rw [hn i, one_mul] at h2
   have h3 := norm_add_le (B₁ (frame p q j)) (B (frameRate B p q j))
@@ -133,7 +136,7 @@ theorem frameMatrixRate_abs_le (B B₁ : Space →L[ℝ] Space) (p q : Space)
   have h5 := abs_add_le ⟪frameRate B p q i,B (frame p q j)⟫_ℝ
     ⟪frame p q i,B₁ (frame p q j)+B (frameRate B p q j)⟫_ℝ
   unfold frameMatrixRate
-  nlinarith only [h1, h2, h3, h4, h5, hB₁j, hBr]
+  linarith only [h1, h2, h3, h4, h5, hB₁j, hBr]
 
 /-- Primary shear, given by `c*(‖m t‖*‖v t‖)`. -/
 def primaryShear (c : ℝ) (m v : ℝ → Space) (t : ℝ) : ℝ := c*(‖m t‖*‖v t‖)
@@ -142,7 +145,8 @@ def primaryShear (c : ℝ) (m v : ℝ → Space) (t : ℝ) : ℝ := c*(‖m t‖
 actual amplitude `c * ‖m‖ * ‖v‖`. -/
 theorem primaryShear_hasDerivWithinAt (B : Space →L[ℝ] Space) (c : ℝ)
     {m v : ℝ → Space} {t : ℝ} {S : Set ℝ}
-    (hm : HasDerivWithinAt m (-B.adjoint (m t)) S t)
+    (hm : HasDerivWithinAt m
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B (m t)) S t)
     (hv : HasDerivWithinAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) :
     HasDerivWithinAt (primaryShear c m v)

@@ -77,6 +77,18 @@ def formCost (T C₀ C₁ CH : ℝ) : ℝ :=
 /-- The polynomial cost of the actual weak forcing term. -/
 def forcingCost (T C₀ C₁ : ℝ) : ℝ := 3 * (T * derivativeCost T C₀ C₁)
 
+theorem derivativeCost_nonneg {T C₀ C₁ : ℝ} (hT : 0 ≤ T) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) :
+    0 ≤ derivativeCost T C₀ C₁ :=
+  add_nonneg (mul_nonneg hT hC₁) hC₀
+
+theorem formCost_nonneg (T C₀ C₁ : ℝ) {CH : ℝ} (hCH : 0 ≤ CH) : 0 ≤ formCost T C₀ C₁ CH :=
+  mul_nonneg (mul_nonneg (by norm_num) (sq_nonneg _))
+    (add_nonneg zero_le_one (mul_nonneg (sq_nonneg T) hCH))
+
+theorem forcingCost_nonneg {T C₀ C₁ : ℝ} (hT : 0 ≤ T) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) :
+    0 ≤ forcingCost T C₀ C₁ :=
+  mul_nonneg (by norm_num) (mul_nonneg hT (derivativeCost_nonneg hT hC₀ hC₁))
+
 omit [CompleteSpace U] [CompleteSpace E] in
 /-- Every actual derivative of the fixed kinetic map has the same factorial bound. -/
 theorem fixedFrameDerivative_bound (T : ℝ) (hT : 0 ≤ T)
@@ -89,17 +101,17 @@ theorem fixedFrameDerivative_bound (T : ℝ) (hT : 0 ≤ T)
     ‖iteratedFDeriv ℝ n (fun y => fixedFrameDerivative T hT (Q y) (Q₁ y)) x‖ ≤
       derivativeCost T C₀ C₁ * majorant R 0 n := by
   have hb := clm_comp_const_right_bound
-    (fun y => productDerivative T hT (Q y) (Q₁ y))
+    (fun y => productDerivative (E := U) (F := E) T hT (Q y) (Q₁ y))
     (zeroTraceDerivatives (U := U) T hT).subtypeL
     (contDiff_productDerivative T hT Q Q₁ hQ hQ₁)
-    R (derivativeCost T C₀ C₁) hR (by unfold derivativeCost; positivity) 0
+    R (derivativeCost T C₀ C₁) hR (derivativeCost_nonneg hT hC₀ hC₁) 0
     (productDerivative_bound T hT Q Q₁ hQ hQ₁ R C₀ C₁ hR hC₀ hC₁ 0 hbQ hbQ₁) n x
   apply hb.trans
   have hN : ‖(zeroTraceDerivatives (U := U) T hT).subtypeL‖ * derivativeCost T C₀ C₁ ≤
       derivativeCost T C₀ C₁ := by
     simpa only [one_mul] using (mul_le_mul_of_nonneg_right
       (zeroTraceDerivatives (U := U) T hT).norm_subtypeL_le
-      (show 0 ≤ derivativeCost T C₀ C₁ by unfold derivativeCost; positivity))
+      (derivativeCost_nonneg hT hC₀ hC₁))
   exact mul_le_mul_of_nonneg_right
     hN (majorant_nonneg R hR 0 n)
 
@@ -114,14 +126,13 @@ theorem fixedFramePrimitive_bound (T : ℝ) (hT : 0 ≤ T)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => fixedFramePrimitive T hT (Q y) (Q₁ y)) x‖ ≤
       (T * derivativeCost T C₀ C₁) * majorant R 0 n := by
-  have hb := clm_comp_const_left_bound (primitiveTimeLp (E := E) T hT)
-    (fun y => fixedFrameDerivative T hT (Q y) (Q₁ y))
+  have hb := clm_comp_const_left_bound (primitiveTimeLp (E := E) T hT) _
     (contDiff_fixedFrameDerivative T hT Q Q₁ hQ hQ₁)
-    R (derivativeCost T C₀ C₁) hR (by unfold derivativeCost; positivity) 0
+    R (derivativeCost T C₀ C₁) hR (derivativeCost_nonneg hT hC₀ hC₁) 0
     (fixedFrameDerivative_bound T hT Q Q₁ hQ hQ₁ R C₀ C₁ hR hC₀ hC₁ hbQ hbQ₁) n x
   exact hb.trans (mul_le_mul_of_nonneg_right
     (mul_le_mul_of_nonneg_right (primitive_norm_le_time (E := E) T hT)
-      (by unfold derivativeCost; positivity)) (majorant_nonneg R hR 0 n))
+      (derivativeCost_nonneg hT hC₀ hC₁)) (majorant_nonneg R hR 0 n))
 
 /-- The physical Dirichlet form has the coefficient-only factorial bound. -/
 theorem dirichletOperator_bound (T : ℝ) (hT : 0 ≤ T)
@@ -129,8 +140,8 @@ theorem dirichletOperator_bound (T : ℝ) (hT : 0 ≤ T)
     (R CH : ℝ) (hR : 0 ≤ R) (hCH : 0 ≤ CH)
     (hbH : ∀ n x, ‖iteratedFDeriv ℝ n H x‖ ≤ CH * majorant R 0 n)
     (n : ℕ) (x : P) :
-    ‖iteratedFDeriv ℝ n (fun y => dirichletOperator (primitiveTimeLp T hT)
-      (timeMultiplier T hT (H y))) x‖ ≤ (1+T^2*CH) * majorant R 0 n := by
+    ‖iteratedFDeriv ℝ n (fun y => dirichletOperator (primitiveTimeLp (E := E) T hT)
+      (timeMultiplier (E := E) (F := E) T hT (H y))) x‖ ≤ (1+T^2*CH) * majorant R 0 n := by
   let J : TimeLp T E →L[ℝ] TimeLp T E := primitiveTimeLp T hT
   have hJ : ‖J‖ ≤ T := primitive_norm_le_time (E := E) T hT
   have hright (k : ℕ) (y : P) :
@@ -140,9 +151,12 @@ theorem dirichletOperator_bound (T : ℝ) (hT : 0 ≤ T)
       R CH hR hCH 0 (timeMultiplier_bound T hT H hH R CH hR hCH 0 hbH) k y).trans
       (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hJ hCH) (majorant_nonneg R hR 0 k))
   have hpotential (k : ℕ) (y : P) :
-      ‖iteratedFDeriv ℝ k (fun z => J.adjoint.comp ((timeMultiplier T hT (H z)).comp J)) y‖ ≤
+      ‖iteratedFDeriv ℝ k (fun z =>
+        (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := TimeLp T E) (F := TimeLp T E) J).comp
+          ((timeMultiplier T hT (H z)).comp J)) y‖ ≤
       (T^2*CH) * majorant R 0 k := by
-    have hp := clm_comp_const_left_bound J.adjoint _
+    have hp := clm_comp_const_left_bound
+      (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := TimeLp T E) (F := TimeLp T E) J) _
       ((contDiff_timeMultiplier T hT H hH).clm_comp contDiff_const)
       R (T*CH) hR (mul_nonneg hT hCH) 0 hright k y
     rw [LinearIsometryEquiv.norm_map] at hp
@@ -151,7 +165,8 @@ theorem dirichletOperator_bound (T : ℝ) (hT : 0 ≤ T)
     convert mul_le_mul_of_nonneg_right h (majorant_nonneg R hR 0 k) using 1
     ring
   exact sub_bound (fun _ : P => ContinuousLinearMap.id ℝ (TimeLp T E))
-    (fun y => J.adjoint.comp ((timeMultiplier T hT (H y)).comp J))
+    (fun y => (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := TimeLp T E) (F := TimeLp T E) J).comp
+      ((timeMultiplier T hT (H y)).comp J))
     contDiff_const (contDiff_const.clm_comp ((contDiff_timeMultiplier T hT H hH).clm_comp
         contDiff_const))
     R 1 (T^2*CH) 0 (const_bound _ R 1 hR norm_id_le) hpotential n x
@@ -169,20 +184,21 @@ theorem fixedFrameOperator_bound (T : ℝ) (hT : 0 ≤ T)
     ‖iteratedFDeriv ℝ n (fun y => fixedFrameOperator T hT (Q y) (Q₁ y) (H y)) x‖ ≤
       formCost T C₀ C₁ CH * majorant R 0 n := by
   let D := fun y => fixedFrameDerivative T hT (Q y) (Q₁ y)
-  let A := fun y => dirichletOperator (primitiveTimeLp T hT) (timeMultiplier T hT (H y))
-  have hD : ContDiff ℝ ∞ D := contDiff_fixedFrameDerivative T hT Q Q₁ hQ hQ₁
+  let A := fun y => dirichletOperator (primitiveTimeLp (E := E) T hT)
+    (timeMultiplier (E := E) (F := E) T hT (H y))
+  have hD := contDiff_fixedFrameDerivative T hT Q Q₁ hQ hQ₁
   have hA : ContDiff ℝ ∞ A := contDiff_const.sub
     (contDiff_const.clm_comp ((contDiff_timeMultiplier T hT H hH).clm_comp contDiff_const))
-  have hd0 : 0 ≤ derivativeCost T C₀ C₁ := by unfold derivativeCost; positivity
-  have ha0 : 0 ≤ 1+T^2*CH := by positivity
+  have hd0 := derivativeCost_nonneg hT hC₀ hC₁
+  have ha0 : 0 ≤ 1+T^2*CH := add_nonneg zero_le_one (mul_nonneg (sq_nonneg T) hCH)
   have hbD := fixedFrameDerivative_bound T hT Q Q₁ hQ hQ₁ R C₀ C₁ hR hC₀ hC₁ hbQ hbQ₁
   have hbA := dirichletOperator_bound T hT H hH R CH hR hCH hbH
   have hAD := clm_comp_bound A D hA hD R (1+T^2*CH) (derivativeCost T C₀ C₁)
     hR ha0 hd0 0 0 hbA hbD
-  have h := clm_comp_bound (fun y => (D y).adjoint) (fun y => (A y).comp (D y))
-    (contDiff_adjoint hD)
+  have h := clm_comp_bound _ _ (contDiff_adjoint hD)
     (hA.clm_comp hD) R (derivativeCost T C₀ C₁) (3*(1+T^2*CH)*derivativeCost T C₀ C₁)
-    hR hd0 (by positivity) 0 0 (adjoint_bound D hD R _ hR hd0 0 hbD) hAD n x
+    hR hd0 (mul_nonneg (mul_nonneg (by norm_num) ha0) hd0) 0 0
+    (adjoint_bound D hD R _ hR hd0 0 hbD) hAD n x
   have he : 3 * derivativeCost T C₀ C₁ * (3*(1+T^2*CH)*derivativeCost T C₀ C₁) =
       formCost T C₀ C₁ CH := by unfold formCost; ring
   simp only [Nat.add_zero, he] at h
@@ -200,18 +216,19 @@ theorem fixedForcing_bound (T : ℝ) (hT : 0 ≤ T)
     (hbf : ∀ n x, ‖iteratedFDeriv ℝ n f x‖ ≤ majorant R d n)
     (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n
-      (fun y => (-(fixedFramePrimitive T hT (Q y) (Q₁ y)).adjoint) (f y)) x‖ ≤
+      (fun y => (-(ContinuousLinearMap.adjoint (𝕜 := ℝ)
+        (E := zeroTraceDerivatives (U := U) T hT) (F := TimeLp T E)
+        (fixedFramePrimitive T hT (Q y) (Q₁ y)))) (f y)) x‖ ≤
       forcingCost T C₀ C₁ * majorant R d n := by
   let Z := fun y => fixedFramePrimitive T hT (Q y) (Q₁ y)
-  have hZ : ContDiff ℝ ∞ Z := contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁
-  have hZT : ContDiff ℝ ∞ (fun y => (Z y).adjoint) :=
-    contDiff_adjoint hZ
-  have hC : 0 ≤ T * derivativeCost T C₀ C₁ := by unfold derivativeCost; positivity
+  have hZ := contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁
+  have hZT := contDiff_adjoint hZ
+  have hC := mul_nonneg hT (derivativeCost_nonneg hT hC₀ hC₁)
   have hbound := adjoint_bound Z hZ R (T * derivativeCost T C₀ C₁) hR hC 0
     (fixedFramePrimitive_bound T hT Q Q₁ hQ hQ₁ R C₀ C₁ hR hC₀ hC₁ hbQ hbQ₁)
-  have hp (k : ℕ) (y : P) := clm_apply_bound (fun z => -(Z z).adjoint) f
+  have hp (k : ℕ) (y : P) := clm_apply_bound _ f
     hZT.neg hf R (T * derivativeCost T C₀ C₁) 1 hR hC zero_le_one 0 d
-    (neg_bound (fun z => (Z z).adjoint) R _ 0 hbound)
+    (neg_bound _ R _ 0 hbound)
     (by simpa only [one_mul] using hbf) k y
   simpa only [forcingCost, mul_one, Nat.zero_add] using hp n x
 
@@ -249,6 +266,9 @@ def inverseCost (T C₀ C₁ c : ℝ) : ℝ := 2 * (transportCeiling T C₀ C₁
 def solveCost (T C₀ C₁ CH c : ℝ) : ℝ :=
   1 + inverseCost T C₀ C₁ c * (formCost T C₀ C₁ CH + forcingCost T C₀ C₁ + 1)
 
+theorem inverseCost_nonneg (T C₀ C₁ c : ℝ) : 0 ≤ inverseCost T C₀ C₁ c :=
+  mul_nonneg zero_le_two (sq_nonneg _)
+
 variable {P U E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -275,10 +295,10 @@ theorem solveCost_one_le (T C₀ C₁ CH c : ℝ)
     1 ≤ solveCost T C₀ C₁ CH c := by
   unfold solveCost
   have h : 0 ≤ inverseCost T C₀ C₁ c *
-      (formCost T C₀ C₁ CH + forcingCost T C₀ C₁ + 1) := by
-    unfold inverseCost formCost forcingCost derivativeCost
-    positivity
-  linarith
+      (formCost T C₀ C₁ CH + forcingCost T C₀ C₁ + 1) :=
+    mul_nonneg (inverseCost_nonneg T C₀ C₁ c) (add_nonneg (add_nonneg
+      (formCost_nonneg T C₀ C₁ hCH) (forcingCost_nonneg hT hC₀ hC₁)) zero_le_one)
+  exact le_add_of_nonneg_right h
 
 variable (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
@@ -310,40 +330,42 @@ theorem fixedFrameSolution_gevrey
         K hK (hPotential y) hsmall (f y)) x‖ ≤ majorant R (d+1) n := by
   let A := fun y => fixedFrameOperator T hT (Q y) (Q₁ y) (H y)
   let δ := fun y => fixedCoercivity T (Q y) (Q₁ y) c
-  let rhs := fun y => (-(fixedFramePrimitive T hT (Q y) (Q₁ y)).adjoint) (f y)
+  let rhs := fun y => (-(ContinuousLinearMap.adjoint (𝕜 := ℝ)
+    (E := zeroTraceDerivatives (U := U) T hT) (F := TimeLp T E)
+    (fixedFramePrimitive T hT (Q y) (Q₁ y)))) (f y)
   have hδ : ∀ y, 0 < δ y := fun y => fixedCoercivity_pos T hT (Q y) (Q₁ y) c hc
   have hAco : ∀ y v, δ y * ‖v‖^2 ≤ ⟪A y v, v⟫_ℝ := fun y =>
     fixedFrameOperator_coercive T hT (Q y) (Q₁ y) (H y) c hc (hLower y) (hd y)
       K hK (hPotential y) hsmall
-  have hAreg : ContDiff ℝ ∞ A := contDiff_fixedFrameOperator T hT Q Q₁ H hQ hQ₁ hH
-  have hrhs : ContDiff ℝ ∞ rhs :=
-    (contDiff_adjoint (contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁)).neg.clm_apply hf
+  have hAreg := contDiff_fixedFrameOperator T hT Q Q₁ H hQ hQ₁ hH
+  have hrhs := (contDiff_adjoint (contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁)).neg.clm_apply hf
   have hM := solveCost_one_le T C₀ C₁ CH c hT hC₀ hC₁ hCH
   have hRcR : Rc ≤ R := (radius_bounds hRc hM hR).2
   have hR0 : 0 ≤ R := hRc.trans hRcR
-  have hCR : 0 ≤ formCost T C₀ C₁ CH := by unfold formCost; positivity
-  have hFR : 0 ≤ forcingCost T C₀ C₁ := by unfold forcingCost derivativeCost; positivity
-  have hI : 0 ≤ inverseCost T C₀ C₁ c := by unfold inverseCost; positivity
+  have hCR := formCost_nonneg T C₀ C₁ hCH
+  have hFR := forcingCost_nonneg hT hC₀ hC₁
+  have hI := inverseCost_nonneg T C₀ C₁ c
   have hMC : inverseCost T C₀ C₁ c * formCost T C₀ C₁ CH ≤ solveCost T C₀ C₁ CH c := by
     unfold solveCost
-    nlinarith
+    have h := mul_le_mul_of_nonneg_left (show formCost T C₀ C₁ CH ≤
+      formCost T C₀ C₁ CH + forcingCost T C₀ C₁ + 1 by linarith only [hFR]) hI
+    linarith only [h]
   have hMF : inverseCost T C₀ C₁ c * forcingCost T C₀ C₁ ≤ solveCost T C₀ C₁ CH c := by
     unfold solveCost
-    nlinarith
+    have h := mul_le_mul_of_nonneg_left (show forcingCost T C₀ C₁ ≤
+      formCost T C₀ C₁ CH + forcingCost T C₀ C₁ + 1 by linarith only [hCR]) hI
+    linarith only [h]
   have hinv (y : P) : (δ y)⁻¹ ≤ inverseCost T C₀ C₁ c := by
     apply fixedCoercivity_inv_le T hT (Q y) (Q₁ y) c hc C₀ C₁
     · simpa only [norm_iteratedFDeriv_zero, majorant, Nat.add_zero, pow_zero,
         Nat.factorial_zero, Nat.cast_one, one_pow, mul_one] using hbQ 0 y
     · simpa only [norm_iteratedFDeriv_zero, majorant, Nat.add_zero, pow_zero,
         Nat.factorial_zero, Nat.cast_one, one_pow, mul_one] using hbQ₁ 0 y
-  have hbA (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ (j+1) A y‖ ≤
-      formCost T C₀ C₁ CH * (Rc^(j+1) * ((j+1).factorial : ℝ)^2) := by
-    simpa only [majorant, Nat.add_zero] using
-      fixedFrameOperator_bound T hT Q Q₁ H hQ hQ₁ hH Rc C₀ C₁ CH hRc hC₀ hC₁ hCH
-        hbQ hbQ₁ hbH (j+1) y
-  have hbQR (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ j Q y‖ ≤ C₀*majorant R 0 j :=
+  have hbA (j : ℕ) (y : P) := fixedFrameOperator_bound T hT Q Q₁ H hQ hQ₁ hH Rc C₀ C₁ CH hRc
+    hC₀ hC₁ hCH hbQ hbQ₁ hbH (j+1) y
+  have hbQR (j : ℕ) (y : P) :=
     (hbQ j y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 j) hC₀)
-  have hbQ₁R (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ j Q₁ y‖ ≤ C₁*majorant R 0 j :=
+  have hbQ₁R (j : ℕ) (y : P) :=
     (hbQ₁ j y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 j) hC₁)
   have hbrhs := fixedForcing_bound T hT Q Q₁ hQ hQ₁ R C₀ C₁ hR0 hC₀ hC₁ hbQR hbQ₁R
     f hf d hbf
@@ -367,9 +389,9 @@ theorem transverseCoordinates_gevrey
       majorant R (d+1) n := by
   let v := fun y => fixedFrameSolver T hT (Q y) (Q₁ y) (H y) c hc (hLower y) (hd y)
     K hK (hPotential y) hsmall (f y)
-  have hv : ContDiff ℝ ∞ v :=
+  have hv :=
     contDiff_fixedFrameSolution T hT Q Q₁ H c hc hLower hd K hK hPotential hsmall hQ hQ₁ hH f hf
-  have hb (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ j v y‖ ≤ majorant R (d+1) j :=
+  have hb (j : ℕ) (y : P) :=
     fixedFrameSolution_gevrey T hT Q Q₁ H c hc hLower hd K hK hPotential hsmall
       hQ hQ₁ hH Rc C₀ C₁ CH hRc hC₀ hC₁ hCH hbQ hbQ₁ hbH R hR f hf d hbf j y
   have heq : (fun y => coordinateDerivative T hT (Q y) (Q₁ y) c hc (hLower y)
@@ -381,7 +403,7 @@ theorem transverseCoordinates_gevrey
     exact (congrArg (fun z : zeroTraceDerivatives (U := U) T hT => (z : TimeLp T U)) he).symm
   rw [heq]
   have hM := solveCost_one_le T C₀ C₁ CH c hT hC₀ hC₁ hCH
-  have hR0 : 0 ≤ R := by nlinarith
+  have hR0 : 0 ≤ R := hRc.trans (radius_bounds hRc hM hR).2
   have hout := contraction_bound (zeroTraceDerivatives (U := U) T hT).subtypeL
     (zeroTraceDerivatives (U := U) T hT).norm_subtypeL_le v hv R 1 hR0 zero_le_one (d+1)
     (by simpa only [one_mul] using hb) n x
@@ -413,9 +435,9 @@ theorem transverseVelocity_gevrey
   have hM := solveCost_one_le T C₀ C₁ CH c hT hC₀ hC₁ hCH
   have hRcR : Rc ≤ R := (radius_bounds hRc hM hR).2
   have hR0 : 0 ≤ R := hRc.trans hRcR
-  have hbQR (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ j Q y‖ ≤ C₀*majorant R 0 j :=
+  have hbQR (j : ℕ) (y : P) :=
     (hbQ j y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 j) hC₀)
-  have h := clm_apply_bound (fun y => timeMultiplier T hT (Q y)) v
+  have h := clm_apply_bound (fun y => timeMultiplier (E := U) (F := E) T hT (Q y)) v
     (contDiff_timeMultiplier T hT Q hQ) hv R C₀ 1 hR0 hC₀ zero_le_one 0 (d+1)
     (timeMultiplier_bound T hT Q hQ R C₀ hR0 hC₀ 0 hbQR)
     (by simpa only [one_mul] using hb) n x
@@ -455,15 +477,14 @@ theorem forcingBlockAmplitude_nonneg (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C
     (hT : 0 ≤ T) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁) (hCf : 0 ≤ Cf) :
     0 ≤ forcingBlockAmplitude ι q T Rc C₀ C₁ Cf := by
   have hb := sobolevCoefficientAmplitude_nonneg (ι := ι) q Rc (T*derivativeCost T C₀ C₁)
-    hRc (by unfold derivativeCost; positivity)
-  unfold forcingBlockAmplitude
-  positivity
+    hRc (mul_nonneg hT (derivativeCost_nonneg hT hC₀ hC₁))
+  exact mul_nonneg (mul_nonneg (by norm_num) hb) hCf
 
 theorem blockCost_one_le (ι : Type*) [Fintype ι] (q : ℕ) (T Rc C₀ C₁ CH c Cf : ℝ)
     (hT : 0 ≤ T) (hRc : 0 ≤ Rc) (hC₀ : 0 ≤ C₀) (hC₁ : 0 ≤ C₁)
     (hCH : 0 ≤ CH) (hCf : 0 ≤ Cf) : 1 ≤ blockCost ι q T Rc C₀ C₁ CH c Cf := by
-  have hI : 0 ≤ inverseCost T C₀ C₁ c := by unfold inverseCost; positivity
-  have hC : 0 ≤ formCost T C₀ C₁ CH := by unfold formCost; positivity
+  have hI := inverseCost_nonneg T C₀ C₁ c
+  have hC := formCost_nonneg T C₀ C₁ hCH
   have hA := sobolevCoefficientAmplitude_nonneg (ι := ι) q Rc _ hRc hC
   have hB := forcingBlockAmplitude_nonneg ι q T Rc C₀ C₁ Cf hT hRc hC₀ hC₁ hCf
   have hS := sobolevInverseCost_nonneg (inverseCost T C₀ C₁ c)
@@ -483,13 +504,17 @@ theorem forcingOperator_bound (T : ℝ) (hT : 0 ≤ T)
     (hbQ : ∀ n x, ‖iteratedFDeriv ℝ n Q x‖ ≤ C₀ * majorant Rc 0 n)
     (hbQ₁ : ∀ n x, ‖iteratedFDeriv ℝ n Q₁ x‖ ≤ C₁ * majorant Rc 0 n)
     (n : ℕ) (x : X) :
-    ‖iteratedFDeriv ℝ n (fun y => -(fixedFramePrimitive T hT (Q y) (Q₁ y)).adjoint) x‖ ≤
+    ‖iteratedFDeriv ℝ n (fun y => -(ContinuousLinearMap.adjoint (𝕜 := ℝ)
+      (E := zeroTraceDerivatives (U := U) T hT) (F := TimeLp T E)
+      (fixedFramePrimitive T hT (Q y) (Q₁ y)))) x‖ ≤
       (T*derivativeCost T C₀ C₁)*majorant Rc 0 n :=
-  neg_bound (fun y => (fixedFramePrimitive T hT (Q y) (Q₁ y)).adjoint)
+  neg_bound (fun y => ContinuousLinearMap.adjoint (𝕜 := ℝ)
+      (E := zeroTraceDerivatives (U := U) T hT) (F := TimeLp T E)
+      (fixedFramePrimitive T hT (Q y) (Q₁ y)))
     Rc (T*derivativeCost T C₀ C₁) 0
-    (adjoint_bound (fun y => fixedFramePrimitive T hT (Q y) (Q₁ y))
+    (adjoint_bound (fun y => fixedFramePrimitive (U := U) (E := E) T hT (Q y) (Q₁ y))
       (contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁)
-      Rc (T*derivativeCost T C₀ C₁) hRc (by unfold derivativeCost; positivity) 0
+      Rc (T*derivativeCost T C₀ C₁) hRc (mul_nonneg hT (derivativeCost_nonneg hT hC₀ hC₁)) 0
       (fixedFramePrimitive_bound T hT Q Q₁ hQ hQ₁ Rc C₀ C₁ hRc hC₀ hC₁ hbQ hbQ₁)) n x
 
 variable (directions : ι → X) (hdir : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
@@ -519,7 +544,9 @@ theorem solver_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d 
       c hc (hLower y) (hd y) K hK (hPotential y) hsmall (f y)) n x ≤ majorant R (d+1) n := by
   let A := fun y => fixedFrameOperator T hT (Q y) (Q₁ y) (H y)
   let δ := fun y => fixedCoercivity T (Q y) (Q₁ y) c
-  let J := fun y => -(fixedFramePrimitive T hT (Q y) (Q₁ y)).adjoint
+  let J := fun y => -(ContinuousLinearMap.adjoint (𝕜 := ℝ)
+    (E := zeroTraceDerivatives (U := U) T hT) (F := TimeLp T E)
+    (fixedFramePrimitive T hT (Q y) (Q₁ y)))
   let v := fun y => fixedFrameSolver T hT (Q y) (Q₁ y) (H y)
     c hc (hLower y) (hd y) K hK (hPotential y) hsmall (f y)
   let rhs := fun y => J y (f y)
@@ -529,10 +556,9 @@ theorem solver_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d 
     fixedFrameOperator_coercive T hT (Q y) (Q₁ y) (H y) c hc (hLower y) (hd y)
       K hK (hPotential y) hsmall u
   let inv := fun y => coerciveInverse (A y) (δ y) (hδ y) (hco y)
-  have hA : ContDiff ℝ ∞ A := contDiff_fixedFrameOperator T hT Q Q₁ H hQ hQ₁ hH
-  have hJ : ContDiff ℝ ∞ J :=
-    (contDiff_adjoint (contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁)).neg
-  have hv : ContDiff ℝ ∞ v := contDiff_fixedFrameSolution T hT Q Q₁ H c hc hLower hd
+  have hA := contDiff_fixedFrameOperator T hT Q Q₁ H hQ hQ₁ hH
+  have hJ := (contDiff_adjoint (contDiff_fixedFramePrimitive T hT Q Q₁ hQ hQ₁)).neg
+  have hv := contDiff_fixedFrameSolution T hT Q Q₁ H c hc hLower hd
     K hK hPotential hsmall hQ hQ₁ hH f hf
   have hrhs : ContDiff ℝ ∞ rhs := hJ.clm_apply hf
   have heq (y : X) : A y (v y) = rhs y :=
@@ -544,20 +570,17 @@ theorem solver_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f) (d 
         Nat.factorial_zero,Nat.cast_one,one_pow,mul_one] using hbQ 0 y
     · simpa only [norm_iteratedFDeriv_zero,majorant,Nat.add_zero,pow_zero,
         Nat.factorial_zero,Nat.cast_one,one_pow,mul_one] using hbQ₁ 0 y
-  have hCA : 0 ≤ formCost T C₀ C₁ CH := by unfold formCost; positivity
-  have hCJ : 0 ≤ T*derivativeCost T C₀ C₁ := by unfold derivativeCost; positivity
+  have hCA := formCost_nonneg T C₀ C₁ hCH
+  have hCJ := mul_nonneg hT (derivativeCost_nonneg hT hC₀ hC₁)
   have hJA : 0 ≤ sobolevCoefficientAmplitude ι q Rc (T*derivativeCost T C₀ C₁) :=
     sobolevCoefficientAmplitude_nonneg q Rc _ hRc hCJ
   have hM := blockCost_one_le ι q T Rc C₀ C₁ CH c Cf hT hRc hC₀ hC₁ hCH hCf
   have hr0 := sobolevCoefficientRadius_nonneg (ι := ι) Rc hRc
   have hrR : sobolevCoefficientRadius ι Rc ≤ R := (radius_bounds hr0 hM hR).2
-  have hAb (k y) : ‖iteratedFDeriv ℝ k A y‖ ≤ formCost T C₀ C₁ CH*majorant Rc 0 k :=
-    fixedFrameOperator_bound T hT Q Q₁ H hQ hQ₁ hH Rc C₀ C₁ CH hRc hC₀ hC₁ hCH hbQ hbQ₁ hbH k y
-  have hJb (k y) : ‖iteratedFDeriv ℝ k J y‖ ≤ (T*derivativeCost T C₀ C₁)*majorant Rc 0 k :=
-    forcingOperator_bound T hT Q Q₁ hQ hQ₁ Rc C₀ C₁ hRc hC₀ hC₁ hbQ hbQ₁ k y
-  have hJB (k y) : coefficientBlock directions q J k y ≤
-      sobolevCoefficientAmplitude ι q Rc (T*derivativeCost T C₀ C₁) *
-        majorant (sobolevCoefficientRadius ι Rc) 0 k :=
+  have hAb :=
+    fixedFrameOperator_bound T hT Q Q₁ H hQ hQ₁ hH Rc C₀ C₁ CH hRc hC₀ hC₁ hCH hbQ hbQ₁ hbH
+  have hJb := forcingOperator_bound T hT Q Q₁ hQ hQ₁ Rc C₀ C₁ hRc hC₀ hC₁ hbQ hbQ₁
+  have hJB (k y) :=
     coefficientBlock_of_tensor_bound directions hdir q J hJ Rc _ hRc hCJ hJb k y
   have hrhsb (k y) : block directions q rhs k y ≤
       forcingBlockAmplitude ι q T Rc C₀ C₁ Cf*majorant R d k :=
@@ -576,15 +599,13 @@ theorem velocityLp_block_gevrey (f : X → TimeLp T E) (hf : ContDiff ℝ ∞ f)
     (hfb : ∀ n x, block directions q f n x ≤ Cf * majorant R d n) (n : ℕ) (x : X) :
     block directions q (fun y => EulerTransverseFixedEvolution.velocityLp T hT (Q y) (Q₁ y) (H y)
       c hc (hLower y) (hd y) K hK (hPotential y) hsmall (f y)) n x ≤ majorant R (d+1) n := by
-  let v := fun y => fixedFrameSolver T hT (Q y) (Q₁ y) (H y)
-    c hc (hLower y) (hd y) K hK (hPotential y) hsmall (f y)
-  have hv : ContDiff ℝ ∞ v := contDiff_fixedFrameSolution T hT Q Q₁ H c hc hLower hd
+  have hv := contDiff_fixedFrameSolution T hT Q Q₁ H c hc hLower hd
     K hK hPotential hsmall hQ hQ₁ hH f hf
   have hb := solver_block_gevrey directions hdir q T hT Q Q₁ H c hc hLower hd K hK hPotential hsmall
     hQ hQ₁ hH Rc C₀ C₁ CH Cf R hRc hC₀ hC₁ hCH hCf hbQ hbQ₁ hbH hR f hf d hfb n x
-  have h := block_comp_clm_le directions q (zeroTraceDerivatives (U := U) T hT).subtypeL v hv n x
+  have h := block_comp_clm_le directions q (zeroTraceDerivatives (U := U) T hT).subtypeL _ hv n x
   apply h.trans
   exact (mul_le_mul_of_nonneg_right (zeroTraceDerivatives (U := U) T hT).norm_subtypeL_le
-    (block_nonneg directions q v n x)).trans (by simpa only [one_mul] using hb)
+    (block_nonneg directions q _ n x)).trans (by simpa only [one_mul] using hb)
 
 end EulerTransverseFixedSobolev

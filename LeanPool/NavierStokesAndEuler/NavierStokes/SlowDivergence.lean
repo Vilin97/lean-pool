@@ -33,15 +33,16 @@ open scoped Topology ContDiff
 open ProfileHistories
 
 /-- The positive-order radial flux, with an arbitrary exponent increment lam. -/
-def radialFlux (h lam : ℝ) (U : Field) (p : Point) : ℝ :=
+def radialFlux (h lam : ℝ) (U : ProfileHistories.Field) (p : Point) : ℝ :=
   p.1 / CoordinateAlgebra.L h p.2 *
     (2 * p.2 * U p - 2 * p.2 * (CoordinateAlgebra.D h + lam) * average U p -
       CoordinateAlgebra.d p.2 * SimilarityProfile.partialEta (average U) p)
 
-theorem radialFlux_at_axis (h lam η : ℝ) (U : Field) : radialFlux h lam U (0, η) = 0 := by
+theorem radialFlux_at_axis (h lam η : ℝ) (U : ProfileHistories.Field) :
+    radialFlux h lam U (0, η) = 0 := by
   simp [radialFlux]
 
-theorem radialFlux_div_radial (h lam : ℝ) (U : Field) {p : Point} (hX : p.1 ≠ 0) :
+theorem radialFlux_div_radial (h lam : ℝ) (U : ProfileHistories.Field) {p : Point} (hX : p.1 ≠ 0) :
     radialFlux h lam U p / p.1 = (CoordinateAlgebra.L h p.2)⁻¹ *
       (2 * p.2 * U p - 2 * p.2 * (CoordinateAlgebra.D h + lam) * average U p -
         CoordinateAlgebra.d p.2 * SimilarityProfile.partialEta (average U) p) := by
@@ -55,7 +56,7 @@ theorem radialFlux_div_radial (h lam : ℝ) (U : Field) {p : Point} (hX : p.1 �
 
 /-- Rewriting the formula through actual radial histories removes every
 division by X and permits differentiation at the axis. -/
-theorem radialFlux_eq_histories (Ω : RadialDomain) {U : Field}
+theorem radialFlux_eq_histories (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h lam : ℝ) {p : Point} (hp : p ∈ Ω.carrier) :
     radialFlux h lam U p =
       (2 * p.2 * (p.1 * U p) -
@@ -67,20 +68,24 @@ theorem radialFlux_eq_histories (Ω : RadialDomain) {U : Field}
   simp only [radialFlux, hη, primitive_eq_mul_average, div_eq_mul_inv]
   ring
 
-theorem radialFlux_smoothAt (Ω : RadialDomain) {U : Field}
+theorem radialFlux_smoothAt (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h lam : ℝ) {p : Point} (hp : p ∈ Ω.carrier)
     (hL : CoordinateAlgebra.L h p.2 ≠ 0) : ContDiffAt ℝ ∞ (radialFlux h lam U) p := by
   have hu := hU.contDiffAt (Ω.isOpen.mem_nhds hp)
   have ha := (average_smooth Ω hU).contDiffAt (Ω.isOpen.mem_nhds hp)
   have hη := (parameterPartial_smooth Ω (average_smooth Ω hU)).contDiffAt (Ω.isOpen.mem_nhds hp)
-  exact (contDiffAt_fst.div
-    (contDiffAt_const.sub (contDiffAt_const.mul (contDiffAt_snd.pow 2))) hL).mul
-      ((((contDiffAt_const.mul contDiffAt_snd).mul hu).sub
-        (((contDiffAt_const.mul contDiffAt_snd).mul contDiffAt_const).mul ha)).sub
-          ((contDiffAt_const.sub (contDiffAt_snd.pow 2)).mul hη))
+  exact ((contDiffAt_fst (𝕜 := ℝ) (E := ℝ) (F := ℝ)).div
+    ((contDiffAt_const (𝕜 := ℝ) (E := Point) (F := ℝ)).sub
+      ((contDiffAt_const (𝕜 := ℝ) (E := Point) (F := ℝ)).mul
+        ((contDiffAt_snd (𝕜 := ℝ) (E := ℝ) (F := ℝ)).pow 2))) hL).mul
+      (((((contDiffAt_const (𝕜 := ℝ) (E := Point) (F := ℝ)).mul contDiffAt_snd).mul hu).sub
+        ((((contDiffAt_const (𝕜 := ℝ) (E := Point) (F := ℝ)).mul contDiffAt_snd).mul
+          contDiffAt_const).mul ha)).sub
+          (((contDiffAt_const (𝕜 := ℝ) (E := Point) (F := ℝ)).sub
+            ((contDiffAt_snd (𝕜 := ℝ) (E := ℝ) (F := ℝ)).pow 2)).mul hη))
 
 /-- Joint C∞ regularity on every open profile domain avoiding L=0. -/
-theorem radialFlux_smooth (Ω : RadialDomain) {U : Field}
+theorem radialFlux_smooth (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h lam : ℝ)
     (hL : ∀ p ∈ Ω.carrier, CoordinateAlgebra.L h p.2 ≠ 0) :
     ContDiffOn ℝ ∞ (radialFlux h lam U) Ω.carrier := by
@@ -89,7 +94,7 @@ theorem radialFlux_smooth (Ω : RadialDomain) {U : Field}
 
 /-- The first identity in (21), derived by FTC from the actual histories.
 The scalar radial statement also holds under total division when L=0. -/
-theorem radialFlux_hasDerivAt (Ω : RadialDomain) {U : Field}
+theorem radialFlux_hasDerivAt (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h lam : ℝ) {p : Point} (hp : p ∈ Ω.carrier) :
     HasDerivAt (fun x => radialFlux h lam U (x, p.2))
       (-SimilarityProfile.Z h (-CoordinateAlgebra.A h + lam) U p) p.1 := by
@@ -116,17 +121,17 @@ theorem radialFlux_hasDerivAt (Ω : RadialDomain) {U : Field}
   exact radialFlux_eq_histories Ω hU h lam hx
 
 /-- Equality with the partial derivative used by the similarity calculus. -/
-theorem partialX_radialFlux (Ω : RadialDomain) {U : Field}
+theorem partialX_radialFlux (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h lam : ℝ) {p : Point} (hp : p ∈ Ω.carrier)
     (hL : CoordinateAlgebra.L h p.2 ≠ 0) :
     SimilarityProfile.partialX (radialFlux h lam U) p =
       -SimilarityProfile.Z h (-CoordinateAlgebra.A h + lam) U p := by
   have hv := ((radialFlux_smoothAt Ω hU h lam hp hL).differentiableAt (by simp)).hasFDerivAt
-  have hd := hv.comp_hasDerivAt p.1
+  have hd := hv.comp_hasDerivAt (F := Point) (f := fun x => (id x, p.2)) p.1
     ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))
   exact hd.unique (radialFlux_hasDerivAt Ω hU h lam hp)
 
-theorem axial_source_intervalIntegrable (Ω : RadialDomain) {U : Field}
+theorem axial_source_intervalIntegrable (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h b : ℝ) {p : Point} (hp : p ∈ Ω.carrier) :
     IntervalIntegrable (fun x => -SimilarityProfile.Z h b U (x, p.2)) volume 0 p.1 := by
   have hu : ContinuousOn (fun x => U (x, p.2)) (uIcc 0 p.1) :=
@@ -150,7 +155,7 @@ theorem axial_source_intervalIntegrable (Ω : RadialDomain) {U : Field}
         hc.intervalIntegrable
 
 /-- The printed expression is precisely the zero-axis integral of -Z U. -/
-theorem radialFlux_eq_integral (Ω : RadialDomain) {U : Field}
+theorem radialFlux_eq_integral (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h lam : ℝ) {p : Point} (hp : p ∈ Ω.carrier) :
     radialFlux h lam U p =
       ∫ x in (0 : ℝ)..p.1, -SimilarityProfile.Z h (-CoordinateAlgebra.A h + lam) U (x, p.2) := by
@@ -162,7 +167,7 @@ theorem radialFlux_eq_integral (Ω : RadialDomain) {U : Field}
 
 /-- Physical incompressibility in flux coordinates `(t,s,z)`, `s=r²/2`.
 The radial flux has power q^lam and the axial velocity has power q^(-A+lam). -/
-theorem physical_flux_axial_balance (Ω : RadialDomain) {U : Field}
+theorem physical_flux_axial_balance (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (lam : ℝ) {p : SimilarityProfile.PhysicalPoint} (hp : p.1 < 1)
     (hi : SimilarityProfile.inner h p ∈ Ω.carrier) :
@@ -185,7 +190,7 @@ theorem physical_flux_axial_balance (Ω : RadialDomain) {U : Field}
 
 /-- Specialization to the manuscript's lam_n = 2nh, with n represented honestly
 as a natural-number order. -/
-theorem slow_order_divergence (Ω : RadialDomain) {U : Field}
+theorem slow_order_divergence (Ω : RadialDomain) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U Ω.carrier) (h : ℝ) (n : ℕ)
     {p : Point} (hp : p ∈ Ω.carrier) (hL : CoordinateAlgebra.L h p.2 ≠ 0) :
     SimilarityProfile.partialX (radialFlux h (2 * (n : ℝ) * h) U) p +

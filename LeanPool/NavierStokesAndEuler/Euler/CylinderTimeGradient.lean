@@ -39,14 +39,18 @@ def fromCoordinates : (Fin 4 → Space) →L[ℝ] (LiftTangent →L[ℝ] Space) 
 
 theorem fromCoordinates_apply (u : Fin 4 → Space) (v : LiftTangent) :
     fromCoordinates u v = ∑ i : Fin 4, (coordinateEquiv.symm v i) • u i := by
-  simp [fromCoordinates, tangentCoordinate]
+  simp only [fromCoordinates, tangentCoordinate, sum_apply, comp_apply, proj_apply,
+      smulRightL_apply_apply, smulRight_apply, ContinuousLinearEquiv.coe_coe,
+      coordinateEquiv_symm_apply, Nat.reduceAdd, PiLp.proj_apply]
 
 theorem tangent_sum_coordinates (v : LiftTangent) :
     (∑ i : Fin 4, (coordinateEquiv.symm v i) • standardDirection i) = v := by
   have he : (∑ i : Fin 4, (coordinateEquiv.symm v i) • EuclideanSpace.single i (1 : ℝ)) =
       coordinateEquiv.symm v := by
     ext i
-    simp [Pi.single_apply, mul_ite]
+    simp only [coordinateEquiv_symm_apply, Nat.reduceAdd, WithLp.ofLp_sum, WithLp.ofLp_smul,
+        PiLp.ofLp_single, Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite,
+        mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
   change (∑ i : Fin 4, (coordinateEquiv.symm v i) • coordinateEquiv (EuclideanSpace.single i (1 :
       ℝ))) = v
   simp_rw [← map_smul]
@@ -65,7 +69,8 @@ theorem fromCoordinates_eq (D : LiftTangent →L[ℝ] Space) :
 variable (P : ℝ) [Fact (0 < P)]
 
 theorem pointField_fderiv_joint_continuous {K : Type*} [TopologicalSpace K] [CompactSpace K]
-    (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
+    (p : C(K, LiftL2 P))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
     Continuous (fun z : K × LiftDomain P => fieldFDeriv P (pointField P p hp z.1) z.2) := by
   have hc : Continuous (fun z : K × LiftDomain P =>
       fun i : Fin 4 => fieldFDeriv P (pointField P p hp z.1) z.2 (standardDirection i)) := by
@@ -75,8 +80,10 @@ theorem pointField_fderiv_joint_continuous {K : Type*} [TopologicalSpace K] [Com
   simpa only [Function.comp_def, fromCoordinates_eq] using fromCoordinates.continuous.comp hc
 
 variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a p))
+  (hf : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT p) (f t) (Icc (0 : ℝ) T) t)
 
 include hd in

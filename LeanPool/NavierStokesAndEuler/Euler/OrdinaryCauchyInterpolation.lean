@@ -92,10 +92,8 @@ theorem sobolevPath_cauchy_of_l2 (hT : 0 ≤ T)
     apply ContinuousMap.ext
     intro t
     exact ordinarySobolev_value (q+1) (A k t).toLp (A k t).translation_contDiff
-  have hh : CauchySeq (fun k =>
-      (valueOperator 1 (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) (u k)) := by
-    simpa only [hv] using hl
-  have hc := cauchy_restrict_of_value 1 (q := q) (by omega : q < q+1) T M hM0 u hu hh
+  have hc := cauchy_restrict_of_value 1 (q := q) (by omega : q < q+1) T M hM0 u hu
+    (by simpa only [hv] using hl)
   have he (k : ℕ) : (restrictOperator 1 (by omega : q ≤ q+1)).compLeftContinuous ℝ
       (Icc (0 : ℝ) T) (u k)=sobolevPath (A k) (hA k) q := by
     apply ContinuousMap.ext

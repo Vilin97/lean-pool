@@ -105,14 +105,14 @@ theorem hasDerivAt_graph_radial (d : ℝ) (vr vt : Plane) (r t : ℝ) (hr : r �
   have hp := (Real.hasDerivAt_rpow_const (p := d) (Or.inl hr)).smul_const vr
   have hb := hp.add (hasDerivAt_const r (t • vt))
   have hq := (hasDerivAt_id r).prodMk (hasDerivAt_const r t)
-  simpa [graph, radialVector, radialSpeed] using hq.prodMk hb
+  simpa only [graph, radialVector, radialSpeed, id_eq, Pi.add_apply, add_zero] using hq.prodMk hb
 
 /-- The time direction has constant graph velocity. -/
 theorem hasDerivAt_graph_time (d : ℝ) (vr vt : Plane) (r t : ℝ) :
     HasDerivAt (fun s => graph d vr vt (r, s)) (timeVector vt) t := by
   have hb := (hasDerivAt_const t (r ^ d • vr)).add ((hasDerivAt_id t).smul_const vt)
   have hq := (hasDerivAt_const t r).prodMk (hasDerivAt_id t)
-  simpa [graph, timeVector] using hq.prodMk hb
+  simpa only [graph, timeVector, id_eq, Pi.add_apply, one_smul, zero_add] using hq.prodMk hb
 
 /-- First radial derivative of the physical pullback equals the exact graph operator. -/
 theorem partialR_pullback (d : ℝ) (vr vt : Plane) (F : Lift → ℝ) (q : Plane)
@@ -167,7 +167,9 @@ theorem fderiv_radialVector_timeVector (d : ℝ) (vr vt : Plane) (p : Lift)
     (hr : p.1.1 ≠ 0) :
     fderiv ℝ (radialVector d vr) p (timeVector vt) = 0 := by
   rw [(hasFDerivAt_radialVector d vr p hr).fderiv]
-  simp [radiusProjection, timeVector]
+  simp only [radiusProjection, timeVector, ContinuousLinearMap.prod_apply, zero_apply,
+      ContinuousLinearMap.smulRight_apply, smul_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.coe_fst', smul_eq_mul, mul_zero, zero_smul, Prod.mk_eq_zero, and_self]
 
 /-- The actual radial and time graph operators commute on every `C²` lift,
 away from the radial axis. This proves the relevant assertion of §8.1. -/
@@ -177,7 +179,7 @@ theorem radialOp_timeOp_comm (d : ℝ) (vr vt : Plane) (F : Lift → ℝ) (p : L
   apply along_comm_of_cross_zero F (radialVector d vr) (fun _ => timeVector vt) p hF
     (differentiableAt_radialVector d vr p hr) (differentiableAt_const _)
   · exact fderiv_radialVector_timeVector d vr vt p hr
-  · simp
+  · simp only [fderiv_fun_const, Pi.zero_apply, zero_apply]
 
 theorem differentiableAt_timeOp (vt : Plane) (F : Lift → ℝ) (p : Lift)
     (hF : ContDiffAt ℝ 2 F p) : DifferentiableAt ℝ (timeOp vt F) p := by
@@ -244,7 +246,8 @@ theorem auxiliary_directional_eq (F : Lift → ℝ) (p : Lift) (v : Plane) :
         v.2 * fderiv ℝ F p ((0, 0), (0, 1)) := by
   have hv : ((0, 0), v) =
       v.1 • (((0, 0), (1, 0)) : Lift) + v.2 • (((0, 0), (0, 1)) : Lift) := by
-    ext <;> simp
+    ext <;> simp only [Prod.smul_mk, smul_eq_mul, mul_zero, mul_one, Prod.mk_add_mk, add_zero,
+        zero_add, Prod.mk.eta]
   rw [hv, map_add, map_smul, map_smul]
   rfl
 
@@ -257,7 +260,8 @@ theorem radialOp_expanded (d : ℝ) (vr : Plane) (F : Lift → ℝ) (p : Lift) :
   change fderiv ℝ F p (radialVector d vr p) = _
   have hv : radialVector d vr p =
       (((1, 0), (0, 0)) : Lift) + radialSpeed d p.1.1 • (((0, 0), vr) : Lift) := by
-    ext <;> simp [radialVector]
+    ext <;> simp only [radialVector, Prod.smul_mk, smul_eq_mul, mul_zero, Prod.mk_add_mk, add_zero,
+        Prod.smul_fst, Prod.fst_add, zero_add, Prod.smul_snd, Prod.snd_add]
   rw [hv, map_add, map_smul, auxiliary_directional_eq]
   rfl
 
@@ -269,7 +273,7 @@ theorem timeOp_expanded (vt : Plane) (F : Lift → ℝ) (p : Lift) :
   change fderiv ℝ F p (timeVector vt) = _
   have hv : timeVector vt =
       (((0, 1), (0, 0)) : Lift) + (((0, 0), vt) : Lift) := by
-    ext <;> simp [timeVector]
+    ext <;> simp only [timeVector, Prod.mk_add_mk, add_zero, Prod.fst_add, zero_add, Prod.snd_add]
   rw [hv, map_add, auxiliary_directional_eq]
 
 end NavierStokes.GraphCalculus
@@ -298,7 +302,7 @@ noncomputable def along (V : E → E) (f : E → F) (x : E) : F :=
 theorem contDiffOn_along {U : Set E} {V : E → E} {f : E → F}
     (hU : IsOpen U) (hV : ContDiffOn ℝ ∞ V U) (hf : ContDiffOn ℝ ∞ f U) :
     ContDiffOn ℝ ∞ (along V f) U :=
-  (hf.fderiv_of_isOpen hU (by simp)).clm_apply hV
+  (hf.fderiv_of_isOpen hU (by simp only [ENat.coe_top_add_one, Std.le_refl])).clm_apply hV
 
 theorem along_congr {U : Set E} {V : E → E} {f g : E → F} {x : E}
     (hU : IsOpen U) (hfg : EqOn f g U) (hx : x ∈ U) :
@@ -336,10 +340,11 @@ theorem along_ofReal (V : E → E) {f : E → ℝ} {x : E}
 noncomputable def phaseFactor (κ : ℝ) : ℂ := (κ : ℂ) * Complex.I
 
 theorem phaseFactor_sq (κ : ℝ) : phaseFactor κ ^ 2 = -(κ : ℂ) ^ 2 := by
-  simp [phaseFactor, mul_pow, Complex.I_sq]
+  simp only [phaseFactor, mul_pow, Complex.I_sq, mul_neg, mul_one]
 
 @[simp] theorem norm_phaseFactor (κ : ℝ) : ‖phaseFactor κ‖ = |κ| := by
-  simp [phaseFactor, Real.norm_eq_abs]
+  simp only [phaseFactor, Complex.norm_mul, Complex.norm_real, Real.norm_eq_abs, Complex.norm_I,
+      mul_one]
 
 /-- `κ = k*j` gives the carrier in the manuscript. -/
 noncomputable def carrier (κ : ℝ) (Φ : E → ℝ) (x : E) : ℂ :=
@@ -420,14 +425,21 @@ theorem along_along_mode {U : Set E} {V : E → E} (κ : ℝ)
   have hb : ContDiffOn ℝ ∞ b U := hDa.add ((contDiffOn_const.mul hDc).mul ha)
   have hfirst : EqOn (along V (mode κ Φ a)) (mode κ Φ b) U := by
     intro y hy
-    exact along_mode V κ ((hΦ.contDiffAt (hU.mem_nhds hy)).differentiableAt (by simp))
-      ((ha.contDiffAt (hU.mem_nhds hy)).differentiableAt (by simp))
-  have da := (ha.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have dDa := (hDa.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have dΦ := (hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have dDΦ := (hDΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have dDc := (hDc.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have db := (hb.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
+    exact along_mode V κ ((hΦ.contDiffAt (hU.mem_nhds hy)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      ((ha.contDiffAt (hU.mem_nhds hy)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+  have da := (ha.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dDa := (hDa.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dΦ := (hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dDΦ := (hDΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dDc := (hDc.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have db := (hb.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   rw [along_congr hU hfirst hx, along_mode V κ dΦ db]
   have hDb : along V b x = along V (along V a) x +
       phaseFactor κ * Complex.ofReal (along V (along V Φ) x) * a x +
@@ -439,10 +451,7 @@ theorem along_along_mode {U : Set E} {V : E → E} (κ : ℝ)
     ring
   rw [hDb]
   dsimp only [b]
-  have hs := phaseFactor_sq κ
-  ring_nf at hs ⊢
-  rw [hs]
-  ring
+  linear_combination (Complex.ofReal (along V Φ x) ^ 2 * a x * carrier κ Φ x) * phaseFactor_sq κ
 
 /-! ## Cylindrical scalar operators -/
 
@@ -468,7 +477,8 @@ theorem phaseSquare_eq_norm_sq (R : E → ℝ) (Vr Vθ Vz : E → E)
     (Φ : E → ℝ) (x : E) :
     phaseSquare R Vr Vθ Vz Φ x = ‖phaseNormal R Vr Vθ Vz Φ x‖ ^ 2 := by
   rw [PhaseCalculus.vec3_norm_sq]
-  simp [phaseSquare, phaseNormal, div_eq_mul_inv]
+  simp only [phaseSquare, Fin.isValue, phaseNormal, div_eq_mul_inv, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.cons_val, add_left_inj, add_right_inj]
   ring
 
 /-- The phase/coefficient cross term in the scalar Laplacian. -/
@@ -490,8 +500,10 @@ theorem cylindricalLaplacian_mode {U : Set E} (R : E → ℝ)
         (phaseFactor κ * Complex.ofReal (cylindricalLaplacian R Vr Vθ Vz Φ x) -
           (κ : ℂ) ^ 2 * Complex.ofReal (phaseSquare R Vr Vθ Vz Φ x)) * a x) *
         carrier κ Φ x := by
-  have da := (ha.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have dΦ := (hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
+  have da := (ha.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have dΦ := (hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   unfold cylindricalLaplacian
   rw [along_along_mode κ hU hr hΦ ha hx, along_along_mode κ hU hθ hΦ ha hx,
     along_along_mode κ hU hz hΦ ha hx, along_mode Vr κ dΦ da]
@@ -521,7 +533,7 @@ theorem along_along_eq_zero_of_const {U : Set E} {V : E → E} {f : E → F}
     {c : F} {x : E} (hU : IsOpen U) (hf : EqOn (along V f) (fun _ => c) U)
     (hx : x ∈ U) : along V (along V f) x = 0 := by
   rw [along_congr hU hf hx]
-  simp [along]
+  simp only [along, fderiv_fun_const, Pi.zero_apply, zero_apply]
 
 /-- With no angular coefficient dependence, its scalar Laplacian contains
 only radial and axial coefficient derivatives. -/
@@ -542,8 +554,9 @@ theorem cylindricalLaplacian_phase {U : Set E} (R : E → ℝ)
       along Vr (fun y => phaseNormal R Vr Vθ Vz Φ y 0) x +
         phaseNormal R Vr Vθ Vz Φ x 0 / R x +
         along Vz (fun y => phaseNormal R Vr Vθ Vz Φ y 2) x := by
-  simp [cylindricalLaplacian, along_along_eq_zero_of_const hU hΦθ hx,
-    phaseNormal, smul_eq_mul, div_eq_mul_inv]
+  simp only [cylindricalLaplacian, smul_eq_mul, along_along_eq_zero_of_const hU hΦθ hx, mul_zero,
+      add_zero, Fin.isValue, phaseNormal, div_eq_mul_inv, Matrix.cons_val_zero, Matrix.cons_val,
+      add_left_inj, add_right_inj]
   ring
 
 /-- The scalar part of the manuscript's no-slow-angular-dependence formula.
@@ -592,7 +605,9 @@ noncomputable def angularGenerator (a : ComplexVector) : ComplexVector :=
 theorem angularGenerator_sq (a : ComplexVector) :
     angularGenerator (angularGenerator a) = ![-a 0, -a 1, 0] := by
   ext i
-  fin_cases i <;> simp [angularGenerator]
+  fin_cases i <;> simp only [angularGenerator, Fin.isValue, Matrix.cons_val_one,
+      Matrix.cons_val_zero, Fin.zero_eta, Nat.succ_eq_add_one, Nat.reduceAdd, Fin.mk_one,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 /-- The scalar component Laplacians plus the two cylindrical frame
 connections. Its identification with Cartesian vector Laplacian belongs to
@@ -618,8 +633,10 @@ theorem cylindricalVectorLaplacian_vectorMode {U : Set E} (R : E → ℝ)
           (κ : ℂ) ^ 2 * Complex.ofReal (‖phaseNormal R Vr Vθ Vz Φ x‖ ^ 2)) * a x i +
         2 * phaseFactor κ * Complex.ofReal (phaseNormal R Vr Vθ Vz Φ x 1 / R x) *
           angularGenerator (a x) i) * carrier κ Φ x := by
-  have dΦ := (hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
-  have da i := ((ha i).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)
+  have dΦ := (hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
+  have da i := ((ha i).contDiffAt (hU.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hL i := cylindricalLaplacian_mode_normal R κ hU hr hθ hz hΦ (ha i) hx
   have hD (i : Fin 3) : along Vθ (fun y => a y i * carrier κ Φ y) x =
       (along Vθ (fun y => a y i) x +
@@ -629,8 +646,11 @@ theorem cylindricalVectorLaplacian_vectorMode {U : Set E} (R : E → ℝ)
   change cylindricalLaplacian R Vr Vθ Vz (mode κ Φ (fun y => a y i)) x + _ = _
   rw [hL i]
   fin_cases i <;>
-    simp [cylindricalVectorLaplacian, angularGenerator, vectorMode, hD 0, hD 1,
-      mode, phaseNormal, Complex.real_smul, div_eq_mul_inv, pow_two] <;> ring
+    simp only [Fin.zero_eta, Fin.isValue, pow_two, phaseNormal, div_eq_mul_inv, Complex.ofReal_mul,
+        mul_inv_rev, angularGenerator, vectorMode, mode, hD 1, hD 0, Matrix.cons_val_zero, mul_neg,
+        Matrix.cons_val_one, smul_add, smul_neg, Complex.real_smul, Complex.ofReal_inv,
+        cylindricalVectorLaplacian, Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val, mul_zero,
+        add_zero, smul_zero] <;> ring
 
 /-- Angularly independent coefficients retain only the `J² a/R²`
 connection, namely `-(a_r,a_θ,0)/R²`. -/
@@ -652,7 +672,8 @@ theorem cylindricalVectorLaplacian_angular_independent {U : Set E} (R : E → �
   rw [he]
   have hzero : angularGenerator 0 = 0 := by
     funext j
-    fin_cases j <;> simp [angularGenerator]
+    fin_cases j <;> simp only [angularGenerator, Pi.zero_apply, neg_zero, Fin.zero_eta, Fin.isValue,
+        Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   simp only [hzero, Pi.zero_apply, mul_zero, zero_add]
 
 /-- Divergence of physical cylindrical components in prescribed directions. -/
@@ -676,7 +697,9 @@ theorem cylindricalDivergence_vectorMode (R : E → ℝ) (Vr Vθ Vz : E → E)
   unfold cylindricalDivergence vectorMode
   rw [along_mode Vr κ hΦ (ha 0), along_mode Vθ κ hΦ (ha 1),
     along_mode Vz κ hΦ (ha 2)]
-  simp [normalDot, phaseNormal, mode, Complex.real_smul, div_eq_mul_inv]
+  simp only [Fin.isValue, mode, Complex.real_smul, Complex.ofReal_inv, normalDot, phaseNormal,
+      div_eq_mul_inv, Matrix.cons_val_zero, Matrix.cons_val_one, Complex.ofReal_mul,
+      Matrix.cons_val]
   ring
 
 /-- Exact harmonic divergence forces the longitudinal identity. The only
@@ -703,7 +726,7 @@ noncomputable def longitudinalCoefficient (n : EuclideanSpace ℝ (Fin 3))
 @[simp] theorem norm_longitudinalCoefficient (n : EuclideanSpace ℝ (Fin 3))
     (a : ComplexVector) :
     ‖longitudinalCoefficient n a‖ = ‖normalDot n a‖ / ‖n‖ := by
-  simp [longitudinalCoefficient]
+  simp only [longitudinalCoefficient, Complex.norm_div, Complex.norm_real, norm_norm]
 
 theorem norm_strippedDivergence_le (R : E → ℝ) (Vr Vz : E → E)
     (a : E → ComplexVector) (x : E) :
@@ -932,7 +955,9 @@ theorem phaseNormal_eq_slot_normal (ε p pz x₀ : ℝ)
       PhaseCalculus.phaseNormal ε p pz x₀ F G q := by
   ext i
   fin_cases i <;>
-    simp [phaseNormal, PhaseCalculus.phaseNormal, along, map_smul, smul_eq_mul]
+    simp only [phaseNormal, along, map_smul, smul_eq_mul, Fin.zero_eta, Fin.isValue,
+        Matrix.cons_val_zero, PhaseCalculus.phaseNormal, Fin.mk_one, Matrix.cons_val_one,
+        Fin.reduceFinMk, Matrix.cons_val]
 
 /-- Restricting a complex harmonic to the actual auxiliary graph gives the
 radial product formula with the genuine radial graph vector field. -/

@@ -26,12 +26,12 @@ open MeasureTheory FourierTransform EulerSobolev
 open scoped SchwartzMap ENNReal ContDiff LineDeriv
 
 theorem sobolevNorm_zero (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
-    sobolevNorm d 0 f = ‖f.toLp 2‖ := by
+    sobolevNorm d 0 f = ‖(f.toLp 2 :)‖ := by
   have he : weightedFourier d 0 f = 𝓕 f := by
     change weightedFourier d 0 f = schwartzFourier f
     ext ξ
-    simp [weightedFourier_apply, besselWeight]
-  simp [sobolevNorm, he]
+    simp only [weightedFourier_apply, besselWeight, zero_div, Real.rpow_zero, one_smul]
+  simp only [sobolevNorm, he, SchwartzMap.norm_fourier_toL2_eq]
 
 theorem besselWeight_mono (d : ℕ) {s t : ℝ} (hst : s ≤ t) (ξ : Domain d) :
     besselWeight d s ξ ≤ besselWeight d t ξ := by
@@ -42,8 +42,8 @@ theorem sobolevNorm_mono (d : ℕ) {s t : ℝ} (hst : s ≤ t) (f : 𝓢(Domain 
     sobolevNorm d s f ≤ sobolevNorm d t f := by
   unfold sobolevNorm
   apply Lp.norm_le_norm_of_ae_le
-  filter_upwards [(weightedFourier d s f).coeFn_toLp 2,
-    (weightedFourier d t f).coeFn_toLp 2] with ξ hs ht
+  filter_upwards [(weightedFourier d s f).coeFn_toLp 2 volume,
+    (weightedFourier d t f).coeFn_toLp 2 volume] with ξ hs ht
   rw [hs, ht, weightedFourier_apply, weightedFourier_apply, norm_smul, norm_smul,
     Real.norm_of_nonneg (besselWeight_pos d s ξ).le,
     Real.norm_of_nonneg (besselWeight_pos d t ξ).le]
@@ -55,16 +55,18 @@ theorem directional_eq_iteratedDeriv (d n : ℕ) (v x : Domain d)
   rw [directional, schwartzIteratedDerivative_apply, iteratedDeriv_eq_iteratedFDeriv]
   let L : ℝ →L[ℝ] Domain d := (ContinuousLinearMap.id ℝ ℝ).smulRight v
   have hC : ContDiff ℝ ∞ (fun z => f (x + z)) := f.smooth'.comp (contDiff_const.add contDiff_id)
-  have he := L.iteratedFDeriv_comp_right hC (0 : ℝ) (by simp : (n : ℕ∞ω) ≤ (∞ : ℕ∞ω))
+  have he := L.iteratedFDeriv_comp_right hC (0 : ℝ) (by simp only [WithTop.le_coe_top, ne_eq,
+      WithTop.natCast_ne_top, not_false_eq_true] : (n : ℕ∞ω) ≤ (∞ : ℕ∞ω))
   change iteratedFDeriv ℝ n f x (fun _ => v) = _
   change _ = iteratedFDeriv ℝ n ((fun z => f (x + z)) ∘ L) 0 (fun _ => 1)
   rw [he]
-  simp [L, ContinuousMultilinearMap.compContinuousLinearMap_apply,
-    iteratedFDeriv_comp_add_left]
+  simp only [ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply, zero_smul,
+      iteratedFDeriv_comp_add_left, add_zero,
+      ContinuousMultilinearMap.compContinuousLinearMap_apply, one_smul, L]
 
 /-- Pointwise multiplication of two complex Schwartz functions. -/
 noncomputable def product (d : ℕ) (f g : 𝓢(Domain d, ℂ)) : 𝓢(Domain d, ℂ) :=
-  SchwartzMap.pairing (ContinuousLinearMap.mul ℂ ℂ) f g
+  SchwartzMap.pairing (D := Domain d) (ContinuousLinearMap.mul ℂ ℂ) f g
 
 @[simp] theorem product_apply (d : ℕ) (f g : 𝓢(Domain d, ℂ)) (x : Domain d) :
     product d f g x = f x * g x := rfl
@@ -81,10 +83,11 @@ theorem directional_product (d n : ℕ) (v : Domain d) (f g : 𝓢(Domain d, ℂ
   have hg : ContDiff ℝ ∞ (fun t : ℝ => g (x + t • v)) :=
     g.smooth'.comp (contDiff_const.add (contDiff_id.smul contDiff_const))
   simpa only [Pi.mul_apply, mul_assoc] using iteratedDeriv_fun_mul
-    (hf.of_le (by simp)).contDiffAt (hg.of_le (by simp)).contDiffAt
+    (hf.of_le (by simp)).contDiffAt (hg.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true])).contDiffAt
 
 theorem directional_L2_le (d n : ℕ) (v : Domain d) (f : 𝓢(Domain d, ℂ)) :
-    ‖(directional d n v f).toLp 2‖ ≤
+    ‖((directional d n v f).toLp 2 :)‖ ≤
       (2 * Real.pi) ^ n * ‖v‖ ^ n * sobolevNorm d n f := by
   rw [← sobolevNorm_zero]
   simpa [directional] using sobolevNorm_iteratedLineDeriv_le d n 0 f (fun _ => v)
@@ -113,7 +116,8 @@ theorem fourier_directional_norm (d n : ℕ) (v : Domain d)
   change ‖𝓕 (directional d n v f) ξ‖ =
       (2 * Real.pi) ^ n * ‖inner ℝ ξ v‖ ^ n * ‖𝓕 f ξ‖
   induction n with
-  | zero => simp [directional]
+  | zero => simp only [directional, LineDeriv.iteratedLineDerivOp_fin_zero, pow_zero,
+      Real.norm_eq_abs, mul_one, one_mul]
   | succ n ih =>
     have ht : (fun ξ : Domain d => inner ℝ ξ v).HasTemperateGrowth :=
       ((innerSL ℝ).flip v).hasTemperateGrowth
@@ -122,7 +126,8 @@ theorem fourier_directional_norm (d n : ℕ) (v : Domain d)
     simp only [smul_apply,
       SchwartzMap.smulLeftCLM_apply_apply ht, norm_smul]
     have hc : ‖(2 * Real.pi * Complex.I : ℂ)‖ = 2 * Real.pi := by
-      simp
+      simp only [Complex.norm_mul, Complex.norm_ofNat, Complex.norm_real, Real.norm_eq_abs,
+          Real.abs_pi, Complex.norm_I, mul_one]
     rw [hc, ih, pow_succ, pow_succ]
     ring
 
@@ -132,7 +137,7 @@ noncomputable def normLp (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
   (f.memLp 2 volume).norm.toLp (fun x => ‖f x‖)
 
 theorem norm_normLp (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
-    ‖normLp d f‖ = ‖f.toLp 2‖ := by
+    ‖normLp d f‖ = ‖(f.toLp 2 :)‖ := by
   simp only [normLp, Lp.norm_toLp, eLpNorm_norm _ f.continuous.aestronglyMeasurable,
     SchwartzMap.norm_toLp]
 
@@ -143,13 +148,13 @@ theorem coe_normLp (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
 theorem normLp_le_sum {ι : Type*} [Fintype ι] (d : ℕ) (f : 𝓢(Domain d, ℂ))
     (g : ι → 𝓢(Domain d, ℂ)) (C : ℝ) (hC : 0 ≤ C)
     (h : ∀ x, ‖f x‖ ≤ C * ∑ i, ‖g i x‖) :
-    ‖f.toLp 2‖ ≤ C * ∑ i, ‖(g i).toLp 2‖ := by
+    ‖(f.toLp 2 :)‖ ≤ C * ∑ i, ‖((g i).toLp 2 :)‖ := by
   have hs : ∀ᵐ x ∂(volume : Measure (Domain d)), ∀ i, normLp d (g i) x = ‖g i x‖ :=
     Filter.eventually_all.2 (fun i => coe_normLp d (g i))
-  have hb : ‖f.toLp 2‖ ≤ C * ‖∑ i, normLp d (g i)‖ := by
+  have hb : ‖f.toLp 2 volume‖ ≤ C * ‖∑ i, normLp d (g i)‖ := by
     apply Lp.norm_le_mul_norm_of_ae_le_mul
-    filter_upwards [f.coeFn_toLp 2, Lp.coeFn_finsetSum Finset.univ (fun i => normLp d (g i)), hs]
-      with x hf hsum hx
+    filter_upwards [f.coeFn_toLp 2 volume,
+      Lp.coeFn_finsetSum Finset.univ (fun i => normLp d (g i)), hs] with x hf hsum hx
     rw [hf, hsum]
     simp only [Finset.sum_apply, hx, Real.norm_eq_abs,
       abs_of_nonneg (Finset.sum_nonneg (fun i _ => norm_nonneg _))]
@@ -161,8 +166,8 @@ theorem normLp_le_sum {ι : Type*} [Fintype ι] (d : ℕ) (f : 𝓢(Domain d, �
 
 theorem sobolevNorm_six_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
     sobolevNorm d 6 f ≤ ((d : ℝ) + 1) ^ 2 *
-      (‖f.toLp 2‖ + (2 * Real.pi) ^ (-6 : ℤ) *
-        ∑ i : Fin d, ‖(directional d 6 (EuclideanSpace.single i 1) f).toLp 2‖) := by
+      (‖(f.toLp 2 :)‖ + (2 * Real.pi) ^ (-6 : ℤ) *
+        ∑ i : Fin d, ‖((directional d 6 (EuclideanSpace.single i 1) f).toLp 2 :)‖) := by
   let g : Option (Fin d) → 𝓢(Domain d, ℂ) := fun i => match i with
     | none => schwartzFourier f
     | some i => ((2 * Real.pi) ^ (-6 : ℤ) : ℝ) •
@@ -180,30 +185,30 @@ theorem sobolevNorm_six_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)) 
         rw [show (-6 : ℤ) = -(6 : ℤ) from rfl, zpow_neg]
         exact inv_mul_cancel₀ (by positivity)
       simp_rw [← mul_assoc, hp, one_mul]
-      rw [add_mul, one_mul, Finset.sum_mul]
+      simp only [add_mul, one_mul, Finset.sum_mul]
     rw [hg]
-    linarith [mul_le_mul_of_nonneg_right (besselWeight_six_le_pure_six d ξ)
-      (norm_nonneg (schwartzFourier f ξ))]
+    exact (mul_le_mul_of_nonneg_right (besselWeight_six_le_pure_six d ξ)
+      (norm_nonneg _)).trans_eq (mul_assoc _ _ _)
   have h := normLp_le_sum d (weightedFourier d 6 f) g (((d : ℝ) + 1) ^ 2)
     (sq_nonneg _) hpoint
-  have hnorm : ∑ i, ‖(g i).toLp 2‖ = ‖f.toLp 2‖ +
+  have hnorm : ∑ i, ‖(g i).toLp 2 volume‖ = ‖f.toLp 2 volume‖ +
       (2 * Real.pi) ^ (-6 : ℤ) * ∑ i : Fin d,
-        ‖(directional d 6 (EuclideanSpace.single i 1) f).toLp 2‖ := by
+        ‖(directional d 6 (EuclideanSpace.single i 1) f).toLp 2 volume‖ := by
     rw [Fintype.sum_option]
     simp only [g]
-    change ‖(𝓕 f).toLp 2‖ + ∑ i,
-      ‖SchwartzMap.toLpCLM ℝ ℂ 2 volume (((2 * Real.pi) ^ (-6 : ℤ)) •
+    change ‖(𝓕 f).toLp 2 volume‖ + ∑ i,
+      ‖SchwartzMap.toLpCLM (E := Domain d) ℝ ℂ 2 volume (((2 * Real.pi) ^ (-6 : ℤ)) •
         𝓕 (directional d 6 (EuclideanSpace.single i 1) f))‖ = _
-    simp only [map_smul, norm_smul,
+    simp only [ContinuousLinearMap.map_smul, norm_smul,
       Real.norm_of_nonneg (by positivity : 0 ≤ (2 * Real.pi) ^ (-6 : ℤ)),
       SchwartzMap.toLpCLM_apply, SchwartzMap.norm_fourier_toL2_eq, Finset.mul_sum]
   rw [hnorm] at h
   exact h
 
 theorem product_L2_le_of_sup (d : ℕ) (f g : 𝓢(Domain d, ℂ)) (A : ℝ)
-    (hA : ∀ x, ‖f x‖ ≤ A) : ‖(product d f g).toLp 2‖ ≤ A * ‖g.toLp 2‖ := by
+    (hA : ∀ x, ‖f x‖ ≤ A) : ‖((product d f g).toLp 2 :)‖ ≤ A * ‖(g.toLp 2 :)‖ := by
   apply Lp.norm_le_mul_norm_of_ae_le_mul
-  filter_upwards [(product d f g).coeFn_toLp 2, g.coeFn_toLp 2] with x hp hg
+  filter_upwards [(product d f g).coeFn_toLp 2 volume, g.coeFn_toLp 2 volume] with x hp hg
   rw [hp, hg, product_apply, norm_mul]
   exact mul_le_mul_of_nonneg_right (hA x) (norm_nonneg _)
 
@@ -230,7 +235,7 @@ theorem directional_sup_le_H6 (d j : ℕ) (hd : (d : ℝ) < 2 * 3) (hj : j ≤ 3
 
 theorem directional_L2_le_H6 (d j : ℕ) (hj : j ≤ 6) (v : Domain d) (hv : ‖v‖ ≤ 1)
     (f : 𝓢(Domain d, ℂ)) :
-    ‖(directional d j v f).toLp 2‖ ≤ (2 * Real.pi) ^ j * sobolevNorm d 6 f := by
+    ‖((directional d j v f).toLp 2 :)‖ ≤ (2 * Real.pi) ^ j * sobolevNorm d 6 f := by
   have hvp : ‖v‖ ^ j ≤ 1 := pow_le_one₀ (norm_nonneg _) hv
   have hS : 0 ≤ sobolevNorm d j f := norm_nonneg _
   have hmono : sobolevNorm d j f ≤ sobolevNorm d 6 f :=
@@ -246,7 +251,7 @@ attribute [local irreducible] sobolevNorm embeddingConstant
 theorem product_directional_L2_le_left (d j k : ℕ) (hd : (d : ℝ) < 2 * 3)
     (hj : j ≤ 3) (hk : k ≤ 6) (v : Domain d) (hv : ‖v‖ ≤ 1)
     (f g : 𝓢(Domain d, ℂ)) :
-    ‖(product d (directional d j v f) (directional d k v g)).toLp 2‖ ≤
+    ‖((product d (directional d j v f) (directional d k v g)).toLp 2 :)‖ ≤
       embeddingConstant d 3 hd * (2 * Real.pi) ^ (j+k) *
         sobolevNorm d 6 f * sobolevNorm d 6 g := by
   have hC : 0 ≤ embeddingConstant d 3 hd := by unfold embeddingConstant; exact norm_nonneg _
@@ -262,7 +267,7 @@ theorem product_directional_L2_le_left (d j k : ℕ) (hd : (d : ℝ) < 2 * 3)
 
 theorem product_directional_L2_le (d j k : ℕ) (hd : (d : ℝ) < 2 * 3) (hjk : j + k ≤ 6)
     (v : Domain d) (hv : ‖v‖ ≤ 1) (f g : 𝓢(Domain d, ℂ)) :
-    ‖(product d (directional d j v f) (directional d k v g)).toLp 2‖ ≤
+    ‖((product d (directional d j v f) (directional d k v g)).toLp 2 :)‖ ≤
       embeddingConstant d 3 hd * (2 * Real.pi) ^ (j+k) *
         sobolevNorm d 6 f * sobolevNorm d 6 g := by
   by_cases hj : j ≤ 3
@@ -270,7 +275,7 @@ theorem product_directional_L2_le (d j k : ℕ) (hd : (d : ℝ) < 2 * 3) (hjk : 
   · have he : product d (directional d j v f) (directional d k v g) =
         product d (directional d k v g) (directional d j v f) := by
       ext x
-      simp [mul_comm]
+      simp only [product_apply, mul_comm]
     rw [he]
     have h := product_directional_L2_le_left d k j hd (by omega) (by omega) v hv g f
     rw [Nat.add_comm k j] at h
@@ -278,27 +283,27 @@ theorem product_directional_L2_le (d j k : ℕ) (hd : (d : ℝ) < 2 * 3) (hjk : 
 
 theorem directional_product_L2_le (d n : ℕ) (hd : (d : ℝ) < 2 * 3) (hn : n ≤ 6)
     (v : Domain d) (hv : ‖v‖ ≤ 1) (f g : 𝓢(Domain d, ℂ)) :
-    ‖(directional d n v (product d f g)).toLp 2‖ ≤
+    ‖((directional d n v (product d f g)).toLp 2 :)‖ ≤
       2 ^ n * (embeddingConstant d 3 hd * (2 * Real.pi) ^ n *
         sobolevNorm d 6 f * sobolevNorm d 6 g) := by
   rw [directional_product]
-  change ‖SchwartzMap.toLpCLM ℂ ℂ 2 volume
+  change ‖SchwartzMap.toLpCLM (E := Domain d) ℂ ℂ 2 volume
     (∑ j ∈ Finset.range (n+1), (n.choose j : ℂ) •
       product d (directional d j v f) (directional d (n-j) v g))‖ ≤ _
   rw [map_sum]
   calc
     _ ≤ ∑ j ∈ Finset.range (n+1),
-        ‖SchwartzMap.toLpCLM ℂ ℂ 2 volume ((n.choose j : ℂ) •
+        ‖SchwartzMap.toLpCLM (E := Domain d) ℂ ℂ 2 volume ((n.choose j : ℂ) •
           product d (directional d j v f) (directional d (n-j) v g))‖ := norm_sum_le _ _
     _ = ∑ j ∈ Finset.range (n+1), (n.choose j : ℝ) *
-        ‖(product d (directional d j v f) (directional d (n-j) v g)).toLp 2‖ := by
+        ‖(product d (directional d j v f) (directional d (n-j) v g)).toLp 2 volume‖ := by
       simp only [map_smul, norm_smul, Complex.norm_natCast, SchwartzMap.toLpCLM_apply]
     _ ≤ ∑ j ∈ Finset.range (n+1), (n.choose j : ℝ) *
         (embeddingConstant d 3 hd * (2 * Real.pi) ^ n *
           sobolevNorm d 6 f * sobolevNorm d 6 g) := by
       apply Finset.sum_le_sum
       intro j hj
-      have hjn : j ≤ n := by simpa using (Finset.mem_range.1 hj)
+      have hjn : j ≤ n := by simpa only [Order.lt_add_one_iff] using (Finset.mem_range.1 hj)
       have h := product_directional_L2_le d j (n-j) hd (by omega) v hv f g
       rw [Nat.add_sub_of_le hjn] at h
       exact mul_le_mul_of_nonneg_left h (Nat.cast_nonneg _)
@@ -312,17 +317,17 @@ theorem sobolevNorm_six_product (d : ℕ) (hd : (d : ℝ) < 2 * 3) (f g : 𝓢(D
     sobolevNorm d 6 (product d f g) ≤
       (((d : ℝ) + 1) ^ 2 * (1 + 64 * d) * embeddingConstant d 3 hd) *
         sobolevNorm d 6 f * sobolevNorm d 6 g := by
-  have hzero : ‖(product d f g).toLp 2‖ ≤
+  have hzero : ‖(product d f g).toLp 2 volume‖ ≤
       embeddingConstant d 3 hd * sobolevNorm d 6 f * sobolevNorm d 6 g := by
     simpa only [directional, LineDeriv.iteratedLineDerivOp_fin_zero, pow_zero, one_mul,
       mul_one] using directional_product_L2_le d 0 hd (by omega)
-      0 (by simp) f g
+      0 (by simp only [norm_zero, zero_le_one]) f g
   have hsix (i : Fin d) :
-      ‖(directional d 6 (EuclideanSpace.single i 1) (product d f g)).toLp 2‖ ≤
+      ‖(directional d 6 (EuclideanSpace.single i 1) (product d f g)).toLp 2 volume‖ ≤
         64 * (embeddingConstant d 3 hd * (2 * Real.pi) ^ 6 *
           sobolevNorm d 6 f * sobolevNorm d 6 g) := by
     have h := directional_product_L2_le d 6 hd (by omega)
-      (EuclideanSpace.single i 1) (by simp) f g
+      (EuclideanSpace.single i 1) (by simp only [PiLp.norm_single, norm_one, Std.le_refl]) f g
     rw [show (2 : ℝ) ^ 6 = 64 by norm_num] at h
     exact h
   have hsum := Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin d))) => hsix i)
@@ -389,7 +394,7 @@ theorem directional_sup_le_H5 (d j : ℕ) (hd : (d : ℝ) < 2 * 3) (hj : j ≤ 2
 
 theorem directional_L2_le_H5 (d j : ℕ) (hj : j ≤ 5) (v : Domain d) (hv : ‖v‖ ≤ 1)
     (f : 𝓢(Domain d, ℂ)) :
-    ‖(directional d j v f).toLp 2‖ ≤ (2 * Real.pi) ^ j * sobolevNorm d 5 f := by
+    ‖((directional d j v f).toLp 2 :)‖ ≤ (2 * Real.pi) ^ j * sobolevNorm d 5 f := by
   have hvp : ‖v‖ ^ j ≤ 1 := pow_le_one₀ (norm_nonneg _) hv
   have hS : 0 ≤ sobolevNorm d j f := norm_nonneg _
   have hmono : sobolevNorm d j f ≤ sobolevNorm d 5 f :=
@@ -404,7 +409,7 @@ attribute [local irreducible] sobolevNorm embeddingConstant
 theorem product_directional_L2_H5_left (d j k : ℕ) (hd : (d : ℝ) < 2 * 3)
     (hj : j ≤ 2) (hk : k ≤ 5) (v : Domain d) (hv : ‖v‖ ≤ 1)
     (f g : 𝓢(Domain d, ℂ)) :
-    ‖(product d (directional d j v f) (directional d k v g)).toLp 2‖ ≤
+    ‖((product d (directional d j v f) (directional d k v g)).toLp 2 :)‖ ≤
       embeddingConstant d 3 hd * (2 * Real.pi) ^ (j+k) *
         sobolevNorm d 5 f * sobolevNorm d 5 g := by
   have hC : 0 ≤ embeddingConstant d 3 hd := by unfold embeddingConstant; exact norm_nonneg _
@@ -420,7 +425,7 @@ theorem product_directional_L2_H5_left (d j k : ℕ) (hd : (d : ℝ) < 2 * 3)
 
 theorem product_directional_L2_H5 (d j k : ℕ) (hd : (d : ℝ) < 2 * 3) (hjk : j + k ≤ 5)
     (v : Domain d) (hv : ‖v‖ ≤ 1) (f g : 𝓢(Domain d, ℂ)) :
-    ‖(product d (directional d j v f) (directional d k v g)).toLp 2‖ ≤
+    ‖((product d (directional d j v f) (directional d k v g)).toLp 2 :)‖ ≤
       embeddingConstant d 3 hd * (2 * Real.pi) ^ (j+k) *
         sobolevNorm d 5 f * sobolevNorm d 5 g := by
   by_cases hj : j ≤ 2
@@ -428,7 +433,7 @@ theorem product_directional_L2_H5 (d j k : ℕ) (hd : (d : ℝ) < 2 * 3) (hjk : 
   · have he : product d (directional d j v f) (directional d k v g) =
         product d (directional d k v g) (directional d j v f) := by
       ext x
-      simp [mul_comm]
+      simp only [product_apply, mul_comm]
     rw [he]
     have h := product_directional_L2_H5_left d k j hd (by omega) (by omega) v hv g f
     rw [Nat.add_comm k j] at h
@@ -469,22 +474,22 @@ the top term, one derivative falls on `b`, leaving a total of at most five.
 -/
 theorem transport_commutator_L2 (d n : ℕ) (hd : (d : ℝ) < 2 * 3) (hn : n ≤ 6)
     (v : Domain d) (hv : ‖v‖ ≤ 1) (b h : 𝓢(Domain d, ℂ)) :
-    ‖(commutator d n v b h).toLp 2‖ ≤
+    ‖((commutator d n v b h).toLp 2 :)‖ ≤
       2 ^ n * (embeddingConstant d 3 hd * (2 * Real.pi) ^ (n-1) *
         sobolevNorm d 5 (directional d 1 v b) * sobolevNorm d 5 h) := by
   rw [commutator_expansion]
-  change ‖SchwartzMap.toLpCLM ℂ ℂ 2 volume
+  change ‖SchwartzMap.toLpCLM (E := Domain d) ℂ ℂ 2 volume
     (∑ j ∈ Finset.range n, (n.choose (j+1) : ℂ) •
       product d (directional d j v (directional d 1 v b)) (directional d (n-(j+1)) v h))‖ ≤ _
   rw [map_sum]
   calc
     _ ≤ ∑ j ∈ Finset.range n,
-        ‖SchwartzMap.toLpCLM ℂ ℂ 2 volume ((n.choose (j+1) : ℂ) •
+        ‖SchwartzMap.toLpCLM (E := Domain d) ℂ ℂ 2 volume ((n.choose (j+1) : ℂ) •
           product d (directional d j v (directional d 1 v b))
             (directional d (n-(j+1)) v h))‖ := norm_sum_le _ _
     _ = ∑ j ∈ Finset.range n, (n.choose (j+1) : ℝ) *
         ‖(product d (directional d j v (directional d 1 v b))
-          (directional d (n-(j+1)) v h)).toLp 2‖ := by
+          (directional d (n-(j+1)) v h)).toLp 2 volume‖ := by
       simp only [map_smul, norm_smul, Complex.norm_natCast, SchwartzMap.toLpCLM_apply]
     _ ≤ ∑ j ∈ Finset.range n, (n.choose (j+1) : ℝ) *
         (embeddingConstant d 3 hd * (2 * Real.pi) ^ (n-1) *

@@ -73,7 +73,8 @@ theorem coordinateVelocityPath_ae :
 theorem coordinateVelocityPath_norm (hTpos : 0 < T) :
     ‖s.coordinateVelocityPath‖ ≤
       (T⁻¹*Real.sqrt T)*‖s.velocityLp‖+(2*Real.sqrt T)*‖s.acceleration‖ := by
-  have heq : s.coordinateVelocityPath = reconstruction T hT (s.velocityLp, s.acceleration) := by
+  have heq : s.coordinateVelocityPath =
+      reconstruction (E := solenoidalSpace) T hT (s.velocityLp, s.acceleration) := by
     apply ContinuousMap.ext
     intro t
     exact (reconstruction_eq_path T hTpos s.velocityLp s.acceleration s.velocity
@@ -84,11 +85,11 @@ theorem coordinateVelocityPath_norm (hTpos : 0 < T) :
 theorem gram_equation_ae :
     ∀ᵐ t ∂timeMeasure T,
       gram (extendPath T hT (solenoidalFrame T F) t) (s.acceleration t) =
-      (solenoidalFrame T F (projIcc 0 T hT t)).adjoint
+      adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (solenoidalFrame T F (projIcc 0 T hT t))
         (f t-(2 : ℝ) • solenoidalFrame T F₁ (projIcc 0 T hT t) (s.velocityLp t)) := by
   filter_upwards [s.equation, s.velocity_ae] with t ht hv
   have hh := congrArg (fun v : solenoidalSpace =>
-    solenoidalProjection ((F (projIcc 0 T hT t)).adjoint
+    solenoidalProjection (adjoint (𝕜 := ℝ) (E := L2) (F := L2) (F (projIcc 0 T hT t))
       (f t-(2 : ℝ) • F₁ (projIcc 0 T hT t) (v : L2)))) hv
   exact gram_equation_of_ordinary (F (projIcc 0 T hT t)) (F₁ (projIcc 0 T hT t))
     (f t) (s.acceleration t) (s.velocityLp t) (ht.trans hh.symm)

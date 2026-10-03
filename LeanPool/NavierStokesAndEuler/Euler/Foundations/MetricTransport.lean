@@ -39,7 +39,8 @@ theorem localFieldLift_cover (f : LiftDomain period → W) (z : LiftTangent) :
     localFieldLift period f (coveringMap period z) =
       fun h => localFieldLift period f 0 (z + h) := by
   funext h
-  simp [localFieldLift, coveringMap]
+  simp only [localFieldLift, coveringMap, Prod.fst_zero, Prod.fst_add, zero_add, Prod.snd_zero,
+      Prod.snd_add, QuotientAddGroup.mk_add]
 
 omit [Fact (0 < period)] in
 theorem fderiv_localFieldLift_cover (f : LiftDomain period → W) (z : LiftTangent) :
@@ -53,7 +54,8 @@ theorem smoothField_continuous (f : LiftDomain period → W)
   apply (coveringMap_isOpenQuotient period).isQuotientMap.continuous_iff.mpr
   have heq : f ∘ coveringMap period = localFieldLift period f 0 := by
     funext z
-    simp [localFieldLift, coveringMap]
+    simp only [Function.comp_apply, coveringMap, localFieldLift, Prod.fst_zero, zero_add,
+        Prod.snd_zero]
   rw [heq]
   exact (hf 0).continuous
 
@@ -67,7 +69,7 @@ theorem localFDeriv_continuous (f : LiftDomain period → W)
     funext z
     exact fderiv_localFieldLift_cover period f z
   rw [heq]
-  exact (hf 0).continuous_fderiv (by simp)
+  exact (hf 0).continuous_fderiv (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
 
 end Fields
 
@@ -93,7 +95,7 @@ theorem coordinateDirections_sum (κ : ℝ) (m v : Vector3) :
     calc
       (∑ i : Fin 3, v i • coordinateDirection κ m i).1 =
           ∑ i : Fin 3, v i • (κ • EuclideanSpace.single i 1) := by
-            simp [Prod.fst_sum, coordinateDirection]
+            simp only [coordinateDirection, Prod.smul_mk, smul_eq_mul, Prod.fst_sum]
       _ = κ • ∑ i : Fin 3, v i • EuclideanSpace.single i 1 := by
         rw [Finset.smul_sum]
         apply Finset.sum_congr rfl
@@ -101,14 +103,14 @@ theorem coordinateDirections_sum (κ : ℝ) (m v : Vector3) :
         exact smul_comm _ _ _
       _ = κ • v := by rw [hrepr]
   · change (∑ i : Fin 3, v i • coordinateDirection κ m i).2 = ⟪m, v⟫_ℝ
-    simp [Prod.snd_sum, coordinateDirection, EuclideanSpace.inner_eq_star_dotProduct,
-      dotProduct, mul_comm]
+    simp only [coordinateDirection, Prod.smul_mk, smul_eq_mul, mul_comm, Prod.snd_sum,
+        EuclideanSpace.inner_eq_star_dotProduct, dotProduct, Pi.star_apply, star_trivial]
 
 theorem vectorOfLinear_inner (κ : ℝ) (m v : Vector3) (L : LiftTangent →L[ℝ] ℝ) :
     ⟪vectorOfLinear κ m L, v⟫_ℝ = L (transportDirection κ m v) := by
   rw [← coordinateDirections_sum κ m v, map_sum]
-  simp [vectorOfLinear, EuclideanSpace.inner_eq_star_dotProduct, dotProduct,
-    map_smul, smul_eq_mul]
+  simp only [vectorOfLinear, EuclideanSpace.inner_eq_star_dotProduct, dotProduct, Pi.star_apply,
+      star_trivial, map_smul, smul_eq_mul]
 
 omit [Fact (0 < period)] in
 theorem liftedGradient_eq_vectorOfLinear (κ : ℝ) (m : Vector3)
@@ -119,7 +121,8 @@ theorem liftedGradient_eq_vectorOfLinear (κ : ℝ) (m : Vector3)
   intro i
   have hd : coordinateDirection κ m i =
       κ • (EuclideanSpace.single i 1, (0 : ℝ)) + m i • ((0 : Vector3), (1 : ℝ)) := by
-    ext <;> simp [coordinateDirection]
+    ext <;> simp only [coordinateDirection, PiLp.smul_apply, PiLp.single_apply, smul_eq_mul,
+        mul_ite, mul_one, mul_zero, Prod.smul_mk, smul_zero, Prod.mk_add_mk, add_zero, zero_add]
   change κ * (fderiv ℝ (localLift period φ x) 0) (EuclideanSpace.single i 1, 0) +
       m i * (fderiv ℝ (localLift period φ x) 0) (0, 1) =
     (fderiv ℝ (localLift period φ x) 0) (coordinateDirection κ m i)
@@ -160,11 +163,13 @@ theorem metricEnergy_fderiv (K : LiftDomain period → Vector3 →L[ℝ] Vector3
       ⟪K x (e x), fderiv ℝ (localFieldLift period e x) 0 v⟫_ℝ +
         (1 / 2 : ℝ) *
           ⟪(fderiv ℝ (localFieldLift period K x) 0 v) (e x), e x⟫_ℝ := by
-  have hdK := ((hK x).differentiable (by simp)).differentiableAt.hasFDerivAt (x := 0)
-  have hde := ((he x).differentiable (by simp)).differentiableAt.hasFDerivAt (x := 0)
+  have hdK := ((hK x).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)).differentiableAt.hasFDerivAt (x := 0)
+  have hde := ((he x).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)).differentiableAt.hasFDerivAt (x := 0)
   have hd := (((hdK.clm_apply hde).inner ℝ hde).const_mul (1 / 2 : ℝ)).fderiv
   have heq := congrArg (fun L : LiftTangent →L[ℝ] ℝ => L v) hd
-  dsimp [localFieldLift] at heq
+  dsimp only [localFieldLift, Prod.fst_zero, Prod.snd_zero, QuotientAddGroup.mk_zero] at heq
   change fderiv ℝ (localLift period (metricEnergy period K e) x) 0 v = _ at heq
   rw [heq]
   simp only [smul_apply, smul_eq_mul,
@@ -254,7 +259,8 @@ theorem transportFlux_compact (κ : ℝ) (m : Vector3)
   simp only [Function.mem_support, not_not] at hx ⊢
   apply PiLp.ext
   intro i
-  simp [transportFlux, vectorOfLinear, hx]
+  simp only [transportFlux, vectorOfLinear, hx, map_zero, ContinuousLinearMap.zero_comp, zero_apply,
+      PiLp.zero_apply]
 
 theorem compact_pairing_integrable (f : LiftDomain period → Vector3)
     (hf : Continuous f) (hfc : HasCompactSupport f) (z : LiftL2 period) :
@@ -302,7 +308,7 @@ theorem metric_transport_by_parts (κ : ℝ) (m : Vector3)
         (transportDirection κ m (z x))) (e x), e x⟫_ℝ) (liftMeasure period) := by
     convert hg.sub ht using 1
     funext x
-    simp
+    simp only [one_div, Pi.sub_apply, add_sub_cancel_left]
   have hzint := metric_transport_zero period κ m K e hec hK he hsym hz
   rw [integral_add ht hq] at hzint
   exact eq_neg_of_add_eq_zero_left hzint

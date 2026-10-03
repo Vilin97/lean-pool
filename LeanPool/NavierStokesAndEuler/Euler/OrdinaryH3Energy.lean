@@ -83,8 +83,8 @@ theorem differenceRhs_word_bound (U W P : SmoothL2Field Space) (M X : ℝ)
     have h := pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) hn
     norm_num at h ⊢
     exact h
-  have hkcoef : 3*((2 : ℝ)^n-1) ≤ 21 := by linarith
-  have hscoef : 3*(2 : ℝ)^n ≤ 24 := by linarith
+  have hkcoef : 3*((2 : ℝ)^n-1) ≤ 21 := by linarith only [hpow]
+  have hscoef : 3*(2 : ℝ)^n ≤ 24 := by linarith only [hpow]
   have hkb : ‖(transportCommutator (addField U W) W w).toLp‖ ≤
       21*h3ProductConstant*(M+X)*X := hk.trans
     (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
@@ -106,8 +106,9 @@ theorem differenceRhs_word_bound (U W P : SmoothL2Field Space) (M X : ℝ)
   calc
     _ ≤ |⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ| +
         |⟪(wordField (advectionField W U) w).toLp,(wordField W w).toLp⟫_ℝ| := by
-      linarith [neg_le_abs ⟪(transportCommutator (addField U W) W w).toLp,(wordField W w).toLp⟫_ℝ,
-        neg_le_abs ⟪(wordField (advectionField W U) w).toLp,(wordField W w).toLp⟫_ℝ]
+      linarith only [neg_le_abs ⟪(transportCommutator (addField U W) W w).toLp,
+          (wordField W w).toLp⟫_ℝ, neg_le_abs ⟪(wordField (advectionField W U) w).toLp,
+          (wordField W w).toLp⟫_ℝ]
     _ ≤ ‖(transportCommutator (addField U W) W w).toLp‖*‖(wordField W w).toLp‖+
         ‖(wordField (advectionField W U) w).toLp‖*‖(wordField W w).toLp‖ :=
       add_le_add (abs_real_inner_le_norm _ _) (abs_real_inner_le_norm _ _)

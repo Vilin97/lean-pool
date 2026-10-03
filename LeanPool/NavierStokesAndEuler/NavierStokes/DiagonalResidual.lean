@@ -152,12 +152,12 @@ theorem perturbation_majorant_le {q A W P b n t d p k : ℝ}
       k * (W * q ^ (n + b)) * (W * q ^ (n + b)) ≤
       (t * W + d * W + p * P + k * A * W + k * W * A + k * W * W) * q ^ n := by
   have hpow : q ^ (n + b) ≤ q ^ n :=
-    Real.rpow_le_rpow_of_exponent_ge hq hq1 (by linarith)
+    Real.rpow_le_rpow_of_exponent_ge hq hq1 (by linarith only [hb])
   have hlinW := mul_le_mul_of_nonneg_left hpow hW
   have hlinP := mul_le_mul_of_nonneg_left hpow hP
-  have hAW := power_product_le hq hq1 hA hW (show n ≤ -b + (n + b) by linarith)
-  have hWA := power_product_le hq hq1 hW hA (show n ≤ (n + b) + -b by linarith)
-  have hWW := power_product_le hq hq1 hW hW (show n ≤ (n + b) + (n + b) by linarith)
+  have hAW := power_product_le hq hq1 hA hW (show n ≤ -b + (n + b) by linarith only)
+  have hWA := power_product_le hq hq1 hW hA (show n ≤ (n + b) + -b by linarith only)
+  have hWW := power_product_le hq hq1 hW hW (show n ≤ (n + b) + (n + b) by linarith only [hb, hn])
   have h1 := mul_le_mul_of_nonneg_left hlinW ht
   have h2 := mul_le_mul_of_nonneg_left hlinW hd
   have h3 := mul_le_mul_of_nonneg_left hlinP hp
@@ -194,18 +194,22 @@ theorem residualDifference_jetRate {U : Set SpaceTime} {l : Filter SpaceTime}
   obtain ⟨A, hA, hAb⟩ := hbg
   obtain ⟨W, hW, hWb⟩ := hwu
   obtain ⟨P, hP, hPb⟩ := hpr
-  let K : ℝ := ‖spaceRestriction Space‖ * (2 : ℝ) ^ m
-  let C : ℝ := ‖timeJet‖ * W + ‖laplaceJet‖ * W + ‖pressureJet‖ * P +
-    K * A * W + K * W * A + K * W * W
-  refine ⟨C, ?_, ?_⟩
-  · dsimp [C, K]
-    positivity
-  · filter_upwards [hlU, hq, hAb, hWb, hPb] with z hz hqz hAz hWz hPz
-    have hres := residualDifference_jet_bound hU hu hw hp hr hz m hAz hWz hPz
-    have hpow := perturbation_majorant_le hqz.1 hqz.2 hA hW hP hb hn
-      (norm_nonneg timeJet) (norm_nonneg laplaceJet) (norm_nonneg pressureJet)
-      (show 0 ≤ K by dsimp [K]; positivity)
-    exact hres.trans hpow
+  -- Each operator norm is elaborated once, here. With `K = ‖spaceRestriction Space‖ * 2 ^ m`,
+  -- `hC` states that the constant
+  -- `‖timeJet‖ * W + ‖laplaceJet‖ * W + ‖pressureJet‖ * P + K * A * W + K * W * A + K * W * W`
+  -- is nonnegative.
+  have ht := norm_nonneg timeJet
+  have hl := norm_nonneg laplaceJet
+  have hj := norm_nonneg pressureJet
+  have hK := mul_nonneg (norm_nonneg (spaceRestriction Space)) (pow_nonneg zero_le_two m)
+  have hKW := mul_nonneg hK hW
+  have hC := add_nonneg (add_nonneg (add_nonneg (add_nonneg (add_nonneg (mul_nonneg ht hW)
+    (mul_nonneg hl hW)) (mul_nonneg hj hP)) (mul_nonneg (mul_nonneg hK hA) hW))
+    (mul_nonneg hKW hA)) (mul_nonneg hKW hW)
+  refine ⟨_, hC, ?_⟩
+  filter_upwards [hlU, hq, hAb, hWb, hPb] with z hz hqz hAz hWz hPz
+  exact (residualDifference_jet_bound hU hu hw hp hr hz m hAz hWz hPz).trans
+    (perturbation_majorant_le hqz.1 hqz.2 hA hW hP hb hn ht hl hj hK)
 
 /-- For each requested order choose a single sufficiently advanced stage.
 Only the jets through `m+2` of its tail are used, and the background power
@@ -247,7 +251,7 @@ theorem residual_jetRate_of_stages {U : Set SpaceTime} {l : Filter SpaceTime}
     exact (hbg J k).weaken hq (neg_le_neg (le_maxJetLoss Lbg hk))
   have htailgain (k : ℕ) (hk : k ≤ m + 2) : n + b ≤ g J - Ltail k := by
     have hkt : Ltail k ≤ t := le_maxJetLoss Ltail hk
-    linarith
+    linarith only [hgain, hkt]
   have hvelocity : FiniteJetRate l q (fun z => u z - uStage J z) (m + 2) (n + b) := by
     apply finiteJetRate_of_jetRate hqpos
     intro k hk
@@ -258,7 +262,7 @@ theorem residual_jetRate_of_stages {U : Set SpaceTime} {l : Filter SpaceTime}
     exact (htp J k (by omega)).weaken hq (htailgain k (by omega))
   have hstage : JetRate l q
       (fun z => navierStokesResidual (uStage J) (pStage J) z.1 z.2) m n :=
-    (hres J m).weaken hq (by linarith)
+    (hres J m).weaken hq (by linarith only [hresgain])
   have hdiff := residualDifference_jetRate hU hlU hq (hus J) (hu.sub (hus J))
     (hps J) (hp.sub (hps J)) m hb hn hbackground hvelocity hpressure
   have hsStage := ResidualRegularity.contDiffOn_residual hU (hus J) (hps J)

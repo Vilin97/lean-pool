@@ -133,7 +133,7 @@ theorem weightedSquare_pos (s c : ℝ) : 0 < weightedSquare s c := by
   · intro θ _
     exact mul_nonneg (sq_nonneg _) (le_of_lt (Real.exp_pos _))
   · by_cases hc : c = 1
-    · refine ⟨Real.pi, ⟨Real.pi_pos.le, by linarith [Real.pi_pos]⟩, ?_⟩
+    · refine ⟨Real.pi, ⟨Real.pi_pos.le, by linarith only [Real.pi_pos]⟩, ?_⟩
       rw [hc, Real.cos_pi]
       positivity
     · refine ⟨0, ⟨le_rfl, period_pos.le⟩, ?_⟩
@@ -205,7 +205,7 @@ theorem baseVariance_nonneg (s : ℝ) : 0 ≤ baseVariance s := by
 theorem baseVariance_add_one_pos (s : ℝ) : 0 < baseVariance s + 1 := by
   have hp := div_pos (expNormalizer_pos (2 * s)) (sq_pos_of_pos (expNormalizer_pos s))
   dsimp [baseVariance]
-  linarith
+  linarith only [hp]
 
 theorem baseVariance_analyticAt (s : ℝ) : AnalyticAt ℝ baseVariance s := by
   apply AnalyticAt.sub _ analyticAt_const
@@ -228,7 +228,7 @@ theorem baseVariance_hasDerivAt (s : ℝ) :
 
 theorem baseVariance_deriv_pos {s : ℝ} (hs : 0 < s) : 0 < deriv baseVariance s := by
   rw [(baseVariance_hasDerivAt s).deriv]
-  have hlog := logSlope_strictMono (show s < 2 * s by linarith)
+  have hlog := logSlope_strictMono (show s < 2 * s by linarith only [hs])
   exact mul_pos (mul_pos (by norm_num) (baseVariance_add_one_pos s)) (sub_pos.mpr hlog)
 
 theorem baseVariance_strictMonoOn : StrictMonoOn baseVariance (Ici 0) := by
@@ -301,7 +301,7 @@ theorem baseVariance_deriv_hasDerivAt_zero : HasDerivAt (deriv baseVariance) 1 0
   have hout : HasDerivAt logSlope (1 / 2) (2 * (0 : ℝ)) := by
     simpa only [mul_zero] using logSlope_hasDerivAt_zero
   have h := ((baseVariance_hasDerivAt_zero.add_const 1).const_mul 2).mul
-    ((hout.comp 0 ((hasDerivAt_id 0).const_mul 2)).sub
+    ((hout.comp 0 ((hasDerivAt_id (0 : ℝ)).const_mul 2)).sub
       logSlope_hasDerivAt_zero)
   convert! h using 1
   norm_num [Function.comp_def, baseVariance_zero, logSlope_zero]
@@ -330,7 +330,7 @@ theorem quadraticFactor_identity (s : ℝ) : baseVariance s = s ^ 2 * quadraticF
   simp only [sub_zero, smul_eq_mul, baseVariance_zero, dslope_same, baseVariance_deriv_zero]
       at h₁ h₂
   change baseVariance s = s ^ 2 * dslope (dslope baseVariance 0) 0 s
-  linarith [congrArg (fun z : ℝ => s * z) h₂]
+  linarith only [h₁, h₂, congrArg (fun z : ℝ => s * z) h₂]
 
 theorem quadraticFactor_analyticAt (s : ℝ) : AnalyticAt ℝ quadraticFactor s := by
   by_cases hs : s = 0
@@ -426,7 +426,7 @@ theorem gaussian_scaled_integral (t : ℝ) (ht : 0 < t) :
 the ordinary Gaussian integral on the whole real line. -/
 theorem normalizer_square_upper (t : ℝ) (ht : 0 < t) :
     expNormalizer (t ^ 2) ≤ Real.exp (t ^ 2) * gaussianMass / ((2 * Real.pi) * t) := by
-  have hp : -Real.pi ≤ Real.pi := by linarith [Real.pi_pos]
+  have hp : -Real.pi ≤ Real.pi := by linarith only [Real.pi_pos]
   have he : Continuous (fun x => Real.exp (t ^ 2 * Real.cos x)) :=
     Real.continuous_exp.comp (continuous_const.mul Real.continuous_cos)
   have hg : Continuous (fun x : ℝ => Real.exp (-(2 / Real.pi ^ 2) * (t * x) ^ 2)) := by
@@ -461,8 +461,8 @@ theorem normalizer_double_square_lower (t : ℝ) (ht : 1 ≤ t) :
   have htpos : 0 < t := lt_of_lt_of_le (by norm_num) ht
   have hinvpos : 0 < 1 / t := one_div_pos.mpr htpos
   have hinvone : 1 / t ≤ 1 := (div_le_one htpos).mpr ht
-  have hinvpi : 1 / t ≤ Real.pi := le_trans hinvone (by linarith [Real.two_le_pi])
-  have hab : -(1 / t) ≤ 1 / t := by linarith
+  have hinvpi : 1 / t ≤ Real.pi := le_trans hinvone (by linarith only [Real.two_le_pi])
+  have hab : -(1 / t) ≤ 1 / t := by linarith only [hinvpos]
   have he : Continuous (fun x => Real.exp ((2 * t ^ 2) * Real.cos x)) :=
     Real.continuous_exp.comp (continuous_const.mul Real.continuous_cos)
   have hbound : ∀ x ∈ Icc (-(1 / t)) (1 / t),
@@ -475,12 +475,12 @@ theorem normalizer_double_square_lower (t : ℝ) (ht : 1 ≤ t) :
       have h := mul_le_mul_of_nonneg_left hx.1 htpos.le
       simpa only [mul_neg, mul_one_div_cancel (ne_of_gt htpos)] using h
     have hsq : (t * x) ^ 2 ≤ 1 := by
-      linarith [mul_nonneg (show 0 ≤ 1 - t * x by linarith)
-        (show 0 ≤ 1 + t * x by linarith)]
+      linarith only [htxhi, htxlo,
+          mul_nonneg (show 0 ≤ 1 - t * x by linarith) (show 0 ≤ 1 + t * x by linarith)]
     apply Real.exp_le_exp.mpr
     have hc := Real.one_sub_sq_div_two_le_cos (x := x)
     have hm := mul_le_mul_of_nonneg_left hc (show 0 ≤ 2 * t ^ 2 by positivity)
-    linarith
+    linarith only [hsq, hm]
   have hloc := intervalIntegral.integral_mono_on (μ := volume) hab
     (continuous_const.intervalIntegrable _ _) (he.intervalIntegrable _ _) hbound
   rw [intervalIntegral.integral_const] at hloc
@@ -540,7 +540,7 @@ theorem baseVariance_unbounded (B : ℝ) : ∃ s : ℝ, 0 ≤ s ∧ B ≤ baseVa
     exact (div_le_iff₀ hc).mp h |>.trans_eq (mul_comm _ _)
   refine ⟨t ^ 2, sq_nonneg t, ?_⟩
   have hg := baseVariance_square_growth t ht
-  linarith
+  linarith only [hBt, hg]
 
 theorem baseVariance_tendsto_atTop : Filter.Tendsto baseVariance Filter.atTop Filter.atTop := by
   rw [Filter.tendsto_atTop_atTop]
@@ -551,7 +551,7 @@ theorem baseVariance_tendsto_atTop : Filter.Tendsto baseVariance Filter.atTop Fi
 
 theorem baseVariance_deriv_neg {s : ℝ} (hs : s < 0) : deriv baseVariance s < 0 := by
   rw [(baseVariance_hasDerivAt s).deriv]
-  have hlog := logSlope_strictMono (show 2 * s < s by linarith)
+  have hlog := logSlope_strictMono (show 2 * s < s by linarith only [hs])
   exact mul_neg_of_pos_of_neg (mul_pos (by norm_num) (baseVariance_add_one_pos s))
     (sub_neg.mpr hlog)
 
@@ -569,11 +569,11 @@ theorem signedRoot_deriv_pos (s : ℝ) : 0 < deriv signedRoot s := by
   · have hR := baseVariance_deriv_neg hneg
     have hS : signedRoot s < 0 :=
       mul_neg_of_neg_of_pos hneg (Real.sqrt_pos.mpr (quadraticFactor_pos s))
-    nlinarith
+    nlinarith only [hid, hR, hS]
   · have hR := baseVariance_deriv_pos hpos
     have hS : 0 < signedRoot s :=
       mul_pos hpos (Real.sqrt_pos.mpr (quadraticFactor_pos s))
-    nlinarith
+    nlinarith only [hid, hR, hS]
 
 theorem signedRoot_strictMono : StrictMono signedRoot :=
   strictMono_of_deriv_pos signedRoot_deriv_pos
@@ -582,13 +582,13 @@ theorem signedRoot_surjective : Function.Surjective signedRoot := by
   intro y
   obtain ⟨s, hs, hB⟩ := baseVariance_unbounded (y ^ 2 + 1)
   have hS : 0 ≤ signedRoot s := mul_nonneg hs (Real.sqrt_nonneg _)
-  have hsq : y ^ 2 ≤ signedRoot s ^ 2 := by rw [signedRoot_sq]; linarith
+  have hsq : y ^ 2 ≤ signedRoot s ^ 2 := by rw [signedRoot_sq]; linarith only [hB]
   have habs : |y| ≤ signedRoot s := by
     simpa only [abs_of_nonneg hS] using (sq_le_sq.mp hsq)
   have hmem : y ∈ Icc (signedRoot (-s)) (signedRoot s) := by
     rw [signedRoot_odd]
     exact abs_le.mp habs
-  obtain ⟨x, _, hx⟩ := intermediate_value_Icc (show -s ≤ s by linarith)
+  obtain ⟨x, _, hx⟩ := intermediate_value_Icc (show -s ≤ s by linarith only [hs])
     signedRoot_contDiff.continuous.continuousOn hmem
   exact ⟨x, hx⟩
 
@@ -630,7 +630,7 @@ theorem inverseRoot_deriv_zero : deriv inverseRoot 0 = 1 / Real.sqrt (1 / 2) := 
   have hprod := hcomp.unique (hasDerivAt_id 0)
   have hroot : Real.sqrt (1 / 2) ≠ 0 := ne_of_gt (Real.sqrt_pos.mpr (by norm_num))
   apply (eq_div_iff hroot).mpr
-  linarith
+  linarith only [hprod]
 
 /-- An analytic divided difference of the actual inverse, which removes the
 apparent `1/p` singularity in the parameter-dependent variance solve. -/
@@ -697,8 +697,8 @@ theorem scaledRoot_hasDerivAt (d p μ : ℝ) :
       unfold scaledRoot signedRoot
       field_simp
     rw [heq]
-    have h := (((signedRoot_contDiff.differentiable (by simp) (μ * p)).hasDerivAt).comp μ
-      ((hasDerivAt_id μ).mul_const p)).const_mul (d / p)
+    have h := (((signedRoot_contDiff.differentiable (by simp) (μ * p)).hasDerivAt).comp
+      (h := fun x => id x * p) μ ((hasDerivAt_id μ).mul_const p)).const_mul (d / p)
     convert! h using 1
     field_simp
 
@@ -768,7 +768,7 @@ theorem exists_unique_nonneg_variance_parameter (d p V : ℝ) (hd : 0 < d) (hV :
     have hnonneg : 0 ≤ scaledRoot d p μ := by
       exact mul_nonneg (mul_nonneg hd.le hμ.1) (Real.sqrt_nonneg _)
     have hsquare : scaledRoot d p μ ^ 2 = V := by rw [scaledRoot_sq, hμ.2]
-    nlinarith [Real.sq_sqrt hV, Real.sqrt_nonneg V]
+    nlinarith only [hsquare, hV, hnonneg, Real.sq_sqrt hV, Real.sqrt_nonneg V]
 
 theorem tiltVariance_strictMonoOn (d p : ℝ) (hd : 0 < d) :
     StrictMonoOn (tiltVariance d p) (Ici 0) := by
@@ -778,7 +778,7 @@ theorem tiltVariance_strictMonoOn (d p : ℝ) (hd : 0 < d) :
     rw [← scaledRoot_zero d p]
     exact (scaledRoot_strictMono d p hd).monotone hμ
   rw [← scaledRoot_sq, ← scaledRoot_sq]
-  nlinarith
+  nlinarith only [hm, hnonneg]
 
 theorem tiltVariance_tendsto_atTop (d p : ℝ) (hd : 0 < d) :
     Filter.Tendsto (tiltVariance d p) Filter.atTop Filter.atTop := by
@@ -848,7 +848,7 @@ theorem regularizedDensitySlope_identity (s θ : ℝ) :
   have hnz := ne_of_gt (expNormalizer_pos s)
   field_simp
   dsimp [expDivided, normalizerDivided]
-  linarith
+  linarith only [h₁, h₂]
 
 theorem regularizedDensitySlope_joint_contDiff :
     ContDiff ℝ ω (fun x : ℝ × ℝ => regularizedDensitySlope x.1 x.2) := by
@@ -943,8 +943,8 @@ theorem exists_smooth_projected_tilt (p₁ p₂ m V : ℝ)
       angularMean (fun θ => (t θ - m) ^ 2) = V ∧
       ∀ θ, 2 < p₁ + p₂ * t θ := by
   let d := (p₁ + p₂ * m - 2) / 2
-  have hd : 0 < d := by dsimp [d]; linarith
-  have hm : 2 ≤ p₁ + p₂ * m - d := by dsimp [d]; linarith
+  have hd : 0 < d := by dsimp [d]; linarith only [hP]
+  have hm : 2 ≤ p₁ + p₂ * m - d := by dsimp [d]; linarith only [hP]
   refine ⟨solvedTilt m d p₂ (Real.sqrt V), solvedTilt_contDiff _ _ _ _,
     solvedTilt_periodic _ _ _ _, solvedTilt_mean _ _ _ _, ?_,
     solvedTilt_projection p₁ m d p₂ _ hd hm⟩
@@ -961,11 +961,11 @@ theorem uniform_variance_amplitude {K : Set ℝ} (hK : IsCompact K)
     (continuous_id.prodMk continuous_const)
   obtain ⟨B, hB⟩ := (hK.image hf).bddAbove
   let M := max B 0 + 1
-  have hM : 0 < M := by dsimp [M]; linarith [le_max_right B (0 : ℝ)]
+  have hM : 0 < M := by dsimp [M]; linarith only [le_max_right B (0 : ℝ)]
   refine ⟨M, hM, fun p hp => ?_⟩
   have hfp : 0 ≤ f p := solveScale_nonneg d p _ hd (Real.sqrt_nonneg _)
   have hfpB : f p ≤ B := hB (mem_image_of_mem f hp)
-  have hfpM : f p < M := by dsimp [M]; linarith [le_max_left B (0 : ℝ)]
+  have hfpM : f p < M := by dsimp [M]; linarith only [hfpB, le_max_left B (0 : ℝ)]
   have hvfp : tiltVariance d p (f p) = V := by
     rw [solveScale_variance d p _ (ne_of_gt hd), Real.sq_sqrt hV]
   rw [← hvfp]
@@ -1008,7 +1008,7 @@ theorem speedCutoff_mem_Icc (δ v : ℝ) : speedCutoff δ v ∈ Icc (0 : ℝ) 1 
   have hlo := Real.smoothTransition.nonneg ((v - lowSpeed δ) / (δ / 8))
   have hhi := Real.smoothTransition.le_one ((v - lowSpeed δ) / (δ / 8))
   unfold speedCutoff
-  constructor <;> linarith
+  constructor <;> linarith only [hhi, hlo]
 
 theorem speedCutoff_one (δ v : ℝ) (hδ : 0 < δ) (hv : v ≤ lowSpeed δ) : speedCutoff δ v = 1 := by
   have harg : (v - lowSpeed δ) / (δ / 8) ≤ 0 :=
@@ -1019,7 +1019,7 @@ theorem speedCutoff_zero (δ v : ℝ) (hδ : 0 < δ) (hv : highSpeed δ ≤ v) :
   have harg : 1 ≤ (v - lowSpeed δ) / (δ / 8) := by
     apply (le_div_iff₀ (by positivity : 0 < δ / 8)).mpr
     dsimp [lowSpeed, highSpeed] at *
-    linarith
+    linarith only [hv]
   simp only [speedCutoff, Real.smoothTransition.one_of_one_le harg, sub_self]
 
 /-- Correction root, given by `speedCutoff δ v * Real.sqrt (targetSpeed δ - v)`. -/
@@ -1041,7 +1041,7 @@ theorem correctionRoot_contDiff (δ : ℝ) (hδ : 0 < δ) : ContDiff ℝ ∞ (co
       ((contDiffAt_const.sub contDiffAt_id).sqrt (ne_of_gt (sub_pos.mpr hv)))
   · have hhigh : highSpeed δ < v := by
       dsimp [highSpeed, targetSpeed] at *
-      linarith
+      linarith only [hδ, hv]
     apply (contDiffAt_const : ContDiffAt ℝ ∞ (fun _ : ℝ => (0 : ℝ)) v).congr_of_eventuallyEq
     filter_upwards [lt_mem_nhds hhigh] with w hw
     exact correctionRoot_zero δ w hδ hw.le
@@ -1058,7 +1058,7 @@ theorem correction_formula (δ v : ℝ) (hδ : 0 < δ) :
       zero_pow (by decide : (2 : ℕ) ≠ 0), zero_mul]
   · have hgap : 0 ≤ targetSpeed δ - v := by
       dsimp [targetSpeed, highSpeed] at *
-      linarith
+      linarith only [hδ, hv]
     simp only [correction, correctionRoot, mul_pow, Real.sq_sqrt hgap]
 
 theorem correction_zero (δ v : ℝ) (hδ : 0 < δ) (hv : highSpeed δ ≤ v) : correction δ v = 0 := by
@@ -1067,10 +1067,10 @@ theorem correction_zero (δ v : ℝ) (hδ : 0 < δ) (hv : highSpeed δ ≤ v) : 
 theorem correction_le_gap (δ v : ℝ) (hδ : 0 < δ) (hv : v ≤ highSpeed δ) :
     correction δ v ≤ targetSpeed δ - v := by
   have hz := speedCutoff_mem_Icc δ v
-  have hzs : speedCutoff δ v ^ 2 ≤ 1 := by nlinarith [hz.1, hz.2]
+  have hzs : speedCutoff δ v ^ 2 ≤ 1 := by nlinarith only [hz, hz.1, hz.2]
   have hgap : 0 ≤ targetSpeed δ - v := by
     dsimp [highSpeed, targetSpeed] at *
-    linarith
+    linarith only [hδ, hv]
   rw [correction_formula δ v hδ]
   simpa only [one_mul] using mul_le_mul_of_nonneg_right hzs hgap
 
@@ -1081,16 +1081,16 @@ theorem correction_lt_three (δ v : ℝ) (hδ : 0 < δ) (hδ₁ : δ ≤ 1) (hv 
     norm_num
   · have h := correction_le_gap δ v hδ (le_of_not_ge hh)
     dsimp [targetSpeed] at h
-    linarith
+    linarith only [hδ₁, hv, h]
 
 theorem correctedSpeed_gt_two (δ v : ℝ) (hδ : 0 < δ) : 2 < correctedSpeed δ v := by
   by_cases hv : v ≤ lowSpeed δ
   · rw [correctedSpeed, correction_formula δ v hδ, speedCutoff_one δ v hδ hv]
     dsimp [targetSpeed]
-    linarith
+    linarith only [hδ]
   · have hn := correction_nonneg δ v
     dsimp [correctedSpeed, lowSpeed] at *
-    linarith
+    linarith only [hδ, hv, hn]
 
 theorem correctedSpeed_le_target_of_active (δ v : ℝ) (hδ : 0 < δ)
     (hactive : speedCutoff δ v ≠ 0) : correctedSpeed δ v ≤ targetSpeed δ := by
@@ -1099,7 +1099,7 @@ theorem correctedSpeed_le_target_of_active (δ v : ℝ) (hδ : 0 < δ)
     exact hactive (speedCutoff_zero δ v hδ (le_of_lt (lt_of_not_ge h)))
   have h := correction_le_gap δ v hδ hv
   dsimp [correctedSpeed]
-  linarith
+  linarith only [h]
 
 /-- Variance root, given by `correctionRoot δ v / Real.sqrt a`. -/
 def varianceRoot (a δ v : ℝ) : ℝ := correctionRoot δ v / Real.sqrt a
@@ -1126,7 +1126,7 @@ theorem varianceRoot_bound (amin a δ v : ℝ) (hmin : 0 < amin) (ha : amin ≤ 
       (div_le_div_of_nonneg_left (by norm_num) hmin ha)
   have hR := Real.sq_sqrt (show 0 ≤ 3 / amin by positivity)
   have hp := Real.sqrt_nonneg (3 / amin)
-  nlinarith [varianceRoot_nonneg a δ v]
+  nlinarith only [hsq, hR, hp, varianceRoot_nonneg a δ v]
 
 theorem solvedTilt_fixed_joint_contDiff (d : ℝ) (hd : d ≠ 0) :
     ContDiff ℝ ∞ (fun z : (ℝ × ℝ) × (ℝ × ℝ) => solvedTilt z.1.1 d z.1.2 z.2.1 z.2.2) := by
@@ -1169,7 +1169,7 @@ theorem uniform_tilt_cone_margin {X : Type*} [TopologicalSpace X]
   have hbound := hb (x, r, θ₀) ⟨hx, hr, ⟨hθ₀.1, hθ₀.2.le⟩⟩
   dsimp [P, J, t] at hbound
   rw [heq]
-  linarith
+  linarith only [hbound]
 
 /-- Nominal speed, given by `a * (1 + m ^ 2)`. -/
 def nominalSpeed (a m : ℝ) : ℝ := a * (1 + m ^ 2)
@@ -1242,7 +1242,7 @@ theorem seed_cone (a m p₁ p₂ d δ R : ℝ) (ha : 0 < a) (hd : 0 < d)
       change seedSpeed a m δ ≤ 2 + δ / 2 at hv
       change 2 + δ ≤ coneBound (p₁ + p₂ * seedTilt a m d p₂ δ θ)
         (p₂ - p₁ * seedTilt a m d p₂ δ θ) at hu
-      linarith
+      linarith only [hδ, hv, hu]
 
 /-- Seed density, constructed using `densityOfTilt`. -/
 def seedDensity (a m d p δ : ℝ) (ha : 0 < a) (hd : d ≠ 0) (hδ : 0 < δ) : CircleDensity :=
@@ -1404,8 +1404,8 @@ theorem exists_trueCone_loop (a m p₁ p₂ : ℝ) (ha : 0 < a)
       (∫ φ in (0 : ℝ)..1, A φ) = a ∧ (∫ φ in (0 : ℝ)..1, C φ) = a * m ∧
       ∀ φ, InTrueCone p₁ p₂ (A φ) (C φ) := by
   let d := (p₁ + p₂ * m - 2) / 2
-  have hd : 0 < d := by dsimp [d]; linarith
-  have hmargin : 2 ≤ p₁ + p₂ * m - d := by dsimp [d]; linarith
+  have hd : 0 < d := by dsimp [d]; linarith only [hP]
+  have hmargin : 2 ≤ p₁ + p₂ * m - d := by dsimp [d]; linarith only [hP]
   let R := Real.sqrt (3 / a)
   obtain ⟨ε, hε, hU⟩ := uniform_tilt_cone_margin (X := ℝ) (K := {0}) isCompact_singleton
     (fun _ => m) (fun _ => p₁) (fun _ => p₂) continuous_const continuous_const continuous_const
@@ -1468,7 +1468,7 @@ theorem exists_family_choices {X : Type*} [TopologicalSpace X]
     intro x hx
     have h := heple x hx
     dsimp [d]
-    linarith
+    linarith only [hep, h]
   let R := Real.sqrt (3 / amin)
   obtain ⟨M, hM, hML⟩ := uniform_variance_amplitude (hK.image hp₂) d (3 / amin) hd (by positivity)
   obtain ⟨eu, heu, hmargin⟩ := uniform_tilt_cone_margin hK m p₁ p₂ hm hp₁ hp₂ d R hd hproj
@@ -1489,7 +1489,7 @@ theorem exists_family_choices {X : Type*} [TopologicalSpace X]
   · intro x hx
     have h := heble x hx
     dsimp [highSpeed]
-    linarith
+    linarith only [heb, hδb, h]
 
 theorem FamilyChoices.root_bound {X : Type*} {a m p₁ p₂ : X → ℝ} {K B : Set X}
     (c : FamilyChoices a m p₁ p₂ K B) {x : X} (hx : x ∈ K) :
@@ -1513,13 +1513,13 @@ theorem FamilyChoices.amplitude_bound {X : Type*} {a m p₁ p₂ : X → ℝ} {K
     have hR := Real.sq_sqrt (div_nonneg (by norm_num : (0 : ℝ) ≤ 3) c.aMin_pos.le)
     have hrle : r ≤ Real.sqrt (3 / c.aMin) := by simpa only [c.radius_eq] using hr.2
     have hsqnonneg := Real.sqrt_nonneg (3 / c.aMin)
-    nlinarith [hr.1]
+    nlinarith only [hR, hrle, hsqnonneg, hr, hr.1]
   by_contra hn
   have hμM : c.maxAmplitude ≤ solveScale c.d (p₂ x) r := le_of_not_gt hn
   have hmono := (tiltVariance_strictMonoOn c.d (p₂ x) c.d_pos).monotoneOn
     c.maxAmplitude_pos.le hμ hμM
   have hlarge := c.amplitude_large x hx
-  linarith
+  linarith only [htarget, hmono, hlarge]
 
 section SmoothFamily
 
@@ -1892,9 +1892,9 @@ theorem phase_hasDerivAt_X
     HasDerivAt (fun r => A (phasePoint n r η))
       (partialX A (phasePoint n X η) +
         (n / X) * partialTheta A (phasePoint n X η)) X := by
-  have hg := (hasDerivAt_id X).prodMk
+  have hg := (hasDerivAt_id X).prodMk (G := ℝ × ℝ)
     ((hasDerivAt_const X η).prodMk ((Real.hasDerivAt_log hX).const_mul n))
-  have hc := hA.hasFDerivAt.comp_hasDerivAt X hg
+  have hc := hA.hasFDerivAt.comp_hasDerivAt (f := fun x => (id x, η, n * Real.log x)) X hg
   have hv : (1, (0, n * X⁻¹)) =
       (1, 0, 0) + (n / X) • ((0, 0, 1) : PhasePoint) := by
     ext <;> simp [div_eq_mul_inv]
@@ -1907,7 +1907,7 @@ theorem phase_hasDerivAt_eta
     (hA : DifferentiableAt ℝ A (phasePoint n X η)) :
     HasDerivAt (fun e => A (phasePoint n X e))
       (partialEta A (phasePoint n X η)) η := by
-  have hg := (hasDerivAt_const η X).prodMk
+  have hg := (hasDerivAt_const η X).prodMk (G := ℝ × ℝ)
     ((hasDerivAt_id η).prodMk (hasDerivAt_const η (n * Real.log X)))
   exact hA.hasFDerivAt.comp_hasDerivAt η hg
 
@@ -2128,10 +2128,10 @@ theorem etaJet_eq_iteratedDeriv
     rw [show iteratedDeriv k (fun e => F (ε, X, e, θ)) =
       (fun e => etaJet k F (ε, X, e, θ)) from funext ih]
     have hd := ((etaJet_contDiff F hF k).differentiable (by simp) (ε, X, η, θ)).hasFDerivAt
-    have hg := (hasDerivAt_const η ε).prodMk
+    have hg := (hasDerivAt_const η ε).prodMk (G := ℝ × ℝ × ℝ)
       ((hasDerivAt_const η X).prodMk
         ((hasDerivAt_id η).prodMk (hasDerivAt_const η θ)))
-    exact (hd.comp_hasDerivAt η hg).deriv
+    exact (hd.comp_hasDerivAt (f := fun x => (ε, X, id x, θ)) η hg).deriv
 
 /-- A smooth periodic family varies by `C_k/n` in each fixed η derivative,
 uniformly on compact radius/parameter sets and all angles. The constant is
@@ -2386,7 +2386,7 @@ theorem exists_compactCutoff (K U : Set P) (hK : IsCompact K) (hU : IsOpen U) (h
   have hO : IsOpen O := isOpen_lt continuous_const hf.continuous
   have hKO : K ⊆ O := by
     intro p hp
-    exact lt_of_lt_of_le (by linarith) (hδf p hp)
+    exact lt_of_lt_of_le (by linarith only [hδ]) (hδf p hp)
   have hOU : O ⊆ U := by
     intro p hp
     rw [← hsupp, mem_support]
@@ -2397,7 +2397,7 @@ theorem exists_compactCutoff (K U : Set P) (hK : IsCompact K) (hU : IsOpen U) (h
     apply Real.smoothTransition.one_of_one_le
     apply (le_div_iff₀ hd4).mpr
     dsimp [O] at hp
-    linarith
+    linarith only [hp]
   have hχzero : ∀ p, p ∉ U → χ =ᶠ[𝓝 p] (fun _ => 0) := by
     intro p hp
     have hfp : f p = 0 := by
@@ -2407,7 +2407,7 @@ theorem exists_compactCutoff (K U : Set P) (hK : IsCompact K) (hU : IsOpen U) (h
       hf.continuous.continuousAt.eventually (gt_mem_nhds (by simpa only [hfp] using hd4))
     filter_upwards [hnear] with y hy
     apply Real.smoothTransition.zero_of_nonpos
-    exact div_nonpos_of_nonpos_of_nonneg (by linarith) hd4.le
+    exact div_nonpos_of_nonpos_of_nonneg (by linarith only [hy]) hd4.le
   exact ⟨⟨χ, hχ, O, hO, hKO, hOU, hχone, hχzero⟩⟩
 
 omit [FiniteDimensional ℝ P] in
@@ -2785,9 +2785,10 @@ theorem theta_derivative_asRadialPrimitive
     (Q : RadialParameter × ℝ → ℝ) (hQ : ContDiff ℝ ∞ Q) (X η θ : ℝ) :
     HasDerivAt (fun s => Q ((X, η), s))
       (RadialModulation.partialTheta (asRadialPrimitive Q) (X, η, θ)) θ := by
-  have hg := (hasDerivAt_const θ X).prodMk ((hasDerivAt_const θ η).prodMk (hasDerivAt_id θ))
+  have hg := (hasDerivAt_const θ X).prodMk (G := ℝ × ℝ)
+    ((hasDerivAt_const θ η).prodMk (hasDerivAt_id θ))
   exact (((asRadialPrimitive_contDiff Q hQ).differentiable (by
-      simp) (X, η, θ)).hasFDerivAt).comp_hasDerivAt θ hg
+      simp) (X, η, θ)).hasFDerivAt).comp_hasDerivAt (f := fun x => (X, η, id x)) θ hg
 
 /-- The prescribed loop derivatives are established for the constructed
 primitives, including the sign change from `C = -b_L`. -/
@@ -2825,10 +2826,10 @@ theorem realized_shears_exact
   have hprim := r.primitives_smooth E ha hm hp₂ hE
   have hθ := realized_primitive_theta r E ha hm hp₂ hE X η (n * Real.log X) hp
   have hEr : DifferentiableAt ℝ (fun x => E (x, η)) X :=
-    (hE.differentiable (by simp) (X, η)).comp X
+    (hE.differentiable (by simp) (X, η)).comp (f := fun x => (id x, η)) X
       (differentiableAt_id.prodMk (differentiableAt_const η))
   have hUr : DifferentiableAt ℝ (fun x => U (x, η)) X :=
-    (hU.differentiable (by simp) (X, η)).comp X
+    (hU.differentiable (by simp) (X, η)).comp (f := fun x => (id x, η)) X
       (differentiableAt_id.prodMk (differentiableAt_const η))
   constructor
   · apply RadialModulation.angular_shear_exact _ _ n X η _ hn hX hE0 hEr

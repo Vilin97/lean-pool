@@ -94,7 +94,7 @@ theorem cutoff_eq_one {R : ℝ} (hR : 0 < R) {x : Space} (hx : ‖x‖ ≤ R) :
 theorem cutoff_eq_one_on_closedBall {R : ℝ} (hR : 0 < R) :
     EqOn (cutoff R) (fun _ => 1) (closedBall (0 : Space) R) := by
   intro x hx
-  exact cutoff_eq_one hR (by simpa [mem_closedBall, dist_zero_right] using hx)
+  exact cutoff_eq_one hR (by simpa only [mem_closedBall, dist_zero_right] using hx)
 
 theorem cutoff_eq_zero {R : ℝ} (hR : 0 < R) {x : Space} (hx : 2 * R ≤ ‖x‖) :
     cutoff R x = 0 :=
@@ -141,10 +141,10 @@ theorem multiplier_hasCompactSupport {R : ℝ} (hR : 0 < R) :
   exact (cutoff_hasCompactSupport hR).comp_left (by norm_num)
 
 theorem weight_eq_one {R : ℝ} (hR : 0 < R) {x : Space} (hx : ‖x‖ ≤ R) :
-    weight R x = 1 := by simp [weight, cutoff_eq_one hR hx]
+    weight R x = 1 := by simp only [weight, cutoff_eq_one hR hx, one_pow]
 
 theorem multiplier_eq_one {R : ℝ} (hR : 0 < R) {x : Space} (hx : ‖x‖ ≤ R) :
-    multiplier R x = 1 := by simp [multiplier, cutoff_eq_one hR hx]
+    multiplier R x = 1 := by simp only [multiplier, cutoff_eq_one hR hx, one_pow]
 
 theorem exists_derivative_bound (n : ℕ) :
     ∃ C : ℝ, 0 < C ∧ ∀ x : Space, ‖iteratedFDeriv ℝ n baseCutoff x‖ ≤ C :=
@@ -186,8 +186,9 @@ theorem fderiv_apply_derivative {f : Space → ℝ} (hf : ContDiff ℝ ∞ f)
     fderiv ℝ (fun y => fderiv ℝ f y b) x a =
       fderiv ℝ (fderiv ℝ f) x a b := by
   have hd : DifferentiableAt ℝ (fderiv ℝ f) x :=
-    (hf.fderiv_right (m := ∞) (by simp)).differentiable (by simp) x
-  simpa using congrArg (fun A : Space →L[ℝ] ℝ => A a)
+    (hf.fderiv_right (m := ∞) (by simp)).differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x
+  simpa only [fderiv_fun_const, Pi.zero_apply, ContinuousLinearMap.comp_zero, zero_add,
+      ContinuousLinearMap.flip_apply] using congrArg (fun A : Space →L[ℝ] ℝ => A a)
     (fderiv_clm_apply hd (differentiableAt_const b))
 
 theorem norm_partial_partial_le {f : Space → ℝ} (hf : ContDiff ℝ ∞ f)
@@ -198,7 +199,7 @@ theorem norm_partial_partial_le {f : Space → ℝ} (hf : ContDiff ℝ ∞ f)
   change ‖fderiv ℝ (fun y => fderiv ℝ f y (coordinateVector j)) x (coordinateVector i)‖ ≤ _
   rw [fderiv_apply_derivative hf]
   have hv (k : Fin 3) : ‖coordinateVector k‖ ≤ 1 := by
-    simp [coordinateVector]
+    simp only [coordinateVector, PiLp.norm_single, norm_one, Std.le_refl]
   exact ((fderiv ℝ (fderiv ℝ f) x (coordinateVector i)).unit_le_opNorm
     (coordinateVector j) (hv j)).trans
     ((fderiv ℝ (fderiv ℝ f) x).unit_le_opNorm (coordinateVector i) (hv i))
@@ -218,7 +219,8 @@ theorem cutoff_laplacian_le {R : ℝ} (hR : 0 < R) (x : Space) :
       norm_sum_le _ _
     _ ≤ ∑ _ : Fin 3, derivativeConstant 2 / R ^ 2 :=
       Finset.sum_le_sum (fun i _ => cutoff_partial_partial_le hR i i x)
-    _ = (3 * derivativeConstant 2) / R ^ 2 := by simp [mul_div_assoc]
+    _ = (3 * derivativeConstant 2) / R ^ 2 := by simp only [Finset.sum_const, Finset.card_univ,
+        Fintype.card_fin, nsmul_eq_mul, Nat.cast_ofNat, mul_div_assoc]
 
 /-- Every fixed compact set lies in the plateau of all sufficiently large cutoffs. -/
 theorem compact_plateau {K : Set Space} (hK : IsCompact K) :

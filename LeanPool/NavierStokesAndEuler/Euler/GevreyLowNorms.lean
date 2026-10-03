@@ -51,9 +51,11 @@ theorem restrict_norm_le_weighted {s q : ℕ} (N : ℕ) (hq : q ≤ s) (ρ : ℝ
   have hsum := Finset.single_le_sum (s := Finset.range (N+1))
     (fun n _ => mul_nonneg (weight_pos hρ n).le (show 0 ≤ blockNorm period (toJet period u) q n
         from blockNorm_nonneg _))
-    (show 0 ∈ Finset.range (N+1) by simp)
+    (show 0 ∈ Finset.range (N+1) by simp only [Finset.mem_range, lt_add_iff_pos_left,
+        Order.lt_add_one_iff, zero_le])
   have hsum' : blockNorm period (toJet period u) q 0 ≤ weightedNorm period q N ρ u := by
-    simpa [weight, weightedNorm] using hsum
+    simpa only [weightedNorm, weight, pow_zero, Nat.factorial_zero, Nat.cast_one, one_pow, ne_eq,
+        one_ne_zero, not_false_eq_true, div_self, one_mul] using hsum
   exact hbase.trans hsum'
 
 /-- The actual pointwise bound has a constant depending only on the fixed base order six, never on

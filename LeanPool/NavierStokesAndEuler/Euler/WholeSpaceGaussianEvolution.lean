@@ -65,8 +65,10 @@ theorem timeKernel_continuous (t : ℝ) : Continuous (timeKernel t) := by
 theorem timeKernel_second_sum (t : ℝ) (y : Space) :
     timeKernel t y = (1/4:ℝ) * ∑ i : Fin 3,
       secondKernel t (EuclideanSpace.single i 1) (EuclideanSpace.single i 1) y := by
-  simp [timeKernel, secondKernel, EuclideanSpace.inner_single_right,
-    EuclideanSpace.real_norm_sq_eq, Fin.sum_univ_three]
+  simp only [timeKernel, inv_pow, EuclideanSpace.real_norm_sq_eq, Fin.sum_univ_three, Fin.isValue,
+      one_div, secondKernel, EuclideanSpace.inner_single_right, conj_trivial, one_mul,
+      inner_self_eq_norm_sq_to_K, PiLp.norm_single, norm_one, RCLike.ofReal_real_eq_id, id_eq,
+      one_pow, mul_one]
   ring
 
 theorem timeKernel_bound {t : ℝ} (ht : 0 < t) (y : Space) :
@@ -109,10 +111,10 @@ theorem timeKernel_local_bound {t : ℝ} (ht : 0 < t) (s : ℝ)
   have hspos : 0 < s := hhalf.trans hs.1
   have hn : normalization s ≤ normalization (t/2) := normalization_antitone hhalf hs.1.le
   have hi : s⁻¹ ≤ (t/2)⁻¹ := inv_anti₀ hhalf hs.1.le
-  have hei : (4*t)⁻¹ ≤ (2*s)⁻¹ := inv_anti₀ (by positivity) (by linarith [hs.2])
+  have hei : (4*t)⁻¹ ≤ (2*s)⁻¹ := inv_anti₀ (by positivity) (by linarith only [hs, hs.2])
   have he : Real.exp (-(2*s)⁻¹*‖y‖^2) ≤ Real.exp (-(4*t)⁻¹*‖y‖^2) := by
     apply Real.exp_le_exp.mpr
-    nlinarith [sq_nonneg ‖y‖]
+    nlinarith only [hei, sq_nonneg ‖y‖]
   apply (timeKernel_bound hspos y).trans
   change ((15/2:ℝ)*s⁻¹)*(normalization s*Real.exp (-(2*s)⁻¹*‖y‖^2)) ≤ _
   calc
@@ -167,10 +169,10 @@ theorem average_hasDerivAt_kernel {t : ℝ} (ht : 0 < t)
     positivity
   have hd (y : Space) (s : ℝ) (hs : s ∈ Ioo (t/2) (2*t)) :
       HasDerivAt (fun r => F r y) (F' s y) s :=
-    (kernel_hasDerivAt (by linarith [hs.1] : 0 < s) y).smul_const (f (x+y))
+    (kernel_hasDerivAt (by linarith only [ht, hs, hs.1] : 0 < s) y).smul_const (f (x+y))
   have h := hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (F := F) (F' := F') (bound := fun y : Space => timeEnvelope t y*C₀)
-    (Ioo_mem_nhds (by linarith : t/2 < t) (by linarith : t < 2*t))
+    (Ioo_mem_nhds (by linarith only [ht] : t/2 < t) (by linarith only [ht] : t < 2*t))
     (Eventually.of_forall hF) (average_integrable_of_bound ht f hf C₀ h₀ x) hFd
     (Eventually.of_forall hb) ((timeEnvelope_integrable ht).mul_const C₀)
     (Eventually.of_forall hd)

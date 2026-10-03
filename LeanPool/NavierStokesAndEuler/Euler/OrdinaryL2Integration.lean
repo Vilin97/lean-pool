@@ -13,6 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanVectorIdentities
 import LeanPool.NavierStokesAndEuler.Euler.OrdinarySobolevL4
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-! Ordinary integration by parts for genuine smooth L² fields. The
 identity needs no compact-support premise because all three pairings

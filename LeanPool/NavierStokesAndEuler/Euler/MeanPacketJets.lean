@@ -40,9 +40,9 @@ theorem slowPressure_pressureJet (FInv : Space →L[ℝ] Space)
     (p : ScalarField) (t : ℝ) (x : Space) (θ : ℝ)
     (hp : DifferentiableAt ℝ (fun y : Space × ℝ => p (t,y)) (x,θ)) :
     slowPressure FInv (pressureJet p (t,(x,θ))) =
-      FInv.adjoint (gradient (fun y => p (t,(y,θ))) x) := by
-  change FInv.adjoint ((toDual ℝ Space).symm ((pressureJet p (t,(x,θ))).2.comp spatialInjection)) =
-      _
+      adjoint (𝕜 := ℝ) (E := Space) (F := Space) FInv (gradient (fun y => p (t,(y,θ))) x) := by
+  change adjoint (𝕜 := ℝ) (E := Space) (F := Space) FInv
+      ((toDual ℝ Space).symm ((pressureJet p (t,(x,θ))).2.comp spatialInjection)) = _
   rw [pressureJet_spatial_derivative p t x θ hp]
   rfl
 

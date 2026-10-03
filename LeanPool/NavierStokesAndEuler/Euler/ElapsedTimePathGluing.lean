@@ -15,6 +15,7 @@ import LeanPool.NavierStokesAndEuler.Euler.ParameterSobolevCoefficient
 public import Mathlib.Topology.ContinuousMap.Compact
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Normed.Order.Lattice
+public import LeanPool.NavierStokesAndEuler.ForMathlib.NormedSpaceShortcuts
 
 /-!
 # Joining an actual history with a forward elapsed-time path
@@ -175,10 +176,13 @@ def mismatch (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) : Pair S τ E →L
 abbrev Matching (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) : Submodule ℝ (Pair S τ E) :=
   (mismatch (E := E) S τ hτ0 hτS).ker
 
+real_normed_space_shortcut_instances Matching (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) :
+  Matching (E := E) S τ hτ0 hτS
+
 theorem matching_values (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) :
     u.val.1 ⟨τ,hτ0,le_rfl⟩=u.val.2 ⟨τ,le_rfl,hτS⟩ := by
-  have h : mismatch S τ hτ0 hτS u.val=0 := u.property
+  have h : mismatch (E := E) S τ hτ0 hτS u.val=0 := u.property
   exact sub_eq_zero.mp h
 
 /-- Glue path as an element of `C(Icc (0 : ℝ) S,E)`. -/
@@ -211,11 +215,14 @@ def glueOperator (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) :
      map_add' := by
        intro u v
        ext t
-       by_cases ht : (t : ℝ) ≤ τ <;> simp [gluePath, glue, ht]
+       by_cases ht : (t : ℝ) ≤ τ <;> simp only [gluePath, glue, Submodule.coe_add, Prod.fst_add,
+           ContinuousMap.add_apply, Prod.snd_add, ContinuousMap.coe_mk, ht, ↓reduceIte]
      map_smul' := by
        intro c u
        ext t
-       by_cases ht : (t : ℝ) ≤ τ <;> simp [gluePath, glue, ht] } :
+       by_cases ht : (t : ℝ) ≤ τ <;> simp only [gluePath, glue, SetLike.val_smul, Prod.smul_fst,
+           ContinuousMap.coe_smul, Pi.smul_apply, Prod.smul_snd, ContinuousMap.coe_mk, ht,
+           ↓reduceIte, RingHom.id_apply] } :
       Matching (E := E) S τ hτ0 hτS →ₗ[ℝ] C(Icc (0 : ℝ) S,E)).mkContinuous
     1 (fun u => by
       change ‖gluePath S τ hτ0 hτS u‖ ≤ 1 * ‖u‖
@@ -264,7 +271,7 @@ attribute [local instance] compactInterval
 
 @[simp] theorem glueOperator_apply (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) :
-    glueOperator S τ hτ0 hτS u = gluePath S τ hτ0 hτS u := rfl
+    glueOperator (E := E) S τ hτ0 hτS u = gluePath S τ hτ0 hτS u := rfl
 
 theorem gluePath_left (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Matching (E := E) S τ hτ0 hτS) (t : Icc (0 : ℝ) τ) :
@@ -304,7 +311,7 @@ theorem glue_word_bound (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (hf : ContDiff ℝ ∞ f) (n : ℕ) (x : X) :
     wordSum directions (fun y => gluePath S τ hτ0 hτS (f y)) n x ≤
       wordSum directions f n x := by
-  have h := wordSum_comp_clm_le directions (glueOperator S τ hτ0 hτS) f hf n x
+  have h := wordSum_comp_clm_le directions (glueOperator (E := E) S τ hτ0 hτS) f hf n x
   exact h.trans ((mul_le_mul_of_nonneg_right
     (glueOperator_norm_le_one S τ hτ0 hτS) (wordSum_nonneg directions f n x)).trans_eq (one_mul _))
 
@@ -314,7 +321,7 @@ theorem glue_block_bound (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (hf : ContDiff ℝ ∞ f) (n : ℕ) (x : X) :
     block directions q (fun y => gluePath S τ hτ0 hτS (f y)) n x ≤
       block directions q f n x := by
-  have h := block_comp_clm_le directions q (glueOperator S τ hτ0 hτS) f hf n x
+  have h := block_comp_clm_le directions q (glueOperator (E := E) S τ hτ0 hτS) f hf n x
   exact h.trans ((mul_le_mul_of_nonneg_right
     (glueOperator_norm_le_one S τ hτ0 hτS) (block_nonneg directions q f n x)).trans_eq (one_mul _))
 
@@ -346,7 +353,7 @@ def repairPair (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) : Pair S τ E �
       (ContinuousLinearMap.const ℝ (Icc τ S)).comp (mismatch S τ hτ0 hτS))
 
 theorem repairPair_mem (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) (u : Pair S τ E) :
-    repairPair S τ hτ0 hτS u ∈ Matching S τ hτ0 hτS := by
+    repairPair (E := E) S τ hτ0 hτS u ∈ Matching S τ hτ0 hτS := by
   change u.1 ⟨τ,hτ0,le_rfl⟩-
     (u.2 ⟨τ,le_rfl,hτS⟩+(u.1 ⟨τ,hτ0,le_rfl⟩-u.2 ⟨τ,le_rfl,hτS⟩))=0
   abel
@@ -360,7 +367,7 @@ def matchingProjection (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S) :
 
 theorem matchingProjection_value (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : Pair S τ E) (hu : u.1 ⟨τ, hτ0, le_rfl⟩ = u.2 ⟨τ, le_rfl, hτS⟩) :
-    (matchingProjection S τ hτ0 hτS u).val=u := by
+    (matchingProjection (E := E) S τ hτ0 hτS u).val=u := by
   apply Prod.ext
   · rfl
   · ext t
@@ -371,7 +378,7 @@ theorem matchingProjection_value (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S
 def matchingFamily (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : X → C(Icc (0 : ℝ) τ, E)) (v : X → C(Icc τ S, E)) :
     X → Matching (E := E) S τ hτ0 hτS :=
-  fun x => matchingProjection S τ hτ0 hτS (u x,v x)
+  fun x => matchingProjection (E := E) S τ hτ0 hτS (u x,v x)
 
 theorem matchingFamily_contDiff (S τ : ℝ) (hτ0 : 0 ≤ τ) (hτS : τ ≤ S)
     (u : X → C(Icc (0 : ℝ) τ, E)) (v : X → C(Icc τ S, E))
@@ -464,7 +471,8 @@ def shiftPath (S τ : ℝ) : C(Icc (0 : ℝ) (S-τ), E) →L[ℝ] C(Icc τ S,E) 
   ContinuousMap.compCLM ℝ E (elapsedTime S τ)
 
 theorem shiftPath_apply (S τ : ℝ) (u : C(Icc (0 : ℝ) (S - τ), E)) (t : Icc τ S) :
-    shiftPath S τ u t = u ⟨(t:ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ :=
+    shiftPath (E := E) S τ u t =
+      u ⟨(t:ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ :=
         rfl
 
 theorem shiftPath_norm_le_one (S τ : ℝ) : ‖shiftPath (E := E) S τ‖ ≤ 1 := by
@@ -476,14 +484,14 @@ theorem shiftPath_norm_le_one (S τ : ℝ) : ‖shiftPath (E := E) S τ‖ ≤ 1
   exact u.norm_coe_le_norm _
 
 theorem shiftPath_initial (S τ : ℝ) (hτS : τ ≤ S) (u : C(Icc (0 : ℝ) (S - τ), E)) :
-    shiftPath S τ u ⟨τ,le_rfl,hτS⟩ = u ⟨0,le_rfl,sub_nonneg.mpr hτS⟩ := by
+    shiftPath (E := E) S τ u ⟨τ,le_rfl,hτS⟩ = u ⟨0,le_rfl,sub_nonneg.mpr hτS⟩ := by
   simp only [shiftPath_apply, sub_self]
 
 /-- Literal elapsed-time paths retain the same fixed-Sobolev word bound. -/
 theorem shiftPath_block_bound [Fintype ι] (S τ : ℝ) (directions : ι → X) (q : ℕ)
     (f : X → C(Icc (0 : ℝ) (S - τ), E)) (hf : ContDiff ℝ ∞ f) (n : ℕ) (x : X) :
-    block directions q (fun y => shiftPath S τ (f y)) n x ≤ block directions q f n x := by
-  have h := block_comp_clm_le directions q (shiftPath S τ) f hf n x
+    block directions q (fun y => shiftPath (E := E) S τ (f y)) n x ≤ block directions q f n x := by
+  have h := block_comp_clm_le directions q (shiftPath (E := E) S τ) f hf n x
   exact h.trans ((mul_le_mul_of_nonneg_right (shiftPath_norm_le_one S τ)
     (block_nonneg directions q f n x)).trans_eq (one_mul _))
 
@@ -514,19 +522,20 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- Pair, given by `⟨(u,shiftPath S τ v),by change u ⟨τ,hτ0,le_rfl⟩-shiftPath S τ v
 ⟨τ,le_rfl,hτS⟩ = 0 rw [shiftPath_initial S τ hτS,hmatch,sub_self]⟩`. -/
 def pair : Matching (E := E) S τ hτ0 hτS :=
-  ⟨(u,shiftPath S τ v),by
-    change u ⟨τ,hτ0,le_rfl⟩-shiftPath S τ v ⟨τ,le_rfl,hτS⟩ = 0
+  ⟨(u,shiftPath (E := E) S τ v),by
+    change u ⟨τ,hτ0,le_rfl⟩-shiftPath (E := E) S τ v ⟨τ,le_rfl,hτS⟩ = 0
     rw [shiftPath_initial S τ hτS,hmatch,sub_self]⟩
 
 /-- Join, given by `gluePath S τ hτ0 hτS (pair S τ hτ0 hτS u v hmatch)`. -/
 def join : C(Icc (0 : ℝ) S,E) := gluePath S τ hτ0 hτS (pair S τ hτ0 hτS u v hmatch)
 
 theorem join_eq_projection : join S τ hτ0 hτS u v hmatch =
-    gluePath S τ hτ0 hτS (matchingProjection S τ hτ0 hτS (u,shiftPath S τ v)) := by
+    gluePath S τ hτ0 hτS
+      (matchingProjection (E := E) S τ hτ0 hτS (u,shiftPath (E := E) S τ v)) := by
   apply congrArg (gluePath S τ hτ0 hτS)
   apply Subtype.ext
-  exact (matchingProjection_value S τ hτ0 hτS (u,shiftPath S τ v) (by
-    change u ⟨τ,hτ0,le_rfl⟩ = shiftPath S τ v ⟨τ,le_rfl,hτS⟩
+  exact (matchingProjection_value S τ hτ0 hτS (u,shiftPath (E := E) S τ v) (by
+    change u ⟨τ,hτ0,le_rfl⟩ = shiftPath (E := E) S τ v ⟨τ,le_rfl,hτS⟩
     rw [shiftPath_initial S τ hτS]
     exact hmatch)).symm
 
@@ -534,7 +543,7 @@ theorem join_extend (t : ℝ) (ht : t ∈ Icc (0 : ℝ) S) :
     extendPath S (hτ0.trans hτS) (join S τ hτ0 hτS u v hmatch) t =
       glue τ (extendPath τ hτ0 u) (fun r => extendPath (S-τ) (sub_nonneg.mpr hτS) v (r-τ)) t := by
   change glue τ (fun r => u (projIcc 0 τ hτ0 r))
-      (fun r => shiftPath S τ v (projIcc τ S hτS r)) (projIcc 0 S (hτ0.trans hτS) t) = _
+      (fun r => shiftPath (E := E) S τ v (projIcc τ S hτS r)) (projIcc 0 S (hτ0.trans hτS) t) = _
   rw [projIcc_of_mem (hτ0.trans hτS) ht]
   by_cases h : t ≤ τ
   · simp only [glue,h,ite_true]
@@ -588,7 +597,8 @@ theorem join_hasDerivWithinAt
   have hv' (s : ℝ) (hs : s ∈ Icc τ S) :
       HasDerivWithinAt (fun r => extendPath (S-τ) (sub_nonneg.mpr hτS) v (r-τ))
         (extendPath (S-τ) (sub_nonneg.mpr hτS) v' (s-τ)) (Icc τ S) s := by
-    have hd := (hv ⟨s-τ,hr hs⟩).scomp s ((hasDerivAt_id s).sub_const τ).hasDerivWithinAt hr
+    have hd := (hv ⟨s-τ,hr hs⟩).scomp (h := fun r : ℝ => r-τ) s
+      ((hasDerivAt_id s).sub_const τ).hasDerivWithinAt hr
     simpa only [one_smul,Function.comp_def,id_eq,extendPath,
       projIcc_of_mem (sub_nonneg.mpr hτS) (hr hs)] using hd
   have hd := glue_hasDerivWithinAt S τ hτ0 hτS (extendPath τ hτ0 u)
@@ -610,7 +620,7 @@ include hp hq hm in
 theorem join_contDiff : ContDiff ℝ ∞ (fun x => join S τ hτ0 hτS (p x) (q x) (hm x)) := by
   simp_rw [join_eq_projection]
   exact (glueOperator (E := E) S τ hτ0 hτS).contDiff.comp
-    (matchingFamily_contDiff S τ hτ0 hτS p (fun x => shiftPath S τ (q x))
+    (matchingFamily_contDiff S τ hτ0 hτS p (fun x => shiftPath (E := E) S τ (q x))
       hp ((shiftPath (E := E) S τ).contDiff.comp hq))
 
 include hp hq hm in
@@ -620,10 +630,11 @@ theorem join_block_bound (directions : ι → X) (k n : ℕ) (x : X) :
     block directions k (fun y => join S τ hτ0 hτS (p y) (q y) (hm y)) n x ≤
       block directions k p n x+block directions k q n x := by
   simp_rw [join_eq_projection]
-  have hm' (y) : p y ⟨τ,hτ0,le_rfl⟩ = shiftPath S τ (q y) ⟨τ,le_rfl,hτS⟩ := by
+  have hm' (y) : p y ⟨τ,hτ0,le_rfl⟩ = shiftPath (E := E) S τ (q y) ⟨τ,le_rfl,hτS⟩ := by
     rw [shiftPath_initial S τ hτS]
     exact hm y
-  have hb := matchingFamily_glue_block S τ hτ0 hτS directions k p (fun y => shiftPath S τ (q y))
+  have hb := matchingFamily_glue_block S τ hτ0 hτS directions k p
+    (fun y => shiftPath (E := E) S τ (q y))
     hp ((shiftPath (E := E) S τ).contDiff.comp hq) hm' n x
   exact hb.trans (by
     gcongr

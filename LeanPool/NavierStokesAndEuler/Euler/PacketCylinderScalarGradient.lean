@@ -50,13 +50,15 @@ theorem gradient_eq_sum (D : LiftTangent →L[ℝ] ℝ) :
 
 variable {P T : ℝ} [Fact (0 < P)] (raw : ScalarField)
   (p : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := ℝ) P a p))
   (he : ∀ (t : Icc (0 : ℝ) T) x θ,
     raw (t, (x, θ)) = scalarPointField P p hp t (x, (θ : AddCircle P)))
 
 /-- A norm-one scalar embedding retains the actual continuous L² path. -/
 def scalarEmbeddingField : Field P T (fun z => scalarEmbed (raw z)) :=
-  Field.ofLifted (pathMap P scalarEmbed p) (pathMap_orbit_contDiff P scalarEmbed p hp)
+  Field.ofLifted (pathMap (K := Icc (0 : ℝ) T) P scalarEmbed p)
+    (pathMap_orbit_contDiff P scalarEmbed p hp)
     (fun t x => scalarEmbed (scalarPointField P p hp t x))
     (fun t => scalarEmbed.continuous.comp (scalarPointField_continuous P p hp t))
     (fun t => by
@@ -75,7 +77,7 @@ theorem scalarRaw_smooth (t : Icc (0 : ℝ) T) :
 
 /-- This witness is the spatial gradient used by `pressureJet`; it needs no time derivative. -/
 def scalarGradientField : Field P T (pressureGradient raw) :=
-  (Field.finsetSum (univ : Finset (Fin 3))
+  (Field.finsetSum (Finset.univ : Finset (Fin 3))
     (fun i z => gradientComponent i
       (fderiv ℝ (fun y => scalarEmbed (raw (z.1,y))) z.2 (standardDirection i.succ)))
     (fun i => ((scalarEmbeddingField raw p hp he).derivative i.succ).map (gradientComponent

@@ -200,7 +200,8 @@ theorem iteratedFDeriv_affineAverage (L : D →L[ℝ] E) (hL : ‖L‖ ≤ 1)
         (iteratedFDeriv ℝ k f (L y + t • v)).compContinuousLinearMap (fun _ => L) :=
       funext fun t => iteratedFDeriv_affine L (t • v) hf k y
     rw [he]
-    exact hc.aestronglyMeasurable
+    exact (hc.stronglyMeasurable
+      (h := secondCountableTopologyEither_of_left _ _)).aestronglyMeasurable
   have hd : SmoothParameterIntegral.LocallyDominated g μ := by
     intro k y
     obtain ⟨C, hC⟩ := hb k
@@ -253,16 +254,18 @@ variable {P : Type} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- Erase auxiliary X, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def eraseAuxX : PressureStream.Lift P →L[ℝ] PressureStream.Lift P where
   toFun x := (x.1, (x.2.1, (0, x.2.2.2)))
-  map_add' := by intros; ext <;> simp
-  map_smul' := by intros; ext <;> simp
+  map_add' := by intros; ext <;> simp only [Prod.fst_add, Prod.mk_add_mk, add_zero, Prod.snd_add]
+  map_smul' := by intros; ext <;> simp only [Prod.smul_fst, smul_eq_mul, RingHom.id_apply,
+      Prod.smul_mk, mul_zero, Prod.smul_snd]
   cont := continuous_fst.prodMk (continuous_snd.fst.prodMk
     (continuous_const.prodMk continuous_snd.snd.snd))
 
 /-- Erase auxiliary Y, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def eraseAuxY : PressureStream.Lift P →L[ℝ] PressureStream.Lift P where
   toFun x := (x.1, (x.2.1, (x.2.2.1, 0)))
-  map_add' := by intros; ext <;> simp
-  map_smul' := by intros; ext <;> simp
+  map_add' := by intros; ext <;> simp only [Prod.fst_add, Prod.mk_add_mk, add_zero, Prod.snd_add]
+  map_smul' := by intros; ext <;> simp only [Prod.smul_fst, smul_eq_mul, RingHom.id_apply,
+      Prod.smul_mk, mul_zero, Prod.smul_snd]
   cont := continuous_fst.prodMk (continuous_snd.fst.prodMk
     (continuous_snd.snd.fst.prodMk continuous_const))
 
@@ -287,11 +290,13 @@ noncomputable def auxY : PressureStream.Lift P := (0, (0, (0, 1)))
 
 @[simp] theorem eraseAuxX_add_smul (x : PressureStream.Lift P) (t : ℝ) :
     eraseAuxX x + t • auxX = (x.1, (x.2.1, (t, x.2.2.2))) := by
-  ext <;> simp [eraseAuxX, auxX]
+  ext <;> simp only [eraseAuxX, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk, auxX,
+      Prod.smul_mk, smul_eq_mul, mul_zero, smul_zero, mul_one, Prod.mk_add_mk, add_zero, zero_add]
 
 @[simp] theorem eraseAuxY_add_smul (x : PressureStream.Lift P) (t : ℝ) :
     eraseAuxY x + t • auxY = (x.1, (x.2.1, (x.2.2.1, t))) := by
-  ext <;> simp [eraseAuxY, auxY]
+  ext <;> simp only [eraseAuxY, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk, auxY,
+      Prod.smul_mk, smul_eq_mul, mul_zero, smul_zero, mul_one, Prod.mk_add_mk, add_zero, zero_add]
 
 /-- Lifted torus average, given by `PressureStream.torusAverage f (x.1, x.2.1)`. -/
 noncomputable def liftedTorusAverage (f : PressureStream.Lift P → ℝ)
@@ -320,9 +325,8 @@ theorem GlobalBandJets.liftedTorusAverage {ε S : ℕ → ℝ} {α : ℝ}
     (hjets : GlobalBandJets ε S α f) (hf : ∀ n, ContDiff ℝ ∞ (f n)) :
     GlobalBandJets ε S α (fun n => liftedTorusAverage (f n)) := by
   have hinner := hjets.affineAverage hf eraseAuxX norm_eraseAuxX_le auxX zero_le_one
-  have houter := hinner.affineAverage
-    (fun n => affineAverage_contDiff eraseAuxX auxX 0 1 (hf n))
-    eraseAuxY norm_eraseAuxY_le auxY zero_le_one
+  have hcd := fun n => affineAverage_contDiff (eraseAuxX (P := P)) auxX 0 1 (hf n)
+  have houter := hinner.affineAverage hcd eraseAuxY norm_eraseAuxY_le auxY zero_le_one
   simpa only [liftedTorusAverage_eq_affine] using houter
 
 end Torus
@@ -405,8 +409,8 @@ theorem meanClass_pressureMass_lift
 /-- Insert slow, bundling `toFun`, `map_add`, `map_smul`, `cont`. -/
 noncomputable def insertSlow : P →L[ℝ] PressureStream.Lift P where
   toFun p := (0, (p, (0, 0)))
-  map_add' := by intros; ext <;> simp
-  map_smul' := by intros; ext <;> simp
+  map_add' := by intros; ext <;> simp only [Prod.mk_add_mk, add_zero]
+  map_smul' := by intros; ext <;> simp only [RingHom.id_apply, Prod.smul_mk, smul_eq_mul, mul_zero]
   cont := continuous_const.prodMk (continuous_id.prodMk continuous_const)
 
 theorem norm_insertSlow_le : ‖insertSlow (P := P)‖ ≤ 1 := by

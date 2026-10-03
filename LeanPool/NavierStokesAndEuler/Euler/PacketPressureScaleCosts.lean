@@ -24,6 +24,10 @@ interval keeps its absolute size constant. -/
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 namespace EulerTransverseHistoryBounds
@@ -145,19 +149,32 @@ theorem envelope_power (K Ti Hi CM CH : ℝ) (hK : 0 ≤ K) (hTi : 0 ≤ Ti)
   have hCHX : CH ≤ X := by dsimp [X]; linarith
   have hemb := embeddingCost_nonneg
   have hhistory := labelHistoryConstant_pos
-  have hF : frameAmplitude K ≤ frameAmplitude X := by
-    unfold frameAmplitude gradientAmplitude
-    gcongr
+  have hF : frameAmplitude K ≤ frameAmplitude X :=
+    add_le_add le_rfl (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hK hKX 2) hemb)
   have hf0 := frameAmplitude_nonneg K
   have hX0 := zero_le_one.trans hX
+  have hbase0 : 0 ≤ 1+K+Ti := add_nonneg (add_nonneg zero_le_one hK) hTi
   have hHist : labelHistoryConstant*(1+K+Ti)^labelHistoryPower ≤
-      labelHistoryConstant*X^labelHistoryPower := by
-      gcongr
+      labelHistoryConstant*X^labelHistoryPower :=
+    mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hbase0 hbase _) hhistory.le
   have hpoly : envelope K Ti Hi CM CH ≤ polynomial.eval X := by
     rw [polynomial_eval]
     unfold envelope formula
-    gcongr
-    all_goals positivity [frameAmplitude_nonneg X]
+    have h₁ : 8*(5+64*CM^2+2*CH) ≤ 8*(5+64*X^2+2*X) :=
+      mul_le_mul_of_nonneg_left (add_le_add (add_le_add le_rfl
+        (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hCM hCMX 2) (by norm_num)))
+        (mul_le_mul_of_nonneg_left hCHX (by norm_num))) (by norm_num)
+    have h₂ : (1+3*frameAmplitude K^2)^2 ≤ (1+3*frameAmplitude X^2)^2 :=
+      pow_le_pow_left₀ (add_nonneg zero_le_one (mul_nonneg (by norm_num) (sq_nonneg _)))
+        (add_le_add le_rfl (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hf0 hF 2)
+          (by norm_num))) 2
+    have hA : 0 ≤ 8*(5+64*X^2+2*X) := by positivity
+    have hB := mul_nonneg hA (sq_nonneg (1+3*frameAmplitude X^2))
+    have hC := mul_nonneg hB (add_nonneg zero_le_one (frameAmplitude_nonneg X))
+    exact mul_le_mul (mul_le_mul (mul_le_mul (mul_le_mul h₁ h₂ (sq_nonneg _) hA)
+      (add_le_add le_rfl hF) (add_nonneg zero_le_one hf0) hB) hHist
+      (mul_nonneg hhistory.le (pow_nonneg hbase0 _)) hC) hHiX hHi
+      (mul_nonneg hC (mul_nonneg hhistory.le (pow_nonneg hX0 _)))
   exact hpoly.trans ((le_abs_self _).trans (eval_bound polynomial X hX))
 
 /-- Bad constant, given by `cutoffBound*(8232*Real.exp 9+4*boundConstant)`. -/
@@ -233,8 +250,14 @@ theorem historySizeRatio_envelope :
     ring
   rw [hEq]
   unfold envelope formula
-  gcongr
-  all_goals positivity [A.CH_nonneg]
+  have ha : 0 ≤ 8*(5+64*A.CM^2+2*A.CH) :=
+    mul_nonneg (by norm_num) (add_nonneg (add_nonneg (by norm_num)
+      (mul_nonneg (by norm_num) (sq_nonneg _))) (mul_nonneg (by norm_num) A.CH_nonneg))
+  have hb := mul_nonneg ha (sq_nonneg (1+3*frameAmplitude L.K^2))
+  have h₁ := mul_le_mul (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hInv0 hInv 2) ha)
+    hRay hRay0 hb
+  exact mul_le_mul_of_nonneg_right (mul_le_mul h₁ hHist hHist0
+    (mul_nonneg hb (add_nonneg zero_le_one hf0))) hHi
 
 theorem historySizeRatio_polynomial :
     A.historySizeCost/(P.rayScale hτ hτT) ≤
@@ -364,13 +387,19 @@ theorem badCost_bound (J : ℕ) (hJ : 3 ≤ J) (Cθ CM CMn CHn c : ℝ)
   have hcθ := zero_le_one.trans hθ
   have hbad := badConstant_pos.le
   have hQ' : Q ≤ (4+CMn+CHn)*exp (c*z) := hQ
+  have hW : 0 ≤ (4+CMn+CHn)*exp (c*z) :=
+    mul_nonneg (add_nonneg (add_nonneg (by norm_num) hMn) hHn) (exp_pos _).le
+  have hV : 0 ≤ badConstant*((4+CMn+CHn)*exp (c*z))^degree := mul_nonneg hbad (pow_nonneg hW _)
   have hr' : r ≤ badConstant*((4+CMn+CHn)*exp (c*z))^degree *
-      (2*Cθ*j^2*(x n)^2)^5*exp (-x n/8) := by
-    apply hr.trans
-    gcongr
+      (2*Cθ*j^2*(x n)^2)^5*exp (-x n/8) :=
+    hr.trans (mul_le_mul (mul_le_mul (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hQ0 hQ' _) hbad)
+      (pow_le_pow_left₀ hΘ0 hΘ' 5) (pow_nonneg hΘ0 5) hV) hσ' (exp_pos _).le
+      (mul_nonneg hV (pow_nonneg (hΘ0.trans hΘ') 5)))
+  have hCe : 0 ≤ 2*(CM*exp z) := mul_nonneg zero_le_two (mul_nonneg hM (exp_pos _).le)
   have hfirst : 2*M*hchild*r ≤ 2*(CM*exp z)*exp z *
-      (badConstant*((4+CMn+CHn)*exp (c*z))^degree*(2*Cθ*j^2*(x n)^2)^5*exp (-x n/8)) := by
-    gcongr
+      (badConstant*((4+CMn+CHn)*exp (c*z))^degree*(2*Cθ*j^2*(x n)^2)^5*exp (-x n/8)) :=
+    mul_le_mul (mul_le_mul (mul_le_mul_of_nonneg_left hM' zero_le_two) hh' hh0 hCe) hr' hr0
+      (mul_nonneg hCe (exp_pos _).le)
   have hexp : (exp z)^2*(exp (c*z))^degree*exp (-x n/8) =
       exp (-(1/8)*(x n/j^0)+((degree : ℝ)*c+2)*z) := by
     rw [← exp_nat_mul,← exp_nat_mul,← exp_add,← exp_add]
@@ -387,10 +416,10 @@ theorem badCost_bound (J : ℕ) (hJ : 3 ≤ J) (Cθ CM CMn CHn c : ℝ)
       ring
     _ = B*j^10*(x n)^10*exp (-(1/8)*(x n/j^0)+((degree : ℝ)*c+2)*z) := by rw [hexp]
     _ ≤ badCoefficient Cθ CM CMn CHn*j^10*(x n)^10 *
-        exp (-(1/8)*(x n/j^0)+((degree : ℝ)*c+2)*z) := by
-      gcongr
-      change B ≤ 1+B
-      linarith
+        exp (-(1/8)*(x n/j^0)+((degree : ℝ)*c+2)*z) :=
+      mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
+        (le_add_of_nonneg_left zero_le_one : B ≤ 1 + B) (pow_nonneg hj0 10)) (pow_nonneg hxp 10))
+        (exp_pos _).le
     _ = badCost J Cθ CM CMn CHn c x n := by
       simp only [badCost,monomialCost,j,z,p,rpow_zero,pow_zero,div_one]
 

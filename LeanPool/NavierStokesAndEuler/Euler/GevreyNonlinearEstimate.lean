@@ -135,7 +135,8 @@ theorem correctionForcing_polynomial {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoeffic
     (lossConstant period M*(ρ⁻¹+Rc)) B0 (productConstant period 3) B1 A0 A2 R
     (weightedNorm period 6 N ρ e) (weightedLoss period 6 N ρ e) (weightedNorm period 6 N ρ (z+e))
     (weightedNorm period 6 N ρ f) _
-    (sourceConstant_nonneg hB (by linarith)) (transportConstant_nonneg period hB (by linarith))
+    (sourceConstant_nonneg hB (by linarith)) (transportConstant_nonneg period hB (by linarith only [
+        hM]))
     (mul_nonneg (lossConstant_nonneg period (by linarith)) (add_nonneg (inv_nonneg.mpr hρ.le) hRc))
     (weightedNorm_nonneg period 6 N ρ hρ e) (weightedLoss_nonneg period 6 N ρ hρ e) hv hf h
 

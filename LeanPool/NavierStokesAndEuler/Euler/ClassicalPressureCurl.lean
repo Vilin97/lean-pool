@@ -42,8 +42,14 @@ theorem fieldDerivative_mul (a : LiftTangent) (f g : LiftDomain period → ℝ)
       fieldDerivative period a f x * g x + f x * fieldDerivative period a g x := by
   have h := ((((hf x).differentiable (by simp)) 0).hasFDerivAt.mul
     (((hg x).differentiable (by simp)) 0).hasFDerivAt).fderiv
-  have he := congrArg (fun L : LiftTangent →L[ℝ] ℝ => L a) h
-  simpa +unfoldPartialApp [fieldDerivative, localFieldLift, Pi.mul_def, mul_comm, add_comm] using he
+  have h0 (k : LiftDomain period → ℝ) : localFieldLift period k x 0 = k x := by
+    simp only [localFieldLift, Prod.fst_zero, Prod.snd_zero, AddCircle.coe_zero, add_zero,
+      Prod.mk.eta]
+  have hmul : localFieldLift period (fun y => f y * g y) x =
+      localFieldLift period f x * localFieldLift period g x := rfl
+  unfold fieldDerivative
+  rw [hmul, h, add_apply, smul_apply, smul_apply, h0 f, h0 g, smul_eq_mul, smul_eq_mul]
+  ring
 
 /-- A smooth scalar field times a compact smooth scalar field is integrable. -/
 theorem scalar_product_integrable (f g : LiftDomain period → ℝ)
@@ -83,7 +89,8 @@ theorem scalar_integration_by_parts_test (a : LiftTangent) (f ψ : LiftDomain pe
       ‖fieldDerivative period a (spatialCutoff period n) x‖ ≤ M * ‖a‖ := by
     calc
       _ ≤ M * cutoffScale n * ‖a‖ := hMb n x a
-      _ ≤ M * 1 * ‖a‖ := by gcongr; exact cutoffScale_le_one n
+      _ ≤ M * 1 * ‖a‖ := mul_le_mul_of_nonneg_right
+        (mul_le_mul_of_nonneg_left (cutoffScale_le_one n) hM.le) (norm_nonneg a)
       _ = _ := by ring
   have hFm (n : ℕ) : AEStronglyMeasurable (F n) (liftMeasure period) :=
     ((smoothField_continuous period _ (fieldDerivative_smooth period a _ (hs n))).mul
@@ -107,7 +114,9 @@ theorem scalar_integration_by_parts_test (a : LiftTangent) (f ψ : LiftDomain pe
         simpa only [norm_mul] using norm_add_le
           (fieldDerivative period a (spatialCutoff period n) x * (f x * ψ x))
           (spatialCutoff period n x * (Df x * ψ x))
-      _ ≤ (M * ‖a‖) * ‖f x * ψ x‖ + 1 * ‖Df x * ψ x‖ := by gcongr; exact hDc n x
+      _ ≤ (M * ‖a‖) * ‖f x * ψ x‖ + 1 * ‖Df x * ψ x‖ :=
+        add_le_add (mul_le_mul_of_nonneg_right (hDc n x) (norm_nonneg _))
+          (mul_le_mul_of_nonneg_right hcn (norm_nonneg _))
       _ = _ := by ring
   have hFl : ∀ᵐ x ∂liftMeasure period, Filter.Tendsto (fun n => F n x) Filter.atTop (𝓝 (Df x * ψ
       x)) := by

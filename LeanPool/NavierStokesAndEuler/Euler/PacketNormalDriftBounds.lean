@@ -48,13 +48,14 @@ theorem normalizedNormal_bound (m : Space) (hm : ‖m‖ ≤ 1)
     (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (((C.inverse.multiply (velocityField hT G k⁻¹)).smul k).map (normalComponentMap m)).WordBound
       6 (4*R) (BC.multiplierCost*(fixedVelocityGradeCost R S.H0 2+2)/k) 0 := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hA : 0 ≤ BC.multiplierCost*(fixedVelocityGradeCost R S.H0 2+2)/k :=
     div_nonneg (mul_nonneg BC.multiplierCost_nonneg
-      (by have := fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 2; linarith)) hk0.le
+      (by have := fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 2; linarith only [
+          this])) hk0.le
   have hE := (normalizedRemainder_bound hT G hG hR ha hb hN BC hRc k hk hbase).map
       (normalComponentMap m)
-  have hE' := hE.mono_amplitude (by linarith : 0 ≤ 4*R)
+  have hE' := hE.mono_amplitude (by linarith only [hR] : 0 ≤ 4*R)
     ((mul_le_mul_of_nonneg_right ((normalComponentMap_norm_le m).trans hm) hA).trans_eq (one_mul _))
   apply hE'.ofRawEq (((C.inverse.multiply (velocityField hT G k⁻¹)).smul k).map
       (normalComponentMap m))

@@ -49,7 +49,8 @@ theorem transformedForce_continuous
     (hY : Continuous (Function.uncurry Y)) (hforce : Continuous (Function.uncurry force))
     (hg : Continuous (Function.uncurry g)) :
     Continuous (fun q : Icc (0 : ℝ) A.T × Space => force q.1 q.2 +
-      A.ell • (A.inverse.field q.1 (A.ell⁻¹ • Y q.1 q.2)).adjoint
+      A.ell • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (A.inverse.field q.1 (A.ell⁻¹ • Y q.1 q.2))
         (g q.1 (A.ell⁻¹ • Y q.1 q.2))) := by
   let r : Icc (0 : ℝ) A.T × Space → Space := fun q => A.ell⁻¹ • Y q.1 q.2
   have hr : Continuous r := hY.const_smul A.ell⁻¹
@@ -62,7 +63,8 @@ theorem transformedForce_continuous
   have hmap : Continuous (fun q : Icc (0 : ℝ) A.T × Space => (q.1,r q)) :=
     continuous_fst.prodMk hr
   have hIn := hI₀.comp (f := fun q : Icc (0 : ℝ) A.T × Space => (q.1,r q)) hmap
-  have ha : Continuous (fun L : Space →L[ℝ] Space => L.adjoint) :=
+  have ha : Continuous (fun L : Space →L[ℝ] Space =>
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) L) :=
     (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)).continuous
   have hI := ha.comp (f := fun q : Icc (0 : ℝ) A.T × Space => A.inverse.field q.1 (r q)) hIn
   have hP := hg.comp (f := fun q : Icc (0 : ℝ) A.T × Space => (q.1,r q)) hmap
@@ -82,7 +84,8 @@ variable {P : ℝ} [Fact (0 < P)] {κ : ℝ} {hκ : |κ| ≤ 1}
 /-- Exact packet force, constructed using `force`. -/
 def exactPacketForce (k : ℝ) (Y force : Icc (0 : ℝ) A.T → Space → Space)
     (t : Icc (0 : ℝ) A.T) (x : Space) : Space :=
-  force t x + A.ell • (A.inverse.field t (A.ell⁻¹ • Y t x)).adjoint
+  force t x + A.ell • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+    (A.inverse.field t (A.ell⁻¹ • Y t x))
     (((exactPacketOfResidual P B residual)).graphPressure k t (A.ell⁻¹ • Y t x))
 
 theorem exactPacketForce_continuous (k : ℝ) (Y force : Icc (0 : ℝ) A.T → Space → Space)
@@ -103,7 +106,8 @@ include hk hXY hY hp hgradient in
 theorem normalizedExactPressure_gradient (t : Icc (0 : ℝ) A.T) (x : Space) :
     gradient (fun y => A.normalizedExactPressure m hm J support hSupport B residual k Y p (t,y)) x =
       A.ell⁻¹ • force t (A.ell • x) +
-        (A.inverse.field t (A.packetInverse Y (t,x))).adjoint
+        ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+          (A.inverse.field t (A.packetInverse Y (t,x)))
           (((exactPacketOfResidual P B residual)).graphPressure k t (A.packetInverse Y (t,x))) := by
   have hs := exact_physicalPressure_smooth (A.transverseData m hm J support hSupport)
       (exactPacketOfResidual P B residual)
@@ -128,11 +132,13 @@ theorem normalizedExactPressure_gradient (t : Icc (0 : ℝ) A.T) (x : Space) :
   erw [gradient_add _ _ x (A.normalizedPressure_differentiableAt p t x (hp t (A.ell • x)))
     (hs.differentiable (by simp) x),hn,hg,hgradient]
   change A.ell⁻¹ • force t (A.ell • x) + κ •
-    (A.inverse.field t (A.packetInverse Y (t,x))).adjoint
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (A.inverse.field t (A.packetInverse Y (t,x)))
       (((exactPacketOfResidual P B residual)).pressure.pointField t
           (EulerGraphPressurePotential.cylinderGraph P k m (A.packetInverse Y (t,x)))) = _
   apply congrArg (fun z => A.ell⁻¹ • force t (A.ell • x) + z)
-  exact ((A.inverse.field t (A.packetInverse Y (t,x))).adjoint.map_smul κ
+  exact ((ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+    (A.inverse.field t (A.packetInverse Y (t,x)))).map_smul κ
     ((exactPacketOfResidual P B residual).pressure.pointField t
       (EulerGraphPressurePotential.cylinderGraph P k m (A.packetInverse Y (t,x))))).symm
 

@@ -121,40 +121,45 @@ theorem correction_envelopes (c R C0 C1 CI X : ℝ)
   have hX : 0 ≤ X := hR.trans hRX
   have hm : correctionMetricEnvelope R CI ≤ metricEnvelope X := by
     apply sobolevCoefficientAmplitude_mono_all 6 (by positivity) (by positivity)
-      (by gcongr)
-    gcongr
+      (mul_le_mul_of_nonneg_left hRX (by norm_num))
+    exact mul_le_mul (mul_le_mul_of_nonneg_left hCIX (by norm_num)) hCIX hCI
+      (mul_nonneg (by norm_num) hX)
   have hm0 : 0 ≤ correctionMetricEnvelope R CI :=
     sobolevCoefficientAmplitude_nonneg 6 (4*R) (3*CI*CI) (by positivity) (by positivity)
   have hmX : 0 ≤ metricEnvelope X := hm0.trans hm
   have hl : correctionLinearEnvelope R C1 CI ≤ linearEnvelope X := by
     apply mul_le_mul_of_nonneg_left _ (by norm_num : (0 : ℝ) ≤ 2)
-    apply sobolevCoefficientAmplitude_mono_all 6 (by positivity) (by positivity) (by gcongr)
-    gcongr
+    apply sobolevCoefficientAmplitude_mono_all 6 (by positivity) (by positivity)
+      (mul_le_mul_of_nonneg_left hRX (by norm_num))
+    exact mul_le_mul (mul_le_mul_of_nonneg_left hCIX (by norm_num)) hC1X hC1
+      (mul_nonneg (by norm_num) hX)
   have hq : correctionQuadraticEnvelope R C0 CI ≤ quadraticEnvelope X := by
     apply mul_le_mul_of_nonneg_left _ (by norm_num : (0 : ℝ) ≤ 6)
-    apply sobolevCoefficientAmplitude_mono_all 6 (by positivity) (by positivity) (by gcongr)
-    gcongr
+    apply sobolevCoefficientAmplitude_mono_all 6 (by positivity) (by positivity)
+      (mul_le_mul_of_nonneg_left hRX (by norm_num))
+    exact mul_le_mul (mul_le_mul_of_nonneg_left hCIX (by norm_num))
+      (mul_le_mul hC0X hRX hR hX) (mul_nonneg hC0 hR) (mul_nonneg (by norm_num) hX)
   have hr : sobolevCoefficientRadius (Fin 4) (4*R) ≤ 64*X := by
     simp only [sobolevCoefficientRadius,Fintype.card_fin,Nat.cast_ofNat,
       max_eq_right (by norm_num : (1 : ℝ) ≤ 4)]
-    nlinarith
+    linarith only [hRX]
   have hr0 : 0 ≤ sobolevCoefficientRadius (Fin 4) (4*R) :=
     sobolevCoefficientRadius_nonneg (4*R) (by positivity)
   have hn : normalizedCoefficientRadius 6 (4*R) (3*CI*CI) ≤
       (1+metricEnvelope X)*(64*X) := by
     apply mul_le_mul _ hr hr0 (by positivity)
     apply max_le
-    · linarith
-    · exact hm.trans (by linarith)
+    · linarith only [hmX]
+    · exact hm.trans (by linarith only)
   have hrad : correctionCoefficientRadius R CI ≤ radiusEnvelope X := by
     have hprod : 0 ≤ (1+metricEnvelope X)*(64*X) := by positivity
     have h64 : 0 ≤ 64*X := by positivity
     unfold correctionCoefficientRadius radiusEnvelope
     apply max_le
-    · linarith
+    · linarith only [hprod, h64]
     · apply max_le
-      · exact hn.trans (by linarith)
-      · exact hr.trans (by linarith)
+      · exact hn.trans (by linarith only [h64])
+      · exact hr.trans (by linarith only [hprod])
   have hp5 : pressureCost c (correctionMetricEnvelope R CI) 5 ≤
       pressureCost ((1+X)^2)⁻¹ (metricEnvelope X) 5 :=
     pressureCost_mono hc (by positivity) hm0 (by simpa only [inv_inv] using hci) hm 5
@@ -165,7 +170,8 @@ theorem correction_envelopes (c R C0 C1 CI X : ℝ)
   have hp60 := pressureCost_nonneg ((1+X)^2)⁻¹ (metricEnvelope X) (by positivity) hmX 6
   have hp : correctionPressureEnvelope c R CI ≤ pressureEnvelope X := by
     unfold correctionPressureEnvelope pressureEnvelope
-    exact max_le (by linarith) (max_le (by linarith) (by linarith))
+    exact max_le (by linarith only [hp50, hp60])
+      (max_le (by linarith only [hp5, hp60]) (by linarith only [hp6, hp50]))
   exact ⟨hrad,hp,hm,hl,hq⟩
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
@@ -221,7 +227,7 @@ theorem correctionBudget_bounds (X : ℝ) (hX : 1 ≤ X)
   have hi : D.inverseBound ≤ 1+X := by
     change 1+‖D.FInv.field‖ ≤ 1+X
     have hn := (coefficientPath_norm_le_of_gevrey D.FInv R CI hCI hFI).trans hCIX
-    linarith
+    linarith only [hn]
   have hm : inverseMetricBound D ≤ X^2 :=
     (inverseMetricBound_le_source D R C0 hC0 hF).trans (pow_le_pow_left₀ hC0 hC0X 2)
   have hf : inverseMetricFirstBound D ≤ 3*X*X*X := by

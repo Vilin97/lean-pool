@@ -63,7 +63,8 @@ theorem add (hf : Shell a b f) (hg : Shell a b g) : Shell a b (f + g) := by
   refine ⟨fun n => (hf.smooth n).add (hg.smooth n), ?_⟩
   intro n x hx
   by_contra hn
-  exact hx (by simp [hf.zero_of_not_mem n x hn, hg.zero_of_not_mem n x hn])
+  exact hx (by simp only [Pi.add_apply, hf.zero_of_not_mem n x hn, hg.zero_of_not_mem n x hn,
+      add_zero])
 
 theorem neg (hf : Shell a b f) : Shell a b (-f) := by
   refine ⟨fun n => (hf.smooth n).neg, ?_⟩
@@ -289,8 +290,9 @@ theorem barMoment_smul (c : ℝ) (f : ScalarField (Point P)) (k : ℕ) :
 omit [NormedAddCommGroup P] [NormedSpace ℝ P] in
 @[simp] theorem barMoment_zero (k : ℕ) : barMoment k (0 : ScalarField (Point P)) = 0 := by
   funext n p
-  simp [barMoment, CorrectionState.radialMoment, PressureStream.pressureMass,
-    PressureStream.torusAverage, PressureStream.torusInner]
+  simp only [barMoment, CorrectionState.radialMoment, PressureStream.pressureMass,
+      PressureStream.torusAverage, PressureStream.torusInner, Pi.zero_apply, mul_zero,
+      intervalIntegral.integral_zero, integral_zero]
 
 theorem barMoment_mem
     {a b cL cR : ℝ} (ha : 0 < a) (hab : a < b) (hcL : 0 < cL) (hcR : 0 < cR)
@@ -434,7 +436,7 @@ theorem actualRadialError_eq_formula {U : Set (Point P)} (hU : IsOpen U)
   intro n x hx
   have he := gr_change hU o ha hb hm hh W hW n hx
   simp only [actualRadialError, Pi.add_apply, Pi.sub_apply] at he ⊢
-  linarith
+  linarith only [he]
 
 section RemainderClasses
 
@@ -449,16 +451,16 @@ theorem thetaQuadratic_mem : MeanClass s (H + 9 / 10 - 2 * κ) (thetaQuadratic m
     simpa only [add_comm] using Class.product hm.axial hh.angular ho.weight_le_one
   have h2 := Class.product hh.axial hm.angular ho.weight_le_one
   have h3 := (Class.product hh.axial hh.angular ho.weight_le_one).mono_exponent
-    (show H + 9 / 10 ≤ H + H from by linarith)
-  exact ((h1.add h2).add h3).mono_exponent (by linarith [ho.kappa_nonneg])
+    (show H + 9 / 10 ≤ H + H from by linarith only [hH])
+  exact ((h1.add h2).add h3).mono_exponent (by linarith only [ho, ho.kappa_nonneg])
 
 include ho hm hh hH in
 theorem axialQuadratic_mem : MeanClass s (H + 9 / 10 - 2 * κ) (axialQuadratic m h) := by
   have h1 : MeanClass s (H + 9 / 10) ((2 : ℝ) • (m.axial * h.axial)) := by
     simpa only [add_comm] using Class.smul (Class.product hm.axial hh.axial ho.weight_le_one) 2
   have h2 := (Class.product hh.axial hh.axial ho.weight_le_one).mono_exponent
-    (show H + 9 / 10 ≤ H + H from by linarith)
-  exact (h1.add h2).mono_exponent (by linarith [ho.kappa_nonneg])
+    (show H + 9 / 10 ≤ H + H from by linarith only [hH])
+  exact (h1.add h2).mono_exponent (by linarith only [ho, ho.kappa_nonneg])
 
 include ho hb hm hh hH in
 theorem actualRadialError_mem
@@ -525,14 +527,17 @@ theorem defects_update :
   have hz := axialDefect_update ha hop hb hm hh W hW
   funext n p i
   fin_cases i <;>
-    simp [defects, linearRows, remainders, hp, ht, hz, Pi.add_apply, Pi.sub_apply, smul_eq_mul]
+    simp only [defects, hp, Pi.add_apply, ht, hz, one_div, Pi.sub_apply, Pi.smul_apply, smul_eq_mul,
+        Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero, linearRows, Matrix.add_cons,
+        Matrix.head_cons, Matrix.tail_cons, Matrix.empty_add_empty, remainders, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
 
 include ha hop hb hm hh hW in
 theorem defects_after_solved_rows
     (hrows : linearRows o base h = -defects o base m W) :
     defects o base (updated m h) W = remainders o base m h W := by
   rw [defects_update ha hop hb hm hh W hW, hrows]
-  simp
+  simp only [add_neg_cancel, zero_add]
 
 end ExactMoments
 
@@ -639,7 +644,8 @@ theorem barMoment_slow {f : ScalarField (Point P)} (hf : IsSlow f) (k n : ℕ) (
   apply integral_congr_ae
   filter_upwards [] with r
   congr 1
-  simp [PressureStream.torusAverage, PressureStream.torusInner, hf n r p]
+  simp only [PressureStream.torusAverage, PressureStream.torusInner, hf n r p,
+      intervalIntegral.integral_const, sub_zero, smul_eq_mul, one_mul]
 
 theorem Shell.sliceIntegrable {a b : ℝ} {f : ScalarField (Point P)} (hf : Shell a b f)
     (k n : ℕ) (p : P) : Integrable (fun r => r ^ k * slowSlice f n p r) :=
@@ -672,7 +678,7 @@ theorem fiveRows_preserve_masses {a b : ℝ} {o : Operators (Point P)}
   obtain ⟨hzv, hzg⟩ := fiveRows_mass_zero hv hg hrows
   change barMoment 2 (m.angular + h.angular) = _ ∧ barMoment 1 (m.axial + h.axial) = _
   rw [barMoment_add hm.angular hh.angular, barMoment_add hm.axial hh.axial, hzv, hzg]
-  simp
+  simp only [add_zero, and_self]
 
 /-- The three moment rows are exactly those solved in (35), including the
 minus sign and factor one half in the axial pressure moment. -/
@@ -722,7 +728,8 @@ theorem linearRows_eq_neg_of_fiveRows {a b : ℝ} (ha : 0 < a)
         simp only [slowSlice, axialLeading, leadingRadial, Operators.invRadius, hop.radius_eq,
           Pi.mul_apply, Pi.smul_apply, smul_eq_mul, pow_one]
         by_cases hr : r = 0
-        · simp [hr]
+        · simp only [hr, zero_mul, one_div, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+            inv_zero, mul_zero, sub_self]
         · field_simp
       _ = _ := (hrows n p).2.2.2.2
 

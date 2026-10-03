@@ -444,13 +444,9 @@ theorem hasFDerivAt_multiplierTerm {f : Source P} (hf : ContDiff ℝ ∞ f)
     HasFDerivAt (fun w : Point P => m k * coefficient f w.1 k * mode k w.2)
       (multiplierTermDerivative m f k z) z := by
   let L := fderiv ℝ (fun q => coefficient f q k) z.1
-  have hc : HasFDerivAt (fun w : Point P => coefficient f w.1 k)
-      (L.comp (ContinuousLinearMap.fst ℝ P Plane)) z :=
-    (((coefficient_smooth hf k).differentiable (by simp) z.1).hasFDerivAt.comp z
-      (hasFDerivAt_fst))
-  have he : HasFDerivAt (fun w : Point P => mode k w.2)
-      (mode k z.2 • ((phase k).comp (ContinuousLinearMap.snd ℝ P Plane))) z :=
-    ((phase k).hasFDerivAt.comp z (hasFDerivAt_snd)).cexp
+  have hc := ((coefficient_smooth hf k).differentiable (by simp) z.1).hasFDerivAt.comp z
+    (hasFDerivAt_fst (p := z))
+  have he := ((phase k).hasFDerivAt.comp z (hasFDerivAt_snd (p := z))).cexp
   have hd : multiplierTermDerivative m f k z =
       (m k * coefficient f z.1 k) •
         (mode k z.2 • ((phase k).comp (ContinuousLinearMap.snd ℝ P Plane))) +
@@ -480,7 +476,7 @@ theorem hasFDerivAt_multiplierTerm {f : Source P} (hf : ContDiff ℝ ∞ f)
     simp only [Complex.real_smul, smul_eq_mul]
     ring
   rw [hd]
-  exact (hc.const_mul (m k)).mul he
+  apply (hc.const_mul (m k)).mul he
 
 theorem norm_multiplierTermDerivative_le (m : Frequency → ℂ) (f : Source P)
     (k : Frequency) (z : Point P) :
@@ -519,17 +515,19 @@ theorem uniform_multiplierDerivative_bound {m : Frequency → ℂ} (hm : Polynom
   have hsum : 0 ≤ ∑ i : BasisIndex P, ‖parameterLift i‖ * CP i :=
     Finset.sum_nonneg (fun i _ => mul_nonneg (norm_nonneg (parameterLift i)) (hCP i))
   refine ⟨(∑ i : BasisIndex P, ‖parameterLift i‖ * CP i) +
-    ‖torusLiftX (P := P)‖ * CX + ‖torusLiftY (P := P)‖ * CY, by positivity, ?_⟩
+    ‖torusLiftX (P := P)‖ * CX + ‖torusLiftY (P := P)‖ * CY,
+    add_nonneg (add_nonneg hsum (mul_nonneg (norm_nonneg _) hCX))
+      (mul_nonneg (norm_nonneg _) hCY), ?_⟩
   intro z hz k
   apply (norm_multiplierTermDerivative_le m f k z).trans
   calc
     _ ≤ (∑ i : BasisIndex P, ‖parameterLift i‖ * (CP i * (weight k ^ 4)⁻¹)) +
         ‖torusLiftX (P := P)‖ * (CX * (weight k ^ 4)⁻¹) +
-        ‖torusLiftY (P := P)‖ * (CY * (weight k ^ 4)⁻¹) := by
-      gcongr with i
-      · exact hP i z.1 hz k
-      · exact hX z.1 hz k
-      · exact hY z.1 hz k
+        ‖torusLiftY (P := P)‖ * (CY * (weight k ^ 4)⁻¹) :=
+      add_le_add (add_le_add
+        (Finset.sum_le_sum fun i _ => mul_le_mul_of_nonneg_left (hP i z.1 hz k) (norm_nonneg _))
+        (mul_le_mul_of_nonneg_left (hX z.1 hz k) (norm_nonneg _)))
+        (mul_le_mul_of_nonneg_left (hY z.1 hz k) (norm_nonneg _))
     _ = _ := by simp only [← mul_assoc, ← Finset.sum_mul]; ring
 
 theorem hasFDerivAt_applyMultiplier {m : Frequency → ℂ} (hm : PolynomialGrowth m)
@@ -570,10 +568,8 @@ theorem fderiv_applyMultiplier {m : Frequency → ℂ} (hm : PolynomialGrowth m)
       ((torusLiftX (P := P)).summable hX)) ((torusLiftY (P := P)).summable hY),
     Summable.tsum_add (summable_sum fun i hi => hLP i) ((torusLiftX (P := P)).summable hX),
     Summable.tsum_finsetSum (fun i hi => hLP i)]
-  congr 2
-  · apply Finset.sum_congr rfl
-    intro i hi
-    exact ((parameterLift i).map_tsum (hP i)).symm
+  refine congrArg₂ (· + ·) (congrArg₂ (· + ·) (Finset.sum_congr rfl fun i _ => ?_) ?_) ?_
+  · exact ((parameterLift i).map_tsum (hP i)).symm
   · exact ((torusLiftX (P := P)).map_tsum hX).symm
   · exact ((torusLiftY (P := P)).map_tsum hY).symm
 
@@ -872,13 +868,13 @@ theorem norm_jet_applyMultiplier_le (n l : ℕ) {m : Frequency → ℂ}
           · apply add_le_add
             · apply Finset.sum_le_sum
               intro i hi
-              exact (norm_jet_linear (parameterLift i)
+              apply (norm_jet_linear (parameterLift i)
                 (applyMultiplier_smooth hmg (hG i) (hPG i)) n (p, Y)).trans
                 (mul_le_mul_of_nonneg_left (hGb i) (norm_nonneg _))
-            · exact (norm_jet_linear (torusLiftX (P := P))
+            · apply (norm_jet_linear (torusLiftX (P := P))
                 (applyMultiplier_smooth hmg.mulX hf hp) n (p, Y)).trans
                 (mul_le_mul_of_nonneg_left hx (norm_nonneg _))
-          · exact (norm_jet_linear (torusLiftY (P := P))
+          · apply (norm_jet_linear (torusLiftY (P := P))
               (applyMultiplier_smooth hmg.mulY hf hp) n (p, Y)).trans
               (mul_le_mul_of_nonneg_left hy (norm_nonneg _))
         _ = _ := by

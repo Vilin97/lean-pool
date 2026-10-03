@@ -327,10 +327,11 @@ theorem physical_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
         (hb.base_F k I w hw hregion hgeo.1 hcell chart hchart)
         (hb.base_G k I w hw hregion hgeo.1 hcell chart hchart)
     · rw [jet_zero_off_tsupport _ _ hs, norm_zero]
-      positivity
+      exact mul_nonneg hC (Real.rpow_nonneg hq.le _)
   have hsum := masked_finsum_jet_bound hh hh1 (f.periodized a h r0)
     (fun I _ _ => (hr.periodized_smooth hc ha I).contDiffAt) hr.periodized_support hw m
-    (B := C * physicalQ h w ^ (g - PhysicalGraphBounds.waveLoss h m)) (by positivity)
+    (B := C * physicalQ h w ^ (g - PhysicalGraphBounds.waveLoss h m))
+    (mul_nonneg hC (Real.rpow_nonneg hq.le _))
   refine (hsum ?_).trans_eq (by ring)
   intro I hregion
   rcases hr.periodized_germ_cover hc ha I w with ⟨k, _, hg⟩ | hg
@@ -338,7 +339,7 @@ theorem physical_sum_jet_bound {h a b Z r0 P B eBase : ℝ}
     exact hcopy I hregion k
   · rw [iteratedFDeriv_eq_of_eventuallyEq hg m]
     simp only [iteratedFDeriv_fun_zero, Pi.zero_apply, norm_zero]
-    positivity
+    exact mul_nonneg hC (Real.rpow_nonneg hq.le _)
 
 section WeightedInputs
 
@@ -384,14 +385,16 @@ theorem CommonChart.amplitude_bound {s : StripData D} {α σ : ℝ}
         A * ChartScales.Q I.1.val.1 ^ (h * α + σ) * ChartScales.S I.1.val.1 ^ p := by
   obtain ⟨A, hA, p, hb⟩ := hs.chart_bound m
   obtain ⟨B, hB, q, hq⟩ := hchart.positive_jets m
-  refine ⟨(m.factorial : ℝ) * A * B ^ m, by positivity, p + q * m, ?_⟩
+  refine ⟨(m.factorial : ℝ) * A * B ^ m,
+    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hA) (pow_nonneg (zero_le_one.trans hB) m),
+    p + q * m, ?_⟩
   intro k I x hx j hj
   have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by
       have := I.1.property; omega)
   have hQ := ChartScales.Q_pos I.1.val.1
   have hS0 : 0 ≤ ChartScales.S I.1.val.1 := zero_le_one.trans hS
-  have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p := by
-      positivity
+  have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p :=
+    mul_nonneg (mul_nonneg hA (Real.rpow_nonneg hQ.le _)) (pow_nonneg hS0 p)
   have hB0 : 1 ≤ B * ChartScales.S I.1.val.1 ^ q :=
     one_le_mul_of_one_le_of_one_le hB (one_le_pow₀ hS)
   have hjb := PhysicalClassBounds.composition_jet_bound

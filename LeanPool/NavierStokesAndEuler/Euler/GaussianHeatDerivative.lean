@@ -63,7 +63,7 @@ def lineHeat (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) : LiftL2 period
 
 @[simp] theorem lineHeat_zero (a : LiftTangent) (f : LiftL2 period) : lineHeat period a 0 f = f :=
     by
-  simp [lineHeat]
+  simp only [lineHeat, gaussianMeasure_zero_var, integral_dirac, lineOrbit_zero]
 
 /-- Gaussian averaging is contractive, including variance zero. -/
 theorem lineHeat_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
@@ -72,7 +72,8 @@ theorem lineHeat_norm_le (a : LiftTangent) (v : ℝ≥0) (f : LiftL2 period) :
       (gaussianMeasure 0 v))
     (f := lineOrbit period a f) (Filter.Eventually.of_forall (fun x => (lineOrbit_norm period a f
         x).le))
-  simpa [lineHeat, measureReal_def] using h
+  simpa only [lineHeat, ge_iff_le, integral_const, measureReal_def, measure_univ,
+      ENNReal.toReal_one, smul_eq_mul, one_mul] using h
 
 theorem lineHeat_add (a : LiftTangent) (v : ℝ≥0) (f g : LiftL2 period) :
     lineHeat period a v (f+g) = lineHeat period a v f + lineHeat period a v g := by
@@ -96,7 +97,7 @@ def lineHeatOperator (a : LiftTangent) (v : ℝ≥0) : LiftL2 period →L[ℝ] L
 
 theorem lineHeatOperator_norm_le (a : LiftTangent) (v : ℝ≥0) : ‖lineHeatOperator period a v‖ ≤ 1 :=
   ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by
-      simpa using lineHeat_norm_le period a v f)
+      simpa only [lineHeatOperator_apply, one_mul] using lineHeat_norm_le period a v f)
 
 /-- The heat average commutes with every cylinder translation. -/
 theorem lineHeat_translation (a : LiftTangent) (v : ℝ≥0) (b : LiftDomain period) (f : LiftL2
@@ -165,15 +166,15 @@ theorem lineHeat_eq_standardGaussian (a : LiftTangent) (v : ℝ≥0) (f : LiftL2
       ∫ x, lineOrbit period a f (Real.sqrt (v : ℝ) * x) ∂gaussianMeasure 0 1 := by
   have hvar : (⟨Real.sqrt (v : ℝ) ^ 2, sq_nonneg _⟩ : ℝ≥0) * 1 = v := by
     ext
-    simp [Real.sq_sqrt v.coe_nonneg]
+    simp only [Real.sq_sqrt v.coe_nonneg, mul_one, NNReal.val_eq_coe]
   have hmap := gaussianReal_map_const_mul (μ := 0) (v := (1 : ℝ≥0)) (Real.sqrt (v : ℝ))
   have hmap' : Measure.map (fun x => Real.sqrt (v : ℝ) * x) (gaussianMeasure 0 1) =
       gaussianMeasure 0 v := by
     simp only [gaussianMeasure_eq_real]
     convert hmap using 2
-    · simp
+    · simp only [mul_zero]
     · ext
-      simp [Real.sq_sqrt v.coe_nonneg]
+      simp only [Real.sq_sqrt v.coe_nonneg, NNReal.mk_coe, mul_one]
   clear hmap hvar
   rw [lineHeat, ← hmap', integral_map_of_stronglyMeasurable (by fun_prop)
     (lineOrbit_continuous period a f).stronglyMeasurable]
@@ -232,7 +233,8 @@ theorem gaussianPDF_hasDerivAt (v : ℝ≥0) (x : ℝ) :
     (Real.sqrt (2*Real.pi*(v : ℝ)))⁻¹
   convert! h using 1
   · ext y
-    simp [gaussianDensity]
+    simp only [gaussianDensity, NNReal.zero_le_coe, Real.sqrt_mul', Nat.ofNat_nonneg, Real.sqrt_mul,
+        mul_inv_rev, sub_zero, Pi.neg_apply, Pi.pow_apply, id_eq]
   · simp only [gaussianDensity, sub_zero, Pi.neg_apply, Pi.pow_apply, id_eq,
       Nat.cast_ofNat, Nat.reduceSub, pow_one, mul_one]
     ring
@@ -242,7 +244,7 @@ theorem gaussianMomentKernel_integrable (v : ℝ≥0) :
     Integrable (fun x : ℝ => (x / (v : ℝ)) * gaussianDensity 0 v x) := by
   by_cases hv : v = 0
   · subst v
-    simp
+    simp only [NNReal.coe_zero, div_zero, zero_mul, integrable_fun_zero]
   have hvpos : 0 < (v : ℝ) := NNReal.coe_pos.mpr (pos_iff_ne_zero.mpr hv)
   have h := (integrable_mul_exp_neg_mul_sq (by positivity : 0 < (2*(v : ℝ))⁻¹)).const_mul
     ((Real.sqrt (2*Real.pi*(v : ℝ)))⁻¹ / (v : ℝ))
@@ -270,9 +272,9 @@ theorem gaussianAbsMoment_scale (v : ℝ≥0) :
     have h := gaussianReal_map_const_mul (μ := 0) (v := (1 : ℝ≥0)) (Real.sqrt (v : ℝ))
     simp only [gaussianMeasure_eq_real]
     convert h using 2
-    · simp
+    · simp only [mul_zero]
     · ext
-      simp [Real.sq_sqrt v.coe_nonneg]
+      simp only [Real.sq_sqrt v.coe_nonneg, NNReal.mk_coe, mul_one]
   rw [gaussianAbsMoment, ← hmap, integral_map_of_stronglyMeasurable (by
       fun_prop) continuous_abs.stronglyMeasurable]
   simp_rw [abs_mul, abs_of_nonneg (Real.sqrt_nonneg _)]

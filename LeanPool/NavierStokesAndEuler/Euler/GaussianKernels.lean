@@ -10,6 +10,7 @@ public import Mathlib.MeasureTheory.Measure.Lebesgue.Basic
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 public import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Probability.Distributions.Gaussian.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Explicit Gaussian kernels used by the heat operators. The probability theory needed to
 establish their mass stays in the proofs, while the kernel formulas remain transparent. -/

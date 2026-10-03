@@ -59,7 +59,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
 /-- The original initial boundary force, expressed in the actual solenoidal coordinate space. -/
 def meanBoundaryFlux (M0 A : L2 →L[ℝ] L2) (L : ℝ) (u : meanDerivatives T hT FInv) :
     solenoidalSpace :=
-  (solenoidalFrame T F ⟨0, le_rfl, hT⟩).adjoint
+  adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (solenoidalFrame T F ⟨0, le_rfl, hT⟩)
     ((M0+L • A) (meanTrace T hT FInv u))
 
 /-- The full mean weak equation, in actual momentum variables, retains the
@@ -79,12 +79,13 @@ theorem meanMomentum_full_weak
     (v : TimeLp T solenoidalSpace) :
     ⟪momentum T hT (solenoidalFrame T F) (u : TimeLp T L2), v⟫_ℝ +
       ⟪momentumForcing T hT (solenoidalFrame T F) (solenoidalFrame T F') H
-        (u : TimeLp T L2) f, primitiveTimeLp T hT v⟫_ℝ +
-      ⟪meanBoundaryFlux T hT FInv F M0 A L u, initialTrace T hT v⟫_ℝ = 0 := by
+        (u : TimeLp T L2) f, primitiveTimeLp (E := solenoidalSpace) T hT v⟫_ℝ +
+      ⟪meanBoundaryFlux T hT FInv F M0 A L u,
+        initialTrace (E := solenoidalSpace) T hT v⟫_ℝ = 0 := by
   have h := hu (meanTestMap T hT FInv F F' hF hInv v)
   have htrace := meanTestMap_trace T hT FInv F F' hF hInv v
   change meanTrace T hT FInv (meanTestMap T hT FInv F F' hF hInv v) =
-    solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace T hT v) at htrace
+    solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace (E := solenoidalSpace) T hT v) at htrace
   have hp := meanTestMap_primitive T hT FInv F F' hF hInv v
   have hk := congrArg (fun w : TimeLp T L2 => ⟪(u : TimeLp T L2), w⟫_ℝ)
     (meanTestMap_coe T hT FInv F F' hF hInv v)
@@ -96,18 +97,20 @@ theorem meanMomentum_full_weak
   have htest :
       ⟪(u : TimeLp T L2), productDerivative T hT (solenoidalFrame T F) (solenoidalFrame T F') v⟫_ℝ -
         ⟪timeMultiplier T hT H (meanPrimitive T hT FInv u),
-          timeMultiplier T hT (solenoidalFrame T F) (primitiveTimeLp T hT v)⟫_ℝ +
+          timeMultiplier T hT (solenoidalFrame T F)
+            (primitiveTimeLp (E := solenoidalSpace) T hT v)⟫_ℝ +
         ⟪M0 (meanTrace T hT FInv u),
-          solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace T hT v)⟫_ℝ +
+          solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace (E := solenoidalSpace) T hT v)⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u),
-          solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace T hT v)⟫_ℝ =
-        -⟪f, timeMultiplier T hT (solenoidalFrame T F) (primitiveTimeLp T hT v)⟫_ℝ := by
-    linarith only [h, hk, hpot, hforce, hm, ha]
+          solenoidalFrame T F ⟨0, le_rfl, hT⟩ (initialTrace (E := solenoidalSpace) T hT v)⟫_ℝ =
+        -⟪f, timeMultiplier T hT (solenoidalFrame T F)
+          (primitiveTimeLp (E := solenoidalSpace) T hT v)⟫_ℝ := by
+    linear_combination h - hk + hpot - hm - ha - hforce
   simp only [meanPrimitive, comp_apply, Submodule.subtypeL_apply,
     productDerivative, add_apply, inner_add_right] at htest
   simp only [momentum, momentumForcing, meanBoundaryFlux, inner_add_left,
     inner_sub_left, adjoint_inner_left, add_apply, smul_apply, real_inner_smul_left]
-  linarith only [htest]
+  linear_combination htest
 
 /-- The weak mean solution has a genuine AC momentum representative whose initial
 value is derived from the original boundary form. -/

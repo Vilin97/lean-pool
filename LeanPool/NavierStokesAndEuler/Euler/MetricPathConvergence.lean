@@ -39,13 +39,14 @@ theorem familyMetricNorm_continuous :
 def metricPath (T : ℝ) (K : C(Icc (0 : ℝ) T, H →L[ℝ] H))
     (u : C(Icc (0 : ℝ) T, I → H)) : C(Icc (0 : ℝ) T, ℝ) :=
   ⟨fun t => familyMetricNorm (K t) (u t),
-    familyMetricNorm_continuous.comp (K.continuous.prodMk u.continuous)⟩
+    (familyMetricNorm_continuous (H := H)).comp (K.continuous.prodMk u.continuous)⟩
 
 /-- The actual metric-root path depends continuously on the field path in the uniform topology. -/
 theorem metricPath_continuous (T : ℝ) (K : C(Icc (0 : ℝ) T, H →L[ℝ] H)) :
     Continuous (fun u : C(Icc (0 : ℝ) T, I → H) => metricPath T K u) := by
   apply ContinuousMap.continuous_of_continuous_uncurry
-  exact familyMetricNorm_continuous.comp
+  exact (familyMetricNorm_continuous (I := I) (H := H)).comp
+    (f := fun p : C(Icc (0 : ℝ) T, I → H) × Icc (0 : ℝ) T => (K p.2, p.1 p.2))
     ((K.continuous.comp continuous_snd).prodMk continuous_eval)
 
 /-- Strong uniform field convergence gives uniform convergence of the actual square-root metric

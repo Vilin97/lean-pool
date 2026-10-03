@@ -55,9 +55,7 @@ theorem inverse_time : SmoothTimeField.TimeDerivative G.T G.T_pos.le G.inverse G
     exact G.inverse_left (projIcc 0 G.T G.T_pos.le s) x v
   rw [he] at hd
   simp only [SmoothTimeField.realField_apply] at hd
-  have hz : (J.field t x).comp (G.frame.field t x) +
-      (G.inverse.field t x).comp (G.first.field t x)=0 :=
-    (hd.derivWithin (uniqueDiffOn_Icc G.T_pos t t.property)).symm.trans
+  have hz := (hd.derivWithin (uniqueDiffOn_Icc G.T_pos t t.property)).symm.trans
       ((hasDerivWithinAt_const (t : ℝ) (Icc (0 : ℝ) G.T)
         (ContinuousLinearMap.id ℝ Space)).derivWithin
           (uniqueDiffOn_Icc G.T_pos t t.property))
@@ -128,19 +126,30 @@ def centerCurvature (t : ℝ) : EndSpace :=
 def centerStrainDerivative (t : ℝ) : EndSpace :=
   extendPath G.T G.T_pos.le G.strainDerivative.field t 0
 
+/-- The clamped extension of a time field is that field at the clamped time. -/
+theorem extendPath_field (A : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace) (t : ℝ) :
+    extendPath G.T G.T_pos.le A.field t = A.field (projIcc 0 G.T G.T_pos.le t) := rfl
+
+/-- Inside the time interval the clamped extension of a time field is the field itself. -/
+theorem extendPath_field_of_mem (A : SmoothTimeField (Icc (0 : ℝ) G.T) Space EndSpace) {t : ℝ}
+    (ht : t ∈ Icc (0 : ℝ) G.T) : extendPath G.T G.T_pos.le A.field t = A.field ⟨t, ht⟩ :=
+  congrArg A.field (projIcc_of_mem G.T_pos.le ht)
+
 theorem centerStrainDerivative_eq (t : ℝ) :
     G.centerStrainDerivative t = -(G.centerStrain t).comp (G.centerStrain t)-G.centerCurvature t :=
-  G.strainDerivative_apply (projIcc 0 G.T G.T_pos.le t) 0
+    by
+  rw [centerStrainDerivative, centerStrain, centerCurvature, G.extendPath_field,
+    G.extendPath_field, G.extendPath_field]
+  exact G.strainDerivative_apply (projIcc 0 G.T G.T_pos.le t) 0
 
 theorem centerStrain_derivative (τ : ℝ) (hτ : 0 ≤ τ)
     (t : ℝ) (ht : t ∈ Icc τ G.T) :
     HasDerivWithinAt G.centerStrain (G.centerStrainDerivative t) (Icc τ G.T) t := by
   have ht0 : t ∈ Icc (0 : ℝ) G.T := ⟨hτ.trans ht.1,ht.2⟩
-  have hd := G.strain_time ⟨t,ht0⟩ 0
-  have hd' := hd.mono (show Icc τ G.T ⊆ Icc (0 : ℝ) G.T from fun _ hs => ⟨hτ.trans hs.1,hs.2⟩)
-  unfold centerStrain centerStrainDerivative
-  simpa only [SmoothTimeField.realField,extendPath,
-    projIcc_of_mem G.T_pos.le ht0] using hd'
+  have hd := (G.strain_time ⟨t,ht0⟩ 0).mono
+    (show Icc τ G.T ⊆ Icc (0 : ℝ) G.T from fun _ hs => ⟨hτ.trans hs.1,hs.2⟩)
+  rw [centerStrainDerivative, G.extendPath_field_of_mem _ ht0]
+  exact hd
 
 /-- The fixed-center derivative bound needed by the next geometric stage
 follows from the actual strain/curvature bounds and one scalar guard. -/
@@ -152,9 +161,10 @@ theorem centerStrainDerivative_bound (τ CM CH K : ℝ) (hτ : 0 ≤ τ) (hCM : 
   have ht0 : t ∈ Icc (0 : ℝ) G.T := ⟨hτ.trans ht.1,ht.2⟩
   have hm := hM t ht
   have hh := hH t ht
-  simp only [centerStrain,centerCurvature,extendPath,projIcc_of_mem G.T_pos.le ht0] at hm hh
-  have hb := (G.strainDerivative_norm_bound CM CH hCM ⟨t,ht0⟩ 0 hm hh).trans hK
-  simpa only [centerStrainDerivative,extendPath,projIcc_of_mem G.T_pos.le ht0] using hb
+  rw [centerStrain, G.extendPath_field_of_mem _ ht0] at hm
+  rw [centerCurvature, G.extendPath_field_of_mem _ ht0] at hh
+  rw [centerStrainDerivative, G.extendPath_field_of_mem _ ht0]
+  exact (G.strainDerivative_norm_bound CM CH hCM ⟨t,ht0⟩ 0 hm hh).trans hK
 
 section Transverse
 

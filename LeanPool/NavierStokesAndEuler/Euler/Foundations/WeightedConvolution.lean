@@ -139,13 +139,13 @@ theorem shifted_triangular_sum_le_product (N : ℕ) (a b : ℕ → ℝ)
     single_le_sum (fun l _ => ha l) (mem_range.mpr (by omega))
   have hsum : (∑ n ∈ range N, b (n + 1)) ≤ ∑ j ∈ range (N + 1), b j := by
     rw [sum_range_succ']
-    linarith [hb 0]
+    linarith only [hb, hb 0]
   have hfirst : (∑ n ∈ range N, a 0 * b (n + 1)) ≤
       (∑ l ∈ range (N + 1), a l) * (∑ j ∈ range (N + 1), b j) := by
     rw [← mul_sum]
     exact mul_le_mul ha0 hsum (sum_nonneg (fun n _ => hb _))
       (sum_nonneg (fun n _ => ha _))
-  nlinarith
+  nlinarith only [hrest, hfirst]
 
 theorem shifted_source_term (ρ : ℝ) (hρ : 0 < ρ) (j l : ℕ)
     (a b : ℝ) (ha : 0 ≤ a) (hb : 0 ≤ b) :

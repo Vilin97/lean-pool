@@ -14,6 +14,7 @@ public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import LeanPool.NavierStokesAndEuler.ForMathlib.SmoothnessOrder
 import Mathlib.Analysis.Calculus.SmoothSeries
 import Mathlib.MeasureTheory.Function.LpSpace.Indicator
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-!
 The smooth compactly supported limit step for the proposed Euler construction.
@@ -84,7 +85,7 @@ theorem tsupport_sum_subset (f : ℕ → Space → Space) (K : Set Space) (hK : 
     intro n
     by_contra hn
     exact hxK (hsupp n hn)
-  exact hx (by simp [hz])
+  exact hx (by simp only [hz, tsum_zero])
 
 /-- Compact support follows from the prescribed common compact set. -/
 theorem compactSupport_sum (f : ℕ → Space → Space) (K : Set Space) (hK : IsCompact K)
@@ -103,7 +104,8 @@ theorem divergence_sum (f : ℕ → Space → Space) (v : ℕ → ℕ → ℝ)
   have hsd : Summable (fun n => fderiv ℝ (f n) x) :=
     Summable.of_norm_bounded (hv 1) (fun n => hd n x)
   simp only [divergence, ← coordinateTrace_eq_linearTrace]
-  rw [fderiv_tsum_apply (hv 1) (fun n => (hf n).differentiable (by simp)) hd
+  rw [fderiv_tsum_apply (hv 1) (fun n => (hf n).differentiable (by simp only [ne_eq,
+      WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])) hd
     (summable_values f v hv hb (0 : Space)) x]
   exact coordinateTrace.map_tsum hsd
 
@@ -115,7 +117,7 @@ theorem divergence_free_sum (f : ℕ → Space → Space) (v : ℕ → ℕ → �
     ∀ x, divergence (fun y => ∑' n, f n y) x = 0 := by
   intro x
   rw [divergence_sum f v hf hv hb x]
-  simp [hdiv]
+  simp only [hdiv, tsum_zero]
 
 /-- The common-support smooth limit belongs to every `L^p`, in particular to `L²`. -/
 theorem memLp_sum (f : ℕ → Space → Space) (v : ℕ → ℕ → ℝ)
@@ -134,7 +136,8 @@ theorem memLp_iterated_derivative_sum (f : ℕ → Space → Space) (v : ℕ →
     (k : ℕ) (p : ℝ≥0∞) :
     MemLp (iteratedFDeriv ℝ k (fun x => ∑' n, f n x)) p volume := by
   have hc : Continuous (iteratedFDeriv ℝ k (fun x => ∑' n, f n x)) :=
-    ContDiff.continuous_iteratedFDeriv (by simp) (contDiff_sum f v hf hv hb)
+    ContDiff.continuous_iteratedFDeriv (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true]) (contDiff_sum f v hf hv hb)
   exact hc.memLp_of_hasCompactSupport ((compactSupport_sum f K hK hsupp).iteratedFDeriv k)
 
 /-- Finite kinetic energy is obtained as integrability of the squared Euclidean norm. -/
@@ -149,7 +152,7 @@ theorem finite_energy_sum (f : ℕ → Space → Space) (v : ℕ → ℕ → ℝ
 theorem odd_sum (f : ℕ → Space → Space) (hodd : ∀ n x, f n (-x) = -f n x) :
     ∀ x, (∑' n, f n (-x)) = -(∑' n, f n x) := by
   intro x
-  simp [hodd, tsum_neg]
+  simp only [hodd, tsum_neg]
 
 /--
 Constructs the limit initial velocity with all required qualitative properties.

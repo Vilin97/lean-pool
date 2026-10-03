@@ -38,7 +38,7 @@ variable (M : EulerMeanPacketProvider.Data)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
   (Cagree : SourceCoefficientAgreement M D) (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-  (Q : Budget period D.T_pos
+  (Q : EulerAllOrderDriftCorrection.Budget period D.T_pos
     (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk))
 
 /-- Initialized exact physical velocity as an element of `Space`. -/
@@ -56,7 +56,7 @@ theorem initializedExactPhysicalVelocity_eq (t : Icc (0 : ℝ) D.T) (Y : Space �
       initializedVelocity M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
         (t,(Y x,k*inner ℝ D.m₀ (Y x))) +
       k⁻¹ • D.F.field t (Y x) (Q.pointField period t (cylinderGraph period k D.m₀ (Y x))) := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := by linarith only [hk]
   have ha : (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k
       hk).approximation =
       (coordinateField D (initializedVelocityField M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹)
@@ -124,7 +124,8 @@ theorem initializedExactPhysicalVelocity_gradient_error
     (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     ‖fderiv ℝ (initializedExactPhysicalVelocity M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree N hN k hk Q t Y) (X 0) -
-      (α/δ) • rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t 0) (D.normal.field t 0)‖ ≤
+      (α/δ) • rankOne ℝ (E := Space) (F := Space) (canonicalVelocity τ hτ hτT B ξ hs t 0)
+        (D.normal.field t 0)‖ ≤
       (initializedRemainderDerivativeCost L.R S.H0/k)*‖D.FInv.field t 0‖ +
       ‖fderiv ℝ (fun y => k⁻¹ • D.F.field t (Y y)
         (Q.pointField period t (cylinderGraph period k D.m₀ (Y y)))) (X 0)‖ := by

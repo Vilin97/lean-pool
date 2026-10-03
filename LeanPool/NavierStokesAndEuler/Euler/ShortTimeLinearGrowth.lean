@@ -10,6 +10,7 @@ public import Mathlib.Topology.ContinuousMap.Compact
 import Mathlib.Analysis.Calculus.MeanValue
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! A short-interval estimate for actual differentiable trajectories.
 The proof uses the supremum norm and the mean value inequality, so the
@@ -53,7 +54,7 @@ theorem norm_le_two (T L : ℝ) (hL : 0 ≤ L)
         ⟨le_rfl,s.property.2⟩) u.property
     have hdist : ‖(u : ℝ)-(s : ℝ)‖ ≤ T := by
       rw [Real.norm_eq_abs,abs_of_nonneg (sub_nonneg.mpr u.property.1)]
-      linarith [s.property.1,u.property.2]
+      linarith only [s.property.1, u.property.2]
     have hdiff : ‖f u-f s‖ ≤ (L*T)*‖V‖ :=
       hh.trans ((mul_le_mul_of_nonneg_left hdist (mul_nonneg hL (norm_nonneg V))).trans_eq
         (by ring))
@@ -65,7 +66,7 @@ theorem norm_le_two (T L : ℝ) (hL : 0 ≤ L)
   have hV : ‖V‖ ≤ ‖f s‖+(L*T)*‖V‖ :=
     (ContinuousMap.norm_le V (by positivity)).mpr hpoint
   have hsmall := mul_le_mul_of_nonneg_right hshort (norm_nonneg V)
-  have hV' : ‖V‖ ≤ 2*‖f s‖ := by linarith
+  have hV' : ‖V‖ ≤ 2*‖f s‖ := by linarith only [hV, hsmall]
   exact (V.norm_coe_le_norm ⟨t,hst,t.property.2⟩).trans hV'
 
 end EulerShortTimeLinearGrowth

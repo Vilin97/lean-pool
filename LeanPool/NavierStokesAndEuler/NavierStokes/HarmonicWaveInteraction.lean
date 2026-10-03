@@ -7,6 +7,7 @@ module
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.HarmonicResidual
 public import LeanPool.NavierStokesAndEuler.NavierStokes.WaveInteractionBounds
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
 
 /-!
 # Actual harmonic wave-update interactions
@@ -70,8 +71,9 @@ theorem constant_mul_constant (f g : D → ℂ) :
   ext j x
   rw [constant_mul]
   by_cases hj : j = 0
-  · simp [hj, constantCoefficient]
-  · simp [constantCoefficient, hj]
+  · simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, hj, Finsupp.single_eq_same]
+  · simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true,
+      Finsupp.single_eq_of_ne, Pi.zero_apply, mul_zero]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem constant_add (f g : D → ℂ) :
@@ -79,18 +81,25 @@ theorem constant_add (f g : D → ℂ) :
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [constantCoefficient]
-  · simp [constantCoefficient, hj]
+    simp only [constantCoefficient, AddMonoidAlgebra.coeff_add, AddMonoidAlgebra.coeff_single,
+        Finsupp.coe_add, Pi.add_apply, Finsupp.single_eq_same]
+  · simp only [constantCoefficient, AddMonoidAlgebra.coeff_add, AddMonoidAlgebra.coeff_single,
+      Finsupp.coe_add, Pi.add_apply, ne_eq, hj, not_false_eq_true, Finsupp.single_eq_of_ne,
+      Pi.zero_apply, add_zero]
 
 theorem differentiate_constant (V : D → D) (k : ℝ) (Φ : D → ℝ) (f : D → ℂ) :
     differentiate V k Φ (constantCoefficient f) = constantCoefficient (along V f) := by
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [differentiate_apply, derivativeCoefficient, constantCoefficient, phaseFactor]
+    simp only [constantCoefficient, differentiate_apply, derivativeCoefficient,
+        AddMonoidAlgebra.coeff_single, Finsupp.single_eq_same, phaseFactor, Int.cast_zero, mul_zero,
+        Complex.ofReal_zero, zero_mul, add_zero]
   · have hz : (constantCoefficient f : Coefficients D) j = 0 := by
-      simp [constantCoefficient, hj]
-    simp [differentiate_apply, derivativeCoefficient_zero, constantCoefficient, hj]
+      simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true,
+          Finsupp.single_eq_of_ne]
+    simp only [constantCoefficient, differentiate_apply, AddMonoidAlgebra.coeff_single, ne_eq, hj,
+        not_false_eq_true, Finsupp.single_eq_of_ne, derivativeCoefficient_zero, Pi.zero_apply]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem angularDifferentiate_constant (kp : ℤ) (f : D → ℂ) :
@@ -98,8 +107,11 @@ theorem angularDifferentiate_constant (kp : ℤ) (f : D → ℂ) :
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [angularDifferentiate_apply]
-  · simp [angularDifferentiate_apply, constantCoefficient, hj]
+    simp only [angularDifferentiate_apply, zero_mul, Int.cast_zero, AddMonoidAlgebra.coeff_zero,
+        Finsupp.coe_zero, Pi.zero_apply]
+  · simp only [constantCoefficient, angularDifferentiate_apply, Int.cast_mul,
+      AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true, Finsupp.single_eq_of_ne,
+      Pi.zero_apply, mul_zero, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem rotate_constant (m : D → ComplexVector) (i : Fin 3) :
@@ -107,8 +119,12 @@ theorem rotate_constant (m : D → ComplexVector) (i : Fin 3) :
         angularGenerator (m x) i) := by
   ext j x
   fin_cases i <;> by_cases hj : j = 0 <;>
-    simp [HarmonicResidual.rotate, HarmonicResidual.constantVector, angularGenerator,
-      constantCoefficient, hj]
+    simp only [HarmonicResidual.rotate, HarmonicResidual.constantVector, constantCoefficient,
+        Fin.isValue, Fin.zero_eta, Matrix.cons_val_zero, AddMonoidAlgebra.coeff_neg,
+        AddMonoidAlgebra.coeff_single, hj, Finsupp.coe_neg, Pi.neg_apply, Finsupp.single_eq_same,
+        angularGenerator, ne_eq, not_false_eq_true, Finsupp.single_eq_of_ne, Pi.zero_apply,
+        neg_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val,
+        AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem rotate_apply (a : HarmonicResidual.VectorCoefficients D) (j : ℤ) (x : D) (i : Fin 3) :
@@ -191,7 +207,9 @@ theorem stateMean_updated (s₀ s₁ : CorrectionState.State D) (h : MeanIncreme
     (he : s₁.mean = MeanIncrementBounds.updated s₀.mean h) (n : ℕ) :
     HarmonicResidual.stateMean s₁ n = HarmonicResidual.stateMean s₀ n + tripleField h n := by
   ext x i
-  fin_cases i <;> simp [HarmonicResidual.stateMean, tripleField, he, MeanIncrementBounds.updated]
+  fin_cases i <;> simp only [HarmonicResidual.stateMean, he, MeanIncrementBounds.updated,
+      Pi.add_apply, Complex.ofReal_add, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      tripleField, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
 
 /-- Block amplitude, defined pointwise by `HarmonicResidual.realCoefficients (b.velocity n i)`. -/
 noncomputable def blockAmplitude (b : CorrectionState.HarmonicBlock D) (n : ℕ) :
@@ -269,7 +287,7 @@ noncomputable def slowGeometry {s : StripData D} {κ : ℝ} (c : CorrectionState
     convert! graph_vector_class ho.kappa_nonneg ho.radialFrequency ho.radialProfile
       c.operators.eR c.operators.vR using 1
     ext n x
-    simp [HarmonicResidual.contextFrame, smul_smul]
+    simp only [HarmonicResidual.contextFrame, smul_smul]
   axial_class := by
     simpa only [HarmonicResidual.contextFrame, ho.epsilon_eq] using
       axial_vector_class s c.operators.eZ
@@ -405,7 +423,8 @@ theorem residualBlock_mean_update (c : CorrectionState.Context D) (s₀ s₁ : C
         (meanCross c h b n i - (G₁ n i - G₀ n i) - (A₁ n i - A₀ n i))) j x := by
   by_cases hj : j = 0
   · subst j
-    simp [HarmonicResidual.residualBlock_zero_mode, HarmonicResidual.nonconstant]
+    simp only [HarmonicResidual.residualBlock_zero_mode, Pi.zero_apply, sub_self,
+        HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_same]
   · change HarmonicResidual.nonconstant _ j x - HarmonicResidual.nonconstant _ j x = _
     simp only [nonconstant_apply_of_ne _ hj]
     exact residualCoefficients_mean_update c s₀ s₁ h he b G₀ G₁ A₀ A₁ n hB hM hh j i
@@ -475,16 +494,13 @@ theorem residualBlock_mean_update_class {s : StripData D} {κ α H : ℝ} {P : �
   apply residualBlock_axisymmetric_alias_update c s₀ s₁ h he b G A₀ A₁ hA n
   · intro t
     exact ((tripleField_smooth hbase n t).contDiffAt (s.isOpen_domain.mem_nhds
-        hx)).differentiableAt (by
-        simp)
+        hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   · intro t
     exact ((tripleField_smooth hmean n t).contDiffAt (s.isOpen_domain.mem_nhds
-        hx)).differentiableAt (by
-        simp)
+        hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   · intro t
     exact ((tripleField_smooth hh.smooth n t).contDiffAt (s.isOpen_domain.mem_nhds
-        hx)).differentiableAt (by
-        simp)
+        hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   · exact hj
 
 /-- Residual difference block, bundling `velocity`, `pressure`, `frequency`, `phase` and the
@@ -538,7 +554,9 @@ theorem nonconstant_sub (a b : Coefficients D) :
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [HarmonicResidual.nonconstant]
+    simp only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
+        AddMonoidAlgebra.coeff_sub, Finsupp.erase_sub, Finsupp.coe_sub, Pi.sub_apply,
+        Finsupp.erase_same, Pi.zero_apply, sub_self]
   · simp only [nonconstant_apply_of_ne _ hj, coeff_sub]
 
 /-- Transport difference as an element of `Coefficients D`. -/
@@ -770,7 +788,8 @@ theorem projection_norm : ‖projection (D := D)‖ ≤ 1 := by
 theorem inclusion_norm : ‖inclusion (D := D)‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
   intro x
-  simp [inclusion, Prod.norm_def]
+  simp only [inclusion, ContinuousLinearMap.prod_apply, ContinuousLinearMap.id_apply, zero_apply,
+      Prod.norm_def, norm_zero, norm_nonneg, sup_of_le_left, one_mul, Std.le_refl]
 
 /-- Product strip, given by `pullbackStrip s projection`. -/
 noncomputable def productStrip (s : StripData D) : StripData (D × ℝ) := pullbackStrip s projection
@@ -854,12 +873,11 @@ theorem lifted_amplitude_angularIndependent {s : StripData D} {κ α : ℝ} {P :
   rcases p with ⟨x, θ⟩
   have hs := class_lift (blockAmplitude_class hb hj i)
   have hd := ((hs.smooth n).contDiffAt ((productStrip s).isOpen_domain.mem_nhds
-      hp)).differentiableAt (by
-      simp)
+      hp)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   change DifferentiableAt ℝ (fun q : D × ℝ => amplitude b j n q.1 i) (x, θ) at hd
   change along HarmonicResidual.angularDirection (fun q => amplitude b j n q.1 i) (x, θ) = 0
   rw [HarmonicResidual.along_angularDirection hd]
-  simp
+  simp only [deriv_const']
 
 theorem along_fst (V : D → D) {f : D → F} {p : D × ℝ}
     (hf : DifferentiableAt ℝ f p.1) :
@@ -892,7 +910,7 @@ theorem along_fullPhase_angular (b : CorrectionState.HarmonicBlock D) (n : ℕ)
   simp only [along, (fullPhase_hasFDerivAt b n hΦ).fderiv,
     _root_.add_apply, ContinuousLinearMap.comp_apply, _root_.smul_apply]
   change (fderiv ℝ (b.phase n) p.1) 0 + ((b.angularFrequency n : ℝ) / b.frequency n) * 1 = _
-  simp
+  simp only [map_zero, mul_one, zero_add]
 
 /-- The exact ordered coefficient from harmonic `j` advecting harmonic `l`.
 The first index is carried by the first input function; `l` enters the derivatives. -/
@@ -978,9 +996,11 @@ theorem orderedKernel_raw_class {s : StripData D} {κ α β : ℝ} {P : ℕ → 
   intro n x hx
   exact (orderedKernel_eq_fullCoefficient c ho hR a (amplitude a j) (amplitude b l)
     l n hx (hk n)
-    (((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
+    (((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     (fun r => ((((blockAmplitude_class hb hl r).smooth n).contDiffAt
-      (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))) i).symm
+      (s.isOpen_domain.mem_nhds hx)).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))) i).symm
 
 /-- Oscillatory input blocks have no stored velocity at harmonic zero. -/
 def ZeroMode (b : CorrectionState.HarmonicBlock D) : Prop :=
@@ -991,18 +1011,21 @@ theorem amplitude_zero {b : CorrectionState.HarmonicBlock D} (hb : ZeroMode b) (
     amplitude b 0 n = 0 := by
   ext x i
   have hzero := hb n i
-  simp [amplitude, blockAmplitude, HarmonicResidual.realCoefficients_apply, hzero]
+  simp only [amplitude, blockAmplitude, HarmonicResidual.realCoefficients_apply, hzero,
+      Pi.zero_apply, neg_zero, map_zero, add_zero, mul_zero]
 
 theorem orderedKernel_zero_left (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ)
     (kp l : ℤ) (b : D → ComplexVector) (x : D) (i : Fin 3) :
     orderedKernel g k Φ kp l 0 b x i = 0 := by
-  simp [orderedKernel]
+  simp only [orderedKernel, Pi.zero_apply, zero_mul, zero_div, Int.cast_mul, add_zero]
 
 theorem orderedKernel_zero_right (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ)
     (kp l : ℤ) (a : D → ComplexVector) (x : D) (i : Fin 3) :
     orderedKernel g k Φ kp l a 0 x i = 0 := by
   simp only [orderedKernel, Pi.zero_apply, mul_zero]
-  fin_cases i <;> simp [angularGenerator, derivativeCoefficient, along]
+  fin_cases i <;> simp only [Fin.isValue, derivativeCoefficient, along, fderiv_fun_const,
+      Pi.zero_apply, zero_apply, mul_zero, add_zero, angularGenerator, neg_zero, Fin.zero_eta,
+      Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
 
 theorem orderedKernel_raw_class_all {s : StripData D} {κ α β : ℝ} {P : ℕ → D → ℝ}
     (c : CorrectionState.Context D) (ho : MeanIncrementBounds.OperatorBounds s c.operators κ)
@@ -1049,7 +1072,7 @@ theorem convolution_apply_finset (a b : Coefficients D) (K : Finset ℤ)
   apply Finset.sum_subset ha
   intro j _ hj
   rw [Finsupp.notMem_support_iff.mp hj]
-  simp
+  simp only [Pi.zero_apply, zero_mul]
 
 theorem transport_convolution (g : HarmonicResidual.Frame D) (k : ℝ) (Φ : D → ℝ)
     (kp : ℤ) (a b : HarmonicResidual.VectorCoefficients D) (K : Finset ℤ)
@@ -1285,7 +1308,8 @@ theorem nonlinearErrorBlock_conjugate (c : CorrectionState.Context D)
 theorem nonlinearErrorBlock_zero (c : CorrectionState.Context D)
     (a b : CorrectionState.HarmonicBlock D) : ZeroMode (nonlinearErrorBlock c a b) := by
   intro n i
-  simp [nonlinearErrorBlock, HarmonicResidual.nonconstant]
+  simp only [nonlinearErrorBlock, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
+      Finsupp.erase_same]
 
 /-! ## Identification with the actual differentiated residual -/
 
@@ -1405,8 +1429,10 @@ theorem nonlinear_update_with_mean {U : Set D} (hU : IsOpen U)
     (HarmonicResidual.constantVector (B + M)) a b p q
     (fun r => HarmonicResidual.smoothCoefficients_constant ((hB r).add (hM r))) ha hb hp hq hx j i
   have hm := linear_mean_difference g k Φ kp B M b q
-    (fun r => ((hB r).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
-    (fun r => ((hM r).contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)) j i
+    (fun r => ((hB r).contDiffAt (hU.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+    (fun r => ((hM r).contDiffAt (hU.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) j i
   linear_combination hn + hm
 
 /-- Linear coefficients as an element of `HarmonicResidual.BlockCoefficients D`. -/
@@ -1505,7 +1531,8 @@ theorem residualBlock_wave_update {U : Set D} (hU : IsOpen U)
         (HarmonicResidual.realCoefficients (waveChangeCoefficients c u₀ a b g A₀ A₁ n i)) j x := by
   by_cases hj : j = 0
   · subst j
-    simp [HarmonicResidual.residualBlock_zero_mode, HarmonicResidual.nonconstant]
+    simp only [HarmonicResidual.residualBlock_zero_mode, Pi.zero_apply, sub_self,
+        HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_same]
   change HarmonicResidual.nonconstant _ j x - HarmonicResidual.nonconstant _ j x = _
   simp only [nonconstant_apply_of_ne _ hj]
   exact residualCoefficients_wave_update hU c u₀ u₁ he a b G g A₀ A₁ n hr hz hΦ hkp
@@ -1548,7 +1575,9 @@ theorem nonconstant_add (a b : Coefficients D) :
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [HarmonicResidual.nonconstant]
+    simp only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
+        AddMonoidAlgebra.coeff_add, Finsupp.erase_add, Finsupp.coe_add, Pi.add_apply,
+        Finsupp.erase_same, Pi.zero_apply, add_zero]
   simp only [nonconstant_apply_of_ne _ hj, coeff_add]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
@@ -1560,7 +1589,8 @@ theorem nonconstant_real_sub_axisymmetric (a b : Coefficients D) (hb : BandLimit
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [HarmonicResidual.nonconstant]
+    simp only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_same,
+        Pi.zero_apply]
   simp only [nonconstant_apply_of_ne _ hj, HarmonicResidual.realCoefficients_apply,
     coeff_sub, band_zero_coefficient hb hj, band_zero_coefficient hb (neg_ne_zero.mpr hj),
     Pi.zero_apply, sub_zero]
@@ -1670,9 +1700,17 @@ theorem divergenceCoefficients_single (g : HarmonicResidual.Frame D)
   ext m x
   by_cases hm : m = j
   · subst m
-    simp [divergenceCoefficients, constantCoefficient]
-  · simp [divergenceCoefficients, constantCoefficient, hm,
-      derivativeCoefficient, along]
+    simp only [divergenceCoefficients, Fin.isValue, constantCoefficient, Complex.ofReal_inv,
+        AddMonoidAlgebra.single_mul_single, zero_add, AddMonoidAlgebra.coeff_add,
+        AddMonoidAlgebra.coeff_single, Finsupp.coe_add, Pi.add_apply, differentiate_apply,
+        Finsupp.single_eq_same, AddMonoidAlgebra.coeff_single_mul_apply, neg_zero, Pi.mul_apply,
+        angularDifferentiate_apply, Int.cast_mul, AddMonoidAlgebra.single_add]
+  · simp only [divergenceCoefficients, Fin.isValue, constantCoefficient, Complex.ofReal_inv,
+      AddMonoidAlgebra.single_mul_single, zero_add, AddMonoidAlgebra.coeff_add,
+      AddMonoidAlgebra.coeff_single, Finsupp.coe_add, Pi.add_apply, differentiate_apply, ne_eq, hm,
+      not_false_eq_true, Finsupp.single_eq_of_ne, add_zero, AddMonoidAlgebra.coeff_single_mul_apply,
+      neg_zero, derivativeCoefficient, along, fderiv_zero, Pi.zero_apply, zero_apply, mul_zero,
+      Pi.mul_apply, angularDifferentiate_apply, Int.cast_mul, AddMonoidAlgebra.single_add]
 
 theorem smoothCoefficients_single {U : Set D} {f : D → ℂ}
     (hf : ContDiffOn ℝ ∞ f U) (j : ℤ) :
@@ -1796,7 +1834,8 @@ theorem interactionBlock_conjugate (c : CorrectionState.Context D) (u : Correcti
 theorem interactionBlock_zero (c : CorrectionState.Context D) (u : CorrectionState.State D)
     (a b : CorrectionState.HarmonicBlock D) : ZeroMode (interactionBlock c u a b) := by
   intro n i
-  simp [interactionBlock, HarmonicResidual.nonconstant]
+  simp only [interactionBlock, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
+      Finsupp.erase_same]
 
 theorem linearGoodBlock_band (c : CorrectionState.Context D) (a : CorrectionState.HarmonicBlock D)
     {b : CorrectionState.HarmonicBlock D} {g : HarmonicResidual.BlockCoefficients D} {N E : ℕ}
@@ -1823,7 +1862,8 @@ theorem linearGoodBlock_zero (c : CorrectionState.Context D)
     (a b : CorrectionState.HarmonicBlock D) (g : HarmonicResidual.BlockCoefficients D) :
     ZeroMode (linearGoodBlock c a b g) := by
   intro n i
-  simp [linearGoodBlock, HarmonicResidual.nonconstant]
+  simp only [linearGoodBlock, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
+      Finsupp.erase_same]
 
 /-- Wave residual difference block, bundling `velocity`, `pressure`, `frequency`, `phase` and
 the required compatibility proofs. -/

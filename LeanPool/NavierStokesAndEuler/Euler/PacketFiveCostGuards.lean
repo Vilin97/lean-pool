@@ -84,21 +84,32 @@ theorem five_costs_bound :
     simp only [initialRadius,one_div,inv_inv]
     unfold inverseRadiusEnvelope
     have hprod := mul_le_mul hM hRc Kc.Rc_nonneg hX0
-    nlinarith
+    linarith only [hprod, hRX, hRc]
   have hp := fiveEnvelope_power P X hX
   obtain ⟨hc₁,hc₂,hc₃,hc₄,hc₅⟩ := fiveEnvelope_components P X hX0
+  have hG : 0 ≤ 8 * growthEnvelope P X * X := mul_nonneg (mul_nonneg (by norm_num) hgX) hX0
+  have hgT : 8 * growth D P Kc R H C * D.T ≤ 8 * growthEnvelope P X * X :=
+    mul_le_mul (mul_le_mul_of_nonneg_left hg (by norm_num)) hT hT0 (mul_nonneg (by norm_num) hgX)
+  have hi0 : 0 ≤ (initialRadius R Kc.M Kc.Rc)⁻¹ := inv_nonneg.mpr hρ.le
+  have hX1 : 0 ≤ 1 + 163 * X := by linarith only [hX0]
   refine ⟨?_,hCX.trans (hc₂.trans hp),?_,?_,?_⟩
   · apply le_trans _ (hc₁.trans hp)
     unfold tailPolynomialConstant
-    gcongr
+    have h1 : 1 + 163 * CT ≤ 1 + 163 * X := by linarith only [hCTX]
+    have hR4 : 0 ≤ 4 * R * 550 ^ 2 := mul_nonneg (mul_nonneg (by norm_num) hR) (by norm_num)
+    have h3 : (4 * R * 550 ^ 2) ^ 110 ≤ (4 * X * 550 ^ 2) ^ 110 :=
+      pow_le_pow_left₀ hR4 (by linarith only [hRX]) 110
+    exact mul_le_mul (mul_le_mul h1 (pow_le_pow_left₀ hH hHX 2) (sq_nonneg H) hX1) h3
+      (pow_nonneg hR4 110) (mul_nonneg hX1 (sq_nonneg X))
   · apply le_trans _ (hc₃.trans hp)
-    gcongr
+    exact mul_le_mul (mul_le_mul_of_nonneg_left hg (by norm_num)) hT hT0
+      (mul_nonneg (by norm_num) hgX)
   · apply le_trans _ (hc₄.trans hp)
     rw [div_eq_mul_inv]
-    gcongr
+    exact mul_le_mul (mul_le_mul hgT hd hdp hG) hiR hi0 (mul_nonneg hG hdX)
   · apply le_trans _ (hc₅.trans hp)
     rw [div_eq_mul_inv]
-    gcongr
+    exact mul_le_mul hgT hiR hi0 hG
 
 /-- The literal source frequency assumptions follow from one explicit
 polynomial comparison; the threshold does not depend on a chosen parent. -/

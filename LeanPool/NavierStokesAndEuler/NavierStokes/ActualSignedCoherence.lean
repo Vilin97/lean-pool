@@ -125,8 +125,12 @@ theorem sqrt_scale (n m : ℕ) :
 theorem slowChange_eq (n m : ℕ) :
     PhysicalSignedWave.slowChange h (ChartScales.Q n) (ChartScales.Q m) =
       (bandSlowEquiv h n m).toContinuousLinearMap := by
-  ext <;> simp [PhysicalSignedWave.slowChange, bandSlowEquiv_apply,
-    PhysicalSignedWave.ratioPower_eq_div_rpow (ChartScales.Q_pos n) (ChartScales.Q_pos m)]
+  ext <;> simp only [PhysicalSignedWave.slowChange,
+      PhysicalSignedWave.ratioPower_eq_div_rpow (ChartScales.Q_pos n) (ChartScales.Q_pos m),
+      Real.rpow_one, ContinuousLinearMap.comp_apply, ContinuousLinearMap.inl_apply,
+      ContinuousLinearMap.coe_prodMap', FunLike.coe_smul, ContinuousLinearMap.coe_id',
+      Prod.map_apply, Pi.smul_apply, id_eq, smul_eq_mul, mul_one, mul_zero,
+      ContinuousLinearEquiv.coe_coe, bandSlowEquiv_apply, ContinuousLinearMap.inr_apply]
 
 theorem requestChart_eq (n m k : ℕ) :
     PhysicalSignedWave.requestChart h (ChartScales.Q_pos n) (ChartScales.Q_pos m) k =

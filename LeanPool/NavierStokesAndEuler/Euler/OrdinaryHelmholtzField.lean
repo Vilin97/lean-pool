@@ -44,7 +44,7 @@ theorem solenoidalField_word (A : SmoothL2Field Space) {n : ℕ} (w : Fin n → 
   exact (projection_word A w).symm
 
 theorem jetLp_eq_word_reassembly (A : SmoothL2Field Space) (n : ℕ) :
-    A.jetLp n=tensorLpReassembly (volume : Measure Space) n
+    A.jetLp n=tensorLpReassembly (V := Space) (volume : Measure Space) n
       (fun w : Fin n → Fin 3 => (wordField A w).toLp) := by
   rw [← ordinaryTensorOperator_apply A n]
   unfold ordinaryTensorOperator

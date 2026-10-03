@@ -59,6 +59,7 @@ theorem continuous_iteratedFDeriv_of_fderiv_eq_comp
     | zero =>
       exact (continuousMultilinearCurryFin0 ℝ E F).symm.continuous.comp hY
     | succ m =>
+      let Φ := (continuousMultilinearCurryRightEquiv' ℝ m E F).symm
       have hsum : Continuous (fun p : K × E =>
           ∑ c : OrderedFinpartition m,
             c.compAlongOrderedFinpartition
@@ -76,21 +77,19 @@ theorem continuous_iteratedFDeriv_of_fderiv_eq_comp
             F)).continuous_uncurry_of_multilinear.comp
           (hq.prodMk hp)
       have heq : (fun p : K × E => iteratedFDeriv ℝ (m+1) (Y p.1) p.2) =
-          fun p => (continuousMultilinearCurryRightEquiv' ℝ m E F).symm
-            (∑ c : OrderedFinpartition m,
+          fun p => Φ (∑ c : OrderedFinpartition m,
               c.compAlongOrderedFinpartition
                 (iteratedFDeriv ℝ c.length (A p.1) (Y p.1 p.2))
                 (fun i => iteratedFDeriv ℝ (c.partSize i) (Y p.1) p.2)) := by
         funext p
         rw [iteratedFDeriv_succ_eq_comp_right]
-        change (continuousMultilinearCurryRightEquiv' ℝ m E F).symm
-          (iteratedFDeriv ℝ m (fderiv ℝ (Y p.1)) p.2) = _
+        change Φ (iteratedFDeriv ℝ m (fderiv ℝ (Y p.1)) p.2) = _
         congr 1
         rw [show fderiv ℝ (Y p.1) = A p.1 ∘ Y p.1 from funext (hDY p.1)]
         rw [iteratedFDeriv_comp (hA p.1).contDiffAt (hYs p.1).contDiffAt (by simp)]
         rfl
       rw [heq]
-      exact (continuousMultilinearCurryRightEquiv' ℝ m E F).symm.continuous.comp hsum
+      exact Φ.continuous.comp hsum
 
 end EulerGevreyComposition
 

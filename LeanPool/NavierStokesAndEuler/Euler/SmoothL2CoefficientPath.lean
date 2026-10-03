@@ -103,35 +103,18 @@ private theorem continuous_jetField_jet_aux (n : ℕ) :
   induction n with
   | zero =>
     intro V _ _ A hA k
-    have he : (fun t => (jetField 0 (A t)).jetLp k) =
-        (fun t => (mapField (V := V) (W := Space [×0]→L[ℝ] V)
-          (continuousMultilinearCurryFin0 ℝ Space
-              V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-          (A t)).jetLp k) :=
-      funext fun t => congrArg (fun F => F.jetLp k) (jetField_zero (A t))
-    rw [he]
     exact continuous_jetLp_mapField (V := V) (W := Space [×0]→L[ℝ] V)
       (continuousMultilinearCurryFin0 ℝ Space V).symm.toContinuousLinearEquiv.toContinuousLinearMap
           A hA k
   | succ n ih =>
     intro V _ _ A hA k
-    have hd : ∀ j, Continuous (fun t => (A t).derivative.jetLp j) :=
-      continuous_jetLp_derivative A hA
-    have hr : ∀ j, Continuous (fun t => (jetField n (A t).derivative).jetLp j) :=
-      ih (Space →L[ℝ] V) (fun t => (A t).derivative) hd
-    have he : (fun t => (jetField (n+1) (A t)).jetLp k) =
-        (fun t => (mapField
-          (V := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (W := Space [×(n+1)]→L[ℝ] V)
-          (continuousMultilinearCurryRightEquiv' ℝ n Space
-              V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-          (jetField n (A t).derivative)).jetLp k) :=
-      funext fun t => congrArg (fun F => F.jetLp k) (jetField_succ (A t) n)
-    rw [he]
-    apply continuous_jetLp_mapField
+    have hd := continuous_jetLp_derivative A hA
+    have hr := ih (Space →L[ℝ] V) (fun t => (A t).derivative) hd
+    exact continuous_jetLp_mapField
       (V := Space [×n]→L[ℝ] (Space →L[ℝ] V)) (W := Space [×(n+1)]→L[ℝ] V)
       (continuousMultilinearCurryRightEquiv' ℝ n Space
           V).symm.toContinuousLinearEquiv.toContinuousLinearMap
-      (fun t => jetField n (A t).derivative) hr
+      (fun t => jetField n (A t).derivative) hr k
 
 theorem continuous_jetField_jet {V : Type u} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (A : K → SmoothL2Field V) (hA : ∀ k, Continuous (fun t => (A t).jetLp k)) (n k : ℕ) :

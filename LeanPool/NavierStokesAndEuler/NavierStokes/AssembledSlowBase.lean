@@ -24,6 +24,10 @@ coefficient or derivative order is selected.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -102,9 +106,9 @@ theorem extendCoreZero_eq {S : Set ℝ} (w : ParametricRadialExtension.Parameter
   unfold extendCoreZero
   rw [extendEven_eq w f hX heta]
   by_cases hp : r / 4 ≤ p.1
-  · rw [TransportPrimitive.cutoff_one (by linarith) hp, one_mul]
+  · rw [TransportPrimitive.cutoff_one (by linarith only [hr]) hp, one_mul]
   · have heS : p.2 ∈ S := w.outer_subset (abs_lt.mp (heta.trans_lt w.inner_lt_outer))
-    have hs : Real.sqrt (2 * p.1) ≤ Real.sqrt r := Real.sqrt_le_sqrt (by linarith)
+    have hs : Real.sqrt (2 * p.1) ≤ Real.sqrt r := Real.sqrt_le_sqrt (by linarith only [hr, hp])
     have hf := hz p.2 heS _ ⟨Real.sqrt_nonneg _, hs⟩
     change _ * f (Real.sqrt (2 * p.1), p.2) = f (Real.sqrt (2 * p.1), p.2)
     rw [hf, mul_zero]
@@ -112,7 +116,7 @@ theorem extendCoreZero_eq {S : Set ℝ} (w : ParametricRadialExtension.Parameter
 theorem extendCoreZero_zero_left {S : Set ℝ}
     (w : ParametricRadialExtension.ParameterWindow S) {r : ℝ} (hr : 0 < r)
     (f : EvenProfile S) {p : ℝ × ℝ} (hp : p.1 ≤ r / 8) : extendCoreZero w r f p = 0 := by
-  rw [extendCoreZero, TransportPrimitive.cutoff_zero (by linarith) hp, zero_mul]
+  rw [extendCoreZero, TransportPrimitive.cutoff_zero (by linarith only [hr]) hp, zero_mul]
 
 theorem extendCoreZero_zero_right {S : Set ℝ}
     (w : ParametricRadialExtension.ParameterWindow S) (r : ℝ) (f : EvenProfile S)
@@ -326,7 +330,7 @@ theorem densities_zero_inner (Z0 : ZeroOrderSolved s inner) (n : ℕ)
         R ^ 2 ≤ (Real.sqrt inner) ^ 2 := (sq_le_sq₀ hR.1 (Real.sqrt_nonneg _)).2 hR.2
         _ = inner := Real.sq_sqrt L.inner_pos.le
     have hx : 0 < R ^ 2 / 2 := div_pos (sq_pos_of_ne_zero hR0) (by norm_num)
-    have hi : R ^ 2 / 2 < inner := by linarith [L.inner_pos]
+    have hi : R ^ 2 / 2 < inner := by linarith only [hRsq, hx, L.inner_pos]
     have hz := coefficients_zero_inner L B0 Z0 n (w := (R ^ 2 / 2, eta)) hx hi heta
     simp only [SlowResidualMatching.thetaDensity, SlowResidualMatching.zDensity,
       SlowResidualMatching.radiusPoint, hz.1, hz.2, mul_zero]
@@ -350,7 +354,7 @@ theorem thetaEven_eq (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
       SlowStressSupport.stress 2 (SlowResidualMatching.thetaDensity h C (asSlowProfiles s) n) (R,
           eta) := by
   change _ + SlowStressSupport.stress 2 _ (-R, eta) = _
-  simp only [SlowStressSupport.stress, ite_eq_right (by linarith : ¬0 < -R), add_zero]
+  simp only [SlowStressSupport.stress, ite_eq_right (by linarith only [hR] : ¬0 < -R), add_zero]
 
 theorem zEven_eq (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
     (hR : 0 ≤ R) :
@@ -358,7 +362,7 @@ theorem zEven_eq (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
       SlowStressSupport.stress 1 (SlowResidualMatching.zDensity h (asSlowProfiles s) n) (R, eta) :=
           by
   change _ + SlowStressSupport.stress 1 _ (-R, eta) = _
-  simp only [SlowStressSupport.stress, ite_eq_right (by linarith : ¬0 < -R), add_zero]
+  simp only [SlowStressSupport.stress, ite_eq_right (by linarith only [hR] : ¬0 < -R), add_zero]
 
 theorem thetaEven_zero (Z0 : ZeroOrderSolved s inner) (n : ℕ) {R eta : ℝ}
     (hR : R ∈ Icc 0 (Real.sqrt inner)) (heta : eta ∈ S) : thetaEven L B0 Z0 n (R, eta) = 0 := by
@@ -491,7 +495,7 @@ theorem coefficients_stress_zero (Z0 : ZeroOrderSolved s inner)
   rw [(coefficients_stress_eq L B0 Z0 hI n hX heta).1,
     (coefficients_stress_eq L B0 Z0 hI n hX heta).2]
   have hr : Real.sqrt (2 * w.1) ≤ Real.sqrt inner :=
-    Real.sqrt_le_sqrt (by linarith)
+    Real.sqrt_le_sqrt (by linarith only [hi])
   exact ⟨SlowStressSupport.stress_inner 2
     (fun _ he _ hR => (densities_zero_inner L B0 Z0 n hR he).1) hr (hI (abs_le.mp heta)),
     SlowStressSupport.stress_inner 1
@@ -628,7 +632,7 @@ theorem extended_axial_primitive_zero {h C : ℝ} (s : Scheme S h C)
   have hrB : s.B ≤ Real.sqrt (2 * p.1) := by
     apply (sq_le_sq₀ s.B_pos.le (Real.sqrt_nonneg _)).mp
     rw [Real.sq_sqrt (mul_nonneg (by norm_num) hXp)]
-    linarith
+    linarith only [hX]
   have hm : PositiveOrderMoments.massHistory (profiles s n).axial
       (Real.sqrt (2 * p.1), p.2) = 0 := by
     change (∫ R in (0 : ℝ)..Real.sqrt (2 * p.1), R * (profiles s n).axial (R, p.2)) = 0
@@ -830,7 +834,7 @@ theorem local_beta_eq_axis (hr : 0 < r) (hu : EqOn P.U Q.U (Ico 0 r ×ˢ S))
     have hi : R ^ 2 / 2 < r := by
       have hsq := (sq_lt_sq₀ hR.1.le hs.le).2 hR.2
       rw [Real.sq_sqrt hr.le] at hsq
-      linarith [sq_nonneg R]
+      linarith only [hr, hsq, sq_nonneg R]
     change (baseFields d C P hP).beta (R, eta) = (baseFields d C Q hQ).beta (R, eta)
     rw [← xProfile_radius (baseFields d C P hP).beta hR.1.le eta,
       ← xProfile_radius (baseFields d C Q hQ).beta hR.1.le eta]
@@ -885,7 +889,7 @@ theorem nominalOuterX_gt_radius : W.controls.radius < nominalOuterX W := by
     (max (OutgoingDilation.pulseEndRadius F W.controls.radius)
       (ReservedPatches.right F W.controls.radius .positive))
   dsimp [nominalOuterX]
-  linarith
+  linarith only [this]
 
 theorem nominalOuterX_pos : 0 < nominalOuterX W :=
   W.controls.radius_pos.trans (nominalOuterX_gt_radius W)
@@ -898,7 +902,7 @@ theorem nominalOuterX_gt_pulse : OutgoingDilation.pulseEndRadius F W.controls.ra
     (max (OutgoingDilation.pulseEndRadius F W.controls.radius)
       (ReservedPatches.right F W.controls.radius .positive))
   dsimp [nominalOuterX]
-  linarith
+  linarith only [h₁, h₂]
 
 theorem nominalOuterX_gt_patch : ReservedPatches.right F W.controls.radius .positive <
     nominalOuterX W := by
@@ -908,7 +912,7 @@ theorem nominalOuterX_gt_patch : ReservedPatches.right F W.controls.radius .posi
     (max (OutgoingDilation.pulseEndRadius F W.controls.radius)
       (ReservedPatches.right F W.controls.radius .positive))
   dsimp [nominalOuterX]
-  linarith
+  linarith only [h₁, h₂]
 
 theorem nominalOuterRadius_pos : 0 < nominalOuterRadius W :=
   Real.sqrt_pos.2 (mul_pos (by norm_num) (nominalOuterX_pos W))
@@ -927,7 +931,7 @@ theorem nominal_pulse_gt_radius : W.controls.radius < OutgoingDilation.pulseEndR
     W.controls.radius := by
   have hp : 0 < F.data.core.endpoint := by
     dsimp only [OutgoingSchedule.Parameters.endpoint]
-    linarith [F.data.core.pulseStart_pos, F.data.core.pulseLength_pos]
+    linarith only [F.data.core.pulseStart_pos, F.data.core.pulseLength_pos]
   simpa only [OutgoingDilation.radius, Real.exp_zero, mul_one, OutgoingDilation.pulseEndRadius]
       using
     ReservedPatches.radius_strictMono W.controls.radius W.controls.radius_pos hp
@@ -939,7 +943,7 @@ theorem nominalOuterX_eq_pulse :
     apply ReservedPatches.radius_strictMono W.controls.radius W.controls.radius_pos
     have hc := (ReservedPatches.clock_inside_wait F .positive).2
     dsimp only [OutgoingSchedule.Parameters.endpoint]
-    linarith [F.data.core.pulseLength_pos]
+    linarith only [hc, F.data.core.pulseLength_pos]
   simp only [nominalOuterX, max_eq_left hp.le, max_eq_right (nominal_pulse_gt_radius W).le]
 
 /-- The common higher-order support radius is strictly inside the later
@@ -949,28 +953,28 @@ theorem nominalOuterX_lt_switch : nominalOuterX W < OutgoingDilation.switchRadiu
   have hflat : 1 < OutgoingTail.flattenLength := by
     have hlog : 0 < Real.log 2 := Real.log_pos (by norm_num)
     dsimp only [OutgoingTail.flattenLength]
-    nlinarith [OutgoingTail.stepBound_ge_one]
+    nlinarith only [hlog, OutgoingTail.stepBound_ge_one]
   have hc : F.data.core.endpoint + 1 < HeatTailEdit.switchStart F.data := by
     have h₁ := OutgoingTail.releaseStart_gt_flattenEnd F.data
     have h₂ := OutgoingTail.tailStart_gt_release F.data
     dsimp only [OutgoingTail.TailData.flattenEnd] at h₁
     dsimp only [HeatTailEdit.switchStart]
-    linarith
+    linarith only [hflat, h₁, h₂]
   have hr : 1 < W.controls.radius := by
     have hx := (W.controls.Xi_lt_heatJoin W.separated).trans W.controls.heatJoin_lt_radius
     norm_num [NominalProfile.Xi] at hx
-    linarith
+    linarith only [hx]
   have hp : 1 < OutgoingDilation.pulseEndRadius F W.controls.radius := hr.trans
       (nominal_pulse_gt_radius W)
   have he : (2 : ℝ) ≤ Real.exp 1 := by
     have he := Real.add_one_le_exp (1 : ℝ)
-    linarith
+    linarith only [he]
   rw [nominalOuterX_eq_pulse]
   calc
     OutgoingDilation.pulseEndRadius F W.controls.radius + 1 <
-        OutgoingDilation.pulseEndRadius F W.controls.radius * 2 := by linarith
+        OutgoingDilation.pulseEndRadius F W.controls.radius * 2 := by linarith only [hp]
     _ ≤ OutgoingDilation.pulseEndRadius F W.controls.radius * Real.exp 1 :=
-      mul_le_mul_of_nonneg_left he (by linarith)
+      mul_le_mul_of_nonneg_left he (by linarith only [hp])
     _ = OutgoingDilation.radius W.controls.radius (F.data.core.endpoint + 1) := by
       rw [OutgoingDilation.pulseEndRadius, OutgoingDilation.radius, OutgoingDilation.radius,
           Real.exp_add]
@@ -1001,7 +1005,7 @@ theorem nominal_positive_patch {R eta : ℝ}
     apply (ReservedPatches.radius_strictMono W.controls.radius W.controls.radius_pos).monotone
     dsimp [ReservedPatches.rightClock, ReservedPatches.leftClock,
       ReservedPatches.rightOffset, ReservedPatches.leftOffset]
-    linarith
+    linarith only
   have he : W.E (R ^ 2 / 2, eta) = OutgoingDilation.E F W.controls.radius (R ^ 2 / 2, eta) :=
     W.E_outgoing_between_patch_and_switch hmatch.le
       (by rw [← ReservedPatches.heat_right]; exact hsep.trans hx.1.le)
@@ -1136,12 +1140,12 @@ theorem nominalInner_pos : 0 < nominalInner W := by
 theorem nominalInner_lt_stop : nominalInner W < nominalStop W := by
   have hi := div_pos (show (0 : ℝ) < 4 by norm_num) W.axis.scale_pos
   dsimp [nominalInner, nominalStop]
-  linarith
+  linarith only [hi]
 
 theorem nominalStop_lt_initial : nominalStop W < 4 / W.axis.scale := by
   have hi := div_pos (show (0 : ℝ) < 4 by norm_num) W.axis.scale_pos
   dsimp [nominalStop]
-  linarith
+  linarith only [hi]
 
 theorem nominalInitial_le_collar :
     4 / W.axis.scale ≤ (4 / W.axis.scale) * Real.exp W.controls.referenceWidth :=
@@ -1166,7 +1170,7 @@ theorem nominalStop_lt_patch :
     (mul_nonneg (by
         norm_num) (ReservedPatches.left_pos F W.controls.radius W.controls.radius_pos
             .positive).le)]
-  linarith
+  linarith only [hsmall, hbig]
 
 /-- The global recursive sequence uses the same nominal profile and the
 same constructed natural/ACT local hierarchy, with one common cutoff. -/
@@ -1280,7 +1284,7 @@ theorem nominalBase_beta_axis {eta : ℝ} (heta : eta ∈ nominalParameters W) :
     have hi : R ^ 2 / 2 < nominalInner W := by
       have hh := (sq_lt_sq₀ hR.1.le hs.le).2 hR.2
       rw [Real.sq_sqrt (nominalInner_pos W).le] at hh
-      linarith [sq_nonneg R]
+      linarith only [hh, sq_nonneg R]
     change (nominalScheme W).base.beta (R, eta) = localExtension (nominalLocalization W) 0 4 (R,
         eta)
     rw [← xProfile_radius (nominalScheme W).base.beta hR.1.le eta,
@@ -1444,7 +1448,7 @@ theorem nominal_exists_base (lo hi : ℝ) (N : ℕ) :
         ProblemStatement.spatialDivergence
           (SlowBorelBase.baseVelocity a F.data.h W.axis.normalization (nominalCoefficients W)) t x
               = 0 :=
-  SlowBorelBase.exists_base_fields W.axis.small.h_pos (by linarith [W.axis.small.h_le])
+  SlowBorelBase.exists_base_fields W.axis.small.h_pos (by linarith only [W.axis.small.h_le])
     (nominalCoefficients_smooth W) W.axis.normalization lo hi N
 
 theorem nominal_divergenceCoefficient (n : ℕ) {p : ℝ × ℝ}
@@ -1857,7 +1861,7 @@ theorem modified_exists_base (lower upper : ℝ) (N : ℕ) :
         ProblemStatement.spatialDivergence
           (SlowBorelBase.baseVelocity a F.data.h W.axis.normalization (modifiedCoefficients W Q M))
               t x = 0 :=
-  SlowBorelBase.exists_base_fields W.axis.small.h_pos (by linarith [W.axis.small.h_le])
+  SlowBorelBase.exists_base_fields W.axis.small.h_pos (by linarith only [W.axis.small.h_le])
     (modifiedCoefficients_smooth W Q M) W.axis.normalization lower upper N
 
 end ModifiedBase

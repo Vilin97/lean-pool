@@ -510,8 +510,8 @@ theorem forcingWordPath_time_tendsto {q m : ℕ} (hm : m ≤ q + 1) (w : Fin m �
   have ht := timePathApply_tendsto T hT A _ _ (regularizedWordPath_first_tendsto period hm w T hT u
       U hU)
   have hp := timePathApply_tendsto T hT G _ _ (sourceWordPath_time_tendsto period hm w T hT p P hP)
-  have h := (hs.add ht).add hp
-  simpa only [forcingWordPath, pathLp_add, forcingWordTime] using h
+  simp only [forcingWordPath, pathLp_add]
+  apply (hs.add ht).add hp
 
 end EulerRegularizedForcingWord
 

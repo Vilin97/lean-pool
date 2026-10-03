@@ -215,7 +215,7 @@ noncomputable def nativeQ (h : ℝ) (x : Native) : ℝ :=
 
 theorem nativeQ_contDiffAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {x : Native} (hT : 0 < x.1.2.2) : ContDiffAt ℝ ∞ (nativeQ h) x :=
-  (SimilarityCoordinates.coordinateQ_smooth (by linarith) (by linarith) hT).comp x
+  (SimilarityCoordinates.coordinateQ_smooth (by linarith) (by linarith only [hh1]) hT).comp x
     (contDiffAt_fst.snd.snd.prodMk contDiffAt_fst.snd.fst)
 
 section ActualTarget
@@ -435,8 +435,8 @@ theorem radialInterior_spec {F : OutgoingProfile.Profile} (W : NominalProfile.Wi
       (WaveEdgeExtension.nativeRadius F.data.h x) ^ 2 / 2 <
         (PrimaryTargetBounds.rightRadius W) ^ 2 / 2
     constructor
-    · linarith [mul_pos (sub_pos.mpr hx.2.1) (add_pos hr ha)]
-    · linarith [mul_pos (sub_pos.mpr hx.2.2) (add_pos (hr.trans hx.2.2) hr)]
+    · linarith only [hx, hr, ha, mul_pos (sub_pos.mpr hx.2.1) (add_pos hr ha)]
+    · linarith only [hx, hr, mul_pos (sub_pos.mpr hx.2.2) (add_pos (hr.trans hx.2.2) hr)]
   refine ⟨ht, hR, hX, ?_⟩
   exact WeightedRadialPrimitive.zeta_pos _ _ (WeightedRadialPrimitive.logPosition_mem ha hx.2)
 
@@ -445,8 +445,8 @@ theorem reference_of_closed_band {F : OutgoingProfile.Profile} (W : NominalProfi
     x.1 ∈ PositiveRepresentatives.positivePart (PrimaryGeometryAssembly.referenceSet W) := by
   obtain ⟨ht, hR, hX, _⟩ := radialInterior_spec W hx
   have hs := SimilarityCoordinates.coordinateQ_spec
-    (show 0 < 2 * F.data.h by linarith [F.data.h_pos])
-    (show 2 * F.data.h < 1 by linarith [F.data.h_lt_half]) (p := (x.1.2.2, x.1.2.1)) ht
+    (show 0 < 2 * F.data.h by linarith only [F.data.h_pos])
+    (show 2 * F.data.h < 1 by linarith only [F.data.h_lt_half]) (p := (x.1.2.2, x.1.2.1)) ht
   refine ⟨subset_closure ?_, ht⟩
   refine ⟨hR.le, ht.le, nativeQ F.data.h x, hq, hs.2, ?_⟩
   have he := And.intro hX.1.le hX.2.le
@@ -599,7 +599,7 @@ theorem factor_zero_germ_slot (L : PrimaryGeometryAssembly.Index W a.N) {x : Nat
     intro hs
     have hb := outerCutoff_support hs
     apply hslot
-    constructor <;> linarith [hb.1, hb.2]
+    constructor <;> linarith only [H, hb, hb.1, hb.2]
   have hz := (notMem_tsupport_iff_eventuallyEq.mp hn).comp_tendsto
     (coordinates_smooth H v a L).continuous.continuousAt.snd
   filter_upwards [hz] with y hy

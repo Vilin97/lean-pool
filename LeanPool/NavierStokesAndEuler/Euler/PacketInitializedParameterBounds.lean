@@ -35,7 +35,7 @@ theorem envelope_bounds (W : ℝ) (hW : 0 ≤ W) :
     positivity
   have hp := (primitive_components period W hW).1
   unfold envelope
-  exact ⟨by linarith,by linarith,by linarith,by linarith⟩
+  exact ⟨by linarith,by linarith only [hr, hp],by linarith only [hW, hp],by linarith only [hW, hr]⟩
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
   {D : EulerTransversePacketProvider.Data U} {τ : ℝ} {hτ : 0 < τ} {hτT : τ < D.T}

@@ -372,7 +372,7 @@ theorem actual_slow_le : ∃ C : ℝ, 1 ≤ C ∧ ∃ p : ℕ,
   intro n hn
   have hS := PhysicalGraphBounds.S_ge_one (show 1 ≤ n by omega)
   change max 1 (ChartScales.S n) ≤ 1 * ChartScales.S n ^ 1
-  simp [max_eq_right hS]
+  simp only [max_eq_right hS, pow_one, one_mul, Std.le_refl]
 
 theorem actual_epsilon (n : ℕ) :
     ActualInitialization.geometry.strip.epsilon n = ChartScales.epsilon ActualPrimary.h n := rfl
@@ -486,7 +486,7 @@ theorem meanGood_eq_reduced_sub (n : ℕ) {z : Point}
   rw [meanGoodResidual_at _ _ n z i
     (H.baseAngular n z (ActualInitialization.geometry.strip_subset hz) i)
     (H.representation.gaussian_angularContinuous n z i) (ha n z i), H.gaussianMean, ham]
-  simp
+  simp only [Pi.zero_apply, sub_zero]
 
 /-- The missing radial component is derived from the measured pressure
 debt, the literal reconstructed pressure and the current compact alias. -/
@@ -741,18 +741,19 @@ theorem realization_native_smooth {h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : S
   have hR : ∀ z ∈ V, z.1.1 ≠ 0 := fun z hz => r.radius_ne (PhysicalResidualTZ.swapCylinder z) hz
   have hB (i : Fin 3) : ContDiffOn ℝ ∞
       (fun z => PhysicalResidualBridge.baseComponents (PhysicalResidualTZ.swapContext c) n z i) V :=
-    (r.base_smooth n hn i).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _ hz => hz)
+    ((r.base_smooth n hn i).comp (PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (s := V))
+      (fun _ hz => hz) :)
   have ha (i : Fin 3) : ContDiffOn ℝ ∞
       (fun z => PhysicalResidualBridge.incrementComponents (PhysicalResidualTZ.swapState s) n z i)
           V :=
-    (r.increment_smooth n hn i).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _ hz
-        => hz)
+    ((r.increment_smooth n hn i).comp
+      (PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (s := V)) (fun _ hz => hz) :)
   have hp : ContDiffOn ℝ ∞ ((PhysicalResidualTZ.swapState s).totalPressureIncrement n) V :=
-    (r.pressure_smooth n hn).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _ hz =>
-        hz)
+    ((r.pressure_smooth n hn).comp
+      (PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (s := V)) (fun _ hz => hz) :)
   have hp₀ : ContDiffOn ℝ ∞ (fun z => p₀ n (PhysicalResidualTZ.swapCylinder z)) V :=
-    (r.base_pressure_smooth n hn).comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (fun _
-        hz => hz)
+    ((r.base_pressure_smooth n hn).comp
+      (PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn (s := V)) (fun _ hz => hz) :)
   have hbase (z : Cylinder) (hz : z ∈ V) (i : Fin 3) :
       PhysicalResidualBridge.graphResidual G.epsilon PhysicalResidualBridge.ScaledGraph.radius
         G.radial PhysicalResidualBridge.ScaledGraph.angular G.axial G.temporal
@@ -781,7 +782,8 @@ theorem realization_native_smooth {h : ℝ} {N : ℕ} {gap : ℕ → ℕ} {U : S
   have hcomp := hs.comp PhysicalResidualTZ.swapCylinder.contDiff.contDiffOn
     (show MapsTo PhysicalResidualTZ.swapCylinder U V from fun z hz => by
       change PhysicalResidualTZ.swapCylinder (PhysicalResidualTZ.swapCylinder z) ∈ U
-      simpa using hz)
+      simpa only [PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply,
+          Prod.mk.eta] using hz)
   apply hcomp.congr
   intro z hz
   ext i
@@ -804,7 +806,7 @@ theorem actual_upper_covers_exterior :
       Real.exp (OutgoingTail.tailStart ActualPrimary.outgoing.data + 1/5) ≤
         ActualPrimary.nominal.controls.radius *
           Real.exp (OutgoingTail.tailStart ActualPrimary.outgoing.data + 3)
-    exact mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr (by linarith))
+    exact mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr (by linarith only))
       ActualPrimary.nominal.controls.radius_pos.le
   have houter : AssembledSlowBase.nominalOuterX ActualPrimary.nominal ≤ R :=
     (AssembledSlowBase.nominalOuterX_lt_switch ActualPrimary.nominal).le.trans hswitch
@@ -825,10 +827,10 @@ theorem actual_upper_covers_exterior :
   change max (AssembledSlowBase.nominalOuterX ActualPrimary.nominal)
     (max ActualPrimary.nominal.controls.radius
       (BaseExterior.nominalHeatSwitch ActualPrimary.nominal * Real.exp 3)) ≤ 2 * R
-  exact max_le (houter.trans (by linarith))
+  exact max_le (houter.trans (by linarith only [hR]))
     (max_le (((AssembledSlowBase.nominalOuterX_gt_radius ActualPrimary.nominal).le.trans
         houter).trans
-      (by linarith)) hlate)
+      (by linarith only [hR])) hlate)
 
 theorem base_residual_germ (B : ℕ) {w : ProblemStatement.SpaceTime}
     (hw : w ∈ preterminal) (hout : w ∉ active) :
@@ -991,7 +993,8 @@ theorem gaussian_coeff_zero_off (l : Index B N0) (n : ℕ) (z : Point)
     (gaussianModes x l).velocity n i j z = 0 := by
   by_cases hj : j = 0
   · subst j
-    simp [gaussianModes, HarmonicResidual.nonconstant]
+    simp only [gaussianModes, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
+        Finsupp.erase_same, Pi.zero_apply]
   · have he := ((H.inputSupport l).gaussian n i) j hj z hz hn
     rw [HarmonicResidual.realCoefficients_eq_self (H.realCoefficients.gaussian l n i)] at he
     simpa only [gaussianModes, HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase,
@@ -1188,7 +1191,7 @@ theorem native_residual (hN : ActualCarrierGeometry.geometricThreshold ≤ N0)
     intro m
     simp only [sub_zero]
     exact (sub_le_self _ (hβ m)).trans
-      (mul_le_mul_of_nonneg_left (by linarith) ActualPrimary.outgoing.data.h_pos.le)
+      (mul_le_mul_of_nonneg_left (by linarith only) ActualPrimary.outgoing.data.h_pos.le)
   have hb : NativeBounds 4 U (ActualPrimary.h * (1/2 + σ)) (fun m => (2 * ActualPrimary.h) * m)
       (fun (_ : Unit) => x.state.errors.base) := by
     rw [hbase]
@@ -1265,7 +1268,7 @@ theorem selected_residual_jet_bound {a b h gain β : ℝ} {N Δ : ℕ} {gap : �
   intro w hw ht hsmall hwS
   have hq := physicalQ_pos hh hh1 hw
   obtain ⟨n, hn, hlo, hhi⟩ := PhysicalMeanJetBounds.exists_comparable_band N hq hsmall
-  have hlo' : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+  have hlo' : physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hq, hlo]
   have hann := g.annulus n hn w hw hlo hhi hwS
   obtain ⟨j, hj⟩ := PolarCharts.annulus_covered ha hann
   have hc := PolarCharts.sector_subset_chartDomain ha j hj

@@ -8,6 +8,7 @@ module
 
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! A genuine singular-kernel Volterra convolution on continuous Banach-valued paths. -/
 

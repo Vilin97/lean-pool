@@ -59,7 +59,7 @@ theorem angularProduct_mem {s : StripData D} {P : ℕ → D → ℝ} {α β : �
   apply Finset.sum_subset (hF n)
   intro j _ hj
   rw [Finsupp.notMem_support_iff.mp hj]
-  simp
+  simp only [Pi.zero_apply, zero_mul]
 
 end CoefficientCovariance
 

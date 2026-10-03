@@ -49,16 +49,16 @@ theorem profile_mem_Icc (v : ℝ) : profile v ∈ Icc (0 : ℝ) 1 :=
 
 theorem profile_one {v : ℝ} (hv : |v - 1 / 2| ≤ 1 / 5) : profile v = 1 := by
   apply profileBump.one_of_mem_closedBall
-  simpa [Metric.mem_closedBall, Real.dist_eq, profileBump] using hv
+  simpa only [one_div, profileBump, Metric.mem_closedBall, Real.dist_eq] using hv
 
 theorem profile_zero {v : ℝ} (hv : 1 / 3 ≤ |v - 1 / 2|) : profile v = 0 := by
   apply profileBump.zero_of_le_dist
-  simpa [Real.dist_eq, profileBump] using hv
+  simpa only [profileBump, one_div, Real.dist_eq] using hv
 
 theorem profile_eventually_one {v : ℝ} (hv : |v - 1 / 2| < 1 / 5) :
     profile =ᶠ[𝓝 v] fun _ => 1 := by
   apply profileBump.eventuallyEq_one_of_mem_ball
-  simpa [Metric.mem_ball, Real.dist_eq, profileBump] using hv
+  simpa only [one_div, profileBump, Metric.mem_ball, Real.dist_eq] using hv
 
 theorem profile_eventually_zero {v : ℝ} (hv : 1 / 3 < |v - 1 / 2|) :
     profile =ᶠ[𝓝 v] fun _ => 0 := by
@@ -104,11 +104,12 @@ theorem slotCutoff_contDiff (L : ℝ) : ContDiff ℝ ∞ (slotCutoff L) :=
 
 theorem slotCutoff_deriv (L v : ℝ) :
     deriv (slotCutoff L) v = L⁻¹ * deriv profile (v / L) := by
-  have hp := (profile_contDiff.differentiable (by simp)).differentiableAt.hasDerivAt
+  have hp := (profile_contDiff.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)).differentiableAt.hasDerivAt
     (x := v / L)
   have hh := hp.comp v ((hasDerivAt_id v).div_const L)
   unfold slotCutoff
-  simpa [Function.comp_def, div_eq_mul_inv, mul_comm] using hh.deriv
+  simpa only [div_eq_mul_inv, id_eq, comp_def, mul_comm, mul_one] using hh.deriv
 
 theorem slot_normalized_distance {L : ℝ} (hL : 0 < L) (v : ℝ) :
     |v / L - 1 / 2| = |v - L / 2| / L := by
@@ -123,14 +124,14 @@ theorem slotCutoff_one {L v : ℝ} (hL : 0 < L) (hv : |v - L / 2| ≤ L / 5) :
   apply profile_one
   rw [slot_normalized_distance hL]
   apply (div_le_iff₀ hL).2
-  linarith
+  linarith only [hv]
 
 theorem slotCutoff_zero {L v : ℝ} (hL : 0 < L) (hv : L / 3 ≤ |v - L / 2|) :
     slotCutoff L v = 0 := by
   apply profile_zero
   rw [slot_normalized_distance hL]
   apply (le_div_iff₀ hL).2
-  linarith
+  linarith only [hv]
 
 /-- The derivative error is supported strictly inside the slot and outside
 the central plateau; in particular it lies near the entry or exit. -/
@@ -140,14 +141,15 @@ theorem slotCutoff_deriv_support {L v : ℝ} (hL : 0 < L)
   have hd : deriv profile (v / L) ≠ 0 := by
     intro hz
     exact hv (by rw [slotCutoff_deriv, hz, mul_zero])
-  have hh := profile_iteratedDeriv_support 0 (by simpa using hd)
+  have hh := profile_iteratedDeriv_support 0 (by simpa only [zero_add, iteratedDeriv_one,
+      mem_support, ne_eq] using hd)
   change 1 / 5 ≤ |v / L - 1 / 2| ∧ |v / L - 1 / 2| ≤ 1 / 3 at hh
   rw [slot_normalized_distance hL] at hh
   constructor
   · have ht := (le_div_iff₀ hL).1 hh.1
-    linarith
+    linarith only [ht]
   · have ht := (div_le_iff₀ hL).1 hh.2
-    linarith
+    linarith only [ht]
 
 /-- The precise Gaussian tail bound uses the full plateau radius. -/
 theorem gaussian_off_plateau {c L v : ℝ} (hc : 0 ≤ c) (hL : 0 < L)
@@ -157,7 +159,7 @@ theorem gaussian_off_plateau {c L v : ℝ} (hc : 0 ≤ c) (hL : 0 < L)
     simpa only [sq_abs] using pow_le_pow_left₀ (by positivity : 0 ≤ L / 5) hv 2
   apply Real.exp_le_exp.2
   apply (div_le_iff₀ hL).2
-  linarith [mul_le_mul_of_nonneg_left hsq hc]
+  linarith only [hsq, hc, mul_le_mul_of_nonneg_left hsq hc]
 
 theorem reference_envelope_off_plateau {lam u L v : ℝ}
     (hlam : 0 < lam) (hu : 0 < u) (hL : 0 < L) (hv : v ∈ Icc 0 L)
@@ -179,7 +181,7 @@ theorem reference_envelope_off_plateau {lam u L v : ℝ}
 /-- The square root of the actual flat edge is another member of that family. -/
 theorem sqrt_edge (c x : ℝ) : Real.sqrt (FlatCutoff.edge c x) = FlatCutoff.edge (c / 2) x := by
   by_cases hx : x ≤ 0
-  · simp [FlatCutoff.edge_of_nonpos _ hx]
+  · simp only [FlatCutoff.edge_of_nonpos _ hx, Real.sqrt_zero]
   · rw [FlatCutoff.edge_of_pos _ (lt_of_not_ge hx),
       FlatCutoff.edge_of_pos _ (lt_of_not_ge hx)]
     rw [← Real.exp_half]
@@ -218,7 +220,7 @@ theorem polynomial_exp_bound {c : ℝ} (hc : 0 < c) (p : ℕ) {x : ℝ} (hx : 0 
   have hfac : (0 : ℝ) < p.factorial := by exact_mod_cast Nat.factorial_pos p
   have hb := (div_le_iff₀ hfac).1
     (Real.pow_div_factorial_le_exp (c * (1 + x))
-      (mul_nonneg hc.le (by linarith : 0 ≤ 1 + x)) p)
+      (mul_nonneg hc.le (by linarith only [hx] : 0 ≤ 1 + x)) p)
   have hp : 0 < c ^ p := pow_pos hc p
   calc
     _ = ((c * (1 + x)) ^ p / c ^ p) * Real.exp (-c * x) := by
@@ -246,21 +248,21 @@ theorem gaussian_beats_Q_power {c : ℝ} (hc : 0 < c) (p : ℕ) (N : ℝ) :
   let A : ℝ := N * Real.log 2
   let K : ℝ := A ^ 2 / (2 * c)
   let B : ℝ := ((p.factorial : ℝ) / (c / 2) ^ p) * Real.exp (c / 2)
-  refine ⟨B * Real.exp K, by dsimp [B]; positivity, ?_⟩
+  refine ⟨B * Real.exp K, by dsimp only [B]; positivity, ?_⟩
   intro n
   have hlin : A * (n : ℝ) ≤ c / 2 * (n : ℝ) ^ 2 + K := by
     have hs := sq_nonneg (c * (n : ℝ) - A)
     have hc2 : 0 < 2 * c := by positivity
-    suffices A * (n : ℝ) - c / 2 * (n : ℝ) ^ 2 ≤ K by linarith
-    dsimp [K]
+    suffices A * (n : ℝ) - c / 2 * (n : ℝ) ^ 2 ≤ K by linarith only [this]
+    dsimp only [K]
     apply (le_div_iff₀ hc2).2
-    linarith
+    linarith only [hs]
   have hexp : Real.exp (-c * ChartScales.S n) ≤
       Real.exp (-(c / 2) * ChartScales.S n) * Real.exp K * ChartScales.Q n ^ N := by
     rw [Q_rpow_eq_exp, ← Real.exp_add, ← Real.exp_add]
     apply Real.exp_le_exp.2
-    dsimp [ChartScales.S, A] at *
-    linarith
+    dsimp only [ChartScales.S, A] at *
+    linarith only [hlin]
   calc
     _ ≤ (1 + ChartScales.S n) ^ p *
         (Real.exp (-(c / 2) * ChartScales.S n) * Real.exp K * ChartScales.Q n ^ N) :=
@@ -270,20 +272,20 @@ theorem gaussian_beats_Q_power {c : ℝ} (hc : 0 < c) (p : ℕ) (N : ℝ) :
     _ ≤ B * Real.exp K * ChartScales.Q n ^ N := by
       apply mul_le_mul_of_nonneg_right _ (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _).le
       apply mul_le_mul_of_nonneg_right _ (Real.exp_pos _).le
-      exact polynomial_exp_bound (by linarith : 0 < c / 2) p (sq_nonneg (n : ℝ))
+      exact polynomial_exp_bound (by linarith only [hc] : 0 < c / 2) p (sq_nonneg (n : ℝ))
     _ = _ := by ring
 
 theorem gaussian_length_comparison {c κ L S : ℝ} (hc : 0 ≤ c) (hL : κ * S ≤ L) :
     Real.exp (-(c / 25) * L) ≤ Real.exp (-(c * κ / 25) * S) := by
   apply Real.exp_le_exp.2
-  linarith [mul_le_mul_of_nonneg_left hL hc]
+  linarith only [hL, hc, mul_le_mul_of_nonneg_left hL hc]
 
 /-- A fixed power loss consumes only half of a Gaussian tail. -/
 theorem fixed_power_gaussian_bound {c : ℝ} (hc : 0 < c) (r : ℝ) :
     ∃ C : ℝ, 0 < C ∧ ∀ n : ℕ,
       ChartScales.Q n ^ r * Real.exp (-c * ChartScales.S n) ≤
         C * Real.exp (-(c / 2) * ChartScales.S n) := by
-  obtain ⟨C, hC, hb⟩ := gaussian_beats_Q_power (by linarith : 0 < c / 2) 0 (-r)
+  obtain ⟨C, hC, hb⟩ := gaussian_beats_Q_power (by linarith only [hc] : 0 < c / 2) 0 (-r)
   refine ⟨C, hC, fun n => ?_⟩
   have he : Real.exp (-c * ChartScales.S n) =
       Real.exp (-(c / 2) * ChartScales.S n) * Real.exp (-(c / 2) * ChartScales.S n) := by
@@ -336,8 +338,8 @@ theorem omittedProfile_jet_bounded (m : ℕ) :
   | zero =>
     refine ⟨1, zero_le_one, fun x => ?_⟩
     rw [norm_iteratedFDeriv_zero, Real.norm_eq_abs, abs_of_nonneg (by
-      linarith [(profile_mem_Icc x).2] : 0 ≤ 1 - profile x)]
-    linarith [(profile_mem_Icc x).1]
+      linarith only [(profile_mem_Icc x).2] : 0 ≤ 1 - profile x)]
+    linarith only [(profile_mem_Icc x).1]
   | succ m =>
     obtain ⟨C, hC, hb⟩ := profile_jet_bounded (m + 1)
     refine ⟨C, hC, fun x => ?_⟩
@@ -420,9 +422,9 @@ theorem cutoffError_eventually_zero (L : ℝ) {θ : D → ℝ} (u f : D → E) {
   have hprofile := (profile_eventually_one hx).comp_tendsto hθ
   have hderiv := (profile_eventually_one hx).deriv.comp_tendsto hθ
   filter_upwards [hprofile, hderiv] with y hy hdy
-  have hy' : profile (θ y) = 1 := by simpa using hy
-  have hdy' : deriv profile (θ y) = 0 := by simpa using hdy
-  simp [cutoffError, hy', hdy']
+  have hy' : profile (θ y) = 1 := by simpa only [comp_apply] using hy
+  have hdy' : deriv profile (θ y) = 0 := by simpa only [comp_apply, deriv_const'] using hdy
+  simp only [cutoffError, hdy', mul_zero, zero_smul, hy', sub_self, add_zero]
 
 theorem cutoffError_jet_zero_on_plateau (L : ℝ) {θ : D → ℝ} (u f : D → E) {x : D}
     (hθ : ContinuousAt θ x) (hx : |θ x - 1 / 2| < 1 / 5) (j : ℕ) :
@@ -544,14 +546,16 @@ theorem cutoff_directional {s : StripData D} (g : SlotFamily s) (n : ℕ) (x w :
     (hw : g.linear n w = (g.length n)⁻¹) :
     fderiv ℝ (g.cutoff n) x w =
       (g.length n)⁻¹ * deriv profile (g.coordinate n x) := by
-  have hp := (profile_contDiff.differentiable (by simp)).differentiableAt.hasDerivAt
+  have hp := (profile_contDiff.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)).differentiableAt.hasDerivAt
     (x := g.coordinate n x)
   have hθ : HasFDerivAt (g.coordinate n) (g.linear n) x :=
     (g.linear n).hasFDerivAt.const_add (g.offset n)
   have hd := hp.hasFDerivAt.comp x hθ
   have he := congrArg (fun A : D →L[ℝ] ℝ => A w) hd.fderiv
   unfold cutoff
-  simpa [hw, mul_comm, Function.comp_def] using he
+  simpa only [mul_comm, comp_def, ContinuousLinearMap.comp_apply, hw,
+      ContinuousLinearMap.toSpanSingleton_apply, smul_eq_mul] using he
 
 theorem error_eq_directional {s : StripData D} (g : SlotFamily s) (u f : ℕ → D → E)
     (n : ℕ) (x w : D) (hw : g.linear n w = (g.length n)⁻¹) :
@@ -597,7 +601,7 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
   have hPg : P n x ≤ Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) := by
     apply (hP n x hx).trans
     apply (Real.exp_le_exp.2 ?_).trans (gaussian_length_comparison hc.le (g.length_lower n))
-    linarith [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (g.length_pos n).le)]
+    linarith only [mul_le_mul_of_nonneg_left hsq (mul_nonneg hc.le (g.length_pos n).le)]
   have hslow0 : 0 ≤ s.slow n := zero_le_one.trans (s.one_le_slow n)
   have hK0 : 0 ≤ scales.boundConstant := zero_le_one.trans scales.constant_one_le
   have hslowp : s.slow n ^ p ≤
@@ -617,13 +621,15 @@ theorem error_gaussian_bound {s : StripData D} (g : SlotFamily s)
             Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) :=
         mul_le_mul_of_nonneg_left hPg (by positivity)
       _ ≤ (A * ChartScales.Q n ^ (scales.power * α) * s.slow n ^ p) * B *
-            Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) := by
-        gcongr
-        exact hweight x hx
+            Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left (hweight x hx)
+          (mul_nonneg (mul_nonneg hA (Real.rpow_nonneg hQ.le _)) (pow_nonneg hslow0 p)))
+          (Real.exp_pos _).le
       _ ≤ (A * ChartScales.Q n ^ (scales.power * α) *
           (scales.boundConstant ^ p * (1 + ChartScales.S n) ^ (scales.degree * p))) * B *
-            Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) := by
-        gcongr
+            Real.exp (-(c * g.lengthScale / 25) * ChartScales.S n) :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hslowp
+          (mul_nonneg hA (Real.rpow_nonneg hQ.le _))) hB) (Real.exp_pos _).le
       _ = _ := by ring
   calc
     _ ≤ majorant s (fun n x => Real.sqrt (s.zeta x) * P n x) α A p n x := hb n x hx j hj
@@ -698,11 +704,11 @@ theorem native_slot_length_lower (r0 h : ℝ) (hr0 : 0 < r0) (hh : 0 ≤ h) :
   · have hSn : 1 ≤ ChartScales.S n := by
       have hnn : (4 : ℝ) ≤ n := by exact_mod_cast hn
       unfold ChartScales.S
-      nlinarith
+      nlinarith only [hnn]
     calc
       _ ≤ r0 * (1 + ChartScales.S n) :=
         mul_le_mul_of_nonneg_right (min_le_left _ _) (hS n).le
-      _ ≤ 2 * r0 * ChartScales.S n := by nlinarith
+      _ ≤ 2 * r0 * ChartScales.S n := by nlinarith only [hr0, hSn]
       _ ≤ ChartScales.slotLength r0 h n := (ChartScales.slotLength_bounds r0 h hr0.le hh hn).1
 
 /-- Actual native slots. `η` is the fixed longitudinal coordinate functional;
@@ -716,7 +722,7 @@ noncomputable def actualSlotFamily (s : StripData D) (r0 h : ℝ)
   have hκL (n : ℕ) : κ ≤ ChartScales.slotLength r0 h n := by
     apply le_trans _ (hκ.2 n)
     have hn : 0 ≤ ChartScales.S n := sq_nonneg _
-    nlinarith [hκ.1]
+    nlinarith only [hr0, hh, hκ, hn, hκ.1]
   refine {
     length := ChartScales.slotLength r0 h
     length_pos := hL
@@ -736,7 +742,7 @@ noncomputable def actualSlotFamily (s : StripData D) (r0 h : ℝ)
     simpa only [one_div] using one_div_le_one_div_of_le hκ.1 (hκL n)
   · intro n
     apply le_trans _ (hκ.2 n)
-    linarith [hκ.1]
+    linarith only [hr0, hh, hκ, hκ.1]
 
 @[simp] theorem actualSlotFamily_length (s : StripData D) (r0 h : ℝ)
     (hr0 : 0 < r0) (hh : 0 ≤ h) (η : D →L[ℝ] ℝ) (center : ℕ → ℝ) (n : ℕ) :
@@ -773,7 +779,7 @@ theorem referenceSlotEnvelope_bound {lam u L : ℝ}
       Real.exp (-(u * GaussianEnvelope.referenceMinSlope lam u / 2) * (θ - 1 / 2) ^ 2 * L) := by
   by_cases hθ : θ ∈ Icc (0 : ℝ) 1
   · rw [referenceSlotEnvelope, ite_eq_left hθ]
-    have ht : L * θ ∈ Icc (0 : ℝ) L := ⟨mul_nonneg hL.le hθ.1, by nlinarith [hθ.2]⟩
+    have ht : L * θ ∈ Icc (0 : ℝ) L := ⟨mul_nonneg hL.le hθ.1, by nlinarith only [hL, hθ, hθ.2]⟩
     apply (GaussianEnvelope.reference_gaussian_bounds hlam hu hL ht).2.trans_eq
     congr 1
     field_simp [hL.ne']
@@ -812,10 +818,10 @@ theorem error_contDiff_of_slot {s : StripData D} (g : SlotFamily s) {u f : ℕ �
       have hx' : g.coordinate n x ≤ 0 ∨ 1 ≤ g.coordinate n x := by
         simpa only [mem_Ioo, not_and_or, not_lt] using hx
       rcases hx' with hx' | hx'
-      · rw [abs_of_nonpos (by linarith)]
-        linarith
-      · rw [abs_of_nonneg (by linarith)]
-        linarith
+      · rw [abs_of_nonpos (by linarith only [hx'])]
+        linarith only [hx']
+      · rw [abs_of_nonneg (by linarith only [hx'])]
+        linarith only [hx']
     have hp := (profile_eventually_zero hout).comp_tendsto
       (g.coordinate_contDiff n).continuous.continuousAt
     have hd := (profile_eventually_zero hout).deriv.comp_tendsto
@@ -824,7 +830,7 @@ theorem error_contDiff_of_slot {s : StripData D} (g : SlotFamily s) {u f : ℕ �
       filter_upwards [hp, hd] with y hpy hdy
       have hp' : profile (g.coordinate n y) = 0 := hpy
       have hd' : deriv profile (g.coordinate n y) = 0 := by simpa using hdy
-      simp [error, cutoffError, hp', hd']
+      simp only [error, cutoffError, hd', mul_zero, zero_smul, hp', sub_zero, one_smul, zero_add]
     exact (hf n).contDiffAt.congr_of_eventuallyEq he
 
 open PhysicalGraphBounds ProblemStatement
@@ -877,7 +883,7 @@ theorem error_physical_isBigO {s : StripData LiftPoint} (g : SlotFamily s)
   have hQ := ChartScales.Q_pos n
   have hpn := hp n hn
   have hh := hb n hn (p n) hpn.1 hpn.2.1 hpn.2.2 (ChartScales.Q n) hQ
-    (by linarith) (by linarith)
+    (by linarith only [hQ]) (by linarith only [hQ])
   simpa only [Real.norm_eq_abs, abs_of_pos (Real.rpow_pos_of_pos hQ N)] using hh
 
 /-- The same result for the actual oscillatory carrier. The phase estimates
@@ -990,16 +996,16 @@ theorem derivativeError_jet_support {s : StripData D} (g : SlotFamily s)
     have hcomp := hv.comp_tendsto (g.coordinate_contDiff n).continuous.continuousAt
     filter_upwards [hcomp] with y hy
     have hy' : deriv profile (g.coordinate n y) = 0 := hy
-    simp [derivativeError, hy']
+    simp only [derivativeError, hy', mul_zero, zero_smul]
   constructor
   · by_contra ht
     apply hzero
     filter_upwards [(profile_eventually_one (lt_of_not_ge ht)).deriv] with y hy
-    simpa using hy
+    simpa only [deriv_const'] using hy
   · by_contra ht
     apply hzero
     filter_upwards [(profile_eventually_zero (lt_of_not_ge ht)).deriv] with y hy
-    simpa using hy
+    simpa only [deriv_const'] using hy
 
 /-- Both transition collars, with the exact normalized slot endpoints. This
 holds for every actual parameter jet, without any regularity needed of `u`
@@ -1011,14 +1017,14 @@ theorem derivativeError_jet_near_ends {s : StripData D} (g : SlotFamily s)
   have hb := g.derivativeError_jet_support u n j hx
   change 1 / 5 ≤ |g.coordinate n x - 1 / 2| ∧ |g.coordinate n x - 1 / 2| ≤ 1 / 3 at hb
   rcases le_total (g.coordinate n x) (1 / 2) with h | h
-  · rw [abs_of_nonpos (by linarith)]
+  · rw [abs_of_nonpos (by linarith only [h])]
       at hb
     left
-    constructor <;> linarith [hb.1, hb.2]
-  · rw [abs_of_nonneg (by linarith)]
+    exact ⟨by linarith only [hb.2], by linarith only [hb.1]⟩
+  · rw [abs_of_nonneg (by linarith only [h])]
       at hb
     right
-    constructor <;> linarith [hb.1, hb.2]
+    exact ⟨by linarith only [hb.1], by linarith only [hb.2]⟩
 
 theorem omittedSource_jet_support {s : StripData D} (g : SlotFamily s)
     (f : ℕ → D → E) (n j : ℕ) :
@@ -1033,7 +1039,7 @@ theorem omittedSource_jet_support {s : StripData D} (g : SlotFamily s)
     (g.coordinate_contDiff n).continuous.continuousAt
   filter_upwards [hcomp] with y hy
   have hy' : profile (g.coordinate n y) = 1 := hy
-  simp [omittedSource, hy']
+  simp only [omittedSource, hy', sub_self, zero_smul]
 
 theorem derivativeError_gaussian_bound {s : StripData D} (g : SlotFamily s)
     (edges : FlatEdges s) (scales : BandScaleControl s)

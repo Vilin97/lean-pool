@@ -96,24 +96,24 @@ theorem transport_telescope {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤ s
   have he : externalTransportForcing period hs N hN L hL u v I a =
       D (externalCommutator period hs I.1.val I.2 (by have := I.1.isLt; omega) L hL u v) := by
     symm
-    exact wordAtLevel_value period 0 a.1.val a.2 (by have := a.1.isLt; omega) _
+    apply wordAtLevel_value period 0 a.1.val a.2 (by have := a.1.isLt; omega)
   have hext : externalCommutator period hs I.1.val I.2 (by
-      have := I.1.isLt; omega) L hL u v = X-Y :=
-    externalCommutator_apply period hs I.1.val I.2 (by have := I.1.isLt; omega) L hL u v
+      have := I.1.isLt; omega) L hL u v = X-Y := by
+    apply externalCommutator_apply period hs I.1.val I.2 (by have := I.1.isLt; omega) L hL u v
   have he' : externalTransportForcing period hs N hN L hL u v I a = D X-D Y :=
     he.trans ((congrArg D hext).trans (map_sub D X Y))
-  have hb : baseTransportForcing period N hN L hL u v I a = D Y-Z :=
-    baseCommutator_apply period a.1.val (by have := a.1.isLt; omega) a.2 L hL
+  have hb : baseTransportForcing period N hN L hL u v I a = D Y-Z := by
+    apply baseCommutator_apply period a.1.val (by have := a.1.isLt; omega) a.2 L hL
       (restrictOperator period (by omega : 7 ≤ s+1) u)
       (wordAtLevel period 7 I.1.val I.2 (by have := I.1.isLt; omega) v)
-  have hx : energyValues period 6 N hN (transportBilinear period hs L hL u v) I a = D X :=
-    (energyWordOperator_apply period 6 N hN I a (transportBilinear period hs L hL u v)).symm
+  have hx : energyValues period 6 N hN (transportBilinear period hs L hL u v) I a = D X := by
+    apply (energyWordOperator_apply period 6 N hN I a (transportBilinear period hs L hL u v)).symm
   change externalTransportForcing period hs N hN L hL u v I a +
     baseTransportForcing period N hN L hL u v I a =
       energyValues period 6 N hN (transportBilinear period hs L hL u v) I a-Z
   calc
     _ = (D X-D Y)+(D Y-Z) := congrArg₂ (fun x y : LiftL2 period => x+y) he' hb
-    _ = D X-Z := by abel
+    _ = D X-Z := sub_add_sub_cancel _ _ _
     _ = _ := congrArg (fun x : LiftL2 period => x-Z) hx.symm
 
 /-- Taking a word of the actual coefficient operator gives the word of its genuine product jet. -/
@@ -182,12 +182,6 @@ theorem pressure_telescope {s : ℕ} {A : SmoothCoefficient period}
       energyValues period 6 N hN (coefficientSobolevOperator period K p) -
         (fun I a => A.operator (energyValues period 6 N hN p I a)) := by
   funext I a
-  change externalPressureForcing period K N hN p I a + basePressureForcing period K0 N hN p I a =
-    energyValues period 6 N hN (coefficientSobolevOperator period K p) I a - A.operator
-        (energyValues period 6 N hN p I a)
-  rw [externalPressure_as_difference period K K0 N hN p I a,
-    basePressure_as_difference period K0 N hN p I a]
-  rw [← energyWordOperator_apply period 6 N hN I a (coefficientSobolevOperator period K p)]
   let D := (valueOperator period 0).comp
     (wordAtLevel period 0 a.1.val a.2 (by have := a.1.isLt; omega : a.1.val+0 ≤ 6))
   let X := wordAtLevel period 6 I.1.val I.2 (by
@@ -195,9 +189,18 @@ theorem pressure_telescope {s : ℕ} {A : SmoothCoefficient period}
   let Y := coefficientSobolevOperator period K0 (wordAtLevel period 6 I.1.val I.2 (by
       have := I.1.isLt; omega) p)
   let Z := A.operator (energyValues period 6 N hN p I a)
-  change D (X-Y) + (D Y-Z) = D X-Z
-  rw [map_sub]
-  abel
+  have h1 : externalPressureForcing period K N hN p I a = D (X - Y) := by
+    apply externalPressure_as_difference period K K0 N hN p I a
+  have h2 : basePressureForcing period K0 N hN p I a = D Y - Z := by
+    apply basePressure_as_difference period K0 N hN p I a
+  have h3 : energyValues period 6 N hN (coefficientSobolevOperator period K p) I a = D X := by
+    apply (energyWordOperator_apply period 6 N hN I a (coefficientSobolevOperator period K p)).symm
+  calc
+    _ = D (X - Y) + (D Y - Z) := congrArg₂ (fun x y : LiftL2 period => x + y) h1 h2
+    _ = D X - D Y + (D Y - Z) :=
+      congrArg (fun x : LiftL2 period => x + (D Y - Z)) (D.map_sub X Y)
+    _ = D X - Z := sub_add_sub_cancel _ _ _
+    _ = _ := congrArg (fun x : LiftL2 period => x - Z) h3.symm
 
 /-- The seven bounded forcing terms are exactly the remainder in the differentiated actual
 correction equation. -/

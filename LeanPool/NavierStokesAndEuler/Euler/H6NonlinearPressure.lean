@@ -86,7 +86,7 @@ theorem nonlinear_pressure_shifted_bound {s : ℕ} {A : SmoothCoefficient period
   rw [heq] at hp
   have ht := mul_le_mul_of_nonneg_left
     (transport_shifted_weighted_bound period 3 (N+1) ρ hρ b e hb he hbL2 heL2)
-    (show 0 ≤ 2*M by linarith)
+    (show 0 ≤ 2*M by linarith only [hM])
   exact hp.trans (ht.trans_eq (by ring))
 
 end EulerH6Nonlinear

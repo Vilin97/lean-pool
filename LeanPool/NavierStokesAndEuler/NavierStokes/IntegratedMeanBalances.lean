@@ -83,7 +83,7 @@ theorem moment_deriv_succ {f : ℝ → ℝ} (hf : ContDiff ℝ ∞ f)
     (fun r _ => (hf.differentiable (by simp) r).hasDerivAt)
     (weighted_integrable (deriv_smooth hf).continuous hs.deriv (n + 1))
     (by
-      change Integrable (fun r => (((n + 1 : ℕ) : ℝ) * r ^ n) * f r)
+      change Integrable (fun r => (((n + 1 : ℕ) : ℝ) * r ^ n) * f r) volume
       simpa only [mul_assoc] using
         (weighted_integrable hf.continuous hs n).const_mul ((n + 1 : ℕ) : ℝ))
     (weighted_integrable hf.continuous hs (n + 1))
@@ -487,7 +487,7 @@ theorem torusPartial_decompose (v : ℝ × ℝ) (F : (P × ℝ) × ℝ → ℝ) 
       v.2 * fixedPartial ((0, 1), 0) F q) := by
   funext q
   have hv : (((0 : P), v.2), v.1) =
-      v.1 • (((0 : P), 0), (1 : ℝ)) + v.2 • (((0 : P), 1), (0 : ℝ)) := by
+      v.1 • (((0 : P), (0 : ℝ)), (1 : ℝ)) + v.2 • (((0 : P), (1 : ℝ)), (0 : ℝ)) := by
     ext <;> simp
   simp only [torusPartial, fixedPartial, hv, map_add, map_smul, smul_eq_mul]
 

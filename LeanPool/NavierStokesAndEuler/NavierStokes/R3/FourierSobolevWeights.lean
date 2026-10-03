@@ -9,6 +9,7 @@ module
 import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 
 public import LeanPool.NavierStokesAndEuler.NavierStokes.R3.ComparisonFourierSetup
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # A polynomially weighted Fourier embedding
@@ -18,6 +19,10 @@ Consequently the resulting Fourier expressions belong to ordinary `L²`.
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 
 
@@ -87,20 +92,22 @@ def B : ComplexTest →ₗ[ℂ] Lp ℂ 2 (volume : Measure Space) :=
 
 theorem continuous_B : Continuous B := BCLM.continuous
 
+theorem B_apply (ψ : ComplexTest) :
+    B ψ = SchwartzMap.toLp (weightedSchwartz (EulerSobolev.schwartzFourier ψ)) 2 volume := rfl
+
 theorem B_ae_eq (ψ : ComplexTest) :
     B ψ =ᵐ[volume] fun ξ : Space =>
       (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (EulerSobolev.schwartzFourier ψ) ξ := by
-  change B ψ =ᵐ[volume] fun ξ : Space =>
-      (((1 + ‖ξ‖ ^ 2) ^ 2 : ℝ) : ℂ) * (FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ
-  exact (SchwartzMap.coeFn_toLp (weightedSchwartz
-    (FourierTransform.fourierCLE ℂ ComplexTest ψ)) 2 volume).trans
+  rw [B_apply]
+  exact (SchwartzMap.coeFn_toLp (weightedSchwartz (EulerSobolev.schwartzFourier ψ)) 2 volume).trans
       (Filter.Eventually.of_forall (weightedSchwartz_apply _))
 
 theorem B_injective : Function.Injective B := by
   intro ψ φ h
+  rw [B_apply, B_apply] at h
   apply (FourierTransform.fourierCLE ℂ ComplexTest).injective
-  apply weightedSchwartz_injective
-  exact SchwartzMap.injective_toLp 2 volume h
+  change EulerSobolev.schwartzFourier ψ = EulerSobolev.schwartzFourier φ
+  exact weightedSchwartz_injective (SchwartzMap.injective_toLp 2 volume h)
 
 theorem norm_weightedSchwartz_apply_sq (ψ : ComplexTest) (ξ : Space) :
     ‖weightedSchwartz ψ ξ‖ ^ 2 = (1 + ‖ξ‖ ^ 2) ^ 4 * ‖ψ ξ‖ ^ 2 := by
@@ -140,17 +147,14 @@ theorem integrable_fourierHNormSq_three (ψ : ComplexTest) :
 
 theorem norm_B_eq_sqrt (ψ : ComplexTest) :
     ‖B ψ‖ = Real.sqrt (fourierHNormSq 4 ψ) := by
-  change ‖(weightedSchwartz (FourierTransform.fourierCLE ℂ ComplexTest ψ)).toLp 2 volume‖ = _
+  change ‖(weightedSchwartz (EulerSobolev.schwartzFourier ψ)).toLp 2 volume‖ = _
   rw [SchwartzMap.norm_toLp, MemLp.eLpNorm_eq_integral_rpow_norm
     (by norm_num : (2 : ℝ≥0∞) ≠ 0) (by norm_num : (2 : ℝ≥0∞) ≠ ⊤)
-    ((weightedSchwartz (FourierTransform.fourierCLE ℂ ComplexTest ψ)).memLp 2 volume)]
+    ((weightedSchwartz (EulerSobolev.schwartzFourier ψ)).memLp 2 volume)]
   simp only [ENNReal.toReal_ofNat, Real.rpow_two, norm_weightedSchwartz_apply_sq]
-  have hi : 0 ≤ ∫ ξ : Space, (1 + ‖ξ‖ ^ 2) ^ 4 *
-      ‖(FourierTransform.fourierCLE ℂ ComplexTest ψ) ξ‖ ^ 2 :=
-    integral_nonneg fun ξ => by positivity
-  rw [ENNReal.toReal_ofReal (Real.rpow_nonneg hi _), Real.sqrt_eq_rpow]
-  simp only [fourierHNormSq, one_div]
-  rfl
+  have hi : 0 ≤ fourierHNormSq 4 ψ := integral_nonneg fun ξ => by positivity
+  rw [← fourierHNormSq, ENNReal.toReal_ofReal (Real.rpow_nonneg hi _), Real.sqrt_eq_rpow,
+    one_div]
 
 theorem norm_B_sq (ψ : ComplexTest) :
     ‖B ψ‖ ^ 2 = fourierHNormSq 4 ψ := by

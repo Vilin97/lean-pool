@@ -37,7 +37,7 @@ theorem flow_time_derivative_eq (X u : ℝ × E → E) (q : ℝ × E)
     (hX : DifferentiableAt ℝ X q)
     (hflow : HasDerivAt (fun s => X (s, q.2)) (u (q.1, X q)) q.1) :
     fderiv ℝ X q (1,0) = u (q.1,X q) := by
-  have h := hX.hasFDerivAt.comp_hasDerivAt q.1
+  have h := hX.hasFDerivAt.comp_hasDerivAt (F := ℝ × E) (f := fun s => (s, q.2)) q.1
     ((hasDerivAt_id q.1).prodMk (hasDerivAt_const q.1 q.2))
   exact h.unique hflow
 
@@ -63,7 +63,8 @@ theorem parent_frame_time (X u : ℝ × E → E) (F : ℝ × E → E →L[ℝ] E
     have h := congrArg (fun L : (ℝ × E) →L[ℝ] E => L (1,0)) he
     simpa only [add_apply,comp_apply,zero_apply,map_zero,zero_add,flip_apply] using h
   have hDXt := hDX.hasFDerivAt.clm_apply (hasFDerivAt_const ((1 : ℝ),(0 : E)) q)
-  have hUX := hu.comp q ((hasFDerivAt_fst).prodMk (hX.differentiableAt two_ne_zero).hasFDerivAt)
+  have hUX := hu.comp (f := fun r : ℝ × E => (r.1, X r)) q
+    ((hasFDerivAt_fst).prodMk (hX.differentiableAt two_ne_zero).hasFDerivAt)
   change HasFDerivAt (fun r => u (r.1,X r)) _ q at hUX
   have het := hflow.fderiv_eq (𝕜 := ℝ)
   rw [hDXt.fderiv,hUX.fderiv] at het
@@ -101,12 +102,12 @@ theorem physical_euler_momentum_of_flow
       (2 : ℝ) • A.symm (DF (1, 0) (z (spaceTimeGraph k m (t, x)))) +
       Dz (0, (κ • z (spaceTimeGraph k m (t, x)), ⟪m, z (spaceTimeGraph k m (t, x))⟫_ℝ)) +
       κ • A.symm (DF (0, z (spaceTimeGraph k m (t, x))) (z (spaceTimeGraph k m (t, x)))) +
-      A.symm (A.symm.toContinuousLinearMap.adjoint P) = 0) :
+      A.symm (adjoint (𝕜 := ℝ) (E := E) (F := E) A.symm.toContinuousLinearMap P) = 0) :
     momentumResidual (fun q => u q+physicalVelocity κ k m F z Y q)
       (fun q => p q+physicalPressure Q Y q) (t,X (t,x)) = 0 := by
   have hXt : HasDerivAt (fun s => X (s,x)) (u (t,X (t,x))) t := by
-    have h := (hX.differentiableAt two_ne_zero).hasFDerivAt.comp_hasDerivAt t
-      ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
+    have h := (hX.differentiableAt two_ne_zero).hasFDerivAt.comp_hasDerivAt (F := ℝ × E)
+      (f := fun s => (s, x)) t ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
     rw [hflow.eq_of_nhds] at h
     exact h
   have hXs : HasFDerivAt (fun y => X (t,y)) A.toContinuousLinearMap x := by

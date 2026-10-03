@@ -70,8 +70,9 @@ local instance instCylinderSlowCurlBounds12 : NormedSpace ℝ C(K,LiftL2 P) := i
 
 variable
   (G : C(K, Space →ᵇ Space →L[ℝ] Space))
-  (hG : ContDiff ℝ ∞ (translateCoefficientPath G))
-  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hG : ContDiff ℝ ∞ (translateCoefficientPath (K := K) (V := Space →L[ℝ] Space) G))
+  (p : C(K, LiftL2 P))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
 
 
 include hG hp in
@@ -79,28 +80,37 @@ include hG hp in
 theorem path_block_bound (q : ℕ) (Rc C R D : ℝ)
     (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius (Fin 4) Rc ≤ R)
-    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath G) a‖ ≤ C * majorant Rc 0 n)
+    (hbG : ∀ n a, ‖iteratedFDeriv ℝ n
+      (translateCoefficientPath (K := K) (V := Space →L[ℝ] Space) G) a‖ ≤ C * majorant Rc 0 n)
     (d : ℕ) (hbp : ∀ n, block standardDirection q
-      (fun a : LiftTangent => pathTranslate P a p) n 0 ≤ D*majorant R d n) (n : ℕ) :
-    block standardDirection q (fun a : LiftTangent => pathTranslate P a (path P G p)) n 0 ≤
+      (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p) n 0 ≤
+        D*majorant R d n) (n : ℕ) :
+    block standardDirection q (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (path P G p)) n 0 ≤
       (9*sobolevCoefficientAmplitude (Fin 4) q Rc C*D)*majorant R (d+1) n := by
   have hdirections (i : Fin 4) : ‖standardDirection i‖ ≤ 1 := by
-    cases i using Fin.cases <;> simp [Prod.norm_def]
+    cases i using Fin.cases <;> simp only [Fin.isValue, standardDirection_zero, Prod.norm_def,
+        norm_zero, norm_one, zero_le_one, sup_of_le_right, Std.le_refl, standardDirection_succ,
+        PiLp.norm_single, sup_of_le_left]
   have ht (i : Fin 3) :
-      block standardDirection q (fun a : LiftTangent => pathTranslate P a (term P G p i)) n 0 ≤
+      block standardDirection q (fun a : LiftTangent =>
+        pathTranslate (K := K) (V := Vector3) P a (term P G p i)) n 0 ≤
         (3*sobolevCoefficientAmplitude (Fin 4) q Rc C*D)*majorant R (d+1) n := by
-    have h := product_orbit_block_bound P (curlCoefficientPath i G) (curlCoefficientPath_orbit i G
-        hG)
+    have h := product_orbit_block_bound P (curlCoefficientPath (K := K) i G)
+      (curlCoefficientPath_orbit i G hG)
       standardDirection hdirections q (derivativePath P p i.succ) (derivativePath_orbit P p hp
           i.succ)
       Rc C R D hRc hC hD hR
       (fun j a => curlCoefficientPath_bound i G hG j (C*majorant Rc 0 j) (hbG j) a)
       (d+1) (derivativePath_majorant P p hp i.succ q R D d hbp) n
     exact h
-  let f := fun i : Fin 3 => fun a : LiftTangent => pathTranslate P a (term P G p i)
-  have he : (fun a : LiftTangent => pathTranslate P a (path P G p)) = f 0+(f 1+f 2) := by
+  let f := fun i : Fin 3 => fun a : LiftTangent =>
+    pathTranslate (K := K) (V := Vector3) P a (term P G p i)
+  have he : (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a (path P G p)) =
+      f 0+(f 1+f 2) := by
     funext a
-    simp [path, Fin.sum_univ_succ, f]
+    simp only [path, Fin.sum_univ_succ, Fin.isValue, Fin.succ_zero_eq_one, Finset.univ_unique,
+        Fin.default_eq_zero, Finset.sum_singleton, Fin.succ_one_eq_two, map_add, Pi.add_apply, f]
   rw [he]
   have h₀ := term_orbit P G hG p hp 0
   have h₁ := term_orbit P G hG p hp 1

@@ -167,7 +167,8 @@ theorem sourceFrame_strong (T : ℝ) (hT : 0 < T)
       (∀ᵐ t ∂timeMeasure T, HasDerivAt v (a t) t) ∧
       ∀ᵐ t ∂timeMeasure T,
         gram (extendPath T hT.le (framePath m₀ R T A) t) (a t) =
-          (extendPath T hT.le (framePath m₀ R T A) t).adjoint
+          adjoint (𝕜 := ℝ) (E := U) (F := E)
+              (extendPath (Y := U →L[ℝ] E) T hT.le (framePath m₀ R T A) t)
             (f t - (2 : ℝ) • extendPath T hT.le (framePath m₀ R T A₁) t (v t)) := by
   let Q := framePath m₀ R T A
   let Q₁ := framePath m₀ R T A₁
@@ -240,7 +241,7 @@ theorem pathEvaluation_norm (x : Space) : ‖pathEvaluation (K := K) (V := V) x�
 
 /-- The source coefficient viewed as a time path at a spatial position. -/
 def pointPath (A : SmoothCoefficientPath K V) (x : Space) : C(K,V) :=
-  pathEvaluation 0 (translateCoefficientPath A.field x)
+  pathEvaluation (K := K) (V := V) 0 (translateCoefficientPath A.field x)
 
 /-- The coefficient path has the literal prescribed pointwise values. -/
 theorem pointPath_apply (A : SmoothCoefficientPath K V) (x : Space) (t : K) :

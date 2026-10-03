@@ -92,11 +92,11 @@ theorem compact_increment_bound (f : Space → V) (hc : HasCompactSupport f)
 fields. -/
 theorem compactField_hasFDerivAt (f : Space → V) (hc : HasCompactSupport f)
     (hf : ContDiff ℝ ∞ f) :
-    HasFDerivAt (fun a : Space => translation a (compactField f hc hf))
+    HasFDerivAt (fun a : Space => translation (V := V) a (compactField f hc hf))
       (derivativeMap volume (compactDerivative f hc hf)) 0 := by
   obtain ⟨M, hM, hM0, hbound⟩ := compact_increment_bound f hc hf
   apply EulerLpDerivative.hasFDerivAt_of_dominated volume
-    (fun a : Space => translation a (compactField f hc hf)) (fun a x => f (x+a))
+    (fun a : Space => translation (V := V) a (compactField f hc hf)) (fun a x => f (x+a))
     _ (compactDerivative f hc hf) _ M hM (Eventually.of_forall hM0)
   · filter_upwards [Metric.ball_mem_nhds (0 : Space) zero_lt_one] with a ha
     apply Eventually.of_forall
@@ -182,7 +182,7 @@ theorem cutoffDerivativeLp_tendsto (f : Space → V) (hf : ContDiff ℝ ∞ f)
     rw [cutoffField_fderiv f hf]
     have he : cutoff n x • fderiv ℝ f x + (fderiv ℝ (cutoff n) x).smulRight (f x) - fderiv ℝ f x =
         (cutoff n x - 1) • fderiv ℝ f x + (fderiv ℝ (cutoff n) x).smulRight (f x) := by
-      rw [sub_smul, one_smul]
+      simp only [sub_smul, one_smul]
       abel
     rw [he]
     apply (norm_add_le _ _).trans
@@ -198,7 +198,7 @@ theorem cutoffDerivativeLp_tendsto (f : Space → V) (hf : ContDiff ℝ ∞ f)
 L². -/
 theorem smooth_hasFDerivAt (f : Space → V) (hf : ContDiff ℝ ∞ f)
     (hLp : MemLp f 2 volume) (hDLp : MemLp (fderiv ℝ f) 2 volume) :
-    HasFDerivAt (fun a : Space => translation a (hLp.toLp f))
+    HasFDerivAt (fun a : Space => translation (V := V) a (hLp.toLp f))
       (derivativeMap volume (hDLp.toLp (fderiv ℝ f))) 0 := by
   apply translation_hasFDerivAt_limit (cutoffLp f hf)
     (fun n => derivativeMap volume (cutoffDerivativeLp f hf n))
@@ -206,7 +206,8 @@ theorem smooth_hasFDerivAt (f : Space → V) (hf : ContDiff ℝ ∞ f)
   · intro n
     exact compactField_hasFDerivAt _ _ _
   · exact cutoffLp_tendsto f hf hLp
-  · exact (EulerLpDerivative.derivativeBundling volume).continuous.continuousAt.tendsto.comp
+  · exact (EulerLpDerivative.derivativeBundling (X := Space) (P := Space) (V := V)
+      volume).continuous.continuousAt.tendsto.comp
       (cutoffDerivativeLp_tendsto f hf hLp hDLp)
 
 end EulerLpTranslation

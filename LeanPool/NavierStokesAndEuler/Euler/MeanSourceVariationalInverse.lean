@@ -27,6 +27,10 @@ section
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 namespace EulerMeanHarmonic
@@ -54,7 +58,7 @@ theorem norm_sub_sq_le_twice_L2 (z w : L2) :
   have hz := norm_nonneg z
   have hw := norm_nonneg w
   have hzw := norm_nonneg (z-w)
-  nlinarith [sq_nonneg (‖z‖-‖w‖)]
+  nlinarith only [h, hz, hw, hzw, sq_nonneg (‖z‖-‖w‖)]
 
 /-- The literal local mass estimate (8), with fixed dimensional constants. -/
 theorem boundary_localization (χ : Cutoff) (R : ℝ) (hR : 0 < R) (z : L2)
@@ -74,14 +78,14 @@ theorem boundary_localization (χ : Cutoff) (R : ℝ) (hR : 0 < R) (z : L2)
   have hc := weakHarmonicSmallBallConstant_nonneg
   have hr3 : 0 ≤ r^3 := pow_nonneg hr _
   have hr31 : r^3 ≤ 1 := by
-    have H := pow_le_pow_left₀ hr (show r ≤ (1:ℝ) by linarith) 3
+    have H := pow_le_pow_left₀ hr (show r ≤ (1:ℝ) by linarith only [hrquarter]) 3
     simpa only [one_pow] using H
   have hsplit := norm_sub_sq_le_twice_L2 z w
   calc
     _ ≤ 2 * localL2Energy (Metric.ball (0 : Space) (R*r)) (z-w) + 2 * ‖w‖^2 :=
       localL2Energy_le_of_decomposition _ z w
     _ ≤ 2 * (weakHarmonicSmallBallConstant * r^3 * ‖z-w‖^2) + 2 * ‖w‖^2 := by
-      linarith
+      linarith only [hloc]
     _ ≤ 2 * (weakHarmonicSmallBallConstant * r^3 * (2*‖z‖^2+2*‖w‖^2)) +
         2 * ‖w‖^2 := by
       have H := mul_le_mul_of_nonneg_left hsplit (mul_nonneg hc hr3)

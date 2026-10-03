@@ -117,7 +117,7 @@ theorem pair_sub_apply (j m : ℤ) (a b : D → ℂ) (x : D) :
     ErrorHarmonics.conjugatePair j (fun y => a y - b y) m x =
       ErrorHarmonics.conjugatePair j a m x - ErrorHarmonics.conjugatePair j b m x := by
   simp only [ParticularWaveAssembly.pair_apply]
-  split_ifs <;> simp [sub_div, map_sub]
+  split_ifs <;> simp only [sub_div, map_sub, map_div₀, map_zero, add_zero, zero_add, sub_self]
   all_goals ring
 
 theorem coefficientBlock_uniform
@@ -273,8 +273,8 @@ theorem nativeSlice_uniform {s : StripData ((Q × ℝ) × TorusInverse.Plane)}
     {w : ι → ℕ → (Q × ℝ) × TorusInverse.Plane → ℝ} {α : ℝ}
     {f : ι → ℕ → (Q × ℝ) × TorusInverse.Plane → F} (hf : UniformClass s w α f) :
     UniformClass (ParticularWaveAssembly.sectionStrip s)
-      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (x,0))) α
-      (fun l n x => f l n (ParticularWaveAssembly.angleShuffle (x,0))) :=
+      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) α
+      (fun l n x => f l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) :=
   uniform_zeroSection (uniform_reindex (ParticularWaveAssembly.angleShuffle (P := Q)) hf)
 
 /-- The native whole-angle strip used by the literal particular solver. -/
@@ -291,8 +291,8 @@ theorem sectionStrip_nativeStrip (s : StripData (Q × TorusInverse.Plane)) :
 theorem nativeSlice_original_uniform {s : StripData (Q × TorusInverse.Plane)}
     {w : ι → ℕ → (Q × ℝ) × TorusInverse.Plane → ℝ} {α : ℝ}
     {f : ι → ℕ → (Q × ℝ) × TorusInverse.Plane → F} (hf : UniformClass (nativeStrip s) w α f) :
-    UniformClass s (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (x,0))) α
-      (fun l n x => f l n (ParticularWaveAssembly.angleShuffle (x,0))) := by
+    UniformClass s (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) α
+      (fun l n x => f l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) := by
   have h := nativeSlice_uniform hf
   rw [sectionStrip_nativeStrip] at h
   exact h
@@ -309,17 +309,19 @@ theorem native_assembledBlock_uniform
     (hv : ∀ j ∈ ParticularWaveAssembly.modes N, UniformClass s w α (fun l => v l j))
     (hp : ∀ j ∈ ParticularWaveAssembly.modes N, UniformClass s w γ (fun l => p l j)) :
     (∀ i m, UniformClass (ParticularWaveAssembly.sectionStrip s)
-      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (x,0))) α
+      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) α
       (fun l n x => (ParticularWaveAssembly.assembledBlock N (k l) (Φ l) (kp l)
-        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (x,0)))
-        (fun j n x => p l j n (ParticularWaveAssembly.angleShuffle (x,0)))).velocity n i m x)) ∧
+        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))
+        (fun j n x => p l j n
+          (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))).velocity n i m x)) ∧
     (∀ m, UniformClass (ParticularWaveAssembly.sectionStrip s)
-      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (x,0))) γ
+      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) γ
       (fun l n x => (ParticularWaveAssembly.assembledBlock N (k l) (Φ l) (kp l)
-        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (x,0)))
-        (fun j n x => p l j n (ParticularWaveAssembly.angleShuffle (x,0)))).pressure n m x)) :=
-  assembledBlock_uniform N k Φ kp (fun l n x hx => hw l n (ParticularWaveAssembly.angleShuffle
-      (x,0)) hx)
+        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))
+        (fun j n x => p l j n
+          (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))).pressure n m x)) :=
+  assembledBlock_uniform N k Φ kp
+    (fun l n x hx => hw l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)) hx)
     (fun j hj => nativeSlice_uniform (hv j hj)) (fun j hj => nativeSlice_uniform (hp j hj))
 
 theorem native_assembledBlock_original_uniform
@@ -331,14 +333,18 @@ theorem native_assembledBlock_original_uniform
     (hw : ∀ l n x, x ∈ (nativeStrip s).domain → 0 ≤ w l n x)
     (hv : ∀ j ∈ ParticularWaveAssembly.modes N, UniformClass (nativeStrip s) w α (fun l => v l j))
     (hp : ∀ j ∈ ParticularWaveAssembly.modes N, UniformClass (nativeStrip s) w γ (fun l => p l j)) :
-    (∀ i m, UniformClass s (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (x,0))) α
+    (∀ i m, UniformClass s
+      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) α
       (fun l n x => (ParticularWaveAssembly.assembledBlock N (k l) (Φ l) (kp l)
-        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (x,0)))
-        (fun j n x => p l j n (ParticularWaveAssembly.angleShuffle (x,0)))).velocity n i m x)) ∧
-    (∀ m, UniformClass s (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (x,0))) γ
+        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))
+        (fun j n x => p l j n
+          (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))).velocity n i m x)) ∧
+    (∀ m, UniformClass s
+      (fun l n x => w l n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0))) γ
       (fun l n x => (ParticularWaveAssembly.assembledBlock N (k l) (Φ l) (kp l)
-        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (x,0)))
-        (fun j n x => p l j n (ParticularWaveAssembly.angleShuffle (x,0)))).pressure n m x)) := by
+        (fun j n x => v l j n (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))
+        (fun j n x => p l j n
+          (ParticularWaveAssembly.angleShuffle (P := Q) (x,0)))).pressure n m x)) := by
   have h := native_assembledBlock_uniform N k Φ kp hw hv hp
   rw [sectionStrip_nativeStrip] at h
   exact h

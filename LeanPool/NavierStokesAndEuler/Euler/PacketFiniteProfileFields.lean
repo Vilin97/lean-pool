@@ -70,8 +70,15 @@ def velocityGradeDerivativeField (i : ℕ) : Field P T (velocityTimeCoefficients
 
 theorem velocityGrade_time (i : ℕ) :
     TimeDerivative hT.le (velocityGradeField hT G i) (velocityGradeDerivativeField hT G i) :=
-  TimeDerivative.assembleFamily N _ _ _ _ _ _ _ _
-    (fun j hj => ((G j hj).high_time.add (G j hj).mean_time))
+  TimeDerivative.assembleFamily N _ _ _ _ _
+    (fun j hj => ((G j hj).high.add (G j hj).mean).timeDerivativeField hT
+      ((G j hj).highDerivative.add (G j hj).meanDerivative)
+      ((G j hj).high_time.add (G j hj).mean_time)) _
+    (fun j hj => (G j hj).corrector.timeDerivativeField hT (G j hj).correctorDerivative
+      (G j hj).corrector_time)
+    (fun j hj => ((G j hj).high_time.add (G j hj).mean_time :
+      TimeDerivative hT.le ((G j hj).high.add (G j hj).mean)
+        ((G j hj).highDerivative.add (G j hj).meanDerivative)))
     (fun j hj => (G j hj).corrector_time) i
 
 /-- Velocity field, given by `Field.evaluateFamily (N+1) κ _ (velocityGradeField hT G)`. -/

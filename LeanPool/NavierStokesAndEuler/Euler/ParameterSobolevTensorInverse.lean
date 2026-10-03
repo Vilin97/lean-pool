@@ -57,15 +57,15 @@ theorem inverse_block_gevrey_of_tensor (directions : ι → P)
   have hcost := sobolevInverseCost_nonneg I _ hI hB q
   have hM : 1 ≤ inverseBlockCost ι q I Rc C D := by
     unfold inverseBlockCost
-    linarith [mul_nonneg hcost (add_nonneg hB hD)]
+    linarith only [hcost, hB, hD, mul_nonneg hcost (add_nonneg hB hD)]
   have hMC : sobolevInverseCost I (sobolevCoefficientAmplitude ι q Rc C) q *
       sobolevCoefficientAmplitude ι q Rc C ≤ inverseBlockCost ι q I Rc C D := by
     unfold inverseBlockCost
-    nlinarith
+    nlinarith only [hD, hcost]
   have hMD : sobolevInverseCost I (sobolevCoefficientAmplitude ι q Rc C) q*D ≤
       inverseBlockCost ι q I Rc C D := by
     unfold inverseBlockCost
-    nlinarith
+    nlinarith only [hB, hcost]
   apply block_inverse_gevrey directions q A u f hA hu hf heq inverse hleft
     I (sobolevCoefficientAmplitude ι q Rc C) (sobolevCoefficientAmplitude ι q Rc C) D
     (inverseBlockCost ι q I Rc C D) (sobolevCoefficientRadius ι Rc) R

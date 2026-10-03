@@ -10,6 +10,8 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import LeanPool.NavierStokesAndEuler.Euler.LpBochnerRealization
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Integral.Prod
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
+import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-! Actual integration of uniformly L²-bounded parameter families.
 The result is proved directly on raw jointly measurable representatives,
@@ -43,7 +45,8 @@ theorem norm_integral_sq_le (ν : Measure α) [IsFiniteMeasure ν]
     (f : α → E) (hf : MemLp f 2 ν) :
     ‖∫ s, f s ∂ν‖^2 ≤ ν.real univ*(∫ s, ‖f s‖^2 ∂ν) := by
   have hp : (2 : ℝ).HolderConjugate 2 := by norm_num [Real.holderConjugate_iff]
-  have hn : MemLp (fun s => ‖f s‖) (ENNReal.ofReal (2 : ℝ)) ν := by simpa using hf.norm
+  have hn : MemLp (fun s => ‖f s‖) (ENNReal.ofReal (2 : ℝ)) ν := by simpa only [
+      ENNReal.ofReal_ofNat] using hf.norm
   have ho : MemLp (fun _ : α => (1 : ℝ)) (ENNReal.ofReal (2 : ℝ)) ν := memLp_const 1
   have h := integral_mul_le_Lp_mul_Lq_of_nonneg hp
     (Eventually.of_forall (fun s => norm_nonneg (f s)))

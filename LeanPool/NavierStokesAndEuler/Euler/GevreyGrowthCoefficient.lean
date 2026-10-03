@@ -92,10 +92,10 @@ theorem absorb_scalar_coefficients (g0 g1 f0 f1 f2 d r X Y B R C : ℝ)
     (hC : 1 + g0 + g1 + f0 + f1 + f2 + d ≤ C) (b : ℝ) :
     (g0+g1*X)*X+b*Y+(f0*r+f1*X+f2*X^2+d*R*(B+X)*Y) ≤
       C*(X+X^2+r)+(b+C*R*(B+X))*Y := by
-  have hc0 : f0 ≤ C := by linarith
-  have hc1 : g0+f1 ≤ C := by linarith
-  have hc2 : g1+f2 ≤ C := by linarith
-  have hcd : d ≤ C := by linarith
+  have hc0 : f0 ≤ C := by linarith only [hg0, hg1, hf1, hf2, hd, hC]
+  have hc1 : g0+f1 ≤ C := by linarith only [hg1, hf0, hf2, hd, hC]
+  have hc2 : g1+f2 ≤ C := by linarith only [hg0, hf0, hf1, hd, hC]
+  have hcd : d ≤ C := by linarith only [hg0, hg1, hf0, hf1, hf2, hC]
   have h0 := mul_le_mul_of_nonneg_right hc0 hr
   have h1 := mul_le_mul_of_nonneg_right hc1 hX
   have h2 := mul_le_mul_of_nonneg_right hc2 (sq_nonneg X)

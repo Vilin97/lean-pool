@@ -44,8 +44,8 @@ theorem slowQ_physical (h : ℝ) (w : SpaceTime) :
 
 theorem slowQ_smoothAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {s : DirectAngularDiagonal.Slow} (hs : s.1 < 1) : ContDiffAt ℝ ∞ (slowQ h) s := by
-  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith : 0 < 2 * h)
-    (by linarith : 2 * h < 1) (p := (1 - s.1, s.2)) (sub_pos.mpr hs)).comp s
+  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith only [hh] : 0 < 2 * h)
+    (by linarith only [hh1] : 2 * h < 1) (p := (1 - s.1, s.2)) (sub_pos.mpr hs)).comp s
     ((contDiffAt_const.sub contDiffAt_fst).prodMk contDiffAt_snd)
 
 theorem localSlowDomain_open {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (qbig : ℝ) :
@@ -190,7 +190,8 @@ theorem angularSum_divergence (hh : 0 < h) (hh1 : h < 1 / 2)
       (fun _ hx => PhysicalWaveSum.physicalQ_pos hh hh1 hx.1) (x := w) ⟨ht, hq⟩
   · rw [DirectAngularDiagonal.divergence_congr
       (angularSum_zero_germ hh hh1 D ha0 ham hgap ht (le_of_not_gt hq))]
-    simp [spatialDivergence, spatialDerivative]
+    simp only [spatialDivergence, spatialDerivative, fderiv_fun_const, Pi.zero_apply, zero_apply,
+        PiLp.zero_apply, Finset.sum_const_zero]
 
 /-- Multiplication by the existing axisymmetric spatial cutoff preserves
 divergence of the same local-data diagonal on every preterminal point. -/
@@ -209,6 +210,7 @@ theorem spatialCut_angularSum_divergence (hh : 0 < h) (hh1 : h < 1 / 2)
       (fun _ hx => PhysicalWaveSum.physicalQ_pos hh hh1 hx.1) (x := (t, x)) ⟨ht, hq⟩
   · rw [DirectAngularDiagonal.divergence_congr (spatialCut_zero_germ
       (angularSum_zero_germ hh hh1 D ha0 ham hgap (w := (t, x)) ht (le_of_not_gt hq)))]
-    simp [spatialDivergence, spatialDerivative]
+    simp only [spatialDivergence, spatialDerivative, fderiv_fun_const, Pi.zero_apply, zero_apply,
+        PiLp.zero_apply, Finset.sum_const_zero]
 
 end NavierStokes.LocalAngularDiagonal

@@ -60,11 +60,11 @@ def inverseCoefficient : MatrixCoefficient D.T (rawInverse D) where
 
 /-- Raw metric, given by `(rawInverse D z).comp (rawInverse D z).adjoint`. -/
 def rawMetric (z : Domain) : Space →L[ℝ] Space :=
-  (rawInverse D z).comp (rawInverse D z).adjoint
+  (rawInverse D z).comp (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawInverse D z))
 
 /-- Raw inverse metric, given by `(rawFrame D z).adjoint.comp (rawFrame D z)`. -/
 def rawInverseMetric (z : Domain) : Space →L[ℝ] Space :=
-  (rawFrame D z).adjoint.comp (rawFrame D z)
+  (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawFrame D z)).comp (rawFrame D z)
 
 /-- Raw linear, given by `(2 : ℝ) • (rawInverse D z).comp (rawFrameTime D z)`. -/
 def rawLinear (z : Domain) : Space →L[ℝ] Space :=
@@ -99,11 +99,12 @@ def quadraticCoefficient (κ : ℝ) (i : Fin 3) : MatrixCoefficient D.T (rawQuad
 
 @[simp] theorem metricCoefficient_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     (metricCoefficient D).path t x =
-      (D.FInv.field t x).comp (D.FInv.field t x).adjoint := rfl
+      (D.FInv.field t x).comp
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x)) := rfl
 
 @[simp] theorem inverseMetricCoefficient_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     (inverseMetricCoefficient D).path t x =
-      (D.F.field t x).adjoint.comp (D.F.field t x) := rfl
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x)).comp (D.F.field t x) := rfl
 
 @[simp] theorem linearCoefficient_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     (linearCoefficient D).path t x =
@@ -140,11 +141,13 @@ def quadraticTower (κ : ℝ) (i : Fin 3) : CoefficientTower P D.T :=
 
 @[simp] theorem metricTower_apply (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
     ((metricTower D P).coefficient t).coefficient x =
-      (D.FInv.field t x.1).comp (D.FInv.field t x.1).adjoint := rfl
+      (D.FInv.field t x.1).comp
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x.1)) := rfl
 
 @[simp] theorem inverseMetricTower_apply (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
     ((inverseMetricTower D P).coefficient t).coefficient x =
-      (D.F.field t x.1).adjoint.comp (D.F.field t x.1) := rfl
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x.1)).comp
+        (D.F.field t x.1) := rfl
 
 @[simp] theorem linearTower_apply (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
     ((linearTower D P).coefficient t).coefficient x =

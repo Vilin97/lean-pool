@@ -112,7 +112,7 @@ theorem difference_transport_bound {q : ℕ} {T : Type*} [TopologicalSpace T]
   have hβ : (1/2 : ℝ)*K.firstBound*((|D.κ|+‖D.direction‖)*velocityBound period q Z R) ≤
       Kx*velocityBound period q Z R := by
     have hh := mul_le_mul_of_nonneg_right hprod hV
-    nlinarith
+    linarith
   exact mul_le_mul_of_nonneg_right hβ (sq_nonneg _)
 
 /-- The actual Sobolev Laplacian has the fixed metric heat bound obtained by integration by parts.
@@ -129,10 +129,11 @@ theorem difference_heat_bound {q : ℕ} (hq : 2 ≤ q) (K : SmoothCoefficient pe
   have hd : 0 ≤ ∑ i : Fin 4, ‖(EulerH6Pressure.SpatialJet.restrict (toJet period u) 2 hq).word (fun
       _ : Fin 1 => i)‖^2 :=
     Finset.sum_nonneg (fun i _ => sq_nonneg _)
-  have hsq : (K.firstBound : ℝ)^2 ≤ Kx^2 := by nlinarith [K.firstBound.coe_nonneg]
+  have hsq : (K.firstBound : ℝ)^2 ≤ Kx^2 := pow_le_pow_left₀ K.firstBound.coe_nonneg hKx 2
   have hcoef := div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hsq (by
       norm_num : (0 : ℝ) ≤ 2)) (sq_nonneg c)
   have hprod := mul_le_mul_of_nonneg_right hcoef (sq_nonneg ‖value period u‖)
-  nlinarith [sq_nonneg c]
+  have hS := mul_nonneg (div_nonneg (sq_nonneg c) zero_le_two) hd
+  linarith only [h, hprod, hS]
 
 end EulerSobolevDifferenceEnergy

@@ -17,6 +17,10 @@ the fixed profile envelope, before the geometric tail is summed. -/
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 namespace EulerPacketCoarseMajorant
 
@@ -50,7 +54,7 @@ theorem tailBase_absorption (R H C : ℝ) (hC : 0 ≤ C) (N n : ℕ) :
     linarith only [h]
   have hf : (1+18*((N+2 : ℕ) : ℝ)^2)*C ≤ A^(n+1) := by
     calc
-      _ ≤ A := by dsimp [A]; nlinarith
+      _ ≤ A := by dsimp [A]; nlinarith only
       _ ≤ A*A^n := le_mul_of_one_le_right (le_trans zero_le_one hA) (one_le_pow₀ hA)
       _ = A^(n+1) := (pow_succ' A n).symm
   have hH : H^(2*n+2) = (H^2)^(n+1) := by
@@ -88,7 +92,7 @@ theorem tailBase_polynomial_bound (R H C : ℝ) (hC : 0 ≤ C) (N : ℕ) (hN : 1
     tailBase R H C N ≤ tailPolynomialConstant R H C*(N : ℝ)^222 := by
   have hn : (1 : ℝ) ≤ N := by exact_mod_cast hN
   have hn2 : (1 : ℝ) ≤ (N : ℝ)^2 := one_le_pow₀ hn
-  have hnplus : (N : ℝ)+2 ≤ 3*(N : ℝ) := by linarith
+  have hnplus : (N : ℝ)+2 ≤ 3*(N : ℝ) := by linarith only [hn]
   have hp := pow_le_pow_left₀ (show (0 : ℝ) ≤ (N : ℝ)+2 by positivity) hnplus 2
   have hf : (1 : ℝ)+18*((N+2 : ℕ) : ℝ)^2 ≤ 163*(N : ℝ)^2 := by
     push_cast

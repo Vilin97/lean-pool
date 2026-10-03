@@ -56,7 +56,7 @@ include hm hb
 
 theorem chain_integrable (n : ℕ) (ν : ℝ) : Integrable (J n ν) μ := by
   obtain ⟨b, hi, hbound⟩ := hb n (|ν| + 1) (by positivity)
-  exact hi.mono' (hm n ν) (hbound.mono fun t ht => ht ν (by linarith))
+  exact hi.mono' (hm n ν) (hbound.mono fun t ht => ht ν (by linarith only))
 
 include hJ
 
@@ -68,7 +68,7 @@ theorem integral_chain_hasDerivAt (n : ℕ) (ν : ℝ) :
     calc
       |u| = |(u - ν) + ν| := by congr 1; ring
       _ ≤ |u - ν| + |ν| := abs_add_le _ _
-      _ ≤ |ν| + 1 := by linarith
+      _ ≤ |ν| + 1 := by linarith only [hdist]
   exact (hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (F := fun u t => J n u t) (F' := fun u t => J (n + 1) u t)
     (bound := b) (μ := μ) (Metric.ball_mem_nhds ν (by norm_num : (0 : ℝ) < 1))
@@ -146,7 +146,7 @@ theorem correctionJet_succ {h : ℝ} (hh : 0 < h) (K X ν : ℝ) (n : ℕ) :
     correctionJet h K (n + 1) ν X = switch K X * (2 / X) ^ (n + 1) *
       iteratedDeriv (n + 1) (HeatProfileExtension.extension (1 + h)) (2 * ν / X) := by
   have hc : ContDiff ℝ ∞ (HeatProfileExtension.scaledProfile (1 + h) X) :=
-    (HeatProfileExtension.extension_contDiff (a := 1 + h) (by linarith)).comp
+    (HeatProfileExtension.extension_contDiff (a := 1 + h) (by linarith only [hh])).comp
       ((contDiff_const.mul contDiff_id).div_const X)
   unfold correctionJet correction
   rw [iteratedDeriv_const_mul _ ((hc.sub contDiff_const).of_le
@@ -154,7 +154,7 @@ theorem correctionJet_succ {h : ℝ} (hh : 0 < h) (K X ν : ℝ) (n : ℕ) :
   rw [show (fun x => HeatProfileExtension.scaledProfile (1 + h) X x - 1) =
     (fun x => (-1 : ℝ) + HeatProfileExtension.scaledProfile (1 + h) X x) by funext x; ring,
     iteratedDeriv_const_add (Nat.succ_pos n),
-    HeatProfileExtension.iteratedDeriv_scaledProfile (a := 1 + h) (by linarith)]
+    HeatProfileExtension.iteratedDeriv_scaledProfile (a := 1 + h) (by linarith only [hh])]
   simp only [Nat.succ_eq_add_one, mul_assoc]
 
 theorem correctionBound_nonneg (h : ℝ) {L : ℝ} (hL : 0 ≤ L) (n : ℕ) :
@@ -172,7 +172,7 @@ theorem correctionJet_continuousOn_X {h K : ℝ} (hh : 0 < h) (hK : 0 < K)
     (n : ℕ) (ν : ℝ) : ContinuousOn (fun X => correctionJet h K n ν X) (Ioi 0) := by
   have hr : ContinuousOn (fun X : ℝ => 2 * ν / X) (Ioi 0) :=
     continuousOn_const.div continuousOn_id (fun X hX => (show 0 < X from hX).ne')
-  have hH := HeatProfileExtension.extension_contDiff (a := 1 + h) (by linarith)
+  have hH := HeatProfileExtension.extension_contDiff (a := 1 + h) (by linarith only [hh])
   cases n with
   | zero =>
       exact (switch_contDiffOn hK).continuousOn.mul
@@ -199,7 +199,7 @@ theorem correctionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
           mul_le_mul_of_nonneg_right hsw.2 (abs_nonneg _)
         _ ≤ 2 * HeatProfileExtension.derivativeBound (1 + h) 1 * |ν| / X := by
           simpa only [one_mul] using HeatProfileExtension.scaledProfile_sub_one_bound
-            (a := 1 + h) (by linarith) hXp ν
+            (a := 1 + h) (by linarith only [hh]) hXp ν
         _ ≤ correctionBound h L 0 / X := by
           change 2 * HeatProfileExtension.derivativeBound (1 + h) 1 * |ν| / X ≤
             (2 * HeatProfileExtension.derivativeBound (1 + h) 1 * L) / X
@@ -213,7 +213,7 @@ theorem correctionJet_bound {h K L ν X : ℝ} (hh : 0 < h) (hX : 1 ≤ X)
       rw [correctionJet_succ hh, abs_mul, abs_mul, abs_of_nonneg hsw.1,
         abs_of_nonneg (pow_nonneg (div_nonneg (by norm_num) hXp.le) _)]
       have hj := HeatProfileExtension.extension_derivative_bound (a := 1 + h)
-        (by linarith) (n + 1) (2 * ν / X)
+        (by linarith only [hh]) (n + 1) (2 * ν / X)
       rw [Real.norm_eq_abs] at hj
       calc
         _ ≤ 1 * (2 ^ (n + 1) / X) * HeatProfileExtension.derivativeBound (1 + h) (n + 1) := by
@@ -427,7 +427,7 @@ noncomputable def nuConstant (d : TailData) (L : ℝ) (square : Bool) (q : ℝ) 
 theorem nuConstant_nonneg (d : TailData) {L : ℝ} (hL : 0 ≤ L) (square : Bool) {q : ℝ}
     (hq : tailDecay d square + q < 0) (n : ℕ) : 0 ≤ nuConstant d L square q n := by
   exact div_nonneg (mul_nonneg (tailSize_nonneg d square)
-    (editBound_nonneg square d.h hL n)) (by linarith)
+    (editBound_nonneg square d.h hL n)) (by linarith only [hq])
 
 theorem nuDebtJet_hasDerivAt (d : TailData) {K : ℝ} (hK : 1 ≤ K) (square : Bool)
     {q : ℝ} (hq : tailDecay d square + q < 0) (n : ℕ) (ν : ℝ) :
@@ -669,15 +669,15 @@ noncomputable def enlargedBand : Set ℝ := Icc (-(3 / 2 : ℝ)) (3 / 2)
 theorem physicalBand_subset_enlargedBand : Icc (-1 : ℝ) 1 ⊆ enlargedBand := by
   intro η hη
   change -(3 / 2 : ℝ) ≤ η ∧ η ≤ 3 / 2
-  constructor <;> linarith [hη.1, hη.2]
+  constructor <;> linarith only [hη, hη.1, hη.2]
 
 theorem enlargedBand_diffusion_bound {η : ℝ} (hη : η ∈ enlargedBand) : |diffusion η| ≤ 3 := by
   have hη' : -(3 / 2 : ℝ) ≤ η ∧ η ≤ 3 / 2 := hη
   have hp : 0 ≤ (3 / 2 - η) * (3 / 2 + η) :=
-    mul_nonneg (by linarith) (by linarith)
+    mul_nonneg (by linarith only [hη']) (by linarith only [hη'])
   rw [abs_le]
   dsimp [diffusion]
-  constructor <;> linarith [sq_nonneg η]
+  constructor <;> linarith only [hp, sq_nonneg η]
 
 theorem enlargedBand_diffusion_derivative_bound {η : ℝ} (hη : η ∈ enlargedBand)
     (n : ℕ) (hn : 1 ≤ n) : ‖iteratedFDeriv ℝ n diffusion η‖ ≤ (3 : ℝ) ^ n := by
@@ -688,7 +688,7 @@ theorem enlargedBand_diffusion_derivative_bound {η : ℝ} (hη : η ∈ enlarge
   rcases n with _ | n
   · rw [iteratedDeriv_one, ParametricHeatTail.diffusion_deriv, Real.norm_eq_abs]
     norm_num only [Nat.zero_add, pow_one]
-    exact abs_le.mpr ⟨by linarith, by linarith⟩
+    exact abs_le.mpr ⟨by linarith only [hη'], by linarith only [hη']⟩
   rcases n with _ | n
   · rw [ParametricHeatTail.diffusion_second]
     norm_num
@@ -790,16 +790,16 @@ theorem exists_physical_debt_jet_bounds (d : TailData) (n : ℕ) :
   have hs : 0 ≤ CS := etaConstant_nonneg d true (ParametricHeatTail.energy_decay d) n
   have hi : 0 ≤ CI := mul_nonneg (Real.sqrt_nonneg 2)
     (etaConstant_nonneg d false (ParametricHeatTail.angular_decay d) n)
-  refine ⟨1 + CP + CS + CI, by linarith, ?_⟩
+  refine ⟨1 + CP + CS + CI, by linarith only [hp, hs, hi], ?_⟩
   intro K hK η hη
   have hKp : 0 < K := lt_of_lt_of_le zero_lt_one hK
   refine ⟨(physicalPressure_jet_bound d hK n hη).trans ?_,
     (physicalEnergy_jet_bound d hK n hη).trans ?_,
     (physicalAngular_jet_bound d hK n hη).trans ?_⟩
-  · exact div_le_div_of_nonneg_right (show CP ≤ 1 + CP + CS + CI by linarith) hKp.le
+  · exact div_le_div_of_nonneg_right (show CP ≤ 1 + CP + CS + CI by linarith only [hs, hi]) hKp.le
   · change CS ≤ 1 + CP + CS + CI
-    linarith
-  · exact mul_le_mul_of_nonneg_right (show CI ≤ 1 + CP + CS + CI by linarith)
+    linarith only [hp, hi]
+  · exact mul_le_mul_of_nonneg_right (show CI ≤ 1 + CP + CS + CI by linarith only [hp, hs])
       (Real.sqrt_nonneg K)
 
 theorem exists_physical_debt_C1_bounds (d : TailData) :
@@ -810,19 +810,19 @@ theorem exists_physical_debt_C1_bounds (d : TailData) :
       |deriv (physicalAngular d K) η| ≤ C * Real.sqrt K := by
   obtain ⟨C0, hC0, hb0⟩ := exists_physical_debt_jet_bounds d 0
   obtain ⟨C1, hC1, hb1⟩ := exists_physical_debt_jet_bounds d 1
-  refine ⟨C0 + C1, by linarith, ?_⟩
+  refine ⟨C0 + C1, by linarith only [hC0, hC1], ?_⟩
   intro K hK η hη
   have hKp : 0 < K := lt_of_lt_of_le zero_lt_one hK
   rcases hb0 K hK η hη with ⟨hp0, hs0, hi0⟩
   rcases hb1 K hK η hη with ⟨hp1, hs1, hi1⟩
   simp only [iteratedDeriv_zero, iteratedDeriv_one] at hp0 hs0 hi0 hp1 hs1 hi1
   refine ⟨hp0.trans ?_, hp1.trans ?_, hs0.trans ?_, hs1.trans ?_, hi0.trans ?_, hi1.trans ?_⟩
-  · exact div_le_div_of_nonneg_right (by linarith) hKp.le
-  · exact div_le_div_of_nonneg_right (by linarith) hKp.le
-  · linarith
-  · linarith
-  · exact mul_le_mul_of_nonneg_right (by linarith) (Real.sqrt_nonneg K)
-  · exact mul_le_mul_of_nonneg_right (by linarith) (Real.sqrt_nonneg K)
+  · exact div_le_div_of_nonneg_right (by linarith only [hC1]) hKp.le
+  · exact div_le_div_of_nonneg_right (by linarith only [hC0]) hKp.le
+  · linarith only [hC1]
+  · linarith only [hC0]
+  · exact mul_le_mul_of_nonneg_right (by linarith only [hC1]) (Real.sqrt_nonneg K)
+  · exact mul_le_mul_of_nonneg_right (by linarith only [hC0]) (Real.sqrt_nonneg K)
 
 /-- Physical debt, given by `![physicalPressure d K η, physicalEnergy d K η, physicalAngular d K
 η]`. -/
@@ -875,8 +875,8 @@ theorem eventually_physicalEdit_pos (d : TailData) :
       ∀ X : ℝ, 0 < X → 0 < physicalEdit d K η X := by
   let C := correctionBound d.h 3 0
   have hC : 0 ≤ C := correctionBound_nonneg d.h (by norm_num) 0
-  refine ⟨1 + 2 * C, by linarith, fun K hK η hη X hX => ?_⟩
-  have hKone : 1 ≤ K := by linarith
+  refine ⟨1 + 2 * C, by linarith only [hC], fun K hK η hη X hX => ?_⟩
+  have hKone : 1 ≤ K := by linarith only [hC, hK]
   have hKp : 0 < K := lt_of_lt_of_le zero_lt_one hKone
   apply mul_pos (outgoingProfile_pos d K η X)
   change 0 < 1 + correction d.h K (diffusion η) X
@@ -887,10 +887,10 @@ theorem eventually_physicalEdit_pos (d : TailData) :
     have hb := correctionJet_bound (K := K) d.h_pos (hKone.trans hKX.le)
       (enlargedBand_diffusion_bound hη) 0
     rw [correctionJet_zero] at hb
-    have hhalf : C / X < 1 / 2 := (div_lt_iff₀ hX).mpr (by dsimp [C] at *; linarith)
+    have hhalf : C / X < 1 / 2 := (div_lt_iff₀ hX).mpr (by dsimp [C] at *; linarith only [hK, hXK])
     have hsmall : |correction d.h K (diffusion η) X| < 1 / 2 := hb.trans_lt hhalf
     have hl := (abs_lt.mp hsmall).1
-    linarith
+    linarith only [hl]
 
 /-! ## Every actual physical-parameter derivative passes under the integral -/
 
@@ -954,7 +954,7 @@ theorem actualIntegrand_joint_contDiffOn (d : TailData) {K : ℝ} (hK : 1 ≤ K)
   have hh : ContDiffOn ℝ ∞ (fun p : ℝ × ℝ =>
       HeatProfileExtension.scaledProfile (1 + d.h) p.2 p.1)
       ((univ : Set ℝ) ×ˢ Ioi K) :=
-    (HeatProfileExtension.scaledProfile_contDiffOn (a := 1 + d.h) (by linarith [d.h_pos])).comp
+    (HeatProfileExtension.scaledProfile_contDiffOn (a := 1 + d.h) (by linarith only [d.h_pos])).comp
       (contDiffOn_snd.prodMk contDiffOn_fst) (fun p hp => ⟨hKp.trans hp.2, mem_univ _⟩)
   have hc : ContDiffOn ℝ ∞ (fun p : ℝ × ℝ => correction d.h K p.1 p.2)
       ((univ : Set ℝ) ×ˢ Ioi K) := hs.mul (hh.sub contDiffOn_const)
@@ -991,10 +991,10 @@ theorem etaIntegrandJet_measurable (d : TailData) {K : ℝ} (hK : 1 ≤ K)
 
 theorem diffusion_abs_bound {L η : ℝ} (hη : |η| ≤ L) : |diffusion η| ≤ 1 + L ^ 2 := by
   have hp : 0 ≤ (L - η) * (L + η) :=
-    mul_nonneg (by linarith [(abs_le.mp hη).2]) (by linarith [(abs_le.mp hη).1])
+    mul_nonneg (by linarith only [hη, (abs_le.mp hη).2]) (by linarith only [hη, (abs_le.mp hη).1])
   rw [abs_le]
   dsimp [diffusion]
-  constructor <;> linarith [sq_nonneg η, sq_nonneg L]
+  constructor <;> linarith only [hp, sq_nonneg η, sq_nonneg L]
 
 theorem diffusion_iterated_bound {L η : ℝ} (hL : 0 ≤ L) (hη : |η| ≤ L)
     (n : ℕ) (hn : 1 ≤ n) : ‖iteratedFDeriv ℝ n diffusion η‖ ≤ (2 * (L + 1)) ^ n := by
@@ -1004,11 +1004,11 @@ theorem diffusion_iterated_bound {L η : ℝ} (hL : 0 ≤ L) (hη : |η| ≤ L)
   rcases n with _ | n
   · rw [iteratedDeriv_one, ParametricHeatTail.diffusion_deriv, Real.norm_eq_abs]
     norm_num only [Nat.zero_add, pow_one]
-    exact abs_le.mpr ⟨by linarith [(abs_le.mp hη).2], by linarith [(abs_le.mp hη).1]⟩
+    exact abs_le.mpr ⟨by linarith [(abs_le.mp hη).2], by linarith only [hη, (abs_le.mp hη).1]⟩
   rcases n with _ | n
   · rw [ParametricHeatTail.diffusion_second]
     norm_num
-    nlinarith
+    nlinarith only [hL]
   · rw [show n + 1 + 1 + 1 = n + 3 by omega, ParametricHeatTail.diffusion_higher]
     simp only [norm_zero]
     positivity
@@ -1205,7 +1205,7 @@ theorem enlargedBand_uniqueDiffOn : UniqueDiffOn ℝ enlargedBand :=
 theorem physicalBand_subset_openNeighborhood :
     Icc (-1 : ℝ) 1 ⊆ Ioo (-(3 / 2 : ℝ)) (3 / 2) := by
   intro η hη
-  constructor <;> linarith [hη.1, hη.2]
+  constructor <;> linarith only [hη, hη.1, hη.2]
 
 theorem normalizedDebt_derivWithin (d : TailData) {K η : ℝ} (hK : 1 ≤ K)
     (hη : η ∈ enlargedBand) :
@@ -1235,7 +1235,7 @@ theorem physicalEdit_joint_contDiffOn (d : TailData) {K : ℝ} (hK : 0 < K) :
   have hH : ContDiffOn ℝ ∞ (fun p : ℝ × ℝ =>
       HeatProfileExtension.scaledProfile (1 + d.h) p.1 (diffusion p.2))
       (Ioi 0 ×ˢ (univ : Set ℝ)) :=
-    HeatProfileExtension.physicalProfile_contDiffOn (a := 1 + d.h) (by linarith [d.h_pos])
+    HeatProfileExtension.physicalProfile_contDiffOn (a := 1 + d.h) (by linarith only [d.h_pos])
   exact (outgoingProfile_joint_contDiffOn d hK).mul
     (contDiffOn_const.add (hs.mul (hH.sub contDiffOn_const)))
 

@@ -17,6 +17,10 @@ import Mathlib.Analysis.SpecialFunctions.Sqrt
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -32,7 +36,7 @@ theorem regularized_root_le (q δ : ℝ) (hq : 0 ≤ q) (hδ : 0 ≤ δ) :
   refine ⟨add_nonneg (sqrt_nonneg q) hδ, ?_⟩
   have hsq := sq_sqrt hq
   have hp := mul_nonneg (sqrt_nonneg q) hδ
-  nlinarith
+  nlinarith only [hsq, hp]
 
 /-- The canonical positive regularization sequence converges at every quadratic energy value. -/
 theorem regularized_root_tendsto (q : ℝ) :
@@ -133,7 +137,7 @@ theorem family_energy_integral_bound {ι H : Type*} [Fintype ι]
       (fun i => transport i u) (fun i => pressure i u) (fun i => forcing i u) (fun i => lap i u)
       (hKd u hu) (fun i => hed i u hu) (hsym u hu) (fun i => heq i u hu) (fun i => hp i u hu)
     have hq := hQ0 u ⟨hu.1.le, hu.2.le⟩
-    have hr := HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by nlinarith : Q u + δ ^ 2 ≠ 0)
+    have hr := HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by nlinarith only [hq, hδ] : Q u + δ ^ 2 ≠ 0)
     exact hr.differentiableAt.hasDerivAt.hasDerivWithinAt
   · intro u hu
     exact family_regularized_energy_evolution K e u δ c (B u) (C u) ν (K' u)

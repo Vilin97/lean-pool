@@ -46,24 +46,30 @@ noncomputable def velocityMap (G : ScaledGraph) : Components →ₗ[ℝ] Velocit
   map_add' a b := by
     funext z
     ext i
-    simp [PhysicalResidualTZ.velocityTZ, PhysicalResidualBridge.ScaledGraph.velocity_apply,
-      mul_add]
+    simp only [PhysicalResidualTZ.velocityTZ, PhysicalResidualTZ.swapCylinder_apply,
+        PhysicalResidualTZ.swapSlow_apply, Pi.add_apply,
+        PhysicalResidualBridge.ScaledGraph.velocity_apply, mul_add, PiLp.add_apply]
   map_smul' r a := by
     funext z
     ext i
-    simp [PhysicalResidualTZ.velocityTZ, PhysicalResidualBridge.ScaledGraph.velocity_apply,
-      mul_left_comm]
+    simp only [PhysicalResidualTZ.velocityTZ, PhysicalResidualTZ.swapCylinder_apply,
+        PhysicalResidualTZ.swapSlow_apply, Pi.smul_apply,
+        PhysicalResidualBridge.ScaledGraph.velocity_apply, smul_eq_mul, mul_left_comm,
+        RingHom.id_apply, PiLp.smul_apply]
 
 /-- Pressure includes the square of the same fixed velocity scale. -/
 noncomputable def pressureMap (G : ScaledGraph) : (Cylinder → ℝ) →ₗ[ℝ] PressureField where
   toFun := PhysicalResidualTZ.pressureTZ G
   map_add' a b := by
     funext z
-    simp [PhysicalResidualTZ.pressureTZ, PhysicalResidualBridge.ScaledGraph.pressure, mul_add]
+    simp only [PhysicalResidualTZ.pressureTZ, PhysicalResidualBridge.ScaledGraph.pressure,
+        PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply, Pi.add_apply,
+        mul_add]
   map_smul' r a := by
     funext z
-    simp [PhysicalResidualTZ.pressureTZ, PhysicalResidualBridge.ScaledGraph.pressure,
-      mul_left_comm]
+    simp only [PhysicalResidualTZ.pressureTZ, PhysicalResidualBridge.ScaledGraph.pressure,
+        PhysicalResidualTZ.swapCylinder_apply, PhysicalResidualTZ.swapSlow_apply, Pi.smul_apply,
+        smul_eq_mul, mul_left_comm, RingHom.id_apply]
 
 /-- Mean components, defined pointwise by `![m.radial n x.1, m.angular n x.1, m.axial n x.1]`. -/
 noncomputable def meanComponents (m : Triple CyclePoint) (n : ℕ) : Components :=
@@ -295,7 +301,8 @@ theorem velocity_prefix (J : ℕ) :
   induction J with
   | zero =>
       funext z
-      simp [DiagonalJetBounds.uncutPrefix, velocityStages, CycleState.iterate]
+      simp only [DiagonalJetBounds.uncutPrefix, zero_add, Finset.range_one, velocityStages,
+          Finset.sum_singleton, Nat.rec_zero, CycleState.iterate]
   | succ J ih =>
       funext z
       calc
@@ -315,7 +322,8 @@ theorem pressure_prefix (p₀ : Cylinder → ℝ) (J : ℕ) :
   induction J with
   | zero =>
       funext z
-      simp [DiagonalJetBounds.uncutPrefix, pressureStages, CycleState.iterate]
+      simp only [DiagonalJetBounds.uncutPrefix, zero_add, Finset.range_one, pressureStages,
+          Finset.sum_singleton, Nat.rec_zero, CycleState.iterate]
   | succ J ih =>
       funext z
       calc
@@ -344,7 +352,9 @@ noncomputable def angularComponents (m : Triple CyclePoint) (n : ℕ) : Componen
 theorem meanComponents_split (m : Triple CyclePoint) (n : ℕ) :
     meanComponents m n = meridionalComponents m n + angularComponents m n := by
   funext x i
-  fin_cases i <;> simp [meanComponents, meridionalComponents, angularComponents]
+  fin_cases i <;> simp only [meanComponents, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      Pi.add_apply, meridionalComponents, angularComponents, add_zero, Fin.mk_one,
+      Matrix.cons_val_one, zero_add, Fin.reduceFinMk, Matrix.cons_val]
 
 /-- This velocity contribution still needs a potential realization. It includes
 the full base, the initialized wave, and the meridional mean. -/

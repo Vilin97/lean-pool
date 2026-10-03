@@ -65,11 +65,8 @@ theorem slowClass_lift {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
     intro n x hx j hj
     have hxu : slowProjection x ∈ U := hSU x hx
     have hpre : IsOpen (slowProjection ⁻¹' U) := hU.preimage slowProjection.continuous
-    have he := slowProjection.iteratedFDerivWithin_comp_right (hf.smooth n) hU.uniqueDiffOn
+    have he := slowProjection.iteratedFDerivWithin_comp_right (s := U) (hf.smooth n) hU.uniqueDiffOn
       hpre.uniqueDiffOn hxu (ENat.natCast_le_of_coe_top_le_withTop le_rfl j)
-    change iteratedFDerivWithin ℝ j (f n ∘ slowProjection) (slowProjection ⁻¹' U) x =
-      (iteratedFDerivWithin ℝ j (f n) U (slowProjection x)).compContinuousLinearMap
-        (fun _ => slowProjection) at he
     rw [iteratedFDerivWithin_of_isOpen j hpre hxu,
       iteratedFDerivWithin_of_isOpen (f := f n) j hU hxu] at he
     have hn : ‖iteratedFDeriv ℝ j (fun y : Point => f n y.2.1) x‖ ≤
@@ -168,11 +165,11 @@ theorem containingShell {coord a b : ℝ} (U : SlowRegion coord) (ha : 0 < a) (h
   let hi := lo + Real.sqrt U.qhi * b + 1
   have hbase : 0 < Real.sqrt U.qlo * a := mul_pos (Real.sqrt_pos.mpr U.qlo_pos) ha
   have hlo : 0 < lo := div_pos hbase (by norm_num)
-  have hlo' : lo < Real.sqrt U.qlo * a := by dsimp [lo]; linarith
+  have hlo' : lo < Real.sqrt U.qlo * a := by dsimp [lo]; linarith only [hbase]
   have hb : 0 < b := ha.trans hab
   have htop : 0 ≤ Real.sqrt U.qhi * b := mul_nonneg (Real.sqrt_nonneg _) hb.le
-  have horder : lo < hi := by dsimp [hi]; linarith
-  have hhi : Real.sqrt U.qhi * b < hi := by dsimp [hi]; linarith
+  have horder : lo < hi := by dsimp [hi]; linarith only [htop]
+  have hhi : Real.sqrt U.qhi * b < hi := by dsimp [hi]; linarith only [hlo]
   refine ⟨lo, hi, hlo, horder, hlo', hhi, ?_, ?_⟩
   · intro x hx
     exact hlo'.le.trans (mul_le_mul_of_nonneg_right (Real.sqrt_le_sqrt (U.q_mem x hx).1) ha.le)
@@ -382,13 +379,13 @@ theorem rankIncrementState_support_margin :
     rcases hn with hR | hT | hZ
     · have hr : 0 < ‖I.radial n z‖ := norm_pos_iff.mpr hR
       dsimp only [f]
-      linarith [norm_nonneg (I.angular n z), norm_nonneg (I.axial n z)]
+      linarith only [hr, norm_nonneg (I.angular n z), norm_nonneg (I.axial n z)]
     · have ht : 0 < ‖I.angular n z‖ := norm_pos_iff.mpr hT
       dsimp only [f]
-      linarith [norm_nonneg (I.radial n z), norm_nonneg (I.axial n z)]
+      linarith only [ht, norm_nonneg (I.radial n z), norm_nonneg (I.axial n z)]
     · have hz' : 0 < ‖I.axial n z‖ := norm_pos_iff.mpr hZ
       dsimp only [f]
-      linarith [norm_nonneg (I.radial n z), norm_nonneg (I.angular n z)]
+      linarith only [hz', norm_nonneg (I.radial n z), norm_nonneg (I.angular n z)]
   have hm := hb n z hz hpos.ne'
   rwa [hparam.length n _ hz] at hm
 

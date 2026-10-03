@@ -98,7 +98,7 @@ theorem rawGradient_sum {ι : Type*} (κ : ℝ) (m : Space) (s : Finset ι)
 structure GradientWitness (P T κ : ℝ) [Fact (0 < P)] (m : Space) (p : ScalarField) where
   smooth : ∀ t : Icc (0 : ℝ) T, ContDiff ℝ ∞ (fun y => p (t,y))
   /-- Underlying field of `GradientWitness`, of type `Field P T (rawGradient κ m p)`. -/
-  field : Field P T (rawGradient κ m p)
+  field : EulerPacketCylinderField.Field P T (rawGradient κ m p)
   gradient_mem : ∀ t : Icc (0 : ℝ) T, field.path t ∈ gradientSpace P κ m
 
 namespace GradientWitness
@@ -172,13 +172,14 @@ def assembleFamily (N : ℕ) (p q : ℕ → ScalarField)
 def evaluateFamily (N : ℕ) (r : ℝ) (p : ℕ → ScalarField)
     (G : ∀ i, GradientWitness P T κ m (p i)) :
     GradientWitness P T κ m (fieldSum N r p) :=
-  (finsetSum (range (N+1)) (fun i => r^i • p i) (fun i => (G i).smul (r^i))).congr (by
+  (finsetSum (Finset.range (N+1)) (fun i => r^i • p i) (fun i => (G i).smul (r^i))).congr (by
     funext z
     simp only [fieldSum,evaluate,Finset.sum_apply,Pi.smul_apply])
 
 /-- Compact, bundling `smooth`, `field`, `gradient_mem`. -/
 def compact (p : ScalarField) (q : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
-    (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+    (hq : ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) T) (V := ℝ) P a q))
     (he : ∀ (t : Icc (0 : ℝ) T) x θ,
       p (t,(x,θ)) = scalarPointField P q hq t (x,(θ : AddCircle P)))
     (S : Set Space) (hS : IsCompact S)
@@ -203,7 +204,7 @@ variable {P : ℝ} [Fact (0 < P)]
 
 /-- Pressure field as an element of `Field P D.T (coordinatePressure D k p)`. -/
 def pressureField (G : GradientWitness P D.T k⁻¹ D.m₀ p) :
-    Field P D.T (coordinatePressure D k p) :=
+    EulerPacketCylinderField.Field P D.T (coordinatePressure D k p) :=
   (G.field.smul (k^2)).congr (fun t x θ => by
     change k • pressureGradient p (t,(x,θ)) +
       k^2 • ((pressureJet p (t,(x,θ))).2 angleDirection • D.m₀) =
@@ -270,7 +271,7 @@ theorem scalarLift_gradient (κ : ℝ) (m : Space) (φ : Space → ℝ)
     hasFDerivAt_fst.const_add z.1
   have hf : HasFDerivAt φ (fderiv ℝ φ z.1) (z.1+(0 : LiftTangent).1) := by
     simpa only [Prod.fst_zero,add_zero] using ((hφ.differentiable (by simp)) z.1).hasFDerivAt
-  have h := hf.comp (0 : LiftTangent) hh
+  have h := hf.comp (f := fun y : LiftTangent => z.1+y.1) (0 : LiftTangent) hh
   have hd : fderiv ℝ (localLift P (scalarLift P φ) z) 0 =
       (fderiv ℝ φ z.1).comp (fst ℝ Space ℝ) := by
     convert! h.fderiv using 1
@@ -283,22 +284,22 @@ theorem scalarLift_gradient (κ : ℝ) (m : Space) (φ : Space → ℝ)
 
 theorem smul_embedding_gradient_mem (κ : ℝ) (m : Space)
     (g : EulerMeanSolenoidal.L2) (hg : g ∈ EulerMeanSolenoidal.gradientSpace) :
-    κ • embedding P g ∈ gradientSpace P κ m := by
-  let L : EulerMeanSolenoidal.L2 →L[ℝ] LiftL2 P := κ • embedding P
+    κ • embedding (V := Space) P g ∈ gradientSpace P κ m := by
+  let L : EulerMeanSolenoidal.L2 →L[ℝ] LiftL2 P := κ • embedding (V := Space) P
   let K := (gradientSpace P κ m).comap L.toLinearMap
   have hgen : Submodule.span ℝ EulerMeanSolenoidal.gradientGenerators ≤ K := by
     apply Submodule.span_le.mpr
     rintro u ⟨φ,hφc,hφs,hu⟩
-    change κ • embedding P u ∈ gradientSpace P κ m
+    change κ • embedding (V := Space) P u ∈ gradientSpace P κ m
     apply testGradient_mem P κ m
     refine ⟨scalarLift P φ,⟨scalarLift_compact P φ hφc,scalarLift_smooth P φ hφs⟩,?_⟩
-    filter_upwards [Lp.coeFn_smul κ (embedding P u),lift_ae P u,
+    filter_upwards [Lp.coeFn_smul κ (embedding (V := Space) P u),lift_ae P u,
       (Measure.quasiMeasurePreserving_fst (μ := (volume : Measure Space))
         (ν := (volume : Measure (AddCircle P)))).ae hu] with z hs hl hz
-    change (κ • embedding P u) z = _
+    change (κ • embedding (V := Space) P u) z = _
     rw [hs]
-    change κ • embedding P u z = _
-    rw [show embedding P u z = u z.1 from hl,hz,scalarLift_gradient P κ m φ hφs]
+    change κ • embedding (V := Space) P u z = _
+    rw [show embedding (V := Space) P u z = u z.1 from hl,hz,scalarLift_gradient P κ m φ hφs]
   have hclosed : IsClosed (K : Set EulerMeanSolenoidal.L2) :=
     (gradientSpace_closed P κ m).preimage L.continuous
   exact ((Submodule.span ℝ EulerMeanSolenoidal.gradientGenerators).topologicalClosure_minimal
@@ -306,7 +307,7 @@ theorem smul_embedding_gradient_mem (κ : ℝ) (m : Space)
 
 theorem embedding_gradient_mem (κ : ℝ) (hκ : κ ≠ 0) (m : Space)
     (g : EulerMeanSolenoidal.L2) (hg : g ∈ EulerMeanSolenoidal.gradientSpace) :
-    embedding P g ∈ gradientSpace P κ m := by
+    embedding (V := Space) P g ∈ gradientSpace P κ m := by
   have h := (gradientSpace P κ m).smul_mem κ⁻¹ (smul_embedding_gradient_mem P κ m g hg)
   simpa only [smul_smul,inv_mul_cancel₀ hκ,one_smul] using h
 
@@ -339,9 +340,12 @@ theorem path_ae_raw_zeroAngle (t : Icc (0 : ℝ) D.T) :
 /-- The classical gradient constructed from the radial potential is the same
 ordinary L² element as the projected pressure residual. -/
 theorem scalarGradient_path_eq (t : Icc (0 : ℝ) D.T) :
-    G.scalarGradientForcing.path t = (D.opF t).adjoint (G.pressureForcePath t) := by
+    G.scalarGradientForcing.path t =
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2) (D.opF t)
+        (G.pressureForcePath t) := by
   change G.scalarGradientForcing.path t =
-    (EulerMeanCoefficients.multiplier (D.F.field t)).adjoint (G.pressureForcePath t)
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2)
+      (EulerMeanCoefficients.multiplier (D.F.field t)) (G.pressureForcePath t)
   rw [← multiplier_adjointField]
   apply Lp.ext
   filter_upwards [G.scalarGradientForcing.path_ae_raw_zeroAngle t,
@@ -350,7 +354,9 @@ theorem scalarGradient_path_eq (t : Icc (0 : ℝ) D.T) :
   change G.scalarGradientForcing.path t x =
     (EulerMeanCoefficients.multiplier (adjointField (D.F.field t)) (G.pressureForcePath t)) x
   rw [hg,hm,adjointField_apply]
-  change G.scalarGradient (t,(x,0)) = (D.F.field t x).adjoint (G.pressureForceForcing.path t x)
+  change G.scalarGradient (t,(x,0)) =
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x)
+      (G.pressureForceForcing.path t x)
   rw [hp,G.scalarGradient_eq]
 
 theorem scalarGradient_path_mem (t : Icc (0 : ℝ) D.T) :
@@ -419,12 +425,12 @@ private theorem coefficient_value_ae {T : ℝ} {a : Domain → Space →L[ℝ] S
     (value P (coefficientSobolevOperator P ((A.toCoefficientTower P).jet q t) u) :
       LiftDomain P → Space) =ᵐ[liftMeasure P] fun x => A.path t x.1 (f x) := by
   rw [MatrixCoefficient.toCoefficientTower_sobolev_value P A q t u]
-  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (A.path t))
-    (value P u),hu] with x hA hf
+  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P)
+    (fieldLift (W := Space →L[ℝ] Space) P (A.path t)) (value P u),hu] with x hA hf
   exact hA.trans (congrArg (A.path t x.1) hf)
 
 private theorem transport_value_ae {T : ℝ} {z : VectorField}
-    (Z : Field P T z) (κ : ℝ) (m : Space) (hκ : |κ| ≤ 1) (hm : ‖m‖ ≤ 1)
+    (Z : EulerPacketCylinderField.Field P T z) (κ : ℝ) (m : Space) (hκ : |κ| ≤ 1) (hm : ‖m‖ ≤ 1)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) T) :
     (value P (transportBilinear P hq (velocityComponents κ m)
       (velocityComponents_norm κ m hκ hm)
@@ -452,8 +458,14 @@ def normalizedResidual (k : ℝ) (W : VectorField) (p : ScalarField) (z : Domain
   k • rawInverse D z (slicedMomentumResidual (Icc (0 : ℝ) D.T) k⁻¹
     (rawInverse D z) (D.strain z) (D.normalField z) W p z)
 
+private theorem value_add_ae {q : ℕ} (u v : SobolevSpace P q) :
+    (value P (u + v) : LiftDomain P → Space) =ᵐ[liftMeasure P]
+      (value P u : LiftDomain P → Space) + value P v :=
+  Lp.coeFn_add _ _
+
 private theorem nonlinearity_value_ae (κ : ℝ) (hκ : |κ| ≤ 1)
-    {z r : VectorField} (Z : Field P D.T z) (R : Field P D.T r)
+    {z r : VectorField} (Z : EulerPacketCylinderField.Field P D.T z)
+    (R : EulerPacketCylinderField.Field P D.T r)
     (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) D.T) :
     (value P (nonlinearity P ((correctionDataOfFields D P κ hκ Z R).atOrder P q) hq t
       (Z.toFieldTower.realization (q+1) t)) : LiftDomain P → Space) =ᵐ[liftMeasure P]
@@ -462,38 +474,28 @@ private theorem nonlinearity_value_ae (κ : ℝ) (hκ : |κ| ≤ 1)
           (transportDirection κ D.m₀ (pointField P Z.path Z.orbit t x)) +
         ∑ i : Fin 3, (pointField P Z.path Z.orbit t x) i •
           (quadraticCoefficient D κ i).path t x.1 (pointField P Z.path Z.orbit t x) := by
-  let u := Z.toFieldTower.realization (q+1) t
-  let a := coefficientSobolevOperator P ((linearTower D P).jet q t) (truncateOperator P q u)
-  let b := transportBilinear P hq (velocityComponents κ D.m₀)
-    (velocityComponents_norm κ D.m₀ hκ D.m₀_unit.le) u u
-  let c := algebraicBilinear P hq
-    (fun i => coefficientSobolevOperator P ((quadraticTower D P κ i).jet q t)) u u
-  have ha := coefficient_value_ae (linearCoefficient D) q t (truncateOperator P q u)
-    (pointField P Z.path Z.orbit t) (by
-      simpa only [value_truncateOperator] using Z.toFieldTower_value_ae (q+1) t)
+  have ha := coefficient_value_ae (linearCoefficient D) q t
+    (truncateOperator P q (Z.toFieldTower.realization (q+1) t)) (pointField P Z.path Z.orbit t)
+    (by simpa only [value_truncateOperator] using Z.toFieldTower_value_ae (q+1) t)
   have hb := transport_value_ae Z κ D.m₀ hκ D.m₀_unit.le q hq t
   have hc := algebraicBilinear_ae P hq (fun i => (quadraticTower D P κ i).coefficient t)
-    (fun i => (quadraticTower D P κ i).jet q t) u u _ _
+    (fun i => (quadraticTower D P κ i).jet q t) (Z.toFieldTower.realization (q+1) t)
+    (Z.toFieldTower.realization (q+1) t) _ _
     (Z.toFieldTower_value_ae (q+1) t) (Z.toFieldTower_value_ae (q+1) t)
-  change ((valueOperator P q) (a+(b+c)) : LiftDomain P → Space) =ᵐ[liftMeasure P] _
-  rw [map_add,map_add]
-  filter_upwards [Lp.coeFn_add (value P a) (value P b+value P c),
-    Lp.coeFn_add (value P b) (value P c),ha,hb,hc] with x hx hy ha hb hc
-  change (value P a + (value P b + value P c)) x = _
-  simp only [Pi.add_apply] at hx hy
-  change (value P a) x = _ at ha
-  change (value P b) x = _ at hb
-  change (value P c) x = _ at hc
-  rw [hx,hy,ha,hb,hc]
-  simp only [add_assoc,quadraticTower,MatrixCoefficient.toCoefficientTower_coefficient]
+  have hs := (value_add_ae _ _).trans (ha.add ((value_add_ae _ _).trans (hb.add hc)))
+  refine hs.trans ?_
+  refine Filter.Eventually.of_forall fun x => ?_
+  simp only [Pi.add_apply, add_assoc, quadraticTower,
+    MatrixCoefficient.toCoefficientTower_coefficient]
 
 section Equation
 
 variable (k : ℝ) (hk : k ≠ 0) (hκ : |k⁻¹| ≤ 1)
-  {W Wt : VectorField} (G : Field P D.T W) (Gt : Field P D.T Wt)
+  {W Wt : VectorField} (G : EulerPacketCylinderField.Field P D.T W)
+  (Gt : EulerPacketCylinderField.Field P D.T Wt)
   (hW : TimeDerivative D.T_pos.le G Gt) (p : ScalarField)
-  (R : Field P D.T (normalizedResidual D k W p))
-  (Pa : Field P D.T (coordinatePressure D k p))
+  (R : EulerPacketCylinderField.Field P D.T (normalizedResidual D k W p))
+  (Pa : EulerPacketCylinderField.Field P D.T (coordinatePressure D k p))
 
 /-- The data used for cancellation has the literal normalized packet field
 and residual. Its coefficients are the original deformation coefficients. -/
@@ -510,29 +512,18 @@ theorem sobolev_residual_identity (q : ℕ) (hq : 6 ≤ q) (t : Icc (0 : ℝ) D.
           (Pa.toFieldTower.realization q t) := by
   let Z := coordinateField D G k
   let Zt := coordinateTimeField D G Gt k
-  let A := coordinateData D k hκ G p R
-  let N := nonlinearity P (A.atOrder P q) hq t (Z.toFieldTower.realization (q+1) t)
-  let Q := coefficientSobolevOperator P ((metricTower D P).jet q t)
-    (Pa.toFieldTower.realization q t)
-  have hn := nonlinearity_value_ae D k⁻¹ hκ Z R q hq t
+  have hn := nonlinearity_value_ae D k⁻¹ hκ (coordinateField D G k) R q hq t
   have hp := coefficient_value_ae (metricCoefficient D) q t
     (Pa.toFieldTower.realization q t) (pointField P Pa.path Pa.orbit t)
     (Pa.toFieldTower_value_ae q t)
+  have hs := (value_add_ae _ _).trans
+    (((value_add_ae _ _).trans
+      (((coordinateTimeField D G Gt k).toFieldTower_value_ae q t).add hn)).add hp)
   apply value_injective P
-  change value P (R.toFieldTower.realization q t) =
-    (valueOperator P q) (Zt.toFieldTower.realization q t+N+Q)
-  rw [map_add,map_add]
   apply Lp.ext
-  filter_upwards [R.toFieldTower_value_ae q t,Zt.toFieldTower_value_ae q t,hn,hp,
-    Lp.coeFn_add (value P (Zt.toFieldTower.realization q t)) (value P N),
-    Lp.coeFn_add (value P (Zt.toFieldTower.realization q t)+value P N) (value P Q)]
-    with x hr ht hn hp hs hs'
-  change (value P (R.toFieldTower.realization q t)) x =
-    (value P (Zt.toFieldTower.realization q t)+value P N+value P Q) x
-  simp only [Pi.add_apply] at hs hs'
-  change (value P N) x = _ at hn
-  change (value P Q) x = _ at hp
-  rw [hr,hs',hs,ht,hn,hp]
+  refine (R.toFieldTower_value_ae q t).trans (Filter.EventuallyEq.trans ?_ hs.symm)
+  refine Filter.Eventually.of_forall fun x => ?_
+  simp only [Pi.add_apply]
   obtain ⟨θ,hθ⟩ := QuotientAddGroup.mk_surjective x.2
   have he := normalized_residual D G Gt k hk hW p t x.1 θ
   change normalizedResidual D k W p (t,(x.1,θ)) = _ at he

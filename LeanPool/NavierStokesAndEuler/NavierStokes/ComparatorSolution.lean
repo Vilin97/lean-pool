@@ -22,7 +22,7 @@ The adapters import `ComparatorDefinitions`, never the challenge module.
 
 namespace NavierStokes.Comparator
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 /-- (C) Breakdown of Navier–Stokes solutions on ℝ³. -/
 theorem navier_stokes_breakdown_R3 (nu : ℝ) (hnu : nu > 0) :

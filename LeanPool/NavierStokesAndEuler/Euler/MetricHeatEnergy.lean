@@ -18,6 +18,10 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -70,7 +74,6 @@ theorem metric_product_hasDerivAt (K : SmoothCoefficient period) (a : LiftTangen
     funext t
     exact (coefficientOperator_translation period (translationPath period a t) K.coefficient
       K.measurable K.bound K.norm_bound f).symm
-  rw [hcov] at hprod
   have hop0 : coefficientOperator
       (translatedCoefficient period (translationPath period a 0) K.coefficient)
       (translatedCoefficient_measurable period (translationPath period a 0) K.coefficient
@@ -86,11 +89,12 @@ theorem metric_product_hasDerivAt (K : SmoothCoefficient period) (a : LiftTangen
       K.bound (fun x => K.norm_bound (x + translationPath period a 0)) u,
       K.operator_ae u] with x hx hy
     rw [hx, hy]
-    simp [translatedCoefficient]
-  rw [hop0] at hprod
-  simp only [translationPath_zero, translation_zero] at hprod
-  convert hprod using 1
-  first | rfl | exact add_comm _ _
+    simp only [translatedCoefficient, translationPath_zero, add_zero]
+  rw [← hcov]
+  refine hprod.congr_deriv ?_
+  rw [hop0]
+  simp only [translationPath_zero, translation_zero]
+  exact add_comm _ _
 
 /-- Exact metric integration by parts for one genuine second translation derivative. -/
 theorem metric_second_derivative_identity (K : SmoothCoefficient period) (a : LiftTangent)
@@ -117,7 +121,7 @@ theorem metric_cross_young (c D x y : ℝ) (hc : 0 < c) :
     ring
   have h := div_nonneg hs hden.le
   rw [← heq] at h
-  linarith
+  linarith only [h]
 
 /-- A positive metric absorbs half of the second-derivative dissipation, leaving an explicit L²
 error. -/
@@ -145,7 +149,9 @@ theorem metric_second_derivative_bound (K : SmoothCoefficient period) (a : LiftT
 
 /-- Every standard angular or spatial cylinder coordinate vector has norm one. -/
 theorem standardDirection_norm (i : Fin 4) : ‖standardDirection i‖ = 1 := by
-  cases i using Fin.cases <;> simp [Prod.norm_def]
+  cases i using Fin.cases <;> simp only [Fin.isValue, standardDirection_zero, Prod.norm_def,
+      norm_zero, norm_one, zero_le_one, sup_of_le_right, standardDirection_succ, PiLp.norm_single,
+      sup_of_le_left]
 
 /-- The actual cylinder Laplacian assembled from strong second coordinate derivatives. -/
 def jetLaplacian {f : LiftL2 period} (J : SpatialJet period standardDirection 2 f) : LiftL2 period

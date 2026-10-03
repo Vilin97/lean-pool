@@ -54,7 +54,7 @@ theorem quadratic_stability_within (X X' : ℝ → ℝ) (C ε T : ℝ)
   have hbound : ∀ t ∈ Icc 0 T, X t ≤ F t := by
     apply image_le_of_deriv_right_lt_deriv_boundary hcont
       (fun t ht => (hder t ht).mono_of_mem_nhdsWithin (Icc_mem_nhdsGE_of_mem ht))
-    · simpa only [F,mul_zero,exp_zero,mul_one] using (hinit.trans (by linarith : ε ≤ 2*ε))
+    · simpa only [F,mul_zero,exp_zero,mul_one] using (hinit.trans (by linarith only [hε] : ε ≤ 2*ε))
     · exact hF
     · intro t ht he
       have hFt : F t ≤ 1/2 := by
@@ -63,9 +63,9 @@ theorem quadratic_stability_within (X X' : ℝ → ℝ) (C ε T : ℝ)
           _ ≤ _ := hsmall
       have hb := hineq t ht
       rw [he] at hb
-      have hfsq : (F t)^2 ≤ F t := by nlinarith [hFp t]
+      have hfsq : (F t)^2 ≤ F t := by nlinarith only [hFp, hFt, hFp t]
       have hh := mul_le_mul_of_nonneg_left hfsq hC.le
-      linarith [mul_pos hC (hFp t)]
+      linarith only [hb, hh, hC, hFp, mul_pos hC (hFp t)]
   intro t ht
   apply (hbound t ht).trans
   dsimp [F]
@@ -102,12 +102,12 @@ theorem regularized_energy_bound (e ep M δ : ℝ) (he : 0 ≤ e) (hM : 0 ≤ M)
     20*ep/sqrt (e+δ^2) ≤ stabilityConstant M *
       (40*sqrt (e+δ^2)+(40*sqrt (e+δ^2))^2) := by
   let s := sqrt (e+δ^2)
-  have hs : 0 < s := sqrt_pos.mpr (by nlinarith)
+  have hs : 0 < s := sqrt_pos.mpr (by nlinarith only [he, hδ])
   have hs2 : s^2=e+δ^2 := sq_sqrt (by positivity)
-  have he2 : e ≤ s^2 := by linarith [sq_nonneg δ]
+  have he2 : e ≤ s^2 := by linarith only [hs2, sq_nonneg δ]
   have hse : sqrt e ≤ 40*s := by
-    have hl : sqrt e ≤ s := sqrt_le_sqrt (by linarith [sq_nonneg δ])
-    linarith
+    have hl : sqrt e ≤ s := sqrt_le_sqrt (by linarith only [hs2, he2, sq_nonneg δ])
+    linarith only [hs, hl]
   have hC := h3ProductConstant_nonneg
   have hb : ep ≤ 3600*h3ProductConstant*(M+40*s)*s^2 := by
     apply hp.trans
@@ -119,14 +119,14 @@ theorem regularized_energy_bound (e ep M δ : ℝ) (he : 0 ≤ e) (hM : 0 ≤ M)
   apply hd.trans
   have hx : 0 ≤ 40*s := by positivity
   have ha : (M+40*s)*(40*s) ≤ (1+M)*(40*s+(40*s)^2) := by
-    linarith [mul_nonneg hM (sq_nonneg (40*s))]
+    linarith only [hs, hM, mul_nonneg hM (sq_nonneg (40*s))]
   calc
     _ = (1800*h3ProductConstant)*((M+40*s)*(40*s)) := by ring
     _ ≤ (1800*h3ProductConstant)*((1+M)*(40*s+(40*s)^2)) :=
       mul_le_mul_of_nonneg_left ha (by positivity)
     _ = (1800*h3ProductConstant*(1+M))*(40*s+(40*s)^2) := by ring
     _ ≤ stabilityConstant M*(40*s+(40*s)^2) :=
-      mul_le_mul_of_nonneg_right (by unfold stabilityConstant; linarith)
+      mul_le_mul_of_nonneg_right (by unfold stabilityConstant; linarith only)
         (add_nonneg hx (sq_nonneg _))
 
 namespace Evolution
@@ -157,7 +157,7 @@ theorem normEnvelope_hasDerivWithinAt (U V : Evolution T hT) (δ : ℝ) (hδ : 0
       (Icc (0 : ℝ) T) t := by
   have he : extendPath T hT (U.energyPath V) t=U.energyPath V t := by
     simp only [extendPath,projIcc_of_mem hT t.property]
-  have hp : 0 < U.energyPath V t+δ^2 := by nlinarith [U.energyPath_nonneg V t]
+  have hp : 0 < U.energyPath V t+δ^2 := by nlinarith only [hT, hδ, U.energyPath_nonneg V t]
   have h := (((U.energy_hasDerivWithinAt V t).add_const (δ^2)).sqrt (by
     simp only [he]
     exact hp.ne')).const_mul 40
@@ -191,9 +191,9 @@ theorem normEnvelope_initial (U V : Evolution T hT) (ε : ℝ) (hε : 0 < ε)
   have hroot := sq_sqrt (show 0 ≤ U.energyPath V ⟨0,le_rfl,hT⟩+ε^2 by positivity)
   have hr : sqrt (U.energyPath V ⟨0,le_rfl,hT⟩+ε^2) ≤ 8*ε := by
     change U.energyPath V ⟨0,le_rfl,hT⟩ ≤ _ at hb
-    nlinarith [sqrt_nonneg (U.energyPath V ⟨0,le_rfl,hT⟩+ε^2)]
+    nlinarith only [hT, hp, hroot, hb, hε, sqrt_nonneg (U.energyPath V ⟨0,le_rfl,hT⟩+ε^2)]
   change 40*sqrt _ ≤ 320*ε
-  linarith
+  linarith only [hT, hr]
 
 theorem h3_stability (U V : Evolution T hT) (M ε : ℝ)
     (hM : ∀ t, WordBound 4 M (U.velocity t)) (hε : 0 < ε)
@@ -206,7 +206,7 @@ theorem h3_stability (U V : Evolution T hT) (M ε : ℝ)
     (extendPath T hT (U.normEnvelope V ε))
     (fun r => U.envelopeDerivative V ε (projIcc 0 T hT r))
     (stabilityConstant M) (320*ε) T hMp (by positivity) hT
-    (by linarith [hsmall]) (extendPath_continuous T hT (U.normEnvelope V ε)).continuousOn
+    (by linarith only [hsmall]) (extendPath_continuous T hT (U.normEnvelope V ε)).continuousOn
     (by
         simpa only [extendPath,projIcc_of_mem hT ⟨le_rfl,hT⟩] using U.normEnvelope_initial V ε hε
             hinit)
@@ -269,13 +269,7 @@ theorem gradient_continuous (U : Evolution T hT) (x : Space) :
       (Space →ᵇ (Space →L[ℝ] Space)) →L[ℝ] (Space →L[ℝ] Space)).continuous.comp
     (continuous_finiteField (fun t => (U.velocity t).derivative)
       (continuous_jetLp_derivative U.velocity U.velocity_continuous))
-  have he : (fun t => fderiv ℝ (U.velocity t).field x) =
-      fun t => (BoundedContinuousFunction.evalCLM ℝ x)
-        (finiteField ((U.velocity t).derivative)) := by
-    funext t
-    exact (finiteField_apply ((U.velocity t).derivative) x).symm
-  rw [he]
-  exact h
+  exact h.congr fun t => finiteField_apply ((U.velocity t).derivative) x
 
 theorem eventually_h3_bound (U : Evolution T hT) (V : ℕ → Evolution T hT)
     (ε : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hlim : Tendsto ε atTop (𝓝 0))

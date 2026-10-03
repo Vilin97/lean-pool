@@ -49,8 +49,9 @@ section QuotientAlgebra
 theorem weights_smul_target (H : Mat2) (T : Vec2) (a : ℝ) :
     SmoothCovariance.weights H (a • T) = a • SmoothCovariance.weights H T := by
   ext j
-  fin_cases j <;> simp [SmoothCovariance.weights, SmoothCovariance.cramerNumerator,
-    Pi.smul_apply, smul_eq_mul] <;> ring
+  fin_cases j <;> simp only [SmoothCovariance.weights, SmoothCovariance.cramerNumerator,
+      Fin.isValue, Pi.smul_apply, smul_eq_mul, Fin.zero_eta, cons_val_zero, Fin.mk_one,
+      cons_val_one, cons_val_fin_one] <;> ring
 
 theorem inverse_smul_target (H : Mat2) (T : Vec2) (a : ℝ) :
     H⁻¹.mulVec (a • T) = a • H⁻¹.mulVec T := by
@@ -138,20 +139,22 @@ the primary square root. This also holds at totalized zero denominators. -/
 theorem increment_twice_target (H : Mat2) (T : Vec2) (j : Fin 2) :
     SignedCovariance.increment H T ((2 : ℝ) • T) j = SmoothCovariance.amplitudes H T j := by
   by_cases hd : H.det = 0
-  · have hi : H⁻¹ = 0 := Matrix.nonsing_inv_apply_not_isUnit H (by simp [hd])
-    simp [SignedCovariance.increment, hi, SmoothCovariance.amplitudes,
-      SmoothCovariance.weights, hd]
+  · have hi : H⁻¹ = 0 := Matrix.nonsing_inv_apply_not_isUnit H (by simp only [hd,
+      isUnit_iff_ne_zero, ne_eq, not_true_eq_false, not_false_eq_true])
+    simp only [SignedCovariance.increment, hi, zero_mulVec, Pi.zero_apply,
+        SmoothCovariance.amplitudes, SmoothCovariance.weights, hd, div_zero, Real.sqrt_zero,
+        mul_zero]
   · rw [SignedCovariance.increment, inverse_smul_target,
       SmoothCovariance.inverse_formula H T hd]
     simp only [Pi.smul_apply, smul_eq_mul, SmoothCovariance.amplitudes]
     by_cases hw : 0 ≤ SmoothCovariance.weights H T j
     · by_cases hz : SmoothCovariance.weights H T j = 0
-      · simp [hz]
+      · simp only [hz, mul_zero, Real.sqrt_zero, div_zero]
       · have hp : 0 < SmoothCovariance.weights H T j := lt_of_le_of_ne hw (Ne.symm hz)
         apply (div_eq_iff (mul_ne_zero (by norm_num) (Real.sqrt_pos.mpr hp).ne')).2
         nlinarith [Real.sq_sqrt hw]
     · rw [Real.sqrt_eq_zero_of_nonpos (le_of_not_ge hw)]
-      simp
+      simp only [mul_zero, div_zero]
 
 end QuotientAlgebra
 
@@ -278,13 +281,13 @@ theorem fullRequest_chart (s sr : StripData Point) (P : SignedStressPrimitive.Pa
   have hr := (sr.epsilon_pos nr).ne'
   ext j
   fin_cases j
-  · simp [LocalSignedRequest.fullRequest, LocalSignedRequest.normalizedRequest,
-      LocalSignedRequest.requestedStress, Pi.smul_apply, smul_eq_mul,
-      Matrix.cons_val_zero, h1];
+  · simp only [LocalSignedRequest.fullRequest, LocalSignedRequest.normalizedRequest,
+      LocalSignedRequest.requestedStress, h1, Fin.zero_eta, Fin.isValue, Pi.smul_apply,
+      cons_val_zero, smul_eq_mul, smul_cons, Matrix.smul_empty];
     field_simp [hl.ne']
-  · simp [LocalSignedRequest.fullRequest, LocalSignedRequest.normalizedRequest,
-      LocalSignedRequest.requestedStress, Pi.smul_apply, smul_eq_mul,
-      Matrix.cons_val_one, h2];
+  · simp only [LocalSignedRequest.fullRequest, LocalSignedRequest.normalizedRequest,
+      LocalSignedRequest.requestedStress, h2, Fin.mk_one, Fin.isValue, Pi.smul_apply, cons_val_one,
+      cons_val_fin_one, smul_eq_mul, smul_cons, Matrix.smul_empty];
     field_simp [hl.ne']
 
 theorem source_over_radial {Q Qr : ℝ} (hQ : 0 < Q) (hQr : 0 < Qr) (h : ℝ) :
@@ -369,7 +372,9 @@ theorem stateRequest_invariant (s : StripData Cylinder) (P : SignedStressPrimiti
     (h : ℝ) (c : CorrectionState.Context Point) (u : CorrectionState.State Point) (n : ℕ) :
     CopyAngularInvariance.Invariant (0, 1) (stateRequest s P h c u n) := by
   intro x t
-  simp [stateRequest, LocalSignedRequest.fullRequest, PhysicalResidualTZ.swapCylinder_apply]
+  simp only [stateRequest, LocalSignedRequest.fullRequest, Prod.smul_mk, smul_zero, smul_eq_mul,
+      mul_one, PhysicalResidualTZ.swapCylinder_apply, Prod.fst_add, add_zero,
+      PhysicalResidualTZ.swapSlow_apply, Prod.snd_add]
 
 /-- Naturality of the actual request is a consequence of primitive
 current-state and background coherence on an open free-lift neighborhood
@@ -472,7 +477,7 @@ theorem homogeneousPressure_scale (K Kr rate c normalScale : ℝ)
   have hk : (K : ℂ) ≠ 0 := by exact_mod_cast hK
   have hkr : (Kr : ℂ) ≠ 0 := by exact_mod_cast hKr
   have hns : (normalScale : ℂ) ≠ 0 := by exact_mod_cast hs
-  rw [show (0 : Space) = (rate * c) • (0 : Space) by simp,
+  rw [show (0 : Space) = (rate * c) • (0 : Space) by simp only [smul_zero],
     NormalScaling.pressureCoefficient_rescale N Ndot v Av 0 rate c hs]
   simp only [smul_zero, Complex.ofReal_mul, Complex.ofReal_div, Complex.real_smul]
   field_simp
@@ -970,9 +975,11 @@ theorem ChartGeometry.normal_invariant {a : LinearWaveBounds.WaveCoefficients Cy
   rw [G.normal]
   apply CopyAngularInvariance.phaseNormal_invariant (hΦ := hphi)
   · intro x t
-    simp [PhysicalResidualBridge.ScaledGraph.radius]
+    simp only [PhysicalResidualBridge.ScaledGraph.radius, Prod.smul_mk, smul_zero, smul_eq_mul,
+        mul_one, Prod.fst_add, add_zero]
   · intro x t
-    simp [PhysicalResidualBridge.ScaledGraph.radial]
+    simp only [PhysicalResidualBridge.ScaledGraph.radial, Prod.smul_mk, smul_zero, smul_eq_mul,
+        mul_one, Prod.fst_add, add_zero]
   · exact CopyAngularInvariance.Invariant.const _
   · exact CopyAngularInvariance.Invariant.const _
 
@@ -1186,7 +1193,10 @@ theorem physicalGraph_add_angle (z : SpaceTime) (t : ℝ) :
       (z + t • ((0 : ℝ), coordinateVector 1)) =
     (PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map z +
       t • ((0 : PhysicalResidualBridge.Lift), (1 : ℝ)) := by
-  ext <;> simp [PhysicalResidualBridge.ScaledGraph.map, coordinateVector, smul_eq_mul]
+  ext <;> simp only [PhysicalResidualBridge.ScaledGraph.map, Fin.isValue, coordinateVector,
+      Prod.smul_mk, smul_eq_mul, mul_zero, Prod.snd_add, PiLp.add_apply, PiLp.smul_apply, ne_eq,
+      zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne, add_zero, Fin.reduceEq, Prod.fst_add,
+      PiLp.single_eq_same, mul_one, smul_zero, Prod.mk_add_mk, Prod.smul_fst, Prod.smul_snd]
 
 theorem referencePotential_periodic {referenceRequest : ℕ → Cylinder → Vec2}
     (H : B.Angular referenceRequest reference) (hK : B.base.frequency reference ≠ 0)
@@ -1207,7 +1217,9 @@ theorem referencePotential_periodic {referenceRequest : ℕ → Cylinder → Vec
   have hR : CopyAngularInvariance.Invariant ((0 : ℝ), coordinateVector 1)
       LinearWaveResidual.coordinateRadius := by
     intro x a
-    simp [LinearWaveResidual.coordinateRadius, coordinateVector]
+    simp only [LinearWaveResidual.coordinateRadius, coordinateVector, Fin.isValue, Prod.smul_mk,
+        smul_eq_mul, mul_zero, Prod.snd_add, PiLp.add_apply, PiLp.smul_apply, ne_eq, zero_ne_one,
+        not_false_eq_true, PiLp.single_eq_of_ne, add_zero]
   have hf : B.base.frequency reference * (H.mode / B.base.frequency reference) = (H.mode : ℝ) := by
     field_simp
   intro angle
@@ -1270,7 +1282,7 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     apply (((R.cutoff_amplitude_smooth j).comp (V.map n).contDiff.contDiffOn hmap).const_smul
       (V.velocity n)).congr
     intro x hx
-    exact V.amplitude_transport request referenceRequest j n x (hrequest x hx)
+    apply V.amplitude_transport request referenceRequest j n x (hrequest x hx)
   have hnrel (x : Cylinder) (hx : x ∈ V.strip.domain) :
       phaseNormal PhysicalResidualBridge.ScaledGraph.radius
         (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).radial
@@ -1308,8 +1320,7 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
         ((PhysicalResidualBridge.commonGraph V.referenceScale V.exponent V.referenceCover).map y) =
       V.frequency n * ((B.base.frequency reference / V.frequency n) * B.base.phase reference
         (V.map n ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map y)))
-    rw [V.map_graph n hy.1]
-    field_simp [V.frequency_ne n]
+    rw [V.map_graph n hy.1, ← mul_assoc, mul_div_cancel₀ _ (V.frequency_ne n)]
   have hav : ∀ y ∈ (PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).source
       V.strip.domain,
       V.physicalRaw referenceRequest j y = V.scale n ^ (-CoordinateAlgebra.A V.exponent) •
@@ -1323,7 +1334,7 @@ theorem wave_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     congr 1
     rw [mul_comm]
     exact (PhysicalParticularWave.ratioPower_cancel (V.scale_pos n) V.referenceScale_pos _).symm
-  exact PhysicalCurlCovariance.reference_correctedWave_constructed (V.scale_pos n) V.exponent
+  apply PhysicalCurlCovariance.reference_correctedWave_constructed (V.scale_pos n) V.exponent
       (V.cover n)
     V.strip.isOpen_domain (fun x hx => (hradius x hx).ne') hK (V.frequency_ne n) hphi ha hn ht
     V.physicalPhase (V.physicalRaw referenceRequest j) hp hav
@@ -1472,8 +1483,10 @@ theorem physicalPressure_forward {referenceRequest : ℕ → Cylinder → Vec2}
         hz).eq_of_nhds
   unfold physicalPressure
   rw [he]
-  simp [CylindricalResidual.frame_apply, PhysicalCurlCovariance.realVector,
-    PhysicalParticularWave.pressureVector]
+  simp only [Fin.isValue, PhysicalCurlCovariance.realVector, PhysicalParticularWave.pressureVector,
+      cons_val_zero, Complex.zero_re, cons_val_one, cons_val, CylindricalResidual.frame_apply,
+      AxisymmetricResidual.pack_zero, mul_zero, AxisymmetricResidual.pack_one, sub_self, add_zero,
+      AxisymmetricResidual.pack_two]
 
 theorem pressureMode_physical (request referenceRequest : ℕ → Cylinder → Vec2)
     (j : Fin 2) (n : ℕ) (hK : B.base.frequency reference ≠ 0)
@@ -1540,7 +1553,8 @@ theorem pressure_physical (request referenceRequest : ℕ → Cylinder → Vec2)
         V.physicalPressure referenceRequest j delta (z.1, CylindricalResidual.chart z.2) := by
   rw [V.pressureMode_physical request referenceRequest j n hK G H hz hPhi hrequest,
     V.physicalPressure_forward A hK G j hdelta chart hchart]
-  simp [Complex.real_smul]
+  simp only [Complex.real_smul, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul,
+      sub_zero]
 
 theorem pressureMode_eq_exact (request : ℕ → Cylinder → Vec2) (j : Fin 2) (n : ℕ) :
     V.pressureMode request j n = HarmonicCalculus.mode ((V.exactCoefficients request j).frequency n)
@@ -1648,7 +1662,8 @@ theorem primary_pressure_physical {request : ℕ → Cylinder → Vec2}
         V.scale n ^ (2 * CoordinateAlgebra.A V.exponent) *
           V.primaryPhysicalPressure delta j (z.1, CylindricalResidual.chart z.2) := by
   have he := V.pressure_physical V.primaryRequest B.primaryRequest j n (A.forPrimary B) hK G H hz
-    ((R.phase.contDiffAt (B.strip.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
+    ((R.phase.contDiffAt (B.strip.isOpen_domain.mem_nhds hx)).differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
     (by simpa only [V.map_graph n hz] using (V.primaryRequest_transport n
       ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map z)))
     hdelta chart hchart
@@ -1777,7 +1792,8 @@ theorem actual_pressure_physical (j : Fin 2) (n : ℕ)
     rw [← V.map_graph n hz.1]
     exact hmap hz.2
   have he := V.pressure_physical D.request D.referenceRequest j n A hK G H hz.1
-    ((R.phase.contDiffAt (B.strip.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
+    ((R.phase.contDiffAt (B.strip.isOpen_domain.mem_nhds hx)).differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
     (by simpa only [V.map_graph n hz.1] using (D.request_transport n
       ((PhysicalResidualBridge.commonGraph (V.scale n) V.exponent (V.cover n)).map z) hz.2))
     hdelta chart hchart

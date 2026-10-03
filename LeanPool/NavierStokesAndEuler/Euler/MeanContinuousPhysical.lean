@@ -197,14 +197,8 @@ theorem classicalPhysicalDerivative_translation_gevrey
     ‖iteratedFDeriv ℝ n (fun b : Space => pathTranslation T b (s.classicalPhysicalDerivative c hc
         hLower fC)) a‖ ≤
       (3*(CF₁*Cv+CF*Ca))*majorant R d n := by
-  have he : (fun b : Space => pathTranslation T b (s.classicalPhysicalDerivative c hc hLower fC)) =
-      fun b : Space =>
-        pathTranslation T b (multiplier (solenoidalFrame T F₁) s.coordinateVelocityPath) +
-        pathTranslation T b (multiplier (solenoidalFrame T F) (s.classicalAcceleration c hc hLower
-            fC)) := by
-    funext b
-    exact (congrArg (pathTranslation T b) (s.classicalPhysicalDerivative_eq_products c hc hLower
-        fC)).trans
+  have he := funext fun b : Space => (congrArg (pathTranslation T b)
+    (s.classicalPhysicalDerivative_eq_products c hc hLower fC)).trans
       ((pathTranslation T b).map_add _ _)
   have hb := add_bound
     (fun b : Space => pathTranslation T b (multiplier (solenoidalFrame T F₁)

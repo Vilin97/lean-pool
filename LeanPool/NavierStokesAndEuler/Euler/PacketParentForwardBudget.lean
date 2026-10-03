@@ -47,10 +47,10 @@ theorem radius_guards (q : ℕ) (T R C C₁ Cp : ℝ)
   have hfr := mul_nonneg hf (add_nonneg hi zero_le_one)
   unfold radius
   constructor
-  · nlinarith
+  · nlinarith only [hr, hi, hfr]
   constructor
-  · nlinarith
-  constructor <;> nlinarith
+  · nlinarith only [hi, hfr]
+  constructor <;> nlinarith only [hr, hfr, hi]
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 

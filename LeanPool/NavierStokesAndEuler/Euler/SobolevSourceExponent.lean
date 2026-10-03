@@ -36,14 +36,14 @@ theorem coefficient_radius_le (k R : ℝ) (hk : 12 ≤ k) (hR : R ≤ k ^ 5) :
   rw [he]
   calc
     12*R ≤ 12*k^5 := mul_le_mul_of_nonneg_left hR (by norm_num)
-    _ ≤ k*k^5 := mul_le_mul_of_nonneg_right hk (pow_nonneg (by linarith) 5)
+    _ ≤ k*k^5 := mul_le_mul_of_nonneg_right hk (pow_nonneg (by linarith only [hk]) 5)
     _ = k^6 := by ring
 
 theorem coefficient_amplitude_le (q : ℕ) (k C R : ℝ) (hk : 12 ≤ k)
     (hcost : fixedCost q ≤ k) (_hC : 0 ≤ C) (hR : 0 ≤ R) (hCb : C ≤ k ^ 6) (hRb : R ≤ k ^ 5) :
     sobolevCoefficientAmplitude (Fin 3) q R C ≤ k^(6*q+7) := by
-  have hk0 : 0 ≤ k := by linarith
-  have hk1 : 1 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
+  have hk1 : 1 ≤ k := by linarith only [hk]
   have hr0 := sobolevCoefficientRadius_nonneg (ι := Fin 3) R hR
   have hr := coefficient_radius_le k R hk hRb
   have hj (j : ℕ) (hj : j ∈ range (q+1)) :
@@ -75,13 +75,13 @@ theorem source_cost_bounds (q : ℕ) (k C R : ℝ) (hk : 12 ≤ k)
     (hcost : fixedCost q ≤ k) (hC : 0 ≤ C) (hR : 0 ≤ R) (hCb : C ≤ k ^ 6) (hRb : R ≤ k ^ 5) :
     3*sobolevCoefficientAmplitude (Fin 3) q R C ≤ k^(10*(q+2)) ∧
       sobolevCoefficientRadius (Fin 3) R ≤ k^(10*(q+2)) := by
-  have hk0 : 0 ≤ k := by linarith
-  have hk1 : 1 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
+  have hk1 : 1 ≤ k := by linarith only [hk]
   constructor
   · calc
       _ ≤ 3*k^(6*q+7) := mul_le_mul_of_nonneg_left
         (coefficient_amplitude_le q k C R hk hcost hC hR hCb hRb) (by norm_num)
-      _ ≤ k*k^(6*q+7) := mul_le_mul_of_nonneg_right (by linarith) (pow_nonneg hk0 _)
+      _ ≤ k*k^(6*q+7) := mul_le_mul_of_nonneg_right (by linarith only [hk]) (pow_nonneg hk0 _)
       _ = k^(6*q+8) := by rw [show 6*q+8=(6*q+7)+1 by omega,pow_succ]; ring
       _ ≤ k^(10*(q+2)) := pow_le_pow_right₀ hk1 (by omega)
   · exact (coefficient_radius_le k R hk hRb).trans (pow_le_pow_right₀ hk1 (by omega))

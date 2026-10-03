@@ -39,25 +39,33 @@ theorem continuousVelocity_smul :
       a • D.velocityPath P (pathLp T D.time_pos.le f) := by
   rw [pathLp_smul,map_smul]
 
+private theorem apply_sub_two_smul_of_eq_smul {X Y Z W : Type*}
+    [AddCommGroup X] [Module ℝ X] [TopologicalSpace X]
+    [AddCommGroup Y] [Module ℝ Y] [TopologicalSpace Y]
+    [AddCommGroup Z] [Module ℝ Z] [TopologicalSpace Z]
+    [AddCommGroup W] [Module ℝ W] [TopologicalSpace W]
+    (G : X →L[ℝ] W) (A : Y →L[ℝ] X) (B : Z →L[ℝ] Y) (a : ℝ) (y : Y) (z z' : Z)
+    (hz : z' = a • z) :
+    G (A (a • y - (2 : ℝ) • B z')) = a • G (A (y - (2 : ℝ) • B z)) := by
+  rw [hz, map_smul, smul_comm (2 : ℝ) a, ← smul_sub, map_smul, map_smul]
+
 theorem accelerationPath_smul : D.accelerationPath P (a • f) = a • D.accelerationPath P f := by
   apply ContinuousMap.ext
   intro t
-  change gramInverse (D.frame P t) D.lower D.lower_pos (D.frame_lower P t)
-    ((D.frame P t).adjoint ((a • f) t-(2 : ℝ) • D.frameDerivative P t
-      (D.velocityPath P (pathLp T D.time_pos.le (a • f)) t))) =
-    a • gramInverse (D.frame P t) D.lower D.lower_pos (D.frame_lower P t)
-      ((D.frame P t).adjoint (f t-(2 : ℝ) • D.frameDerivative P t
-        (D.velocityPath P (pathLp T D.time_pos.le f) t)))
-  rw [D.continuousVelocity_smul P a f]
-  simp only [ContinuousMap.smul_apply,map_smul]
-  rw [smul_comm (2 : ℝ) a,← smul_sub,map_smul,map_smul]
+  have hv : D.velocityPath P (pathLp T D.time_pos.le (a • f)) t =
+      a • D.velocityPath P (pathLp T D.time_pos.le f) t :=
+    (DFunLike.congr_fun (D.continuousVelocity_smul P a f) t).trans (ContinuousMap.smul_apply _ _ _)
+  exact apply_sub_two_smul_of_eq_smul
+    (gramInverse (D.frame P t) D.lower D.lower_pos (D.frame_lower P t))
+    (adjoint (𝕜 := ℝ) (E := CylinderL2 P U) (F := CylinderL2 P E) (D.frame P t))
+    (D.frameDerivative P t) a (f t) _ _ hv
 
 theorem physicalVelocity_smul : D.physicalVelocity P (a • f) = a • D.physicalVelocity P f := by
   apply ContinuousMap.ext
   intro t
   change D.frame P t (D.velocityPath P (pathLp T D.time_pos.le (a • f)) t) =
     a • D.frame P t (D.velocityPath P (pathLp T D.time_pos.le f) t)
-  rw [D.continuousVelocity_smul P a f,ContinuousMap.smul_apply,map_smul]
+  simp only [D.continuousVelocity_smul P a f, ContinuousMap.smul_apply, map_smul]
 
 theorem physicalDerivative_smul : D.physicalDerivative P (a • f) = a • D.physicalDerivative P f :=
     by
@@ -67,8 +75,8 @@ theorem physicalDerivative_smul : D.physicalDerivative P (a • f) = a • D.phy
     D.frame P t (D.accelerationPath P (a • f) t) =
     a • (D.frameDerivative P t (D.velocityPath P (pathLp T D.time_pos.le f) t) +
       D.frame P t (D.accelerationPath P f t))
-  rw [D.continuousVelocity_smul P a f,D.accelerationPath_smul P a f]
-  simp only [ContinuousMap.smul_apply,map_smul,smul_add]
+  simp only [D.continuousVelocity_smul P a f, D.accelerationPath_smul P a f,
+    ContinuousMap.smul_apply, map_smul, smul_add]
 
 end EulerCylinderDirichlet.Coefficients
 
@@ -97,21 +105,20 @@ theorem coordinates_smul :
     coordinates P S hS T hT Q Q₁ c hc hQ (a • f) (a • a₀) =
       a • coordinates P S hS T hT Q Q₁ c hc hQ f a₀ := by
   unfold coordinates projectedForcing
-  rw [map_smul]
+  simp only [map_smul]
   exact solution_smul (X := Supported P U S hS) _ a _ a₀
 
 theorem velocity_smul :
     velocity P S hS T hT Q Q₁ c hc hQ (a • f) (a • a₀) =
       a • velocity P S hS T hT Q Q₁ c hc hQ f a₀ := by
   unfold velocity physicalVelocity
-  rw [coordinates_smul,map_smul]
+  simp only [coordinates_smul, map_smul]
 
 theorem velocityDerivative_smul :
     velocityDerivative P S hS T hT Q Q₁ c hc hQ (a • f) (a • a₀) =
       a • velocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ := by
   unfold velocityDerivative coordinateDerivative projectedForcing
-  rw [coordinates_smul]
-  simp only [map_smul,smul_add,map_add]
+  simp only [coordinates_smul, map_smul, smul_add, map_add]
 
 end EulerSourceCylinderEquation
 
@@ -137,10 +144,11 @@ variable {P : ℝ} [Fact (0 < P)]
 def smul (G : Forcing P D raw) (a : ℝ) : Forcing P D (a • raw) where
   path := a • G.path
   path_orbit := by simpa only [map_smul] using G.path_orbit.const_smul a
-  raw_eq := (Field.smul (⟨includePath P D.support D.support_measurable G.path,
+  raw_eq := (Field.smul (⟨includePath (K := Icc (0 : ℝ) D.T)
+    (V := EulerLiftedGradientSpace.Vector3) P D.support D.support_measurable G.path,
     G.path_orbit,G.raw_eq⟩ : Field P D.T raw) a).raw_eq
   mean_zero t := by
-    change average P (a • (G.path t : CylinderL2 P Space)) = 0
+    change average (V := Space) P (a • (G.path t : CylinderL2 P Space)) = 0
     rw [map_smul,G.mean_zero t,smul_zero]
 
 theorem velocityPath_eq_smul (G : Forcing P D raw) (H : Forcing P D raw')
@@ -177,23 +185,24 @@ variable {P : ℝ} [Fact (0 < P)]
 
 include h
 
+omit [CompleteSpace U] in
+theorem forcingPath_eq_smul : forcingPath H = a • forcingPath G := by
+  unfold forcingPath
+  rw [h, ContinuousLinearMap.map_smul]
+
 theorem coordinatePath_eq_smul : B.coordinatePath H = a • B.coordinatePath G := by
-  have hf : forcingPath H = a • forcingPath G := by unfold forcingPath; rw [h,map_smul]
-  change B.coefficients.velocityPath P (pathLp D.T D.T_pos.le (forcingPath H)) = _
-  rw [hf,pathLp_smul,map_smul]
-  rfl
+  unfold coordinatePath
+  rw [forcingPath_eq_smul G H a h, pathLp_smul, ContinuousLinearMap.map_smul]
 
 theorem velocityPath_eq_smul : B.velocityPath H = a • B.velocityPath G := by
-  have hf : forcingPath H = a • forcingPath G := by unfold forcingPath; rw [h,map_smul]
-  change B.coefficients.physicalVelocity P (forcingPath H) = _
+  have hf := forcingPath_eq_smul G H a h
+  unfold velocityPath
   rw [hf,B.coefficients.physicalVelocity_smul P a (forcingPath G)]
-  rfl
 
 theorem derivativePath_eq_smul : B.derivativePath H = a • B.derivativePath G := by
-  have hf : forcingPath H = a • forcingPath G := by unfold forcingPath; rw [h,map_smul]
-  change B.coefficients.physicalDerivative P (forcingPath H) = _
+  have hf := forcingPath_eq_smul G H a h
+  unfold derivativePath
   rw [hf,B.coefficients.physicalDerivative_smul P a (forcingPath G)]
-  rfl
 
 end EulerTransversePacketProvider.HistoryData
 
@@ -245,26 +254,27 @@ theorem tail_forcing_eq_smul : (H.tail τ hτ.le hτT).path = a • (G.tail τ h
 theorem forwardInitial_eq_smul : (forwardInitial τ hτ hτT B H).value =
     a • (forwardInitial τ hτ hτT B G).value := by
   apply Subtype.ext
-  change B.coordinatePath (H.initial τ hτ hτT.le) ⟨τ,hτ.le,le_rfl⟩ =
-    a • B.coordinatePath (G.initial τ hτ hτT.le) ⟨τ,hτ.le,le_rfl⟩
-  rw [B.coordinatePath_eq_smul (G.initial τ hτ hτT.le) (H.initial τ hτ hτT.le) a
+  rw [Submodule.coe_smul, forwardInitial_eq, forwardInitial_eq,
+    B.coordinatePath_eq_smul (G.initial τ hτ hτT.le) (H.initial τ hτ hτT.le) a
     (initial_forcing_eq_smul τ hτ hτT G H a h),ContinuousMap.smul_apply]
 
-theorem pastVelocity_eq_smul : pastVelocity τ hτ hτT B H = a • pastVelocity τ hτ hτT B G :=
-  B.velocityPath_eq_smul (G.initial τ hτ hτT.le) (H.initial τ hτ hτT.le) a
-    (initial_forcing_eq_smul τ hτ hτT G H a h)
+theorem pastVelocity_eq_smul : pastVelocity τ hτ hτT B H = a • pastVelocity τ hτ hτT B G := by
+  unfold pastVelocity
+  refine B.velocityPath_eq_smul _ _ a ?_
+  exact initial_forcing_eq_smul τ hτ hτT G H a h
 
-theorem pastDerivative_eq_smul : pastDerivative τ hτ hτT B H = a • pastDerivative τ hτ hτT B G :=
-  B.derivativePath_eq_smul (G.initial τ hτ hτT.le) (H.initial τ hτ hτT.le) a
-    (initial_forcing_eq_smul τ hτ hτT G H a h)
+theorem pastDerivative_eq_smul :
+    pastDerivative τ hτ hτT B H = a • pastDerivative τ hτ hτT B G := by
+  unfold pastDerivative
+  refine B.derivativePath_eq_smul _ _ a ?_
+  exact initial_forcing_eq_smul τ hτ hτT G H a h
 
 theorem futureVelocity_eq_smul : futureVelocity τ hτ hτT B H = a • futureVelocity τ hτ hτT B G := by
   unfold futureVelocity
   rw [(G.tail τ hτ.le hτT).velocityPath_eq_smul (H.tail τ hτ.le hτT)
     (forwardInitial τ hτ hτT B G) (forwardInitial τ hτ hτT B H) a
     (tail_forcing_eq_smul τ hτ hτT G H a h) (forwardInitial_eq_smul τ hτ hτT B G H a h)]
-  exact (includePath (V := Space) (K := Icc (0 : ℝ) (D.T - τ))
-    P D.support D.support_measurable).map_smul a _
+  exact map_smul _ a _
 
 theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B H = a • futureDerivative τ hτ hτT B
     G := by
@@ -272,8 +282,7 @@ theorem futureDerivative_eq_smul : futureDerivative τ hτ hτT B H = a • futu
   rw [(G.tail τ hτ.le hτT).derivativePath_eq_smul (H.tail τ hτ.le hτT)
     (forwardInitial τ hτ hτT B G) (forwardInitial τ hτ hτT B H) a
     (tail_forcing_eq_smul τ hτ hτT G H a h) (forwardInitial_eq_smul τ hτ hτT B G H a h)]
-  exact (includePath (V := Space) (K := Icc (0 : ℝ) (D.T - τ))
-    P D.support D.support_measurable).map_smul a _
+  exact map_smul _ a _
 
 theorem velocityPath_eq_smul : velocityPath τ hτ hτT B H = a • velocityPath τ hτ hτT B G := by
   apply ContinuousMap.ext

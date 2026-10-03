@@ -46,7 +46,7 @@ variable {P U E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 def forcing (T : ℝ) (hT : 0 ≤ T)
     (Q Q₁ : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
     (f : P → TimeLp T E) (v : P → TimeLp T U) (x : P) : TimeLp T U :=
-  (timeMultiplier T hT (Q x)).adjoint
+  adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT (Q x))
     (f x - (2 : ℝ) • timeMultiplier T hT (Q₁ x) (v x))
 
 /-- The actual strong forcing is smoothly parameterized whenever its inputs are. -/
@@ -56,8 +56,8 @@ theorem forcing_contDiff (T : ℝ) (hT : 0 ≤ T)
     (hQ : ContDiff ℝ n Q) (hQ₁ : ContDiff ℝ n Q₁)
     (hf : ContDiff ℝ n f) (hv : ContDiff ℝ n v) :
     ContDiff ℝ n (forcing T hT Q Q₁ f v) :=
-  ((realAdjoint (U := TimeLp T U) (E := TimeLp T E)).contDiff.comp
-    (contDiff_timeMultiplier T hT Q hQ)).clm_apply
+  ((contDiff_timeMultiplier T hT Q hQ).continuousLinearMap_comp
+    (realAdjoint (U := TimeLp T U) (E := TimeLp T E))).clm_apply
     (hf.sub (((contDiff_timeMultiplier T hT Q₁ hQ₁).clm_apply hv).const_smul (2 : ℝ)))
 
 /-- One fixed polynomial amplitude controls all genuine forcing derivatives. -/
@@ -79,24 +79,26 @@ theorem forcing_bound (T : ℝ) (hT : 0 ≤ T)
   have hw : ContDiff ℝ ∞ w := (contDiff_timeMultiplier T hT Q₁ hQ₁).clm_apply hv
   have hbw (j : ℕ) (y : P) : ‖iteratedFDeriv ℝ j w y‖ ≤ (3*C₁*V)*majorant R d j := by
     simpa only [Nat.zero_add] using clm_apply_bound
-      (fun z => timeMultiplier T hT (Q₁ z)) v (contDiff_timeMultiplier T hT Q₁ hQ₁) hv
+      (fun z => timeMultiplier (E := U) (F := E) T hT (Q₁ z)) v
+      (contDiff_timeMultiplier T hT Q₁ hQ₁) hv
       R C₁ V hR hC₁ hV 0 d (timeMultiplier_bound T hT Q₁ hQ₁ R C₁ hR hC₁ 0 hbQ₁) hbv j y
   have hb2w (j : ℕ) (y : P) :
       ‖iteratedFDeriv ℝ j (fun z => (2 : ℝ) • w z) y‖ ≤ (6*C₁*V)*majorant R d j := by
     rw [iteratedFDeriv_const_smul_apply' (hw.contDiffAt.of_le (by simp)), norm_smul]
     norm_num only [Real.norm_ofNat]
-    nlinarith [hbw j y]
+    linarith only [hbw j y]
   let r := fun y => f y - (2 : ℝ) • w y
   have hr : ContDiff ℝ ∞ r := hf.sub (hw.const_smul (2 : ℝ))
   have hbr := sub_bound f (fun y => (2 : ℝ) • w y) hf (hw.const_smul (2 : ℝ))
     R F (6*C₁*V) d hbf hb2w
-  have hAdj : ContDiff ℝ ∞ (fun y => (timeMultiplier T hT (Q y)).adjoint) :=
-    (realAdjoint (U := TimeLp T U) (E := TimeLp T E)).contDiff.comp (contDiff_timeMultiplier T hT Q
-        hQ)
+  have hAdj := (contDiff_timeMultiplier T hT Q hQ).continuousLinearMap_comp
+    (realAdjoint (U := TimeLp T U) (E := TimeLp T E))
   have h := clm_apply_bound
-    (fun y => (timeMultiplier T hT (Q y)).adjoint) r hAdj hr R C₀ (F+6*C₁*V)
-    hR hC₀ (by positivity) 0 d
-    (adjoint_bound (fun y => timeMultiplier T hT (Q y)) (contDiff_timeMultiplier T hT Q hQ)
+    (fun y => adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT (Q y)))
+    r hAdj hr R C₀ (F+6*C₁*V)
+    hR hC₀ (add_nonneg hF (mul_nonneg (mul_nonneg (by norm_num) hC₁) hV)) 0 d
+    (adjoint_bound (fun y => timeMultiplier (E := U) (F := E) T hT (Q y))
+      (contDiff_timeMultiplier T hT Q hQ)
       R C₀ hR hC₀ 0 (timeMultiplier_bound T hT Q hQ R C₀ hR hC₀ 0 hbQ)) hbr n x
   simp only [Nat.zero_add] at h
   convert h using 1

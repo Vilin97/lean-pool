@@ -33,13 +33,14 @@ variable (P : ℝ) [Fact (0 < P)]
   (Q Q₁ : SmoothCoefficientPath (Icc (0 : ℝ) T) (U →L[ℝ] Space))
   (c : ℝ) (hc : 0 < c) (hQ : ∀ t x v, c * ‖v‖ ^ 2 ≤ ‖Q.field t x v‖ ^ 2)
   (f : C(Icc (0 : ℝ) T, Supported P Space S hS)) (a₀ : Supported P U S hS)
-  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (includePath P S hS f)))
-  (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a (a₀ : CylinderL2 P U)))
+  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Space) P a
+    (includePath (K := Icc (0 : ℝ) T) (V := Space) P S hS f)))
+  (ha₀ : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a (a₀ : CylinderL2 P U)))
   (M : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space))
   (m : SmoothCoefficientPath (Icc (0 : ℝ) T) Space)
   (cm : ℝ) (hcm : 0 < cm) (hm : ∀ t x, cm ≤ ‖m.field t x‖ ^ 2)
-  (hf₀ : ∀ t, average P (f t : CylinderL2 P Space) = 0)
-  (ha₀zero : average P (a₀ : CylinderL2 P U) = 0)
+  (hf₀ : ∀ t, average (V := Space) P (f t : CylinderL2 P Space) = 0)
+  (ha₀zero : average (V := U) P (a₀ : CylinderL2 P U) = 0)
 
 theorem pressureField_eq_pointField (t : Icc (0 : ℝ) T) :
     pressureField P S hS hSc T hT Q Q₁ c hc hQ f a₀ hf ha₀ M m cm hcm hm hf₀ ha₀zero t =

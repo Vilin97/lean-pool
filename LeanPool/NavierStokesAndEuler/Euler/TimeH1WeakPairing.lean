@@ -11,6 +11,7 @@ public import Mathlib.MeasureTheory.Function.L2Space
 import LeanPool.NavierStokesAndEuler.Euler.TimeH1PointwiseBounds
 import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 Integration by parts for an actual H¹ representative against zero-endpoint

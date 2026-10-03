@@ -56,28 +56,34 @@ theorem derivative_recurrence
   have hBu : ContDiff ℝ ∞ (fun y => B y (u y)) := hB.clm_apply hu
   have hfreeze : u = I ∘ (fun y => f y - B y (u y)) := by
     funext y
-    dsimp [B]
+    dsimp only [Function.comp_apply, B]
     rw [sub_apply, ← heq y, sub_sub_cancel]
     exact (hI (u y)).symm
   have hzero : ‖iteratedFDeriv ℝ 0 B x‖ = 0 := by
     rw [norm_iteratedFDeriv_zero]
-    simp [B]
+    simp only [sub_self, norm_zero, B]
   have hpositive (j : ℕ) :
       iteratedFDeriv ℝ (j+1) B x = iteratedFDeriv ℝ (j+1) A x := by
-    change iteratedFDeriv ℝ (j+1) (A - fun _ => A x) x = _
-    rw [iteratedFDeriv_sub_apply (hA.contDiffAt.of_le (by simp)) contDiffAt_const]
+    change iteratedFDeriv ℝ (j+1) (A - fun _ : P => A x) x = _
+    rw [iteratedFDeriv_sub_apply (hA.contDiffAt.of_le (by simp only [Nat.cast_add, Nat.cast_one,
+        WithTop.le_coe_top, ne_eq, WithTop.add_eq_top, WithTop.natCast_ne_top, WithTop.one_ne_top,
+        or_self, not_false_eq_true])) contDiffAt_const]
     simp only [iteratedFDeriv_succ_const, Pi.zero_apply, sub_zero]
-  have hprod := norm_iteratedFDeriv_clm_apply hB hu x (n := n) (by simp)
+  have hprod := norm_iteratedFDeriv_clm_apply hB hu x (n := n) (by simp only [WithTop.le_coe_top,
+      ne_eq, WithTop.natCast_ne_top, not_false_eq_true])
   rw [sum_range_succ'] at hprod
   simp only [hzero, mul_zero, zero_mul, add_zero, hpositive] at hprod
   have hsub : ‖iteratedFDeriv ℝ n (fun y => f y - B y (u y)) x‖ ≤
       ‖iteratedFDeriv ℝ n f x‖ + ‖iteratedFDeriv ℝ n (fun y => B y (u y)) x‖ := by
     change ‖iteratedFDeriv ℝ n (f - fun y => B y (u y)) x‖ ≤ _
-    rw [iteratedFDeriv_sub_apply (hf.contDiffAt.of_le (by simp))
-      (hBu.contDiffAt.of_le (by simp))]
+    rw [iteratedFDeriv_sub_apply (hf.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true]))
+      (hBu.contDiffAt.of_le (by simp only [WithTop.le_coe_top, ne_eq, WithTop.natCast_ne_top,
+          not_false_eq_true]))]
     exact norm_sub_le _ _
   have hbound := I.norm_iteratedFDeriv_comp_left (x := x)
-    ((hf.sub hBu).contDiffAt) (n := n) (by simp)
+    ((hf.sub hBu).contDiffAt) (n := n) (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true])
   rw [← hfreeze] at hbound
   exact hbound.trans (mul_le_mul_of_nonneg_left
     (hsub.trans (add_le_add (le_refl ‖iteratedFDeriv ℝ n f x‖) hprod)) (norm_nonneg I))
@@ -164,17 +170,17 @@ theorem coerciveSolution_gevrey_amplitudes
       (fun y => coerciveInverse (A y) (c y) (hc y) (hcoercive y) (f y)) x‖ ≤
         majorant R (d+1) n := by
   let u := fun y => coerciveInverse (A y) (c y) (hc y) (hcoercive y) (f y)
-  have hR0 : 0 ≤ R := by nlinarith
+  have hR0 : 0 ≤ R := by nlinarith only [hM, hRc, hR]
   apply triangular_inverse_majorant M Rc R hM hRc hR d
     (fun k => majorant R d k) (fun k => ‖iteratedFDeriv ℝ k u x‖) (fun _ => le_rfl) _ n
   intro k
   let S : ℝ := ∑ j ∈ range k, (k.choose (j+1) : ℝ) * Rc^(j+1) *
     ((j+1).factorial : ℝ)^2 * ‖iteratedFDeriv ℝ (k-(j+1)) u x‖
-  have hS : 0 ≤ S := by dsimp [S]; positivity
+  have hS : 0 ≤ S := by dsimp only [S]; positivity
   have hsum : (∑ j ∈ range k,
       (k.choose (j+1) : ℝ) * ‖iteratedFDeriv ℝ (j+1) A x‖ *
         ‖iteratedFDeriv ℝ (k-(j+1)) u x‖) ≤ C*S := by
-    dsimp [S]
+    dsimp only [S]
     rw [mul_sum]
     apply sum_le_sum
     intro j _
@@ -193,7 +199,7 @@ theorem coerciveSolution_gevrey_amplitudes
   have ha := mul_le_mul_of_nonneg_right hMC hS
   have hf' := mul_le_mul_of_nonneg_right hMD (majorant_nonneg R hR0 d k)
   change ‖iteratedFDeriv ℝ k u x‖ ≤ M * (majorant R d k + S)
-  linarith
+  linarith only [hb, ha, hf']
 
 end Hilbert
 

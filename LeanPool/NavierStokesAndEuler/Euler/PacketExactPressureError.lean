@@ -41,7 +41,7 @@ variable (M : EulerMeanPacketProvider.Data)
   (B : HistoryData (D.initial τ hτ hτT.le))
   (δ : ℝ) (hδ : 0 < δ) (ξ : U) (hs : tsupport innerCutoff ⊆ D.support) (α : ℝ)
   (Cagree : SourceCoefficientAgreement M D) (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k)
-  (Q : Budget period D.T_pos
+  (Q : EulerAllOrderDriftCorrection.Budget period D.T_pos
     (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk))
 
 /-- Initialized exact physical pressure, given by `(initializedExactPacket M D hTime τ hτ hτT B
@@ -62,7 +62,7 @@ theorem initializedExactPhysicalPressure_gradient
       gradient (fun y => initializedPressure M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
         (t,(Y t y,k*⟪D.m₀,Y t y⟫_ℝ))) x +
       gradient (Q.physicalPotential D period k Y t) x := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := by linarith only [hk]
   have hkk : k*(initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree N hN k hk).κ=1 := mul_inv_cancel₀ hk0
   let S := initializedExactPacket M D hTime τ hτ hτT B δ hδ ξ hs α Cagree N hN k hk Q
@@ -84,7 +84,7 @@ theorem initializedExactPhysicalPressure_gradient
     (continuousInverse_hasFDerivAt D X Y hX hXY hY t x)
     ((S.graphPotential_smooth k hkk t).differentiable (by simp) (Y t x)),
     S.graphPotential_gradient k hkk t (Y t x),map_smul]
-  change k⁻¹ • (D.FInv.field t (Y t x)).adjoint
+  change k⁻¹ • adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t (Y t x))
     (S.pressure.pointField t (cylinderGraph period k D.m₀ (Y t x))) = _
   rw [hpressure,hactual,map_add,smul_add,
     Q.physicalPotential_gradient D period X Y hX hXY hY k hkk t x,
@@ -103,7 +103,7 @@ theorem initializedExactPhysicalPressure_hessian
       fderiv ℝ (gradient (fun y => initializedPressure M D τ hτ hτT B δ hδ ξ hs α N k⁻¹
         (t,(Y t y,k*⟪D.m₀,Y t y⟫_ℝ)))) x +
       fderiv ℝ (gradient (Q.physicalPotential D period k Y t)) x := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := by linarith only [hk]
   have hkk : k*(initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α
       Cagree N hN k hk).κ=1 := mul_inv_cancel₀ hk0
   have hp := ((initializedPressureWitness M D hTime τ hτ hτT B δ hδ ξ hs α N k⁻¹).changeTime
@@ -143,7 +143,7 @@ theorem initializedExactPhysicalPressure_hessian_error
       Cagree N hN k hk Q t (Y t))) x -
       (EulerPacketPrimaryPressure.coefficient τ hτ hτT B ξ hs α t (Y t x) *
         deriv (profile δ) (k*⟪D.m₀,Y t x⟫_ℝ)) •
-      rankOne ℝ (D.normal.field t (Y t x)) (D.normal.field t (Y t x))‖ ≤
+      rankOne ℝ (E := Space) (F := Space) (D.normal.field t (Y t x)) (D.normal.field t (Y t x))‖ ≤
         initializedPressureHessianCost NB L.R S.H0 L.Rc L.C₀/k +
           ‖fderiv ℝ (gradient (Q.physicalPotential D period k Y t)) x‖ := by
   rw [initializedExactPhysicalPressure_hessian M D hTime τ hτ hτT B δ hδ ξ hs α

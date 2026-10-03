@@ -526,7 +526,7 @@ theorem temporalInverse_solves {f : PressureStream.Lift S → ℝ} (hf : ContDif
       Plane).symm.toContinuousLinearEquiv.toContinuousLinearMap
   have hi := SmoothFamilyTorusInverse.inverse_smooth .temporal hfs hps
   have hD := (Complex.reCLM.hasFDerivAt.comp q
-    (((hi.differentiable (by simp)) q).hasFDerivAt)).comp z L.hasFDerivAt
+    (((hi.differentiable (by simp)) q).hasFDerivAt)).comp (f := ⇑L) z L.hasFDerivAt
   change HasFDerivAt (temporalInverse f) _ z at hD
   rw [PressureStream.graphDz, hD.fderiv]
   change (fderiv ℝ (SmoothFamilyTorusInverse.inverse .temporal (sourceToFamily f)) q
@@ -908,7 +908,7 @@ theorem meanClass_divideRadius {a b : ℝ} (ha : 0 < a)
     funext n z
     by_cases hr : a ≤ z.1
     · dsimp [PressureStream.divideRadius, φ]
-      rw [RadialPullback.positiveRadius_eq_self (by positivity) (by linarith)]
+      rw [RadialPullback.positiveRadius_eq_self (by positivity) (by linarith only [ha, hr])]
       simp only [div_eq_mul_inv, mul_comm]
     · have hg0 : g n z = 0 := by
         by_contra hn
@@ -994,7 +994,8 @@ theorem dividedAlias_eq_pullback {d a b M : ℝ} (ha : 0 < a) (hab : a < b) (hd 
   · dsimp [PressureStream.divideRadius, RadialPullback.physicalAlias,
       UniformFourierAlias.exactAlias,
       RadialPullback.liftChart, aliasFactor]
-    rw [RadialPullback.positiveRadius_eq_self (show 0 < a / 4 by positivity) (by linarith)]
+    rw [RadialPullback.positiveRadius_eq_self (show 0 < a / 4 by positivity) (by linarith only [ha,
+        hr])]
     ring
   · have hχ := RadialPullback.deriv_interiorCutoff_zero_left
       (Real.rpow_lt_rpow ha.le hab hd) (RadialPullback.powerChart_lt_left ha hd (lt_of_not_ge
@@ -1225,9 +1226,9 @@ theorem dividedAlias_superflat {a b d cL cR h α : ℝ}
   let χ := TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)
   have hχ : ContDiff ℝ ∞ χ := TransportPrimitive.interiorCutoff_contDiff _ _
   have hleft : ∀ U ≤ a ^ d, χ U = 0 := fun U hU =>
-    TransportPrimitive.interiorCutoff_zero habU (by linarith)
+    TransportPrimitive.interiorCutoff_zero habU (by linarith only [habU, hU])
   have hright : ∀ U, b ^ d ≤ U → χ U = 1 := fun U hU =>
-    TransportPrimitive.interiorCutoff_one habU (by linarith)
+    TransportPrimitive.interiorCutoff_one habU (by linarith only [habU, hU])
   obtain ⟨C, hC, hb⟩ := UniformFourierAlias.radial_realMeanClass_alias_superflat
     haU habU.le hcLU hcRU hh hχ hleft hright hG hGc hGp hGm hGs m N
   obtain ⟨K, hK, ht⟩ := dividedAlias_finiteJets_transfer (E := S × Plane) ha hab hd m
@@ -1277,7 +1278,7 @@ theorem axialAlias_superflat {a b d cL cR h α : ℝ}
 omit [FiniteDimensional ℝ S] [NormedSpace ℝ S] in
 theorem temporalVector_norm_le_one : ‖((0 : ℝ), ((0 : S), vector .temporal))‖ ≤ 1 := by
   have ha : |Real.sqrt 2 - 1| ≤ 1 := abs_le.mpr
-    ⟨by linarith [Real.sqrt_nonneg (2 : ℝ)], by linarith [ChartScales.sqrt_two_lt_two]⟩
+    ⟨by linarith only [Real.sqrt_nonneg (2 : ℝ)], by linarith only [ChartScales.sqrt_two_lt_two]⟩
   simp only [Prod.norm_def, vector, norm_zero, Real.norm_eq_abs, abs_one]
   exact max_le zero_le_one (max_le zero_le_one (max_le ha le_rfl))
 
@@ -1286,7 +1287,7 @@ theorem timeCoefficient_norm_le_one {h : ℝ} (hh : 0 ≤ h) {n : ℕ} (hn : 4 �
     ‖ChartScales.timeCoefficient h n‖ ≤ 1 := by
   rw [Real.norm_eq_abs, abs_of_pos (ChartScales.timeCoefficient_pos h n)]
   have hn1 : (1 : ℝ) ≤ n := by exact_mod_cast (show 1 ≤ n by omega)
-  have hS : 1 ≤ ChartScales.S n := by dsimp [ChartScales.S]; nlinarith
+  have hS : 1 ≤ ChartScales.S n := by dsimp [ChartScales.S]; nlinarith only [hn1]
   exact (ChartScales.timeCoefficient_bounds h hh hn).2.trans
     (by simpa using one_div_le_one_div_of_le (by norm_num : (0 : ℝ) < 1) hS)
 
@@ -1356,9 +1357,9 @@ theorem dividedAlias_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (
   have habU : a ^ d < b ^ d := Real.rpow_lt_rpow ha.le hab hd
   let cU := (2 * a ^ d + b ^ d) / 3
   let eU := (a ^ d + 2 * b ^ d) / 3
-  have hacU : a ^ d < cU := by dsimp [cU]; linarith
-  have hceU : cU < eU := by dsimp [cU, eU]; linarith
-  have hebU : eU < b ^ d := by dsimp [eU]; linarith
+  have hacU : a ^ d < cU := by dsimp [cU]; linarith only [habU]
+  have hceU : cU < eU := by dsimp [cU, eU]; linarith only [habU]
+  have hebU : eU < b ^ d := by dsimp [eU]; linarith only [habU]
   have hcU : 0 < cU := haU.trans hacU
   have heU : 0 < eU := hcU.trans hceU
   let c := cU ^ d⁻¹
@@ -1378,7 +1379,7 @@ theorem dividedAlias_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (
     apply interiorCutoff_deriv_zero_left habU
     change RadialPullback.powerChart d a r < cU
     by_cases hra : a ≤ r
-    · rw [RadialPullback.powerChart_eq ha (by linarith) d]
+    · rw [RadialPullback.powerChart_eq ha (by linarith only [ha, hra]) d]
       exact (Real.rpow_lt_rpow (ha.trans_le hra).le hr hd).trans_eq hcPow
     · exact (RadialPullback.powerChart_lt_left ha hd (lt_of_not_ge hra)).trans hacU
   have hright (r : ℝ) (hr : e < r) :
@@ -1386,7 +1387,7 @@ theorem dividedAlias_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (
           0 := by
     apply interiorCutoff_deriv_zero_right habU
     change eU < RadialPullback.powerChart d a r
-    rw [RadialPullback.powerChart_eq ha (by linarith) d, ← hePow]
+    rw [RadialPullback.powerChart_eq ha (by linarith only [ha, hac, hce, hr]) d, ← hePow]
     exact Real.rpow_lt_rpow (ha.trans (hac.trans hce)).le hr hd
   refine ⟨c, e, hac, hce, heb, ?_⟩
   intro M v g z hz
@@ -1435,7 +1436,8 @@ theorem meanClass_of_interior_bounds {a b c e cL cR α : ℝ}
       _ ≤ C * ε n ^ α * R n ^ p := hbound n j hj z
       _ ≤ C * ε n ^ α * st.growth n z ^ p :=
         mul_le_mul_of_nonneg_left hgr (mul_nonneg hC (Real.rpow_pos_of_pos (hε n) α).le)
-      _ = (C / η * ε n ^ α * st.growth n z ^ p) * η := by field_simp
+      _ = (C / η * ε n ^ α * st.growth n z ^ p) * η := by
+        linear_combination (-(C * ε n ^ α * st.growth n z ^ p)) * mul_inv_cancel₀ hη.ne'
       _ ≤ (C / η * ε n ^ α * st.growth n z ^ p) * st.zeta z := mul_le_mul_of_nonneg_left hζ hA
       _ = _ := rfl
   · have hzero : iteratedFDeriv ℝ j (f n) z = 0 :=
@@ -1484,9 +1486,9 @@ theorem dividedAlias_global_bounds {a b d cL cR α : ℝ}
   let χ := TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)
   have hχ : ContDiff ℝ ∞ χ := TransportPrimitive.interiorCutoff_contDiff _ _
   have hleft : ∀ U ≤ a ^ d, χ U = 0 := fun U hU =>
-    TransportPrimitive.interiorCutoff_zero habU (by linarith)
+    TransportPrimitive.interiorCutoff_zero habU (by linarith only [habU, hU])
   have hright : ∀ U, b ^ d ≤ U → χ U = 1 := fun U hU =>
-    TransportPrimitive.interiorCutoff_one habU (by linarith)
+    TransportPrimitive.interiorCutoff_one habU (by linarith only [habU, hU])
   obtain ⟨KA, hKA, hbA⟩ := UniformFourierAlias.real_exactAlias_finiteJets (S := S) .radial
     habU.le hχ hleft hright m 0
   obtain ⟨KT, hKT, hbT⟩ := dividedAlias_finiteJets_transfer (E := S × Plane) ha hab hd m

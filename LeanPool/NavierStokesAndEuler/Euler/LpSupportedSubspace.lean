@@ -8,6 +8,8 @@ module
 
 public import Mathlib.MeasureTheory.Function.LpSpace.Complete
 public import Mathlib.Analysis.InnerProductSpace.Defs
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.NormedSpaceShortcuts
 
 /-!
 # The actual supported subspace of ordinary spatial L²
@@ -116,6 +118,8 @@ theorem supportedSpace_closed : IsClosed (supportedSpace (V := V) μ S hS : Set 
 
 instance [CompleteSpace V] : CompleteSpace (supportedSpace (V := V) μ S hS) :=
   (supportedSpace_closed μ S hS).completeSpace_coe
+
+real_normed_space_shortcut_instances supportedSpace : supportedSpace (V := V) μ S hS
 
 /-- Every cutoff output belongs to the supported subspace. -/
 theorem cutoff_mem (u : Lp V 2 μ) : cutoff μ S hS u ∈ supportedSpace μ S hS := by

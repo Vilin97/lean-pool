@@ -57,7 +57,7 @@ theorem tensor_map_norm_le (L : V →L[ℝ] W) (f : LiftDomain P → V)
   have h : ‖hM.toLp (tensor P (fun x => L (f x)) n)‖ ≤ ‖L‖ * ‖hLp.toLp (tensor P f n)‖ := by
     apply Lp.norm_le_mul_norm_of_ae_le_mul
     filter_upwards [hM.coeFn_toLp, hLp.coeFn_toLp] with q hq hq'
-    rw [hq, hq', tensor_map P L f hf n]
+    simp only [hq, hq', tensor_map P L f hf n q]
     exact L.norm_compContinuousMultilinearMap_le _
   simpa only [Lp.norm_toLp] using h
 
@@ -110,15 +110,15 @@ theorem tensor_transport_norm_le :
       with q hq hg hh hs ha
     simp only [Pi.add_apply] at ha
     simp only [Pi.smul_apply] at hs
-    rw [ha, hs, hq, hg, hh]
-    exact tensor_transport_split P κ m f hf n q
+    exact hq.trans ((tensor_transport_split P κ m f hf n q).trans
+      (ha.trans (congrArg₂ (· + ·) (hs.trans (congrArg (κ • ·) hg)) hh)).symm)
   have hi := (tensor_map_norm_le P (ContinuousLinearMap.inl ℝ Vector3 ℝ) f hf n hLp).trans
     (mul_le_mul_of_nonneg_right spatialInjection_norm ENNReal.toReal_nonneg)
   have hj := (tensor_map_norm_le P angularInjection _ (normal_smooth P m f hf) n hN).trans
     (mul_le_mul_of_nonneg_right angularInjection_norm ENNReal.toReal_nonneg)
-  have h := (norm_add_le (κ • hG.toLp G) (hH.toLp H))
-  rw [← he, norm_smul, Real.norm_eq_abs] at h
-  simp only [Lp.norm_toLp] at h
+  have h := (congrArg norm he).trans_le ((norm_add_le (κ • hG.toLp G) (hH.toLp H)).trans_eq
+    (congrArg (· + ‖hH.toLp H‖) (norm_smul κ (hG.toLp G))))
+  simp only [Lp.norm_toLp, Real.norm_eq_abs] at h
   exact h.trans (add_le_add (mul_le_mul_of_nonneg_left (by simpa only [one_mul] using hi)
     (abs_nonneg κ)) (by simpa only [one_mul] using hj))
 

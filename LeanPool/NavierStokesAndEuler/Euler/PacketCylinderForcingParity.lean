@@ -51,7 +51,8 @@ theorem PrefixOdd.knownJet_value_odd (H : PrefixOdd T p a) (hp : 1 ≤ p) (i : �
   by_cases hi : i < p
   · by_cases hz : i = 0
     · subst i
-      simp [knownJets,history,velocityJet,show (0 : ℕ) < p by omega]
+      simp only [knownJets, history, show (0 : ℕ) < p by omega, ↓reduceIte, velocityJet,
+          Prod.fst_zero, neg_zero]
     · simp only [knownJets,history,hi,ite_true,velocityJet,hz,ite_false]
       change (a i).high (t,(-x,-θ)) + (a i).mean (t,(-x,-θ)) +
         (a (i-1)).corrector (t,(-x,-θ)) =
@@ -98,9 +99,10 @@ theorem PrefixFields.knownForce_odd (F : PrefixFields P T p a) (H : PrefixOdd T 
   have hQ : JointOdd T (fun z => slowPressure (O.inverseFrame z) (pressureJet (a
       (p-1)).highPressure z)) := by
     intro t x θ
-    change (O.inverseFrame (t,(-x,-θ))).adjoint (pressureGradient (a (p-1)).highPressure
-        (t,(-x,-θ))) =
-      -((O.inverseFrame (t,(x,θ))).adjoint (pressureGradient (a (p-1)).highPressure (t,(x,θ))))
+    change ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (O.inverseFrame (t,(-x,-θ))) (pressureGradient (a (p-1)).highPressure (t,(-x,-θ))) =
+      -(ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (O.inverseFrame (t,(x,θ))) (pressureGradient (a (p-1)).highPressure (t,(x,θ))))
     rw [hI,hpressure,map_neg]
   exact ((hL.add hQ).add (F.nonlinear_odd H hp hI hN)).neg
 

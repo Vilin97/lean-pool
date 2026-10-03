@@ -57,11 +57,14 @@ theorem leibniz_boundary (f g : ℕ → ℝ) (m : ℕ) :
       f 0 * g (m + 1) +
         ∑ kl ∈ antidiagonal m, (m.choose (kl.1 + 1) : ℝ) * f (kl.1 + 1) * g kl.2 := by
   cases m with
-  | zero => simp
+  | zero => simp only [HasAntidiagonal.antidiagonal_zero, sum_singleton, Nat.choose_self,
+      Nat.cast_one, one_mul, zero_add, Nat.choose_zero_succ, CharP.cast_eq_zero, zero_mul,
+      sum_const_zero, add_zero]
   | succ m =>
       conv_lhs => rw [sum_antidiagonal_succ]
       conv_rhs => rhs; rw [sum_antidiagonal_succ']
-      simp
+      simp only [Nat.choose_zero_right, Nat.cast_one, one_mul, Nat.choose_succ_self,
+          CharP.cast_eq_zero, zero_mul, zero_add]
 
 /-- Pascal's identity is exactly the derivative recurrence for the Leibniz sum. -/
 theorem leibnizSum_succ (f g : ℕ → ℝ) (m : ℕ) :
@@ -625,7 +628,7 @@ theorem shifted_kernel_weight_le (D d a b C w w' v : ℝ)
     (hD : 0 < D) (hd : 0 ≤ d) (ha : 0 ≤ a) (_hb : 0 ≤ b) (hC : 0 ≤ C)
     (hw' : 0 ≤ w') (hv : 0 ≤ v) (hshift : w ≤ C * b * w') (hfactor : b * d ≤ D) :
     ((d / D) * a) * w * v ≤ C * (a * w' * v) := by
-  have hratio : b * d / D ≤ 1 := (div_le_iff₀ hD).2 (by simpa using hfactor)
+  have hratio : b * d / D ≤ 1 := (div_le_iff₀ hD).2 (by simpa only [one_mul] using hfactor)
   have hcoef : 0 ≤ (d / D) * a := mul_nonneg (div_nonneg hd hD.le) ha
   calc
     _ ≤ ((d / D) * a) * (C * b * w') * v :=
@@ -703,7 +706,7 @@ def differentialData (I : Window) {ε : ℝ} (hε : 0 < ε)
   smul_left := by
     intro c A B n m x
     cases n with
-    | zero => simp [differentialFamily]
+    | zero => simp only [differentialFamily, mul_zero]
     | succ n =>
         simp only [differentialFamily, inputJet, Submodule.coe_smul, jet_smul, Finset.mul_sum]
         apply Finset.sum_congr rfl
@@ -718,7 +721,7 @@ def differentialData (I : Window) {ε : ℝ} (hε : 0 < ε)
   smul_right := by
     intro c A B n m x
     cases n with
-    | zero => simp [differentialFamily]
+    | zero => simp only [differentialFamily, mul_zero]
     | succ n =>
         simp only [differentialFamily, inputJet, Submodule.coe_smul, jet_smul, Finset.mul_sum]
         apply Finset.sum_congr rfl
@@ -994,7 +997,7 @@ theorem one_sub_mul_tsum_pow {Q : R} (hs : Summable (fun k : ℕ => Q ^ k)) :
   have h := hs.hasSum.mul_left (1 - Q)
   refine tendsto_nhds_unique h.tendsto_sum_nat ?_
   have hz : Tendsto (fun k : ℕ => 1 - Q ^ k) atTop (𝓝 (1 : R)) := by
-    simpa using tendsto_const_nhds.sub hs.tendsto_atTop_zero
+    simpa only [sub_zero] using tendsto_const_nhds.sub hs.tendsto_atTop_zero
   convert! ← hz using 1
   funext k
   rw [← mul_neg_geom_sum, Finset.mul_sum]
@@ -1006,7 +1009,7 @@ theorem tsum_pow_mul_one_sub {Q : R} (hs : Summable (fun k : ℕ => Q ^ k)) :
   have h := hs.hasSum.mul_right (1 - Q)
   refine tendsto_nhds_unique h.tendsto_sum_nat ?_
   have hz : Tendsto (fun k : ℕ => 1 - Q ^ k) atTop (𝓝 (1 : R)) := by
-    simpa using tendsto_const_nhds.sub hs.tendsto_atTop_zero
+    simpa only [sub_zero] using tendsto_const_nhds.sub hs.tendsto_atTop_zero
   convert! ← hz using 1
   funext k
   rw [← geom_sum_mul_neg, Finset.sum_mul]
@@ -1074,7 +1077,8 @@ theorem pow_bound_of_filtration (Q : E →L[ℝ] E) (P : ℕ → E → Prop)
     induction k with
     | zero =>
         intro x
-        simpa using And.intro (hzero x) (le_refl ‖x‖)
+        simpa only [pow_zero, one_apply_eq_self, factorialMajorant_zero, one_mul, Std.le_refl,
+            and_true] using And.intro (hzero x) (le_refl ‖x‖)
     | succ k ih =>
         intro x
         rw [pow_succ', _root_.mul_apply_eq_comp]
@@ -1374,7 +1378,7 @@ noncomputable def constBound (a : F) (B : ℝ) (hB : 0 ≤ B) (ha : ‖a‖ ≤ 
   bound_nonneg := hB
   lip_nonneg := le_rfl
   norm_le := fun _ _ => ha
-  sub_le := by intro x y hx hy; simp
+  sub_le := by intro x y hx hy; simp only [sub_self, norm_zero, zero_mul, Std.le_refl]
 
 /-- Const, given by `constBound a ‖a‖ (norm_nonneg a) le_rfl`. -/
 noncomputable def const (a : F) : Controlled E F R :=
@@ -1428,7 +1432,7 @@ noncomputable def neg (f : Controlled E F R) : Controlled E F R where
   lip := f.lip
   bound_nonneg := f.bound_nonneg
   lip_nonneg := f.lip_nonneg
-  norm_le := by intro x hx; simpa using f.norm_le x hx
+  norm_le := by intro x hx; simpa only [norm_neg] using f.norm_le x hx
   sub_le := by
     intro x y hx hy
     simpa only [neg_sub_neg, norm_sub_rev] using f.sub_le x y hx hy
@@ -1492,42 +1496,28 @@ noncomputable def bilinear (B : F →L[ℝ] G →L[ℝ] H)
       (mul_nonneg f.bound_nonneg g.lip_nonneg))
   norm_le := by
     intro x hx
-    calc
-      ‖B (f.eval x) (g.eval x)‖ ≤ ‖B‖ * ‖f.eval x‖ * ‖g.eval x‖ :=
-        B.le_opNorm₂ _ _
-      _ ≤ ‖B‖ * f.bound * g.bound :=
-        mul_le_mul
-          (mul_le_mul_of_nonneg_left (f.norm_le x hx) (norm_nonneg B))
-          (g.norm_le x hx) (norm_nonneg _)
-          (mul_nonneg (norm_nonneg B) f.bound_nonneg)
+    exact (B.le_opNorm₂ _ _).trans <| mul_le_mul
+      (mul_le_mul_of_nonneg_left (f.norm_le x hx) (norm_nonneg B))
+      (g.norm_le x hx) (norm_nonneg _)
+      (mul_nonneg (norm_nonneg B) f.bound_nonneg)
   sub_le := by
     intro x y hx hy
     have hid : B (f.eval x) (g.eval x) - B (f.eval y) (g.eval y) =
         B (f.eval x - f.eval y) (g.eval x) +
           B (f.eval y) (g.eval x - g.eval y) := by
-      simp only [map_sub, _root_.sub_apply]
-      abel
+      rw [B.map_sub, (B (f.eval y)).map_sub, _root_.sub_apply, sub_add_sub_cancel]
     rw [hid]
-    calc
-      ‖B (f.eval x - f.eval y) (g.eval x) +
-          B (f.eval y) (g.eval x - g.eval y)‖ ≤
-          ‖B (f.eval x - f.eval y) (g.eval x)‖ +
-            ‖B (f.eval y) (g.eval x - g.eval y)‖ := norm_add_le _ _
-      _ ≤ ‖B‖ * ‖f.eval x - f.eval y‖ * ‖g.eval x‖ +
-          ‖B‖ * ‖f.eval y‖ * ‖g.eval x - g.eval y‖ :=
-        add_le_add (B.le_opNorm₂ _ _) (B.le_opNorm₂ _ _)
-      _ ≤ ‖B‖ * (f.lip * ‖x - y‖) * g.bound +
-          ‖B‖ * f.bound * (g.lip * ‖x - y‖) :=
-        add_le_add
-          (mul_le_mul
-            (mul_le_mul_of_nonneg_left (f.sub_le x y hx hy) (norm_nonneg B))
-            (g.norm_le x hx) (norm_nonneg _)
-            (mul_nonneg (norm_nonneg B) (mul_nonneg f.lip_nonneg (norm_nonneg _))))
-          (mul_le_mul
-            (mul_le_mul_of_nonneg_left (f.norm_le y hy) (norm_nonneg B))
-            (g.sub_le x y hx hy) (norm_nonneg _)
-            (mul_nonneg (norm_nonneg B) f.bound_nonneg))
-      _ = (‖B‖ * (f.lip * g.bound + f.bound * g.lip)) * ‖x - y‖ := by ring
+    refine (norm_add_le _ _).trans <|
+      (add_le_add (B.le_opNorm₂ _ _) (B.le_opNorm₂ _ _)).trans <| (add_le_add
+        (mul_le_mul
+          (mul_le_mul_of_nonneg_left (f.sub_le x y hx hy) (norm_nonneg B))
+          (g.norm_le x hx) (norm_nonneg _)
+          (mul_nonneg (norm_nonneg B) (mul_nonneg f.lip_nonneg (norm_nonneg _))))
+        (mul_le_mul
+          (mul_le_mul_of_nonneg_left (f.norm_le y hy) (norm_nonneg B))
+          (g.sub_le x y hx hy) (norm_nonneg _)
+          (mul_nonneg (norm_nonneg B) f.bound_nonneg))).trans_eq ?_
+    ring
 
 /-- Pair, bundling `eval`, `bound`, `lip`, `bound_nonneg` and the required compatibility proofs. -/
 noncomputable def pair (f : Controlled E F R) (g : Controlled E G R) : Controlled E (F × G) R where
@@ -1572,7 +1562,7 @@ theorem exists_fixedPoint_of_controlled [CompleteSpace E]
       _ = ‖x₀‖ + 1 := add_comm _ _
   have herr {x : E} (hx : x ∈ closedBall x₀ 1) :
       ‖F x - x₀‖ ≤ s * f.bound := by
-    have heq : F x - x₀ = s • f.eval x := by dsimp [F]; abel
+    have heq : F x - x₀ = s • f.eval x := add_sub_cancel_left x₀ (s • f.eval x)
     rw [heq, norm_smul, Real.norm_eq_abs, abs_of_nonneg hs]
     exact mul_le_mul_of_nonneg_left (f.norm_le x (hnorm hx)) hs
   have hmaps : MapsTo F (closedBall x₀ 1) (closedBall x₀ 1) := by
@@ -1580,10 +1570,8 @@ theorem exists_fixedPoint_of_controlled [CompleteSpace E]
     simpa only [mem_closedBall, dist_eq_norm] using (herr hx).trans hbound
   have hdiff {x y : E} (hx : x ∈ closedBall x₀ 1) (hy : y ∈ closedBall x₀ 1) :
       ‖F x - F y‖ ≤ (1 / 2 : ℝ) * ‖x - y‖ := by
-    have heq : F x - F y = s • (f.eval x - f.eval y) := by
-      dsimp [F]
-      rw [smul_sub]
-      abel
+    have heq : F x - F y = s • (f.eval x - f.eval y) :=
+      (add_sub_add_left_eq_sub _ _ x₀).trans (smul_sub s _ _).symm
     rw [heq, norm_smul, Real.norm_eq_abs, abs_of_nonneg hs]
     calc
       s * ‖f.eval x - f.eval y‖ ≤ s * (f.lip * ‖x - y‖) :=
@@ -1599,7 +1587,7 @@ theorem exists_fixedPoint_of_controlled [CompleteSpace E]
       hdiff x.property y.property
   obtain ⟨x, hx, hfix, _, _⟩ :=
     ContractingWith.exists_fixedPoint' isClosed_closedBall.isComplete hmaps hc
-      (x := x₀) (by simp) (edist_ne_top _ _)
+      (x := x₀) (by simp only [mem_closedBall, dist_self, zero_le_one]) (edist_ne_top _ _)
   refine ⟨x, by simpa only [mem_closedBall, dist_eq_norm] using hx,
     hfix, ?_, ?_⟩
   · simpa only [hfix.eq] using herr hx
@@ -1609,7 +1597,7 @@ theorem exists_fixedPoint_of_controlled [CompleteSpace E]
     have h := hdiff hym hx
     change ‖F y - F x‖ ≤ (1 / 2 : ℝ) * ‖y - x‖ at h
     rw [show F y = y from hyfix, hfix.eq] at h
-    have : ‖y - x‖ = 0 := by linarith [norm_nonneg (y - x)]
+    have : ‖y - x‖ = 0 := le_antisymm (by linarith only [h]) (norm_nonneg _)
     exact sub_eq_zero.mp (norm_eq_zero.mp this)
 
 /-- Actual bounded coefficient operators, later instantiated by AxisOperators.
@@ -1829,25 +1817,31 @@ def controlledRemainder (O : NaturalOperators V) (d : AxisData V)
 ball radius, and upper bound for the pressure amplitude. -/
 def remainderBound (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (R M : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) : ℝ :=
-  (controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa using hM)).bound
+  (controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa only [norm_zero] using hM)).bound
 
 /-- Remainder lip, given by `(controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa using
 hM)).lip`. -/
 def remainderLip (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (R M : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) : ℝ :=
-  (controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa using hM)).lip
+  (controlledRemainder O d S R M hR hM 0 (by simp) 0 (by simpa only [norm_zero] using hM)).lip
 
 theorem controlledRemainder_bound_eq (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (R M : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M)
     (t : ℝ) (ht : |t| ≤ 1) (a : V) (ha : ‖a‖ ≤ M) :
     (controlledRemainder O d S R M hR hM t ht a ha).bound =
-      remainderBound O d S R M hR hM := by rfl
+      remainderBound O d S R M hR hM := by
+  dsimp only [remainderBound, controlledRemainder, Controlled.const, Controlled.constBound,
+    Controlled.fst, Controlled.snd, Controlled.linear, Controlled.bilinear, Controlled.add,
+    Controlled.sub, Controlled.neg, Controlled.unitSmul, Controlled.pair]
 
 theorem controlledRemainder_lip_eq (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (R M : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M)
     (t : ℝ) (ht : |t| ≤ 1) (a : V) (ha : ‖a‖ ≤ M) :
     (controlledRemainder O d S R M hR hM t ht a ha).lip =
-      remainderLip O d S R M hR hM := by rfl
+      remainderLip O d S R M hR hM := by
+  dsimp only [remainderLip, controlledRemainder, Controlled.const, Controlled.constBound,
+    Controlled.fst, Controlled.snd, Controlled.linear, Controlled.bilinear, Controlled.add,
+    Controlled.sub, Controlled.neg, Controlled.unitSmul, Controlled.pair]
 
 theorem remainderBound_nonneg (O : NaturalOperators V) (d : AxisData V)
     (S : V →L[ℝ] V) (R M : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) :
@@ -1910,21 +1904,21 @@ theorem exists_unique_natural_fixedPoint [CompleteSpace V]
       ∀ y : V × V, ‖y - x₀‖ ≤ 1 →
         x₀ + (1 / (2 * Λ)) • naturalRemainder O d S (1 / Λ) a y = y → y = x := by
   let R := ‖x₀‖ + 1
-  have hR : 0 ≤ R := by dsimp [R]; positivity
+  have hR : 0 ≤ R := by dsimp only [R]; positivity
   let B := remainderBound O d S R M hR hM
   let L := remainderLip O d S R M hR hM
   have hB : 0 ≤ B := remainderBound_nonneg O d S R M hR hM
   have hL : 0 ≤ L := remainderLip_nonneg O d S R M hR hM
   have htotal : 1 + B + L ≤ Λ := hΛ
-  have hΛ1 : 1 ≤ Λ := by linarith
-  have hBΛ : B ≤ Λ := by linarith
-  have hLΛ : L ≤ Λ := by linarith
+  have hΛ1 : 1 ≤ Λ := by linarith only [htotal, hB, hL]
+  have hBΛ : B ≤ Λ := by linarith only [htotal, hL]
+  have hLΛ : L ≤ Λ := by linarith only [htotal, hB]
   have hΛpos : 0 < Λ := lt_of_lt_of_le zero_lt_one hΛ1
-  have hden : 0 < 2 * Λ := by positivity
+  have hden : 0 < 2 * Λ := mul_pos two_pos hΛpos
   have ht : |1 / Λ| ≤ 1 := by
     rw [abs_of_pos (one_div_pos.mpr hΛpos)]
     exact (div_le_one hΛpos).mpr hΛ1
-  have hs : 0 ≤ 1 / (2 * Λ) := by positivity
+  have hs : 0 ≤ 1 / (2 * Λ) := (one_div_pos.mpr hden).le
   let f := controlledRemainder O d S R M hR hM (1 / Λ) ht a ha
   have hfB : f.bound = B := controlledRemainder_bound_eq O d S R M hR hM (1 / Λ) ht a ha
   have hfL : f.lip = L := controlledRemainder_lip_eq O d S R M hR hM (1 / Λ) ht a ha
@@ -1932,12 +1926,12 @@ theorem exists_unique_natural_fixedPoint [CompleteSpace V]
     rw [hfB]
     rw [show (1 / (2 * Λ)) * B = B / (2 * Λ) by ring]
     apply (div_le_iff₀ hden).mpr
-    linarith
+    linarith only [hBΛ, hΛpos]
   have hl : (1 / (2 * Λ)) * f.lip ≤ 1 / 2 := by
     rw [hfL]
     rw [show (1 / (2 * Λ)) * L = L / (2 * Λ) by ring]
     apply (div_le_iff₀ hden).mpr
-    linarith
+    linarith only [hLΛ]
   obtain ⟨x, hx, hfixed, herr, huniq⟩ :=
     exists_fixedPoint_of_controlled x₀ f (1 / (2 * Λ)) hs hb hl
   refine ⟨x, hx, ?_, ?_, ?_⟩
@@ -2139,15 +2133,13 @@ theorem natural_axis_profiles
         ContDiffOn ℝ ∞ (AxisEvaluation.profile I ε x.1) (AxisEvaluation.strip I 20) ∧
         ContDiffOn ℝ ∞ (AxisEvaluation.profile I ε x.2) (AxisEvaluation.strip I 20) := by
   dsimp only
-  obtain ⟨Λ₀, hΛ₀, hexists⟩ :=
-    coefficient_fixedPoint I hε d (AxisResolvent.naturalResolvent I hε χ) M hM
-  refine ⟨Λ₀, hΛ₀, ?_⟩
-  intro Λ hΛ a ha
-  obtain ⟨x, hball, hfixed, herr, _⟩ := hexists Λ hΛ a ha
+  refine (coefficient_fixedPoint I hε d (AxisResolvent.naturalResolvent I hε χ) M hM).elim
+    fun Λ₀ hΛ₀ => ⟨Λ₀, hΛ₀.1, fun Λ hΛ a ha => ?_⟩
+  refine (hΛ₀.2 Λ hΛ a ha).elim fun x hx => ?_
   have heq := fixedPoint_integrated_equations (coefficientOperators I hε) d
     (AxisResolvent.naturalResolvent I hε χ) (AxisResolvent.naturalOperator I hε χ)
-    (AxisResolvent.naturalResolvent_equation I hε χ) (1 / Λ) (1 / (2 * Λ)) a x hfixed
-  exact ⟨x, hball, herr, heq.1, heq.2,
+    (AxisResolvent.naturalResolvent_equation I hε χ) (1 / Λ) (1 / (2 * Λ)) a x hx.2.1
+  exact ⟨x, hx.1, hx.2.2.1, heq.1, heq.2,
     AxisEvaluation.profile_smooth I hε x.1, AxisEvaluation.profile_smooth I hε x.2⟩
 
 end NavierStokes.AxisContraction
@@ -2211,9 +2203,9 @@ theorem profile_axis (I : Window) (ε : ℝ) (A : AxisSpace I ε) (η : ℝ) :
     profile I ε A (0, η) = coefficient I (weight ε) A 0 η := by
   unfold profile
   rw [tsum_eq_single 0]
-  · simp
+  · simp only [pow_zero, one_mul]
   · intro n hn
-    simp [zero_pow hn]
+    simp only [zero_pow hn, zero_mul]
 
 theorem profile_deriv_Y (I : Window) {ε : ℝ} (hε : 0 < ε)
     (A : AxisSpace I ε) {Y η : ℝ} (hY : Y ∈ Ioo (-20 : ℝ) 20)
@@ -2254,7 +2246,9 @@ theorem polynomialJet_radial (r n : ℕ) (Y : ℝ) :
     Y * polynomialJet (n + 1) 2 Y + (r : ℝ) * polynomialJet (n + 1) 1 Y =
       radialDivisor r n * Y ^ n := by
   cases n with
-  | zero => simp [polynomialJet, radialDivisor, Nat.descFactorial_succ]
+  | zero => simp only [polynomialJet, zero_add, Nat.descFactorial_succ, tsub_self, tsub_zero,
+      Nat.descFactorial_zero, mul_one, CharP.cast_eq_zero, Nat.one_le_ofNat, Nat.sub_eq_zero_of_le,
+      pow_zero, mul_zero, Nat.cast_one, radialDivisor, one_mul]
   | succ n =>
       have he : n + 1 + 1 - 2 = n := by omega
       simp only [polynomialJet, Nat.descFactorial_succ, Nat.descFactorial_zero,
@@ -2281,7 +2275,10 @@ theorem radialValue_series (I : Window) {ε : ℝ} (hε : 0 < ε)
     _ = ∑' n : ℕ, (Y * term I ε A 2 0 (n + 1) (Y, η) +
         (r : ℝ) * term I ε A 1 0 (n + 1) (Y, η)) := by
       rw [hs.tsum_eq_zero_add]
-      simp [term, polynomialJet]
+      simp only [term, polynomialJet, Nat.descFactorial_succ, zero_tsub, tsub_self,
+          Nat.descFactorial_zero, mul_one, mul_zero, CharP.cast_eq_zero, pow_zero, zero_mul,
+          add_zero, add_tsub_cancel_right, tsub_zero, Nat.cast_mul, Nat.cast_add, Nat.cast_one,
+          Nat.reduceSubDiff, zero_add]
     _ = _ := by
       apply tsum_congr
       intro n
@@ -2321,7 +2318,8 @@ theorem derivativeSeries (I : Window) {ε : ℝ} (hε : 0 < ε)
     zero_mul, zero_add]
   apply tsum_congr
   intro n
-  simp [coefficient]
+  simp only [Nat.descFactorial_succ, tsub_zero, Nat.descFactorial_zero, mul_one, Nat.cast_add,
+      Nat.cast_one, add_tsub_cancel_right, coefficient]
 
 theorem jet_average_eval (I : Window) {ε : ℝ} (hε : 0 < ε)
     (A : AxisSpace I ε) (n m : ℕ) {η : ℝ} (hη : η ∈ I.interval) :
@@ -2366,7 +2364,8 @@ theorem primitive_Y_value (I : Window) {ε : ℝ} (hε : 0 < ε)
   rw [jet_primitive_eval I hε A (n + 1) 0 hη]
   simp only [primitiveScale, Nat.pred_succ]
   change ((n : ℝ) + 1) * Y ^ n * (1 / ((n : ℝ) + 1) * coefficient I (weight ε) A n η) = _
-  field_simp
+  linear_combination (Y ^ n * coefficient I (weight ε) A n η) *
+    mul_inv_cancel₀ (Nat.cast_add_one_ne_zero n : (n : ℝ) + 1 ≠ 0)
 
 theorem primitive_hasDerivAt (I : Window) {ε : ℝ} (hε : 0 < ε)
     (A : AxisSpace I ε) {Y η : ℝ} (hY : Y ∈ Ioo (-20 : ℝ) 20)
@@ -2382,7 +2381,7 @@ theorem primitive_axis_zero (I : Window) {ε : ℝ} (hε : 0 < ε)
   rw [profile_axis]
   change inputJet I ε (primitive I hε A) 0 0 η = _
   rw [jet_primitive_eval I hε A 0 0 hη]
-  simp [primitiveScale]
+  simp only [primitiveScale, Nat.pred_eq_sub_one, zero_tsub, zero_mul]
 
 theorem profile_mulY (I : Window) {ε : ℝ} (hε : 0 < ε)
     (A : AxisSpace I ε) {Y η : ℝ} (hY : |Y| < 20) (hη : η ∈ I.interval) :
@@ -2393,7 +2392,7 @@ theorem profile_mulY (I : Window) {ε : ℝ} (hε : 0 < ε)
   have hzero : coefficient I (weight ε) (mulY I hε A) 0 η = 0 := by
     change inputJet I ε (mulY I hε A) 0 0 η = _
     rw [jet_mulY_eval I hε A 0 0 hη]
-    simp [multiplyYScale]
+    simp only [multiplyYScale, Nat.pred_eq_sub_one, zero_tsub, zero_mul]
   rw [hzero, mul_zero, zero_add, ← tsum_mul_left]
   apply tsum_congr
   intro n
@@ -2410,7 +2409,9 @@ theorem primitive_eq_mulY_average (I : Window) {ε : ℝ} (hε : 0 < ε)
   change inputJet I ε (primitive I hε A) n 0 η = inputJet I ε (mulY I hε (average I hε A)) n 0 η
   rw [jet_primitive_eval I hε A n 0 hη, jet_mulY_eval I hε (average I hε A) n 0 hη,
     jet_average_eval I hε A n.pred 0 hη]
-  cases n <;> simp [primitiveScale, multiplyYScale, div_eq_mul_inv, mul_comm]
+  cases n <;> simp only [primitiveScale, Nat.pred_eq_sub_one, zero_tsub, zero_mul, multiplyYScale,
+      CharP.cast_eq_zero, zero_add, div_eq_mul_inv, inv_one, mul_comm, one_mul,
+      add_tsub_cancel_right]
 
 theorem average_times_Y (I : Window) {ε : ℝ} (hε : 0 < ε)
     (A : AxisSpace I ε) {Y η : ℝ} (hY : |Y| < 20) (hη : η ∈ I.interval) :
@@ -2433,7 +2434,8 @@ theorem parameterSeries_norm_summable (I : Window) {ε : ℝ} (hε : 0 < ε)
 theorem polynomialJet_dot (n : ℕ) (Y : ℝ) :
     Y * polynomialJet n 1 Y = (n : ℝ) * Y ^ n := by
   cases n with
-  | zero => simp [polynomialJet]
+  | zero => simp only [polynomialJet, Nat.descFactorial_succ, tsub_self, Nat.descFactorial_zero,
+      mul_one, CharP.cast_eq_zero, zero_tsub, pow_zero, mul_zero]
   | succ n =>
       simp only [polynomialJet, Nat.descFactorial_one, Nat.add_sub_cancel,
         Nat.cast_add, Nat.cast_one, pow_succ]
@@ -2582,7 +2584,8 @@ theorem parameterPrimitive_Y_value (I : Window) {ε : ℝ} (hε : 0 < ε)
   change ((n : ℝ) + 1) * Y ^ n * inputJet I ε (parameterPrimitive I hε A) (n + 1) 0 η = _
   rw [jet_parameterPrimitive_eval I hε A (n + 1) 0 hη]
   simp only [primitiveScale, Nat.pred_succ, Nat.add_zero]
-  field_simp
+  linear_combination (Y ^ n * inputJet I ε A n 1 η) *
+    mul_inv_cancel₀ (Nat.cast_add_one_ne_zero n : (n : ℝ) + 1 ≠ 0)
 
 theorem parameterPrimitive_hasDerivAt (I : Window) {ε : ℝ} (hε : 0 < ε)
     (A : AxisSpace I ε) {Y η : ℝ} (hY : Y ∈ Ioo (-20 : ℝ) 20)
@@ -2599,7 +2602,7 @@ theorem parameterPrimitive_axis_zero (I : Window) {ε : ℝ} (hε : 0 < ε)
   rw [profile_axis]
   change inputJet I ε (parameterPrimitive I hε A) 0 0 η = _
   rw [jet_parameterPrimitive_eval I hε A 0 0 hη]
-  simp [primitiveScale]
+  simp only [primitiveScale, Nat.pred_eq_sub_one, zero_tsub, add_zero, zero_mul]
 
 theorem radial_segment_mem {Y y : ℝ} (hY : Y ∈ Ioo (-20 : ℝ) 20)
     (hy : y ∈ uIcc (0 : ℝ) Y) : y ∈ Ioo (-20 : ℝ) 20 := by
@@ -2772,7 +2775,8 @@ theorem profile_sub (I : Window) {ε : ℝ} (hε : 0 < ε)
 
 theorem profile_zero (I : Window) (ε : ℝ) (p : ℝ × ℝ) :
     AxisEvaluation.profile I ε (0 : AxisSpace I ε) p = 0 := by
-  simp [AxisEvaluation.profile, coefficient]
+  simp only [AxisEvaluation.profile, coefficient, ZeroMemClass.coe_zero, jet_zero, mul_zero,
+      tsum_zero]
 
 theorem radialEvaluation_add (I : Window) {ε : ℝ} (hε : 0 < ε)
     (r : ℕ) (A B : AxisSpace I ε) {p : ℝ × ℝ} (hp : |p.1| < 20) :
@@ -2803,7 +2807,7 @@ theorem profile_radiallyConstant (I : Window) (ε : ℝ) (A : AxisSpace I ε)
     AxisEvaluation.profile I ε A (Y, η) = coefficient I (weight ε) A 0 η := by
   unfold AxisEvaluation.profile
   rw [tsum_eq_single 0]
-  · simp
+  · simp only [pow_zero, one_mul]
   · intro n hn
     simp only [hA n hn η hη, mul_zero]
 
@@ -2836,7 +2840,8 @@ theorem coefficient_product_constant (I : Window) {ε : ℝ} (hε : 0 < ε)
       · exact hi
       · simpa only [hi, zero_add] using hs
     simp only [hA ij.1 hi η hη, zero_mul]
-  · simp
+  · simp only [Finset.mem_antidiagonal, zero_add, not_true_eq_false, mul_eq_zero,
+      IsEmpty.forall_iff]
 
 /-- A fixed parameter multiplier commutes with the radial differential expression. -/
 theorem radialEvaluation_product_constant (I : Window) {ε : ℝ} (hε : 0 < ε)
@@ -3285,7 +3290,7 @@ theorem integrated_solution (I : Window) {ε : ℝ} (hε : 0 < ε)
           (2 * s) * angularRemainder (parameters I ε χ d) t
             (AxisEvaluation.profile I ε x.1) (AxisEvaluation.profile I ε x.2)
             (AxisEvaluation.profile I ε (AxisOperators.average I hε x.2)) p := by
-        linarith only [he]
+        linear_combination 2 * he
       _ = _ := by rw [hst]
   · intro p hp
     have hY : |p.1| < 20 := abs_lt.mpr hp.1
@@ -3307,7 +3312,7 @@ theorem integrated_solution (I : Window) {ε : ℝ} (hε : 0 < ε)
             (AxisEvaluation.profile I ε x.2)
             (AxisEvaluation.profile I ε (AxisOperators.average I hε x.2))
             (AxisEvaluation.profile I ε (pressureCoefficient I hε a x.1)) p := by
-        linarith only [he]
+        linear_combination 2 * he
       _ = _ := by rw [hst]
 
 /-- The leading pair defined using the proved angular resolvent. -/
@@ -3339,7 +3344,7 @@ theorem reference_isLeadingSolution (I : Window) {ε : ℝ} (hε : 0 < ε)
       (AxisEvaluation.profile I ε (referenceCoefficients I hε χ d).2) := by
   have hzero : RadiallyConstant I ε (0 : AxisSpace I ε) := by
     intro n hn η hη
-    simp [coefficient]
+    simp only [coefficient, ZeroMemClass.coe_zero, jet_zero]
   have hφ : (referenceCoefficients I hε χ d).1 +
       AxisResolvent.naturalOperator I hε χ (referenceCoefficients I hε χ d).1 =
       d.one + (0 : ℝ) • (AxisContraction.naturalRemainder

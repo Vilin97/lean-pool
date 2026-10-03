@@ -90,37 +90,38 @@ theorem difference_metric_deriv_bound {q : ℕ} {T : Type*} [TopologicalSpace T]
     (gradientSpace period D.κ D.direction).sub_mem (D.pressure_mem_gradient period hq τ u)
       (D.pressure_mem_gradient period hq τ v)
   have hp : ⟪K t (e t),(D.metric.coefficient τ).operator p⟫_ℝ=0 := by
-    rw [hKv,hev]
+    simp only [hKv, hev]
     exact metric_pressure_cancellation period D.κ D.direction A.coefficient (D.metric.coefficient
         τ).coefficient
       A.measurable (D.metric.coefficient τ).measurable A.bound (D.metric.coefficient τ).bound
       A.norm_bound (D.metric.coefficient τ).norm_bound hsym hinv hdiv hpgrad
   have ht : |⟪K t (e t),top⟫_ℝ| ≤ (Kx*V)*‖e t‖^2 := by
-    rw [hKv,hev]
+    simp only [hKv, hev]
     exact difference_transport_bound period D hq τ A u v Kx Z R hKx hZ hu hsym hz hud
   have hheat : ⟪K t (e t),laplacianEvaluation period (q+1) (by omega) d⟫_ℝ ≤
       (2*Kx^2/c^2)*‖e t‖^2 := by
-    rw [hKv,hev]
+    simp only [hKv, hev]
     exact difference_heat_bound period (by omega : 2 ≤ q+1) A d c Kx hc hKx hpos
   have hforce : ‖F‖ ≤ L*‖e t‖+|ν-μ| *(4*R) := by
-    rw [hev]
+    simp only [hev]
     have hrem := differenceRemainder_uniform period D hq τ u v A0 A2 Z R hA0 hA2 hZ hu hv
     have hlap := (laplacianEvaluation_bound period (by omega : 2 ≤ q+1) v).trans
       (mul_le_mul_of_nonneg_left hv (by norm_num : (0 : ℝ) ≤ 4))
     have hh := norm_add_le (-value period (differenceRemainder period D hq τ u v))
       ((ν-μ) • laplacianEvaluation period (q+1) (by omega) v)
-    rw [norm_neg,norm_smul,Real.norm_eq_abs] at hh
+    simp only [norm_neg, norm_smul, Real.norm_eq_abs] at hh
     exact hh.trans (add_le_add hrem (mul_le_mul_of_nonneg_left hlap (abs_nonneg _)))
   have hcoer : c^2*‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ := by
-    rw [hKv]
+    simp only [hKv]
     exact coefficientOperator_coercive A.coefficient A.measurable A.bound A.norm_bound (c^2) hpos
         (e t)
   have hsymL : ∀ a b, ⟪K t a,b⟫_ℝ=⟪a,K t b⟫_ℝ := by
-    rw [hKv]
+    simp only [hKv]
     exact coefficientOperator_inner_swap A.coefficient A.measurable A.bound A.norm_bound hsym
   have hgen := metric_derivative_bound K e t ν c (Kx*V) (2*Kx^2/c^2) L |ν-μ| (4*R) K'
     (differenceRhs period D hq ν μ τ u v) top ((D.metric.coefficient τ).operator p) F
-    (laplacianEvaluation period (q+1) (by omega) d) hc hν (mul_nonneg hkx0 hV) (by positivity) hL
+    (laplacianEvaluation period (q+1) (by omega) d) hc hν (mul_nonneg hkx0 hV)
+    (div_nonneg (mul_nonneg zero_le_two (sq_nonneg Kx)) (sq_nonneg c)) hL
     hK he hsymL hcoer heq hp ht hheat hforce
   have he0 : 0 ≤ ⟪K t (e t),e t⟫_ℝ := (mul_nonneg (sq_nonneg c) (sq_nonneg ‖e t‖)).trans hcoer
   have hkn : ‖K t‖ ≤ Kb := by rw [hKv]; exact hKb
@@ -131,7 +132,8 @@ theorem difference_metric_deriv_bound {q : ℕ} {T : Type*} [TopologicalSpace T]
     have hh : 2*ν*(2*Kx^2/c^2) ≤ 4*Kx^2/c^2 := by
       calc
         _ = ν*(4*Kx^2/c^2) := by ring
-        _ ≤ 1*(4*Kx^2/c^2) := mul_le_mul_of_nonneg_right hν1 (by positivity)
+        _ ≤ 1*(4*Kx^2/c^2) := mul_le_mul_of_nonneg_right hν1
+          (div_nonneg (mul_nonneg zero_le_four (sq_nonneg Kx)) (sq_nonneg c))
         _ = _ := one_mul _
     have hk : 2*‖K t‖*L ≤ 2*Kb*L := by
       have h := mul_le_mul_of_nonneg_right hkn (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hL)

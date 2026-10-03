@@ -42,7 +42,7 @@ open Set Finset Real InnerProductSpace EulerSmoothLimit EulerParentPacketFrames
 
 variable {c B : ℝ} {S : Scales c B} {n : ℕ} (P : Stage S n)
 
-local notation "k" => frequency S.J S.X n
+local notation "k" => (frequency S.J S.X n)
 
 /-- The initial-gradient increment of the next packet, `h·r` for its target
 shear `h` and error ratio `r` plus the frequency error, fits the stage's

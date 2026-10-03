@@ -115,16 +115,13 @@ theorem compact_smooth_second_derivative_bound (f : LiftDomain period → W)
     (hfc : HasCompactSupport f) (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x)) :
     ∃ M : ℝ≥0, ∀ x y, ‖fderiv ℝ (fderiv ℝ (localFieldLift period f x)) y‖ ≤ M := by
   let F := fieldFDeriv period (fieldFDeriv period f)
-  have hFc : HasCompactSupport F := fieldFDeriv_compact period _ (fieldFDeriv_compact period f hfc)
-  have hFs : ∀ x, ContDiff ℝ ∞ (localFieldLift period F x) :=
-    fieldFDeriv_smooth period _ (fieldFDeriv_smooth period f hf)
+  have hFc := fieldFDeriv_compact period _ (fieldFDeriv_compact period f hfc)
+  have hFs := fieldFDeriv_smooth period _ (fieldFDeriv_smooth period f hf)
   have hFb := (hFc.isCompact_range (smoothField_continuous period F hFs)).isBounded
   obtain ⟨M, hM, hbound⟩ := hFb.exists_pos_norm_le
   refine ⟨⟨M, hM.le⟩, fun x y => ?_⟩
   have hBy := hbound (F (x.1 + y.1, x.2 + (y.2 : AddCircle period))) (Set.mem_range_self _)
-  change ‖fderiv ℝ (localFieldLift period (fieldFDeriv period f)
-    (x.1 + y.1, x.2 + (y.2 : AddCircle period))) 0‖ ≤ M at hBy
-  rw [fderiv_localFieldLift_shift, localFieldLift_fieldFDeriv] at hBy
+  rw [← localFieldLift_fieldFDeriv, ← fderiv_localFieldLift_shift]
   exact hBy
 
 end FieldCalculus
@@ -201,8 +198,9 @@ theorem field_translation_remainder (a : LiftTangent)
       (fderiv ℝ (localFieldLift period f x) (s • a) a) s := by
     intro s
     have hF := (((hf x).differentiable (by simp)) (s • a)).hasFDerivAt
-    convert hF.comp_hasDerivAt s ((hasDerivAt_id s).smul_const a) using 1 <;>
-      first | rfl | simp
+    have hl : HasDerivAt (fun u : ℝ => u • a) a s := by
+      simpa only [one_smul] using (hasDerivAt_id' s).smul_const a
+    exact hF.comp_hasDerivAt (f := fun u : ℝ => u • a) s hl
   have hr := uniform_derivative_remainder
     (fun s => localFieldLift period f x (s • a))
     (fun s => fderiv ℝ (localFieldLift period f x) (s • a) a) hd (M * ‖a‖₊ ^ 2)
@@ -262,7 +260,8 @@ theorem smoothFieldLp_translation_hasDerivAt (a : LiftTangent)
     (f' := df) (x := (0 : ℝ))).mpr
   simp only [translationPath_zero, translation_zero, sub_zero]
   apply squeeze_zero'
-  · exact Filter.Eventually.of_forall fun t => by positivity
+  · exact Filter.Eventually.of_forall fun t =>
+      mul_nonneg (inv_nonneg.mpr (norm_nonneg _)) (norm_nonneg _)
   · filter_upwards [Metric.ball_mem_nhds (0 : ℝ) (by norm_num : (0 : ℝ) < 1)] with t ht
     have ht' : |t| ≤ 1 := by
       simp only [Metric.mem_ball, Real.dist_eq, sub_zero] at ht
@@ -270,14 +269,10 @@ theorem smoothFieldLp_translation_hasDerivAt (a : LiftTangent)
     calc
       _ ≤ ‖t‖⁻¹ * (((M : ℝ) * ‖a‖ ^ 2 * |t| ^ 2) * ‖χ‖) :=
         mul_le_mul_of_nonneg_left (hR t ht') (inv_nonneg.mpr (norm_nonneg _))
-      _ ≤ ((M : ℝ) * ‖a‖ ^ 2 * ‖χ‖) * |t| := by
-        by_cases ht0 : t = 0
-        · simp [ht0]
-        · rw [Real.norm_eq_abs]
-          have hta : |t| ≠ 0 := abs_ne_zero.mpr ht0
-          field_simp
-          ring_nf
-          exact le_rfl
+      _ = ((M : ℝ) * ‖a‖ ^ 2 * ‖χ‖) * (|t|⁻¹ * |t| * |t|) := by
+        rw [Real.norm_eq_abs]
+        ring
+      _ = ((M : ℝ) * ‖a‖ ^ 2 * ‖χ‖) * |t| := by rw [inv_mul_mul_self]
   · simpa only [Pi.mul_def, abs_zero, mul_zero] using
       (continuous_const.mul continuous_abs).tendsto (0 : ℝ)
 

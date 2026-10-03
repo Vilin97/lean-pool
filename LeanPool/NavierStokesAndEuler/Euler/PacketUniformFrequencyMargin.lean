@@ -40,11 +40,11 @@ theorem delta_mul_rpow_tendsto_zero (p : ℝ) :
       (_root_.tendsto_rpow_atTop (by norm_num [theta] : 0 < theta/2))
   apply h.congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with k hk
-  dsimp [Function.comp_def, delta]
+  dsimp only [Function.comp_apply, delta]
   rw [sqrt_expansion_eq k hk.le, ← Real.rpow_mul hk.le]
   have hp : theta/2*(p/(theta/2))=p := by field_simp [theta]
   rw [hp]
-  simp
+  simp only [neg_mul, one_mul]
 
 /-- Any fixed source multiplier is eventually smaller than an arbitrary
 fixed inverse power of the frequency. -/
@@ -52,7 +52,7 @@ theorem correction_eventually_lt_inverse_power (C p : ℝ) :
     ∀ᶠ k : ℝ in atTop, C*delta (expansion k) < k^(-p) := by
   have h := (delta_mul_rpow_tendsto_zero p).const_mul C
   have hsmall : ∀ᶠ k : ℝ in atTop, C*(k^p*delta (expansion k)) < 1 :=
-    h.eventually (Iio_mem_nhds (by simp : C*0 < (1 : ℝ)))
+    h.eventually (Iio_mem_nhds (by simp only [mul_zero, zero_lt_one] : C*0 < (1 : ℝ)))
   filter_upwards [hsmall,eventually_gt_atTop (0 : ℝ)] with k he hk
   rw [Real.rpow_neg hk.le]
   rw [← one_div]
@@ -131,7 +131,7 @@ theorem liftedAmplitude_small_eventually (C E R T : ℝ)
     liftedAmplitude_eventually_le_inverse_half C E,
     (_root_.tendsto_rpow_atTop (by norm_num : (0 : ℝ) < 1/2)).eventually_ge_atTop (16*R*T)]
     with k hk hb hroot
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hp : 0 < k^(1/2 : ℝ) := Real.rpow_pos_of_pos hk0 _
   refine ⟨hk, liftedAmplitude_nonneg C E k hC hE hk0.le, hb, ?_⟩
   calc
@@ -140,7 +140,7 @@ theorem liftedAmplitude_small_eventually (C E R T : ℝ)
     _ = (2*R*T)/k^(1/2 : ℝ) := by rw [Real.rpow_neg hk0.le]; ring
     _ ≤ 1/8 := by
       apply (div_le_iff₀ hp).mpr
-      nlinarith
+      nlinarith only [hroot]
 
 end EulerPacketSourceFrequency
 
@@ -232,7 +232,7 @@ theorem liftedAmplitude_small_of_costs (C E R T k : ℝ) (hk : 1 ≤ k)
         _ = _ := by rw [← Real.rpow_add hk0,← Real.rpow_add hk0]; norm_num
     _ ≤ 1/8 := by
       rw [Real.rpow_neg hk0.le,← div_eq_mul_inv]
-      exact (div_le_iff₀ (Real.rpow_pos_of_pos hk0 _)).mpr (by linarith)
+      exact (div_le_iff₀ (Real.rpow_pos_of_pos hk0 _)).mpr (by linarith only [hroot])
 
 /-- This one numerical threshold is independent of all parent fields,
 all source costs and all stages of the iteration. -/

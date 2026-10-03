@@ -55,9 +55,9 @@ theorem unshifted_product_sum (ρ : ℝ) (hρ : 0 < ρ) (N : ℕ) (A B : ℕ →
       intro l hl
       have he : n-l+l = n := by have := mem_range.mp hl; omega
       simpa only [he] using unshifted_product_term ρ hρ (n-l) l (A l) (B (n-l)) (hA l) (hB (n-l))
-    _ ≤ _ := EulerH6Pressure.triangle_sum_le_product N _ _
-      (fun l => mul_nonneg (weight_pos hρ l).le (hA l)) (fun j => mul_nonneg (weight_pos hρ j).le
-          (hB j))
+    _ ≤ _ := EulerH6Pressure.triangle_sum_le_product N (fun l => weight ρ l * A l)
+      (fun j => weight ρ j * B j) (fun l => mul_nonneg (weight_pos hρ l).le (hA l))
+      (fun j => mul_nonneg (weight_pos hρ j).le (hB j))
 
 end EulerWeightedConvolution
 

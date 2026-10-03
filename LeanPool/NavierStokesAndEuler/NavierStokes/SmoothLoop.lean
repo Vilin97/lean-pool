@@ -10,6 +10,7 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Periodic
 public import Mathlib.Analysis.Real.Sqrt
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Smooth periodic tilt functions and their actual integral moments
@@ -42,6 +43,10 @@ They establish finite moment feasibility, including a one-sided support bound.
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 namespace NavierStokes.LoopMoments
 
@@ -103,7 +108,7 @@ theorem energy_moment (s : Finset ι) (w t : ι → ℝ) (a m ρ : ℝ)
     a * avg s w (fun i => 1 + t i ^ 2) = a * (1 + m ^ 2) + ρ := by
   have hsecond : avg s w (fun i => t i ^ 2) = m ^ 2 + ρ / a := by
     have := variance_identity s w t m hmass hmean
-    linarith
+    linarith only [hvar, this]
   rw [avg_add, avg_const s w 1 hmass, hsecond]
   field_simp; ring
 
@@ -132,7 +137,7 @@ def loopA (v t : ℝ) : ℝ := v / (1 + t ^ 2)
 def loopC (v t : ℝ) : ℝ := v * t / (1 + t ^ 2)
 
 theorem one_add_sq_pos (t : ℝ) : 0 < 1 + t ^ 2 := by
-  nlinarith [sq_nonneg t]
+  nlinarith only [sq_nonneg t]
 
 theorem loopA_pos (v t : ℝ) (hv : 0 < v) : 0 < loopA v t := by
   exact div_pos hv (one_add_sq_pos t)
@@ -255,14 +260,14 @@ theorem symmetricPair_probability (m V : ℝ) : (symmetricPair m V).IsProbabilit
   norm_num [TwoPoint.IsProbability, symmetricPair]
 
 theorem symmetricPair_mean (m V : ℝ) : (symmetricPair m V).mean = m := by
-  dsimp [TwoPoint.mean, symmetricPair]
+  dsimp only [symmetricPair, TwoPoint.mean]
   ring
 
 theorem symmetricPair_variance (m V : ℝ) (hV : 0 ≤ V) :
     (symmetricPair m V).centeredSecond m = V := by
-  dsimp [TwoPoint.centeredSecond, symmetricPair]
+  dsimp only [symmetricPair, TwoPoint.centeredSecond]
   have hsq := Real.sq_sqrt hV
-  nlinarith
+  nlinarith only [hsq]
 
 /-- An asymmetric law preserves a lower bound on the projection `p*t`,
 while allowing any nonnegative variance. For `p = 0`, use `symmetricPair`.
@@ -274,12 +279,12 @@ def oneSidedPair (m p d V : ℝ) : TwoPoint :=
 theorem oneSidedPair_denom_pos (p d V : ℝ) (hd : 0 < d) (hV : 0 ≤ V) :
     0 < d ^ 2 + V * p ^ 2 := by
   have hprod := mul_nonneg hV (sq_nonneg p)
-  nlinarith
+  nlinarith only [hprod, hd]
 
 theorem oneSidedPair_probability (m p d V : ℝ) (hd : 0 < d) (hV : 0 ≤ V) :
     (oneSidedPair m p d V).IsProbability := by
   have hden := oneSidedPair_denom_pos p d V hd hV
-  dsimp [TwoPoint.IsProbability, oneSidedPair]
+  dsimp only [oneSidedPair, TwoPoint.IsProbability]
   refine ⟨div_nonneg (mul_nonneg hV (sq_nonneg p)) (le_of_lt hden),
     div_nonneg (sq_nonneg d) (le_of_lt hden), ?_⟩
   field_simp; ring
@@ -288,7 +293,7 @@ theorem oneSidedPair_mean (m p d V : ℝ) (hp : p ≠ 0) (hd : 0 < d) (hV : 0 �
     (oneSidedPair m p d V).mean = m := by
   have hden := ne_of_gt (oneSidedPair_denom_pos p d V hd hV)
   have hdne := ne_of_gt hd
-  dsimp [TwoPoint.mean, oneSidedPair]
+  dsimp only [oneSidedPair, TwoPoint.mean]
   field_simp; ring
 
 theorem oneSidedPair_variance (m p d V : ℝ)
@@ -296,17 +301,17 @@ theorem oneSidedPair_variance (m p d V : ℝ)
     (oneSidedPair m p d V).centeredSecond m = V := by
   have hden := ne_of_gt (oneSidedPair_denom_pos p d V hd hV)
   have hdne := ne_of_gt hd
-  dsimp [TwoPoint.centeredSecond, oneSidedPair]
+  dsimp only [oneSidedPair, TwoPoint.centeredSecond]
   field_simp; ring
 
 theorem oneSidedPair_lower_projection (m p d V : ℝ) (hp : p ≠ 0) :
     p * ((oneSidedPair m p d V).leftValue - m) = -d := by
-  dsimp [oneSidedPair]
+  dsimp only [oneSidedPair]
   field_simp; ring
 
 theorem oneSidedPair_upper_projection (m p d V : ℝ) :
     p * ((oneSidedPair m p d V).rightValue - m) = V * p ^ 2 / d := by
-  dsimp [oneSidedPair]
+  dsimp only [oneSidedPair]
   ring
 
 /-- Every mean whose stress projection is strictly above `2` has a finite
@@ -322,17 +327,17 @@ theorem exists_projected_twoPoint (p₁ p₂ m V : ℝ)
       symmetricPair_mean m V, symmetricPair_variance m V hV, ?_, ?_⟩ <;>
       simpa only [hp, zero_mul, add_zero] using hP
   · let d := (p₁ + p₂ * m - 2) / 2
-    have hd : 0 < d := by dsimp [d]; linarith
+    have hd : 0 < d := by dsimp only [d]; linarith only [hP]
     refine ⟨oneSidedPair m p₂ d V, oneSidedPair_probability m p₂ d V hd hV,
       oneSidedPair_mean m p₂ d V hp hd hV,
       oneSidedPair_variance m p₂ d V hp hd hV, ?_, ?_⟩
     · have hleft := oneSidedPair_lower_projection m p₂ d V hp
-      dsimp [d] at hleft
-      linarith
+      dsimp only [d] at hleft
+      linarith only [hP, hleft]
     · have hright := oneSidedPair_upper_projection m p₂ d V
       have hinc : 0 ≤ V * p₂ ^ 2 / d :=
         div_nonneg (mul_nonneg hV (sq_nonneg p₂)) (le_of_lt hd)
-      linarith
+      linarith only [hP, hright, hinc]
 
 /-- The cutoff correction used by the manuscript remains between the old
 speed and the target speed whenever the old speed is below that target. -/
@@ -340,10 +345,10 @@ theorem corrected_speed_bounds (v₀ vstar ζ : ℝ)
     (hz₀ : 0 ≤ ζ) (hz₁ : ζ ≤ 1) (hv : v₀ ≤ vstar) :
     v₀ ≤ v₀ + ζ ^ 2 * (vstar - v₀) ∧
       v₀ + ζ ^ 2 * (vstar - v₀) ≤ vstar := by
-  have hs : ζ ^ 2 ≤ 1 := by nlinarith
+  have hs : ζ ^ 2 ≤ 1 := by nlinarith only [hz₁, hz₀]
   have hlow := mul_nonneg (sq_nonneg ζ) (sub_nonneg.mpr hv)
   have hupp := mul_nonneg (sub_nonneg.mpr hs) (sub_nonneg.mpr hv)
-  constructor <;> nlinarith
+  constructor <;> nlinarith only [hlow, hupp]
 
 end
 
@@ -407,7 +412,7 @@ theorem angularMean_pos (f : ℝ → ℝ) (hf : Continuous f) (hpos : ∀ θ, 0 
     (hf.intervalIntegrable _ _) hpos period_pos) period_pos
 
 theorem angularMean_cos : angularMean Real.cos = 0 := by
-  simp [angularMean, Real.sin_two_pi]
+  simp only [angularMean, integral_cos, Real.sin_two_pi, Real.sin_zero, sub_self, zero_div]
 
 theorem angularMean_cos_sq : angularMean (fun θ => Real.cos θ ^ 2) = 1 / 2 := by
   simp only [angularMean, integral_cos_sq, Real.sin_two_pi, Real.sin_zero,
@@ -443,7 +448,7 @@ theorem cosineTilt_variance (m amplitude : ℝ) :
   have heq : (fun θ => (cosineTilt m amplitude θ - m) ^ 2) =
       fun θ => amplitude ^ 2 * Real.cos θ ^ 2 := by
     funext θ
-    dsimp [cosineTilt]
+    dsimp only [cosineTilt]
     ring
   rw [heq, angularMean_const_mul, angularMean_cos_sq]
   ring
@@ -468,15 +473,15 @@ theorem cosineTilt_projection_bound (p₁ p₂ m amplitude θ : ℝ) :
         mul_le_mul_of_nonneg_left (Real.abs_cos_le_one θ) (abs_nonneg _)
       _ = |p₂ * amplitude| := mul_one _
   have hlow := (abs_le.mp habs).1
-  dsimp [cosineTilt]
-  nlinarith
+  dsimp only [cosineTilt]
+  nlinarith only [hlow]
 
 theorem cosineTilt_stress_positive (p₁ p₂ m amplitude : ℝ)
     (hmargin : 2 + |p₂ * amplitude| < p₁ + p₂ * m) :
     ∀ θ, 2 < p₁ + p₂ * cosineTilt m amplitude θ := by
   intro θ
   have hbound := cosineTilt_projection_bound p₁ p₂ m amplitude θ
-  linarith
+  linarith only [hmargin, hbound]
 
 /-- Sufficient projection margin for the explicit prescribed-variance loop.
 The margin is an additional hypothesis, not a consequence of `P>2`. -/
@@ -522,7 +527,7 @@ theorem angular_energy_moment (t : ℝ → ℝ) (a m ρ : ℝ) (ha : a ≠ 0)
     (hvar : angularMean (fun θ => (t θ - m) ^ 2) = ρ / a) :
     a * angularMean (fun θ => 1 + t θ ^ 2) = a * (1 + m ^ 2) + ρ := by
   have hv := angular_variance_identity t m ht hmean
-  have hsecond : angularMean (fun θ => t θ ^ 2) = m ^ 2 + ρ / a := by linarith
+  have hsecond : angularMean (fun θ => t θ ^ 2) = m ^ 2 + ρ / a := by linarith only [hvar, hv]
   rw [angularMean_add _ _ continuous_const (ht.fun_pow 2), angularMean_const, hsecond]
   field_simp; ring
 
@@ -600,7 +605,7 @@ theorem normalizedExp_second_moment (s : ℝ) :
   have heq : (fun θ => normalizedExp s θ ^ 2) =
       (fun θ => Real.exp ((2 * s) * Real.cos θ) / expNormalizer s ^ 2) := by
     funext θ
-    dsimp [normalizedExp]
+    dsimp only [normalizedExp]
     rw [div_pow, show (2 * s) * Real.cos θ = s * Real.cos θ + s * Real.cos θ by ring,
       Real.exp_add, pow_two]
   rw [heq, angularMean_div_const]
@@ -641,7 +646,7 @@ theorem expTilt_variance (m d μ p : ℝ) :
   have heq : (fun θ => (expTilt m d μ p θ - m) ^ 2) =
       fun θ => (d / p) ^ 2 * (normalizedExp (μ * p) θ - 1) ^ 2 := by
     funext θ
-    dsimp [expTilt]
+    dsimp only [expTilt]
     ring
   rw [heq, angularMean_const_mul, normalizedExp_variance]
 
@@ -682,7 +687,7 @@ theorem extendedExpTilt_mean (m d μ p : ℝ) :
 
 theorem extendedExpTilt_variance_zero (m d μ : ℝ) :
     angularMean (fun θ => (extendedExpTilt m d μ 0 θ - m) ^ 2) = d ^ 2 * μ ^ 2 / 2 := by
-  simp [extendedExpTilt, cosineTilt_variance, mul_pow]
+  simp only [extendedExpTilt, ↓reduceIte, cosineTilt_variance, mul_pow]
 
 theorem extendedExpTilt_projection_positive (p₁ p₂ m d μ : ℝ)
     (hd : 0 < d) (hmargin : 2 ≤ p₁ + p₂ * m - d) :
@@ -691,7 +696,7 @@ theorem extendedExpTilt_projection_positive (p₁ p₂ m d μ : ℝ)
   by_cases hp : p₂ = 0
   · simp only [hp, zero_mul, add_zero]
       at hmargin ⊢
-    linarith
+    linarith only [hd, hmargin]
   · simp only [extendedExpTilt, ite_eq_right hp]
     exact lt_of_le_of_lt hmargin (expTilt_projection_lower p₁ p₂ m d μ hp hd θ)
 
@@ -726,7 +731,8 @@ theorem phaseMap_contDiff (d : CircleDensity) : ContDiff ℝ (∞ : WithTop ℕ�
 theorem phaseMap_strictMono (d : CircleDensity) : StrictMono (phaseMap d) :=
   strictMono_of_hasDerivAt_pos (phaseMap_hasDerivAt d) d.positive
 
-theorem phaseMap_zero (d : CircleDensity) : phaseMap d 0 = 0 := by simp [phaseMap]
+theorem phaseMap_zero (d : CircleDensity) : phaseMap d 0 = 0 := by simp only [phaseMap,
+    intervalIntegral.integral_same]
 
 theorem phaseMap_fullTurn (d : CircleDensity) : phaseMap d (2 * Real.pi) = 1 := d.integral_one
 
@@ -749,13 +755,13 @@ theorem phaseMap_surjective (d : CircleDensity) : Function.Surjective (phaseMap 
   have hy : -(n : ℝ) ≤ y ∧ y ≤ (n : ℝ) := by
     have h₁ := neg_abs_le y
     have h₂ := le_abs_self y
-    constructor <;> linarith
+    constructor <;> linarith only [hn, h₁, h₂]
   have hlo : phaseMap d (-(n : ℝ) * (2 * Real.pi)) = -(n : ℝ) := by
     simpa only [Int.cast_neg, Int.cast_natCast] using phaseMap_int_fullTurn d (-(n : ℤ))
   have hhi : phaseMap d ((n : ℝ) * (2 * Real.pi)) = (n : ℝ) := by
     simpa only [Int.cast_natCast] using phaseMap_int_fullTurn d (n : ℤ)
   have hab : -(n : ℝ) * (2 * Real.pi) ≤ (n : ℝ) * (2 * Real.pi) :=
-    mul_le_mul_of_nonneg_right (by linarith) (le_of_lt period_pos)
+    mul_le_mul_of_nonneg_right (by linarith only) (le_of_lt period_pos)
   have hmem : y ∈ Set.Icc (phaseMap d (-(n : ℝ) * (2 * Real.pi)))
       (phaseMap d ((n : ℝ) * (2 * Real.pi))) := by
     simpa only [hlo, hhi, Set.mem_Icc] using hy
@@ -796,7 +802,7 @@ theorem rephase_contDiff (d : CircleDensity) (f : ℝ → ℝ)
 theorem rephase_periodic (d : CircleDensity) (f : ℝ → ℝ)
     (hf : Function.Periodic f (2 * Real.pi)) : Function.Periodic (rephase d f) 1 := by
   intro φ
-  dsimp [rephase]
+  dsimp only [rephase]
   rw [phaseInverse_add_one]
   exact hf _
 
@@ -873,7 +879,7 @@ theorem exists_rephased_shear_loop (t : ℝ → ℝ) (a m ρ v : ℝ)
     rw [intervalIntegral.integral_div]
     exact hmom.2.2
   · intro φ
-    dsimp [rephase, fA, fC]
+    dsimp only [rephase, fA, fC]
     refine ⟨loopA_pos _ _ hv, ?_⟩
     rw [loop_slope _ _ (ne_of_gt hv), loop_speed]
 
@@ -915,14 +921,14 @@ theorem exists_prescribed_mean_shear_loop (a b ρ : ℝ) (ha : 0 < a) (hρ : 0 �
   have hV : 0 ≤ ρ / a := div_nonneg hρ (le_of_lt ha)
   obtain ⟨t, hts, htp, htm, htv⟩ := exists_cosine_moments m (ρ / a) hV
   have hv : 0 < v := by
-    dsimp [v]
+    dsimp only [v]
     exact add_pos_of_pos_of_nonneg
       (mul_pos ha (LoopMoments.one_add_sq_pos m)) hρ
   obtain ⟨A, C, hA, hC, hpA, hpC, hmA, hmC, hs⟩ :=
     exists_rephased_shear_loop t a m ρ v ha hv hts htp htm htv rfl
   refine ⟨A, C, hA, hC, hpA, hpC, hmA, ?_, hs⟩
   rw [hmC]
-  dsimp [m]
+  dsimp only [m]
   field_simp
 
 theorem rephase_const (d : CircleDensity) (c : ℝ) :
@@ -934,7 +940,7 @@ independently of the phase parametrization. -/
 theorem zero_amplitude_is_nominal (d : CircleDensity) (a m : ℝ) :
     rephase d (fun θ => loopA (a * (1 + m ^ 2)) (cosineTilt m 0 θ)) = (fun _ => a) ∧
     rephase d (fun θ => loopC (a * (1 + m ^ 2)) (cosineTilt m 0 θ)) = (fun _ => a * m) := by
-  constructor <;> funext φ <;> dsimp [rephase, loopA, loopC, cosineTilt]
+  constructor <;> funext φ <;> dsimp only [cosineTilt, loopA, rephase, loopC]
   · have hnz := ne_of_gt (LoopMoments.one_add_sq_pos m)
     simp only [zero_mul, add_zero]
     exact mul_div_cancel_right₀ a hnz

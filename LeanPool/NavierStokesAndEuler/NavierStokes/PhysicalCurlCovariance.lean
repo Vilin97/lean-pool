@@ -42,7 +42,8 @@ noncomputable def realVector (a : ComplexVector) : Space :=
 
 @[simp] theorem realVector_apply (a : ComplexVector) (i : Fin 3) :
     realVector a i = (a i).re := by
-  fin_cases i <;> simp [realVector]
+  fin_cases i <;> simp only [Fin.zero_eta, Fin.isValue, realVector, AxisymmetricResidual.pack_zero,
+      Fin.mk_one, AxisymmetricResidual.pack_one, Fin.reduceFinMk, AxisymmetricResidual.pack_two]
 
 /-- Real curl as an element of `Fin 3 → ℝ`. -/
 noncomputable def realCurl (R : E → ℝ) (Vr Vθ Vz : E → E)
@@ -61,7 +62,11 @@ theorem real_cylindricalCurl (R : E → ℝ) (Vr Vθ Vz : E → E)
       along V (fun y => (a y j).re) x = (along V (fun y => a y j) x).re :=
     LinearWaveResidual.along_map Complex.reCLM V (ha j)
   fin_cases i <;>
-    simp [CurlClassBounds.cylindricalCurl, realCurl, hD, Complex.real_smul]
+    simp only [CurlClassBounds.cylindricalCurl, Fin.isValue, Complex.real_smul, Complex.ofReal_inv,
+        Fin.zero_eta, Matrix.cons_val_zero, Complex.sub_re, Complex.mul_re, Complex.inv_re,
+        Complex.ofReal_re, Complex.normSq_ofReal, div_self_mul_self', Complex.inv_im,
+        Complex.ofReal_im, neg_zero, zero_div, zero_mul, sub_zero, realCurl, hD, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val, Complex.add_re]
 
 /-- Curl, like its underlying alternating tensor, rotates with an oriented
 orthonormal cylindrical frame. -/
@@ -71,8 +76,14 @@ theorem curlLinear_rotation (L : Space →L[ℝ] Space) (θ : ℝ) :
         (L.comp (CylindricalResidual.frame θ))) := by
   ext i
   fin_cases i <;>
-    simp [CylindricalResidual.frame_apply, AxisymmetricResidual.pack,
-      coordinateVector]
+    simp only [CylindricalResidual.frame_apply, AxisymmetricResidual.pack, Fin.isValue,
+      Real.cos_neg, Real.sin_neg, coordinateVector, SpatialCurl.curlLinear_apply_zero,
+      SpatialCurl.curlLinear_apply_one, SpatialCurl.curlLinear_apply_two, neg_mul, sub_neg_eq_add,
+      Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, PiLp.add_apply, PiLp.smul_apply, PiLp.neg_apply,
+      PiLp.single_eq_same, PiLp.single_eq_of_ne, smul_eq_mul, mul_one, mul_zero, add_zero,
+      zero_add, ne_eq, zero_ne_one, one_ne_zero, not_false_eq_true, Fin.reduceEq,
+      ContinuousLinearMap.comp_apply, zero_sub, sub_zero, sub_self, neg_smul, zero_smul, one_smul,
+      ContinuousLinearMap.map_add, ContinuousLinearMap.map_neg, ContinuousLinearMap.map_smul]
   · ring
   · ring
   · linear_combination
@@ -99,23 +110,33 @@ theorem cartesianCurl_components {a : Space → Space} {q : Space}
     simp only [ContinuousLinearMap.comp_apply]
     rw [CylindricalResidual.cartesianDerivative_components ha hr,
       CylindricalResidual.cartesianDerivative_components ha hr]
-    simp [cylindricalSpatialCurl, coordinateVector,
-      CylindricalResidual.connection_apply, div_eq_mul_inv]
+    simp only [Fin.isValue, coordinateVector, ne_eq, zero_ne_one, not_false_eq_true,
+        PiLp.single_eq_of_ne, zero_smul, PiLp.single_eq_same, div_eq_mul_inv, one_mul,
+        CylindricalResidual.connection_apply, smul_add, zero_add, Fin.reduceEq, add_zero,
+        PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, AxisymmetricResidual.pack_two, mul_zero,
+        zero_mul, one_smul, cylindricalSpatialCurl, Fin.zero_eta, AxisymmetricResidual.pack_zero,
+        sub_left_inj]
     ring
   · change SpatialCurl.curlLinear _ 1 = _
     rw [SpatialCurl.curlLinear_apply_one]
     simp only [ContinuousLinearMap.comp_apply]
     rw [CylindricalResidual.cartesianDerivative_components ha hr,
       CylindricalResidual.cartesianDerivative_components ha hr]
-    simp [cylindricalSpatialCurl, coordinateVector,
-      CylindricalResidual.connection_apply, div_eq_mul_inv]
+    simp only [Fin.isValue, coordinateVector, ne_eq, Fin.reduceEq, not_false_eq_true,
+        PiLp.single_eq_of_ne, zero_smul, div_eq_mul_inv, zero_mul,
+        CylindricalResidual.connection_apply, smul_add, add_zero, PiLp.single_eq_same, one_smul,
+        zero_add, one_ne_zero, cylindricalSpatialCurl, Fin.mk_one, AxisymmetricResidual.pack_one]
   · change SpatialCurl.curlLinear _ 2 = _
     rw [SpatialCurl.curlLinear_apply_two]
     simp only [ContinuousLinearMap.comp_apply]
     rw [CylindricalResidual.cartesianDerivative_components ha hr,
       CylindricalResidual.cartesianDerivative_components ha hr]
-    simp [cylindricalSpatialCurl, coordinateVector,
-      CylindricalResidual.connection_apply, div_eq_mul_inv]
+    simp only [Fin.isValue, coordinateVector, PiLp.single_eq_same, one_smul, ne_eq, one_ne_zero,
+        not_false_eq_true, PiLp.single_eq_of_ne, div_eq_mul_inv, zero_mul,
+        CylindricalResidual.connection_apply, smul_add, zero_smul, add_zero, Fin.reduceEq,
+        zero_ne_one, one_mul, zero_add, PiLp.add_apply, PiLp.smul_apply, smul_eq_mul,
+        AxisymmetricResidual.pack_zero, mul_neg, cylindricalSpatialCurl, Fin.reduceFinMk,
+        AxisymmetricResidual.pack_two]
     ring
 
 theorem along_complex_pull {Γ : E → F} {V : E → E} {W : F → F}
@@ -141,7 +162,7 @@ theorem cylindricalCurl_pull {Γ : E → F} {R : F → ℝ} {r : E → ℝ}
     (c : ℂ) :
     CurlClassBounds.cylindricalCurl r Sr Sθ Sz (fun y => c • a (Γ y)) x =
       (c * (l : ℂ)) • CurlClassBounds.cylindricalCurl R Vr Vθ Vz a (Γ x) := by
-  have hθ : fderiv ℝ Γ x (Sθ x) = (1 : ℝ) • Vθ (Γ x) := by simpa using hDθ
+  have hθ : fderiv ℝ Γ x (Sθ x) = (1 : ℝ) • Vθ (Γ x) := by simpa only [one_smul] using hDθ
   have h1 i := along_complex_pull c l hΓ (ha i) hDr
   have h2 i := along_complex_pull c 1 hΓ (ha i) hθ
   have h3 i := along_complex_pull c l hΓ (ha i) hDz
@@ -164,12 +185,14 @@ theorem phaseNormal_pull {Γ : E → F} {R : F → ℝ} {r : E → ℝ}
     {Φ : F → ℝ} (hΦ : DifferentiableAt ℝ Φ (Γ x)) (b : ℝ) :
     phaseNormal r Sr Sθ Sz (fun y => b * Φ (Γ y)) x =
       (b * l) • phaseNormal R Vr Vθ Vz Φ (Γ x) := by
-  have hθ : fderiv ℝ Γ x (Sθ x) = (1 : ℝ) • Vθ (Γ x) := by simpa using hDθ
+  have hθ : fderiv ℝ Γ x (Sθ x) = (1 : ℝ) • Vθ (Γ x) := by simpa only [one_smul] using hDθ
   have h1 := PhysicalResidualBridge.along_scaled_pull b l hΓ hΦ hDr
   have h2 := PhysicalResidualBridge.along_scaled_pull b 1 hΓ hΦ hθ
   have h3 := PhysicalResidualBridge.along_scaled_pull b l hΓ hΦ hDz
   ext i
-  fin_cases i <;> simp [phaseNormal, h1, h2, h3, hR, smul_eq_mul]
+  fin_cases i <;> simp only [phaseNormal, h1, h2, mul_one, h3, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val_zero, hR, PiLp.smul_apply, smul_eq_mul, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val]
   field_simp [hl, hr]
 
 theorem normalCoefficient_scale (n : Space) (a : ComplexVector) {s : ℝ}
@@ -178,7 +201,7 @@ theorem normalCoefficient_scale (n : Space) (a : ComplexVector) {s : ℝ}
       (c / s) • CurlClassBounds.normalCoefficient n a := by
   have hc : CurlClassBounds.normalCross (s • n) (c • a) =
       (s * c) • CurlClassBounds.normalCross n a := by
-    simp [CurlClassBounds.normalCross, map_smul, smul_smul, mul_comm]
+    simp only [CurlClassBounds.normalCross, map_smul, smul_apply, smul_smul, mul_comm]
   rw [CurlClassBounds.normalCoefficient, hc, norm_smul, Real.norm_eq_abs, mul_pow,
     sq_abs, smul_smul, CurlClassBounds.normalCoefficient, smul_smul]
   congr 1
@@ -245,8 +268,11 @@ theorem realCurl_eq_cylindrical {a : VelocityField} {t : ℝ} {q : Space}
     rw [LinearWaveResidual.along_space_slice hj]
     exact CylindricalResidual.dCoord_map (AxisymmetricFields.projection j) hs k
   fin_cases i <;>
-    simp [realCurl, cylindricalSpatialCurl, LinearWaveResidual.coordinateRadius,
-      hfirst, div_eq_mul_inv] <;> ring
+    simp only [realCurl, LinearWaveResidual.coordinateRadius, Fin.isValue, hfirst, Fin.zero_eta,
+        Matrix.cons_val_zero, cylindricalSpatialCurl, div_eq_mul_inv,
+        AxisymmetricResidual.pack_zero, sub_left_inj, Fin.mk_one, Matrix.cons_val_one,
+        AxisymmetricResidual.pack_one, Fin.reduceFinMk, Matrix.cons_val,
+        AxisymmetricResidual.pack_two] <;> ring
 
 theorem cylindricalSpatialCurl_congr {a b : Space → Space} {q : Space}
     (hab : a =ᶠ[𝓝 q] b) : cylindricalSpatialCurl a q = cylindricalSpatialCurl b q := by
@@ -299,7 +325,8 @@ theorem complexPotential_differentiableAt (G : ScaledGraph) {z : SpaceTime}
     (hr : G.radialScale * z.2 0 ≠ 0) {B : Cylinder → ComplexVector}
     (hB : ∀ i, DifferentiableAt ℝ (fun y => B y i) (G.map z)) (c : ℝ) (i : Fin 3) :
     DifferentiableAt ℝ (fun y => complexPotential G c B y i) z :=
-  ((hB i).comp z ((G.map_smoothAt hr).differentiableAt (by simp))).const_mul (c : ℂ)
+  ((hB i).comp z ((G.map_smoothAt hr).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero))).const_mul (c : ℂ)
 
 theorem physical_curl (G : ScaledGraph) (hl : 0 < G.radialScale)
     {B : Cylinder → ComplexVector} {t : ℝ} {q : Space} (hr : 0 < q 0)
@@ -321,9 +348,11 @@ theorem physical_curl (G : ScaledGraph) (hl : 0 < G.radialScale)
     (R := PhysicalResidualBridge.ScaledGraph.radius) (x := (t, q))
     (Sr := LinearWaveResidual.spaceDirection 0) (Sθ := LinearWaveResidual.spaceDirection 1)
     (Sz := LinearWaveResidual.spaceDirection 2) hl.ne' hr.ne'
-    ((G.map_smoothAt hr').differentiableAt (by simp)) (G.map_radial hr')
+    ((G.map_smoothAt hr').differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (G.map_radial hr')
     (G.map_angular hr') (G.map_axial hr') rfl hB (c : ℂ)]
-  simp [smul_eq_mul, Complex.mul_re]
+  simp only [Pi.smul_apply, smul_eq_mul, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
+      mul_zero, sub_zero, Complex.mul_im, zero_mul, add_zero]
 
 end ScaledGraph
 
@@ -341,7 +370,8 @@ theorem along_reindex (e : E ≃L[ℝ] F) (V : F → F) {W : Type*}
   dsimp only [Function.comp_def] at hd
   unfold along reindexVector
   rw [hd.fderiv]
-  simp
+  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+      ContinuousLinearEquiv.apply_symm_apply]
 
 theorem cylindricalCurl_reindex (e : E ≃L[ℝ] F) (R : F → ℝ) (Vr Vθ Vz : F → F)
     {B : F → ComplexVector} {x : E} (hB : ∀ i, DifferentiableAt ℝ (fun y => B y i) (e x)) :
@@ -379,8 +409,12 @@ theorem cylindricalCurl_cutoff (R : E → ℝ) (Vr Vθ Vz : E → E)
     simpa only [Complex.real_smul] using hD V j
   ext i
   fin_cases i <;>
-    simp [CurlClassBounds.cylindricalCurl, Pi.smul_apply, hD', phaseNormal,
-      Complex.real_smul, div_eq_mul_inv] <;> ring
+    simp only [CurlClassBounds.cylindricalCurl, Fin.isValue, Pi.smul_apply, Complex.real_smul, hD',
+        smul_add, Complex.ofReal_inv, Fin.zero_eta, Matrix.cons_val_zero, Matrix.smul_cons,
+        Matrix.smul_empty, phaseNormal, div_eq_mul_inv, Pi.add_apply,
+        CurlClassBounds.normalCross_zero, Matrix.cons_val_one, Complex.ofReal_mul, Matrix.cons_val,
+        Fin.mk_one, CurlClassBounds.normalCross_one, Fin.reduceFinMk,
+        CurlClassBounds.normalCross_two] <;> ring
 
 theorem vectorPotential_cutoff (K : ℝ) (R : E → ℝ) (Vr Vθ Vz : E → E)
     (Φ : E → ℝ) (a : E → ComplexVector) (χ : E → ℝ) (x : E) :
@@ -427,7 +461,8 @@ theorem radialCurve_smoothAt (G : ScaledGraph) {r : ℝ} (hr : r ≠ 0) :
 theorem radial_aux_derivative (G : ScaledGraph) {x : Cylinder} (hx : x.1.1 ≠ 0)
     (v : Cylinder) (hv : v.1.1 = 0) : fderiv ℝ G.radial x v = 0 := by
   change fderiv ℝ (radialCurve G ∘ radiusCLM) x v = 0
-  rw [fderiv_comp x ((G.radialCurve_smoothAt hx).differentiableAt (by simp))
+  rw [fderiv_comp x ((G.radialCurve_smoothAt hx).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
     radiusCLM.differentiableAt, ContinuousLinearMap.fderiv]
   change fderiv ℝ (radialCurve G) x.1.1 v.1.1 = 0
   rw [hv, map_zero]
@@ -523,7 +558,8 @@ theorem commonGraph_vectorPotential_pull {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : �
     (R := PhysicalResidualBridge.ScaledGraph.radius) (x := x)
     (Sr := LinearWaveResidual.spaceDirection 0) (Sθ := LinearWaveResidual.spaceDirection 1)
     (Sz := LinearWaveResidual.spaceDirection 2) hl.ne' hr.ne' hK (div_ne_zero hL hK) hKL
-    ((G.map_smoothAt hr').differentiableAt (by simp)) (G.map_radial hr') (G.map_angular hr')
+    ((G.map_smoothAt hr').differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (G.map_radial hr') (G.map_angular hr')
     (G.map_axial hr') rfl hΦ a G.velocityScale
   rw [commonGraph_potentialScale hQ] at he
   exact he
@@ -576,7 +612,7 @@ theorem referencePotential_eq_on {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : ℕ)
     (b := fun y => Q ^ (-CoordinateAlgebra.A h) • a ((commonGraph Q h k).map y)) he (hamplitude z
         hz)]
   exact commonGraph_vectorPotential_pull hQ h k hK hL hz.1
-    ((hΦ.contDiffAt (hU.mem_nhds hz.2)).differentiableAt (by simp)) a
+    ((hΦ.contDiffAt (hU.mem_nhds hz.2)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) a
 
 /-- One Cartesian reference potential supplies every compatible band's
 actual corrected wave. Amplitude and phase compatibility are primitive
@@ -613,7 +649,8 @@ theorem reference_correctedWave {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : ℕ)
   have hgeom := ScaledGraph.geometry G hU hR
   have hBs := CurlClassBounds.vectorPotential_contDiffOn hgeom L hΦ ha hn
   have hB i : DifferentiableAt ℝ (fun y => B y i) (G.map (t, q)) :=
-    (((contDiffOn_pi.mp hBs) i).contDiffAt (hU.mem_nhds hz.2)).differentiableAt (by simp)
+    (((contDiffOn_pi.mp hBs) i).contDiffAt (hU.mem_nhds hz.2)).differentiableAt (by simp only [
+        ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   have he := referencePotential_eq_on hQ h k hU hK hL hΦ a Ψ v hphase hamplitude
   have hre : (fun z : SpaceTime => A (z.1, CylindricalResidual.chart z.2)) =ᶠ[𝓝 (t, q)]
       (fun z => CylindricalResidual.frame (z.2 1) (ScaledGraph.realPotential G (Q ^ (-h)) B z)) :=
@@ -652,7 +689,7 @@ theorem corrected_is_curl (a : LinearWaveBounds.WaveCoefficients E)
     intro y hy
     have he : normalDot (a.normal s d n y) (ψ n y • a.amplitude n y) =
         (ψ n y : ℂ) * normalDot (a.normal s d n y) (a.amplitude n y) := by
-      simp [normalDot, Complex.real_smul]
+      simp only [normalDot, Fin.isValue, Pi.smul_apply, Complex.real_smul]
       ring
     rw [he, ht y hy, mul_zero]
   exact CurlClassBounds.cylindricalCurl_vectorPotential G hK hΦ (hψ.smul ha) hn hcut hx
@@ -663,7 +700,7 @@ theorem spatialCurl_zero_of_zero_near {A : VelocityField} {z : SpaceTime}
     hA.comp_tendsto (continuous_const.prodMk continuous_id).continuousAt
   change SpatialCurl.curl (fun y => A (z.1, y)) z.2 = 0
   rw [SpatialCurl.curl_eq_of_eventuallyEq hs]
-  simp [SpatialCurl.curl]
+  simp only [SpatialCurl.curl, fderiv_fun_const, Pi.zero_apply, map_zero]
 
 /-- Annularly localized potentials have zero actual curl on the axis,
 without assigning a cylindrical angle there. -/
@@ -674,13 +711,14 @@ theorem spatialCurl_axis_zero (A : VelocityField) (t : ℝ) (x : Space)
   have hc : Continuous (fun y : Space => (y 0) ^ 2 + (y 1) ^ 2) :=
     ((AxisymmetricFields.projection 0).continuous.pow 2).add
       ((AxisymmetricFields.projection 1).continuous.pow 2)
-  have hx : (x 0) ^ 2 + (x 1) ^ 2 < r ^ 2 := by simp [hx₀, hx₁, sq_pos_of_pos hr]
+  have hx : (x 0) ^ 2 + (x 1) ^ 2 < r ^ 2 := by simp only [Fin.isValue, hx₀, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, hx₁, add_zero, sq_pos_of_pos hr]
   have hn : {y : Space | (y 0) ^ 2 + (y 1) ^ 2 < r ^ 2} ∈ 𝓝 x :=
     (isOpen_lt hc continuous_const).mem_nhds hx
   have he : (fun y => A (t, y)) =ᶠ[𝓝 x] fun _ => 0 := eventually_of_mem hn hA
   change SpatialCurl.curl (fun y => A (t, y)) x = 0
   rw [SpatialCurl.curl_eq_of_eventuallyEq he]
-  simp [SpatialCurl.curl]
+  simp only [SpatialCurl.curl, fderiv_fun_const, Pi.zero_apply, map_zero]
 
 /-! ## A concrete Cartesian potential in an actual inverse polar chart -/
 
@@ -747,7 +785,8 @@ theorem polarInput_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) {z : S
     polarInput a j (z.1, CylindricalResidual.chart z.2) = (z.2 0, z.2 1) := by
   have he : PhysicalGraphBounds.radialProjection (z.1, CylindricalResidual.chart z.2) =
       PolarCharts.polar (z.2 0, z.2 1) := by
-    simp [PhysicalGraphBounds.radialProjection_apply, CylindricalResidual.chart, PolarCharts.polar]
+    simp only [CylindricalResidual.chart, Fin.isValue, PhysicalGraphBounds.radialProjection_apply,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, PolarCharts.polar]
   unfold polarInput
   rw [he]
   exact PolarCharts.chart_polar ha j hz.1 hz.2.1 hz.2.2
@@ -760,7 +799,9 @@ theorem polarCoordinates_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index) 
   apply Prod.ext
   · rfl
   · ext i
-    fin_cases i <;> simp [CylindricalResidual.chart]
+    fin_cases i <;> simp only [Fin.isValue, CylindricalResidual.chart,
+        AxisymmetricResidual.pack_two, Fin.zero_eta, AxisymmetricResidual.pack_zero, Fin.mk_one,
+        AxisymmetricResidual.pack_one, Fin.reduceFinMk]
 
 theorem cartesianPotential_forward {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     (B : SpaceTime → ComplexVector) {z : SpaceTime} (hz : z ∈ validCylindrical a j) :
@@ -789,7 +830,7 @@ theorem cartesianPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
   have hBc : ContDiffAt ℝ ∞ B (polarCoordinates a j (z.1, CylindricalResidual.chart z.2)) := by
     rw [polarCoordinates_forward ha j hz]
     exact hB
-  have hd : DifferentiableAt ℝ B z := hB.differentiableAt (by simp)
+  have hd : DifferentiableAt ℝ B z := hB.differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hdi k : DifferentiableAt ℝ (fun w => B w k) z := (differentiableAt_pi.mp hd) k
   rw [curl_of_representation ((cartesianPotential_smoothAt ha j hBc).differentiableAt (by simp))
     (realVector_differentiableAt hdi) hz.1.ne' (cartesianPotential_forward_germ ha j B hz)]
@@ -798,7 +839,9 @@ theorem cartesianPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
 theorem frame_periodic : Periodic CylindricalResidual.frame (2 * Real.pi) := by
   intro θ
   ext v i
-  fin_cases i <;> simp [CylindricalResidual.frame_apply]
+  fin_cases i <;> simp only [CylindricalResidual.frame_apply, Fin.isValue, Real.cos_add_two_pi,
+      Real.sin_add_two_pi, Fin.zero_eta, AxisymmetricResidual.pack_zero, Fin.mk_one,
+      AxisymmetricResidual.pack_one, Fin.reduceFinMk, AxisymmetricResidual.pack_two]
 
 /-- Periodicity of the full cylindrical potential gives equality of the
 constructed Cartesian potentials on chart overlaps. -/
@@ -898,7 +941,8 @@ theorem globalCartesianPotential_zero {a : ℝ} (ha : 0 < a)
     change cartesianPotential a j B x = 0
     unfold cartesianPotential
     rw [hzero _ hz]
-    simp [realVector, AxisymmetricResidual.pack]
+    simp only [realVector, AxisymmetricResidual.pack, Pi.zero_apply, Complex.zero_re, Fin.isValue,
+        zero_smul, add_zero, map_zero]
   · rfl
 
 /-- Annular vanishing removes the boundary of the selected-chart union;
@@ -1006,7 +1050,7 @@ theorem cartesianVelocity_smoothOn {a : ℝ} (ha : 0 < a)
     (hzero : ∀ z : SpaceTime, z.2 0 ≤ a → B z = 0) :
     ContDiffOn ℝ ∞ (cartesianVelocity a B) (times ×ˢ (univ : Set Space)) :=
   SpatialCurl.contDiffOn_spatialCurl (globalCartesianPotential_smoothOn ha hTimes hB hper hzero)
-    (by simp)
+    (by simp only [ENat.coe_top_add_one, Std.le_refl])
 
 theorem cartesianVelocity_divergence {a : ℝ} (ha : 0 < a)
     {times : Set ℝ} (hTimes : IsOpen times) {B : SpaceTime → ComplexVector}
@@ -1026,7 +1070,8 @@ theorem cartesianVelocity_axis_zero {a : ℝ} (ha : 0 < a)
     cartesianVelocity a B (t, x) = 0 := by
   apply spatialCurl_zero_of_zero_near
   apply globalCartesianPotential_zero_germ ha hzero
-  simpa [PolarCharts.radius, PhysicalGraphBounds.radialProjection_apply, hx₀, hx₁] using ha
+  simpa only [PolarCharts.radius, PhysicalGraphBounds.radialProjection_apply, Fin.isValue, hx₀, hx₁,
+      ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, add_zero, Real.sqrt_zero] using ha
 
 theorem globalCartesianPotential_curl {a : ℝ} (ha : 0 < a) (j : PolarCharts.Index)
     {B : SpaceTime → ComplexVector}

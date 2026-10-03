@@ -36,7 +36,7 @@ theorem sourceBound_scaling {B0 B1 A0 A2 residual E DE δ : ℝ}
       sourceBound period B0 B1 A0 A2 1 E DE*δ := by
   have hP := productConstant_nonneg period 3
   have hquad : 0 ≤ productConstant period 3*E*DE + A2*productConstant period 3*E^2 := by positivity
-  have hsq : δ^2 ≤ δ := by nlinarith
+  have hsq : δ^2 ≤ δ := by nlinarith only [hδ, hδ1]
   have hm := mul_le_mul_of_nonneg_left hsq hquad
   unfold sourceBound
   nlinarith only [hr, hm]

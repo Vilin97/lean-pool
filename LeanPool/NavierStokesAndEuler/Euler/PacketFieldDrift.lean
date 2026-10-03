@@ -59,13 +59,15 @@ theorem spatialVelocityMap_norm : ‖spatialVelocityMap‖ ≤ 3 := by
       exact ((coordinate 3 i).le_opNorm z).trans
         ((mul_le_mul_of_nonneg_right (coordinate_norm_le 3 i) (norm_nonneg z)).trans_eq
           (one_mul _))
-    _ = 3*‖z‖ := by simp
+    _ = 3*‖z‖ := by simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+        Nat.cast_ofNat]
 
 theorem normalVelocityMap_norm : ‖normalVelocityMap‖ ≤ 1 := by
   calc
     ‖normalVelocityMap‖ ≤ ‖toSpanSingleton ℝ (EuclideanSpace.single (0 : Fin 4) (1 : ℝ))‖*
         ‖scalarProject‖ := opNorm_comp_le _ _
-    _ = 1 := by simp [norm_toSpanSingleton,scalarProject_norm]
+    _ = 1 := by simp only [Fin.isValue, norm_toSpanSingleton, PiLp.norm_single, norm_one,
+        scalarProject_norm, mul_one]
 
 theorem velocityMap_split (κ : ℝ) (m : Space) :
     velocityMap (velocityComponents κ m) =
@@ -74,41 +76,33 @@ theorem velocityMap_split (κ : ℝ) (m : Space) :
   intro v
   ext i
   refine Fin.cases ?_ (fun j => ?_) i
-  · simp [velocityMap_apply,velocityComponents,spatialVelocityMap,normalVelocityMap,
-      toSpanSingleton_apply]
-  · simp [velocityMap_apply,velocityComponents,spatialVelocityMap,normalVelocityMap,
-      toSpanSingleton_apply]
+  · simp only [velocityComponents, Fin.isValue, velocityMap_apply, Fin.cons_zero, coe_innerSL_apply,
+      spatialVelocityMap, normalVelocityMap, add_apply, smul_apply, comp_apply,
+      normalComponentMap_apply, project_embed, toSpanSingleton_apply, PiLp.add_apply,
+      PiLp.smul_apply, zero_apply, smul_eq_mul, mul_zero, PiLp.single_eq_same, mul_one, zero_add]
+  · simp only [velocityComponents, velocityMap_apply, Fin.cons_succ, smul_apply, smul_eq_mul,
+      spatialVelocityMap, normalVelocityMap, Fin.isValue, add_apply, comp_apply,
+      normalComponentMap_apply, project_embed, toSpanSingleton_apply, PiLp.add_apply,
+      PiLp.smul_apply, ne_eq, Fin.succ_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero,
+      add_zero]
 
 variable (P : ℝ) [Fact (0 < P)]
 
 theorem velocityMap_L2_bound (κ : ℝ) (m : Space) (u : LiftL2 P) :
     ‖(velocityMap (velocityComponents κ m)).compLpL 2 (liftMeasure P) u‖ ≤
       3 * |κ| * ‖u‖ + ‖(normalComponentMap m).compLpL 2 (liftMeasure P) u‖ := by
-  rw [velocityMap_split,add_compLpL,smul_compLpL,add_apply,smul_apply]
-  have he : (normalVelocityMap.comp (normalComponentMap m)).compLpL 2 (liftMeasure P) u =
-      normalVelocityMap.compLpL 2 (liftMeasure P)
-        ((normalComponentMap m).compLpL 2 (liftMeasure P) u) := by
-    exact congrArg (fun L => L u) (map_comp P normalVelocityMap (normalComponentMap m))
-  rw [he]
-  calc
-    _ ≤ |κ| * ‖spatialVelocityMap.compLpL 2 (liftMeasure P) u‖ +
-        ‖normalVelocityMap.compLpL 2 (liftMeasure P)
-          ((normalComponentMap m).compLpL 2 (liftMeasure P) u)‖ := by
-      simpa only [norm_smul,Real.norm_eq_abs] using norm_add_le
-        (κ • spatialVelocityMap.compLpL 2 (liftMeasure P) u)
-        (normalVelocityMap.compLpL 2 (liftMeasure P)
-          ((normalComponentMap m).compLpL 2 (liftMeasure P) u))
-    _ ≤ |κ| * (3*‖u‖) + 1*‖(normalComponentMap m).compLpL 2 (liftMeasure P) u‖ := by
-      apply add_le_add
-      · exact mul_le_mul_of_nonneg_left
-          (((spatialVelocityMap.compLpL 2 (liftMeasure P)).le_opNorm u).trans
-            (mul_le_mul_of_nonneg_right
-              (spatialVelocityMap.norm_compLpL_le.trans spatialVelocityMap_norm) (norm_nonneg u)))
-          (abs_nonneg κ)
-      · exact ((normalVelocityMap.compLpL 2 (liftMeasure P)).le_opNorm _).trans
-          (mul_le_mul_of_nonneg_right
-            (normalVelocityMap.norm_compLpL_le.trans normalVelocityMap_norm) (norm_nonneg _))
-    _ = _ := by ring
+  have hc := congrArg (fun L => L u) (map_comp P normalVelocityMap (normalComponentMap m))
+  simp only [velocityMap_split, add_compLpL, smul_compLpL, add_apply, smul_apply]
+  refine (norm_add_le _ _).trans (add_le_add ?_ ?_)
+  · rw [norm_smul, Real.norm_eq_abs]
+    exact (mul_le_mul_of_nonneg_left
+      (((spatialVelocityMap.compLpL 2 (liftMeasure P)).le_opNorm u).trans
+        (mul_le_mul_of_nonneg_right
+          (spatialVelocityMap.norm_compLpL_le.trans spatialVelocityMap_norm) (norm_nonneg u)))
+      (abs_nonneg κ)).trans_eq (by ring)
+  · exact (congrArg norm hc).trans_le (((map P normalVelocityMap).le_opNorm _).trans
+      ((mul_le_mul_of_nonneg_right ((map_norm P _).trans normalVelocityMap_norm)
+        (norm_nonneg _)).trans_eq (one_mul _)))
 
 end EulerLiftedVelocitySplit
 
@@ -137,7 +131,8 @@ variable {P T : ℝ} [Fact (0 < P)] {raw : VectorField}
 theorem toFieldTower_word_eq (G : Field P T raw) (s n : ℕ) (hn : n ≤ s)
     (w : Fin n → Fin 4) (t : Icc (0 : ℝ) T) :
     (toJet P (G.toFieldTower.realization s t)).word w =
-      wordDerivative standardDirection (fun a : LiftTangent => translate P a (G.path t)) w 0 := by
+      wordDerivative standardDirection
+        (fun a : LiftTangent => translate (V := Vector3) P a (G.path t)) w 0 := by
   rw [toJet_word P _ hn]
   exact sobolev_coordinate P s (G.path t) (path_evaluation_smooth P G.path G.orbit t)
     ⟨⟨n,by omega⟩,w⟩
@@ -147,13 +142,15 @@ theorem toFieldTower_word_map (G : Field P T raw) (L : Space →L[ℝ] Space)
     (toJet P ((G.map L).toFieldTower.realization s t)).word w =
       L.compLpL 2 (liftMeasure P) ((toJet P (G.toFieldTower.realization s t)).word w) := by
   rw [(G.map L).toFieldTower_word_eq s n hn w t,G.toFieldTower_word_eq s n hn w t]
-  have he : (fun a : LiftTangent => translate P a ((G.map L).path t)) =
-      (EulerCylinderConstantMap.map P L) ∘ (fun a : LiftTangent => translate P a (G.path t)) := by
+  have he : (fun a : LiftTangent => translate (V := Vector3) P a ((G.map L).path t)) =
+      (EulerCylinderConstantMap.map (E := Space) (F := Space) P L) ∘
+        (fun a : LiftTangent => translate (V := Vector3) P a (G.path t)) := by
     funext a
     exact (EulerCylinderConstantMap.map_translation P L a (G.path t)).symm
   rw [he]
-  exact wordDerivative_comp_clm standardDirection (EulerCylinderConstantMap.map P L)
-    (fun a : LiftTangent => translate P a (G.path t))
+  exact wordDerivative_comp_clm standardDirection
+    (EulerCylinderConstantMap.map (E := Space) (F := Space) P L)
+    (fun a : LiftTangent => translate (V := Vector3) P a (G.path t))
     (path_evaluation_smooth P G.path G.orbit t) w 0
 
 end EulerPacketCylinderField.Field

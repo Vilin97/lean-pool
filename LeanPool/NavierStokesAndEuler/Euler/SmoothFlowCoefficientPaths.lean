@@ -70,12 +70,8 @@ def spatialDerivative (x : E) : C(Icc (0 : ℝ) T,E →L[ℝ] V) :=
     ℝ (Icc (0 : ℝ) T)) (jetFamily T f 1 x)
 
 theorem spatialDerivative_contDiff (hf : ContDiff ℝ ∞ f) :
-    ContDiff ℝ ∞ (spatialDerivative T f) := by
-  exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
-    (E := C(Icc (0 : ℝ) T,E [×1]→L[ℝ] V)) (F := C(Icc (0 : ℝ) T,E →L[ℝ] V))
-    ((continuousMultilinearCurryFin1 ℝ E
-        V).toContinuousLinearEquiv.toContinuousLinearMap.compLeftContinuous
-      ℝ (Icc (0 : ℝ) T))).comp (jetFamily_contDiff T f hf 1)
+    ContDiff ℝ ∞ (spatialDerivative T f) :=
+  (jetFamily_contDiff T f hf 1).continuousLinearMap_comp _
 
 theorem spatialDerivative_apply (hf : ContDiff ℝ ∞ f) (x : E) (t : Icc (0 : ℝ) T) :
     spatialDerivative T f x t = fderiv ℝ (fun y => f y t) x := by
@@ -89,7 +85,7 @@ theorem spatialDerivative_apply (hf : ContDiff ℝ ∞ f) (x : E) (t : Icc (0 : 
 theorem timeSlice_hasFDerivAt (hf : ContDiff ℝ ∞ f) (t : ℝ) (x : E) :
     HasFDerivAt (timeSlice T hT f t) (spatialDerivative T f x (projIcc 0 T hT t)) x := by
   rw [spatialDerivative_apply T f hf]
-  exact (((ContinuousMap.evalCLM ℝ (projIcc 0 T hT t)).contDiff.comp hf).differentiable
+  exact (((ContinuousMap.evalCLM (M := V) ℝ (projIcc 0 T hT t)).contDiff.comp hf).differentiable
     (by simp) x).hasFDerivAt
 
 /-- Joint derivative, given by `(ContinuousLinearMap.toSpanSingleton ℝ (timeSlice T hT q t
@@ -212,7 +208,7 @@ theorem velocityFamily_time_derivative_interior
     (Icc_mem_nhds ht.1 ht.2)
   have hd := SmoothTimeField.realField_hasFDerivAt T hT A A₁ htime t ht
     (extendPath T hT (pathFamily T hT A x) t)
-  have h := hd.comp_hasDerivAt t ((hasDerivAt_id t).prodMk hf)
+  have h := hd.comp_hasDerivAt (F := ℝ × E) t ((hasDerivAt_id t).prodMk hf)
   convert h using 1
   · rfl
   · simp only [SmoothTimeField.jointDerivative, ContinuousLinearMap.coprod_apply,
@@ -316,11 +312,8 @@ theorem forward_jointDerivative_contDiffAt_one
   have hs := (ContinuousLinearMap.toSpanSingletonLIE ℝ
       E).toContinuousLinearEquiv.contDiff.contDiffAt.comp
     (t,x) hq
-  let L : ((ℝ →L[ℝ] E) × (E →L[ℝ] E)) →L[ℝ] ((ℝ × E) →L[ℝ] E) :=
-    (ContinuousLinearMap.coprodEquivL (𝕜 := ℝ) (E := ℝ) (F := E) (G := E) ℝ).toContinuousLinearMap
-  exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := 1)
-    (E := (ℝ →L[ℝ] E) × (E →L[ℝ] E)) (F := (ℝ × E) →L[ℝ] E) L).contDiffAt.comp
-    (t,x) (hs.prodMk hJ)
+  exact ((ContinuousLinearMap.coprodEquivL (𝕜 := ℝ) (E := ℝ) (F := E) (G := E)
+    ℝ).contDiff.contDiffAt.comp (t,x) (hs.prodMk hJ) :)
 
 theorem forward_joint_contDiffAt_two
     (htime : SmoothTimeField.TimeDerivative T hT A A₁)
@@ -345,8 +338,18 @@ def timeLiftEquiv (J : E ≃L[ℝ] E) (v : E) : (ℝ × E) ≃L[ℝ] (ℝ × E) 
       (J.symm.toContinuousLinearMap.comp
         ((ContinuousLinearMap.snd ℝ ℝ E) -
           (ContinuousLinearMap.toSpanSingleton ℝ v).comp (ContinuousLinearMap.fst ℝ ℝ E))))
-    (by intro p; ext <;> simp)
-    (by intro p; ext <;> simp)
+    (by
+      intro p
+      simp only [ContinuousLinearMap.prod_apply, ContinuousLinearMap.coe_fst',
+        ContinuousLinearMap.coe_snd', ContinuousLinearMap.comp_apply, add_apply, sub_apply,
+        ContinuousLinearMap.toSpanSingleton_apply, ContinuousLinearEquiv.coe_coe,
+        add_sub_cancel_left, ContinuousLinearEquiv.symm_apply_apply, Prod.mk.eta])
+    (by
+      intro p
+      simp only [ContinuousLinearMap.prod_apply, ContinuousLinearMap.coe_fst',
+        ContinuousLinearMap.coe_snd', ContinuousLinearMap.comp_apply, add_apply, sub_apply,
+        ContinuousLinearMap.toSpanSingleton_apply, ContinuousLinearEquiv.coe_coe,
+        add_sub_cancel, ContinuousLinearEquiv.apply_symm_apply, Prod.mk.eta])
 
 /-- Lift forward, given by `(p.1, (flowData T hT A).forward p.1 p.2)`. -/
 def liftForward (p : ℝ × E) : ℝ × E := (p.1, (flowData T hT A).forward p.1 p.2)
@@ -543,7 +546,7 @@ def ofPathFamily : SmoothTimeField (Icc (0 : ℝ) T) E V where
     (value_bound T q D hD) hd
   smooth t := by
     change ContDiff ℝ ∞ (fun x => f x t)
-    exact (ContinuousMap.evalCLM ℝ t).contDiff.comp hf
+    exact (ContinuousMap.evalCLM (M := V) ℝ t).contDiff.comp hf
   jet n := boundedPath T hT (jetFamily T f n) (jetFamily T q n)
     (jetFamily_contDiff T f hf n).continuous (C n) (D n)
     (fun t x => by rw [jetFamily_apply T f hf]; exact hC n t x)

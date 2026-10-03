@@ -53,13 +53,17 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- The frame adjoint is the actual ordinary solenoidal projection of `F*`. -/
 theorem solenoidalFrame_adjoint (t : Icc (0 : ℝ) T) :
-    (solenoidalFrame T F t).adjoint =
-      solenoidalSpace.orthogonalProjectionOnto.comp (F t).adjoint := by
-  change ((F t).comp solenoidalSpace.subtypeL).adjoint = _
+    adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (solenoidalFrame T F t) =
+      solenoidalSpace.orthogonalProjectionOnto.comp
+        (adjoint (𝕜 := ℝ) (E := L2) (F := L2) (F t)) := by
+  change adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2)
+    ((F t).comp solenoidalSpace.subtypeL) = _
   calc
-    _ = solenoidalSpace.subtypeL.adjoint.comp (F t).adjoint :=
+    _ = (adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) solenoidalSpace.subtypeL).comp
+        (adjoint (𝕜 := ℝ) (E := L2) (F := L2) (F t)) :=
       adjoint_comp _ _
-    _ = _ := congrArg (fun A : L2 →L[ℝ] solenoidalSpace => A.comp (F t).adjoint)
+    _ = _ := congrArg (fun A : L2 →L[ℝ] solenoidalSpace =>
+        A.comp (adjoint (𝕜 := ℝ) (E := L2) (F := L2) (F t)))
       (Submodule.adjoint_subtypeL solenoidalSpace)
 
 /-- Thus the momentum's actual representative is `Pσ F* u`, with ordinary
@@ -67,12 +71,12 @@ spatial L² projection and no abstract replacement of the solenoidal space. -/
 theorem meanMomentum_ae (u : TimeLp T L2) :
     (fun t => ((momentum T hT (solenoidalFrame T F) u t : solenoidalSpace) : L2))
       =ᵐ[timeMeasure T]
-      fun t => solenoidalProjection ((extendPath T hT F t).adjoint (u t)) := by
+      fun t => solenoidalProjection (adjoint (𝕜 := ℝ) (E := L2) (F := L2)
+        (extendPath (Y := L2 →L[ℝ] L2) T hT F t) (u t)) := by
   filter_upwards [momentum_ae T hT (solenoidalFrame T F) u] with t ht
-  rw [ht]
-  change (((solenoidalFrame T F (projIcc 0 T hT t)).adjoint (u t) : solenoidalSpace) : L2) = _
-  exact congrArg (fun A : L2 →L[ℝ] solenoidalSpace => (A (u t) : L2))
-    (solenoidalFrame_adjoint T F (projIcc 0 T hT t))
+  exact (congrArg Subtype.val ht).trans
+    (congrArg (fun A : L2 →L[ℝ] solenoidalSpace => (A (u t) : L2))
+      (solenoidalFrame_adjoint T F (projIcc 0 T hT t)))
 
 /-- The exact mean variational identity determines the weak derivative of its
 actual projected momentum after the trace-zero test restriction. -/
@@ -186,18 +190,22 @@ def pressurePath : C(Icc (0 : ℝ) T,L2) :=
 /-- The projected equation forces the actual pullback residual to be a gradient
 at every time, not just almost everywhere in time. -/
 theorem pressurePath_gradient (t : Icc (0 : ℝ) T) :
-    (F t).adjoint (s.pressurePath c hc hLower fC t) ∈ gradientSpace := by
+    adjoint (𝕜 := ℝ) (E := L2) (F := L2) (F t) (s.pressurePath c hc hLower fC t) ∈
+      gradientSpace := by
   have hg := accelerationPath_equation T (solenoidalFrame T F) (solenoidalFrame T F₁)
     c hc hLower s.coordinateVelocityPath fC t
-  have hz : (solenoidalFrame T F t).adjoint (s.pressurePath c hc hLower fC t) = 0 := by
+  have hz : adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (solenoidalFrame T F t)
+      (s.pressurePath c hc hLower fC t) = 0 := by
     have he : s.pressurePath c hc hLower fC t =
         fC t-(2 : ℝ) • solenoidalFrame T F₁ t (s.coordinateVelocityPath t) -
           solenoidalFrame T F t (s.classicalAcceleration c hc hLower fC t) := by
       change fC t-solenoidalFrame T F t (s.classicalAcceleration c hc hLower fC t) -
         (2 : ℝ) • solenoidalFrame T F₁ t (s.coordinateVelocityPath t) = _
       abel
-    exact (congrArg (solenoidalFrame T F t).adjoint he).trans
-      (((solenoidalFrame T F t).adjoint.map_sub _ _).trans (sub_eq_zero.mpr hg.symm))
+    exact (congrArg (adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (solenoidalFrame T F t))
+        he).trans
+      (((adjoint (𝕜 := ℝ) (E := solenoidalSpace) (F := L2) (solenoidalFrame T F t)).map_sub
+        _ _).trans (sub_eq_zero.mpr hg.symm))
   apply (solenoidalProjection_eq_zero_iff _).1
   have hh := congrArg (fun z : solenoidalSpace => (z : L2)) hz
   exact (congrArg (fun G : L2 →L[ℝ] solenoidalSpace =>

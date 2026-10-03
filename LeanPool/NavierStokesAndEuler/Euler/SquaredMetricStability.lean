@@ -15,6 +15,7 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.Deriv.MeanValue
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Squared metric stability with a viscosity-sized source, including zero energy. -/
 
@@ -51,15 +52,19 @@ theorem metric_derivative_bound (K : ℝ → H →L[ℝ] H) (e : ℝ → H)
   rw [hd.deriv]
   have hb := energy_derivative_bound (K t) K' (e t) transport forcing β hβ ht
   have hheat := mul_le_mul_of_nonneg_left hlap (mul_nonneg (by norm_num : (0 : ℝ) ≤ 2) hν)
-  have hforce := mul_le_mul_of_nonneg_left hf (by positivity : 0 ≤ 2*‖K t‖*‖e t‖)
+  have hforce := mul_le_mul_of_nonneg_left hf
+    (mul_nonneg (mul_nonneg zero_le_two (norm_nonneg (K t))) (norm_nonneg (e t)))
   have hy := sq_nonneg (‖e t‖-‖K t‖*M*ε)
   have hraw : ⟪K' (e t),e t⟫_ℝ+2*⟪K t (e t),forcing+ν • lap⟫_ℝ-2*⟪K t (e t),transport⟫_ℝ ≤
       (‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)*‖e t‖^2+(‖K t‖*M)^2*ε^2 := by
     rw [inner_add_right,real_inner_smul_right]
-    linarith
-  have hn : ‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ/c^2 := (le_div_iff₀ (sq_pos_of_pos hc)).mpr (by
-      linarith [hcoer])
-  have ha : 0 ≤ ‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1 := by positivity
+    linarith only [hb, hheat, hforce, hy]
+  have hn : ‖e t‖^2 ≤ ⟪K t (e t),e t⟫_ℝ/c^2 :=
+    (le_div_iff₀ (sq_pos_of_pos hc)).mpr ((mul_comm _ _).trans_le hcoer)
+  have ha : 0 ≤ ‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1 :=
+    add_nonneg (add_nonneg (add_nonneg (add_nonneg (norm_nonneg K')
+      (mul_nonneg zero_le_two hβ)) (mul_nonneg (mul_nonneg zero_le_two hν) hh))
+      (mul_nonneg (mul_nonneg zero_le_two (norm_nonneg (K t))) hL)) zero_le_one
   calc
     _ ≤ (‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)*‖e t‖^2+(‖K t‖*M)^2*ε^2 := hraw
     _ ≤ (‖K'‖+2*β+2*ν*h+2*‖K t‖*L+1)*(⟪K t (e t),e t⟫_ℝ/c^2)+(‖K t‖*M)^2*ε^2 :=
@@ -94,15 +99,15 @@ theorem linear_growth_bound (E E' : ℝ → ℝ) (A B T : ℝ) (hA : 0 ≤ A) (h
       rw [interior_Icc] at ht
       rw [(hFd t ht).deriv]
       have h := mul_le_mul_of_nonneg_left (hineq t ht) (exp_pos (-A*t)).le
-      have hexp : exp (-A*t) ≤ 1 := exp_le_one_iff.mpr (by nlinarith [ht.1])
+      have hexp : exp (-A*t) ≤ 1 := exp_le_one_iff.mpr (by nlinarith only [hA, ht, ht.1])
       have hBexp := mul_le_mul_of_nonneg_right hexp hB
-      linarith
+      linarith only [h, hBexp]
   intro t ht
   have hF := hanti ⟨le_rfl,hT⟩ ht ht.1
   have hscaled : exp (-A*t)*E t ≤ B*t := by
     dsimp [F] at hF
     simp only [mul_zero,exp_zero,one_mul,sub_zero] at hF
-    linarith
+    linarith only [hzero, hF]
   have heq : exp (A*t)*exp (-A*t)=1 := by rw [← exp_add,show A*t+ -A*t=0 by ring,exp_zero]
   have hE : E t ≤ B*t*exp (A*t) := by
     have h := mul_le_mul_of_nonneg_left hscaled (exp_pos (A*t)).le

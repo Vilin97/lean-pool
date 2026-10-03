@@ -9,6 +9,7 @@ module
 public import LeanPool.NavierStokesAndEuler.Euler.TimeLp
 public import Mathlib.MeasureTheory.Function.L2Space
 import LeanPool.NavierStokesAndEuler.Euler.TimeLpPairing
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-! Strong Bochner energy passage on every genuine subinterval of the original time interval. -/
 
@@ -40,7 +41,8 @@ theorem subinterval_inner_eq (T s t : ℝ) (c f : TimeLp T ℝ) :
       apply integral_congr_ae
       filter_upwards [subintervalWeight_ae T s t c] with r hr
       rw [hr]
-      by_cases h : r ∈ Icc s t <;> simp [h]
+      by_cases h : r ∈ Icc s t <;> simp only [h, indicator_of_mem, not_false_eq_true,
+          indicator_of_notMem, zero_mul]
     _ = _ := integral_indicator measurableSet_Icc
 
 /-- For actual continuous paths a subinterval pairing is the ordinary interval integral. -/

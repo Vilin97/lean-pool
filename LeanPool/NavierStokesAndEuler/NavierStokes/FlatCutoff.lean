@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.SmoothTransition
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # A concrete smooth exponential-flat edge
@@ -34,17 +35,17 @@ def edge (c x : ℝ) : ℝ :=
   if x ≤ 0 then 0 else Real.exp (-c / x ^ 2)
 
 theorem edge_of_nonpos (c : ℝ) {x : ℝ} (hx : x ≤ 0) : edge c x = 0 := by
-  simp [edge, hx]
+  simp only [edge, hx, ↓reduceIte]
 
 @[simp] theorem edge_zero (c : ℝ) : edge c 0 = 0 := edge_of_nonpos c le_rfl
 
 theorem edge_of_pos (c : ℝ) {x : ℝ} (hx : 0 < x) :
     edge c x = Real.exp (-c / x ^ 2) := by
-  simp [edge, not_le_of_gt hx]
+  simp only [edge, not_le_of_gt hx, ↓reduceIte]
 
 theorem edge_nonneg (c x : ℝ) : 0 ≤ edge c x := by
   by_cases hx : x ≤ 0
-  · simp [edge, hx]
+  · simp only [edge, hx, ↓reduceIte, Std.le_refl]
   · rw [edge, ite_eq_right hx]
     exact (Real.exp_pos _).le
 
@@ -74,7 +75,7 @@ def polynomialEdge (c : ℝ) (p : ℝ[X]) (x : ℝ) : ℝ :=
   p.eval x⁻¹ * edge c x
 
 @[simp] theorem polynomialEdge_zero (c : ℝ) (p : ℝ[X]) :
-    polynomialEdge c p 0 = 0 := by simp [polynomialEdge]
+    polynomialEdge c p 0 = 0 := by simp only [polynomialEdge, inv_zero, edge_zero, mul_zero]
 
 /-- Every polynomial in the inverse coordinate is defeated by this actual
 edge exponential. The limit is two-sided and includes the zero extension. -/
@@ -100,22 +101,25 @@ theorem polynomialEdge_hasDerivAt {c : ℝ} (hc : 0 < c) (p : ℝ[X]) (x : ℝ) 
   · rw [polynomialEdge, edge_of_nonpos c hx.le, mul_zero]
     refine (hasDerivAt_const x 0).congr_of_eventuallyEq ?_
     filter_upwards [gt_mem_nhds hx] with y hy
-    simp [polynomialEdge, edge_of_nonpos c hy.le]
+    simp only [polynomialEdge, edge_of_nonpos c hy.le, mul_zero]
   · rw [polynomialEdge_zero, hasDerivAt_iff_tendsto_slope]
     refine ((polynomialEdge_tendsto_zero hc (p * X)).mono_left inf_le_left).congr ?_
     intro x
-    simp [slope_def_field, polynomialEdge, div_eq_mul_inv, mul_right_comm]
+    simp only [polynomialEdge, eval_mul, eval_X, slope_def_field, inv_zero, edge_zero, mul_zero,
+        sub_zero, div_eq_mul_inv, mul_right_comm]
   · have hinv : HasDerivAt (fun y : ℝ => y⁻¹) (-(x ^ 2)⁻¹) x :=
       hasDerivAt_inv hx.ne'
     have hpoly := (p.hasDerivAt x⁻¹).comp x hinv
     have hexp := (((hinv.pow 2).const_mul (-c)).exp)
     have hprod := hpoly.mul hexp
     convert! hprod.congr_of_eventuallyEq ?_ using 1
-    · simp [polynomialEdge, derivativePolynomial, edge_of_pos c hx, inv_pow,
-        div_eq_mul_inv]
+    · simp only [polynomialEdge, derivativePolynomial, map_mul, eval_sub, eval_mul, eval_C,
+        eval_pow, eval_X, inv_pow, edge_of_pos c hx, div_eq_mul_inv, neg_mul, mul_neg, Pi.pow_apply,
+        Function.comp_apply, Nat.cast_ofNat, Nat.add_one_sub_one, pow_one, neg_neg]
       ring
     · filter_upwards [lt_mem_nhds hx] with y hy
-      simp [polynomialEdge, edge_of_pos c hy, div_eq_mul_inv, inv_pow]
+      simp only [polynomialEdge, edge_of_pos c hy, div_eq_mul_inv, neg_mul, Pi.pow_apply, inv_pow,
+          Pi.mul_apply, Function.comp_apply]
 
 theorem polynomialEdge_differentiable {c : ℝ} (hc : 0 < c) (p : ℝ[X]) :
     Differentiable ℝ (polynomialEdge c p) :=
@@ -129,7 +133,8 @@ theorem polynomialEdge_contDiff {c : ℝ} (hc : 0 < c) (p : ℝ[X]) {n : ℕ∞}
   | zero => exact contDiff_zero.2 (polynomialEdge_differentiable hc p).continuous
   | succ m ih =>
     rw [show ((m + 1 : ℕ) : WithTop ℕ∞) = m + 1 from rfl]
-    refine contDiff_succ_iff_deriv.2 ⟨polynomialEdge_differentiable hc p, by simp, ?_⟩
+    refine contDiff_succ_iff_deriv.2 ⟨polynomialEdge_differentiable hc p, by simp only [
+        WithTop.natCast_ne_top, analyticOn_univ, IsEmpty.forall_iff], ?_⟩
     convert! ih (derivativePolynomial c p) using 2
     funext x
     exact (polynomialEdge_hasDerivAt hc p x).deriv
@@ -138,7 +143,7 @@ theorem polynomialEdge_contDiff {c : ℝ} (hc : 0 < c) (p : ℝ[X]) {n : ℕ∞}
 theorem edge_contDiff {c : ℝ} (hc : 0 < c) {n : ℕ∞} : ContDiff ℝ n (edge c) := by
   convert! polynomialEdge_contDiff hc (1 : ℝ[X]) (n := n) using 1
   funext x
-  simp [polynomialEdge]
+  simp only [polynomialEdge, eval_one, one_mul]
 
 /-- The explicit derivative polynomial after `m` differentiations. -/
 def jetPolynomial (c : ℝ) (p : ℝ[X]) : ℕ → ℝ[X]
@@ -148,7 +153,7 @@ def jetPolynomial (c : ℝ) (p : ℝ[X]) : ℕ → ℝ[X]
 theorem iteratedDeriv_polynomialEdge {c : ℝ} (hc : 0 < c) (p : ℝ[X]) (m : ℕ) :
     iteratedDeriv m (polynomialEdge c p) = polynomialEdge c (jetPolynomial c p m) := by
   induction m with
-  | zero => simp [jetPolynomial]
+  | zero => simp only [iteratedDeriv_zero, jetPolynomial]
   | succ m ih =>
     rw [iteratedDeriv_succ, ih]
     funext x
@@ -156,7 +161,7 @@ theorem iteratedDeriv_polynomialEdge {c : ℝ} (hc : 0 < c) (p : ℝ[X]) (m : �
 
 @[simp] theorem polynomialEdge_one (c : ℝ) : polynomialEdge c 1 = edge c := by
   funext x
-  simp [polynomialEdge]
+  simp only [polynomialEdge, eval_one, one_mul]
 
 /-- Every actual derivative vanishes at the joining point. -/
 theorem iteratedDeriv_edge_zero {c : ℝ} (hc : 0 < c) (m : ℕ) :
@@ -168,7 +173,8 @@ theorem iteratedDeriv_edge_zero {c : ℝ} (hc : 0 < c) (m : ℕ) :
 theorem polynomialEdge_div_pow (c : ℝ) (p : ℝ[X]) (loss : ℕ) :
     (fun x => polynomialEdge c p x / x ^ loss) = polynomialEdge c (p * X ^ loss) := by
   funext x
-  simp [polynomialEdge, div_eq_mul_inv, inv_pow, mul_assoc, mul_comm]
+  simp only [polynomialEdge, div_eq_mul_inv, mul_comm, eval_mul, eval_pow, eval_X, inv_pow,
+      mul_assoc]
 
 /-- The total quotient, with value zero at the origin, is genuinely smooth. -/
 theorem edge_div_pow_contDiff {c : ℝ} (hc : 0 < c) (loss : ℕ) {n : ℕ∞} :
@@ -198,7 +204,7 @@ theorem edge_div_edge (c d : ℝ) :
     (fun x => edge c x / edge d x) = edge (c - d) := by
   funext x
   by_cases hx : x ≤ 0
-  · simp [edge, hx]
+  · simp only [edge, hx, ↓reduceIte, div_zero]
   · simp only [edge, ite_eq_right hx, ← Real.exp_sub]
     congr 1
     ring

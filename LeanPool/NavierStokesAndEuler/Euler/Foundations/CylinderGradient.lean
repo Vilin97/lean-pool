@@ -46,7 +46,8 @@ omit [Fact (0 < period)] in
 theorem tangent_coordinate_norm_le (v : LiftTangent) (i : Fin 4) :
     ‖coordinateEquiv.symm v i‖ ≤ ‖v‖ := by
   cases i using Fin.cases with
-  | zero => simpa using norm_snd_le v
+  | zero => simpa only [Fin.isValue, coordinateEquiv_symm_apply, Nat.reduceAdd, Fin.cons_zero,
+      Real.norm_eq_abs] using norm_snd_le v
   | succ i => exact (PiLp.norm_apply_le v.1 i).trans (norm_fst_le v)
 
 omit [Fact (0 < period)] in
@@ -58,7 +59,9 @@ theorem linear_norm_le_standard_sum (A : LiftTangent →L[ℝ] F) :
   have he : (∑ i : Fin 4, (coordinateEquiv.symm v i) • EuclideanSpace.single i (1 : ℝ)) =
       coordinateEquiv.symm v := by
     ext i
-    simp [Pi.single_apply, mul_ite]
+    simp only [coordinateEquiv_symm_apply, Nat.reduceAdd, WithLp.ofLp_sum, WithLp.ofLp_smul,
+        PiLp.ofLp_single, Finset.sum_apply, Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite,
+        mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
   have hv : (∑ i : Fin 4, (coordinateEquiv.symm v i) • standardDirection i) = v := by
     change (∑ i : Fin 4, (coordinateEquiv.symm v i) • coordinateEquiv (EuclideanSpace.single i (1 :
         ℝ))) = v
@@ -93,6 +96,8 @@ theorem fieldFDeriv_memLp_of_coordinates (f : LiftDomain period → F)
     memLp_finsetSum _ (fun i _ => (hD i).norm)
   have hc : Continuous (fieldFDeriv period f) := smoothField_continuous period _
       (fieldFDeriv_smooth period f hf)
+  have : SecondCountableTopologyEither (LiftDomain period) (LiftTangent →L[ℝ] F) :=
+    secondCountableTopologyEither_of_left _ _
   apply hsum.of_le hc.aestronglyMeasurable
   filter_upwards [] with x
   rw [Real.norm_of_nonneg (Finset.sum_nonneg (fun _ _ => norm_nonneg _))]
@@ -115,7 +120,7 @@ theorem fieldFDeriv_L2_le_coordinate_sum (f : LiftDomain period → F)
     exact fieldFDeriv_norm_le_standard_sum period f x
   have he : (fun x => ∑ i : Fin 4, ‖fieldDerivative period (standardDirection i) f x‖) =
       ∑ i : Fin 4, (fun x => ‖fieldDerivative period (standardDirection i) f x‖) := by
-          funext x; simp
+          funext x; simp only [Finset.sum_apply]
   rw [he] at hA
   have hB : eLpNorm (∑ i : Fin 4, fun x => ‖fieldDerivative period (standardDirection i) f x‖) 2
       (liftMeasure period) ≤

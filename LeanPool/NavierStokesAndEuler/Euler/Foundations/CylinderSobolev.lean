@@ -38,8 +38,10 @@ noncomputable def standardDirection (i : Fin 4) : LiftTangent :=
 @[simp] theorem standardDirection_zero : standardDirection 0 = (0,1) := by
   apply Prod.ext
   · ext i
-    simp [standardDirection]
-  · simp [standardDirection]
+    simp only [standardDirection, Fin.isValue, coordinateEquiv_apply, ne_eq, Fin.succ_ne_zero,
+        not_false_eq_true, PiLp.single_eq_of_ne, PiLp.single_eq_same, PiLp.zero_apply]
+  · simp only [standardDirection, Fin.isValue, coordinateEquiv_apply, ne_eq, Fin.succ_ne_zero,
+      not_false_eq_true, PiLp.single_eq_of_ne, PiLp.single_eq_same]
 
 @[simp] theorem standardDirection_succ (i : Fin 3) :
     standardDirection i.succ = (EuclideanSpace.single i 1, 0) := by
@@ -97,14 +99,16 @@ theorem euclideanLift_zero (f : LiftDomain period → F) (x : LiftDomain period)
     euclideanLift period f x 0 = f x := by
   change localFieldLift period f x (coordinateEquiv 0) = _
   rw [map_zero]
-  simp [localFieldLift]
+  simp only [localFieldLift, Prod.fst_zero, add_zero, Prod.snd_zero, QuotientAddGroup.mk_zero,
+      Prod.mk.eta]
 
 theorem euclideanLift_fieldDerivative (f : LiftDomain period → F)
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x)) (v z : Domain 4)
     (x : LiftDomain period) :
     euclideanLift period (fieldDerivative period (coordinateEquiv v) f) x z =
       fderiv ℝ (euclideanLift period f x) z v := by
-  have hchain := ((hf x).differentiable (by simp) (coordinateEquiv z)).hasFDerivAt.comp z
+  have hchain := ((hf x).differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) (coordinateEquiv z)).hasFDerivAt.comp z
     coordinateEquiv.hasFDerivAt
   rw [euclideanLift, localFieldLift_fieldDerivative]
   change fderiv ℝ (localFieldLift period f x) (coordinateEquiv z) (coordinateEquiv v) = _
@@ -121,7 +125,7 @@ theorem euclideanLift_iteratedFieldDerivative {n : ℕ} (w : Fin n → Fin 4)
       iteratedFDeriv ℝ n (euclideanLift period f x) z
         (fun j => EuclideanSpace.single (w j) 1) := by
   induction n generalizing z with
-  | zero => simp [iteratedFDeriv_zero_apply]
+  | zero => simp only [iteratedFieldDerivative_zero, iteratedFDeriv_zero_apply]
   | succ n ih =>
     rw [iteratedFieldDerivative_succ, standardDirection,
       euclideanLift_fieldDerivative _ _ (iteratedFieldDerivative_smooth period (Fin.tail w) f hf),
@@ -190,7 +194,8 @@ theorem euclideanLift_eq_translated_cover (f : LiftDomain period → F)
   change f (x.1 + (coordinateEquiv z).1, x.2 + ((coordinateEquiv z).2 : AddCircle period)) =
     f ((coveringMap period (coordinateEquiv z)) + x)
   congr 1
-  ext <;> simp [coveringMap, add_comm]
+  ext <;> simp only [coordinateEquiv_apply, Fin.isValue, PiLp.add_apply, add_comm, coveringMap,
+      Prod.fst_add, Prod.snd_add]
 
 theorem wordMagnitude_memLp (n : ℕ) (f : LiftDomain period → F)
     (hf : ∀ w : Fin n → Fin 4, MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure period)) :
@@ -204,7 +209,7 @@ theorem eLpNorm_wordMagnitude_le (n : ℕ) (f : LiftDomain period → F)
   have he : wordMagnitude period n f = ∑ w : Fin n → Fin 4,
       (fun x => ‖iteratedFieldDerivative period w f x‖) := by
     funext x
-    simp [wordMagnitude]
+    simp only [wordMagnitude, Finset.sum_apply]
   rw [he]
   exact (eLpNorm_sum_le (by norm_num : (1 : ℝ≥0∞) ≤ 2)).trans_eq
     (Finset.sum_congr rfl fun w _ => eLpNorm_norm _ (hf w).aestronglyMeasurable)
@@ -214,7 +219,7 @@ theorem totalMagnitude_memLp (s : ℕ) (f : LiftDomain period → F)
       MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure period)) :
     MemLp (totalMagnitude period s f) 2 (liftMeasure period) :=
   memLp_finsetSum _ (fun n hn => wordMagnitude_memLp period n f (hf n (by
-      simpa using Finset.mem_range.1 hn)))
+      simpa only [Order.lt_add_one_iff] using Finset.mem_range.1 hn)))
 
 theorem totalMagnitude_L2_le (s : ℕ) (f : LiftDomain period → F)
     (hf : ∀ n ≤ s, ∀ w : Fin n → Fin 4,
@@ -223,7 +228,7 @@ theorem totalMagnitude_L2_le (s : ℕ) (f : LiftDomain period → F)
       liftSobolevNorm period s f := by
   have he : totalMagnitude period s f = ∑ n ∈ Finset.range (s+1), wordMagnitude period n f := by
     funext x
-    simp [totalMagnitude]
+    simp only [totalMagnitude, Finset.sum_apply]
   have hA : eLpNorm (totalMagnitude period s f) 2 (liftMeasure period) ≤
       ∑ n ∈ Finset.range (s+1), eLpNorm (wordMagnitude period n f) 2 (liftMeasure period) := by
     rw [he]
@@ -232,7 +237,7 @@ theorem totalMagnitude_L2_le (s : ℕ) (f : LiftDomain period → F)
       ∑ n ∈ Finset.range (s+1), ∑ w : Fin n → Fin 4,
         eLpNorm (iteratedFieldDerivative period w f) 2 (liftMeasure period) := by
     exact Finset.sum_le_sum (fun n hn => eLpNorm_wordMagnitude_le period n f
-      (hf n (by simpa using Finset.mem_range.1 hn)))
+      (hf n (by simpa only [Order.lt_add_one_iff] using Finset.mem_range.1 hn)))
   have hfin (n : ℕ) (hn : n ∈ Finset.range (s+1)) :
       (∑ w : Fin n → Fin 4, eLpNorm (iteratedFieldDerivative period w f) 2 (liftMeasure period)) ≠
           ⊤ :=
@@ -315,7 +320,8 @@ theorem localized_tensor_norm_le (n : ℕ) (f : LiftDomain period → ℂ)
       bumpCoefficient period n * translated period (totalMagnitude period n f) x
         (euclideanCover period z) := by
   have hA := norm_iteratedFDeriv_smul_le (localBump_smooth period)
-    (euclideanLift_smooth period f hf x) z (by simp : (n : ℕ∞ω) ≤ (∞ : ℕ∞ω))
+    (euclideanLift_smooth period f hf x) z (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true] : (n : ℕ∞ω) ≤ (∞ : ℕ∞ω))
   apply hA.trans
   change (∑ j ∈ Finset.range (n+1), (n.choose j : ℝ) *
     ‖iteratedFDeriv ℝ j (localBump period) z‖ *
@@ -349,7 +355,7 @@ theorem directional_localized_support (n : ℕ) (i : Fin 4) (f : LiftDomain peri
     exact schwartzIteratedDerivative_apply (fun _ : Fin n => EuclideanSpace.single i 1)
       (localized period f hf x) z
   rw [he]
-  exact subset_closure.trans ((tsupport_comp_subset (by simp) _).trans
+  exact subset_closure.trans ((tsupport_comp_subset (by simp only [zero_apply]) _).trans
     ((tsupport_iteratedFDeriv_subset n).trans (localized_tsupport period f hf x)))
 
 /-- Every localized pure derivative is controlled by the actual cylinder derivative L² sum. -/
@@ -357,7 +363,7 @@ theorem localized_directional_L2_le (n : ℕ) (i : Fin 4) (f : LiftDomain period
     (hf : ∀ x, ContDiff ℝ ∞ (localFieldLift period f x))
     (hfL2 : ∀ j ≤ n, ∀ w : Fin j → Fin 4,
       MemLp (iteratedFieldDerivative period w f) 2 (liftMeasure period)) (x : LiftDomain period) :
-    ‖(directional 4 n (EuclideanSpace.single i 1) (localized period f hf x)).toLp 2‖ ≤
+    ‖((directional 4 n (EuclideanSpace.single i 1) (localized period f hf x)).toLp 2 :)‖ ≤
       (bumpCoefficient period n : ℝ) * (6 : ℝ) ^ (1/2 : ℝ) * liftSobolevNorm period n f := by
   let q := totalMagnitude period n f
   have hq : MemLp q 2 (liftMeasure period) := totalMagnitude_memLp period n f hfL2
@@ -413,16 +419,18 @@ theorem cylinder_pointwise_le_H3 (f : LiftDomain period → ℂ)
   have hbase := localized_directional_L2_le period 0 0 f hf
     (fun j hj => hfL2 j (by omega)) x
   have he : directional 4 0 (EuclideanSpace.single 0 1) (localized period f hf x) =
-      localized period f hf x := by ext z; simp [directional]
+      localized period f hf x := by ext z; simp only [directional, Fin.isValue,
+          LineDeriv.iteratedLineDerivOp_fin_zero, localized_apply, Complex.real_smul]
   rw [he] at hbase
   have hbase' := hbase.trans (mul_le_mul_of_nonneg_left
     (liftSobolevNorm_mono period (show 0 ≤ 3 by omega) f)
     (mul_nonneg (bumpCoefficient period 0).coe_nonneg (Real.rpow_nonneg (by norm_num) _)))
   have hthird : (∑ i : Fin 4,
-      ‖(directional 4 3 (EuclideanSpace.single i 1) (localized period f hf x)).toLp 2‖) ≤
+      ‖(directional 4 3 (EuclideanSpace.single i 1) (localized period f hf x)).toLp 2 volume‖) ≤
         4 * ((bumpCoefficient period 3 : ℝ) * (6 : ℝ) ^ (1/2 : ℝ) * liftSobolevNorm period 3 f) :=
             by
-    simpa using Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin 4))) =>
+    simpa only [one_div, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+        Nat.cast_ofNat] using Finset.sum_le_sum (fun i (_ : i ∈ (Finset.univ : Finset (Fin 4))) =>
       localized_directional_L2_le period 3 i f hf hfL2 x)
   have hA := pointwise_le_L2_third_derivatives (localized period f hf x) 0
   rw [localized_zero] at hA

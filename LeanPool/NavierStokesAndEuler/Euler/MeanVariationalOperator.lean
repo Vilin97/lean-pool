@@ -19,6 +19,10 @@ bound is required only on the trace image, as in the source's solenoidal space.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -35,7 +39,7 @@ variable {V W X : Type*}
 /-- The actual bounded operator representing kinetic, potential, and boundary terms. -/
 def meanOperator (J : V →L[ℝ] W) (R : V →L[ℝ] X)
     (H : W →L[ℝ] W) (C : X →L[ℝ] X) : V →L[ℝ] V :=
-  dirichletOperator J H + R.adjoint.comp (C.comp R)
+  dirichletOperator J H + (adjoint (𝕜 := ℝ) (E := V) (F := X) R).comp (C.comp R)
 
 /-- The constructed operator has exactly the intended bilinear form. -/
 theorem meanOperator_inner (J : V →L[ℝ] W) (R : V →L[ℝ] X)
@@ -67,7 +71,8 @@ theorem meanOperator_coercive (u : V) :
 /-- The forcing-to-derivative map constructed from the coercive mean form. -/
 def meanSolver : W →L[ℝ] V :=
   (coerciveInverse (meanOperator J R H C) (1/2) (by norm_num)
-    (meanOperator_coercive J R H C P Q K B hK hB hJ hR hH hC hsmall)).comp (-J.adjoint)
+    (meanOperator_coercive J R H C P Q K B hK hB hJ hR hH hC hsmall)).comp
+      (-adjoint (𝕜 := ℝ) (E := V) (F := W) J)
 
 /-- The actual weak equation follows from the constructed inverse. -/
 theorem meanSolver_weak (f : W) (v : V) :
@@ -77,7 +82,8 @@ theorem meanSolver_weak (f : W) (v : V) :
   rw [← meanOperator_inner]
   change ⟪meanOperator J R H C
     (coerciveInverse (meanOperator J R H C) (1/2) (by norm_num)
-      (meanOperator_coercive J R H C P Q K B hK hB hJ hR hH hC hsmall) (-J.adjoint f)), v⟫_ℝ = _
+      (meanOperator_coercive J R H C P Q K B hK hB hJ hR hH hC hsmall)
+      (-adjoint (𝕜 := ℝ) (E := V) (F := W) J f)), v⟫_ℝ = _
   rw [operator_inverse_apply, inner_neg_left, adjoint_inner_left]
 
 /-- Uniqueness holds in the same actual Hilbert displacement space. -/
@@ -96,12 +102,13 @@ theorem meanSolver_unique (f : W) (u : V)
 theorem meanSolver_norm (f : W) :
     ‖meanSolver J R H C P Q K B hK hB hJ hR hH hC hsmall f‖ ≤ 2*‖J‖*‖f‖ := by
   have hi := coerciveInverse_apply_norm_le (meanOperator J R H C) (1/2) (by norm_num)
-    (meanOperator_coercive J R H C P Q K B hK hB hJ hR hH hC hsmall) (-J.adjoint f)
+    (meanOperator_coercive J R H C P Q K B hK hB hJ hR hH hC hsmall)
+    (-adjoint (𝕜 := ℝ) (E := V) (F := W) J f)
   change ‖meanSolver J R H C P Q K B hK hB hJ hR hH hC hsmall f‖ ≤ _ at hi
-  have ha := J.adjoint.le_opNorm f
+  have ha := (adjoint (𝕜 := ℝ) (E := V) (F := W) J).le_opNorm f
   simp only [norm_neg, inv_div, div_one, LinearIsometryEquiv.norm_map] at hi ha
   calc
-    _ ≤ 2*‖J.adjoint f‖ := hi
+    _ ≤ 2*‖adjoint (𝕜 := ℝ) (E := V) (F := W) J f‖ := hi
     _ ≤ 2*(‖J‖*‖f‖) := mul_le_mul_of_nonneg_left ha (by norm_num)
     _ = 2*‖J‖*‖f‖ := by ring
 

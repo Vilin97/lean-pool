@@ -52,9 +52,10 @@ def velocityLp : TimeLp T E →L[ℝ] TimeLp T U :=
 
 /-- Acceleration Lᵖ as an element of `TimeLp T E →L[ℝ] TimeLp T U`. -/
 def accelerationLp : TimeLp T E →L[ℝ] TimeLp T U :=
-  (gramSolver T hT Q c hc hQ).comp ((timeMultiplier T hT Q).adjoint.comp
-    (ContinuousLinearMap.id ℝ (TimeLp T E)-(2 : ℝ) • (timeMultiplier T hT Q₁).comp
-      (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall)))
+  (gramSolver T hT Q c hc hQ).comp
+    ((adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q)).comp
+      (ContinuousLinearMap.id ℝ (TimeLp T E)-(2 : ℝ) • (timeMultiplier T hT Q₁).comp
+        (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall)))
 
 /-- Velocity path as an element of `TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T,U)`. -/
 def velocityPath : TimeLp T E →L[ℝ] C(Icc (0 : ℝ) T,U) :=
@@ -68,27 +69,32 @@ theorem velocityLp_zero_trace (f : TimeLp T E) :
 theorem accelerationLp_ae (f : TimeLp T E) :
     (accelerationLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f : ℝ → U) =ᵐ[timeMeasure T]
       fun t => gramInverse (Q (projIcc 0 T hT t)) c hc (hQ (projIcc 0 T hT t))
-        ((Q (projIcc 0 T hT t)).adjoint (f t-(2 : ℝ) • Q₁ (projIcc 0 T hT t)
-          (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t))) := by
+        (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q (projIcc 0 T hT t))
+          (f t-(2 : ℝ) • Q₁ (projIcc 0 T hT t)
+            (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t))) := by
   let v := velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f
   let w := f-(2 : ℝ) • timeMultiplier T hT Q₁ v
-  change (gramSolver T hT Q c hc hQ ((timeMultiplier T hT Q).adjoint w) : ℝ → U) =ᵐ[timeMeasure T] _
+  change (gramSolver T hT Q c hc hQ (adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E)
+    (timeMultiplier T hT Q) w) : ℝ → U) =ᵐ[timeMeasure T] _
   rw [gramSolver_eq_multiplier]
   filter_upwards [timeMultiplier_ae T hT (gramInversePath T Q c hc hQ)
-      ((timeMultiplier T hT Q).adjoint w), momentum_ae T hT Q w,
+      (adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q) w),
+    momentum_ae T hT Q w,
     Lp.coeFn_sub f ((2 : ℝ) • timeMultiplier T hT Q₁ v),
     Lp.coeFn_smul (2 : ℝ) (timeMultiplier T hT Q₁ v),timeMultiplier_ae T hT Q₁ v]
       with t ha hm hw hs hv
   change w t = _ at hw
-  change ((timeMultiplier T hT Q).adjoint w) t = _ at hm
-  rw [ha,hm,hw,Pi.sub_apply,hs,Pi.smul_apply,hv]
+  change (adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q) w) t = _
+    at hm
+  simp only [ha,hm,hw,Pi.sub_apply,hs,Pi.smul_apply,hv]
   rfl
 
 theorem accelerationLp_equation (f : TimeLp T E) :
     ∀ᵐ t ∂timeMeasure T,
       gram (extendPath T hT Q t) (accelerationLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t) =
-        (extendPath T hT Q t).adjoint (f t-(2 : ℝ) • extendPath T hT Q₁ t
-          (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t)) := by
+        adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q t)
+          (f t-(2 : ℝ) • extendPath T hT Q₁ t
+            (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f t)) := by
   filter_upwards [accelerationLp_ae T hT Q Q₁ H c hc hQ hd K hK hH hsmall f] with t ht
   change gram (Q (projIcc 0 T hT t)) _ = _
   rw [ht]
@@ -112,9 +118,9 @@ theorem velocityLp_h1 (hTpos : 0 < T) (f : TimeLp T E) :
     with t hdt het hvt hat
   dsimp only [extendPath] at het
   have hi := congrArg (gramInverse (Q (projIcc 0 T hT t)) c hc (hQ (projIcc 0 T hT t))) het
-  rw [inverse_gram_apply] at hi
+  simp only [inverse_gram_apply] at hi
   change (velocityLp T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) t = v t at hvt
-  rw [← hvt,← hat] at hi
+  simp only [← hvt,← hat] at hi
   rw [← hi]
   exact hdt
 

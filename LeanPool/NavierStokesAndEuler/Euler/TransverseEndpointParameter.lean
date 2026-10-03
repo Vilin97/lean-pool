@@ -30,6 +30,10 @@ physical endpoint solution, rather than introducing a second unrelated solve.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 namespace EulerTransverseFixedEndpoint
@@ -56,9 +60,9 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 include hd in
 theorem fixedFrameDerivative_trace_zero (v : zeroTraceDerivatives (U := U) T hT) :
-    initialTrace T hT (fixedFrameDerivative T hT Q Q₁ v) = 0 := by
-  have hv : initialTrace T hT (v : TimeLp T U) = 0 := v.property
-  change initialTrace T hT (productDerivative T hT Q Q₁ (v : TimeLp T U)) = 0
+    initialTrace (E := E) T hT (fixedFrameDerivative T hT Q Q₁ v) = 0 := by
+  have hv : initialTrace (E := U) T hT (v : TimeLp T U) = 0 := v.property
+  change initialTrace (E := E) T hT (productDerivative T hT Q Q₁ (v : TimeLp T U)) = 0
   rw [initialTrace_productDerivative T hT Q Q₁ hd, hv, map_zero]
 
 include hd in
@@ -77,10 +81,11 @@ theorem fixedFrame_energy (u v : zeroTraceDerivatives (U := U) T hT) :
 /-- Fixed endpoint correction as an element of `V →L[ℝ] zeroTraceDerivatives (U := U) T hT`. -/
 def fixedEndpointCorrection (L : V →L[ℝ] TimeLp T E) :
     V →L[ℝ] zeroTraceDerivatives (U := U) T hT :=
-  (coerciveInverse (fixedFrameOperator T hT Q Q₁ H) (fixedCoercivity T Q Q₁ c)
-    (fixedCoercivity_pos T hT Q Q₁ c hc)
+  (coerciveInverse (E := zeroTraceDerivatives (U := U) T hT) (fixedFrameOperator T hT Q Q₁ H)
+    (fixedCoercivity T Q Q₁ c) (fixedCoercivity_pos T hT Q Q₁ c hc)
     (fixedFrameOperator_coercive T hT Q Q₁ H c hc hQ hd K hK hH hsmall)).comp
-      ((fixedFrameDerivative T hT Q Q₁).adjoint.comp ((energyOperator T hT H).comp L))
+      ((adjoint (𝕜 := ℝ) (E := zeroTraceDerivatives (U := U) T hT) (F := TimeLp T E)
+        (fixedFrameDerivative T hT Q Q₁)).comp ((energyOperator T hT H).comp L))
 
 /-- Fixed endpoint derivative, given by `L - (fixedFrameDerivative T hT Q Q₁).comp
 (fixedEndpointCorrection T hT Q Q₁ H c hc hQ hd K hK hH hsmall L)`. -/
@@ -96,11 +101,13 @@ theorem fixedEndpointCorrection_equation (L : V →L[ℝ] TimeLp T E) (Y : V)
         ⟪energyOperator T hT H (L Y), fixedFrameDerivative T hT Q Q₁ v⟫_ℝ := by
   rw [fixedFrame_energy T hT Q Q₁ H hd]
   change ⟪fixedFrameOperator T hT Q Q₁ H
-    (coerciveInverse (fixedFrameOperator T hT Q Q₁ H) (fixedCoercivity T Q Q₁ c)
-      (fixedCoercivity_pos T hT Q Q₁ c hc)
+    (coerciveInverse (E := zeroTraceDerivatives (U := U) T hT) (fixedFrameOperator T hT Q Q₁ H)
+      (fixedCoercivity T Q Q₁ c) (fixedCoercivity_pos T hT Q Q₁ c hc)
       (fixedFrameOperator_coercive T hT Q Q₁ H c hc hQ hd K hK hH hsmall)
-      ((fixedFrameDerivative T hT Q Q₁).adjoint (energyOperator T hT H (L Y)))), v⟫_ℝ = _
-  rw [operator_inverse_apply, adjoint_inner_left]
+      (adjoint (𝕜 := ℝ) (E := zeroTraceDerivatives (U := U) T hT) (F := TimeLp T E)
+        (fixedFrameDerivative T hT Q Q₁) (energyOperator T hT H (L Y)))), v⟫_ℝ = _
+  exact (congrArg (fun z => ⟪z, v⟫_ℝ) (operator_inverse_apply _ _ _ _ _)).trans
+    (adjoint_inner_left _ _ _)
 
 theorem fixedEndpointDerivative_orthogonal (L : V →L[ℝ] TimeLp T E) (Y : V)
     (v : zeroTraceDerivatives (U := U) T hT) :
@@ -152,8 +159,7 @@ theorem fixedEndpointDerivative_eq_endpoint (L : V →L[ℝ] TimeLp T E) :
     have h₁ := fixedEndpointDerivative_sub_mem T hT Q Q₁ H c hc hQ hd K hK hH hsmall m hm L Y
     have h₂ := endpointDerivative_sub_mem T hT m H K hK hH hsmall L Y
     have hh := (transverseDerivatives T hT m).sub_mem h₁ h₂
-    have he : (u - L Y) - (w - L Y) = u - w := by abel
-    exact he ▸ hh
+    exact sub_sub_sub_cancel_right u w (L Y) ▸ hh
   let d : transverseDerivatives T hT m := ⟨u - w, hdiff⟩
   have hu : ⟪energyOperator T hT H u, (d : TimeLp T E)⟫_ℝ = 0 :=
     fixedEndpointDerivative_physical_orthogonal T hT Q Q₁ H c hc hQ hd K hK hH hsmall m hm hRange L
@@ -163,11 +169,11 @@ theorem fixedEndpointDerivative_eq_endpoint (L : V →L[ℝ] TimeLp T E) :
     exact endpointDerivative_weak T hT m H K hK hH hsmall L Y d
   have hz : ⟪energyOperator T hT H (u - w), u - w⟫_ℝ = 0 := by
     change ⟪energyOperator T hT H (u - w), (d : TimeLp T E)⟫_ℝ = 0
-    rw [map_sub, inner_sub_left, hu, hw, sub_zero]
-  have hc' := energyOperator_coercive T hT H K hK hH hsmall (u - w)
-  rw [hz] at hc'
-  have hn : ‖u - w‖ = 0 := by nlinarith only [hc', norm_nonneg (u - w)]
-  exact sub_eq_zero.mp (norm_eq_zero.mp hn)
+    simp only [map_sub, inner_sub_left, hu, hw, sub_zero]
+  have hc' := (energyOperator_coercive T hT H K hK hH hsmall (u - w)).trans_eq hz
+  have hsq : ‖u - w‖ ^ 2 = 0 := le_antisymm (nonpos_of_mul_nonpos_right hc' one_half_pos)
+    (sq_nonneg _)
+  exact sub_eq_zero.mp (norm_eq_zero.mp ((pow_eq_zero_iff two_ne_zero).mp hsq))
 
 end EulerTransverseFixedEndpoint
 
@@ -225,7 +231,7 @@ theorem contDiff_fixedEndpointCorrection
     ContDiff ℝ n (fun x => fixedEndpointCorrection T hT (Q x) (Q₁ x) (H x)
       c hc (hLower x) (hd x) K hK (hPotential x) hsmall (L x)) := by
   have hA := contDiff_fixedFrameOperator T hT Q Q₁ H hQ hQ₁ hH
-  have hi := contDiff_coerciveInverse_variable
+  have hi := contDiff_coerciveInverse_variable (E := zeroTraceDerivatives (U := U) T hT)
     (fun x => fixedFrameOperator T hT (Q x) (Q₁ x) (H x))
     (fun x => fixedCoercivity T (Q x) (Q₁ x) c)
     (fun x => fixedCoercivity_pos T hT (Q x) (Q₁ x) c hc)
@@ -277,9 +283,9 @@ theorem affineTrial_primitive
     (hA : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT A) (A₁ t) (Icc (0 : ℝ) T) t)
     (ξT : U) (t : Icc (0 : ℝ) T) :
-    initialPrimitive T hT (affineTrial T hT A A₁ ξT) t =
+    initialPrimitive (E := E) T hT (affineTrial T hT A A₁ ξT) t =
       A t (((t : ℝ) / T) • ξT) := by
-  change initialPrimitive T hT
+  change initialPrimitive (E := E) T hT
     (initialProductDerivative T hT A A₁ (constantFieldOperator T hT (T⁻¹ • ξT))) t = _
   rw [initialPrimitive_initialProductDerivative T hT A A₁ hA,
     initialPrimitive_constantFieldOperator, smul_smul, div_eq_mul_inv]
@@ -288,7 +294,7 @@ theorem affineTrial_terminal (hTpos : 0 < T)
     (hA : ∀ t : Icc (0 : ℝ) T,
       HasDerivWithinAt (extendPath T hT A) (A₁ t) (Icc (0 : ℝ) T) t)
     (ξT : U) :
-    initialPrimitive T hT (affineTrial T hT A A₁ ξT) ⟨T, hT, le_rfl⟩ =
+    initialPrimitive (E := E) T hT (affineTrial T hT A A₁ ξT) ⟨T, hT, le_rfl⟩ =
       A ⟨T, hT, le_rfl⟩ ξT := by
   rw [affineTrial_primitive T hT A A₁ hA, div_self hTpos.ne', one_smul]
 
@@ -297,7 +303,7 @@ theorem affineTrial_tangent
       HasDerivWithinAt (extendPath T hT A) (A₁ t) (Icc (0 : ℝ) T) t)
     (m : Icc (0 : ℝ) T → E) (hm : ∀ t v, ⟪m t, A t v⟫_ℝ = 0)
     (ξT : U) (t : Icc (0 : ℝ) T) :
-    ⟪m t, initialPrimitive T hT (affineTrial T hT A A₁ ξT) t⟫_ℝ = 0 := by
+    ⟪m t, initialPrimitive (E := E) T hT (affineTrial T hT A A₁ ξT) t⟫_ℝ = 0 := by
   rw [affineTrial_primitive T hT A A₁ hA]
   exact hm t _
 

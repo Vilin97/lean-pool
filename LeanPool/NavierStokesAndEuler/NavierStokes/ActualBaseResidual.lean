@@ -151,13 +151,17 @@ noncomputable def cylinderLinear (h Q : ℝ) : Full →L[ℝ] SpaceTime where
     · change -Q * (x.1.2.1.1 + y.1.2.1.1) = -Q * x.1.2.1.1 + -Q * y.1.2.1.1
       ring
     · ext i
-      fin_cases i <;> simp [AxisymmetricResidual.pack] <;> ring
+      fin_cases i <;> simp only [Fin.reduceFinMk, Prod.snd_add, Prod.fst_add, PiLp.add_apply,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
+        AxisymmetricResidual.pack_two] <;> ring
   map_smul' c x := by
     apply Prod.ext
     · change -Q * (c * x.1.2.1.1) = c * (-Q * x.1.2.1.1)
       ring
     · ext i
-      fin_cases i <;> simp [AxisymmetricResidual.pack] <;> ring
+      fin_cases i <;> simp only [Fin.reduceFinMk, Prod.smul_fst, Prod.smul_snd, PiLp.smul_apply,
+        smul_eq_mul, RingHom.id_apply, AxisymmetricResidual.pack_zero,
+        AxisymmetricResidual.pack_one, AxisymmetricResidual.pack_two] <;> ring
   cont := by
     apply Continuous.prodMk
     · exact continuous_const.mul continuous_fst.snd.fst.fst
@@ -231,9 +235,13 @@ theorem physicalPoint_zero_angle (h : ℝ) (n : ℕ) (x : Point) :
   · rfl
   ext i
   fin_cases i <;>
-    simp [physicalPoint, cylinderPoint, CylindricalResidual.chart,
-      BaseContextAssembly.physicalPoint, BaseChartJets.bandPoint,
-      BaseContextAssembly.slowCoordinates]
+    simp only [physicalPoint, cylinderPoint, CylindricalResidual.chart, Fin.isValue,
+        AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one, Real.cos_zero, mul_one,
+        Real.sin_zero, mul_zero, AxisymmetricResidual.pack_two, Fin.zero_eta,
+        BaseContextAssembly.physicalPoint, BaseChartJets.bandPoint,
+        BaseContextAssembly.slowCoordinates, ContinuousLinearMap.coe_mk', LinearMap.coe_mk,
+        AddHom.coe_mk, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val]
 
 
 /-- The elementary power identities used by the actual chart differential. -/
@@ -248,17 +256,17 @@ theorem scale_identities {Q : ℝ} (hQ : 0 < Q) (h : ℝ) :
   constructor
   · rw [hadd]
     congr 1
-    simp [CoordinateAlgebra.D]
+    simp only [CoordinateAlgebra.D, one_div, sub_add_cancel]
   constructor
   · nth_rw 1 [← Real.rpow_one Q]
     rw [hadd, hadd]
     congr 1
-    simp [CoordinateAlgebra.A]
+    simp only [CoordinateAlgebra.A, one_div]
     ring
   constructor
   · rw [mul_one, ← Real.rpow_sub hQ]
     congr 1
-    simp [CoordinateAlgebra.A]
+    simp only [CoordinateAlgebra.A, one_div, add_sub_cancel_left]
   · rw [← Real.rpow_mul_natCast hQ.le, hadd]
     congr 1
     norm_num
@@ -286,46 +294,71 @@ theorem cylinderPullback {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k : ℕ) :
     intro x hx
     rw [(cylinderPoint_hasFDerivAt h Q x).fderiv]
     apply Prod.ext
-    · simp [cylinderLinear, PhysicalResidualTZ.graphRadialTZ_eq, ScaledGraph.radial,
-        LinearWaveResidual.spaceDirection]
+    · simp only [cylinderLinear, neg_mul, PhysicalResidualTZ.graphRadialTZ_eq, ScaledGraph.radial,
+        ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk, mul_zero, neg_zero, mul_one,
+        LinearWaveResidual.spaceDirection, Fin.isValue, Prod.smul_mk, smul_eq_mul]
     · ext i
       fin_cases i <;>
-        simp [cylinderLinear, PhysicalResidualTZ.graphRadialTZ_eq, ScaledGraph.radial,
-          LinearWaveResidual.spaceDirection, ProblemStatement.coordinateVector]
+        simp only [cylinderLinear, neg_mul, PhysicalResidualTZ.graphRadialTZ_eq, ScaledGraph.radial,
+            ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk, mul_zero, neg_zero,
+            mul_one, Fin.zero_eta, Fin.isValue, AxisymmetricResidual.pack_zero,
+            LinearWaveResidual.spaceDirection, ProblemStatement.coordinateVector, Prod.smul_mk,
+            smul_eq_mul, PiLp.smul_apply, PiLp.single_eq_same, Fin.mk_one,
+            AxisymmetricResidual.pack_one, ne_eq, one_ne_zero, not_false_eq_true,
+            PiLp.single_eq_of_ne, Fin.reduceFinMk, AxisymmetricResidual.pack_two, Fin.reduceEq]
   angular := by
     intro x hx
     rw [(cylinderPoint_hasFDerivAt h Q x).fderiv]
     apply Prod.ext
-    · simp [cylinderLinear, PhysicalResidualTZ.graphAngularTZ_eq, ScaledGraph.angular,
-        LinearWaveResidual.spaceDirection]
+    · simp only [cylinderLinear, neg_mul, PhysicalResidualTZ.graphAngularTZ_eq, ScaledGraph.angular,
+        ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk, Prod.snd_zero, Prod.fst_zero,
+        mul_zero, neg_zero, LinearWaveResidual.spaceDirection, Fin.isValue]
     · ext i
       fin_cases i <;>
-        simp [cylinderLinear, PhysicalResidualTZ.graphAngularTZ_eq, ScaledGraph.angular,
-          LinearWaveResidual.spaceDirection, ProblemStatement.coordinateVector]
+        simp only [cylinderLinear, neg_mul, PhysicalResidualTZ.graphAngularTZ_eq,
+            ScaledGraph.angular, ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk,
+            Prod.snd_zero, Prod.fst_zero, mul_zero, neg_zero, Fin.zero_eta, Fin.isValue,
+            AxisymmetricResidual.pack_zero, LinearWaveResidual.spaceDirection,
+            ProblemStatement.coordinateVector, ne_eq, zero_ne_one, not_false_eq_true,
+            PiLp.single_eq_of_ne, Fin.mk_one, AxisymmetricResidual.pack_one, PiLp.single_eq_same,
+            Fin.reduceFinMk, AxisymmetricResidual.pack_two, Fin.reduceEq]
   axial := by
     intro x hx
     rw [(cylinderPoint_hasFDerivAt h Q x).fderiv]
     apply Prod.ext
-    · simp [cylinderLinear, PhysicalResidualTZ.graphAxialTZ_apply,
-        LinearWaveResidual.spaceDirection]
+    · simp only [cylinderLinear, neg_mul, PhysicalResidualTZ.graphAxialTZ_apply,
+        ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk, mul_zero, neg_zero,
+        LinearWaveResidual.spaceDirection, Fin.isValue, Prod.smul_mk, smul_eq_mul]
     · ext i
       fin_cases i <;>
-        simp [cylinderLinear, PhysicalResidualTZ.graphAxialTZ_apply, commonGraph,
-          LinearWaveResidual.spaceDirection, ProblemStatement.coordinateVector,
-          (scale_identities hQ h).1]
+        simp only [cylinderLinear, neg_mul, commonGraph, one_div,
+            PhysicalResidualTZ.graphAxialTZ_apply, ContinuousLinearMap.coe_mk', LinearMap.coe_mk,
+            AddHom.coe_mk, mul_zero, neg_zero, (scale_identities hQ h).1, Fin.zero_eta, Fin.isValue,
+            AxisymmetricResidual.pack_zero, LinearWaveResidual.spaceDirection,
+            ProblemStatement.coordinateVector, Prod.smul_mk, smul_eq_mul, PiLp.smul_apply, ne_eq,
+            Fin.reduceEq, not_false_eq_true, PiLp.single_eq_of_ne, Fin.mk_one,
+            AxisymmetricResidual.pack_one, Fin.reduceFinMk, AxisymmetricResidual.pack_two,
+            PiLp.single_eq_same, mul_one]
   temporal := by
     intro x hx
     rw [(cylinderPoint_hasFDerivAt h Q x).fderiv]
     apply Prod.ext
-    · simpa [cylinderLinear, PhysicalResidualTZ.graphTemporalTZ_apply, commonGraph,
-        LinearWaveResidual.physicalTimeDirection] using (scale_identities hQ h).2.1
+    · simpa only [cylinderLinear, neg_mul, commonGraph, one_div,
+        PhysicalResidualTZ.graphTemporalTZ_apply, ContinuousLinearMap.coe_mk', LinearMap.coe_mk,
+        AddHom.coe_mk, mul_neg, neg_neg, mul_zero, LinearWaveResidual.physicalTimeDirection,
+        Prod.smul_mk, smul_eq_mul, mul_one, smul_zero] using (scale_identities hQ h).2.1
     · ext i
       fin_cases i <;>
-        simp [cylinderLinear, PhysicalResidualTZ.graphTemporalTZ_apply,
-          LinearWaveResidual.physicalTimeDirection]
+        simp only [cylinderLinear, neg_mul, PhysicalResidualTZ.graphTemporalTZ_apply,
+            ContinuousLinearMap.coe_mk', LinearMap.coe_mk, AddHom.coe_mk, mul_neg, neg_neg,
+            mul_zero, Fin.zero_eta, Fin.isValue, AxisymmetricResidual.pack_zero,
+            LinearWaveResidual.physicalTimeDirection, Prod.smul_mk, smul_eq_mul, mul_one, smul_zero,
+            PiLp.zero_apply, Fin.mk_one, AxisymmetricResidual.pack_one, Fin.reduceFinMk,
+            AxisymmetricResidual.pack_two]
   radius := by
     intro x hx
-    simp [LinearWaveResidual.coordinateRadius, cylinderPoint, ScaledGraph.radius]
+    simp only [LinearWaveResidual.coordinateRadius, cylinderPoint, Fin.isValue,
+        AxisymmetricResidual.pack_zero, ScaledGraph.radius]
 
 
 section CylindricalRegularity
@@ -359,14 +392,16 @@ theorem axisymmetric_components (b f u : AxisymmetricFields.Profile) (t : ℝ) (
     AxisymmetricResidual.velocity b f u (t, AxisymmetricResidual.pack (q 0) 0 (q 2)) := by
   have hp0 : AxisymmetricFields.profilePoint t (AxisymmetricResidual.pack (q 0) 0 (q 2)) =
       (t, ((q 0)^2 / 2, q 2)) := by
-    simp [AxisymmetricFields.profilePoint, AxisymmetricFields.radialEnergy]
+    simp only [AxisymmetricFields.profilePoint, AxisymmetricFields.radialEnergy,
+      AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one,
+      AxisymmetricResidual.pack_two, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      add_zero]
   simp only [AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
     AxisymmetricResidual.componentY, AxisymmetricResidual.lift, profilePoint_chart, hp0]
   rw [CylindricalResidual.frame_apply]
-  ext i
-  fin_cases i <;> simp [CylindricalResidual.chart, AxisymmetricResidual.pack,
-    ProblemStatement.coordinateVector,
-    Real.cos_neg, Real.sin_neg]
+  simp only [CylindricalResidual.chart, AxisymmetricResidual.pack_zero,
+    AxisymmetricResidual.pack_one, AxisymmetricResidual.pack_two, Real.cos_neg, Real.sin_neg]
+  congr 1
   · linear_combination -(q 0 * b (t, ((q 0)^2 / 2, q 2))) * Real.cos_sq_add_sin_sq (q 1)
   · linear_combination (q 0 * f (t, ((q 0)^2 / 2, q 2))) * Real.cos_sq_add_sin_sq (q 1)
 
@@ -399,13 +434,15 @@ theorem profileAtScale_hasFDerivAt (h Q : ℝ) (x : Point) :
       (hz.const_mul (Q ^ CoordinateAlgebra.D h)))
   convert! hd using 1
   · funext y
-    apply Prod.ext
-    · simp [profileAtScale]
-    · simp [profileAtScale, pow_two]
-      ring
-  · ext
-    all_goals simp [profileJacobian, smul_eq_mul]
-    all_goals ring
+    refine Prod.ext rfl (Prod.ext ?_ rfl)
+    change Q * y.1 ^ 2 / 2 = 1 / 2 * (Q * (y.1 * y.1))
+    ring
+  · refine ContinuousLinearMap.ext fun d => ?_
+    simp only [profileJacobian_apply, neg_mul, ContinuousLinearMap.comp_id, one_div, id_eq,
+      smul_add, ContinuousLinearMap.prod_apply, neg_apply, smul_apply,
+      ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_snd', ContinuousLinearMap.coe_fst',
+      smul_eq_mul, add_apply, Prod.mk.injEq, true_and, and_true]
+    ring
 
 /-- A direct derivative calculation for the normalized stress profile. -/
 theorem normalized_profile_radialDiv
@@ -421,10 +458,11 @@ theorem normalized_profile_radialDiv
   have hd := (hS.hasFDerivAt.comp x (profileAtScale_hasFDerivAt h Q x)).const_mul
     (Q ^ (2 * CoordinateAlgebra.A h))
   dsimp only [Function.comp_def] at hd
-  have hzero : profileJacobian h Q x o.vR = 0 := by rw [hvR, profileJacobian_apply]; simp
+  have hzero : profileJacobian h Q x o.vR = 0 := by rw [hvR, profileJacobian_apply]; simp only [
+      Prod.fst_zero, mul_zero, Prod.snd_zero, Prod.mk_eq_zero, and_self]
   have hrad : profileJacobian h Q x o.eR = (Q * x.1) • (0, (1, 0)) := by
     rw [heR, profileJacobian_apply]
-    simp
+    simp only [Prod.fst_zero, mul_zero, mul_one, Prod.snd_zero, Prod.smul_mk, smul_eq_mul]
   have hsqrt : Real.sqrt (2 * (profileAtScale h Q x).2.1) = Real.sqrt Q * x.1 := by
     change Real.sqrt (2 * (Q * x.1 ^ 2 / 2)) = _
     rw [show 2 * (Q * x.1 ^ 2 / 2) = Q * x.1 ^ 2 by ring,
@@ -439,10 +477,11 @@ theorem normalized_profile_radialDiv
     rw [Real.rpow_add hQ, Real.sqrt_eq_rpow]
   rw [LeadingStress.radialDivergence, hsqrt, hpower]
   unfold SimilarityProfile.partialS
-  field_simp [hx.ne', (Real.sqrt_pos.2 hQ).ne']
-  ring_nf
-  rw [Real.sq_sqrt hQ.le]
-  ring
+  have hs : Real.sqrt Q * Real.sqrt Q = Q := Real.mul_self_sqrt hQ.le
+  have hinv : Real.sqrt Q * (Real.sqrt Q)⁻¹ = 1 := mul_inv_cancel₀ (Real.sqrt_pos.2 hQ).ne'
+  linear_combination (-(Q ^ (2 * CoordinateAlgebra.A h) * x.1 *
+      fderiv ℝ S (profileAtScale h Q x) (0, 1, 0))) * hs -
+    (k * Q ^ (2 * CoordinateAlgebra.A h) * S (profileAtScale h Q x) * x.1⁻¹) * hinv
 
 /-- Rotation of the actual Cartesian tangential stress force. -/
 theorem tangentialStressForce_components (theta axial : AxisymmetricFields.Profile)
@@ -460,10 +499,9 @@ theorem tangentialStressForce_components (theta axial : AxisymmetricFields.Profi
       Real.sqrt_sq_eq_abs, abs_of_pos hr]
   simp only [SlowResidualMatching.tangentialStressForce, hsqrt, profilePoint_chart]
   rw [CylindricalResidual.frame_apply]
-  ext i
-  fin_cases i <;> simp [CylindricalResidual.chart, AxisymmetricResidual.pack,
-    ProblemStatement.coordinateVector,
-    Real.cos_neg, Real.sin_neg]
+  simp only [CylindricalResidual.chart, AxisymmetricResidual.pack_zero,
+    AxisymmetricResidual.pack_one, AxisymmetricResidual.pack_two, Real.cos_neg, Real.sin_neg]
+  congr 1
   · field_simp [hr.ne']
     ring
   · field_simp [hr.ne']
@@ -613,7 +651,7 @@ theorem scaled_residual {Q : ℝ} (hQ : 0 < Q) (k : ℕ) {x : Full} (hx : x ∈ 
       mul_pos (Real.sqrt_pos.2 hQ) hx.1
   have hns := CylindricalResidual.navierStokesResidual_cylindrical
     (huv.of_le (ENat.natCast_le_of_coe_top_le_withTop le_rfl 2))
-    (hpv.differentiableAt (by simp)) hr
+    (hpv.differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hr
   have hf := congrArg (CylindricalResidual.frame (-x.2)) hns
   simp only [cylinderPoint, AxisymmetricResidual.pack_one,
     CylindricalResidual.frame_inverse] at hf
@@ -639,13 +677,14 @@ theorem actual_velocity_components {t : ℝ} (ht : t < 1) (q : Space) :
       (AxisymmetricFields.profilePoint t z) :=
     (SlowBorelBase.physicalProfile_smoothAt ha hh hh1
       (SlowBorelBase.bundleComponent_smooth hd W.axis.normalization 0)
-      (-CoordinateAlgebra.A F.data.h) ht).differentiableAt (by simp)
+      (-CoordinateAlgebra.A F.data.h) ht).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hK (z : Space) : DifferentiableAt ℝ
       (SlowBorelBase.swirlPotential a F.data.h W.axis.normalization d)
       (AxisymmetricFields.profilePoint t z) :=
     (SlowBorelBase.physicalProfile_smoothAt ha hh hh1
       (SlowBorelBase.bundleComponent_smooth hd W.axis.normalization 1)
-      (1 / 2 - CoordinateAlgebra.A F.data.h) ht).differentiableAt (by simp)
+      (1 / 2 - CoordinateAlgebra.A F.data.h) ht).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   change CylindricalResidual.frame (-(q 1))
       (AxisymmetricFields.velocity _ _ (t, CylindricalResidual.chart q)) =
     AxisymmetricFields.velocity _ _ (t, AxisymmetricResidual.pack (q 0) 0 (q 2))
@@ -666,7 +705,9 @@ theorem velocityAtScale_eq_baseComponents (index : ℕ → ℕ) (n : ℕ) {x : F
       AxisymmetricResidual.pack ((cylinderPoint F.data.h (ChartScales.Q n) x).2 0) 0
         ((cylinderPoint F.data.h (ChartScales.Q n) x).2 2)) =
       BaseContextAssembly.physicalPoint F.data.h n x.1 := by
-    simpa [physicalPoint, cylinderPoint, CylindricalResidual.chart] using
+    simpa only [cylinderPoint, Fin.isValue, AxisymmetricResidual.pack_zero,
+        AxisymmetricResidual.pack_two, physicalPoint, CylindricalResidual.chart,
+        AxisymmetricResidual.pack_one, Real.cos_zero, mul_one, Real.sin_zero, mul_zero] using
       physicalPoint_zero_angle F.data.h n x.1
   erw [hp] at hc
   simp only [cylinderPoint, AxisymmetricResidual.pack_one] at hc
@@ -735,12 +776,14 @@ theorem stressAtScale_eq_virtualDivergence (index : ℕ → ℕ) (n : ℕ) {x : 
     (SlowBorelBase.physicalProfile_smoothAt (FinalSlowBase.scales_strictMono H v upper B)
       F.data.h_pos F.data.h_lt_half (SlowBorelBase.bundleComponent_smooth
         (FinalSlowBase.coefficients_smooth H v) W.axis.normalization 3)
-      (-CoordinateAlgebra.A F.data.h - 1 / 2) ht).differentiableAt (by simp)
+      (-CoordinateAlgebra.A F.data.h - 1 / 2) ht).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hz : DifferentiableAt ℝ Sz (profileAtScale F.data.h Q x.1) :=
     (SlowBorelBase.physicalProfile_smoothAt (FinalSlowBase.scales_strictMono H v upper B)
       F.data.h_pos F.data.h_lt_half (SlowBorelBase.bundleComponent_smooth
         (FinalSlowBase.coefficients_smooth H v) W.axis.normalization 4)
-      (-CoordinateAlgebra.A F.data.h - 1 / 2) ht).differentiableAt (by simp)
+      (-CoordinateAlgebra.A F.data.h - 1 / 2) ht).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hθeq : c.virtualTheta n =ᶠ[𝓝 x.1]
       (fun y => Q ^ (2 * CoordinateAlgebra.A F.data.h) * Sθ (profileAtScale F.data.h Q y)) := by
     filter_upwards [(isOpen_lt continuous_const (continuous_fst : Continuous (fun y : Point =>
@@ -786,7 +829,12 @@ theorem stressAtScale_eq_virtualDivergence (index : ℕ → ℕ) (n : ℕ) {x : 
     LiftedMeanResidual.virtualDivergence c n x i
   fin_cases i <;>
     simp only [LiftedMeanResidual.virtualDivergence, hdcθ, hdcz] <;>
-    simp [AxisymmetricResidual.pack, ProblemStatement.coordinateVector]
+    simp only [one_div, AxisymmetricResidual.pack, ProblemStatement.coordinateVector, Fin.isValue,
+        zero_smul, neg_smul, zero_add, Fin.zero_eta, PiLp.add_apply, PiLp.neg_apply,
+        PiLp.smul_apply, ne_eq, zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul,
+        mul_zero, neg_zero, Fin.reduceEq, add_zero, Matrix.cons_val_zero, Fin.mk_one,
+        PiLp.single_eq_same, mul_one, mul_neg, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val]
 
 
 theorem velocityAtScale_smooth {Q : ℝ} (hQ : 0 < Q) (i : Fin 3) :
@@ -899,16 +947,24 @@ theorem errorState_band (U : Set Point) (n m k : ℕ) :
     congr 1
     ring
   refine ⟨⟨?_, ?_, ?_⟩, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro x hx; simp [errorState]
-  · intro x hx; simp [errorState]
-  · intro x hx; simp [errorState]
-  · intro x hx; simp [errorState]
-  · intro x hx theta i; simp [errorState]
-  · intro x hx theta; simp [errorState]
+  · intro x hx; simp only [errorState, Pi.zero_apply, GaugeStateCoherence.bandChartEquiv_apply,
+      GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
+  · intro x hx; simp only [errorState, Pi.zero_apply, GaugeStateCoherence.bandChartEquiv_apply,
+      GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
+  · intro x hx; simp only [errorState, Pi.zero_apply, GaugeStateCoherence.bandChartEquiv_apply,
+      GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
+  · intro x hx; simp only [errorState, Pi.zero_apply, GaugeStateCoherence.bandChartEquiv_apply,
+      GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
+  · intro x hx theta i; simp only [errorState, Pi.zero_apply,
+      GaugeStateCoherence.bandChartEquiv_apply, GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
+  · intro x hx theta; simp only [errorState, Pi.zero_apply,
+      GaugeStateCoherence.bandChartEquiv_apply, GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
   · intro x hx theta i
     simpa only [errorState, hp] using baseError_band H v upper B n m k x theta i
-  · intro x hx theta i; simp [errorState]
-  · intro x hx theta i; simp [errorState]
+  · intro x hx theta i; simp only [errorState, Pi.zero_apply,
+      GaugeStateCoherence.bandChartEquiv_apply, GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
+  · intro x hx theta i; simp only [errorState, Pi.zero_apply,
+      GaugeStateCoherence.bandChartEquiv_apply, GaugeStateCoherence.bandSlowEquiv_apply, mul_zero]
 
 theorem fixedPressure_band (U : Set Point) (n m k : ℕ) :
     PhysicalResidualNaturality.ScalarOn U (GaugeStateCoherence.bandChartEquiv F.data.h n m k)
@@ -935,10 +991,12 @@ theorem baseError_angle_eq (n : ℕ) {x : Point} (hR : 0 < x.1) (hT : 0 < x.2.1.
   let G := commonGraph (ChartScales.Q n) F.data.h 0
   have hr : CopyAngularInvariance.Invariant (0, (1 : ℝ)) ScaledGraph.radius := by
     intro y t
-    simp [ScaledGraph.radius]
+    simp only [ScaledGraph.radius, Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, Prod.fst_add,
+        add_zero]
   have hvr : CopyAngularInvariance.Invariant (0, (1 : ℝ)) (PhysicalResidualTZ.graphRadialTZ G) := by
     intro y t
-    simp [PhysicalResidualTZ.graphRadialTZ_eq, ScaledGraph.radial]
+    simp only [Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, PhysicalResidualTZ.graphRadialTZ_eq,
+        ScaledGraph.radial, Prod.fst_add, add_zero]
   have hvtheta : CopyAngularInvariance.Invariant (0, (1 : ℝ)) PhysicalResidualTZ.graphAngularTZ :=
     fun _ _ => rfl
   have hvz : CopyAngularInvariance.Invariant (0, (1 : ℝ)) (PhysicalResidualTZ.graphAxialTZ G) :=
@@ -947,11 +1005,12 @@ theorem baseError_angle_eq (n : ℕ) {x : Point} (hR : 0 < x.1) (hT : 0 < x.2.1.
     fun _ _ => rfl
   have ha : CopyAngularInvariance.Invariant (0, (1 : ℝ)) (baseComponents c n) := by
     intro y t
-    simp [baseComponents]
+    simp only [baseComponents, Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, Prod.fst_add,
+        add_zero]
   have hp : CopyAngularInvariance.Invariant (0, (1 : ℝ)) (basePressure H v upper B n) := by
     intro y t
     rw [basePressure_eq_fixedPressure, basePressure_eq_fixedPressure]
-    simp
+    simp only [Prod.smul_mk, smul_zero, smul_eq_mul, mul_one, Prod.fst_add, add_zero]
   have hinv := graphResidual_invariant (0, (1 : ℝ)) (ChartScales.Q n ^ F.data.h)
     ScaledGraph.radius (PhysicalResidualTZ.graphRadialTZ G) PhysicalResidualTZ.graphAngularTZ
     (PhysicalResidualTZ.graphAxialTZ G) (PhysicalResidualTZ.graphTemporalTZ G)
@@ -979,22 +1038,29 @@ theorem errorState_common (U : Set Point) (n k : ℕ) :
     PhysicalResidualNaturality.StateOn U (CommonBaseContext.coverLift k) 1 1
       (errorState H v upper B) (errorState H v upper B) n n := by
   refine ⟨⟨?_, ?_, ?_⟩, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro x hx; simp [errorState]
-  · intro x hx; simp [errorState]
-  · intro x hx; simp [errorState]
-  · intro x hx; simp [errorState]
-  · intro x hx theta i; simp [errorState]
-  · intro x hx theta; simp [errorState]
+  · intro x hx; simp only [errorState, Pi.zero_apply, CommonBaseContext.coverLift_apply, mul_zero]
+  · intro x hx; simp only [errorState, Pi.zero_apply, CommonBaseContext.coverLift_apply, mul_zero]
+  · intro x hx; simp only [errorState, Pi.zero_apply, CommonBaseContext.coverLift_apply, mul_zero]
+  · intro x hx; simp only [errorState, Pi.zero_apply, mul_one, CommonBaseContext.coverLift_apply,
+      mul_zero]
+  · intro x hx theta i; simp only [errorState, Pi.zero_apply, CommonBaseContext.coverLift_apply,
+      mul_zero]
+  · intro x hx theta; simp only [errorState, Pi.zero_apply, mul_one,
+      CommonBaseContext.coverLift_apply, mul_zero]
   · intro x hx theta i
-    simp [errorState, baseError, errorAtScale, physicalPoint, cylinderPoint]
-  · intro x hx theta i; simp [errorState]
-  · intro x hx theta i; simp [errorState]
+    simp only [errorState, baseError, errorAtScale, one_div, physicalPoint, cylinderPoint, mul_one,
+        CommonBaseContext.coverLift_apply, one_mul]
+  · intro x hx theta i; simp only [errorState, Pi.zero_apply, mul_one,
+      CommonBaseContext.coverLift_apply, mul_zero]
+  · intro x hx theta i; simp only [errorState, Pi.zero_apply, mul_one,
+      CommonBaseContext.coverLift_apply, mul_zero]
 
 theorem fixedPressure_common (U : Set Point) (n k : ℕ) :
     PhysicalResidualNaturality.ScalarOn U (CommonBaseContext.coverLift k) 1
       (fixedPressure H v upper B n) (fixedPressure H v upper B n) := by
   intro x hx
-  simp [fixedPressure, basePressure, pressureAtScale, physicalPoint, cylinderPoint]
+  simp only [fixedPressure, basePressure, pressureAtScale, physicalPoint, cylinderPoint,
+      CommonBaseContext.coverLift_apply, one_mul]
 
 end Actual
 

@@ -1666,12 +1666,12 @@ theorem core_active {B N0 : ℕ} (l : Index B N0) (n : ℕ) {z : Point}
 
 section SignedOutputs
 variable {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index B N0)}
-local notation "p" => ActualCycleParameters.fixedParameters B N0
-local notation "c" => ActualPrimary.commonContext B
+local notation "p" => (ActualCycleParameters.fixedParameters B N0)
+local notation "c" => (ActualPrimary.commonContext B)
 local notation "v" => x.coefficients
 local notation "u" => x.state
-local notation "post" => CycleParameters.afterParticular p v c u
-local notation "request" => CycleParameters.signedRequest p v c u
+local notation "post" => (CycleParameters.afterParticular p v c u)
+local notation "request" => (CycleParameters.signedRequest p v c u)
 
 theorem signed_request_jets (first : ActualParticularMeanGain.Result x σ) :
     ∀ q, PeriodizedWaveBounds.UniformLocalJets ActualSignedStageControls.fullStrip
@@ -1799,8 +1799,8 @@ end SignedOutputs
 
 section Assembly
 variable {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index B N0)}
-local notation "p" => ActualCycleParameters.fixedParameters B N0
-local notation "c" => ActualPrimary.commonContext B
+local notation "p" => (ActualCycleParameters.fixedParameters B N0)
+local notation "c" => (ActualPrimary.commonContext B)
 local notation "v" => x.coefficients
 local notation "u" => x.state
 
@@ -1887,12 +1887,12 @@ theorem residualSource_zero_germ_of_not_ordered {B N0 : ℕ} {σ : ℝ}
 
 section SignedEquations
 variable {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index B N0)}
-local notation "p" => ActualCycleParameters.fixedParameters B N0
-local notation "c" => ActualPrimary.commonContext B
+local notation "p" => (ActualCycleParameters.fixedParameters B N0)
+local notation "c" => (ActualPrimary.commonContext B)
 local notation "v" => x.coefficients
 local notation "u" => x.state
-local notation "post" => CycleParameters.afterParticular p v c u
-local notation "request" => CycleParameters.signedRequest p v c u
+local notation "post" => (CycleParameters.afterParticular p v c u)
+local notation "request" => (CycleParameters.signedRequest p v c u)
 
 theorem signed_solenoidal (first : ActualParticularMeanGain.Result x σ) (l : Index B N0) :
     HarmonicWaveInteraction.ModeSolenoidal (G).strip c ((p).signedBlock v c u l) :=
@@ -1952,8 +1952,8 @@ theorem nativeParticular_inactive {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index
 
 section Factory
 variable {B N0 : ℕ} {σ : ℝ} {x : CycleState (Index B N0)}
-local notation "p" => ActualCycleParameters.fixedParameters B N0
-local notation "c" => ActualPrimary.commonContext B
+local notation "p" => (ActualCycleParameters.fixedParameters B N0)
+local notation "c" => (ActualPrimary.commonContext B)
 local notation "v" => x.coefficients
 local notation "u" => x.state
 

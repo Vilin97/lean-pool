@@ -49,7 +49,8 @@ theorem iterated_operator_leibniz {R : Type*} [Ring R] (D T : R) (n : ℕ) :
     D ^ n * T = ∑ l ∈ Finset.range (n + 1),
       n.choose l • (iteratedRingCommutator D T l * D ^ (n - l)) := by
   induction n with
-  | zero => simp [iteratedRingCommutator]
+  | zero => simp only [pow_zero, one_mul, zero_add, Finset.range_one, zero_tsub, mul_one,
+      nsmul_eq_mul, Finset.sum_singleton, Nat.choose_self, Nat.cast_one, iteratedRingCommutator]
   | succ n ih =>
     rw [pow_succ', mul_assoc, ih, Finset.mul_sum,
       Finset.sum_choose_succ_nsmul (fun l r => iteratedRingCommutator D T l * D ^ r) n,
@@ -202,9 +203,7 @@ theorem hasDerivAt_coerciveInverse (T : ℝ → E →L[ℝ] E) (c : ℝ) (hc : 0
     ext x
     exact coerciveEquiv_apply (T t) c hc (hT t) x
   have hui : (↑u⁻¹ : E →L[ℝ] E) = coerciveInverse (T t) c hc (hT t) := rfl
-  have hi := hasFDerivAt_ringInverse (𝕜 := ℝ) u
-  rw [hu] at hi
-  have hcomp := hi.comp_hasDerivAt t hder
+  have hcomp := (hasFDerivAt_ringInverse (𝕜 := ℝ) u).comp_hasDerivAt_of_eq t hder hu
   have hfun : (fun s => coerciveInverse (T s) c hc (hT s)) = Ring.inverse ∘ T := by
     funext s
     exact coerciveInverse_eq_ringInverse (T s) c hc (hT s)

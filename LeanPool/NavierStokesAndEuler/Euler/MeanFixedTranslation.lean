@@ -74,14 +74,14 @@ theorem fixedMeanDerivative_translate (u : TimeLp T solenoidalSpace) :
 theorem fixedMeanPrimitive_translate (u : TimeLp T solenoidalSpace) :
     translatedMeanPrimitive T hT a F F₁ (timeSolenoidalTranslation T a u) =
       timeTranslation T a (fixedMeanPrimitive T hT F F₁ u) :=
-  (congrArg (primitiveTimeLp T hT) (fixedMeanDerivative_translate T hT a F F₁ u)).trans
+  (congrArg (primitiveTimeLp (E := L2) T hT) (fixedMeanDerivative_translate T hT a F F₁ u)).trans
     (timeTranslation_primitiveTimeLp T hT a (fixedMeanDerivative T hT F F₁ u))
 
 /-- Covariance includes the actual initial trace. -/
 theorem fixedMeanTrace_translate (u : TimeLp T solenoidalSpace) :
     fixedMeanTrace T hT (translatePath T a F) (translatePath T a F₁)
       (timeSolenoidalTranslation T a u) = translation a (fixedMeanTrace T hT F F₁ u) :=
-  (congrArg (initialTrace T hT) (fixedMeanDerivative_translate T hT a F F₁ u)).trans
+  (congrArg (initialTrace (E := L2) T hT) (fixedMeanDerivative_translate T hT a F F₁ u)).trans
     (timeTranslation_initialTrace T hT a (fixedMeanDerivative T hT F F₁ u))
 
 /-- The two actual initial boundary terms transform together. -/
@@ -105,7 +105,8 @@ theorem fixedMeanForm_translate (u v : TimeLp T solenoidalSpace) :
   have hpot := (congrArg₂ (fun x y : TimeLp T L2 => ⟪x,y⟫_ℝ) hHJ (hJ v)).trans
     ((timeTranslation T a).inner_map_map
       (timeMultiplier T hT H (fixedMeanPrimitive T hT F F₁ u)) (fixedMeanPrimitive T hT F F₁ v))
-  have hCR := (congrArg (translateOperator a M0+L • translateOperator a A) (hR u)).trans
+  have hCR := (congrArg (translateOperator a M0+L • translateOperator a A : L2 →L[ℝ] L2)
+      (hR u)).trans
     (boundaryCoefficient_translate a M0 A L (fixedMeanTrace T hT F F₁ u))
   have hboundary := (congrArg₂ (fun x y : L2 => ⟪x,y⟫_ℝ) hCR (hR v)).trans
     ((translation a).inner_map_map ((M0+L • A) (fixedMeanTrace T hT F F₁ u)) (fixedMeanTrace T hT F
@@ -158,17 +159,17 @@ theorem translatedMeanOperator_coercive (c : ℝ)
 
 /-- The forcing adjoint transforms by the same actual spatial action. -/
 theorem fixedMeanPrimitive_adjoint_translate (f : TimeLp T L2) :
-    (translatedMeanPrimitive T hT a F F₁).adjoint (timeTranslation T a f) =
-      timeSolenoidalTranslation T a ((fixedMeanPrimitive T hT F F₁).adjoint f) := by
+    adjoint (𝕜 := ℝ) (E := TimeLp T solenoidalSpace) (F := TimeLp T L2)
+        (translatedMeanPrimitive T hT a F F₁) (timeTranslation T a f) =
+      timeSolenoidalTranslation T a
+        (adjoint (𝕜 := ℝ) (F := TimeLp T L2) (fixedMeanPrimitive T hT F F₁) f) := by
   apply eq_of_translated_pairing T a
   intro v
-  exact (adjoint_inner_left (translatedMeanPrimitive T hT a F F₁)
-      (timeSolenoidalTranslation T a v) (timeTranslation T a f)).trans
+  exact (adjoint_inner_left _ (timeSolenoidalTranslation T a v) (timeTranslation T a f)).trans
     ((congrArg (fun z : TimeLp T L2 => ⟪timeTranslation T a f,z⟫_ℝ)
         (fixedMeanPrimitive_translate T hT a F F₁ v)).trans
       (((timeTranslation T a).inner_map_map f (fixedMeanPrimitive T hT F F₁ v)).trans
-        ((adjoint_inner_left (fixedMeanPrimitive T hT F F₁) v f).symm.trans
-          ((timeSolenoidalTranslation T a).inner_map_map ((fixedMeanPrimitive T hT F F₁).adjoint f)
-              v).symm)))
+        ((adjoint_inner_left _ v f).symm.trans
+          ((timeSolenoidalTranslation T a).inner_map_map _ v).symm)))
 
 end EulerMeanFixedTranslation

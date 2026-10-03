@@ -136,6 +136,6 @@ theorem orderZeroSource_bound {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 ≤
   have hc := algebraicAt_bound period hs N hN ρ hρ C K e e
   have hsum' := add_le_add (add_le_add (add_le_add (add_le_add (add_le_add (le_refl (W r)) hd) hl)
       ha) hb) hc
-  exact hsum.trans (hsum'.trans_eq (by dsimp [W,z]; ring))
+  exact hsum.trans (hsum'.trans_eq (by dsimp only [W, z]; ring))
 
 end EulerGevreyOrderZero

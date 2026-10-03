@@ -41,8 +41,8 @@ theorem intervalCutoff_contDiff (a b d : ℝ) : ContDiff ℝ ∞ (intervalCutoff
 
 theorem intervalCutoff_one {a b d x : ℝ} (hd : 0 < d)
     (ha : a - d ≤ x) (hb : x ≤ b + d) : intervalCutoff a b d x = 1 := by
-  have h1 : 1 ≤ (x - (a - 2 * d)) / d := (le_div_iff₀ hd).2 (by linarith)
-  have h2 : 1 ≤ ((b + 2 * d) - x) / d := (le_div_iff₀ hd).2 (by linarith)
+  have h1 : 1 ≤ (x - (a - 2 * d)) / d := (le_div_iff₀ hd).2 (by linarith only [ha])
+  have h2 : 1 ≤ ((b + 2 * d) - x) / d := (le_div_iff₀ hd).2 (by linarith only [hb])
   simp only [intervalCutoff, Real.smoothTransition.one_of_one_le h1,
     Real.smoothTransition.one_of_one_le h2, mul_one]
 
@@ -53,11 +53,11 @@ theorem intervalCutoff_support {a b d : ℝ} (hd : 0 < d) :
   constructor
   · by_contra hn
     have harg : (x - (a - 2 * d)) / d ≤ 0 :=
-      div_nonpos_of_nonpos_of_nonneg (by linarith) hd.le
+      div_nonpos_of_nonpos_of_nonneg (by linarith only [hn]) hd.le
     exact hne.1 (Real.smoothTransition.zero_of_nonpos harg)
   · by_contra hn
     have harg : ((b + 2 * d) - x) / d ≤ 0 :=
-      div_nonpos_of_nonpos_of_nonneg (by linarith) hd.le
+      div_nonpos_of_nonpos_of_nonneg (by linarith only [hn]) hd.le
     exact hne.2 (Real.smoothTransition.zero_of_nonpos harg)
 
 /-- Input geometry for the compact clock cutoff. The full sampled native
@@ -106,12 +106,12 @@ theorem plateau_open : IsOpen w.plateau := isOpen_Ioo.prod isOpen_Ioo
 theorem core_subset_plateau : w.core ⊆ w.plateau := by
   rintro z ⟨⟨hl1, hu1⟩, ⟨hl2, hu2⟩⟩
   have hd := w.padding_pos
-  exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩
+  exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith only [hl2, hd], by linarith only [hu2, hd]⟩⟩
 
 theorem plateau_subset_outer : w.plateau ⊆ w.outer := by
   rintro z ⟨⟨hl1, hu1⟩, ⟨hl2, hu2⟩⟩
   have hd := w.padding_pos
-  exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith, by linarith⟩⟩
+  exact ⟨⟨by linarith, by linarith⟩, ⟨by linarith only [hl2, hd], by linarith only [hu2, hd]⟩⟩
 
 theorem core_subset_outer : w.core ⊆ w.outer :=
   w.core_subset_plateau.trans w.plateau_subset_outer
@@ -155,7 +155,7 @@ theorem periodizeScalar_eventually_finite (g : Geometry) {f : Plane → ℝ}
   obtain ⟨J, hJ⟩ := g.finite_copy_cutoffs hf (‖Y‖ + 1)
   refine ⟨J, ?_⟩
   filter_upwards [(isOpen_lt continuous_norm continuous_const).mem_nhds
-    (show ‖Y‖ < ‖Y‖ + 1 by linarith)] with Z hZ
+    (show ‖Y‖ < ‖Y‖ + 1 by linarith only)] with Z hZ
   exact tsum_eq_sum (fun k hk => hJ Z hZ.le k hk)
 
 theorem periodizeScalar_contDiff (g : Geometry) {f : Plane → ℝ}

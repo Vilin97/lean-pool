@@ -180,7 +180,7 @@ theorem slot_material (l : SlotColoring.Label) (p pz x0 : ℝ) (b F G : Slow →
     rw [ActualSignedGeometry.slot_coordinates_radial, ActualSignedGeometry.slot_coordinates_angular,
       ActualSignedGeometry.slot_coordinates_axial, slot_coordinates_temporal]
     rfl
-  rw [he, LinearWaveResidual.materialPhaseDefect_slot_formula _ _ _ _ _ _ _ _
+  rw [he, LinearWaveResidual.materialPhaseDefect_slot_formula _ _ _ _ _ _ _ (chi x)
     (ChartScales.epsilon_pos h l.1).ne' hx hF hG]
   rfl
 
@@ -709,7 +709,7 @@ theorem materialWeight_bound (L : Label B N0) (n : ℕ)
   rw [materialWeight_normal]
   exact mul_le_mul hnormal (ActualSignedGeometry.dyadic_ratioPower_le hnm hmn _)
     (PhysicalParticularWave.ratioPower_pos (ChartScales.Q_pos n) (ChartScales.Q_pos _) _).le
-    (by have := ActualSignedGeometry.powerBound_one (h/2+1/2); linarith)
+    (by have := ActualSignedGeometry.powerBound_one (h/2+1/2); linarith only [this])
 
 theorem native_core_of_interval (j : Fin 2) (L : Label B N0) (n : ℕ)
     (k : TorusInverse.Frequency) {x : FullPoint}
@@ -765,12 +765,12 @@ noncomputable def paddedRegion : LocalSignedRequest.SlowRegion (2*h) where
     rw [isOpen_iff_mem_nhds]
     intro z hz
     have hq := (SimilarityCoordinates.coordinateQ_smooth
-      (by linarith [outgoing.data.h_pos] : 0 < 2*h)
-      (by linarith [outgoing.data.h_lt_half] : 2*h < 1) hz.1).continuousAt
+      (by linarith only [outgoing.data.h_pos] : 0 < 2*h)
+      (by linarith only [outgoing.data.h_lt_half] : 2*h < 1) hz.1).continuousAt
     exact inter_mem (isOpen_lt continuous_const continuous_fst |>.mem_nhds hz.1)
       (hq.preimage_mem_nhds (isOpen_Ioo.mem_nhds hz.2))
-  coord_pos := by linarith [outgoing.data.h_pos]
-  coord_lt_one := by linarith [outgoing.data.h_lt_half]
+  coord_pos := by linarith only [outgoing.data.h_pos]
+  coord_lt_one := by linarith only [outgoing.data.h_lt_half]
   qlo := 1/4
   qhi := 4
   qlo_pos := by norm_num
@@ -864,9 +864,9 @@ theorem native_reduced_polynomial (U : LocalSignedRequest.SlowRegion (2 * h)) :
   let M := (phases B N0 0).M+(phases B N0 1).M
   have hM0 := (phases B N0 0).one_le_M
   have hM1 := (phases B N0 1).one_le_M
-  have hM : 1 ≤ M := by dsimp [M]; linarith
+  have hM : 1 ≤ M := by dsimp [M]; linarith only [hM0, hM1]
   have hMj (j : Fin 2) : (phases B N0 j).M ≤ M := by
-    fin_cases j <;> dsimp [M] <;> linarith
+    fin_cases j <;> dsimp [M] <;> linarith only [hM1, hM0]
   have hp : PhaseJetBounds.PolynomialJets (D.slot V hV) (fun i _ => (phases B N0 i.1).phase.p i.2)
       :=
     PhaseJetBounds.PolynomialJets.const_uniform _ hM (fun i => by

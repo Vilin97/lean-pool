@@ -90,7 +90,7 @@ theorem graph_evaluated_tensor_bound (k : ℝ) (m : Vector3) (C R : ℝ)
   refine ⟨hg,hgNorm.trans ?_⟩
   have hfirst : C*R^n*(n.factorial : ℝ)^2 ≤ C*majorant (4*R) 0 n := by
     simpa only [majorant,Nat.add_zero,mul_assoc] using mul_le_mul_of_nonneg_left
-      (majorant_radius_mono R (4*R) hR (by linarith) 0 n) hC
+      (majorant_radius_mono R (4*R) hR (by linarith only [hR]) 0 n) hC
   have hsecond : C*R^(n+1)*((n+1).factorial : ℝ)^2 ≤ C*R*majorant (4*R) 0 n := by
     simpa only [majorant,mul_assoc] using mul_le_mul_of_nonneg_left
       (majorant_one_le_radius_four R hR n) hC
@@ -108,6 +108,9 @@ theorem graph_Lp_bound (k : ℝ) (m : Vector3) (C R : ℝ)
         (Real.sqrt (2/P+2*P)*C*(1+R))*(4*R*graphFactor k m)^n*(n.factorial : ℝ)^2 := by
   obtain ⟨hg,hgNorm⟩ := graph_evaluated_tensor_bound P f hperiod hf k m C R hC hR hLp hn n
   have hm : AEStronglyMeasurable (iteratedFDeriv ℝ n (f ∘ graphMap k m)) volume :=
+    have : SecondCountableTopologyEither Vector3
+        (ContinuousMultilinearMap ℝ (fun _ : Fin n => Vector3) W) :=
+      secondCountableTopologyEither_of_left _ _
     ((hf.comp (graphMap k m).contDiff).continuous_iteratedFDeriv (m := n) (by
         simp)).aestronglyMeasurable
   have hbound := norm_graph_derivative_le f hf k m n

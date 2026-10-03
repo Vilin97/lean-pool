@@ -642,7 +642,7 @@ theorem exists_physical_schedule_residual_zero {h qbig : ℝ}
     apply tendsto_atTop.2
     intro r
     filter_upwards [hgtop.eventually (eventually_ge_atTop (2 * r))] with j hj
-    linarith
+    linarith only [hj]
   have hnonneg (J : ℕ) : 0 ≤ g J := hg0.trans (hgmono (Nat.zero_le J))
   apply physical_vanishingJointJets (Lbg := Lbg) (Lres := Lres) hh hh1 hat hU hUp hlU
     (fun j => (hA j).mono inter_subset_right)
@@ -652,6 +652,6 @@ theorem exists_physical_schedule_residual_zero {h qbig : ℝ}
     (fun j hj m hm z hz => hb.direct j hj m hm z hz.1)
     (fun j hj m hm z hz => hb.pressure j hj m hm z hz.1) hbg
   intro J m
-  exact (hres J m).weaken hlq (by linarith [hnonneg J])
+  exact (hres J m).weaken hlq (by linarith only [hnonneg, hnonneg J])
 
 end NavierStokes.MixedDiagonalResidual

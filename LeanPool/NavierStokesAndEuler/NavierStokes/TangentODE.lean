@@ -255,16 +255,12 @@ theorem continuousOn_projectedOperator {s : Set ℝ}
     (hK : ContinuousOn K s) (hδ : ContinuousOn δ s)
     (hn0 : ∀ t ∈ s, n t ≠ 0) :
     ContinuousOn (fun t => projectedOperator (n t) (n' t) (K t) (δ t)) s := by
-  have hlin : ContinuousOn
-      (fun t => (innerSL ℝ (n t)).comp (K t) - innerSL ℝ (n' t)) s :=
-    (((innerSL ℝ).continuous.comp_continuousOn hn).clm_comp hK).sub
-      ((innerSL ℝ).continuous.comp_continuousOn hn')
-  have hnorm : ContinuousOn (fun t => (⟪n t, n t⟫_ℝ)⁻¹ • n t) s :=
-    ((hn.inner hn).inv₀ (fun t ht => inner_self_ne_zero.mpr (hn0 t ht))).smul hn
-  have houter : ContinuousOn (fun t =>
-      ((innerSL ℝ (n t)).comp (K t) - innerSL ℝ (n' t)).smulRight
-        ((⟪n t, n t⟫_ℝ)⁻¹ • n t)) s :=
-    isBoundedBilinearMap_smulRight.continuous.comp_continuousOn (hlin.prodMk hnorm)
+  have hlin := (((innerSL ℝ).continuous.comp_continuousOn hn).clm_comp hK).sub
+    ((innerSL ℝ).continuous.comp_continuousOn hn')
+  have hnorm := ((hn.inner (𝕜 := ℝ) hn).inv₀
+    (fun t ht => inner_self_ne_zero.mpr (hn0 t ht))).smul hn
+  have houter := (isBoundedBilinearMap_smulRight (𝕜 := ℝ) (E := H) (F := H)).continuous
+    |>.comp_continuousOn (hlin.prodMk hnorm)
   exact (hK.neg.add houter).sub (hδ.smul continuousOn_const)
 
 theorem continuousOn_projectedForcing {s : Set ℝ}

@@ -49,52 +49,65 @@ def jet {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- Linear part, bundling `toFun`, `map_add`, `map_smul`. -/
 def linearPart (M : Space →L[ℝ] Space) : VectorJet →ₗ[ℝ] Space where
   toFun J := J.2 timeDirection + M J.1
-  map_add' J K := by simp [add_add_add_comm]
-  map_smul' c J := by simp [smul_add]
+  map_add' J K := by
+    change (J.2 + K.2) timeDirection + M (J.1 + K.1) = _
+    rw [add_apply, M.map_add]
+    exact add_add_add_comm _ _ _ _
+  map_smul' c J := by
+    change (c • J.2) timeDirection + M (c • J.1) = c • (J.2 timeDirection + M J.1)
+    rw [smul_apply, M.map_smul, smul_add]
 
 /-- Slow pressure, bundling `toFun`, `map_add`, `map_smul`. -/
 def slowPressure (FInv : Space →L[ℝ] Space) : ScalarJet →ₗ[ℝ] Space where
-  toFun J := FInv.adjoint ((toDual ℝ Space).symm (J.2.comp spatialInjection))
-  map_add' J K := by simp [ContinuousLinearMap.add_comp]
-  map_smul' c J := by simp [ContinuousLinearMap.smul_comp]
+  toFun J := ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) FInv
+    ((toDual ℝ Space).symm (J.2.comp spatialInjection))
+  map_add' J K := by simp only [Prod.snd_add, ContinuousLinearMap.add_comp, map_add]
+  map_smul' c J := by
+    simp only [Prod.smul_snd, ContinuousLinearMap.smul_comp, map_smul, RingHom.id_apply]
 
 /-- Fast pressure, bundling `toFun`, `map_add`, `map_smul`. -/
 def fastPressure (m : Space) : ScalarJet →ₗ[ℝ] Space where
   toFun J := J.2 angleDirection • m
-  map_add' J K := by simp [add_smul]
-  map_smul' c J := by simp [smul_smul]
+  map_add' J K := by simp only [Prod.snd_add, add_apply, add_smul]
+  map_smul' c J := by
+    simp only [Prod.smul_snd, smul_apply, smul_eq_mul, RingHom.id_apply, smul_smul]
 
 /-- Slow advection, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
 compatibility proofs. -/
 def slowAdvection (FInv : Space →L[ℝ] Space) : VectorJet →ₗ[ℝ] VectorJet →ₗ[ℝ] Space where
   toFun J :=
     { toFun := fun K => K.2 (spatialInjection (FInv J.1))
-      map_add' K H := by simp
+      map_add' K H := by simp only [Prod.snd_add, add_apply]
       map_smul' c K := by simp }
   map_add' J K := by
     apply LinearMap.ext
     intro H
-    simp
+    simp only [Prod.fst_add, ContinuousLinearMap.map_add, LinearMap.coe_mk, AddHom.coe_mk,
+      LinearMap.add_apply]
   map_smul' c J := by
     apply LinearMap.ext
     intro K
-    simp
+    simp only [Prod.smul_fst, ContinuousLinearMap.map_smul, LinearMap.coe_mk, AddHom.coe_mk,
+      RingHom.id_apply, LinearMap.smul_apply]
 
 /-- Fast advection, bundling `toFun`, `map_add`, `map_smul`, `map_add` and the required
 compatibility proofs. -/
 def fastAdvection (m : Space) : VectorJet →ₗ[ℝ] VectorJet →ₗ[ℝ] Space where
   toFun J :=
     { toFun := fun K => ⟪m, J.1⟫_ℝ • K.2 angleDirection
-      map_add' K H := by simp [smul_add]
-      map_smul' c K := by simp [smul_smul, mul_comm] }
+      map_add' K H := by simp only [Prod.snd_add, add_apply, smul_add]
+      map_smul' c K := by
+        simp only [Prod.smul_snd, smul_apply, smul_smul, mul_comm, RingHom.id_apply] }
   map_add' J K := by
     apply LinearMap.ext
     intro H
-    simp [inner_add_right, add_smul]
+    simp only [Prod.fst_add, inner_add_right, add_smul, LinearMap.coe_mk, AddHom.coe_mk,
+      LinearMap.add_apply]
   map_smul' c J := by
     apply LinearMap.ext
     intro K
-    simp [inner_smul_right, smul_smul]
+    simp only [Prod.smul_fst, inner_smul_right, LinearMap.coe_mk, AddHom.coe_mk, RingHom.id_apply,
+      LinearMap.smul_apply, smul_smul]
 
 /-- Field sum, given by `evaluate M κ (fun n => u n z)`. -/
 def fieldSum {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -134,7 +147,8 @@ theorem momentumResidual_formula (κ : ℝ) (FInv M : Space →L[ℝ] Space) (m 
     (u : Domain → Space) (p : Domain → ℝ) (z : Domain) :
     momentumResidual κ FInv M m u p z =
       fderiv ℝ u z timeDirection + M (u z) +
-      FInv.adjoint ((toDual ℝ Space).symm ((fderiv ℝ p z).comp spatialInjection)) +
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) FInv
+        ((toDual ℝ Space).symm ((fderiv ℝ p z).comp spatialInjection)) +
       κ⁻¹ • (fderiv ℝ p z angleDirection • m) +
       fderiv ℝ u z (spatialInjection (FInv (u z))) +
       κ⁻¹ • (⟪m, u z⟫_ℝ • fderiv ℝ u z angleDirection) := rfl

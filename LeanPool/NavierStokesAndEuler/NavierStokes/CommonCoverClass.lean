@@ -153,18 +153,19 @@ noncomputable def sourceLinear (P : Type) [NormedAddCommGroup P] [NormedSpace �
 theorem nativeArgument_affine (g : CCS) (k : Frequency) (w : Joint P) :
     nativeArgument g k w = nativeArgument g k 0 + nativeLinear P g w := by
   simp only [nativeArgument, g.coordinates_eq_affine k w.1.2, nativeLinear_apply]
-  ext <;> simp
+  ext <;> simp only [Prod.fst_zero, Prod.snd_zero, Prod.mk_add_mk, zero_add, Prod.fst_add]
 
 theorem sourceArgument_affine (g : CCS) (k : Frequency) (w : Joint P) :
     sourceArgument g k w = sourceArgument g k 0 + sourceLinear P g w := by
   have ha : ((g.coordinates k w.1.2).1, w.2) =
       ((g.coordinates k 0).1, 0) + ((g.coordinateLinear w.1.2).1, w.2) := by
     rw [g.coordinates_eq_affine k w.1.2]
-    ext <;> simp
+    ext <;> simp only [Prod.fst_add, Prod.mk_add_mk, zero_add]
   simp only [sourceArgument, CommonCoverSolve.Geometry.path, ha, g.point_add,
     sourceLinear_apply, CommonCoverSolve.Geometry.pointLinear,
     ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe]
-  ext <;> simp
+  ext <;> simp only [Prod.fst_zero, Prod.snd_zero, Prod.mk_add_mk, zero_add, Prod.fst_add,
+      Prod.snd_add]
 
 theorem nativeArgument_smooth (g : CCS) (k : Frequency) :
     ContDiff ℝ ∞ (nativeArgument (P := P) g k) := by
@@ -190,7 +191,7 @@ noncomputable def argumentCost (g : CCS) : ℝ :=
 theorem one_le_argumentCost (g : CCS) : 1 ≤ argumentCost g := by
   unfold argumentCost
   have h : 0 ≤ ‖g.pointLinear‖ * (1 + ‖g.coordinateLinear‖) := by positivity
-  linarith [norm_nonneg g.coordinateLinear]
+  linarith only [h, norm_nonneg g.coordinateLinear]
 
 theorem norm_nativeLinear_le (g : CCS) : ‖nativeLinear P g‖ ≤ argumentCost g := by
   apply ContinuousLinearMap.opNorm_le_bound _ (zero_le_one.trans (one_le_argumentCost g))
@@ -202,7 +203,7 @@ theorem norm_nativeLinear_le (g : CCS) : ‖nativeLinear P g‖ ≤ argumentCost
   have hc : ‖g.coordinateLinear‖ ≤ argumentCost g := by
     unfold argumentCost
     have h : 0 ≤ ‖g.pointLinear‖ * (1 + ‖g.coordinateLinear‖) := by positivity
-    linarith
+    linarith only [h]
   have h1 : ‖w‖ ≤ argumentCost g * ‖w‖ :=
     le_mul_of_one_le_left (norm_nonneg _) (one_le_argumentCost g)
   exact max_le ((norm_fst_le w.1).trans ((norm_fst_le w).trans h1))
@@ -287,7 +288,7 @@ theorem scaledBasis_transverse (B : Plane ≃L[ℝ] Plane) (ci : ℝ) (hci : ci 
     scaledBasis B ci hci (0, 1) = ci • B (0, 1) := by
   rw [scaledBasis_apply, ← map_smul]
   congr 1
-  ext <;> simp
+  ext <;> simp only [Prod.smul_mk, smul_eq_mul, mul_zero, mul_one]
 
 theorem norm_transverseChart_le {ci : ℝ} (hci : ci ≠ 0) (habs : |ci| ≤ 1) :
     ‖(TorusAverages.transverseChart ci hci : Plane →L[ℝ] Plane)‖ ≤ 1 := by
@@ -305,10 +306,10 @@ theorem norm_inverse_transverseChart_le (ci : ℝ) (hci : ci ≠ 0) :
   rw [ContinuousLinearEquiv.coe_coe, TorusAverages.transverseChart_symm_apply, Prod.norm_def]
   apply max_le
   · exact (norm_fst_le z).trans
-      (le_mul_of_one_le_left (norm_nonneg _) (by linarith [abs_nonneg (ci⁻¹)]))
+      (le_mul_of_one_le_left (norm_nonneg _) (by linarith only [abs_nonneg (ci⁻¹)]))
   · rw [div_eq_mul_inv, norm_mul, Real.norm_eq_abs (ci⁻¹), mul_comm]
     exact (mul_le_mul_of_nonneg_left (norm_snd_le z) (abs_nonneg _)).trans
-      (mul_le_mul_of_nonneg_right (by linarith : |ci⁻¹| ≤ 1 + |ci⁻¹|) (norm_nonneg _))
+      (mul_le_mul_of_nonneg_right (by linarith only : |ci⁻¹| ≤ 1 + |ci⁻¹|) (norm_nonneg _))
 
 theorem norm_scaledBasis_le (B : Plane ≃L[ℝ] Plane) {ci : ℝ}
     (hci : ci ≠ 0) (habs : |ci| ≤ 1) :
@@ -355,10 +356,10 @@ theorem geometryCost_one_le (B : Plane ≃L[ℝ] Plane) (D : ℕ) : 1 ≤ geomet
     mul_nonneg (CommonCoverSolve.coveringBound_pos D).le (norm_nonneg _)
   have h2 : 0 ≤ (1 + ChartScales.Tg) * ‖(B.symm : Plane →L[ℝ] Plane)‖ *
       CommonCoverSolve.coveringBound D := by
-    exact mul_nonneg (mul_nonneg (by linarith [ChartScales.Tg_pos]) (norm_nonneg _))
+    exact mul_nonneg (mul_nonneg (by linarith only [ChartScales.Tg_pos]) (norm_nonneg _))
       (CommonCoverSolve.coveringBound_pos D).le
   unfold geometryCost
-  linarith
+  linarith only [h1, h2]
 
 /-- This constant depends on the fixed native basis and the covering-gap
 budget, and is chosen before the band, center, copy, or source. -/
@@ -368,7 +369,7 @@ noncomputable def bandArgumentCost (B : Plane ≃L[ℝ] Plane) (D : ℕ) : ℝ :
 theorem bandArgumentCost_one_le (B : Plane ≃L[ℝ] Plane) (D : ℕ) : 1 ≤ bandArgumentCost B D := by
   have h := geometryCost_one_le B D
   unfold bandArgumentCost
-  nlinarith
+  nlinarith only [h]
 
 theorem bandGeometry_argumentCost_le (B : Plane ≃L[ℝ] Plane) {h : ℝ} (hh : 0 ≤ h)
     {n gap D : ℕ} (hn : 4 ≤ n) (hd : gap ≤ D) (center : Plane) :
@@ -384,7 +385,7 @@ theorem bandGeometry_argumentCost_le (B : Plane ≃L[ℝ] Plane) {h : ℝ} (hh :
       (1 + ChartScales.Tg) * ChartScales.S n := by
     rw [abs_of_pos (inv_pos.mpr (ChartScales.timeCoefficient_pos h n))]
     have hb := ChartScales.timeCoefficient_inv_upper h hh hn
-    nlinarith
+    linarith only [hb, hS]
   have hb : ‖(g.basis : Plane →L[ℝ] Plane)‖ ≤ ‖(B : Plane →L[ℝ] Plane)‖ :=
     norm_scaledBasis_le B _ hci
   have hbi : ‖(g.basis.symm : Plane →L[ℝ] Plane)‖ ≤
@@ -396,15 +397,15 @@ theorem bandGeometry_argumentCost_le (B : Plane ≃L[ℝ] Plane) {h : ℝ} (hh :
   have hcoeff : (1 + ChartScales.Tg) * ‖(B.symm : Plane →L[ℝ] Plane)‖ *
       CommonCoverSolve.coveringBound D ≤ geometryCost B D := by
     unfold geometryCost
-    linarith [mul_nonneg hC0 (norm_nonneg (B : Plane →L[ℝ] Plane))]
+    linarith only [hC0, mul_nonneg hC0 (norm_nonneg (B : Plane →L[ℝ] Plane))]
   have hpoint : ‖g.pointLinear‖ ≤ geometryCost B D := by
     refine (g.norm_pointLinear_le hd).trans ?_
     refine (mul_le_mul_of_nonneg_left hb hC0).trans ?_
     unfold geometryCost
     have ht : 0 ≤ (1 + ChartScales.Tg) * ‖(B.symm : Plane →L[ℝ] Plane)‖ *
         CommonCoverSolve.coveringBound D := by
-      exact mul_nonneg (mul_nonneg (by linarith [ChartScales.Tg_pos]) (norm_nonneg _)) hC0
-    linarith
+      exact mul_nonneg (mul_nonneg (by linarith only [ChartScales.Tg_pos]) (norm_nonneg _)) hC0
+    linarith only [ht]
   have hcoord : ‖g.coordinateLinear‖ ≤ geometryCost B D * ChartScales.S n := by
     refine (g.norm_coordinateLinear_le hd).trans ?_
     calc
@@ -418,10 +419,10 @@ theorem bandGeometry_argumentCost_le (B : Plane ≃L[ℝ] Plane) {h : ℝ} (hh :
     _ ≤ 1 + geometryCost B D * ChartScales.S n +
         geometryCost B D * (1 + geometryCost B D * ChartScales.S n) := by
       exact add_le_add (add_le_add_right hcoord _) (mul_le_mul hpoint (add_le_add_right hcoord _)
-        (by positivity) hK0)
+        (add_nonneg zero_le_one (norm_nonneg _)) hK0)
     _ ≤ bandArgumentCost B D * ChartScales.S n := by
       unfold bandArgumentCost
-      nlinarith [mul_nonneg hK0 (sub_nonneg.mpr hS)]
+      linarith only [mul_nonneg hK0 (sub_nonneg.mpr hS), hS]
 
 end BandGeometry
 
@@ -447,7 +448,7 @@ noncomputable def currentLinear (P : Type) [NormedAddCommGroup P] [NormedSpace �
 theorem currentArgument_affine (g : CCS) (k : Frequency) (p : P × Plane) :
     currentArgument g k p = currentArgument g k 0 + currentLinear P g p := by
   simp only [currentArgument, g.coordinates_eq_affine k p.2, currentLinear_apply]
-  ext <;> simp
+  ext <;> simp only [Prod.snd_zero, Prod.mk_add_mk, zero_add, Prod.snd_add]
 
 theorem currentArgument_smooth (g : CCS) (k : Frequency) :
     ContDiff ℝ ∞ (currentArgument (P := P) g k) := by
@@ -465,7 +466,7 @@ theorem norm_currentLinear_le (g : CCS) : ‖currentLinear P g‖ ≤ argumentCo
   have hc : ‖g.coordinateLinear‖ ≤ argumentCost g := by
     unfold argumentCost
     have hp : 0 ≤ ‖g.pointLinear‖ * (1 + ‖g.coordinateLinear‖) := by positivity
-    linarith
+    linarith only [hp]
   exact (norm_snd_le (g.coordinateLinear p.2)).trans ((g.coordinateLinear.le_opNorm _).trans
     ((mul_le_mul_of_nonneg_left (norm_snd_le p) (norm_nonneg _)).trans
       (mul_le_mul_of_nonneg_right hc (norm_nonneg _))))
@@ -632,7 +633,7 @@ theorem bandRatio_mul_scale (a : ℝ) (n m : ℕ) :
     _ = (ChartScales.Q n ^ a * ChartScales.Q n ^ (-a)) / ChartScales.Q m ^ a := by ring
     _ = (ChartScales.Q m ^ a)⁻¹ := by
       rw [← Real.rpow_add (ChartScales.Q_pos n)]
-      simp
+      simp only [add_neg_cancel, Real.rpow_zero, one_div]
     _ = ChartScales.Q m ^ (-a) := (Real.rpow_neg (ChartScales.Q_pos m).le a).symm
 
 theorem bandRatio_mul_power (a : ℝ) (n m : ℕ) :
@@ -646,7 +647,7 @@ theorem bandRatio_le (a : ℝ) {n m : ℕ} (hnm : n ≤ m + 4) (hmn : m ≤ n + 
     have h1 : (n : ℝ) ≤ (m : ℝ) + 4 := by exact_mod_cast hnm
     have h2 : (m : ℝ) ≤ (n : ℝ) + 4 := by exact_mod_cast hmn
     rw [abs_le]
-    constructor <;> linarith
+    constructor <;> linarith only [h1, h2]
   apply Real.rpow_le_rpow_of_exponent_le (by norm_num)
   calc
     ((m : ℝ) - (n : ℝ)) * a ≤ |((m : ℝ) - (n : ℝ)) * a| := le_abs_self _
@@ -670,7 +671,7 @@ theorem slow_scale_transfer {n m : ℕ} (hm : 1 ≤ m) (hnm : n ≤ m + 4) :
   have h : (n : ℝ) ≤ 5 * (m : ℝ) := by exact_mod_cast (show n ≤ 5 * m by omega)
   have hs := mul_self_le_mul_self (Nat.cast_nonneg n) h
   unfold ChartScales.S
-  nlinarith
+  nlinarith only [hs]
 
 theorem slow_power_transfer {n m : ℕ} (hm : 1 ≤ m) (hnm : n ≤ m + 4) (p : ℕ) :
     ChartScales.S n ^ p ≤ 25 ^ p * ChartScales.S m ^ p := by
@@ -713,7 +714,7 @@ noncomputable def chartCost (D : ℝ) : ℝ := 1 + (2 : ℝ) ^ (4 * (1 + |D|))
 
 theorem chartCost_one_le (D : ℝ) : 1 ≤ chartCost D := by
   unfold chartCost
-  linarith [Real.rpow_pos_of_pos (by norm_num : (0 : ℝ) < 2) (4 * (1 + |D|))]
+  linarith only [Real.rpow_pos_of_pos (by norm_num : (0 : ℝ) < 2) (4 * (1 + |D|))]
 
 theorem bandRatio_le_chartCost {D a : ℝ} (ha : |a| ≤ 1 + |D|) {n m : ℕ}
     (hnm : n ≤ m + 4) (hmn : m ≤ n + 4) : bandRatio a n m ≤ chartCost D := by
@@ -721,7 +722,7 @@ theorem bandRatio_le_chartCost {D a : ℝ} (ha : |a| ≤ 1 + |D|) {n m : ℕ}
   refine (Real.rpow_le_rpow_of_exponent_le (by
       norm_num) (mul_le_mul_of_nonneg_left ha (by norm_num))).trans ?_
   unfold chartCost
-  linarith
+  linarith only
 
 theorem norm_bandChart_le (D : ℝ) {n m : ℕ} (hnm : n ≤ m + 4) (hmn : m ≤ n + 4) :
     ‖bandChart D n m‖ ≤ chartCost D := by
@@ -735,11 +736,11 @@ theorem norm_bandChart_le (D : ℝ) {n m : ℕ} (hnm : n ≤ m + 4) (hmn : m ≤
   rw [bandChart_apply, Prod.norm_def, Prod.norm_def]
   apply max_le
   · exact hb (1 / 2) x.1 (by
-      rw [abs_of_pos (by norm_num : (0 : ℝ) < 1 / 2)]; linarith [abs_nonneg D])
+      rw [abs_of_pos (by norm_num : (0 : ℝ) < 1 / 2)]; linarith only [abs_nonneg D])
       (norm_fst_le x)
   · apply max_le
-    · exact hb D x.2.1 (by linarith) ((norm_fst_le x.2).trans (norm_snd_le x))
-    · exact hb 1 x.2.2 (by rw [abs_one]; linarith [abs_nonneg D])
+    · exact hb D x.2.1 (by linarith only) ((norm_fst_le x.2).trans (norm_snd_le x))
+    · exact hb 1 x.2.2 (by rw [abs_one]; linarith only [abs_nonneg D])
         ((norm_snd_le x.2).trans (norm_snd_le x))
 
 theorem bandChart_jet_bound {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -845,8 +846,11 @@ theorem memClass_affine_transport
           (CL ^ m * t.growth n x ^ (l * m)) := by
         have hv0 := hv n x hx
         have htε : 0 ≤ t.epsilon n ^ α := (Real.rpow_pos_of_pos (t.epsilon_pos n) α).le
-        gcongr
-        exact heps n
+        have hB0 : 0 ≤ A * (Ce * t.epsilon n ^ α) := mul_nonneg hA (mul_nonneg hCe htε)
+        exact mul_le_mul (mul_le_mul_of_nonneg_right (mul_le_mul
+          (mul_le_mul_of_nonneg_left (heps n) hA) hgpow (pow_nonneg hsource p) hB0) hv0) hpow
+          (pow_nonneg (norm_nonneg _) _) (mul_nonneg (mul_nonneg hB0
+            (mul_nonneg (pow_nonneg hCg0 p) (pow_nonneg htarget _))) hv0)
       _ = WeightedClasses.majorant t v α (A * Ce * Cg ^ p * CL ^ m)
           (r * p + l * m) n x := by
         unfold WeightedClasses.majorant
@@ -918,12 +922,15 @@ theorem memClass_sourceArgument (s : WeightedClasses.StripData P)
     rw [hpres]
     rfl
   have heps (n : ℕ) : (sourceStrip s).epsilon n ^ α ≤ 1 * (jointStrip s).epsilon n ^ α := by
-    simp [sourceStrip, jointStrip, parameterStrip]
+    simp only [sourceStrip, parameterStrip, ContinuousLinearMap.coe_fst', jointStrip,
+        ContinuousLinearMap.comp_apply, one_mul, Std.le_refl]
   have hgrowth (n : ℕ) (x : Joint P) (_hx : x ∈ (jointStrip s).domain) :
       (sourceStrip s).growth n (sourceArgument (g n) (copy n) 0 + sourceLinear P (g n) x) ≤
         1 * (jointStrip s).growth n x ^ 1 := by
     rw [hpres]
-    simp [sourceStrip, jointStrip, parameterStrip, WeightedClasses.StripData.growth, sourceArgument]
+    simp only [WeightedClasses.StripData.growth, sourceStrip, parameterStrip,
+        ContinuousLinearMap.coe_fst', sourceArgument, jointStrip, ContinuousLinearMap.comp_apply,
+        pow_one, one_mul, Std.le_refl]
   have hlinear (n : ℕ) (x : Joint P) (_hx : x ∈ (jointStrip s).domain) :
       ‖sourceLinear P (g n)‖ ≤ bandArgumentCost B D * (jointStrip s).growth n x ^ 1 := by
     rw [pow_one]
@@ -969,7 +976,7 @@ noncomputable def commonChartCost (D : ℝ) (gapBound : ℕ) : ℝ :=
 
 theorem commonChartCost_one_le (D : ℝ) (gapBound : ℕ) : 1 ≤ commonChartCost D gapBound := by
   unfold commonChartCost
-  linarith [chartCost_one_le D, CommonCoverSolve.coveringBound_pos gapBound]
+  linarith only [chartCost_one_le D, CommonCoverSolve.coveringBound_pos gapBound]
 
 theorem norm_bandCommonChart_le (D : ℝ) {n m gap gapBound : ℕ}
     (hnm : n ≤ m + 4) (hmn : m ≤ n + 4) (forward : Bool) (hgap : gap ≤ gapBound) :
@@ -987,7 +994,7 @@ theorem norm_bandCommonChart_le (D : ℝ) {n m gap gapBound : ℕ}
       _ ≤ commonChartCost D gapBound * ‖x‖ := by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         unfold commonChartCost
-        linarith
+        linarith only [hC]
   · calc
       _ ≤ ‖coverChange forward gap‖ * ‖x.2‖ := (coverChange forward gap).le_opNorm _
       _ ≤ CommonCoverSolve.coveringBound gapBound * ‖x‖ :=
@@ -995,7 +1002,7 @@ theorem norm_bandCommonChart_le (D : ℝ) {n m gap gapBound : ℕ}
       _ ≤ commonChartCost D gapBound * ‖x‖ := by
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         unfold commonChartCost
-        linarith
+        linarith only [hD]
 
 theorem bandCommonChart_envelope {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (D : ℝ) {n m gap gapBound r : ℕ} (hnm : n ≤ m + 4) (hmn : m ≤ n + 4)
@@ -1274,7 +1281,7 @@ theorem norm_meshLinear_le {D : ℝ} {L M : SlotColoring.Label} (h : SlotColorin
 bounded by assuming the lattice copy indices themselves are bounded. -/
 theorem norm_meshOffset_le {D : ℝ} {L M : SlotColoring.Label} (h : SlotColoring.Adj D L M) :
     ‖meshOffset D L M‖ ≤ 2 * (SlotColoring.ratioBound D + 1) := by
-  apply (pi_norm_le_iff_of_nonneg (by linarith [mesh_ratioBound_pos D] :
+  apply (pi_norm_le_iff_of_nonneg (by linarith only [mesh_ratioBound_pos D] :
     0 ≤ 2 * (SlotColoring.ratioBound D + 1))).mpr
   intro j
   have hM := SlotColoring.width_pos D j h.right_positive
@@ -1300,8 +1307,8 @@ theorem meshTransition_jet_bound {V : Type} [NormedAddCommGroup V] [NormedSpace 
     ∀ j ≤ m, ‖iteratedFDeriv ℝ j (fun y => f (meshTransition D L M y)) x‖ ≤
       A * (1 + SlotColoring.ratioBound D) ^ m := by
   apply affine_jet_bound hf (meshLinear D L M) (meshOffset D L M)
-    (by linarith [mesh_ratioBound_pos D])
-    ((norm_meshLinear_le h).trans (by linarith)) m x hb
+    (by linarith only [mesh_ratioBound_pos D])
+    ((norm_meshLinear_le h).trans (by linarith only)) m x hb
 
 theorem meshTransition_norm_le {D : ℝ} {L M : SlotColoring.Label} (h : SlotColoring.Adj D L M)
     {x : SlotColoring.Position} (hx : ‖x‖ ≤ 2) :
@@ -1309,7 +1316,7 @@ theorem meshTransition_norm_le {D : ℝ} {L M : SlotColoring.Label} (h : SlotCol
   have hlin : ‖meshLinear D L M x‖ ≤ SlotColoring.ratioBound D * 2 :=
     ((meshLinear D L M).le_opNorm x).trans
       (mul_le_mul (norm_meshLinear_le h) hx (norm_nonneg _) (mesh_ratioBound_pos D).le)
-  exact (norm_add_le _ _).trans (by linarith [norm_meshOffset_le h])
+  exact (norm_add_le _ _).trans (by linarith only [hlin, h, norm_meshOffset_le h])
 
 /-- The covering budget used in the path estimate is now instantiated
 from the actual adjacent labels and their coarsest common native index. -/
@@ -1336,11 +1343,11 @@ noncomputable def nativeBasis : Plane ≃L[ℝ] Plane :=
 
 theorem nativeBasis_radial : nativeBasis (1, 0) = PhysicalGraphBounds.radialDirection := by
   rw [nativeBasis, TorusAverages.slotChart_apply]
-  simp
+  simp only [one_smul, zero_smul, add_zero]
 
 theorem nativeBasis_temporal : nativeBasis (0, 1) = PhysicalGraphBounds.timeDirection := by
   rw [nativeBasis, TorusAverages.slotChart_apply]
-  simp
+  simp only [zero_smul, one_smul, zero_add]
 
 /-- The exact manuscript path, with the actual `c_i` and `v_t`. -/
 theorem native_band_path (h : ℝ) (n gap : ℕ) (center : Plane) (k : Frequency)

@@ -242,8 +242,11 @@ theorem coefficients_constant (e : D ≃ₗᵢ[ℝ] E) (a : E → ℂ) :
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [coefficients_apply, HarmonicFields.constantCoefficient]
-  · simp [coefficients_apply, HarmonicFields.constantCoefficient, hj]
+    simp only [HarmonicFields.constantCoefficient, coefficients_apply,
+        AddMonoidAlgebra.coeff_single, Finsupp.single_eq_same]
+  · simp only [HarmonicFields.constantCoefficient, coefficients_apply,
+      AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true, Finsupp.single_eq_of_ne,
+      Pi.zero_apply]
 
 theorem evaluate_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficients E)
     (x : D) (theta : ℝ) :
@@ -292,8 +295,10 @@ theorem nonconstant_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicFields.Coefficien
   ext j x
   by_cases hj : j = 0
   · subst j
-    simp [HarmonicResidual.nonconstant, coefficients_apply]
-  · simp [HarmonicResidual.nonconstant, coefficients_apply, hj]
+    simp only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_same,
+        Pi.zero_apply, coefficients_apply]
+  · simp only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, ne_eq, hj,
+      not_false_eq_true, Finsupp.erase_ne, coefficients_apply]
 
 /-- Block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required compatibility
 proofs. -/
@@ -336,7 +341,9 @@ theorem rotate_pull (e : D ≃ₗᵢ[ℝ] E) (a : HarmonicResidual.VectorCoeffic
     HarmonicResidual.rotate (fun i => coefficients e (a i)) =
       fun i => coefficients e (HarmonicResidual.rotate a i) := by
   funext i
-  fin_cases i <;> simp [HarmonicResidual.rotate, coefficients_neg]
+  fin_cases i <;> simp only [HarmonicResidual.rotate, Fin.isValue, Fin.zero_eta,
+      Matrix.cons_val_zero, coefficients_neg, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+      Matrix.cons_val, coefficients_zero]
 
 theorem scalarLaplacian_pull (e : D ≃ₗᵢ[ℝ] E) (g : HarmonicResidual.Frame E)
     (k : ℝ) (Phi : E → ℝ) (kp : ℤ) (a : HarmonicFields.Coefficients E) :
@@ -370,8 +377,10 @@ theorem gradientCoefficients_pull (e : D ≃ₗᵢ[ℝ] E) (g : HarmonicResidual
     HarmonicResidual.gradient (frame e g) k (fun x => Phi (e x)) kp (coefficients e a) =
       fun i => coefficients e (HarmonicResidual.gradient g k Phi kp a i) := by
   funext i
-  fin_cases i <;> simp [HarmonicResidual.gradient, frame, differentiate_pull,
-    angularDifferentiate_pull, coefficients_mul, coefficients_constant]
+  fin_cases i <;> simp only [HarmonicResidual.gradient, frame, differentiate_pull,
+      Complex.ofReal_inv, angularDifferentiate_pull, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, coefficients_mul,
+      coefficients_constant, Fin.reduceFinMk, Matrix.cons_val]
 
 theorem linearCoefficients_pull (e : D ≃ₗᵢ[ℝ] E) (g : HarmonicResidual.Frame E)
     (k : ℝ) (Phi : E → ℝ) (kp : ℤ) (B a : HarmonicResidual.VectorCoefficients E)

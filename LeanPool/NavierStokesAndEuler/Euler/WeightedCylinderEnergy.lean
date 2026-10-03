@@ -130,8 +130,8 @@ theorem weighted_cylinder_energy_integral {α β : Type*} [Fintype α] [Fintype 
         metric_energy_hasDerivAt (fun v => (K v).operator) (e i j) u (K' u) (e' i j u)
           (hKt u hu) (het i j u hu) hsymL)
     have hq := hQ0 i u ⟨hu.1.le, hu.2.le⟩
-    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by
-        nlinarith : Q i u + δ ^ 2 ≠ 0)).differentiableAt
+    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2))
+      (add_pos_of_nonneg_of_pos hq (pow_pos hδ 2)).ne').differentiableAt
   have hreg (i : α) (δ : ℝ) (hδ : 0 < δ) (u : ℝ) (hu : u ∈ Ioo s t) :
       deriv (fun v => √(Q i v + δ ^ 2)) u ≤ a u * √(Q i u + δ ^ 2) + F i u := by
     exact finite_cylinder_viscous_energy period κ m K (G u) (e i) u δ c ν (K' u)
@@ -159,8 +159,8 @@ theorem weighted_cylinder_energy_integral {α β : Type*} [Fintype α] [Fintype 
       (ρ' u / ρ u) * weightedMetricLoss (ρ u) order (K u).operator (fun i j => e i j u) +
       (((K u).bound : ℝ) / c) * weightedForcingSum (ρ u) order (fun i j => forcing i j u) := by
     simp only [Ψ, A, w, w', F, Q, weightedMetricSum, weightedMetricLoss, weightedForcingSum,
-      familyMetricNorm, add_mul, Finset.sum_add_distrib, Finset.mul_sum]
-    simp only [mul_comm, mul_left_comm, mul_assoc]
+      familyMetricNorm, Finset.mul_sum, ← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun i _ => by ring
   simpa only [halg, w, Q, a, weightedMetricSum, familyMetricNorm] using hsum
 
 end EulerWeightedCylinderEnergy

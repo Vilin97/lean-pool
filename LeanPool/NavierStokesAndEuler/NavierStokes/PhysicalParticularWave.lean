@@ -820,7 +820,7 @@ theorem reference_physical_velocity (hQr : 0 < Qr) {z : SpaceTime} (hz : 0 < z.2
     (fun _ => D.directions.angular) (D.directions.axialField D.strip D.reference.band)
     (fun i => (((contDiffOn_pi.mp (commonPotential_smooth D C D.reference.band)) i).contDiffAt
       (D.strip.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
-  rw [H.radius, H.radial, H.angular, H.axial] at he
+  simp only [H.radius, H.radial, H.angular, H.axial] at he
   change CurlClassBounds.cylindricalCurl PhysicalResidualBridge.ScaledGraph.radius G.radial
     PhysicalResidualBridge.ScaledGraph.angular G.axial B (G.map z) =
     CurlClassBounds.cylindricalCurl (D.background.radius D.reference.band)
@@ -829,6 +829,7 @@ theorem reference_physical_velocity (hQr : 0 < Qr) {z : SpaceTime} (hz : 0 < z.2
       (commonPotential D j D.reference.band) (nativeMap h Qr I z) at he
   rw [commonPotential_curl D C D.reference.band hx] at he
   rw [he] at hc
+  unfold physicalVelocity physicalPotential
   exact hc
 
 end ReferenceRealization

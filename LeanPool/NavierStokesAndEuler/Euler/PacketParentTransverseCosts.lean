@@ -150,10 +150,10 @@ theorem inverseRadius_bound (R C c : ℝ) (hR : 0 ≤ R)
 theorem traceCost_le (T Ti : ℝ) (hT : 0 < T) (hT1 : T ≤ 1) (hi : T⁻¹ ≤ Ti) :
     traceCost T ≤ Ti+2 := by
   have hTi : 0 ≤ Ti := (inv_nonneg.mpr hT.le).trans hi
-  have hs : Real.sqrt T ≤ 1 := by nlinarith [Real.sqrt_nonneg T,Real.sq_sqrt hT.le]
+  have hs : Real.sqrt T ≤ 1 := by nlinarith only [hT1, hT, Real.sqrt_nonneg T, Real.sq_sqrt hT.le]
   have hm := mul_le_mul hi hs (Real.sqrt_nonneg T) hTi
   unfold traceCost
-  linarith
+  linarith only [hs, hm]
 
 theorem forwardCost_bound (q : ℕ) (S Ti R C C₁ Cp V : ℝ)
     (hS : 0 ≤ S) (hR : 0 ≤ R) (hC : 0 ≤ C) (hC₁ : 0 ≤ C₁) (hCp : 0 ≤ Cp)
@@ -195,11 +195,11 @@ theorem radius_guards (q : ℕ) (T S Ti R C C₁ C₂ Cp : ℝ)
   have hfr := mul_nonneg hf (add_nonneg hi zero_le_one)
   unfold radius
   constructor
-  · linarith
+  · linarith only [hi, hgr, hcr, hfr]
   constructor
-  · linarith
+  · linarith only [hi, hwr, hcr, hfr]
   constructor
-  · linarith
-  constructor <;> linarith
+  · linarith only [hi, hwr, hgr, hfr]
+  constructor <;> linarith only [hwr, hgr, hcr, hfr, hi]
 
 end EulerPacketParentTransverseCosts

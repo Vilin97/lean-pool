@@ -16,6 +16,10 @@ import Mathlib.Analysis.Calculus.MeanValue
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 open Set
@@ -89,12 +93,12 @@ theorem normalized_motion_errors
       |ε ^ 2 * h t / a - 1| ≤ e ∧
       |B t 0 1 / a - 1| ≤ e ∧ |B t 2 1 / a - β| ≤ e := by
   let e := 16 * (ε * Θ * G ^ 2 + d)
-  have haPos : 0 < a := by linarith
+  have haPos : 0 < a := one_half_pos.trans_le ha
   have haNe : a ≠ 0 := ne_of_gt haPos
   have hεNe : ε ≠ 0 := ne_of_gt hε
-  have hΘ0 : 0 ≤ Θ := by linarith
-  have hG0 : 0 ≤ G := by linarith
-  have hG2 : G ≤ G ^ 2 := by nlinarith only [hG]
+  have hΘ0 : 0 ≤ Θ := zero_le_one.trans hΘ
+  have hG0 : 0 ≤ G := zero_le_one.trans hG
+  have hG2 : G ≤ G ^ 2 := le_self_pow₀ hG two_ne_zero
   have hΘG2 : G ^ 2 ≤ Θ * G ^ 2 := by
     have hh := mul_le_mul_of_nonneg_right hΘ (sq_nonneg G)
     linarith only [hh]
@@ -104,7 +108,7 @@ theorem normalized_motion_errors
   have hεBase : ε ≤ ε * Θ * G ^ 2 := by
     have hh := mul_le_mul_of_nonneg_left hG hε.le
     linarith only [hh, hεG]
-  have hbase0 : 0 ≤ ε * Θ * G ^ 2 := by positivity
+  have hbase0 : 0 ≤ ε * Θ * G ^ 2 := mul_nonneg (mul_nonneg hε.le hΘ0) (sq_nonneg G)
   have he : 0 ≤ e := by dsimp [e]; positivity
   have hεe : ε ≤ e := by dsimp [e]; linarith only [hεBase, hd, hε]
   have hShearSmall : (4 * ε * G) * Θ ≤ 1 / 2 := by

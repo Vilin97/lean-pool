@@ -28,9 +28,9 @@ variable {K V W : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Apply a fixed bounded linear map to the actual field and all its literal derivative jets. -/
 def map (L : V →L[ℝ] W) (A : SmoothCoefficientPath K V) : SmoothCoefficientPath K W where
-  field := mapCoefficientPath L A.field
+  field := mapCoefficientPath (K := K) L A.field
   smooth t := L.contDiff.comp (A.smooth t)
-  jet n := mapCoefficientPath (ContinuousLinearMap.compContinuousMultilinearMapL ℝ
+  jet n := mapCoefficientPath (K := K) (ContinuousLinearMap.compContinuousMultilinearMapL ℝ
     (fun _ : Fin n => Space) V W L) (A.jet n)
   jet_eq n t x := by
     change L.compContinuousMultilinearMap (A.jet n t x) =

@@ -62,7 +62,8 @@ include hX hXY hY in
 theorem Budget.physicalPotential_gradient (k : ℝ) (hk : k * A.κ = 1)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     gradient (B.physicalPotential D P k Y t) x =
-      A.κ • (D.FInv.field t (Y t x)).adjoint
+      A.κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (D.FInv.field t (Y t x))
         (B.pointPressure P t (cylinderGraph P k A.direction (Y t x))) := by
   rw [Budget.physicalPotential, EulerLagrangian.gradient_pullback _ _ _ _
     (continuousInverse_hasFDerivAt D X Y hX hXY hY t x)
@@ -73,7 +74,8 @@ include hX hXY hY in
 theorem Budget.physicalPotential_gradient_jet (k : ℝ) (hk : k * A.κ = 1)
     (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
     iteratedFDeriv ℝ n (gradient (B.physicalPotential D P k Y t)) x =
-      iteratedFDeriv ℝ n (fun y => A.κ • (D.FInv.field t (Y t y)).adjoint
+      iteratedFDeriv ℝ n (fun y => A.κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space)
+        (F := Space) (D.FInv.field t (Y t y))
         (B.pointPressure P t (cylinderGraph P k A.direction (Y t y)))) x := by
   congr 2
   funext y
@@ -83,7 +85,8 @@ include hX hXY hY in
 theorem Budget.physicalPotential_hessian_norm (k : ℝ) (hk : k * A.κ = 1)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     ‖fderiv ℝ (gradient (B.physicalPotential D P k Y t)) x‖ =
-      ‖iteratedFDeriv ℝ 1 (fun y => A.κ • (D.FInv.field t (Y t y)).adjoint
+      ‖iteratedFDeriv ℝ 1 (fun y => A.κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space)
+        (F := Space) (D.FInv.field t (Y t y))
         (B.pointPressure P t (cylinderGraph P k A.direction (Y t y)))) x‖ := by
   rw [← norm_iteratedFDeriv_one,
     B.physicalPotential_gradient_jet D P X Y hX hXY hY k hk 1 t x]

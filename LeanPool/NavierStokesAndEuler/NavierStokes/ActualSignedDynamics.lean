@@ -122,7 +122,7 @@ theorem nativeUnit_hasDerivAt (j : Fin 2) (L : Label B N0) {x : Native}
       PrimaryPulseBounds.normalizedPulse (P.frame L) (P.lam L) (P.u L) ell (x.1,t/ell) := by
     simp only [nativeUnit, pulseCoordinates, ell, P, length_sign]
   simp only [he]
-  convert! hd' using 1
+  refine hd'.congr_deriv ?_
   rw [show (P.frame L).normal (x.1,x.2.2) = P.phase.normal L (phasePoint L x) from
     frame_normal P L hz,
     show (P.frame L).normalMotion (x.1,x.2.2) = P.phase.velocity L (phasePoint L x) from
@@ -249,16 +249,17 @@ theorem normal_eq_copy_germ (j : Fin 2) (L : Label B N0) (n : ℕ)
   have hrad : (chartCoefficients j L).radius n y = y.1.1 := rfl
   have heps : (phases B N0 j).phase.epsilon L = ChartScales.epsilon h (BaseChartJets.cellBand L) :=
       rfl
+  have hdf := hd.fderiv
   ext i
   fin_cases i <;>
-    simp only [LinearWaveBounds.WaveCoefficients.normal, phaseNormal, along, hd.fderiv, heps,
+    simp only [LinearWaveBounds.WaveCoefficients.normal, phaseNormal, along, hdf, heps,
         smul_apply, ContinuousLinearMap.comp_apply, slotLinear_radial, map_smul, smul_eq_mul,
             slotLinear_angular j L n y, hrad, slotLinear_axial, Fin.zero_eta, Fin.isValue,
                 Matrix.cons_val_zero, normalScale, PhaseCalculus.phaseNormal, PiLp.smul_apply,
                     Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
   · ring
-  · rw [slotPoint_radius]
-    field_simp [(radialScale_pos L n).ne', hyR.ne']
+  · rw [slotPoint_radius, mul_div_assoc, mul_assoc (_ / _) (radialScale L n),
+      ← mul_div_assoc (radialScale L n), mul_div_mul_left _ _ (radialScale_pos L n).ne']
   · ring
 
 /-- True ambient tangency near every admissible closed-core point. -/

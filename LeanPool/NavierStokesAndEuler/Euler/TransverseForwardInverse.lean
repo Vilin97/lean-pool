@@ -42,7 +42,8 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- The actual ordinary coefficient `-2 K⁻¹ Q* Q₁` in equation (12). -/
 def generator : C(Icc (0 : ℝ) T,V →L[ℝ] V) :=
-  ⟨fun t => (-2 : ℝ) • (gramInversePath T Q c hc hQ t).comp ((Q t).adjoint.comp (Q₁ t)),
+  ⟨fun t => (-2 : ℝ) • (gramInversePath T Q c hc hQ t).comp
+      ((adjoint (𝕜 := ℝ) (E := V) (F := E) (Q t)).comp (Q₁ t)),
     ((gramInversePath T Q c hc hQ).continuous.clm_comp
       ((adjointPath T Q).continuous.clm_comp Q₁.continuous)).const_smul (-2 : ℝ)⟩
 
@@ -95,12 +96,13 @@ theorem coordinates_hasDerivWithinAt (f : C(Icc (0 : ℝ) T, E)) (a₀ : V) (t :
 /-- The constructed derivative satisfies the literal projected equation (12). -/
 theorem coordinate_equation (f : C(Icc (0 : ℝ) T, E)) (a₀ : V) (t : Icc (0 : ℝ) T) :
     gram (Q t) (coordinateDerivative T hT Q Q₁ c hc hQ U f a₀ t) =
-      (Q t).adjoint (f t - (2 : ℝ) • Q₁ t (coordinates T hT Q Q₁ c hc hQ U f a₀ t)) := by
+      adjoint (𝕜 := ℝ) (E := V) (F := E) (Q t)
+        (f t - (2 : ℝ) • Q₁ t (coordinates T hT Q Q₁ c hc hQ U f a₀ t)) := by
   change gram (Q t) ((-2 : ℝ) • gramInverse (Q t) c hc (hQ t)
-      ((Q t).adjoint (Q₁ t (coordinates T hT Q Q₁ c hc hQ U f a₀ t))) +
-      gramInverse (Q t) c hc (hQ t) ((Q t).adjoint (f t))) = _
-  rw [map_add, map_smul, gram_inverse_apply, gram_inverse_apply, map_sub, map_smul]
-  module
+      (adjoint (𝕜 := ℝ) (E := V) (F := E) (Q t)
+        (Q₁ t (coordinates T hT Q Q₁ c hc hQ U f a₀ t))) +
+      gramInverse (Q t) c hc (hQ t) (adjoint (𝕜 := ℝ) (E := V) (F := E) (Q t) (f t))) = _
+  simp only [neg_smul, map_smul, gram_inverse_apply, map_sub, neg_add_eq_sub]
 
 /-- Physical velocity is tangent at every time because it lies in the frame range. -/
 theorem velocity_tangent (m : Icc (0 : ℝ) T → E)

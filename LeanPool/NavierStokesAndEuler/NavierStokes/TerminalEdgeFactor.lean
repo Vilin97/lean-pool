@@ -24,6 +24,10 @@ parameter coefficients smooth without assuming a normalized stress factor.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -59,7 +63,7 @@ noncomputable def chartPoint (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) :
 
 theorem timeOf_lt_one (p : EdgeParam) : timeOf p < 1 := by
   unfold timeOf
-  linarith [Real.exp_pos p.1]
+  linarith only [Real.exp_pos p.1]
 
 theorem timeOf_contDiff : ContDiff ℝ ∞ timeOf :=
   contDiff_const.sub contDiff_fst.exp
@@ -132,14 +136,14 @@ theorem carrier_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ContDiff ℝ ∞ (carrier C d y0) := by
   apply contDiff_iff_contDiffAt.mpr
   intro y
-  exact (physicalHeat_contDiffAt C (by linarith [d.h_pos])
+  exact (physicalHeat_contDiffAt C (by linarith only [d.h_pos])
     (p := chartPoint d y0 y) (timeOf_lt_one y.1)
     (div_pos (sq_pos_of_pos (radius_pos d y0 y)) (by norm_num))).comp y
       (chartPoint_contDiff d y0).contDiffAt
 
 theorem carrier_pos {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) :
     0 < carrier C d y0 y :=
-  heatAmplitude_pos hC (by linarith [d.h_pos]) (timeOf_lt_one y.1) (radius_pos d y0 y)
+  heatAmplitude_pos hC (by linarith only [d.h_pos]) (timeOf_lt_one y.1) (radius_pos d y0 y)
 
 /-- Carrier radial, given by `radius d y0 y * SimilarityProfile.partialS (physicalHeat C (1 +
 d.h)) (chartPoint d y0 y)`. -/
@@ -149,7 +153,7 @@ noncomputable def carrierRadial (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgePar
 theorem carrierRadial_eq (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgeParam × ℝ) :
     carrierRadial C d y0 y =
       deriv (heatAmplitude C (1 + d.h) (timeOf y.1)) (radius d y0 y) := by
-  have hp := physicalHeat_contDiffAt C (a := 1 + d.h) (by linarith [d.h_pos])
+  have hp := physicalHeat_contDiffAt C (a := 1 + d.h) (by linarith only [d.h_pos])
     (p := chartPoint d y0 y) (timeOf_lt_one y.1)
     (div_pos (sq_pos_of_pos (radius_pos d y0 y)) (by norm_num))
   exact (radialSlice_hasDerivAt (hp.differentiableAt (by simp))).deriv.symm
@@ -158,7 +162,7 @@ theorem carrierRadial_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ContDiff ℝ ∞ (carrierRadial C d y0) := by
   apply contDiff_iff_contDiffAt.mpr
   intro y
-  have hp := physicalHeat_contDiffAt C (a := 1 + d.h) (by linarith [d.h_pos])
+  have hp := physicalHeat_contDiffAt C (a := 1 + d.h) (by linarith only [d.h_pos])
     (p := chartPoint d y0 y) (timeOf_lt_one y.1)
     (div_pos (sq_pos_of_pos (radius_pos d y0 y)) (by norm_num))
   exact (radius_contDiff d y0).contDiffAt.mul
@@ -266,8 +270,8 @@ theorem radialFlatDensity_integral {c R r : ℝ} (hc : 0 < c) (hR : 0 < R) (hr :
 theorem chart_tau_identity (d : TailData) (p : EdgeParam) :
     1 - timeOf p = chartQ d p * (1 - chartEta d p ^ 2) := by
   exact SimilarityCoordinates.tau_coordinate_identity
-    (by linarith [d.h_pos] : 0 < 2 * d.h)
-    (by linarith [d.h_lt_half] : 2 * d.h < 1)
+    (by linarith only [d.h_pos] : 0 < 2 * d.h)
+    (by linarith only [d.h_lt_half] : 2 * d.h < 1)
     (p := (1 - timeOf p, p.2)) (sub_pos.mpr (timeOf_lt_one p))
 
 /-- The physical heat argument retains the varying factor `1-eta²`. -/
@@ -325,7 +329,7 @@ theorem radialTaper_plateau (d : TailData) (y0 : ℝ) (p : EdgeParam) :
     radialTaper d y0 p =ᶠ[atTop] fun _ => 1 := by
   apply radial_flattening_plateau d.h_pos d.h_lt_half (timeOf_lt_one p)
   filter_upwards [eventually_ge_atTop (y0 + 3)] with y hy
-  exact tailShape_late d (by linarith)
+  exact tailShape_late d (by linarith only [hy])
 
 /-- Boundary coefficient, given by `(2 * carrier C d y0 y / radius d y0 y) * taperSlopeFactor d
 y.2`. -/
@@ -470,7 +474,7 @@ theorem viscous_weight_integrable (C : ℝ) (d : TailData) (y0 : ℝ) (p : EdgeP
   apply integrableOn_Ioi_of_eventually_zero hr
   · intro u hu
     have hK := heatAmplitude_contDiffAt C (a := 1 + d.h)
-      (by linarith [d.h_pos]) (timeOf_lt_one p) hu
+      (by linarith only [d.h_pos]) (timeOf_lt_one p) hu
     have hKr := contDiffAt_deriv hK (m := ∞) (by simp)
     have hg := radialTaper_contDiffAt d y0 p hu
     have hgr := contDiffAt_deriv hg (m := ∞) (by simp)
@@ -500,7 +504,7 @@ noncomputable def angularFactor (C : ℝ) (d : TailData) (y0 : ℝ) (y : EdgePar
 theorem angularFactor_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ContDiff ℝ ∞ (angularFactor C d y0) :=
   (boundaryCoefficient_contDiff C d y0).add
-    (((contDiff_snd.pow 3).div ((radius_contDiff d y0).pow 2)
+    ((((contDiff_snd (𝕜 := ℝ) (E := EdgeParam) (F := ℝ)).pow 3).div ((radius_contDiff d y0).pow 2)
       (fun y => (sq_pos_of_pos (radius_pos d y0 y)).ne')).mul
         ((ParametricFlatFactor.factor_contDiff (by norm_num : (0 : ℝ) < 4) 3
           (timeCoefficient_contDiff C d y0)).add
@@ -769,7 +773,7 @@ theorem positiveExtension_eq {m x : ℝ} (hm : 0 < m) (hx : m ≤ x) :
     positiveExtension m x = x := by
   unfold positiveExtension
   rw [OutgoingSchedule.sigma_one ((le_div_iff₀ (by positivity : 0 < m / 2)).mpr
-    (by linarith))]
+    (by linarith only [hx]))]
   ring
 
 /-- Profile L, given by `positiveExtension (1 - 2 * d.h) (CoordinateAlgebra.L d.h η)`. -/
@@ -781,17 +785,17 @@ theorem profileL_contDiff (d : TailData) : ContDiff ℝ ∞ (profileL d) :=
     (contDiff_const.sub (contDiff_const.mul (contDiff_id.pow 2)))
 
 theorem profileL_pos (d : TailData) (η : ℝ) : 0 < profileL d η :=
-  positiveExtension_pos (by linarith [d.h_lt_half]) _
+  positiveExtension_pos (by linarith only [d.h_lt_half]) _
 
 theorem profileL_eq (d : TailData) {η : ℝ} (hη : η ^ 2 ≤ 1) :
     profileL d η = CoordinateAlgebra.L d.h η := by
-  apply positiveExtension_eq (by linarith [d.h_lt_half])
+  apply positiveExtension_eq (by linarith only [d.h_lt_half])
   unfold CoordinateAlgebra.L
-  nlinarith [d.h_pos]
+  nlinarith only [hη, d.h_pos]
 
 theorem eta_sq_le_one {η : ℝ} (hη : η ∈ Icc (-1 : ℝ) 1) : η ^ 2 ≤ 1 := by
-  nlinarith [mul_nonneg (show 0 ≤ η + 1 by linarith [hη.1])
-    (show 0 ≤ 1 - η by linarith [hη.2])]
+  nlinarith only [hη,
+      mul_nonneg (show 0 ≤ η + 1 by linarith [hη.1]) (show 0 ≤ 1 - η by linarith [hη.2])]
 
 /-- Profile S, given by `Real.exp (y0 + 3 - x)`. -/
 noncomputable def profileS (y0 x : ℝ) : ℝ := Real.exp (y0 + 3 - x)
@@ -821,11 +825,13 @@ theorem profileRadius_square (y0 x : ℝ) :
   ring
 
 theorem profileZ_contDiff (y0 : ℝ) : ContDiff ℝ ∞ (profileZ y0) :=
-  (contDiff_const.mul (contDiff_const.sub (contDiff_fst.pow 2))).div
+  ((contDiff_const (𝕜 := ℝ) (E := ℝ × ℝ) (F := ℝ)).mul
+    ((contDiff_const (𝕜 := ℝ) (E := ℝ × ℝ) (F := ℝ)).sub
+      ((contDiff_fst (𝕜 := ℝ) (E := ℝ) (F := ℝ)).pow 2))).div
     ((profileS_contDiff y0).comp contDiff_snd) (fun y => (profileS_pos y0 y.2).ne')
 
 theorem profileZ_nonneg (y0 : ℝ) {y : ℝ × ℝ} (hη : y.1 ^ 2 ≤ 1) :
-    0 ≤ profileZ y0 y := div_nonneg (by nlinarith) (profileS_pos y0 y.2).le
+    0 ≤ profileZ y0 y := div_nonneg (by nlinarith only [hη]) (profileS_pos y0 y.2).le
 
 /-- Profile carrier, given by `C * (profileS y0 y.2) ^ RadialHeatProfile.spatialExponent (1 +
 d.h) * HeatProfileExtension.extension (1 + d.h) (profileZ y0 y)`. -/
@@ -845,13 +851,13 @@ theorem profileCarrier_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ContDiff ℝ ∞ (profileCarrier C d y0) :=
   (contDiff_const.mul (((profileS_contDiff y0).comp contDiff_snd).rpow_const_of_ne
     (fun y => (profileS_pos y0 y.2).ne'))).mul
-      ((HeatProfileExtension.extension_contDiff (by linarith [d.h_pos])).comp
+      ((HeatProfileExtension.extension_contDiff (by linarith only [d.h_pos])).comp
         (profileZ_contDiff y0))
 
 theorem profileCarrierRadial_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ContDiff ℝ ∞ (profileCarrierRadial C d y0) := by
   have hH : ContDiff ℝ ∞ (HeatProfileExtension.extension (1 + d.h)) :=
-    HeatProfileExtension.extension_contDiff (by linarith [d.h_pos])
+    HeatProfileExtension.extension_contDiff (by linarith only [d.h_pos])
   have hH' : ContDiff ℝ ∞ (deriv (HeatProfileExtension.extension (1 + d.h))) :=
     (contDiff_infty_iff_deriv.mp hH).2
   exact ((contDiff_const.mul
@@ -864,13 +870,14 @@ theorem profileCarrierRadial_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
 theorem profileCarrier_pos {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ)
     {y : ℝ × ℝ} (hη : y.1 ^ 2 ≤ 1) : 0 < profileCarrier C d y0 y :=
   mul_pos (mul_pos hC (Real.rpow_pos_of_pos (profileS_pos y0 y.2) _))
-    (HeatProfileExtension.extension_pos (by linarith [d.h_pos]) (profileZ_nonneg y0 hη))
+    (HeatProfileExtension.extension_pos (by linarith only [d.h_pos]) (profileZ_nonneg y0 hη))
 
 /-- Profile chi, given by `2 * η / profileL d η`. -/
 noncomputable def profileChi (d : TailData) (η : ℝ) : ℝ := 2 * η / profileL d η
 
 theorem profileChi_contDiff (d : TailData) : ContDiff ℝ ∞ (profileChi d) :=
-  (contDiff_const.mul contDiff_id).div (profileL_contDiff d) (fun η => (profileL_pos d η).ne')
+  ((contDiff_const (𝕜 := ℝ) (E := ℝ) (F := ℝ)).mul contDiff_id).div (profileL_contDiff d)
+    (fun η => (profileL_pos d η).ne')
 
 /-- Profile boundary coefficient, given by `(2 * profileCarrier C d y0 y / profileRadius y0 y.2)
 * taperSlopeFactor d y.2`. -/
@@ -930,7 +937,8 @@ noncomputable def profileAngularStress (C : ℝ) (d : TailData) (y0 : ℝ) (y : 
 theorem profileAngularFactor_contDiff (C : ℝ) (d : TailData) (y0 : ℝ) :
     ContDiff ℝ ∞ (profileAngularFactor C d y0) :=
   (profileBoundaryCoefficient_contDiff C d y0).add
-    (((contDiff_snd.pow 3).div (((profileRadius_contDiff y0).comp contDiff_snd).pow 2)
+    ((((contDiff_snd (𝕜 := ℝ) (E := ℝ) (F := ℝ)).pow 3).div
+      (((profileRadius_contDiff y0).comp (contDiff_snd (𝕜 := ℝ) (E := ℝ) (F := ℝ))).pow 2)
       (fun y => (sq_pos_of_pos (profileRadius_pos y0 y.2)).ne')).mul
       ((ParametricFlatFactor.factor_contDiff (by norm_num : (0 : ℝ) < 4) 3
         (profileTimeCoefficient_contDiff C d y0)).add
@@ -1207,13 +1215,13 @@ theorem carrierRadial_normalizedParam (C : ℝ) (d : TailData) (y0 x : ℝ)
   rw [carrierRadial_eq]
   unfold heatAmplitude
   rw [deriv_const_mul_field,
-    RadialHeatProfile.radialProfile_first_derivative (by linarith [d.h_pos])
+    RadialHeatProfile.radialProfile_first_derivative (by linarith only [d.h_pos])
       (sub_pos.mpr (timeOf_lt_one (normalizedParam η))) (radius_pos d y0 (normalizedParam η, x))]
   unfold RadialHeatProfile.radialFirst RadialHeatProfile.spatialFirst
   rw [timeOf_normalizedParam hη, radialS_normalizedParam d y0 x hη,
     radius_normalizedParam d y0 x hη]
   have hder := HeatProfileExtension.iteratedDeriv_extension_eq_profileJet
-    (a := 1 + d.h) (by linarith [d.h_pos]) 1 (profileZ_nonneg y0 (y := (η, x)) hη.le)
+    (a := 1 + d.h) (by linarith only [d.h_pos]) 1 (profileZ_nonneg y0 (y := (η, x)) hη.le)
   simp only [iteratedDeriv_one] at hder
   unfold profileCarrierRadial
   dsimp only
@@ -1472,14 +1480,14 @@ theorem extended_heat_slope (d : TailData) {z : ℝ} (hz : 0 ≤ z) :
   rcases eq_or_lt_of_le hz with he | hp
   · subst z
     simpa only [neg_zero, zero_mul, HeatProfileExtension.extension_zero
-      (a := 1 + d.h) (by linarith [d.h_pos]),
+      (a := 1 + d.h) (by linarith only [d.h_pos]),
       mul_one] using d.h_pos
   · have he := HeatProfileExtension.iteratedDeriv_extension_eq_profileJet
-      (a := 1 + d.h) (by linarith [d.h_pos]) 1 hp.le
+      (a := 1 + d.h) (by linarith only [d.h_pos]) 1 hp.le
     simp only [iteratedDeriv_one] at he
     rw [he, HeatProfileExtension.extension_eq_profile _ hp.le,
-      ← (RadialHeatProfile.profile_hasDerivAt (by linarith [d.h_pos]) hp).deriv]
-    exact (div_lt_iff₀ (RadialHeatProfile.profile_pos (by linarith [d.h_pos]) hp.le)).mp
+      ← (RadialHeatProfile.profile_hasDerivAt (by linarith only [d.h_pos]) hp).deriv]
+    exact (div_lt_iff₀ (RadialHeatProfile.profile_pos (by linarith only [d.h_pos]) hp.le)).mp
       (RadialHeatProfile.profile_h_logSlope_lt d.h_pos hp)
 
 theorem profileCarrier_radial_gap {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ)
@@ -1492,14 +1500,13 @@ theorem profileCarrier_radial_gap {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : �
       profileZ y0 y * deriv (HeatProfileExtension.extension (1 + d.h)) (profileZ y0 y)) +
       HeatProfileExtension.extension (1 + d.h) (profileZ y0 y) < 0 := by
     unfold RadialHeatProfile.spatialExponent
-    nlinarith
+    linear_combination 2 * hlog
   have hi := mul_neg_of_pos_of_neg
     (mul_pos hC (Real.rpow_pos_of_pos hs (RadialHeatProfile.spatialExponent (1 + d.h)))) hb
   convert! hi using 1
   unfold profileCarrierRadial profileCarrier
   rw [Real.rpow_sub hs, Real.rpow_one]
   field_simp [hs.ne']
-  ring_nf
   rw [profileRadius_square]
   ring
 
@@ -1508,12 +1515,12 @@ theorem profileSpeed_zero_gt_two {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ
   have hK := profileCarrier_pos hC d y0 (y := (η, 0)) (eta_sq_le_one hη)
   have hgap := profileCarrier_radial_gap hC d y0 (y := (η, 0)) (eta_sq_le_one hη)
   have hdiv : profileRadius y0 0 * profileCarrierRadial C d y0 (η, 0) /
-      profileCarrier C d y0 (η, 0) < -1 := (div_lt_iff₀ hK).mpr (by linarith)
+      profileCarrier C d y0 (η, 0) < -1 := (div_lt_iff₀ hK).mpr (by linarith only [hgap])
   have hz : tailShapeDeriv d 3 = 0 := by
     have he := tailShapeDeriv_factorization d 0
     simpa only [sub_zero, FlatCutoff.edge_zero, zero_div, zero_mul] using he
   simp only [profileSpeed, sub_zero, hz, mul_zero, zero_div]
-  linarith
+  linarith only [hdiv]
 
 /-- Profile cone gap, given by `2 - (profileSpeed C d y0 y - 2) * profileTilt C d y0 y ^ 2`. -/
 noncomputable def profileConeGap (C : ℝ) (d : TailData) (y0 : ℝ) (y : ℝ × ℝ) : ℝ :=
@@ -1537,7 +1544,7 @@ theorem compact_positive_collar {E : Type*} [NormedAddCommGroup E]
     intro p hp
     exact ((hf p hp).comp (f := fun q : ℝ × E => (q.2, q.1))
       (continuousAt_snd.prodMk continuousAt_fst)).eventually
-      (Ioi_mem_nhds (lt_of_lt_of_le (show m / 2 < m by linarith) (hmb p hp)))
+      (Ioi_mem_nhds (lt_of_lt_of_le (show m / 2 < m by linarith only [hm]) (hmb p hp)))
   obtain ⟨ε, hε, hball⟩ := Metric.mem_nhds_iff.mp hE
   refine ⟨ε, m / 2, hε, by positivity, ?_⟩
   intro p hp x hx
@@ -1587,7 +1594,7 @@ theorem profileS_hasDerivAt (y0 x : ℝ) : HasDerivAt (profileS y0) (-profileS y
 
 theorem profileZ_hasDerivAt (y0 η x : ℝ) :
     HasDerivAt (fun u => profileZ y0 (η, u)) (profileZ y0 (η, x)) x := by
-  convert! (hasDerivAt_const x (2 * (1 - η ^ 2))).div
+  convert! (hasDerivAt_const (𝕜 := ℝ) (F := ℝ) x (2 * (1 - η ^ 2))).div
     (profileS_hasDerivAt y0 x) (profileS_pos y0 x).ne' using 1
   unfold profileZ
   dsimp only
@@ -1600,8 +1607,9 @@ theorem profileCarrier_hasDerivAt_edge (C : ℝ) (d : TailData) (y0 η x : ℝ) 
   have hpow := (profileS_hasDerivAt y0 x).rpow_const
     (p := RadialHeatProfile.spatialExponent (1 + d.h)) (Or.inl hs.ne')
   have hH := ((HeatProfileExtension.extension_contDiff (a := 1 + d.h)
-    (by linarith [d.h_pos])).differentiable (by simp) (profileZ y0 (η, x))).hasDerivAt
-  have hp := (hpow.fun_mul (hH.comp x (profileZ_hasDerivAt y0 η x))).const_mul C
+    (by linarith only [d.h_pos])).differentiable (by simp) (profileZ y0 (η, x))).hasDerivAt
+  have hp := (hpow.fun_mul (hH.comp (h := fun u => profileZ y0 (η, u)) x
+    (profileZ_hasDerivAt y0 η x))).const_mul C
   simp only [Function.comp_def] at hp
   convert! hp using 1
   · funext u
@@ -1612,7 +1620,6 @@ theorem profileCarrier_hasDerivAt_edge (C : ℝ) (d : TailData) (y0 η x : ℝ) 
     dsimp only
     rw [Real.rpow_sub hs, Real.rpow_one]
     field_simp [hs.ne']
-    ring_nf
     rw [profileRadius_square]
     ring
 
@@ -1654,12 +1661,12 @@ theorem profile_relative_cone {C : ℝ} (hC : 0 < C) (d : TailData) (y0 : ℝ) :
   have hTa : 0 < profileAngularStress C d y0 (η, x) := by
     rw [profileAngularStress_factorization]
     exact mul_pos (div_pos (FlatCutoff.edge_pos 4 hx) (pow_pos hx _)) (hm.trans_le ha)
-  refine ⟨hTa, by linarith, ?_⟩
+  refine ⟨hTa, by linarith only [hm, hv], ?_⟩
   have hg' : (profileSpeed C d y0 (η, x) - 2) *
       (profileAxialStress C d y0 (η, x) / profileAngularStress C d y0 (η, x)) ^ 2 < 2 := by
     rw [profileTilt_eq_ratio C d y0 η hx]
     change m ≤ 2 - (profileSpeed C d y0 (η, x) - 2) * profileTilt C d y0 (η, x) ^ 2 at hg
-    linarith
+    linarith only [hm, hg]
   apply (div_lt_iff₀ (sq_pos_of_pos hTa)).mp
   simpa only [div_pow, mul_div_assoc] using hg'
 

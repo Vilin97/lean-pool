@@ -11,6 +11,7 @@ public import Mathlib.Analysis.InnerProductSpace.Defs
 public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Tangent projection and pressure cancellation

@@ -13,6 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.OperatorGevreyCalculus
 import LeanPool.NavierStokesAndEuler.Euler.TimeLpCoefficientGevrey
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.ContDiff.Comp
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # The actual Gram inverse on Bochner L²
@@ -44,7 +45,8 @@ variable {U E : Type*}
 /-- The genuine Bochner Gram operator, formed from the actual frame multiplier. -/
 def gramOperator (T : ℝ) (hT : 0 ≤ T) (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
     TimeLp T U →L[ℝ] TimeLp T U :=
-  (timeMultiplier T hT Q).adjoint.comp (timeMultiplier T hT Q)
+  (adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q)).comp
+    (timeMultiplier T hT Q)
 
 /-- The pointwise lower frame bound gives coercivity on the actual time-L² space. -/
 theorem gramOperator_coercive (T : ℝ) (hT : 0 ≤ T)
@@ -73,7 +75,8 @@ def gramSolver (T : ℝ) (hT : 0 ≤ T)
 theorem gramOperator_ae (T : ℝ) (hT : 0 ≤ T)
     (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (u : TimeLp T U) :
     ∀ᵐ t ∂timeMeasure T, gramOperator T hT Q u t =
-      (Q (projIcc 0 T hT t)).adjoint (Q (projIcc 0 T hT t) (u t)) := by
+      adjoint (𝕜 := ℝ) (E := U) (F := E) (Q (projIcc 0 T hT t))
+        (Q (projIcc 0 T hT t) (u t)) := by
   simp only [gramOperator, comp_apply, timeMultiplier_adjoint]
   filter_upwards [timeMultiplier_ae T hT (adjointPath T Q) (timeMultiplier T hT Q u),
     timeMultiplier_ae T hT Q u] with t hA hQ
@@ -93,7 +96,7 @@ theorem gramSolver_eq_multiplier (T : ℝ) (hT : 0 ≤ T)
       timeMultiplier_ae T hT (gramInversePath T Q c hc hQ) f] with t hg hb
     rw [hg, hb]
     exact gram_inverse_apply (Q (projIcc 0 T hT t)) c hc (hQ _) (f t)
-  have hi := inverse_operator_apply (gramOperator T hT Q) c hc
+  have hi := inverse_operator_apply (E := TimeLp T U) (gramOperator (U := U) (E := E) T hT Q) c hc
     (gramOperator_coercive T hT Q c hQ) (timeMultiplier T hT (gramInversePath T Q c hc hQ) f)
   rw [he] at hi
   exact hi
@@ -103,7 +106,8 @@ theorem gramSolver_norm (T : ℝ) (hT : 0 ≤ T)
     (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) (c : ℝ) (hc : 0 < c)
     (hQ : ∀ t v, c * ‖v‖ ^ 2 ≤ ‖Q t v‖ ^ 2) :
     ‖gramSolver T hT Q c hc hQ‖ ≤ c⁻¹ :=
-  coerciveInverse_norm_le (gramOperator T hT Q) c hc (gramOperator_coercive T hT Q c hQ)
+  coerciveInverse_norm_le (E := TimeLp T U) (gramOperator (U := U) (E := E) T hT Q) c hc
+    (gramOperator_coercive T hT Q c hQ)
 
 variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 
@@ -112,7 +116,9 @@ theorem gramOperator_contDiff (T : ℝ) (hT : 0 ≤ T)
     (Q : P → C(Icc (0 : ℝ) T, U →L[ℝ] E)) {n : ℕ∞ω} (hQ : ContDiff ℝ n Q) :
     ContDiff ℝ n (fun x => gramOperator T hT (Q x)) := by
   have hM := contDiff_timeMultiplier T hT Q hQ
-  exact ((realAdjoint (U := TimeLp T U) (E := TimeLp T E)).contDiff.comp hM).clm_comp hM
+  exact ((ContinuousLinearMap.contDiff (𝕜 := ℝ) (E := TimeLp T U →L[ℝ] TimeLp T E)
+    (F := TimeLp T E →L[ℝ] TimeLp T U)
+    (realAdjoint (U := TimeLp T U) (E := TimeLp T E))).comp hM).clm_comp hM
 
 /-- The actual Gram coefficient jets have a polynomial factorial multiplier constant. -/
 theorem gramOperator_bound (T : ℝ) (hT : 0 ≤ T)
@@ -125,8 +131,11 @@ theorem gramOperator_bound (T : ℝ) (hT : 0 ≤ T)
   let M := fun y => timeMultiplier T hT (Q y)
   have hM : ContDiff ℝ ∞ M := contDiff_timeMultiplier T hT Q hQ
   have hb := timeMultiplier_bound T hT Q hQ R C hR hC 0 hbQ
-  have h := clm_comp_bound (fun y => (M y).adjoint) M
-    ((realAdjoint (U := TimeLp T U) (E := TimeLp T E)).contDiff.comp hM) hM
+  have h := clm_comp_bound
+    (fun y => adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (M y)) M
+    ((ContinuousLinearMap.contDiff (𝕜 := ℝ) (E := TimeLp T U →L[ℝ] TimeLp T E)
+      (F := TimeLp T E →L[ℝ] TimeLp T U)
+      (realAdjoint (U := TimeLp T U) (E := TimeLp T E))).comp hM) hM
     R C C hR hC hC 0 0 (adjoint_bound M hM R C hR hC 0 hb) hb n x
   have he : 3*C*C = 3*C^2 := by ring
   simp only [Nat.add_zero, he] at h

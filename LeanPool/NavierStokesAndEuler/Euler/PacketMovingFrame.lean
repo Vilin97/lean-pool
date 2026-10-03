@@ -192,7 +192,8 @@ theorem frameRate_skew (B : Space →L[ℝ] Space) (p q : Space)
 def normalizedFrame (m v : ℝ → Space) (t : ℝ) : Fin 3 → Space := frame (unit (m t)) (unit (v t))
 
 theorem normalizedFrame_hasDerivAt (B : Space →L[ℝ] Space) {m v : ℝ → Space} {t : ℝ}
-    (hm : HasDerivAt m (-B.adjoint (m t)) t)
+    (hm : HasDerivAt m
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B (m t)) t)
     (hv : HasDerivAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i : Fin 3) :
     HasDerivAt (fun s => normalizedFrame m v s i)
@@ -206,7 +207,8 @@ theorem normalizedFrame_hasDerivAt (B : Space →L[ℝ] Space) {m v : ℝ → Sp
 
 theorem normalizedFrame_hasDerivWithinAt (B : Space →L[ℝ] Space)
     {m v : ℝ → Space} {t : ℝ} {S : Set ℝ}
-    (hm : HasDerivWithinAt m (-B.adjoint (m t)) S t)
+    (hm : HasDerivWithinAt m
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B (m t)) S t)
     (hv : HasDerivWithinAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) S t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i : Fin 3) :
     HasDerivWithinAt (fun s => normalizedFrame m v s i)
@@ -221,7 +223,8 @@ theorem normalizedFrame_hasDerivWithinAt (B : Space →L[ℝ] Space)
 /-- The source skew matrix is now identified with the derivative of the
 actual normalized ray/velocity frame. -/
 theorem normalizedFrame_skew (B : Space →L[ℝ] Space) {m v : ℝ → Space} {t : ℝ}
-    (hm : HasDerivAt m (-B.adjoint (m t)) t)
+    (hm : HasDerivAt m
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B (m t)) t)
     (hv : HasDerivAt v (-B (v t) + (2 * ⟪m t, B (v t)⟫_ℝ / ‖m t‖ ^ 2) • m t) t)
     (hm0 : m t ≠ 0) (hv0 : v t ≠ 0) (hmv : ⟪m t, v t⟫_ℝ = 0) (i j : Fin 3) :
     ⟪normalizedFrame m v t i, deriv (fun s => normalizedFrame m v s j) t⟫_ℝ =

@@ -80,20 +80,26 @@ theorem Data.activationRayScale_bounds (D : Data U) (t₀ : Icc (0 : ℝ) D.T) (
       (activationRayScale (D.deformationEquiv t₀ 0) n)⁻¹ ≤ D.frameBound := by
   have hn0 : n ≠ 0 := by intro hz; rw [hz,norm_zero] at hn; norm_num at hn
   let F := D.deformationEquiv t₀ 0
-  have hpos : 0 < ‖F.toContinuousLinearMap.adjoint n‖ :=
+  have hpos : 0 < ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n‖ :=
     norm_pos_iff.mpr (forward_adjoint_ne_zero F hn0)
-  have hlo : 1 ≤ D.inverseBound*‖F.toContinuousLinearMap.adjoint n‖ := by
+  have hlo : 1 ≤ D.inverseBound*
+      ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n‖ := by
     calc
-      1 = ‖F.symm.toContinuousLinearMap.adjoint (F.toContinuousLinearMap.adjoint n)‖ := by
+      1 = ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.symm.toContinuousLinearMap
+          (adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n)‖ := by
         rw [inverse_adjoint_forward_adjoint,hn]
-      _ ≤ ‖F.symm.toContinuousLinearMap.adjoint‖*‖F.toContinuousLinearMap.adjoint n‖ :=
-        F.symm.toContinuousLinearMap.adjoint.le_opNorm _
-      _ ≤ D.inverseBound*‖F.toContinuousLinearMap.adjoint n‖ := by
+      _ ≤ ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.symm.toContinuousLinearMap‖*
+          ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n‖ :=
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.symm.toContinuousLinearMap).le_opNorm _
+      _ ≤ D.inverseBound*
+          ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n‖ := by
         rw [LinearIsometryEquiv.norm_map]
         exact mul_le_mul_of_nonneg_right (D.inverse_norm t₀ 0) (norm_nonneg _)
-  have hhi : ‖F.toContinuousLinearMap.adjoint n‖ ≤ D.frameBound := by
+  have hhi : ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n‖ ≤
+      D.frameBound := by
     calc
-      _ ≤ ‖F.toContinuousLinearMap.adjoint‖*‖n‖ := F.toContinuousLinearMap.adjoint.le_opNorm n
+      _ ≤ ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap‖*‖n‖ :=
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap).le_opNorm n
       _ = ‖D.F.field t₀ 0‖ := by rw [LinearIsometryEquiv.norm_map,hn,mul_one]; rfl
       _ ≤ D.frameBound := D.frame_norm t₀ 0
   refine ⟨activationRayScale_pos F hn0,?_,?_⟩

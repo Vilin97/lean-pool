@@ -138,26 +138,25 @@ theorem meanAcceleration_translation_gevrey
         majorant R (d+1) n := by
   let Q := fun b : Space => solenoidalFrame T (translatePath T b F)
   let Q₁ := fun b : Space => solenoidalFrame T (translatePath T b F₁)
-  have hQ : ContDiff ℝ ∞ Q := contDiff_solenoidalFrame T (fun b => translatePath T b F) hF
-  have hQ₁ : ContDiff ℝ ∞ Q₁ := contDiff_solenoidalFrame T (fun b => translatePath T b F₁) hF₁
-  have hbQ : ∀ k b, ‖iteratedFDeriv ℝ k Q b‖ ≤ CF*majorant Rc 0 k :=
-    solenoidalFrame_bound T (fun b => translatePath T b F) hF Rc CF hRc hCF 0 hFb
-  have hbQ₁ : ∀ k b, ‖iteratedFDeriv ℝ k Q₁ b‖ ≤ CF₁*majorant Rc 0 k :=
-    solenoidalFrame_bound T (fun b => translatePath T b F₁) hF₁ Rc CF₁ hRc hCF₁ 0 hF₁b
+  have hQ := contDiff_solenoidalFrame T (fun b => translatePath T b F) hF
+  have hQ₁ := contDiff_solenoidalFrame T (fun b => translatePath T b F₁) hF₁
+  have hbQ := solenoidalFrame_bound T (fun b => translatePath T b F) hF Rc CF hRc hCF 0 hFb
+  have hbQ₁ := solenoidalFrame_bound T (fun b => translatePath T b F₁) hF₁ Rc CF₁ hRc hCF₁ 0 hF₁b
   have hbQR (k b) : ‖iteratedFDeriv ℝ k Q b‖ ≤ CF*majorant R 0 k :=
     (hbQ k b).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 k) hCF)
   have hbQ₁R (k b) : ‖iteratedFDeriv ℝ k Q₁ b‖ ≤ CF₁*majorant R 0 k :=
     (hbQ₁ k b).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 k) hCF₁)
   let g := EulerTimeLpAccelerationForcing.forcing T hT Q Q₁
     (fun b => timeTranslation T b f) (fun b => timeSolenoidalTranslation T b v)
-  have hg : ContDiff ℝ ∞ g := EulerTimeLpAccelerationForcing.forcing_contDiff T hT Q Q₁
+  have hg := EulerTimeLpAccelerationForcing.forcing_contDiff T hT Q Q₁
     (fun b => timeTranslation T b f) (fun b => timeSolenoidalTranslation T b v) hQ hQ₁ hf hv
-  have hgb : ∀ k b, ‖iteratedFDeriv ℝ k g b‖ ≤ (3*CF*(Cf+6*CF₁*Cv))*majorant R d k :=
-    EulerTimeLpAccelerationForcing.forcing_bound T hT Q Q₁
+  have hgb := EulerTimeLpAccelerationForcing.forcing_bound T hT Q Q₁
       (fun b => timeTranslation T b f) (fun b => timeSolenoidalTranslation T b v)
       hQ hQ₁ hf hv R CF CF₁ Cf Cv hR hCF hCF₁ hCf hCv d hbQR hbQ₁R hfb hvb
   have hs := gramSolution_gevrey T hT Q c hc (translatedFrame_lower T F c hLower) hQ
-    Rc CF hRc hCF hbQ g hg (3*CF*(Cf+6*CF₁*Cv)) R (by positivity) hstrong d hgb n a
+    Rc CF hRc hCF hbQ g hg (3*CF*(Cf+6*CF₁*Cv)) R
+    (mul_nonneg (mul_nonneg (by norm_num) hCF)
+      (add_nonneg hCf (mul_nonneg (mul_nonneg (by norm_num) hCF₁) hCv))) hstrong d hgb n a
   exact (congrArg (fun g : Space → TimeLp T solenoidalSpace => ‖iteratedFDeriv ℝ n g a‖)
     (meanAcceleration_orbit_eq T hT F F₁ c hc hLower v f)).trans_le hs
 

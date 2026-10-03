@@ -116,7 +116,9 @@ theorem cutoff_jet_bound {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
   let D := finiteBound B m
   have hD : 1 ≤ D := finiteBound_one_le _ _
   have hDp : 0 < D := zero_lt_one.trans_le hD
-  refine ⟨m.factorial * A * D ^ m, by positivity, ?_⟩
+  refine ⟨m.factorial * A * D ^ m,
+    mul_pos (mul_pos (Nat.cast_pos.mpr (Nat.factorial_pos m)) (zero_lt_one.trans_le hA))
+      (pow_pos hDp m), ?_⟩
   intro a ha x hx
   have hqx := hpos x hx
   let f : E → ℝ := fun y => (q x)⁻¹ • q y
@@ -131,8 +133,8 @@ theorem cutoff_jet_bound {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
       (le_finiteBound B hkm).trans (by
         simpa only [pow_one] using pow_le_pow_right₀ hD hk)
     have he : (q x)⁻¹ * q x ^ (1 - (k : ℝ)) = q x ^ (-(k : ℝ)) := by
-      rw [Real.rpow_sub hqx, Real.rpow_one, Real.rpow_neg hqx.le]
-      field_simp [hqx.ne']
+      rw [Real.rpow_sub hqx, Real.rpow_one, Real.rpow_neg hqx.le, div_eq_mul_inv,
+        inv_mul_cancel_left₀ hqx.ne']
     calc
       ‖iteratedFDeriv ℝ k f x‖ = (q x)⁻¹ * ‖iteratedFDeriv ℝ k q x‖ := by
         dsimp only [f]
@@ -152,8 +154,7 @@ theorem cutoff_jet_bound {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
   have heq : g ∘ f = fun y => SmoothCutoffs.scaledCutoff a (q y) := by
     funext y
     simp only [Function.comp_apply, g, f, SmoothCutoffs.scaledCutoff, smul_eq_mul]
-    congr 1
-    field_simp
+    rw [mul_assoc, mul_inv_cancel_left₀ hqx.ne']
   rw [heq] at hb
   calc
     _ ≤ m.factorial * A * (D / q x) ^ m := hb
@@ -239,7 +240,7 @@ theorem cut_product_bound {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
   let CA := finiteBound C m
   have hCQ : 0 < CQ := zero_lt_one.trans_le (finiteBound_one_le _ _)
   have hCA : 0 < CA := zero_lt_one.trans_le (finiteBound_one_le _ _)
-  refine ⟨2 ^ m * CQ * CA, by positivity, ?_⟩
+  refine ⟨2 ^ m * CQ * CA, mul_pos (mul_pos (pow_pos two_pos m) hCQ) hCA, ?_⟩
   intro a ha x hx hq1
   have hqx := hpos x hx
   let l : ℝ := 1 + |Real.log (q x)|
@@ -257,7 +258,8 @@ theorem cut_product_bound {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
     apply mul_le_mul_of_nonneg_right _ (Real.rpow_nonneg hqx.le _)
     calc
       C k * l ^ (p k) ≤ CA * l ^ (p k) :=
-        mul_le_mul_of_nonneg_right (le_finiteBound C hk) (Real.rpow_nonneg (by positivity) _)
+        mul_le_mul_of_nonneg_right (le_finiteBound C hk)
+          (Real.rpow_nonneg (zero_le_one.trans hl) _)
       _ ≤ CA * l ^ (finiteBound p m) := mul_le_mul_of_nonneg_left
         (Real.rpow_le_rpow_of_exponent_le hl (le_finiteBound p hk)) hCA.le
   have hb := smul_jet_bound hU
@@ -275,7 +277,7 @@ theorem cut_product_bound {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
         have hL := le_finiteBound L hki
         have hi' : (i : ℝ) ≤ m := by exact_mod_cast him
         dsimp only [cutLoss]
-        linarith
+        linarith only [hL, hi']
       calc
         _ ≤ (m.choose i : ℝ) * (CQ * q x ^ (-(i : ℝ))) *
             (CA * l ^ (finiteBound p m) * q x ^ (g - L (m - i))) := by
@@ -283,13 +285,14 @@ theorem cut_product_bound {U S : Set E} (hU : IsOpen U) (hSU : S ⊆ U)
           · exact mul_le_mul_of_nonneg_left (hcut' i him) (Nat.cast_nonneg _)
           · exact hraw' (m - i) hki
           · exact norm_nonneg _
-          · positivity
+          · exact mul_nonneg (Nat.cast_nonneg _) (mul_nonneg hCQ.le (Real.rpow_nonneg hqx.le _))
         _ = (m.choose i : ℝ) * CQ * CA * l ^ (finiteBound p m) *
             q x ^ (g - L (m - i) - (i : ℝ)) := by
           rw [show g - L (m - i) - (i : ℝ) = -(i : ℝ) + (g - L (m - i)) by ring,
             Real.rpow_add hqx]
           ring
-        _ ≤ _ := mul_le_mul_of_nonneg_left hp (by positivity)
+        _ ≤ _ := mul_le_mul_of_nonneg_left hp (mul_nonneg (mul_nonneg (mul_nonneg
+          (Nat.cast_nonneg _) hCQ.le) hCA.le) (Real.rpow_nonneg (zero_le_one.trans hl) _))
     _ = (2 ^ m * CQ * CA) * l ^ (finiteBound p m) * q x ^ (g - cutLoss L m) := by
       simp only [← Finset.sum_mul, sum_choose_real]
 
@@ -414,7 +417,7 @@ theorem exists_finite_diagonal_cut_bounds [Finite ι] {U S : Set E} (hU : IsOpen
     intro j m
     have := Finset.sum_nonneg (fun i (_ : i ∈ Finset.univ) => abs_nonneg (K i j m))
     dsimp only [Kall]
-    linarith
+    linarith only [this]
   have hKle : ∀ i j m, K i j m ≤ Kall j m := by
     intro i j m
     exact (le_abs_self _).trans ((Finset.single_le_sum (fun i _ => abs_nonneg (K i j m))
@@ -550,9 +553,10 @@ theorem physicalQ_jet_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (m : ℕ) :
       ‖iteratedFDeriv ℝ m (PhysicalWaveSum.physicalQ h) w‖ ≤
         C * PhysicalWaveSum.physicalQ h w ^ (1 - (m : ℝ)) := by
   have ha : 0 < 2 * h := by positivity
-  have ha1 : 2 * h < 1 := by linarith
+  have ha1 : 2 * h < 1 := by linarith only [hh1]
   obtain ⟨C, hC, hb⟩ := PhysicalCoordinateBounds.physical_q_derivative_bound ha ha1 0 0 1 m
-  refine ⟨C * (‖physicalProjection‖ + 1) ^ m, by positivity, ?_⟩
+  refine ⟨C * (‖physicalProjection‖ + 1) ^ m,
+    mul_pos hC (pow_pos (add_pos_of_nonneg_of_pos (norm_nonneg _) one_pos) m), ?_⟩
   intro w hw hq1
   have hU : IsOpen {p : PhysicalCoordinateBounds.Point | p.1 < 1} :=
     isOpen_lt continuous_fst continuous_const
@@ -571,11 +575,11 @@ theorem physicalQ_jet_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (m : ℕ) :
     pow_le_pow_left₀ (norm_nonneg _) (le_add_of_nonneg_right zero_le_one) m
   have hpos := PhysicalWaveSum.physicalQ_pos hh hh1 hw
   calc
-    _ ≤ ‖iteratedFDeriv ℝ m (PhysicalCoordinateBounds.physicalQ (2 * h))
-        (physicalProjection w)‖ * ‖physicalProjection‖ ^ m := hlin
+    _ ≤ _ := hlin
     _ ≤ (C * PhysicalWaveSum.physicalQ h w ^ (1 - (m : ℝ))) *
         (‖physicalProjection‖ + 1) ^ m :=
-      mul_le_mul hqb hpow (pow_nonneg (norm_nonneg _) _) (by positivity)
+      mul_le_mul hqb hpow (pow_nonneg (norm_nonneg _) _)
+        (mul_nonneg hC.le (Real.rpow_nonneg hpos.le _))
     _ = _ := by ring
 
 theorem physical_cutoff_jet_bound {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (m : ℕ) :

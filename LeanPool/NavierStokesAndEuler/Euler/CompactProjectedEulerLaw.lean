@@ -130,7 +130,7 @@ open scoped ContDiff Topology
 
 namespace Euler.EulerExistenceAndSmoothnessR3
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 variable {u₀ : ℝ³ → ℝ³} {v : ℝ³ → ℝ → ℝ³} {p : ℝ³ → ℝ → ℝ}
   (h : EulerExistenceAndSmoothnessR3 u₀ v p)
@@ -158,11 +158,12 @@ theorem velocity_test_pairing_hasDerivAt
       HasDerivAt (fun s => v x s) (C r x) r := by
     have hud := (hu.differentiableOn (by simp) (r, x) ⟨hr, mem_univ x⟩).differentiableAt
       (hΩ.mem_nhds ⟨hr, mem_univ x⟩)
-    simpa only [u, C, Function.comp_def, id_eq] using hud.hasFDerivAt.comp_hasDerivAt r
-      ((hasDerivAt_id r).prodMk (hasDerivAt_const r x))
+    simpa only [u, C, Function.comp_def, id_eq] using
+      hud.hasFDerivAt.comp_hasDerivAt (F := ℝ × ℝ³) r
+        ((hasDerivAt_id r).prodMk (hasDerivAt_const r x))
   let J : Set ℝ := Icc (t₀ / 2) (t₀ + 1)
-  have hJ : J ∈ 𝓝 t₀ := Icc_mem_nhds (by linarith) (by linarith)
-  have hJpos : ∀ r ∈ J, 0 < r := by intro r hr; dsimp [J] at hr; linarith [hr.1]
+  have hJ : J ∈ 𝓝 t₀ := Icc_mem_nhds (half_lt_self ht₀) (lt_add_one t₀)
+  have hJpos : ∀ r ∈ J, 0 < r := fun r hr => (half_pos ht₀).trans_le hr.1
   let F : ℝ → ℝ³ → ℝ := fun r x => inner ℝ (φ x) (v x r)
   let G : ℝ → ℝ³ → ℝ := fun r x => inner ℝ (φ x) (C r x)
   have hG : ContinuousOn (Function.uncurry G) (J ×ˢ tsupport φ) := by
@@ -426,7 +427,7 @@ theorem compactSolenoidalTests_representation (u : solenoidalSpace)
       (∀ x, divergence φ x = 0) ∧ ((u : L2) : Space → Space) =ᵐ[volume] φ := by
   obtain ⟨f, hf⟩ := hu
   refine ⟨(curlTest f : Space → Space), (curlTest f).smooth, (curlTest f).compact,
-    divergence_curl _ ((contDiff_piLp 2).mp f.smooth), ?_⟩
+    divergence_curl (fun i x => (f : Space → Space) x i) ((contDiff_piLp 2).mp f.smooth), ?_⟩
   rw [← hf]
   exact testValue_ae (curlTest f)
 
@@ -436,7 +437,8 @@ theorem compactSolenoidalTests_testValue (u : solenoidalSpace)
     ∃ f : Test, (∀ x, divergence (f : Space → Space) x = 0) ∧
       testValue f = (u : L2) := by
   obtain ⟨f, hf⟩ := hu
-  exact ⟨curlTest f, divergence_curl _ ((contDiff_piLp 2).mp f.smooth), hf⟩
+  exact ⟨curlTest f, divergence_curl (fun i x => (f : Space → Space) x i)
+    ((contDiff_piLp 2).mp f.smooth), hf⟩
 
 /-- The compact test fields form a dense subset of the actual solenoidal L² space. -/
 theorem compactSolenoidalTests_dense : Dense compactSolenoidalTests := by
@@ -465,7 +467,8 @@ theorem solenoidal_eq_zero_of_compact_test_pairing_zero
   apply weakHarmonicOn_univ_eq_zero u
   apply weakHarmonicOn_univ_of_compactCurl_pairing_zero u hu
   intro f
-  exact htest (curlTest f) (divergence_curl _ ((contDiff_piLp 2).mp f.smooth))
+  exact htest (curlTest f) (divergence_curl (fun i x => (f : Space → Space) x i)
+    ((contDiff_piLp 2).mp f.smooth))
 
 end Euler.ComparatorBridge
 

@@ -61,24 +61,24 @@ theorem shape_axis_lower {h j eta ell theta : ℝ}
       theta * H h j eta * OutgoingEntranceCone.shapeGradient eta := by
   have heta : |eta| ≤ 1 := abs_le.mpr hη
   have hd0 := d_nonneg hη
-  have hd1 : d eta ≤ 1 := by unfold d; linarith [sq_nonneg eta]
+  have hd1 : d eta ≤ 1 := by unfold d; linarith only [sq_nonneg eta]
   have hD := D_pos hs
   have hu : |U j eta| ≤ 4001 / 1000 := by
     calc
       _ ≤ |4 * eta| + |j| := abs_add_le _ _
       _ = 4 * |eta| + j := by rw [abs_mul, abs_of_pos hs.j_pos]; norm_num
-      _ ≤ _ := by linarith [hs.j_le]
+      _ ≤ _ := by linarith only [heta, hs.j_le]
   have hup : |eta * U j eta| ≤ 4001 / 1000 := by
     rw [abs_mul]
     exact (mul_le_mul heta hu (abs_nonneg _) (by norm_num)).trans_eq (by ring)
   have hterm : h * (1 - 2 * eta * U j eta) ≤ 4501 / 500000 := by
     have he : 1 - 2 * eta * U j eta ≤ 4501 / 500 := by
-      linarith [(abs_le.mp hup).1]
+      linarith only [(abs_le.mp hup).1]
     have h1 := mul_le_mul_of_nonneg_left he hs.h_pos.le
     have h2 := mul_le_mul_of_nonneg_right hs.h_le (by norm_num : (0 : ℝ) ≤ 4501 / 500)
-    linarith
+    linarith only [h1, h2]
   have hgabs : |OutgoingEntranceCone.shapeGradient eta| ≤ 2 :=
-    (OutgoingEntranceCone.abs_shapeGradient_le eta).trans (by linarith)
+    (OutgoingEntranceCone.abs_shapeGradient_le eta).trans (by linarith only [heta])
   have hget : 0 ≤ eta * OutgoingEntranceCone.shapeGradient eta :=
     (sq_nonneg eta).trans (OutgoingEntranceCone.eta_shapeGradient_bounds heta).1
   have hmain : 0 ≤ (D h + 4 * d eta) * (eta * OutgoingEntranceCone.shapeGradient eta) :=
@@ -88,7 +88,7 @@ theorem shape_axis_lower {h j eta ell theta : ℝ}
     (mul_le_of_le_one_left hs.j_pos.le hd1).trans hs.j_le
   have herr : -(1 / 500 : ℝ) ≤ d eta * j * OutgoingEntranceCone.shapeGradient eta := by
     have hm := mul_le_mul_of_nonneg_left (abs_le.mp hgabs).1 hdj
-    linarith
+    linarith only [hm, hdj1]
   have hid : H h j eta * OutgoingEntranceCone.shapeGradient eta =
       (D h + 4 * d eta) * (eta * OutgoingEntranceCone.shapeGradient eta) +
         d eta * j * OutgoingEntranceCone.shapeGradient eta := by
@@ -96,14 +96,14 @@ theorem shape_axis_lower {h j eta ell theta : ℝ}
     ring
   have hH : -(1 / 500 : ℝ) ≤ H h j eta * OutgoingEntranceCone.shapeGradient eta := by
     rw [hid]
-    linarith
+    linarith only [hmain, herr]
   have htheta : -(1 / 500 : ℝ) ≤ theta * H h j eta * OutgoingEntranceCone.shapeGradient eta := by
     have hm := mul_le_mul_of_nonneg_left hH ht.1
-    linarith [ht.2]
+    linarith only [hm, ht.2]
   have hW := neg_W_lower_bound hs hη
   have hbase : (2991 / 1000 : ℝ) * (11 / 20) ≤ -W h j eta * ell :=
-    mul_le_mul hW hl (by norm_num) (by linarith)
-  linarith
+    mul_le_mul hW hl (by norm_num) (by linarith only [hW])
+  linarith only [hbase, hterm, htheta]
 
 /-- Shape remainder as an element of `ℝ`. -/
 noncomputable def shapeRemainder (h j sigma eta theta ell : ℝ) (v : Fin 5 → ℝ) (t : ℝ) : ℝ :=
@@ -145,18 +145,18 @@ theorem shapeModel_zero_lower {h j sigma B : ℝ} (hs : SmallParameters h j)
     rcases mul_eq_zero.mp hz with hleft | hright
     · have ht := (mul_eq_zero.mp hleft).resolve_right (L_pos hs p.1.property).ne'
       left
-      linarith
+      linarith only [ht]
     · exact Or.inr hright
   rcases hcases with ht | hc
   · simp only [shapeModel, shapeRemainder, ht, zero_mul, sub_zero, add_zero,
       sub_self, one_mul] at ha ⊢
-    linarith
+    linarith only [ha]
   · have hH := NaturalEntrance.chi_zero_imp_H_zero h j hsigma hc
     have hg := NaturalEntrance.gradient_zero_of_chi_zero h j hsigma hc
     simp only [shapeModel, shapeRemainder, zero_mul, mul_zero, sub_zero, add_zero, hH, hg]
     rw [hH] at ha
     simp only [mul_zero, zero_mul, add_zero] at ha
-    linarith
+    linarith only [ha]
 
 theorem shapeModel_uniform_lower {h j sigma : ℝ} (hs : SmallParameters h j)
     (hsigma : 0 < sigma) (B : ℝ) :
@@ -184,11 +184,11 @@ theorem shapeModel_uniform_lower {h j sigma : ℝ} (hs : SmallParameters h j)
     rw [Real.norm_eq_abs, abs_of_pos (one_div_pos.mpr hΛp), div_lt_iff₀ hΛp]
     have hm := (div_lt_iff₀ htau).mp (show 1 / tau < Λ by
       have := (le_max_right M0 (1 + 1 / tau)).trans hΛ
-      linarith)
-    linarith
+      linarith only [this])
+    linarith only [hm]
   have he := (abs_lt.mp (hpert p (1 / Λ) ht)).1
   have hm := hmain Λ ((le_max_left _ _).trans hΛ) p
-  linarith
+  linarith only [he, hm]
 
 /-- Shape jet, given by `![1, Λ * (P.U p - U j p.2), Λ * (P.Ubar p - U j p.2), Λ * (average
 (parameterPartial P.U) p - 4), g]`. -/
@@ -280,7 +280,7 @@ theorem angular_barrier {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
     (hq : ∀ s ∈ Icc a X, 1 < ReferenceBounds.sourceQ P h (s, eta))
     (hinit : 2 < ReferenceBounds.p1 P h (a, eta)) :
     2 < ReferenceBounds.p1 P h (X, eta) := by
-  have hspos (s : ℝ) (hs : s ∈ Icc a X) : 0 < s := lt_of_lt_of_le (by linarith) hs.1
+  have hspos (s : ℝ) (hs : s ∈ Icc a X) : 0 < s := lt_of_lt_of_le (by linarith only [ha]) hs.1
   have hHpos (s : ℝ) (hs : s ∈ Icc a X) : 0 < P.H (s, eta) := by
     change 0 < 2 * s * P.f (s, eta)
     exact mul_pos (mul_pos (by norm_num) (hspos s hs)) (hf s hs)
@@ -295,16 +295,16 @@ theorem angular_barrier {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
     have he := ReferenceBounds.angularSource_eq P (hmem s hs) (hf s hs).ne' h
     have hterm : 2 * L h eta * ReferenceBounds.logSlope P (s, eta) ≤ 2 := by
       have hh := mul_le_mul_of_nonneg_left (hl s hs) (show 0 ≤ 2 * L h eta by positivity)
-      linarith
+      linarith only [hL1, hh]
     have hsq : 2 < s * ReferenceBounds.sourceQ P h (s, eta) := by
       have hh := mul_lt_mul_of_pos_left (hq s hs) (hspos s hs)
-      linarith [hs.1]
+      linarith only [ha, hh, hs, hs.1]
     have hprod : 0 ≤ P.H (s, eta) *
         (s * ReferenceBounds.sourceQ P h (s, eta) - 2 * L h eta * ReferenceBounds.logSlope P (s,
             eta)) :=
-      mul_nonneg (hHpos s hs).le (by linarith)
+      mul_nonneg (hHpos s hs).le (by linarith only [hterm, hsq])
     rw [he]
-    nlinarith [hspos s hs]
+    nlinarith only [hprod, hL, hdot, hspos, hs, hspos s hs]
   have hm : MonotoneOn (angularGap P h eta) (Icc a X) := by
     apply monotoneOn_of_hasDerivWithinAt_nonneg (convex_Icc a X)
     · intro s hs
@@ -317,12 +317,12 @@ theorem angular_barrier {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
     rw [ReferenceBounds.p1_primitive P (hspos a ⟨le_rfl, haX⟩).ne' h] at hinit
     have hi := (lt_div_iff₀ (mul_pos hL (hHpos a ⟨le_rfl, haX⟩))).mp hinit
     unfold angularGap
-    linarith
+    linarith only [hi]
   have hout : 0 < angularGap P h eta X := hini.trans_le (hm ⟨le_rfl, haX⟩ ⟨haX, le_rfl⟩ haX)
   rw [ReferenceBounds.p1_primitive P (hspos X ⟨haX, le_rfl⟩).ne' h]
   apply (lt_div_iff₀ (mul_pos hL (hHpos X ⟨haX, le_rfl⟩))).mpr
   unfold angularGap at hout
-  linarith
+  linarith only [hout]
 
 theorem shape_relaxed_from_source {D : RadialDomain} (P : Profiles D) {h eta a X : ℝ}
     (ha : 2 ≤ a) (haX : a ≤ X) (hL : 0 < L h eta) (hL1 : L h eta ≤ 1)
@@ -337,7 +337,7 @@ theorem shape_relaxed_from_source {D : RadialDomain} (P : Profiles D) {h eta a X
   have he := ActivationContinuation.logSlope_eq_shear P (X, eta)
   have hb := hl X ⟨haX, le_rfl⟩
   exact ActivationContinuation.zero_axial_relaxed_profile P
-    (by linarith [hb.1, hb.2]) (by linarith [hb.1, hb.2]) hu hp
+    (by linarith only [he, hb, hb.1, hb.2]) (by linarith only [he, hb, hb.1, hb.2]) hu hp
 
 theorem axial_error_jet {J K : Set ℝ} (R : TransitionRamp.StockReference J)
     (hJ : IsOpen J) (hKJ : K ⊆ J) {N : ℕ} {eps T kappa wU wE y eta : ℝ}
@@ -353,7 +353,7 @@ theorem axial_error_jet {J K : Set ℝ} (R : TransitionRamp.StockReference J)
       rw [show R.axialVelocity T kappa wU (y, e) =
           R.axialVelocity T kappa wU (R.finalTime, e) from
         TransitionRamp.axialField_hold hwU hJ R.initialU (R.axialStock_smooth hJ)
-          (by linarith [hc.finish_before]) (le_of_not_ge hf) he]
+          (by linarith only [hwE, hc, hc.finish_before]) (le_of_not_ge hf) he]
     rw [he.iteratedDeriv_eq n]
     exact (hc.axial_jets R.finalTime ⟨hb.trans R.finalTime_gt_bigTime.le, le_rfl⟩ eta hη n hn).le
 
@@ -373,7 +373,7 @@ theorem seedU_error_jets {N : ℕ} {eps X eta : ℝ}
   · have hxn : X ≤ 4 / A.scale := by simpa only [c.reference_radius] using hx
     have hY : A.scale * X ∈ Ioo (-20 : ℝ) 20 := by
       have hb := (le_div_iff₀ A.scale_pos).mp hxn
-      constructor <;> linarith [mul_nonneg A.scale_pos.le hX]
+      constructor <;> linarith only [hX, hb, mul_nonneg A.scale_pos.le hX]
     have he : (fun e => c.seedU (X, e) - U A.j e) =
         (fun e => A.natural.profile.family.U (X, e) - U A.j e) := by
       funext e
@@ -383,7 +383,7 @@ theorem seedU_error_jets {N : ℕ} {eps X eta : ℝ}
     have hY5 : |A.scale * X| ≤ 5 := by
       rw [abs_of_nonneg (mul_nonneg A.scale_pos.le hX)]
       have hb := (le_div_iff₀ A.scale_pos).mp hxn
-      linarith
+      linarith only [hb]
     have hb := (ReferenceJetBounds.coefficient_jet_bound A.preparation.inputs.coefficients
       A.natural.profile.coefficients A.natural.profile.norm_ball 0 n (p := (A.scale * X, eta))
           hY5).2
@@ -496,7 +496,7 @@ theorem initialShape_gradient_bound {N : ℕ} {eps eta : ℝ}
           F.data.h A.j A.preparation.sigma eta| ≤
             8 * ReferenceJetBounds.jetConstant A.preparation.inputs.coefficients 0 1 := by
         simpa only [hinit] using hnat
-      linarith
+      linarith only [herr, hb]
 
 theorem seedU_source_jets {N : ℕ} {eps X eta : ℝ}
     (hc : MatchingDebtBounds.SmallControl c N eps) (heps : 0 ≤ eps) (hN : 1 ≤ N)
@@ -759,7 +759,7 @@ theorem shapeConstant_one {F : OutgoingProfile.Profile} {j : ℝ}
   have h0 := ReferenceJetBounds.jetConstant_nonneg prep.inputs.coefficients 0 0
   have h1 := ReferenceJetBounds.jetConstant_nonneg prep.inputs.coefficients 0 1
   unfold shapeConstant
-  linarith
+  linarith only [h0, h1]
 
 /-- The shape-source scale depends on the fixed natural-axis data, before
 the normalization or continuation controls are chosen. -/
@@ -806,7 +806,7 @@ theorem actual_shape_source {eps X eta : ℝ}
   have he1 : eps ≤ 1 := heps1.trans (min_le_left _ _)
   have heL : A.scale * eps ≤ 1 := by
     have hh := (le_div_iff₀ A.scale_pos).mp (heps1.trans (min_le_right _ _))
-    linarith
+    linarith only [hh]
   let theta := OutgoingSchedule.sigma (Real.log (X / NominalProfile.Xi) / c.shapeTime)
   let g := deriv c.initialShape eta - A.scale * NaturalAxisCoefficients.realGradient
     F.data.h A.j A.preparation.sigma eta
@@ -817,10 +817,10 @@ theorem actual_shape_source {eps X eta : ℝ}
       (NaturalAxisCoefficients.original_interval_interior hη) hsmall]
     dsimp only [g, theta]
     ring
-  · exact hjets.1.trans (by unfold shapeConstant; linarith)
-  · exact hjets.2.1.trans (by unfold shapeConstant; linarith)
-  · exact hjets.2.2.trans (by unfold shapeConstant; linarith)
-  · exact hgrad.trans (by unfold shapeConstant; linarith)
+  · exact hjets.1.trans (by unfold shapeConstant; linarith only [heL, h1])
+  · exact hjets.2.1.trans (by unfold shapeConstant; linarith only [heL, h1])
+  · exact hjets.2.2.trans (by unfold shapeConstant; linarith only [heL, h0, h1])
+  · exact hgrad.trans (by unfold shapeConstant; linarith only [he1, h0, h1])
 
 /-- The actual shape interval satisfies the relaxed cone. The sole stock
 input is the incoming value at `Xi`, supplied by the same continuation
@@ -841,7 +841,7 @@ theorem actual_shape_relaxed {N : ℕ} {rho eps X eta : ℝ}
   have hL := L_pos A.small hη
   have hL1 : L F.data.h eta ≤ 1 := by
     unfold L
-    nlinarith [A.small.h_pos, sq_nonneg eta]
+    nlinarith only [A.small.h_pos, sq_nonneg eta]
   have hmem : ∀ s ∈ Icc NominalProfile.Xi X, (s, eta) ∈ c.admissibleDomain.carrier := by
     intro s hs
     exact c.admissible_nonnegative (p := (s, eta)) (NominalProfile.Xi_pos.le.trans hs.1) hηJ hsmall
@@ -866,7 +866,7 @@ theorem actual_shape_relaxed {N : ℕ} {rho eps X eta : ℝ}
   have hls := hl X ⟨hX, le_rfl⟩
   have he := ActivationContinuation.logSlope_eq_shear (c.profiles hsep) (X, eta)
   exact ActivationContinuation.zero_axial_relaxed_profile (c.profiles hsep)
-    (by linarith [hls.1, hls.2]) (by linarith [hls.1, hls.2])
+    (by linarith [hls.1, hls.2]) (by linarith only [hsep, he, hls, hls.1, hls.2])
     (profiles_shape_radialU c hsep hX hR hηJ hsmall) hp
 
 end ActualShapeCone
@@ -932,14 +932,14 @@ theorem exists_ordered_prepared_continuation (F : OutgoingProfile.Profile) (N : 
     have hm := (le_div_iff₀ (show 0 < 2 * K by positivity)).mp (min_le_right
       (min 1 (NominalProfile.resetSolver.radius / 2)) (delta / (2 * K)))
     change tau * (2 * K) ≤ delta at hm
-    linarith [mul_nonneg hK.le htau.le]
+    linarith only [hdelta, hm, mul_nonneg hK.le htau.le]
   let rho := tau ^ (N + 1)
   have hrho : 0 < rho := pow_pos htau _
   have hpow : rho ≤ tau := by
     simpa only [pow_one] using pow_le_pow_of_le_one htau.le ht1 (show 1 ≤ N + 1 by omega)
   have hradius : rho ≤ NominalProfile.resetSolver.radius :=
     hpow.trans ((hmax.trans (min_le_right _ _)).trans
-      (by linarith [NominalProfile.resetSolver.radius_pos]))
+      (by linarith only [NominalProfile.resetSolver.radius_pos]))
   obtain ⟨eps, heps, heps1, hmatching⟩ :=
     MatchingDebtBounds.exists_ordered_matching_continuation F N hrho hradius
   let jcap := min eps (delta / 3)
@@ -962,7 +962,7 @@ theorem exists_ordered_prepared_continuation (F : OutgoingProfile.Profile) (N : 
       ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 n / Λ ≤ delta / 3 := by
     apply (div_le_iff₀ hΛ).mpr
     have hmul := (div_le_iff₀ hdelta).mp hLD
-    linarith [hDb n hn]
+    linarith only [hmul, hDb, hn, hDb n hn]
   obtain ⟨T, hT, Cmatch, hCmatch, hnorm⟩ := hmatch Λ hΛ hLm
   obtain ⟨Cgeo, hgeo⟩ := eventually_atTop.mp
     (NominalProfile.eventually_matching_geometry F T radiusFloor Cmatch)
@@ -998,7 +998,7 @@ theorem exists_ordered_prepared_continuation (F : OutgoingProfile.Profile) (N : 
     change _ ≤ ReferenceJetBounds.jetConstant prep.inputs.coefficients 0 n / Λ + tolerance + |j|
         at hb
     have hjD : |j| ≤ delta / 3 := hjbound.trans (min_le_right _ _)
-    exact hb.trans (by linarith [hjet n hn])
+    exact hb.trans (by linarith only [htolD, hjD, hjet, hn, hjet n hn])
 
 /-- The actual entrance profile and continuation are stored, so subsequent
 cone gluing uses the same controls that produced the small repair debt. -/
@@ -1044,7 +1044,7 @@ theorem preparedWitness_exists (F : OutgoingProfile.Profile) (hP : 2 ≤ F.data.
   have hjpos : 0 < j := lt_min (by positivity) (by norm_num)
   have hjbound : |j| ≤ jcap := by
     rw [abs_of_pos hjpos]
-    exact (min_le_left _ _).trans (by linarith)
+    exact (min_le_left _ _).trans (by linarith only [hjcap])
   have hj : SmallParameters F.data.h j :=
     ⟨F.data.h_pos, hh, hjpos, (min_le_right _ _).trans (by norm_num)⟩
   obtain ⟨prep, hcut⟩ := NominalProfile.prepare_axis_with_cutoff F hP hj
@@ -1107,7 +1107,7 @@ theorem exists_scheduled_core_below (P m : ℝ) (hP : 0 < P) (hm : 0 < m)
   have hreset' : lam < resetLam := hrest.trans_le (min_le_left _ _)
   have hdelta' : lam < delta := hrest.trans_le ((min_le_right _ _).trans (min_le_left _ _))
   have hsmall : lam < 1 / 120 := hrest.trans_le ((min_le_right _ _).trans (min_le_right _ _))
-  let core := OutgoingSchedule.paperParameters P m lam hP hm hlam (by linarith)
+  let core := OutgoingSchedule.paperParameters P m lam hP hm hlam (by linarith only [hlam, hsmall])
   refine ⟨K, 128 * CorrectedPulseAmplitude.combinedConstant P m K, core, hK,
     mul_pos (by norm_num) (CorrectedPulseAmplitude.combinedConstant_pos hP m K hK),
     rfl, rfl, rfl, hcaller, hsmall, ?_⟩
@@ -1164,7 +1164,7 @@ theorem heightCap_bounds (core : OutgoingSchedule.Parameters) (extra : ℝ) :
           min_le_right _ _
   have hrest := hr.trans (min_le_right _ _)
   have hlast := hrest.trans (min_le_right _ _)
-  exact ⟨by linarith [core.lam_pos], hr.trans (min_le_left _ _),
+  exact ⟨by linarith only [hl, core.lam_pos], hr.trans (min_le_left _ _),
     hrest.trans (min_le_left _ _), hlast.trans (min_le_left _ _), hlast.trans (min_le_right _ _)⟩
 
 /-- The common lambda and all height caps are fixed before h and before the
@@ -1295,7 +1295,7 @@ theorem PreparedProfile.large_nominal (d : PreparedProfile) (floor left : ℝ)
   have hrho : 0 < NominalProfile.resetSolver.radius / 2 :=
     div_pos NominalProfile.resetSolver.radius_pos (by norm_num)
   have hradius : NominalProfile.resetSolver.radius / 2 ≤ NominalProfile.resetSolver.radius := by
-    linarith [NominalProfile.resetSolver.radius_pos]
+    linarith only [hrho, NominalProfile.resetSolver.radius_pos]
   obtain ⟨eps, heps, _heps1, hordered⟩ :=
     MatchingDebtBounds.exists_ordered_nominal_witness d.specification d.amplitude_lower
       0 hrho hradius
@@ -1303,7 +1303,7 @@ theorem PreparedProfile.large_nominal (d : PreparedProfile) (floor left : ℝ)
   have hj : 0 < j := lt_min (by positivity) (by norm_num)
   have hjbound : |j| ≤ eps := by
     rw [abs_of_pos hj]
-    exact (min_le_left _ _).trans (by linarith)
+    exact (min_le_left _ _).trans (by linarith only [heps])
   have hsmall : NaturalAxisData.SmallParameters d.profile.data.h j :=
     ⟨d.profile.data.h_pos, d.height_upper, hj,
       (min_le_right _ _).trans (by norm_num)⟩
@@ -1912,7 +1912,7 @@ theorem physical_log_shears {D : RadialDomain} (P : Profiles D) {R : ℝ}
 theorem physical_shear_cancel {r f X : ℝ} (hr : r ≠ 0) (hf : f ≠ 0)
     (hsq : r ^ 2 = 2 * X) (df : ℝ) :
     1 - 2 * X * (1 / (2 * r) * (2 * 1) * f + r * df) / (r * f) = -2 * X * df / f := by
-  have hx : X = r ^ 2 / 2 := by linarith
+  have hx : X = r ^ 2 / 2 := by linarith only [hsq]
   rw [hx]
   field_simp; ring
 
@@ -2498,7 +2498,7 @@ theorem physical_initial_shears {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Anal
   change R.angularStock (y, η) = -2 * radialPartial L (y, η) ∧
     R.axialStock (y, η) = -2 * radialPartial U (y, η) at hs
   have hb : y ≤ R.bigTime := hy.trans r.before_big
-  have hb' : y ≤ R.bigTime + r.widthU := by linarith [r.widthU_pos]
+  have hb' : y ≤ R.bigTime + r.widthU := by linarith only [hΛ, hsmall, hP0, hb, r.widthU_pos]
   have hR : z.1 ≤ N.endpoint * Real.exp r.refTime :=
     mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr hy) N.endpoint_pos.le
   have hf : P.f z = activatedAngular r.actTime r.kappa L (y, η) :=
@@ -2552,12 +2552,13 @@ theorem referenceP1_positive_initial {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d :
       (original_interval_interior hη)]
   apply E.slope_positive
   · change (Λ * (N.fromLog (y, η)).1, η) ∈ NaturalEntrance.entranceSet
-    have hyT : y < ReferencePath.rampLimit := by linarith [r.refTime_pos, r.refTime_bound]
+    have hyT : y < ReferencePath.rampLimit := by linarith only [hΛ, hsmall, hP0, hy, r.refTime_pos,
+        r.refTime_bound]
     have he : Real.exp y < 41 / 40 := by
       simpa only [ReferencePath.rampLimit, Real.exp_log (by norm_num : (0 : ℝ) < 41 / 40)]
         using Real.exp_lt_exp.mpr hyT
     have hid : Λ * (N.fromLog (y, η)).1 = 4 * Real.exp y := N.fromLog_scaled (y, η)
-    exact ⟨⟨by rw [hid]; positivity, by rw [hid]; linarith⟩, hη⟩
+    exact ⟨⟨by rw [hid]; positivity, by rw [hid]; linarith only [he]⟩, hη⟩
   · exact mul_pos N.endpoint_pos (Real.exp_pos y)
 
 theorem shearSize_eq_initial (a b : ℝ) (ha : a ≠ 0) :
@@ -2685,9 +2686,10 @@ theorem activation_cone {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
     · rw [hsize y eta hy heta, hproj y eta hy heta, hcross y eta hy heta]
       exact hc.2.2.2.1
   refine ⟨hrelaxed, theta * r.actTime, mul_pos htheta r.actTime_pos, ?_, ?_⟩
-  · nlinarith [r.actTime_pos]
+  · nlinarith only [hΛ, hsmall, hP0, htheta1, r.actTime_pos]
   · intro y eta hy0 hy heta
-    have hyT : y ≤ r.actTime := hy.trans (by nlinarith [r.actTime_pos])
+    have hyT : y ≤ r.actTime := hy.trans (by nlinarith only [hΛ, hsmall, hP0, htheta, htheta1, hy0,
+        hy, r.actTime_pos])
     refine ⟨hrelaxed y eta hy0 hyT heta, ?_⟩
     rw [hsize y eta hyT heta]
     exact lt_trans (by norm_num : (2 : ℝ) < 2 + 1 / 16) ((hcert y ⟨hy0, hyT⟩ eta heta).2.2.2.2 hy)
@@ -2710,7 +2712,7 @@ theorem activeLeft_lt_Xi {F : Profile} (W : NominalProfile.Witness F) :
     activeLeft W < NominalProfile.Xi := by
   have he := Real.one_lt_exp_iff.mpr W.controls.referenceWidth_pos
   have hmul : activeLeft W < activeLeft W * Real.exp W.controls.referenceWidth := by
-    nlinarith [activeLeft_pos W]
+    nlinarith only [he, activeLeft_pos W]
   exact hmul.trans_le W.controls.activation_collar_le_Xi
 
 theorem chart_log {R : ℝ} (hR : 0 < R) {p : Point} (hp : 0 < p.1) :
@@ -2865,7 +2867,7 @@ end Assembly
 
 theorem assembly_exists (d : PreparedOutgoing.PreparedProfile) : Nonempty (Assembly d) := by
   obtain ⟨cleanFloor, hcleanFloor, hclean⟩ := d.clean (-5) (by norm_num)
-  have hanchor : 0 < cleanFloor + 1 := by linarith
+  have hanchor : 0 < cleanFloor + 1 := by linarith only [hcleanFloor]
   obtain ⟨G⟩ := exists_compensatedFamily d.profile (hclean (cleanFloor + 1) (by linarith)) hanchor
   obtain ⟨delta, repairFloor, hdelta, _hrepairFloor, hrepair⟩ :=
       RepairConeBounds.exists_repair_cone d.profile
@@ -2887,7 +2889,7 @@ theorem assembly_exists (d : PreparedOutgoing.PreparedProfile) : Nonempty (Assem
   refine ⟨⟨G, delta, floor, M, hG, hT.trans M.bounds.radius_large,
     hclean M.controls.radius ?_, ?_⟩⟩
   · have hh := hC.trans M.bounds.radius_large
-    exact lt_of_lt_of_le (by linarith : cleanFloor < cleanFloor + 1) hh
+    exact lt_of_lt_of_le (by linarith only : cleanFloor < cleanFloor + 1) hh
   · intro p hp heta
     exact hrepair M.axis M.controls M.bounds.matching.separation.le hendpoint M.bounds.coefficients
       (hR.trans M.bounds.radius_large) p hp heta (M.bounds.matching.smallDebt M.bounds.debt_radius

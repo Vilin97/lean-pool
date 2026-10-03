@@ -67,12 +67,12 @@ noncomputable def coverBound (Δ : ℕ) : ℝ := 1 + CommonCoverSolve.coveringBo
 
 theorem coverBound_ge_one (Δ : ℕ) : 1 ≤ coverBound Δ := by
   unfold coverBound
-  linarith [CommonCoverSolve.coveringBound_pos Δ]
+  linarith only [CommonCoverSolve.coveringBound_pos Δ]
 
 theorem norm_downLift_le {d Δ : ℕ} (hd : d ≤ Δ) : ‖downLift d‖ ≤ coverBound Δ := by
   have hK := coverBound_ge_one Δ
   have hc := CommonCoverSolve.inverseCoveringNorm_le_bound hd
-  refine ContinuousLinearMap.opNorm_le_bound _ (by linarith) ?_
+  refine ContinuousLinearMap.opNorm_le_bound _ (by linarith only [hK]) ?_
   intro y
   rw [downLift_apply, Prod.norm_def]
   apply max_le
@@ -82,12 +82,12 @@ theorem norm_downLift_le {d Δ : ℕ} (hd : d ≤ Δ) : ‖downLift d‖ ≤ cov
         ContinuousLinearMap.le_opNorm _ _
       _ ≤ CommonCoverSolve.coveringBound Δ * ‖y‖ :=
         mul_le_mul hc (norm_snd_le y) (norm_nonneg _) (CommonCoverSolve.coveringBound_pos Δ).le
-      _ ≤ _ := by unfold coverBound; nlinarith [norm_nonneg y]
+      _ ≤ _ := by unfold coverBound; nlinarith only [norm_nonneg y]
 
 theorem norm_upLift_le {d Δ : ℕ} (hd : d ≤ Δ) : ‖upLift d‖ ≤ coverBound Δ := by
   have hK := coverBound_ge_one Δ
   have hc := CommonCoverSolve.coveringNorm_le_bound hd
-  refine ContinuousLinearMap.opNorm_le_bound _ (by linarith) ?_
+  refine ContinuousLinearMap.opNorm_le_bound _ (by linarith only [hK]) ?_
   intro y
   rw [upLift_apply, Prod.norm_def]
   apply max_le
@@ -97,7 +97,7 @@ theorem norm_upLift_le {d Δ : ℕ} (hd : d ≤ Δ) : ‖upLift d‖ ≤ coverBo
         ContinuousLinearMap.le_opNorm _ _
       _ ≤ CommonCoverSolve.coveringBound Δ * ‖y‖ :=
         mul_le_mul hc (norm_snd_le y) (norm_nonneg _) (CommonCoverSolve.coveringBound_pos Δ).le
-      _ ≤ _ := by unfold coverBound; nlinarith [norm_nonneg y]
+      _ ≤ _ := by unfold coverBound; nlinarith only [norm_nonneg y]
 
 /-- Common lift, given by `downLift d ∘ PhysicalGraphBounds.physicalLift h n`. -/
 noncomputable def commonLift (h : ℝ) (n d : ℕ) : SpaceTime → LiftPoint :=
@@ -291,7 +291,7 @@ theorem labelRegion_band {D : ℝ} {L : Label} {z : ℝ × Position}
 theorem labelRegion_active_relation {D : ℝ} {L : Label} {z : ℝ × Position}
     (hz : z ∈ labelRegion D L) : z.1 / 2 ≤ ChartScales.Q L.1 ∧ ChartScales.Q L.1 ≤ 2 * z.1 := by
   have hb := labelRegion_band hz
-  constructor <;> linarith [hb.1, hb.2]
+  constructor <;> linarith only [hb, hb.1, hb.2]
 
 theorem logCoordinate_in_band {q : ℝ} (hq : 0 < q) {n : ℕ}
     (hlo : ChartScales.Q n / 2 ≤ q) (hhi : q ≤ 2 * ChartScales.Q n) :
@@ -308,9 +308,9 @@ theorem logCoordinate_in_band {q : ℝ} (hq : 0 < q) {n : ℕ}
   change (n : ℝ) - 1 ≤ -Real.log q / Real.log 2 ∧ -Real.log q / Real.log 2 ≤ (n : ℝ) + 1
   constructor
   · apply (le_div_iff₀ h2).mpr
-    nlinarith
+    nlinarith only [hu]
   · apply (div_le_iff₀ h2).mpr
-    nlinarith
+    nlinarith only [hl]
 
 theorem labelRegion_adjacency {D : ℝ} {L M : Label} {z : ℝ × Position}
     (hq : 0 < z.1) (hL : 1 ≤ L.1) (hM : 1 ≤ M.1) (hne : L ≠ M)
@@ -318,10 +318,10 @@ theorem labelRegion_adjacency {D : ℝ} {L M : Label} {z : ℝ × Position}
   have hl := logCoordinate_in_band hq (labelRegion_band hzL).1 (labelRegion_band hzL).2
   have hm := logCoordinate_in_band hq (labelRegion_band hzM).1 (labelRegion_band hzM).2
   have hLM : L.1 ≤ M.1 + 4 := by
-    have h : (L.1 : ℝ) ≤ (M.1 : ℝ) + 4 := by linarith [hl.1, hm.2]
+    have h : (L.1 : ℝ) ≤ (M.1 : ℝ) + 4 := by linarith only [hl, hm, hl.1, hm.2]
     exact_mod_cast h
   have hML : M.1 ≤ L.1 + 4 := by
-    have h : (M.1 : ℝ) ≤ (L.1 : ℝ) + 4 := by linarith [hm.1, hl.2]
+    have h : (M.1 : ℝ) ≤ (L.1 : ℝ) + 4 := by linarith only [hm, hl, hm.1, hl.2]
     exact_mod_cast h
   exact ⟨hL, hM, hne, hLM, hML, z.2,
     SquaredPartition.physicalSlowMask_tsupport_subset_physicalBox D hL _ _ hzL.2,
@@ -375,7 +375,7 @@ theorem labelRegion_locallyFinite (D : ℝ) :
       {z : PositiveParam | z.2 ∈ tsupport (SquaredPartition.physicalSlowMask D n k.1)} := by
     simpa only [inter_univ] using SquaredPartition.locallyFinite_pair_inter (hg n)
       (fun _ => locallyFinite_of_finite (fun _ : Bool => (univ : Set PositiveParam)))
-  exact SquaredPartition.locallyFinite_pair_inter hb hs
+  exact (SquaredPartition.locallyFinite_pair_inter hb hs :)
 
 /-- Band label: an abbreviation for `{L : Label // 4 ≤ L.1}`. -/
 abbrev BandLabel := {L : Label // 4 ≤ L.1}
@@ -512,7 +512,7 @@ theorem physical_active_neighborhood {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   obtain ⟨U, hU, hUs⟩ := (mem_nhds_subtype preterminal ⟨w, hw⟩ _).mp hsub
   refine ⟨s, hs, ?_⟩
   filter_upwards [hU, preterminal_open.mem_nhds hw] with y hy hyt
-  exact ⟨hyt, hUs (show (⟨y, hyt⟩ : preterminal) ∈ Subtype.val ⁻¹' U from hy)⟩
+  exact ⟨hyt, (hUs (show (⟨y, hyt⟩ : preterminal) ∈ Subtype.val ⁻¹' U from hy) :)⟩
 
 theorem iteratedFDeriv_eq_of_eventuallyEq {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F]
@@ -950,7 +950,7 @@ theorem norm_coverChange_le {d e Δ : ℕ} (hd : d ≤ Δ) (he : e ≤ Δ) :
     _ ≤ ‖downLift e‖ * ‖upLift d‖ := ContinuousLinearMap.opNorm_comp_le _ _
     _ ≤ coverBound Δ * coverBound Δ :=
       mul_le_mul (norm_downLift_le he) (norm_upLift_le hd) (norm_nonneg _) (by
-        have := coverBound_ge_one Δ; linarith)
+        have := coverBound_ge_one Δ; linarith only [this])
     _ = _ := (pow_two _).symm
 
 /-- Re-expressing a source by the true linear cover change preserves its

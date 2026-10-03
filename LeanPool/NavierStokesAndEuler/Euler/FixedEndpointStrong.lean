@@ -72,7 +72,7 @@ theorem fixedEndpointDerivative_weak
   simp only [productDerivative, add_apply, comp_apply, inner_add_right] at ht
   simp only [momentum, initialMomentumForcing, sub_apply, comp_apply,
     inner_sub_left, adjoint_inner_left]
-  linarith only [ht]
+  exact eq_neg_of_add_eq_zero_right ((sub_add_eq_add_sub _ _ _).trans ht)
 
 /-- The affine fixed-coordinate solution lies in the actual frame range
 at every time, including the two endpoints. -/

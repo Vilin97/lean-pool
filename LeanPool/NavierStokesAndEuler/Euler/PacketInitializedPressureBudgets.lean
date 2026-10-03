@@ -180,7 +180,8 @@ theorem initializedPressureBudget_exists (p : ℕ) :
     Nonempty (PressureBudget period M.T M.T_pos.le D.m₀
       (initializedProfiles M D τ hτ hτT B δ hδ ξ hs α p) S L.R p) := by
   let a := initializedProfiles M D τ hτ hτT B δ hδ ξ hs α
-  let primary := joinedTerminalPrimary period M D τ hτ hτT B (initialData D δ hδ (α • ξ) hs)
+  let d := initialData D δ hδ (α • ξ) hs
+  let primary := joinedTerminalPrimary period M D τ hτ hτT B d
   have ha0 : a 0=0 := profiles_zero _ _
   have hb0 : pressureGradient (a 0).meanPressure=0 := by
     rw [ha0]
@@ -216,17 +217,17 @@ theorem initializedPressureBudget_exists (p : ℕ) :
     have hs1 : S.high 1=S.growth := ContinuousMap.ext (fun t => S.high_one t)
     have ht : timeProfileChange (α • L.fullProfile) hTime.symm=S.high 1 := by
       rw [← hgrowth,timeProfileChange_roundtrip,hs1]
-    have hb := H.angular_grade_bound NB _ WP (initialData D δ hδ (α • ξ) hs) α hα
+    have hb := H.angular_grade_bound NB _ WP d α hα
       (scaled_initialData_bound (L := L) δ hδ hδ1 ξ hs α hα hR)
     have hb' := hb.normalized_changeTime D.T_pos.le (α • L.fullProfile)
       (smul_profile_pos L.fullProfile L.fullProfile_pos α hα) hTime.symm M.T_pos.le
       (S.high 1) (S.high_pos 1) ht
-    have he : (a 1).highPressure=scalar τ hτ hτT B (initialData D δ hδ (α • ξ) hs) := by
+    have he : (a 1).highPressure=scalar τ hτ hτT B d := by
       simp only [a,initializedProfiles,joinedSourceProfiles,profiles_one]
       rfl
     let A : Field period M.T (fun z => (pressureJet (a 1).highPressure z).2 angleDirection • D.m₀)
         :=
-      ((angularField τ hτ hτT B (initialData D δ hδ (α • ξ) hs)).changeTime hTime.symm).congr
+      ((angularField τ hτ hτT B d).changeTime hTime.symm).congr
         (fun _ _ _ => by rw [he])
     refine ⟨⟨Q,A,?_,hb'.of_path_eq _ rfl⟩⟩
     exact (Field.wordBound_normalized_of_zero Q (fun _ _ _ => congrFun hb1 _)
@@ -253,8 +254,8 @@ theorem initializedPressureBudget_exists (p : ℕ) :
       rw [ha0]
       exact inner_zero_right _
     · exact joinedSource_high_tangent_all period M D hTime τ hτ hτT B primary
-        (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
-        (joinedTerminalPrimary_tangent period M D hTime τ hτ hτT B (initialData D δ hδ (α • ξ) hs))
+        (joinedTerminalPrimaryWitness period M D hTime τ hτ hτT B d)
+        (joinedTerminalPrimary_tangent period M D hTime τ hτ hτT B d)
         i (by omega) t x θ
   obtain ⟨Q,hQ⟩ := ProfileBudget.meanPressure_step_exists M LM WM C BC rfl hRc hcost
     S hp G hG hc₀ hB₁ hA

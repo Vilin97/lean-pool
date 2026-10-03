@@ -10,6 +10,7 @@ public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 public import Mathlib.Analysis.Normed.Module.Basic
 public import Mathlib.Topology.Algebra.Module.Equiv
 import Mathlib.Topology.MetricSpace.Contracting
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Finite moment repair
@@ -49,7 +50,8 @@ omit [DecidableEq ι] in
 theorem moments_synthesize (L : ι → V →ₗ[ℝ] ℝ) (b : ι → V) (c : ι → ℝ) :
     moments L (synthesize b c) = (momentMatrix L b).mulVec c := by
   ext i
-  simp [moments, synthesize, momentMatrix, Matrix.mulVec, dotProduct, mul_comm]
+  simp only [moments, synthesize, map_sum, map_smul, smul_eq_mul, Matrix.mulVec, dotProduct,
+      momentMatrix, mul_comm]
 
 /-- Coefficients obtained using the actual matrix inverse. -/
 def coefficients (B : Matrix ι ι ℝ) (d : ι → ℝ) : ι → ℝ := B⁻¹.mulVec d
@@ -80,11 +82,12 @@ theorem repair_exact (L : ι → V →ₗ[ℝ] ℝ) (b : ι → V)
   rw [map_add]
   change L i u + moments L (synthesize b _) i = target i
   rw [hi]
-  simp [moments]
+  simp only [Pi.sub_apply, moments, add_sub_cancel]
 
 theorem repair_unchanged_when_exact (L : ι → V →ₗ[ℝ] ℝ) (b : ι → V) (u : V) :
     repair L b u (moments L u) = u := by
-  simp [repair, coefficients, synthesize]
+  simp only [repair, synthesize, coefficients, sub_self, Matrix.mulVec_zero, Pi.zero_apply,
+      zero_smul, Finset.sum_const_zero, add_zero]
 
 /-- An arbitrary correction attaining the target has the computed coefficients. -/
 theorem repair_coefficients_unique (L : ι → V →ₗ[ℝ] ℝ) (b : ι → V)
@@ -98,7 +101,7 @@ theorem repair_coefficients_unique (L : ι → V →ₗ[ℝ] ℝ) (b : ι → V)
   change L i (u + synthesize b c) = target i at hi
   simp only [map_add] at hi
   change L i (synthesize b c) = target i - L i u
-  linarith
+  linarith only [hi]
 
 /-- The repair is idempotent for fixed target moments. -/
 theorem repair_idempotent (L : ι → V →ₗ[ℝ] ℝ) (b : ι → V)
@@ -117,7 +120,8 @@ variable {ι X : Type*} [Fintype ι] [DecidableEq ι]
 theorem repair_eq_of_profiles_zero (L : ι → (X → ℝ) →ₗ[ℝ] ℝ) (b : ι → X → ℝ)
     (u : X → ℝ) (target : ι → ℝ) (x : X) (hb : ∀ j, b j x = 0) :
     repair L b u target x = u x := by
-  simp [repair, synthesize, Finset.sum_apply, hb]
+  simp only [repair, synthesize, Pi.add_apply, Finset.sum_apply, Pi.smul_apply, hb, smul_eq_mul,
+      mul_zero, Finset.sum_const_zero, add_zero]
 
 /-- A common support set is preserved by finite moment repair. -/
 theorem repair_support_subset (L : ι → (X → ℝ) →ₗ[ℝ] ℝ) (b : ι → X → ℝ)
@@ -131,7 +135,7 @@ theorem repair_support_subset (L : ι → (X → ℝ) →ₗ[ℝ] ℝ) (b : ι �
     by_contra h
     exact hxs (hb j h)
   have h := repair_eq_of_profiles_zero L b u target x hzero
-  exact hx (by simpa using sub_eq_zero.mpr h)
+  exact hx (by simpa only [Pi.sub_apply] using sub_eq_zero.mpr h)
 
 end Support
 
@@ -141,7 +145,8 @@ def twoPointMatrix (x₁ x₂ w₁ w₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 
 theorem twoPointMatrix_det (x₁ x₂ w₁ w₂ : ℝ) :
     (twoPointMatrix x₁ x₂ w₁ w₂).det = w₁ * w₂ * (x₂ - x₁) := by
-  simp [twoPointMatrix, Matrix.det_fin_two]
+  simp only [twoPointMatrix, Matrix.det_fin_two, Fin.isValue, Matrix.of_apply, Matrix.cons_val',
+      Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_one]
   ring
 
 /-- Ordered nodes and positive weights genuinely imply nonsingularity in two rows. -/
@@ -167,7 +172,7 @@ theorem correctionIteration_norm_le
     (hQ : ∀ x, ‖x‖ ≤ r → ‖Q x‖ ≤ K * ‖x‖ ^ 2)
     (hsmall : 4 * β * K * r ≤ 1) (hd : 2 * β * ‖d‖ ≤ r)
     (c : E) (hc : ‖c‖ ≤ r) : ‖correctionIteration B Q d c‖ ≤ r := by
-  have hc2 : ‖c‖ ^ 2 ≤ r ^ 2 := by nlinarith [norm_nonneg c]
+  have hc2 : ‖c‖ ^ 2 ≤ r ^ 2 := by nlinarith only [hr, hc, norm_nonneg c]
   have hQc : ‖Q c‖ ≤ K * r ^ 2 :=
     (hQ c hc).trans (mul_le_mul_of_nonneg_left hc2 hK)
   have hsr := mul_le_mul_of_nonneg_right hsmall hr
@@ -176,7 +181,7 @@ theorem correctionIteration_norm_le
     _ ≤ β * (‖d‖ + ‖Q c‖) := mul_le_mul_of_nonneg_left (norm_sub_le _ _) hβ
     _ ≤ β * (‖d‖ + K * r ^ 2) :=
       mul_le_mul_of_nonneg_left (add_le_add_right hQc _) hβ
-    _ ≤ r := by nlinarith
+    _ ≤ r := by nlinarith only [hr, hd, hsr]
 
 /-- On the correction ball the iteration has Lipschitz constant at most `1/2`. -/
 theorem correctionIteration_sub_le
@@ -189,8 +194,8 @@ theorem correctionIteration_sub_le
     (x y : E) (hx : ‖x‖ ≤ r) (hy : ‖y‖ ≤ r) :
     ‖correctionIteration B Q d x - correctionIteration B Q d y‖ ≤
       (1 / 2 : ℝ) * ‖x - y‖ := by
-  have hsum : ‖x‖ + ‖y‖ ≤ 2 * r := by linarith
-  have hcoef : β * (K * (2 * r)) ≤ (1 / 2 : ℝ) := by nlinarith [hsmall]
+  have hsum : ‖x‖ + ‖y‖ ≤ 2 * r := by linarith only [hx, hy]
+  have hcoef : β * (K * (2 * r)) ≤ (1 / 2 : ℝ) := by nlinarith only [hsmall]
   calc
     ‖correctionIteration B Q d x - correctionIteration B Q d y‖ =
         ‖B.symm ((d - Q x) - (d - Q y))‖ := by rw [map_sub]; rfl
@@ -239,7 +244,7 @@ theorem exists_unique_small_correction [CompleteSpace E]
       (by simpa only [S, Metric.mem_closedBall, dist_zero_right] using x.property)
       (by simpa only [S, Metric.mem_closedBall, dist_zero_right] using y.property)
   have hcomplete : IsComplete S := Metric.isClosed_closedBall.isComplete
-  have hzero : (0 : E) ∈ S := by simpa [S] using hr
+  have hzero : (0 : E) ∈ S := Metric.mem_closedBall_self hr
   obtain ⟨c, hcS, hfix, _, _⟩ :=
     ContractingWith.exists_fixedPoint' hcomplete hmaps hcontract hzero (edist_ne_top 0 (f 0))
   have hc : ‖c‖ ≤ r := by
@@ -258,7 +263,7 @@ theorem exists_unique_small_correction [CompleteSpace E]
   have hdist := correctionIteration_sub_le B Q d β K r hβ hK hB hQdiff hsmall y c hy.1 hc
   change correctionIteration B Q d c = c at hfix
   rw [hyfix, hfix] at hdist
-  have hnorm : ‖y - c‖ = 0 := by nlinarith [norm_nonneg (y - c)]
+  have hnorm : ‖y - c‖ = 0 := le_antisymm (by linarith only [hdist]) (norm_nonneg _)
   exact sub_eq_zero.mp (norm_eq_zero.mp hnorm)
 
 end NonlinearRepair

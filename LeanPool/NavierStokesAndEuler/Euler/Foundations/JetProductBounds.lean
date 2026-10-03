@@ -46,7 +46,7 @@ variable {period} {directions : Fin 4 → LiftTangent}
 theorem levelNorm_nonneg {s n : ℕ} {f : LiftL2 period} (J : SpatialJet period directions s f) :
     0 ≤ levelNorm period J n := by
   induction J generalizing n with
-  | zero => cases n <;> simp [levelNorm]
+  | zero => cases n <;> simp only [levelNorm, norm_nonneg, Std.le_refl]
   | succ df lower hd ih =>
     cases n with
     | zero => rw [levelNorm]; exact norm_nonneg _
@@ -58,7 +58,7 @@ omit [Fact (0 < period)] in
 theorem boundLevel_nonneg {s n : ℕ} {A : SmoothCoefficient period}
     (K : CoefficientJet period directions s A) : 0 ≤ boundLevel period K n := by
   induction K generalizing n with
-  | zero => cases n <;> simp [boundLevel]
+  | zero => cases n <;> simp only [boundLevel, NNReal.zero_le_coe, Std.le_refl]
   | succ dA lower hd ih =>
     cases n with
     | zero => rw [boundLevel]; exact NNReal.coe_nonneg _
@@ -73,7 +73,8 @@ theorem levelNorm_eq_words {s n : ℕ} {f : LiftL2 period} (J : SpatialJet perio
   | zero f => cases n <;> simp [levelNorm, SpatialJet.word]
   | succ df lower hd ih =>
     cases n with
-    | zero => simp [levelNorm]
+    | zero => simp only [levelNorm, Finset.univ_unique, SpatialJet.word_zero, Finset.sum_const,
+        Finset.card_singleton, one_smul]
     | succ n =>
       rw [levelNorm, SpatialJet.sum_word_succ]
       exact Finset.sum_congr rfl fun i _ => ih i
@@ -117,7 +118,8 @@ theorem levelNorm_add_le {s n : ℕ} {f g : LiftL2 period}
     (J : SpatialJet period directions s f) (K : SpatialJet period directions s g) :
     levelNorm period (J.add K) n ≤ levelNorm period J n + levelNorm period K n := by
   induction s generalizing f g n with
-  | zero => cases J; cases K; cases n <;> simp [SpatialJet.add, levelNorm, norm_add_le]
+  | zero => cases J; cases K; cases n <;> simp only [SpatialJet.add, levelNorm, norm_add_le,
+      add_zero, Std.le_refl]
   | succ s ih =>
     cases J with
     | succ df lower hd =>
@@ -142,7 +144,7 @@ theorem leibnizConvolution_succ (A B : ℕ → ℝ) (n : ℕ) :
   congr 1
   apply Finset.sum_congr rfl
   intro l hl
-  have hln : l ≤ n := by simpa using Finset.mem_range.mp hl
+  have hln : l ≤ n := by simpa only [Order.lt_add_one_iff] using Finset.mem_range.mp hl
   rw [show n + 1 - l = n - l + 1 by omega]
 
 theorem leibnizConvolution_congr (A B C D : ℕ → ℝ) (n : ℕ)
@@ -150,7 +152,7 @@ theorem leibnizConvolution_congr (A B C D : ℕ → ℝ) (n : ℕ)
     leibnizConvolution A B n = leibnizConvolution C D n := by
   apply Finset.sum_congr rfl
   intro l hl
-  have hl : l ≤ n := by simpa using Finset.mem_range.mp hl
+  have hl : l ≤ n := by simpa only [Order.lt_add_one_iff] using Finset.mem_range.mp hl
   rw [hA l hl, hB (n - l) (by omega)]
 
 theorem sum_leibnizConvolution_right (A : ℕ → ℝ) (B : Fin 4 → ℕ → ℝ) (n : ℕ) :
@@ -225,14 +227,15 @@ theorem word_add {s n : ℕ} {f g : LiftL2 period}
     (J : SpatialJet period directions s f) (K : SpatialJet period directions s g)
     (w : Fin n → Fin 4) : (J.add K).word w = J.word w + K.word w := by
   induction s generalizing f g n with
-  | zero => cases J; cases K; cases n <;> simp [SpatialJet.add, SpatialJet.word]
+  | zero => cases J; cases K; cases n <;> simp only [SpatialJet.add, SpatialJet.word_zero,
+      SpatialJet.word, add_zero]
   | succ s ih =>
     cases J with
     | succ df lower hd =>
       cases K with
       | succ dg lowerG hG =>
         cases n with
-        | zero => simp
+        | zero => simp only [SpatialJet.word_zero]
         | succ n =>
           simp only [SpatialJet.add, SpatialJet.word_succ]
           exact ih (lower _) (lowerG _) _
@@ -245,7 +248,7 @@ theorem commutatorConvolution_eq_sum (A B : ℕ → ℝ) (n : ℕ) :
     commutatorConvolution A B n =
       ∑ l ∈ Finset.range n, (n.choose (l + 1) : ℝ) * A (l + 1) * B (n - (l + 1)) := by
   rw [commutatorConvolution, leibnizConvolution, Finset.sum_range_succ']
-  simp
+  simp only [Nat.choose_zero_right, Nat.cast_one, one_mul, tsub_zero, add_sub_cancel_right]
 
 theorem commutatorConvolution_congr (A B C D : ℕ → ℝ) (n : ℕ)
     (hA : ∀ l ≤ n, A l = C l) (hB : ∀ l ≤ n, B l = D l) :
@@ -339,7 +342,9 @@ theorem commutatorLevel_le {s n : ℕ} {A : SmoothCoefficient period} {f : LiftL
     commutatorLevel K J n ≤
       commutatorConvolution (boundLevel period K) (levelNorm period J) n := by
   induction n generalizing s A f with
-  | zero => simp [commutatorLevel, commutatorConvolution_eq_sum]
+  | zero => simp only [commutatorLevel, Finset.univ_unique, SpatialJet.word_zero, sub_self,
+      norm_zero, Finset.sum_const_zero, commutatorConvolution_eq_sum, Finset.range_zero,
+      Nat.choose_zero_succ, CharP.cast_eq_zero, zero_mul, zero_tsub, Std.le_refl]
   | succ n ih =>
     cases s with
     | zero => omega

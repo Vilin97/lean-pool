@@ -43,7 +43,7 @@ theorem step_zero {b w y : ℝ} (hw : 0 < w) (hy : y ≤ b) : step b w y = 0 :=
   OutgoingSchedule.sigma_zero (div_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr hy) hw.le)
 
 theorem step_one {b w y : ℝ} (hw : 0 < w) (hy : b + w ≤ y) : step b w y = 1 :=
-  OutgoingSchedule.sigma_one ((le_div_iff₀ hw).mpr (by linarith))
+  OutgoingSchedule.sigma_one ((le_div_iff₀ hw).mpr (by linarith only [hy]))
 
 theorem damping_eq_constant {T : ℝ} (hT : 0 < T) (κ : ℝ) {y : ℝ} (hy : T ≤ y) :
     damping T κ y = κ := by
@@ -54,29 +54,32 @@ theorem damping_mem (T : ℝ) {κ : ℝ} (hκ : κ ∈ Icc (0 : ℝ) 1) (y : ℝ
     damping T κ y ∈ Icc (0 : ℝ) 1 := by
   have h0 := activation_nonneg T κ y hκ.2
   have h1 := activation_le_one T κ y hκ
-  constructor <;> dsimp only [damping] <;> linarith
+  constructor <;> dsimp only [damping] <;> linarith only [h1, h0]
 
 /-- A literal primitive, with an independently specified value at the axis
 of the logarithmic clock. -/
-noncomputable def integrate (initial : ℝ → ℝ) (slope : Field) : Field :=
+noncomputable def integrate (initial : ℝ → ℝ)
+    (slope : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => initial p.2 + primitive slope p
 
-theorem integrate_smooth {J : Set ℝ} (hJ : IsOpen J) {initial : ℝ → ℝ} {slope : Field}
+theorem integrate_smooth {J : Set ℝ} (hJ : IsOpen J) {initial : ℝ → ℝ}
+    {slope : ProfileHistories.Field}
     (hi : ContDiffOn ℝ ∞ initial J)
     (hs : ContDiffOn ℝ ∞ slope (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (integrate initial slope) (logDomain J hJ).carrier :=
   (hi.comp contDiffOn_snd (fun _ hp => hp.2)).add (primitive_smooth (logDomain J hJ) hs)
 
-theorem integrate_hasDerivAt {J : Set ℝ} (hJ : IsOpen J) (initial : ℝ → ℝ) {slope : Field}
+theorem integrate_hasDerivAt {J : Set ℝ} (hJ : IsOpen J) (initial : ℝ → ℝ)
+    {slope : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ slope (logDomain J hJ).carrier) (y : ℝ) {η : ℝ} (hη : η ∈ J) :
     HasDerivAt (fun x => integrate initial slope (x, η)) (slope (y, η)) y := by
   simpa only [integrate, zero_add] using (hasDerivAt_const y (initial η)).fun_add
     (primitive_hasDerivAt (logDomain J hJ) hs (p := (y, η)) ⟨mem_univ _, hη⟩)
 
-@[simp] theorem integrate_initial (initial : ℝ → ℝ) (slope : Field) (η : ℝ) :
+@[simp] theorem integrate_initial (initial : ℝ → ℝ) (slope : ProfileHistories.Field) (η : ℝ) :
     integrate initial slope (0, η) = initial η := by simp [integrate, primitive]
 
-theorem integrate_congr (initial : ℝ → ℝ) (slope₁ slope₂ : Field) (p : Point)
+theorem integrate_congr (initial : ℝ → ℝ) (slope₁ slope₂ : ProfileHistories.Field) (p : Point)
     (he : ∀ t ∈ uIcc (0 : ℝ) p.1, slope₁ (t, p.2) = slope₂ (t, p.2)) :
     integrate initial slope₁ p = integrate initial slope₂ p := by
   unfold integrate primitive
@@ -85,78 +88,84 @@ theorem integrate_congr (initial : ℝ → ℝ) (slope₁ slope₂ : Field) (p :
 
 /-- The ordinary ACT control continues to multiply the REF lag stock,
 even when the REF derivative has already become zero. -/
-noncomputable def baseSlope (T κ : ℝ) (stock : Field) : Field :=
+noncomputable def baseSlope (T κ : ℝ) (stock : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => -(damping T κ p.1 * stock p) / 2
 
 /-- Angular slope, defined pointwise by `(1 - step (b + w₁) w₂ p.1) * baseSlope T κ stock p - (2
 / 5 : ℝ) * step (b + w₁) w₂ p.1`. -/
-noncomputable def angularSlope (T κ b w₁ w₂ : ℝ) (stock : Field) : Field :=
+noncomputable def angularSlope (T κ b w₁ w₂ : ℝ)
+    (stock : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => (1 - step (b + w₁) w₂ p.1) * baseSlope T κ stock p -
     (2 / 5 : ℝ) * step (b + w₁) w₂ p.1
 
 /-- Axial slope, defined pointwise by `(1 - step b w₁ p.1) * baseSlope T κ stock p`. -/
-noncomputable def axialSlope (T κ b w₁ : ℝ) (stock : Field) : Field :=
+noncomputable def axialSlope (T κ b w₁ : ℝ)
+    (stock : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => (1 - step b w₁ p.1) * baseSlope T κ stock p
 
-theorem baseSlope_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem baseSlope_smooth (T κ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (baseSlope T κ stock) (logDomain J hJ).carrier :=
-  ((((damping_smooth T κ).comp contDiff_fst).contDiffOn.mul hs).neg).div_const 2
+  ((((damping_smooth T κ).comp (contDiff_fst (F := ℝ))).contDiffOn.mul hs).neg).div_const 2
 
-theorem angularSlope_smooth (T κ b w₁ w₂ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem angularSlope_smooth (T κ b w₁ w₂ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
+    {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (angularSlope T κ b w₁ w₂ stock) (logDomain J hJ).carrier :=
-  (contDiffOn_const.sub ((step_smooth (b + w₁) w₂).comp contDiff_fst).contDiffOn).mul
+  (contDiffOn_const.sub ((step_smooth (b + w₁) w₂).comp (contDiff_fst (F := ℝ))).contDiffOn).mul
     (baseSlope_smooth T κ hJ hs) |>.sub
-      (contDiffOn_const.mul ((step_smooth (b + w₁) w₂).comp contDiff_fst).contDiffOn)
+      (contDiffOn_const.mul ((step_smooth (b + w₁) w₂).comp (contDiff_fst (F := ℝ))).contDiffOn)
 
-theorem axialSlope_smooth (T κ b w₁ : ℝ) {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem axialSlope_smooth (T κ b w₁ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
+    {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (axialSlope T κ b w₁ stock) (logDomain J hJ).carrier :=
-  (contDiffOn_const.sub ((step_smooth b w₁).comp contDiff_fst).contDiffOn).mul
+  (contDiffOn_const.sub ((step_smooth b w₁).comp (contDiff_fst (F := ℝ))).contDiffOn).mul
     (baseSlope_smooth T κ hJ hs)
 
-theorem angularSlope_before {T κ b w₁ w₂ : ℝ} (hw₂ : 0 < w₂) (stock : Field)
+theorem angularSlope_before {T κ b w₁ w₂ : ℝ} (hw₂ : 0 < w₂) (stock : ProfileHistories.Field)
     {p : Point} (hp : p.1 ≤ b + w₁) :
     angularSlope T κ b w₁ w₂ stock p = baseSlope T κ stock p := by
   simp only [angularSlope, step_zero hw₂ hp, sub_zero, one_mul, mul_zero]
 
-theorem axialSlope_before {T κ b w₁ : ℝ} (hw₁ : 0 < w₁) (stock : Field)
+theorem axialSlope_before {T κ b w₁ : ℝ} (hw₁ : 0 < w₁) (stock : ProfileHistories.Field)
     {p : Point} (hp : p.1 ≤ b) :
     axialSlope T κ b w₁ stock p = baseSlope T κ stock p := by
   simp only [axialSlope, step_zero hw₁ hp, sub_zero, one_mul]
 
-theorem angularSlope_after {T κ b w₁ w₂ : ℝ} (hw₂ : 0 < w₂) (stock : Field)
+theorem angularSlope_after {T κ b w₁ w₂ : ℝ} (hw₂ : 0 < w₂) (stock : ProfileHistories.Field)
     {p : Point} (hp : b + w₁ + w₂ ≤ p.1) :
     angularSlope T κ b w₁ w₂ stock p = -(2 / 5 : ℝ) := by
   simp only [angularSlope, step_one hw₂ hp, sub_self, zero_mul, mul_one, zero_sub]
 
-theorem axialSlope_after {T κ b w₁ : ℝ} (hw₁ : 0 < w₁) (stock : Field)
+theorem axialSlope_after {T κ b w₁ : ℝ} (hw₁ : 0 < w₁) (stock : ProfileHistories.Field)
     {p : Point} (hp : b + w₁ ≤ p.1) : axialSlope T κ b w₁ stock p = 0 := by
   simp only [axialSlope, step_one hw₁ hp, sub_self, zero_mul]
 
 /-- The actual logarithm of the angular amplitude. -/
-noncomputable def logField (T κ b w₁ w₂ : ℝ) (initial : ℝ → ℝ) (stock : Field) : Field :=
+noncomputable def logField (T κ b w₁ w₂ : ℝ) (initial : ℝ → ℝ)
+    (stock : ProfileHistories.Field) : ProfileHistories.Field :=
   integrate initial (angularSlope T κ b w₁ w₂ stock)
 
 /-- The actual axial velocity after the first, axial, shutoff. -/
-noncomputable def axialField (T κ b w₁ : ℝ) (initial : ℝ → ℝ) (stock : Field) : Field :=
+noncomputable def axialField (T κ b w₁ : ℝ) (initial : ℝ → ℝ)
+    (stock : ProfileHistories.Field) : ProfileHistories.Field :=
   integrate initial (axialSlope T κ b w₁ stock)
 
 theorem logField_smooth (T κ b w₁ w₂ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
-    {initial : ℝ → ℝ} {stock : Field} (hi : ContDiffOn ℝ ∞ initial J)
+    {initial : ℝ → ℝ} {stock : ProfileHistories.Field} (hi : ContDiffOn ℝ ∞ initial J)
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (logField T κ b w₁ w₂ initial stock) (logDomain J hJ).carrier :=
   integrate_smooth hJ hi (angularSlope_smooth T κ b w₁ w₂ hJ hs)
 
 theorem axialField_smooth (T κ b w₁ : ℝ) {J : Set ℝ} (hJ : IsOpen J)
-    {initial : ℝ → ℝ} {stock : Field} (hi : ContDiffOn ℝ ∞ initial J)
+    {initial : ℝ → ℝ} {stock : ProfileHistories.Field} (hi : ContDiffOn ℝ ∞ initial J)
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (axialField T κ b w₁ initial stock) (logDomain J hJ).carrier :=
   integrate_smooth hJ hi (axialSlope_smooth T κ b w₁ hJ hs)
 
 theorem logField_before {T κ b w₁ w₂ : ℝ} (hb : 0 ≤ b + w₁) (hw₂ : 0 < w₂)
-    (initial : ℝ → ℝ) (stock : Field) {p : Point} (hp : p.1 ≤ b + w₁) :
+    (initial : ℝ → ℝ) (stock : ProfileHistories.Field) {p : Point} (hp : p.1 ≤ b + w₁) :
     logField T κ b w₁ w₂ initial stock p = integrate initial (baseSlope T κ stock) p := by
   apply integrate_congr
   intro t ht
@@ -164,14 +173,15 @@ theorem logField_before {T κ b w₁ w₂ : ℝ} (hb : 0 ≤ b + w₁) (hw₂ : 
   exact (mem_uIcc.mp ht).elim (fun h => h.2.trans hp) (fun h => h.2.trans hb)
 
 theorem axialField_before {T κ b w₁ : ℝ} (hb : 0 ≤ b) (hw₁ : 0 < w₁)
-    (initial : ℝ → ℝ) (stock : Field) {p : Point} (hp : p.1 ≤ b) :
+    (initial : ℝ → ℝ) (stock : ProfileHistories.Field) {p : Point} (hp : p.1 ≤ b) :
     axialField T κ b w₁ initial stock p = integrate initial (baseSlope T κ stock) p := by
   apply integrate_congr
   intro t ht
   apply axialSlope_before hw₁
   exact (mem_uIcc.mp ht).elim (fun h => h.2.trans hp) (fun h => h.2.trans hb)
 
-theorem integrate_affine_after {J : Set ℝ} (hJ : IsOpen J) (initial : ℝ → ℝ) {slope : Field}
+theorem integrate_affine_after {J : Set ℝ} (hJ : IsOpen J) (initial : ℝ → ℝ)
+    {slope : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ slope (logDomain J hJ).carrier) {a y c η : ℝ}
     (hay : a ≤ y) (hη : η ∈ J) (hc : ∀ t, a ≤ t → slope (t, η) = c) :
     integrate initial slope (y, η) = integrate initial slope (a, η) + (y - a) * c := by
@@ -183,10 +193,11 @@ theorem integrate_affine_after {J : Set ℝ} (hJ : IsOpen J) (initial : ℝ → 
     (intervalIntegrable_const : IntervalIntegrable (fun _ : ℝ => c) volume a y)
   rw [intervalIntegral.integral_const] at hi
   simp only [smul_eq_mul] at hi
-  linarith
+  linarith only [hi]
 
 theorem logField_hold {T κ b w₁ w₂ : ℝ} (hw₂ : 0 < w₂) {J : Set ℝ} (hJ : IsOpen J)
-    (initial : ℝ → ℝ) {stock : Field} (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier)
+    (initial : ℝ → ℝ) {stock : ProfileHistories.Field}
+    (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier)
     {a y η : ℝ} (ha : b + w₁ + w₂ ≤ a) (hay : a ≤ y) (hη : η ∈ J) :
     logField T κ b w₁ w₂ initial stock (y, η) =
       logField T κ b w₁ w₂ initial stock (a, η) - (2 / 5 : ℝ) * (y - a) := by
@@ -196,7 +207,8 @@ theorem logField_hold {T κ b w₁ w₂ : ℝ} (hw₂ : 0 < w₂) {J : Set ℝ} 
   ring
 
 theorem axialField_hold {T κ b w₁ : ℝ} (hw₁ : 0 < w₁) {J : Set ℝ} (hJ : IsOpen J)
-    (initial : ℝ → ℝ) {stock : Field} (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier)
+    (initial : ℝ → ℝ) {stock : ProfileHistories.Field}
+    (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier)
     {a y η : ℝ} (ha : b + w₁ ≤ a) (hay : a ≤ y) (hη : η ∈ J) :
     axialField T κ b w₁ initial stock (y, η) = axialField T κ b w₁ initial stock (a, η) := by
   unfold axialField
@@ -228,18 +240,18 @@ variable {J : Set ℝ} (R : StockReference J)
 noncomputable def chart (p : Point) : Point := (radius R.radius0 p.1, p.2)
 
 theorem chart_smooth : ContDiff ℝ ∞ R.chart :=
-  ((radius_smooth R.radius0).comp contDiff_fst).prodMk contDiff_snd
+  ((radius_smooth R.radius0).comp (contDiff_fst (F := ℝ))).prodMk contDiff_snd
 
 theorem chart_radius_pos (p : Point) : 0 < (R.chart p).1 :=
   mul_pos R.radius0_pos (Real.exp_pos _)
 
 /-- Angular stock, defined pointwise by `ActivationStocks.profileStockOne R.profiles R.exponent
 (R.chart p)`. -/
-noncomputable def angularStock : Field := fun p =>
+noncomputable def angularStock : ProfileHistories.Field := fun p =>
   ActivationStocks.profileStockOne R.profiles R.exponent (R.chart p)
 
 /-- This is `X * ns_REF`, including the radial factor in the axial ODE. -/
-noncomputable def axialStock : Field := fun p =>
+noncomputable def axialStock : ProfileHistories.Field := fun p =>
   (R.chart p).1 * R.profiles.axialLag R.exponent (R.chart p) /
     NaturalAxisData.L R.exponent p.2
 
@@ -295,11 +307,11 @@ noncomputable def bigTime : ℝ := Real.log (100 / R.radius0)
 noncomputable def finalTime : ℝ := Real.log (110 / R.radius0)
 
 /-- Log amplitude, given by `logField T κ R.bigTime w₁ w₂ R.initialLog R.angularStock`. -/
-noncomputable def logAmplitude (T κ w₁ w₂ : ℝ) : Field :=
+noncomputable def logAmplitude (T κ w₁ w₂ : ℝ) : ProfileHistories.Field :=
   logField T κ R.bigTime w₁ w₂ R.initialLog R.angularStock
 
 /-- Axial velocity, given by `axialField T κ R.bigTime w₁ R.initialU R.axialStock`. -/
-noncomputable def axialVelocity (T κ w₁ : ℝ) : Field :=
+noncomputable def axialVelocity (T κ w₁ : ℝ) : ProfileHistories.Field :=
   axialField T κ R.bigTime w₁ R.initialU R.axialStock
 
 theorem logAmplitude_smooth (hJ : IsOpen J) (T κ w₁ w₂ : ℝ) :
@@ -353,18 +365,18 @@ end StockReference
 
 /-- Parameter jet as an element of `ℕ → Field → Field | 0, F => F | n + 1, F => parameterPartial
 (parameterJet n F)`. -/
-noncomputable def parameterJet : ℕ → Field → Field
+noncomputable def parameterJet : ℕ → ProfileHistories.Field → ProfileHistories.Field
   | 0, F => F
   | n + 1, F => parameterPartial (parameterJet n F)
 
-theorem parameterJet_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem parameterJet_smooth {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (n : ℕ) :
     ContDiffOn ℝ ∞ (parameterJet n F) (logDomain J hJ).carrier := by
   induction n with
   | zero => exact hF
   | succ n ih => exact parameterPartial_smooth (logDomain J hJ) ih
 
-theorem parameterJet_eq_iteratedDeriv {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem parameterJet_eq_iteratedDeriv {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (n : ℕ) {p : Point} (hp : p.2 ∈ J) :
     parameterJet n F p = iteratedDeriv n (fun η => F (p.1, η)) p.2 := by
   induction n generalizing p with
@@ -378,7 +390,7 @@ theorem parameterJet_eq_iteratedDeriv {J : Set ℝ} (hJ : IsOpen J) {F : Field}
     exact (parameterPartial_hasDerivAt (logDomain J hJ) (parameterJet_smooth hJ hF n)
       (p := p) ⟨mem_univ _, hp⟩).deriv.symm.trans he.deriv_eq
 
-theorem parameterPartial_congr {J : Set ℝ} (hJ : IsOpen J) {F G : Field}
+theorem parameterPartial_congr {J : Set ℝ} (hJ : IsOpen J) {F G : ProfileHistories.Field}
     (he : ∀ p, p.2 ∈ J → F p = G p) {p : Point} (hp : p.2 ∈ J) :
     parameterPartial F p = parameterPartial G p := by
   have hev : F =ᶠ[𝓝 p] G := by
@@ -386,7 +398,7 @@ theorem parameterPartial_congr {J : Set ℝ} (hJ : IsOpen J) {F G : Field}
     exact he q hq
   exact congrArg (fun A : Point →L[ℝ] ℝ => A (0, 1)) hev.fderiv_eq
 
-theorem parameterJet_primitive {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem parameterJet_primitive {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (n : ℕ) {p : Point} (hp : p.2 ∈ J) :
     parameterJet n (primitive F) p = primitive (parameterJet n F) p := by
   induction n generalizing p with
@@ -398,7 +410,7 @@ theorem parameterJet_primitive {J : Set ℝ} (hJ : IsOpen J) {F : Field}
         (p := p) ⟨mem_univ _, hp⟩]
     rfl
 
-theorem parameterJet_mul_radial {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem parameterJet_mul_radial {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) {g : ℝ → ℝ}
     (hg : ContDiff ℝ ∞ g) (n : ℕ)
     {p : Point} (hp : p.2 ∈ J) :
@@ -411,17 +423,17 @@ theorem parameterJet_mul_radial {J : Set ℝ} (hJ : IsOpen J) {F : Field}
     have hd := (parameterPartial_hasDerivAt (logDomain J hJ) (parameterJet_smooth hJ hF n)
       (p := p) ⟨mem_univ _, hp⟩).const_mul (g p.1)
     exact (parameterPartial_hasDerivAt (logDomain J hJ)
-      ((hg.comp contDiff_fst).contDiffOn.mul (parameterJet_smooth hJ hF n))
+      ((hg.comp (contDiff_fst (F := ℝ))).contDiffOn.mul (parameterJet_smooth hJ hF n))
         (p := p) ⟨mem_univ _, hp⟩).unique hd
 
-theorem parameterJet_congr {J : Set ℝ} (hJ : IsOpen J) {F G : Field}
+theorem parameterJet_congr {J : Set ℝ} (hJ : IsOpen J) {F G : ProfileHistories.Field}
     (he : ∀ p, p.2 ∈ J → F p = G p) (n : ℕ) {p : Point} (hp : p.2 ∈ J) :
     parameterJet n F p = parameterJet n G p := by
   induction n generalizing p with
   | zero => exact he p hp
   | succ n ih => exact parameterPartial_congr hJ (fun _ hq => ih hq) hp
 
-theorem parameterJet_sub {J : Set ℝ} (hJ : IsOpen J) {F G : Field}
+theorem parameterJet_sub {J : Set ℝ} (hJ : IsOpen J) {F G : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier)
     (hG : ContDiffOn ℝ ∞ G (logDomain J hJ).carrier) (n : ℕ)
     {p : Point} (hp : p.2 ∈ J) :
@@ -442,7 +454,7 @@ theorem parameterJet_radial {J : Set ℝ} (hJ : IsOpen J) {g : ℝ → ℝ}
     (hg : ContDiff ℝ ∞ g) (n : ℕ) {p : Point} (hp : p.2 ∈ J) :
     parameterJet n (fun q => g q.1) p = if n = 0 then g p.1 else 0 := by
   rw [parameterJet_eq_iteratedDeriv hJ (F := fun q => g q.1)
-    (hg.comp contDiff_fst).contDiffOn n hp]
+    (hg.comp (contDiff_fst (F := ℝ))).contDiffOn n hp]
   cases n with
   | zero => rfl
   | succ n =>
@@ -510,9 +522,9 @@ theorem late_layer_bound {F : ℝ → ℝ} (hF : Continuous F) {a y w M : ℝ}
     rw [hzero, zero_add] at hsplit
     rw [← hsplit]
     exact (integral_norm_bound hay (fun t ht => hb t ⟨ha.trans ht.1, ht.2⟩)).trans
-      (mul_le_mul_of_nonneg_left (by linarith) hM)
+      (mul_le_mul_of_nonneg_left (by linarith only [hyw]) hM)
 
-theorem parameterJet_baseSlope {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem parameterJet_baseSlope {J : Set ℝ} (hJ : IsOpen J) {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (T κ : ℝ) (n : ℕ)
     {p : Point} (hp : p.2 ∈ J) :
     parameterJet n (baseSlope T κ stock) p = -(damping T κ p.1 * parameterJet n stock p) / 2 := by
@@ -523,7 +535,7 @@ theorem parameterJet_baseSlope {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
   rw [he, parameterJet_mul_radial hJ hs ((damping_smooth T κ).neg.div_const 2) n hp]
   ring
 
-theorem parameterJet_axialSlope {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem parameterJet_axialSlope {J : Set ℝ} (hJ : IsOpen J) {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (T κ b w : ℝ) (n : ℕ)
     {p : Point} (hp : p.2 ∈ J) :
     parameterJet n (axialSlope T κ b w stock) p =
@@ -532,7 +544,7 @@ theorem parameterJet_axialSlope {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
   rw [parameterJet_mul_radial hJ (baseSlope_smooth T κ hJ hs)
     (contDiff_const.sub (step_smooth b w)) n hp, parameterJet_baseSlope hJ hs T κ n hp]
 
-theorem parameterJet_angularSlope {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem parameterJet_angularSlope {J : Set ℝ} (hJ : IsOpen J) {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (T κ b w₁ w₂ : ℝ) (n : ℕ)
     {p : Point} (hp : p.2 ∈ J) :
     parameterJet n (angularSlope T κ b w₁ w₂ stock) p =
@@ -544,14 +556,15 @@ theorem parameterJet_angularSlope {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
   rw [parameterJet_sub hJ
     (F := fun p => (1 - step (b + w₁) w₂ p.1) * baseSlope T κ stock p)
     (G := fun p => (2 / 5 : ℝ) * step (b + w₁) w₂ p.1)
-    ((contDiffOn_const.sub ((step_smooth (b + w₁) w₂).comp contDiff_fst).contDiffOn).mul
-      (baseSlope_smooth T κ hJ hs)) (hc.comp contDiff_fst).contDiffOn n hp,
+    ((contDiffOn_const.sub ((step_smooth (b + w₁) w₂).comp (contDiff_fst (F := ℝ))).contDiffOn).mul
+      (baseSlope_smooth T κ hJ hs)) (hc.comp (contDiff_fst (F := ℝ))).contDiffOn n hp,
     parameterJet_mul_radial hJ (baseSlope_smooth T κ hJ hs)
       (contDiff_const.sub (step_smooth (b + w₁) w₂)) n hp,
     parameterJet_baseSlope hJ hs T κ n hp,
     parameterJet_radial hJ hc n hp]
 
-theorem integrate_error_jet {J : Set ℝ} (hJ : IsOpen J) (initial : ℝ → ℝ) {slope : Field}
+theorem integrate_error_jet {J : Set ℝ} (hJ : IsOpen J) (initial : ℝ → ℝ)
+    {slope : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ slope (logDomain J hJ).carrier) (n : ℕ) (y : ℝ)
     {η : ℝ} (hη : η ∈ J) :
     iteratedDeriv n (fun ξ => integrate initial slope (y, ξ) - initial ξ) η =
@@ -591,9 +604,9 @@ theorem damped_integral_bound {F : ℝ → ℝ} (hF : Continuous F) {T κ y M : 
     calc
       _ ≤ |∫ t in (0 : ℝ)..T, F t| + |∫ t in T..y, F t| := abs_add_le _ _
       _ ≤ M * T + (κ * M) * (y - T) := add_le_add hfirst hlast
-      _ ≤ M * (T + κ * y) := by linarith [mul_nonneg (mul_nonneg hκ.1 hM) hT.le]
+      _ ≤ M * (T + κ * y) := by linarith only [hκ, hM, hT, mul_nonneg (mul_nonneg hκ.1 hM) hT.le]
 
-theorem jet_slice_continuous {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem jet_slice_continuous {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (n : ℕ) {η : ℝ} (hη : η ∈ J) :
     Continuous (fun t => parameterJet n F (t, η)) := by
   apply continuous_iff_continuousAt.mpr
@@ -603,7 +616,7 @@ theorem jet_slice_continuous {J : Set ℝ} (hJ : IsOpen J) {F : Field}
       (continuousAt_id.prodMk continuousAt_const)
 
 theorem compact_stock_jet_bound {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
-    (hKJ : K ⊆ J) {stock : Field}
+    (hKJ : K ⊆ J) {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (R : ℝ) (N : ℕ) :
     ∃ M ≥ 0, ∀ n ≤ N, ∀ t ∈ Icc (0 : ℝ) R, ∀ η ∈ K,
       |parameterJet n stock (t, η)| ≤ M := by
@@ -636,9 +649,9 @@ theorem controlled_product_bound {a d z M : ℝ} (ha : a ∈ Icc (0 : ℝ) 1)
   rw [abs_of_pos (by norm_num : (0 : ℝ) < 2)]
   have hza : a * |z| ≤ M :=
     (mul_le_mul_of_nonneg_left hz ha.1).trans (mul_le_of_le_one_left hM ha.2)
-  linarith [mul_le_mul_of_nonneg_left hza hd, mul_nonneg hd hM]
+  linarith only [hza, hd, hM, mul_le_mul_of_nonneg_left hza hd, mul_nonneg hd hM]
 
-theorem axialField_jet_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem axialField_jet_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (initial : ℝ → ℝ)
     {T κ b w y η M : ℝ} (hT : 0 < T) (hκ : κ ∈ Icc (0 : ℝ) 1)
     (hy : 0 ≤ y) (hη : η ∈ J) (hM : 0 ≤ M) (n : ℕ)
@@ -652,9 +665,10 @@ theorem axialField_jet_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
   rw [parameterJet_axialSlope hJ hs T κ b w n hη]
   apply controlled_product_bound _ (damping_mem T hκ t).1 hM (hb t ht)
   have hstep := step_mem b w t
-  constructor <;> linarith [hstep.1, hstep.2]
+  constructor <;> linarith only [hstep, hstep.1, hstep.2]
 
-theorem logField_positive_jet_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem logField_positive_jet_error_bound {J : Set ℝ} (hJ : IsOpen J)
+    {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (initial : ℝ → ℝ)
     {T κ b w₁ w₂ y η M : ℝ} (hT : 0 < T) (hκ : κ ∈ Icc (0 : ℝ) 1)
     (hy : 0 ≤ y) (hη : η ∈ J) (hM : 0 ≤ M) {n : ℕ} (hn : n ≠ 0)
@@ -668,9 +682,9 @@ theorem logField_positive_jet_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock :
   rw [parameterJet_angularSlope hJ hs T κ b w₁ w₂ n hη, ite_eq_right hn, sub_zero]
   apply controlled_product_bound _ (damping_mem T hκ t).1 hM (hb t ht)
   have hstep := step_mem (b + w₁) w₂ t
-  constructor <;> linarith [hstep.1, hstep.2]
+  constructor <;> linarith only [hstep, hstep.1, hstep.2]
 
-theorem logField_value_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
+theorem logField_value_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : ProfileHistories.Field}
     (hs : ContDiffOn ℝ ∞ stock (logDomain J hJ).carrier) (initial : ℝ → ℝ)
     {T κ b w₁ w₂ y η M : ℝ} (hT : 0 < T) (hκ : κ ∈ Icc (0 : ℝ) 1)
     (hb0 : 0 ≤ b) (hw₁ : 0 ≤ w₁) (hw₂ : 0 < w₂)
@@ -688,17 +702,17 @@ theorem logField_value_error_bound {J : Set ℝ} (hJ : IsOpen J) {stock : Field}
     intro t ht
     apply controlled_product_bound _ (damping_mem T hκ t).1 hM (hb t ht)
     have hstep := step_mem (b + w₁) w₂ t
-    constructor <;> linarith [hstep.1, hstep.2]
+    constructor <;> linarith only [hstep, hstep.1, hstep.2]
   have hBbound : |∫ t in (0 : ℝ)..y, B t| ≤ (2 / 5 : ℝ) * (w₁ + w₂) := by
-    apply late_layer_bound hB hb0 hy (by linarith) (by linarith) (by norm_num)
+    apply late_layer_bound hB hb0 hy (by linarith) (by linarith only [hw₁, hw₂]) (by norm_num)
     · intro t _
       dsimp [B]
       rw [abs_mul, abs_of_nonneg (step_mem (b + w₁) w₂ t).1,
         abs_of_pos (by norm_num : (0 : ℝ) < 2 / 5)]
-      linarith [(step_mem (b + w₁) w₂ t).2]
+      linarith only [(step_mem (b + w₁) w₂ t).2]
     · intro t ht
       dsimp [B]
-      rw [step_zero hw₂ (show t ≤ b + w₁ by linarith [ht.2]), mul_zero]
+      rw [step_zero hw₂ (show t ≤ b + w₁ by linarith only [hw₁, ht, ht.2]), mul_zero]
   have he : logField T κ b w₁ w₂ initial stock (y, η) - initial η =
       (∫ t in (0 : ℝ)..y, A t) - ∫ t in (0 : ℝ)..y, B t := by
     simp only [logField, integrate, add_sub_cancel_left, primitive, angularSlope]
@@ -732,12 +746,12 @@ theorem chart_logTime {X η : ℝ} (hX : 0 < X) : R.chart (R.logTime X, η) = (X
 
 /-- Physical F, defined pointwise by `if p.1 ≤ R.radius0 then R.profiles.f p else Real.exp
 (R.logAmplitude T κ w₁ w₂ (R.logPoint p))`. -/
-noncomputable def physicalF (T κ w₁ w₂ : ℝ) : Field := fun p =>
+noncomputable def physicalF (T κ w₁ w₂ : ℝ) : ProfileHistories.Field := fun p =>
   if p.1 ≤ R.radius0 then R.profiles.f p else Real.exp (R.logAmplitude T κ w₁ w₂ (R.logPoint p))
 
 /-- Physical U, defined pointwise by `if p.1 ≤ R.radius0 then R.profiles.U p else
 R.axialVelocity T κ w₁ (R.logPoint p)`. -/
-noncomputable def physicalU (T κ w₁ : ℝ) : Field := fun p =>
+noncomputable def physicalU (T κ w₁ : ℝ) : ProfileHistories.Field := fun p =>
   if p.1 ≤ R.radius0 then R.profiles.U p else R.axialVelocity T κ w₁ (R.logPoint p)
 
 theorem physicalF_before (T κ w₁ w₂ : ℝ) {p : Point} (hp : p.1 ≤ R.radius0) :
@@ -780,11 +794,11 @@ theorem L_pos_parameterInterval {h j η : ℝ} (hs : NaturalAxisData.SmallParame
   have hη' : -(11 / 10 : ℝ) < η ∧ η < 11 / 10 := by
     simpa only [parameterInterval, NaturalAxisCoefficients.window, mem_Ioo, neg_div] using hη
   have hsquare : η ^ 2 ≤ (121 / 100 : ℝ) := by
-    linarith [mul_nonneg (show 0 ≤ η + 11 / 10 by linarith [hη'.1])
-      (show 0 ≤ 11 / 10 - η by linarith [hη'.2])]
+    linarith [mul_nonneg (show 0 ≤ η + 11 / 10 by linarith only [hη', hη'.1])
+      (show 0 ≤ 11 / 10 - η by linarith only [hη', hη'.2])]
   have hm := mul_le_mul hs.h_le hsquare (sq_nonneg η) (by norm_num : (0 : ℝ) ≤ 1 / 1000)
   unfold NaturalAxisData.L
-  linarith
+  linarith only [hm]
 
 /-- No stock or differential equation is postulated in this constructor:
 the underlying profiles and all five histories are the completed REF path. -/
@@ -814,7 +828,7 @@ theorem natural_stock_identity (y : ℝ) (hy : y ≤ δ) {η : ℝ} (hη : η �
   let p := N.fromLog (y, η)
   change ActivationStocks.profileStockOne P h p = NaturalEntrance.p1 F.f p ∧
     ActivationStocks.profileStockTwo P h p = NaturalEntrance.p2 F.f F.U p
-  have hyT : y < rampLimit := by linarith
+  have hyT : y < rampLimit := by linarith only [hδ, hδT, hy]
   have hp : p ∈ domain Λ := N.fromLog_mem ⟨hyT, hη⟩
   have hpN : p ∈ N.radialDomain.carrier := StressActivation.FromReference.log_radius_mem N y hη
   have hX : 0 < p.1 := mul_pos N.endpoint_pos (Real.exp_pos _)
@@ -839,7 +853,7 @@ theorem natural_stock_identity (y : ℝ) (hy : y ≤ δ) {η : ℝ} (hη : η �
       simpa only [rampLimit, Real.exp_log (by norm_num : (0 : ℝ) < 41 / 40)] using
         Real.exp_lt_exp.mpr hyT
     rw [show Λ * p.1 = 4 * Real.exp y from N.fromLog_scaled (y, η)]
-    linarith
+    linarith only [he]
   have hf : ∀ x ∈ uIcc (0 : ℝ) p.1, F.f (x, p.2) ≠ 0 := by
     intro x hx
     have hx' : x ∈ Icc (0 : ℝ) p.1 := by simpa only [uIcc_of_le hX.le] using hx
@@ -874,7 +888,7 @@ theorem ofNatural_stock_slopes (y : ℝ) (hy : y ≤ δ) {η : ℝ} (hη : η �
   let N := Input.ofNatural hΛ F
   let R := ofNatural F hΛ hsmall hδ hδT hP0
   let p := N.fromLog (y, η)
-  have hyT : y < rampLimit := by linarith
+  have hyT : y < rampLimit := by linarith only [hδ, hδT, hy]
   have hp : p ∈ domain Λ := N.fromLog_mem ⟨hyT, hη⟩
   have hids := natural_stock_identity F hΛ hsmall hδ hδT hP0 y hy hη
   change ActivationStocks.profileStockOne (N.histories hδ hδT P0 hP0) h p = NaturalEntrance.p1 F.f
@@ -903,7 +917,7 @@ theorem ofNatural_stock_slopes (y : ℝ) (hy : y ≤ δ) {η : ℝ} (hη : η �
       rw [N.refF_eq_natural hδ hδT hη hupper]
       rfl
     have hEn : Real.sqrt (2 * p.1) * F.f p ≠ 0 :=
-      mul_ne_zero (Real.sqrt_pos.2 (by linarith)).ne' hf.ne'
+      mul_ne_zero (Real.sqrt_pos.2 (by linarith only [hX])).ne' hf.ne'
     have hsecond := hids.2
     dsimp only [ActivationStocks.profileStockTwo, NaturalEntrance.p2,
       NaturalEntrance.angularVelocity] at hsecond
@@ -1243,7 +1257,7 @@ theorem finalTime_sub_bigTime : R.finalTime - R.bigTime = Real.log (11 / 10 : �
 
 theorem finalTime_gt_bigTime : R.bigTime < R.finalTime := by
   have hp : 0 < Real.log (11 / 10 : ℝ) := Real.log_pos (by norm_num)
-  linarith [R.finalTime_sub_bigTime]
+  linarith only [hp, R.finalTime_sub_bigTime]
 
 theorem radius0_lt_100 (hb : 0 < R.bigTime) : R.radius0 < 100 := by
   have he := Real.exp_lt_exp.mpr hb
@@ -1347,12 +1361,12 @@ theorem exists_small_log_control (hJ : IsOpen J) {K : Set ℝ} (hK : IsCompact K
   obtain ⟨Ma, hMa, ha⟩ := compact_stock_jet_bound hJ hK hKJ (R.angularStock_smooth hJ) R.finalTime N
   obtain ⟨Mu, hMu, hu⟩ := compact_stock_jet_bound hJ hK hKJ (R.axialStock_smooth hJ) R.finalTime N
   let M := Ma + Mu + 1
-  have hM : 0 < M := by dsimp [M]; linarith
-  have haM : Ma ≤ M := by dsimp [M]; linarith
-  have huM : Mu ≤ M := by dsimp [M]; linarith
+  have hM : 0 < M := by dsimp [M]; linarith only [hMa, hMu]
+  have haM : Ma ≤ M := by dsimp [M]; linarith only [hMu]
+  have huM : Mu ≤ M := by dsimp [M]; linarith only [hMa]
   have hf : 0 < R.finalTime := lt_of_le_of_lt hb R.finalTime_gt_bigTime
   let s := ε / (4 * M * (1 + R.finalTime))
-  have hs : 0 < s := div_pos hε (by positivity)
+  have hs : 0 < s := div_pos hε (mul_pos (mul_pos four_pos hM) (add_pos one_pos hf))
   let T0 := min Tmax s
   let κ0 := min (1 / 2 : ℝ) s
   let w0 := min ((R.finalTime - R.bigTime) / 4) (ε / 4)
@@ -1362,7 +1376,7 @@ theorem exists_small_log_control (hJ : IsOpen J) {K : Set ℝ} (hK : IsCompact K
     min_le_left _ _, lt_of_le_of_lt (min_le_left _ _) (by norm_num), ?_, ?_⟩
   · have hw := min_le_left ((R.finalTime - R.bigTime) / 4) (ε / 4)
     dsimp only [w0]
-    linarith [R.finalTime_gt_bigTime]
+    linarith only [hw, R.finalTime_gt_bigTime]
   intro T hT κ hκ w₁ hw₁ w₂ hw₂
   have hTs : T < s := hT.2.trans_le (min_le_right _ _)
   have hκs : κ < s := hκ.2.trans_le (min_le_right _ _)
@@ -1370,35 +1384,35 @@ theorem exists_small_log_control (hJ : IsOpen J) {K : Set ℝ} (hK : IsCompact K
     ⟨hκ.1, hκ.2.le.trans ((min_le_left _ _).trans (by norm_num))⟩
   have hws : w₁ + w₂ < R.finalTime - R.bigTime := by
     have hw : w0 ≤ (R.finalTime - R.bigTime) / 4 := min_le_left _ _
-    linarith [hw₁.2, hw₂.2, R.finalTime_gt_bigTime]
+    linarith only [hw, hw₁.2, hw₂.2, R.finalTime_gt_bigTime]
   have hwe : w₁ + w₂ < ε / 2 := by
     have hw : w0 ≤ ε / 4 := min_le_right _ _
-    linarith [hw₁.2, hw₂.2]
+    linarith only [hw, hw₁.2, hw₂.2]
   have hcontrol (y : ℝ) (hy : y ∈ Icc (0 : ℝ) R.finalTime) : M * (T + κ * y) < ε / 4 := by
     have hky : κ * y ≤ s * R.finalTime := mul_le_mul hκs.le hy.2 hy.1 hs.le
-    have hsum : T + κ * y < s * (1 + R.finalTime) := by linarith
+    have hsum : T + κ * y < s * (1 + R.finalTime) := by linarith only [hTs, hky]
     have hm := mul_lt_mul_of_pos_left hsum hM
     have he : M * (s * (1 + R.finalTime)) = ε / 4 := by
       dsimp [s]
       field_simp
     rwa [he] at hm
-  refine ⟨by linarith, ?_, ?_, ?_⟩
+  refine ⟨by linarith only [hws], ?_, ?_, ?_⟩
   · intro y hy η hη n hn
     have hv := axialField_jet_error_bound hJ (R.axialStock_smooth hJ) R.initialU
       (b := R.bigTime) (w := w₁) hT.1 hκ1 hy.1 (hKJ hη) hM.le n
       (fun t ht => (hu n hn t ⟨ht.1, ht.2.trans hy.2⟩ η hη).trans huM)
-    exact hv.trans_lt ((hcontrol y hy).trans (by linarith))
+    exact hv.trans_lt ((hcontrol y hy).trans (div_lt_self hε (by norm_num)))
   · intro y hy η hη n hn hn0
     have hv := logField_positive_jet_error_bound hJ (R.angularStock_smooth hJ) R.initialLog
       (b := R.bigTime) (w₁ := w₁) (w₂ := w₂) hT.1 hκ1 hy.1 (hKJ hη) hM.le (Nat.ne_of_gt hn0)
       (fun t ht => (ha n hn t ⟨ht.1, ht.2.trans hy.2⟩ η hη).trans haM)
-    exact hv.trans_lt ((hcontrol y hy).trans (by linarith))
+    exact hv.trans_lt ((hcontrol y hy).trans (div_lt_self hε (by norm_num)))
   · intro y hy η hη
-    have hyf : y ∈ Icc (0 : ℝ) R.finalTime := ⟨hy.1, hy.2.trans (by linarith)⟩
+    have hyf : y ∈ Icc (0 : ℝ) R.finalTime := ⟨hy.1, hy.2.trans (by linarith only [hws])⟩
     have hv := logField_value_error_bound hJ (R.angularStock_smooth hJ) R.initialLog
       hT.1 hκ1 hb hw₁.1.le hw₂.1 hy.1 hy.2 (hKJ hη) hM.le
       (fun t ht => (ha 0 (Nat.zero_le N) t ⟨ht.1, ht.2.trans hyf.2⟩ η hη).trans haM)
-    exact hv.trans_lt (by linarith [hcontrol y hyf])
+    exact hv.trans_lt (by linarith only [hcontrol y hyf, hwe, hε])
 
 /-- The same estimates stated directly for the actual physical fields. -/
 structure SmallPhysicalControl (K : Set ℝ) (N : ℕ) (ε T κ w₁ w₂ : ℝ) : Prop where
@@ -1538,7 +1552,7 @@ theorem exists_phase_bound (d : AnalyticInputs h j σ P0) :
   intro η hη
   have he := hb η hη
   rw [Real.norm_eq_abs] at he
-  linarith [le_abs_self B]
+  linarith only [he, le_abs_self B]
 
 omit F in
 theorem normalized_initialLog_formula (E : NaturalEntrance.CoefficientProfile d Λ C)
@@ -1582,21 +1596,21 @@ theorem exists_uniform_initialLog_bound (hσ : 0 < σ)
     have he := (ReferenceJetBounds.coefficient_jet_bound d.coefficients E.coefficients E.norm_ball
       0 0 (p := (4, η)) (by norm_num)).1
     rw [AxisEvaluation.mixedSeries_zero] at he
-    exact (le_abs_self φ).trans (he.trans (by dsimp [J0]; linarith))
+    exact (le_abs_self φ).trans (he.trans (by dsimp [J0]; linarith only))
   have hlo : Real.log (1 / 8 : ℝ) ≤ Real.log φ := Real.log_le_log (by norm_num) hphi.le
   have hhi : Real.log φ ≤ Real.log (1 + J0) := Real.log_le_log hφ hupper
   have hlog : |Real.log φ| ≤ |Real.log (1 / 8 : ℝ)| + |Real.log (1 + J0)| := by
     apply abs_le.mpr
     constructor
-    · linarith [neg_abs_le (Real.log (1 / 8 : ℝ)), abs_nonneg (Real.log (1 + J0))]
-    · linarith [le_abs_self (Real.log (1 + J0)), abs_nonneg (Real.log (1 / 8 : ℝ))]
+    · linarith only [hlo, neg_abs_le (Real.log (1 / 8 : ℝ)), abs_nonneg (Real.log (1 + J0))]
+    · linarith only [hhi, le_abs_self (Real.log (1 + J0)), abs_nonneg (Real.log (1 / 8 : ℝ))]
   rw [normalized_initialLog_formula hΛ hsmall hδ hδT hP0 E hC hφ.ne']
   calc
     _ ≤ |Λ * realPhase h j σ η| + |Real.log φ| := abs_add_le _ _
     _ ≤ Λ * A + (|Real.log (1 / 8 : ℝ)| + |Real.log (1 + J0)|) := by
       rw [abs_mul, abs_of_pos hΛ]
       exact add_le_add (mul_le_mul_of_nonneg_left (ha η hη) hΛ.le) hlog
-    _ ≤ B := by dsimp [B]; linarith
+    _ ≤ B := by dsimp [B]; linarith only
 
 omit F in
 theorem initialU_error_jet (E : NaturalEntrance.CoefficientProfile d Λ C) (n : ℕ)
@@ -1732,8 +1746,8 @@ theorem exists_uniform_logPhi_jets (hσ : 0 < σ)
   obtain ⟨M, hM, hm⟩ := finite_majorant (fun n => n.factorial * B * D ^ n) N
   refine ⟨M, zero_le_one.trans hM, ?_⟩
   intro C E Y hY n hn η hη
-  have hY20 : Y ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith [hY.1, hY.2]
-  have hY5 : |Y| ≤ 5 := (abs_le.mpr ⟨by linarith [hY.1], by linarith [hY.2]⟩)
+  have hY20 : Y ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith only [hY, hY.1, hY.2]
+  have hY5 : |Y| ≤ 5 := (abs_le.mpr ⟨by linarith only [hY, hY.1], by linarith only [hY, hY.2]⟩)
   let φ : ℝ → ℝ := fun ξ => AxisEvaluation.profile window d.coefficients.epsilon E.coefficients.1
       (Y, ξ)
   have hφ : ContDiffOn ℝ ∞ φ parameterInterval :=
@@ -1772,7 +1786,7 @@ theorem normalizedNaturalLog_smooth (hσ : 0 < σ)
     {C : ℝ} (E : NaturalEntrance.CoefficientProfile d Λ C) {Y : ℝ} (hY : Y ∈ Icc (0 : ℝ) (41 / 10))
         :
     ContDiffOn ℝ ∞ (normalizedNaturalLog d E Y) parameterInterval := by
-  have hY20 : Y ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith [hY.1, hY.2]
+  have hY20 : Y ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith only [hY, hY.1, hY.2]
   have hφ : ContDiffOn ℝ ∞
       (fun η => AxisEvaluation.profile window d.coefficients.epsilon E.coefficients.1 (Y, η))
           parameterInterval :=
@@ -1794,12 +1808,12 @@ theorem exists_normalized_natural_jets (hΛ : 0 < Λ) (hσ : 0 < σ)
   obtain ⟨A, hA, ha⟩ := compact_scalar_jets parameterInterval_open isCompact_Icc
     original_interval_interior (phase_smooth d) N
   obtain ⟨L, hL, hl⟩ := exists_uniform_logPhi_jets d hσ hscale N
-  refine ⟨1 + Λ * A + L, by linarith [mul_nonneg hΛ.le hA], ?_⟩
+  refine ⟨1 + Λ * A + L, by linarith only [hL, hΛ, hA, mul_nonneg hΛ.le hA], ?_⟩
   intro C E Y hY n hn η hη
   have hηJ := original_interval_interior hη
   have hphase := ((phase_smooth d).contDiffAt (parameterInterval_open.mem_nhds hηJ)).of_le
       (nat_le_infty n)
-  have hY20 : Y ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith [hY.1, hY.2]
+  have hY20 : Y ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith only [hY, hY.1, hY.2]
   have hφ := ((AxisEvaluation.profile_smooth window d.coefficients.epsilon_pos
       E.coefficients.1).contDiffAt
     ((AxisEvaluation.strip_isOpen window 20).mem_nhds ⟨hY20, hηJ⟩)).comp η
@@ -1825,7 +1839,7 @@ theorem exists_normalized_natural_jets (hΛ : 0 < Λ) (hσ : 0 < σ)
     _ ≤ Λ * A + L := by
       rw [abs_mul, abs_of_pos hΛ]
       exact add_le_add (mul_le_mul_of_nonneg_left (ha n hn η hη) hΛ.le) (hl C E Y hY n hn η hηJ)
-    _ ≤ _ := by linarith
+    _ ≤ _ := by linarith only
 
 theorem natural_normalization_identity {C : ℝ} (E : NaturalEntrance.CoefficientProfile d Λ C)
     (hC : 0 < C) {X η : ℝ}
@@ -1877,7 +1891,7 @@ theorem jet_transfer {A B : ℝ → ℝ} {η M ε : ℝ} (n : ℕ)
   calc
     _ = |(iteratedDeriv n A η - iteratedDeriv n B η) + iteratedDeriv n B η| := by ring_nf
     _ ≤ |iteratedDeriv n A η - iteratedDeriv n B η| + |iteratedDeriv n B η| := abs_add_le _ _
-    _ ≤ _ := by linarith
+    _ ≤ _ := by linarith only [he, hb]
 
 namespace StockReference
 
@@ -1927,14 +1941,14 @@ theorem normalizedLog_bounds_of_control (hJ : IsOpen J) {K : Set ℝ} (hKJ : K �
       R.normalizedLog T κ w₁ w₂ C y η ≤ B + 1 ∧
       ∀ n ≤ N, 0 < n → |iteratedDeriv n (R.normalizedLog T κ w₁ w₂ C y) η| ≤ B + 1 := by
   let a := R.bigTime + w₁ + w₂
-  have ha0 : 0 ≤ a := by dsimp [a]; linarith
+  have ha0 : 0 ≤ a := by dsimp [a]; linarith only [hb, hw₁, hw₂]
   have ha : a ≤ R.finalTime := hc.finish_before.le
   have hvalue (y : ℝ) (hy : y ∈ Icc (0 : ℝ) a) (η : ℝ) (hη : η ∈ K) :
       R.normalizedLog T κ w₁ w₂ C y η ≤ B + 1 := by
     have he := hc.log_value y hy η hη
     have hb' := (le_abs_self (R.normalizedInitial C η)).trans (hi 0 (Nat.zero_le N) η hη)
     unfold normalizedLog normalizedInitial at *
-    linarith [le_abs_self (R.logAmplitude T κ w₁ w₂ (y, η) - R.initialLog η)]
+    linarith only [he, hb', le_abs_self (R.logAmplitude T κ w₁ w₂ (y, η) - R.initialLog η)]
   have hjet (y : ℝ) (hy : y ∈ Icc (0 : ℝ) R.finalTime) (η : ℝ) (hη : η ∈ K)
       (n : ℕ) (hn : n ≤ N) (hn0 : 0 < n) :
       |iteratedDeriv n (R.normalizedLog T κ w₁ w₂ C y) η| ≤ B + 1 := by
@@ -1970,7 +1984,7 @@ theorem endpointLog_jets_of_control (hJ : IsOpen J) {K : Set ℝ} (hKJ : K ⊆ J
     ∀ n ≤ N, ∀ η ∈ K, |iteratedDeriv n (R.endpointLog T κ w₁ w₂ C) η| ≤
       B + 1 + (2 / 5 : ℝ) * Real.log (11 / 10 : ℝ) + |Real.log 220 / 2| := by
   let a := R.bigTime + w₁ + w₂
-  have ha0 : 0 ≤ a := by dsimp [a]; linarith
+  have ha0 : 0 ≤ a := by dsimp [a]; linarith only [hb, hw₁, hw₂]
   have ha : a ≤ R.finalTime := hc.finish_before.le
   have hgap : 0 < Real.log (11 / 10 : ℝ) := Real.log_pos (by norm_num)
   have hbound := R.normalizedLog_bounds_of_control hJ hKJ hb hw₁ hw₂ hc hi
@@ -1983,16 +1997,15 @@ theorem endpointLog_jets_of_control (hJ : IsOpen J) {K : Set ℝ} (hKJ : K ⊆ J
     have hc0 := (hc.log_value a ⟨ha0, le_rfl⟩ η hη).le
     have hi0 := hi 0 (Nat.zero_le N) η hη
     simp only [iteratedDeriv_zero] at hi0
-    have htime : 0 ≤ R.finalTime - a ∧ R.finalTime - a ≤ Real.log (11 / 10 : ℝ) := by
-      have hg := R.finalTime_sub_bigTime
-      dsimp [a] at *
-      constructor <;> linarith
+    have hadef : a = R.bigTime + w₁ + w₂ := rfl
+    have htime : 0 ≤ R.finalTime - a ∧ R.finalTime - a ≤ Real.log (11 / 10 : ℝ) :=
+      ⟨sub_nonneg.mpr ha, by linarith only [R.finalTime_sub_bigTime, hw₁, hw₂, hadef]⟩
     have heq : R.endpointLog T κ w₁ w₂ C η = R.normalizedInitial C η +
         (R.logAmplitude T κ w₁ w₂ (a, η) - R.initialLog η) -
         (2 / 5 : ℝ) * (R.finalTime - a) + Real.log 220 / 2 := by
       unfold endpointLog normalizedInitial
       unfold normalizedLog at he
-      linarith
+      linear_combination he
     rw [heq]
     have hmul : |(2 / 5 : ℝ) * (R.finalTime - a)| ≤ (2 / 5 : ℝ) * Real.log (11 / 10 : ℝ) := by
       rw [abs_mul, abs_of_nonneg htime.1, abs_of_pos (by norm_num : (0 : ℝ) < 2 / 5)]
@@ -2002,7 +2015,7 @@ theorem endpointLog_jets_of_control (hJ : IsOpen J) {K : Set ℝ} (hKJ : K ⊆ J
           |(2 / 5 : ℝ) * (R.finalTime - a)| + |Real.log 220 / 2| := by
         exact (abs_add_le _ _).trans (add_le_add_left
           ((abs_sub _ _).trans (add_le_add_left (abs_add_le _ _) _)) _)
-      _ ≤ _ := by linarith
+      _ ≤ _ := add_le_add (add_le_add (add_le_add hi0 hc0) hmul) le_rfl
   · have hnpos : 0 < n := Nat.pos_of_ne_zero hn0
     have heq : R.endpointLog T κ w₁ w₂ C =
         fun ξ => Real.log 220 / 2 + R.normalizedLog T κ w₁ w₂ C R.finalTime ξ := by
@@ -2011,7 +2024,8 @@ theorem endpointLog_jets_of_control (hJ : IsOpen J) {K : Set ℝ} (hKJ : K ⊆ J
       ring
     rw [heq, iteratedDeriv_const_add hnpos]
     exact ((hbound R.finalTime (ha0.trans ha) η hη).2 n hn hnpos).trans
-      (by linarith [abs_nonneg (Real.log 220 / 2)])
+      (le_add_of_le_of_nonneg (le_add_of_nonneg_right (mul_nonneg (by norm_num) hgap.le))
+        (abs_nonneg _))
 
 theorem SmallLogControl.mono_tolerance {K : Set ℝ} {N : ℕ} {ε ε' T κ w₁ w₂ : ℝ}
     (hc : R.SmallLogControl K N ε T κ w₁ w₂) (hε : ε ≤ ε') :
@@ -2045,7 +2059,7 @@ theorem axialVelocity_jets_of_control (hJ : IsOpen J) {K : Set ℝ} (hKJ : K ⊆
         (fun ξ => R.axialVelocity T κ w₁ (R.finalTime, ξ)) := by
       filter_upwards [hJ.mem_nhds (hKJ hη)] with ξ hξ
       exact axialField_hold hw₁ hJ R.initialU (R.axialStock_smooth hJ)
-        (by linarith [hc.finish_before]) (le_of_not_ge hyf) hξ
+        (by linarith only [hw₂, hc, hc.finish_before]) (le_of_not_ge hyf) hξ
     rw [he.iteratedDeriv_eq n]
     exact hbound R.finalTime ⟨hfi, le_rfl⟩ η hη n hn
 
@@ -2073,7 +2087,7 @@ theorem physicalF_postaxis_jet_bound (hJ : IsOpen J) {K : Set ℝ} (hKJ : K ⊆ 
   rw [he, iteratedDeriv_const_mul
     C⁻¹ ((hs.exp.contDiffAt (hJ.mem_nhds (hKJ hη))).of_le (nat_le_infty n)),
     abs_mul, abs_of_pos (inv_pos.mpr hC)]
-  have hexb := exp_jet_bound_local_of_upper hJ hs (hKJ hη) n (by linarith) hbounds.1
+  have hexb := exp_jet_bound_local_of_upper hJ hs (hKJ hη) n (by linarith only [hB]) hbounds.1
     (fun i hi hin => hbounds.2 i (hin.trans hn) hi)
   convert! mul_le_mul_of_nonneg_left hexb (inv_nonneg.mpr hC.le) using 1
   ring
@@ -2138,22 +2152,23 @@ theorem exists_naturalU_jets (hΛ : 0 < Λ) (N : ℕ) :
     original_interval_interior (uStar_smooth j).contDiffOn N
   obtain ⟨D, hD, hd⟩ := finite_majorant (fun n => ReferenceJetBounds.jetConstant d.coefficients 0
       n) N
-  refine ⟨1 + B0 + D / Λ, by have := div_nonneg (zero_le_one.trans hD) hΛ.le; linarith, ?_⟩
+  refine ⟨1 + B0 + D / Λ, by have := div_nonneg (zero_le_one.trans hD) hΛ.le; linarith only [hB0,
+      this], ?_⟩
   intro C E X hY n hn η hη
-  have hY20 : Λ * X ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith [hY.1, hY.2]
+  have hY20 : Λ * X ∈ Ioo (-20 : ℝ) 20 := by constructor <;> linarith only [hY, hY.1, hY.2]
   have hηJ := original_interval_interior hη
   have herr : |iteratedDeriv n (fun ξ => E.family.U (X, ξ) - NaturalAxisData.U j ξ) η| ≤ D / Λ := by
     rw [naturalU_error_jet d E hY20 hηJ n, abs_mul, abs_of_pos (one_div_pos.mpr hΛ)]
     have hcoef := (ReferenceJetBounds.coefficient_jet_bound d.coefficients E.coefficients
         E.norm_ball
-      0 n (p := (Λ * X, η)) (by rw [abs_of_nonneg hY.1]; linarith [hY.2])).2
+      0 n (p := (Λ * X, η)) (by rw [abs_of_nonneg hY.1]; linarith only [hY, hY.2])).2
     have hm := mul_le_mul_of_nonneg_left (hcoef.trans (hd n hn)) (one_div_nonneg.mpr hΛ.le)
     convert! hm using 1
     ring
   have htot := jet_transfer n
     ((naturalU_slice_smooth d E hY20).contDiffAt (parameterInterval_open.mem_nhds hηJ))
     (uStar_smooth j).contDiffAt herr (hb0 n hn η hη)
-  exact htot.trans (by linarith)
+  exact htot.trans (by linarith only)
 
 theorem naturalF_jet_bound (hσ : 0 < σ)
     (hscale : AxisReference.stabilityScale d.coefficients.epsilon (profileErrorConstant d) ≤ Λ)
@@ -2177,7 +2192,7 @@ theorem naturalF_jet_bound (hσ : 0 < σ)
     C⁻¹ ((hs.exp.contDiffAt (parameterInterval_open.mem_nhds hηJ)).of_le (nat_le_infty n)),
     abs_mul, abs_of_pos (inv_pos.mpr hC)]
   have hbexp := exp_jet_bound_local parameterInterval_open hs hηJ n (by linarith : 1 ≤ B + 1)
-    (fun i hi => (hb i (hi.trans hn) η hη).trans (by linarith))
+    (fun i hi => (hb i (hi.trans hn) η hη).trans (by linarith only))
   convert! mul_le_mul_of_nonneg_left hbexp (inv_nonneg.mpr hC.le) using 1
   ring
 
@@ -2253,7 +2268,7 @@ theorem endpointU_four_eta_jet_bound (hΛ : 0 < Λ) (hsmall : NaturalAxisData.Sm
   by_cases hn0 : n = 0
   · subst n
     simp only [iteratedDeriv_zero] at hbnd ⊢
-    exact (abs_add_le _ _).trans (by linarith)
+    exact (abs_add_le _ _).trans (by linarith only [hΛ, hsmall, hδ, hδT, hP0, hbnd])
   · rw [iteratedDeriv_const_add (Nat.pos_of_ne_zero hn0)]
     exact hbnd.trans (le_add_of_nonneg_right (abs_nonneg j))
 
@@ -2285,8 +2300,8 @@ theorem ordered_seed_bounds (hΛ : 0 < Λ) (hsmall : NaturalAxisData.SmallParame
   have hBJ : 1 ≤ BJ := by
     dsimp [BJ]
     have hg : 0 < Real.log (11 / 10 : ℝ) := Real.log_pos (by norm_num)
-    linarith [abs_nonneg (Real.log 220 / 2)]
-  refine ⟨U + 1, by linarith, K, hK, BJ, hBJ, ?_⟩
+    linarith only [hL, hg, abs_nonneg (Real.log 220 / 2)]
+  refine ⟨U + 1, by linarith only [hU], K, hK, BJ, hBJ, ?_⟩
   intro C hC E δ hδ hδT R T κ w₁ w₂ hb hw₁ hw₂ hc
   let A := Input.ofNatural hΛ E.family
   have hb0 : 0 ≤ R.bigTime := hδ.le.trans hb
@@ -2310,7 +2325,7 @@ theorem ordered_seed_bounds (hΛ : 0 < Λ) (hsmall : NaturalAxisData.SmallParame
         have hm := mul_le_mul_of_nonneg_left hx hΛ.le
         have he : Λ * R.radius0 = 4 := A.scale_endpoint
         rw [he] at hm
-        linarith
+        linarith only [hm]
       have hf : (fun ξ => R.physicalF T κ w₁ w₂ (X, ξ)) = fun ξ => E.family.f (X, ξ) := by
         funext ξ
         exact (physical_fields_natural E.family hΛ hsmall hδ hδT hP0 T κ w₁ w₂ hx).1
@@ -2320,7 +2335,7 @@ theorem ordered_seed_bounds (hΛ : 0 < Λ) (hsmall : NaturalAxisData.SmallParame
       rw [hf, hUe]
       exact ⟨(naturalF_jet_bound d hσ hscale E hC hY hη hn hL (hl C E (Λ * X) hY)).trans
         (div_le_div_of_nonneg_right (hk n hn) hC.le),
-        (hu C E X hY n hn η hη).trans (by linarith)⟩
+        (hu C E X hY n hn η hη).trans (by linarith only)⟩
     · exact ⟨(R.physicalF_postaxis_jet_bound parameterInterval_open original_interval_interior
         hb0 hw₁ hw₂ hC hL (lt_of_not_ge hx) hη hc hiL hn).trans
           (div_le_div_of_nonneg_right (hk n hn) hC.le),

@@ -32,7 +32,7 @@ open scoped ContDiff
 
 namespace Euler
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 theorem initialVelocityConditionDecay_of_compact
     (u₀ : ℝ³ → ℝ³) (hs : ContDiff ℝ ∞ u₀) (hc : HasCompactSupport u₀)
@@ -66,7 +66,7 @@ namespace Euler
 open ComparatorBridge EulerPacketInduction Set MeasureTheory
 open scoped ENNReal Topology
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 private theorem initialDatum_no_global_solution :
     ¬ (∃ v p, EulerExistenceAndSmoothnessR3 initialDatum.field v p) := by

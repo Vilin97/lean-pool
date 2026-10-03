@@ -127,26 +127,27 @@ variable (P : ℝ) [Fact (0 < P)]
   (S : Set Space) (hS : MeasurableSet S) (hSym : ∀ x, -x ∈ S ↔ x ∈ S)
   (T : ℝ) (hT : 0 ≤ T) (B : C(Icc (0 : ℝ) T, Space →ᵇ V →L[ℝ] V))
   (hB : ∀ t x, B t (-x) = B t x)
-  (U : Evolution T hT (liftedOperatorPath P S hS T B))
+  (U : Evolution T hT (liftedOperatorPath (V := V) P S hS T B))
 
 include hB in
 theorem solution_reflection (f : C(Icc (0 : ℝ) T, Supported P V S hS)) (a₀ : Supported P V S hS) :
-    supportedPathReflection P S hS hSym (U.solution f a₀) =
-      U.solution (supportedPathReflection P S hS hSym f) (supportedReflection P S hS hSym a₀) := by
+    supportedPathReflection (K := Icc (0 : ℝ) T) (V := V) P S hS hSym (U.solution f a₀) =
+      U.solution (supportedPathReflection (K := Icc (0 : ℝ) T) (V := V) P S hS hSym f)
+        (supportedReflection (V := V) P S hS hSym a₀) := by
   apply (U.solution_map U (supportedReflection P S hS hSym) _ f a₀).symm
   intro t u
-  change liftedOperator P S hS (B t) (supportedReflection P S hS hSym u) =
-    supportedReflection P S hS hSym (liftedOperator P S hS (B t) u)
+  change liftedOperator P S hS (B t) (supportedReflection (V := V) P S hS hSym u) =
+    supportedReflection (V := V) P S hS hSym (liftedOperator P S hS (B t) u)
   rw [← supportedOperator_eq_square]
   exact (supportedReflection_operator P S hS hSym (B t) (hB t) u).symm
 
 include hB in
 theorem solution_reflection_neg (f : C(Icc (0 : ℝ) T, Supported P V S hS))
     (a₀ : Supported P V S hS)
-    (hf : ∀ t, supportedReflection P S hS hSym (f t) = -f t)
-    (ha₀ : supportedReflection P S hS hSym a₀ = -a₀) (t : Icc (0 : ℝ) T) :
-    supportedReflection P S hS hSym (U.solution f a₀ t) = -U.solution f a₀ t := by
-  have hfp : supportedPathReflection P S hS hSym f = -f := by
+    (hf : ∀ t, supportedReflection (V := V) P S hS hSym (f t) = -f t)
+    (ha₀ : supportedReflection (V := V) P S hS hSym a₀ = -a₀) (t : Icc (0 : ℝ) T) :
+    supportedReflection (V := V) P S hS hSym (U.solution f a₀ t) = -U.solution f a₀ t := by
+  have hfp : supportedPathReflection (K := Icc (0 : ℝ) T) (V := V) P S hS hSym f = -f := by
     apply ContinuousMap.ext
     exact hf
   have he := solution_reflection P S hS hSym T hT B hB U f a₀
@@ -156,9 +157,11 @@ theorem solution_reflection_neg (f : C(Icc (0 : ℝ) T, Supported P V S hS))
 include hB hSym in
 theorem solution_full_reflection_neg (f : C(Icc (0 : ℝ) T, Supported P V S hS))
     (a₀ : Supported P V S hS)
-    (hf : ∀ t, reflection P (f t : CylinderL2 P V) = -(f t : CylinderL2 P V))
-    (ha₀ : reflection P (a₀ : CylinderL2 P V) = -(a₀ : CylinderL2 P V)) (t : Icc (0 : ℝ) T) :
-    reflection P (U.solution f a₀ t : CylinderL2 P V) = -(U.solution f a₀ t : CylinderL2 P V) := by
+    (hf : ∀ t, reflection (V := V) P (f t : CylinderL2 P V) = -(f t : CylinderL2 P V))
+    (ha₀ : reflection (V := V) P (a₀ : CylinderL2 P V) = -(a₀ : CylinderL2 P V))
+    (t : Icc (0 : ℝ) T) :
+    reflection (V := V) P (U.solution f a₀ t : CylinderL2 P V) =
+      -(U.solution f a₀ t : CylinderL2 P V) := by
   have h := solution_reflection_neg P S hS hSym T hT B hB U f a₀
     (fun r => Subtype.ext (hf r)) (Subtype.ext ha₀) t
   exact congrArg (fun u : Supported P V S hS => (u : CylinderL2 P V)) h
@@ -214,20 +217,23 @@ variable (P : ℝ) [Fact (0 < P)]
   (hE : ∀ t x, Q.field t (-x) = Q.field t x)
   (hE₁ : ∀ t x, Q₁.field t (-x) = Q₁.field t x)
   (f : C(Icc (0 : ℝ) T, Supported P E S hS)) (a₀ : Supported P U S hS)
-  (hf : ∀ t, reflection P (f t : CylinderL2 P E) = -(f t : CylinderL2 P E))
-  (ha₀ : reflection P (a₀ : CylinderL2 P U) = -(a₀ : CylinderL2 P U))
+  (hf : ∀ t, reflection (V := E) P (f t : CylinderL2 P E) = -(f t : CylinderL2 P E))
+  (ha₀ : reflection (V := U) P (a₀ : CylinderL2 P U) = -(a₀ : CylinderL2 P U))
 
 include hE hf in
 theorem projectedForcing_reflection_neg (t : Icc (0 : ℝ) T) :
-    reflection P (projectedForcing P S hS Q c hc hQ f t : CylinderL2 P U) =
+    reflection (V := U) P (projectedForcing P S hS Q c hc hQ f t : CylinderL2 P U) =
       -(projectedForcing P S hS Q c hc hQ f t : CylinderL2 P U) := by
-  change reflection P (fullOperatorMap P (sourceForcing Q c hc hQ t) (f t : CylinderL2 P E)) =
-    -fullOperatorMap P (sourceForcing Q c hc hQ t) (f t : CylinderL2 P E)
-  rw [reflection_fullOperator P _ (sourceForcing_even Q c hc hQ hE t), hf, map_neg]
+  change reflection (V := U) P (fullOperatorMap (E := E) (F := U) P (sourceForcing Q c hc hQ t)
+      (f t : CylinderL2 P E)) =
+    -fullOperatorMap (E := E) (F := U) P (sourceForcing Q c hc hQ t) (f t : CylinderL2 P E)
+  exact (reflection_fullOperator P _ (sourceForcing_even Q c hc hQ hE t) _).trans
+    ((congrArg (fullOperatorMap (E := E) (F := U) P (sourceForcing Q c hc hQ t)) (hf t)).trans
+      (ContinuousLinearMap.map_neg _ _))
 
 include hSym hE hE₁ hf ha₀ in
 theorem coordinates_reflection_neg (t : Icc (0 : ℝ) T) :
-    reflection P (coordinates P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) =
+    reflection (V := U) P (coordinates P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) =
       -(coordinates P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) :=
   solution_full_reflection_neg P S hS hSym T hT (sourceGenerator Q Q₁ c hc hQ)
     (sourceGenerator_even Q Q₁ c hc hQ hE hE₁)
@@ -236,42 +242,57 @@ theorem coordinates_reflection_neg (t : Icc (0 : ℝ) T) :
 
 include hSym hE hE₁ hf ha₀ in
 theorem velocity_reflection_neg (t : Icc (0 : ℝ) T) :
-    reflection P (velocity P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P E) =
+    reflection (V := E) P (velocity P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P E) =
       -(velocity P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P E) := by
-  change reflection P (fullOperatorMap P (Q.field t)
+  change reflection (V := E) P (fullOperatorMap (E := U) (F := E) P (Q.field t)
       (coordinates P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U)) = _
-  rw [reflection_fullOperator P _ (hE t),
-    coordinates_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀, map_neg]
-  rfl
+  exact (reflection_fullOperator P _ (hE t) _).trans
+    ((congrArg (fullOperatorMap (E := U) (F := E) P (Q.field t))
+      (coordinates_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀ t)).trans
+      (ContinuousLinearMap.map_neg _ _))
 
 include hSym hE hE₁ hf ha₀ in
 theorem coordinateDerivative_reflection_neg (t : Icc (0 : ℝ) T) :
-    reflection P (coordinateDerivative P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) =
+    reflection (V := U) P
+        (coordinateDerivative P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) =
       -(coordinateDerivative P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) := by
-  change reflection P
-    (fullOperatorMap P (sourceGenerator Q Q₁ c hc hQ t)
+  change reflection (V := U) P
+    (fullOperatorMap (E := U) (F := U) P (sourceGenerator Q Q₁ c hc hQ t)
         (coordinates P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) +
-      fullOperatorMap P (sourceForcing Q c hc hQ t) (f t : CylinderL2 P E)) = _
-  rw [map_add, reflection_fullOperator P _ (sourceGenerator_even Q Q₁ c hc hQ hE hE₁ t),
-    reflection_fullOperator P _ (sourceForcing_even Q c hc hQ hE t),
-    coordinates_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀,
-    hf, map_neg, map_neg, ← neg_add]
-  rfl
+      fullOperatorMap (E := E) (F := U) P (sourceForcing Q c hc hQ t) (f t : CylinderL2 P E)) = _
+  refine ((reflection (V := U) P).map_add _ _).trans ?_
+  refine (congrArg₂ (· + ·)
+    ((reflection_fullOperator P _ (sourceGenerator_even Q Q₁ c hc hQ hE hE₁ t) _).trans
+      ((congrArg (fullOperatorMap (E := U) (F := U) P (sourceGenerator Q Q₁ c hc hQ t))
+        (coordinates_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀ t)).trans
+        (ContinuousLinearMap.map_neg _ _)))
+    ((reflection_fullOperator P _ (sourceForcing_even Q c hc hQ hE t) _).trans
+      ((congrArg (fullOperatorMap (E := E) (F := U) P (sourceForcing Q c hc hQ t)) (hf t)).trans
+        (ContinuousLinearMap.map_neg _ _)))).trans ?_
+  exact (neg_add _ _).symm
 
 include hSym hE hE₁ hf ha₀ in
 theorem velocityDerivative_reflection_neg (t : Icc (0 : ℝ) T) :
-    reflection P (velocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P E) =
+    reflection (V := E) P
+        (velocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P E) =
       -(velocityDerivative P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P E) := by
-  change reflection P
-    (fullOperatorMap P (Q₁.field t)
+  change reflection (V := E) P
+    (fullOperatorMap (E := U) (F := E) P (Q₁.field t)
         (coordinates P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U) +
-      fullOperatorMap P (Q.field t)
+      fullOperatorMap (E := U) (F := E) P (Q.field t)
         (coordinateDerivative P S hS T hT Q Q₁ c hc hQ f a₀ t : CylinderL2 P U)) = _
-  rw [map_add, reflection_fullOperator P _ (hE₁ t), reflection_fullOperator P _ (hE t),
-    coordinates_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀,
-    coordinateDerivative_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀,
-    map_neg, map_neg, ← neg_add]
-  rfl
+  refine ((reflection (V := E) P).map_add _ _).trans ?_
+  refine (congrArg₂ (· + ·)
+    ((reflection_fullOperator P _ (hE₁ t) _).trans
+      ((congrArg (fullOperatorMap (E := U) (F := E) P (Q₁.field t))
+        (coordinates_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀ t)).trans
+        (ContinuousLinearMap.map_neg _ _)))
+    ((reflection_fullOperator P _ (hE t) _).trans
+      ((congrArg (fullOperatorMap (E := U) (F := E) P (Q.field t))
+        (coordinateDerivative_reflection_neg P S hS hSym T hT Q Q₁ c hc hQ hE hE₁ f a₀ hf ha₀
+          t)).trans
+        (ContinuousLinearMap.map_neg _ _)))).trans ?_
+  exact (neg_add _ _).symm
 
 end Evolution
 end EulerSourceCylinderParity
@@ -319,7 +340,8 @@ theorem inverse_even (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
 
 theorem normal_even (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
     (t : Icc (0 : ℝ) D.T) (x : Space) : D.normal.field t (-x) = D.normal.field t x := by
-  change (D.FInv.field t (-x)).adjoint D.m₀ = (D.FInv.field t x).adjoint D.m₀
+  change adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t (-x)) D.m₀ =
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) D.m₀
   rw [D.inverse_even hF]
 
 end Data
@@ -332,7 +354,7 @@ variable {P : ℝ} [Fact (0 < P)]
 
 /-- Forcing field, bundling `path`, `orbit`, `raw_eq`. -/
 def forcingField : Field P D.T raw where
-  path := includePath P D.support D.support_measurable G.path
+  path := includePath (K := Icc (0 : ℝ) D.T) (V := Vector3) P D.support D.support_measurable G.path
   orbit := G.path_orbit
   raw_eq := G.raw_eq
 
@@ -340,18 +362,18 @@ omit [CompleteSpace U] in
 theorem path_reflection_neg
     (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ)))
     (t : Icc (0 : ℝ) D.T) :
-    reflection P (G.path t : CylinderL2 P Space) = -(G.path t : CylinderL2 P Space) :=
+    reflection (V := Space) P (G.path t : CylinderL2 P Space) = -(G.path t : CylinderL2 P Space) :=
   G.forcingField.reflection_neg_of_raw_odd t (hraw t)
 
 variable (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
   (hraw : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t, (-x, -θ)) = -raw (t, (x, θ)))
-  (hinit : reflection P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
+  (hinit : reflection (V := U) P (I.value : CylinderL2 P U) = -(I.value : CylinderL2 P U))
 
 include hSym hF hM hraw hinit in
 theorem velocityPath_reflection_neg (t : Icc (0 : ℝ) D.T) :
-    reflection P (G.fullVelocityPath I t) = -G.fullVelocityPath I t :=
+    reflection (V := Space) P (G.fullVelocityPath I t) = -G.fullVelocityPath I t :=
   EulerSourceCylinderParity.velocity_reflection_neg P D.support D.support_measurable hSym
     D.T D.T_pos.le D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
     (D.frame_even hF) (D.frameDerivative_even hF hM) G.path I.value (G.path_reflection_neg hraw)
@@ -359,7 +381,7 @@ theorem velocityPath_reflection_neg (t : Icc (0 : ℝ) D.T) :
 
 include hSym hF hM hraw hinit in
 theorem derivativePath_reflection_neg (t : Icc (0 : ℝ) D.T) :
-    reflection P (G.fullDerivativePath I t) = -G.fullDerivativePath I t :=
+    reflection (V := Space) P (G.fullDerivativePath I t) = -G.fullDerivativePath I t :=
   EulerSourceCylinderParity.velocityDerivative_reflection_neg P D.support D.support_measurable hSym
     D.T D.T_pos.le D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
     (D.frame_even hF) (D.frameDerivative_even hF hM) G.path I.value (G.path_reflection_neg hraw)

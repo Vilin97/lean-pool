@@ -101,7 +101,8 @@ theorem continuous_weightedDriftNorm_pair {s : ℕ} (q N : ℕ) (hN : N + q ≤ 
 
 theorem continuous_weightedDriftNorm {s : ℕ} (q N : ℕ) (hN : N + q ≤ s) (ρ : ℝ)
     (L : Vector3 →L[ℝ] Domain 4) : Continuous (weightedDriftNorm period (s := s) q N ρ L) :=
-  (continuous_weightedDriftNorm_pair period q N hN L).comp (continuous_const.prodMk continuous_id)
+  (continuous_weightedDriftNorm_pair period q N hN L).comp (f := fun u => (ρ, id u))
+    (continuous_const.prodMk continuous_id)
 
 /-- The drift norm is subadditive without discarding its directional cancellations. -/
 theorem driftLevelNorm_add_le {s n : ℕ} (hn : n ≤ s) (L : Vector3 →L[ℝ] Domain 4)

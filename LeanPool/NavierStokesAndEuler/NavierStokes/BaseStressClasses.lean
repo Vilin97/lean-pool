@@ -93,7 +93,7 @@ theorem class_comp_of_outer_jets {s : StripData D} {w : ℕ → D → ℝ} {α :
   intro n x hx j hj
   have hG : 1 ≤ s.growth n x := s.one_le_growth n x
   have hD : 1 ≤ (B+1) * s.growth n x ^ q :=
-    one_le_mul_of_one_le_of_one_le (by linarith) (one_le_pow₀ hG)
+    one_le_mul_of_one_le_of_one_le (by linarith only [hB]) (one_le_pow₀ hG)
   have hA : 0 ≤ majorant s w α C p n x := majorant_nonneg s w α hC _ _ _ (hw n x hx)
   have hcomp := norm_iteratedFDerivWithin_comp_le (hf n) (hg.smooth n) (nat_le_infty j)
     hU.uniqueDiffOn s.isOpen_domain.uniqueDiffOn (hmap n) hx
@@ -105,7 +105,7 @@ theorem class_comp_of_outer_jets {s : StripData D} {w : ℕ → D → ℝ} {α :
       rw [iteratedFDerivWithin_of_isOpen i s.isOpen_domain hx]
       have hi0 := hq n x hx i (hij.trans hj)
       simp only [majorant, Real.rpow_zero, mul_one] at hi0
-      exact hi0.trans ((mul_le_mul_of_nonneg_right (by linarith : B ≤ B+1)
+      exact hi0.trans ((mul_le_mul_of_nonneg_right (by linarith only : B ≤ B+1)
         (pow_nonneg (s.growth_nonneg n x) q)).trans (by simpa using pow_le_pow_right₀ hD hi)))
   rw [iteratedFDerivWithin_of_isOpen j s.isOpen_domain hx] at hcomp
   calc
@@ -225,7 +225,7 @@ theorem native_edgeDistance_le (U : LocalSignedRequest.SlowRegion (2 * F.data.h)
   rw [hd]
   unfold FinalSlowBase.edgeDistance BaseResidual.activeDelta ActiveAnnulusWeight.edgeDistance
   rw [hl, hh]
-  exact min_le_min le_rfl (min_le_min (by linarith [hlog.1]) (by linarith [hlog.2]))
+  exact min_le_min le_rfl (min_le_min (by linarith [hlog.1]) (by linarith only [hlog, hlog.2]))
 
 theorem inverse_edgeDistance_le_growth (U : LocalSignedRequest.SlowRegion (2 * F.data.h))
     (n : ℕ) {x : Point} (hx : x ∈ (BaseContextAssembly.nativeStrip W U).domain) :

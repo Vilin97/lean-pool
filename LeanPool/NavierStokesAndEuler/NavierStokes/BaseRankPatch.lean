@@ -36,7 +36,7 @@ theorem positive_before_mean (F : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 <
   apply ReservedPatches.radius_strictMono XR hXR
   simp only [ReservedPatches.rightClock, ReservedPatches.leftClock,
     ReservedPatches.rightOffset, ReservedPatches.leftOffset]
-  linarith
+  linarith only
 
 section Leading
 
@@ -156,7 +156,7 @@ theorem coordinates_rankEta (h R : ℝ) (s : ℝ × ℝ) :
 
 theorem rankScale_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {s : ℝ × ℝ} (hs : 0 < s.1) : 0 < rankScale h s :=
-  (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith) hs).1
+  (SimilarityCoordinates.coordinateQ_spec (by linarith only [hh]) (by linarith only [hh1]) hs).1
 
 theorem rankLength_pos {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {s : ℝ × ℝ} (hs : 0 < s.1) : 0 < rankLength h s :=
@@ -174,8 +174,8 @@ theorem rank_parameters_smooth (F : OutgoingProfile.Profile) (XR : ℝ) :
     ContDiffOn ℝ ∞ (rankCoefficient F XR) {s | 0 < s.1} ∧
       ContDiffOn ℝ ∞ (rankLength F.data.h) {s | 0 < s.1} ∧
       ContDiffOn ℝ ∞ (rankVelocity F.data.h) {s | 0 < s.1} := by
-  have hh : 0 < 2 * F.data.h := by linarith [F.data.h_pos]
-  have hh1 : 2 * F.data.h < 1 := by linarith [F.data.h_lt_half]
+  have hh : 0 < 2 * F.data.h := by linarith only [F.data.h_pos]
+  have hh1 : 2 * F.data.h < 1 := by linarith only [F.data.h_lt_half]
   refine ⟨?_, ?_, ?_⟩
   · intro s hs
     exact ((MeanRankUpdate.shapedAmplitude_contDiff _).contDiffAt.comp s
@@ -222,7 +222,7 @@ theorem positive_fields_zero {n : ℕ} (hn : 0 < n) {p : Inner}
       (ReservedPatches.left_pos F W.controls.radius W.controls.radius_pos .positive).le)] at hc
     rw [Real.sq_sqrt (by positivity)]
     have hl := ReservedPatches.left_lt_right F W.controls.radius W.controls.radius_pos .positive
-    linarith
+    linarith only [H, hp, hc, hl]
   have hzphi : s.seedPhi n (Real.sqrt (2 * p.1), p.2) = 0 := by
     dsimp only [s, EntranceAlignedBase.modulatedScheme, EntranceAlignedBase.scheme,
       GlobalSlowProfiles.schemeFromHierarchy]
@@ -319,8 +319,8 @@ theorem rank_fields (upper : ℝ) (B : ℕ) (Q : ℝ)
       W.controls.radius_pos .mean)).trans hR.1
   have hr : R / rankLength F.data.h s ∈ ReservedPatches.radialWindow F W.controls.radius .mean := by
     apply ReservedPatches.radial_closedPatch_subset F W.controls.radius W.controls.radius_pos .mean
-    exact ⟨(le_div_iff₀ hell).mpr (by nlinarith [hR.1]),
-      (div_le_iff₀ hell).mpr (by nlinarith [hR.2])⟩
+    exact ⟨(le_div_iff₀ hell).mpr (by nlinarith only [hR, hR.1]),
+      (div_le_iff₀ hell).mpr (by nlinarith only [hR, hR.2])⟩
   have hx := ReservedPatches.radial_mem_window F W.controls.radius W.controls.radius_pos .mean hr
   rw [coordinates_radius_sq F.data.h_pos F.data.h_lt_half hs R] at hx
   have heta := (normalizedCoordinates_eta F.data.h_pos F.data.h_lt_half

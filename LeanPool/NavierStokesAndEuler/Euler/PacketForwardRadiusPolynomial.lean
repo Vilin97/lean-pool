@@ -40,7 +40,7 @@ theorem source_radius_le (T R C C1 Cp W : ℝ) (hW : 1 ≤ W)
   have hb := primitiveLift_bounds W hW0
   have hV : 1 ≤ V := hb.1
   have hV0 := zero_le_one.trans hV
-  have hWV : W ≤ V := (by linarith : W ≤ W+2).trans hb.2.1
+  have hWV : W ≤ V := (le_add_of_nonneg_right zero_le_two).trans hb.2.1
   have hCV : C ≤ V := hC.trans hWV
   have hC1V : C1 ≤ V := hC1.trans hWV
   have hRV : R ≤ V := hR.trans hWV
@@ -48,18 +48,25 @@ theorem source_radius_le (T R C C1 Cp W : ℝ) (hW : 1 ≤ W)
   have hiv : Ri ≤ V := hRi.trans hWV
   have hpf := (projected_scalar_le Ri C W hi0 hC0 hW0 hRi hC).trans hb.2.2.2.2.2.2.2
   have hpf0 : 0 ≤ EulerSourceCylinderForwardSobolev.forcingCost (Fin 4) 6 Ri C := by
-    have hc := coeff_nonneg (4*Ri) (3*Ri*C) (by positivity) (by positivity)
+    have hc := coeff_nonneg (4*Ri) (3*Ri*C) (mul_nonneg zero_le_four hi0)
+      (mul_nonneg (mul_nonneg zero_le_three hi0) hC0)
     unfold EulerSourceCylinderForwardSobolev.forcingCost
     positivity
   have hforward : EulerPacketParentTransverseCosts.forwardCost 6 T 0 R C C1 Cp ≤ forwardEnvelope V
       := by
-    apply forward_scalar_le T Cp (0+2) _ (18*Ri*C*C1) (4*Ri) V
-      hT0 hT1 hCp0 (by norm_num) hpf0 (by positivity) (by positivity) hV0
-      (hCp.trans hWV) ((by linarith : 0+2 ≤ W+2).trans hb.2.1) hpf
-    · calc
-        18*Ri*C*C1 ≤ 18*V*V*V := by gcongr
+    have hCCV : 18*Ri*C*C1 ≤ 18*V^3 :=
+      calc
+        18*Ri*C*C1 ≤ 18*V*V*V := mul_le_mul (mul_le_mul
+            (mul_le_mul_of_nonneg_left hiv (by norm_num)) hCV hC0
+            (mul_nonneg (by norm_num) hV0)) hC1V hC10
+          (mul_nonneg (mul_nonneg (by norm_num) hV0) hV0)
         _ = _ := by ring
-    · gcongr
+    apply forward_scalar_le T Cp (0+2) _ (18*Ri*C*C1) (4*Ri) V
+      hT0 hT1 hCp0 (by norm_num) hpf0
+      (mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) hi0) hC0) hC10)
+      (mul_nonneg zero_le_four hi0) hV0
+      (hCp.trans hWV) ((add_le_add_left hW0 2).trans hb.2.1) hpf hCCV
+      (mul_le_mul_of_nonneg_left hiv zero_le_four)
   have hwi := weakEnvelope_lower_inputs V hV
   have hw1 : 1 ≤ weakEnvelope V := inverseBlockCost_one_le 6
     (hV0.trans hwi.1) hV0 (hV0.trans hwi.2.1) (hV0.trans hwi.2.2)
@@ -67,7 +74,14 @@ theorem source_radius_le (T R C C1 Cp W : ℝ) (hW : 1 ≤ W)
   unfold EulerPacketParentForwardBudget.radius
   simp only [coefficientRadius_eq]
   calc
-    _ ≤ 1+16*V+16*(4*V)+2*forwardEnvelope V*(16*(4*V)+1) := by gcongr
+    _ ≤ 1+16*V+16*(4*V)+2*forwardEnvelope V*(16*(4*V)+1) := by
+      have h4 : 16*(4*Ri) ≤ 16*(4*V) :=
+        mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hiv zero_le_four) (by norm_num)
+      exact add_le_add (add_le_add (add_le_add_right
+          (mul_le_mul_of_nonneg_left hRV (by norm_num)) 1) h4)
+        (mul_le_mul (mul_le_mul_of_nonneg_left hforward zero_le_two) (add_le_add_left h4 1)
+          (add_nonneg (mul_nonneg (by norm_num) (mul_nonneg zero_le_four hi0)) zero_le_one)
+          (mul_nonneg zero_le_two hfw))
     _ ≤ sourceRadiusEnvelope W := by
       change _ ≤ 1+V+6*weakEnvelope V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)
       linarith only [hV0,mul_nonneg (sub_nonneg.mpr hw1) (by positivity : 0 ≤ 16*V+1)]
@@ -105,17 +119,24 @@ theorem grade_sum_le (N : EulerTransversePacketJoin.NormalBudget D 6 L.R)
   have hp := pressureCost_le N.Ri N.C 1 L.commonCost W N.Ri_nonneg N.C_nonneg zero_le_one
     L.commonCost_nonneg hW hNI hNC le_rfl hcommon
   have hN0 := N.blockAmplitude_nonneg
-  have hN := normalEnvelope_nonneg W hW
   have hC0 := L.commonCost_nonneg
-  have hC := commonEnvelope_nonneg W hW
   have hP := (Fact.out : 0 < period).le
+  have hsq := pow_le_pow_left₀ hN0 hn 2
+  have hpc := mul_le_mul_of_nonneg_left hcommon hP
+  have hprod (k : ℝ) (hk : 0 ≤ k) :
+      k * N.blockAmplitude ^ 2 * (period * L.commonCost) ≤
+        k * normalEnvelope W ^ 2 * (period * commonEnvelope W) :=
+    mul_le_mul (mul_le_mul_of_nonneg_left hsq hk) hpc (mul_nonneg hP hC0)
+      (mul_nonneg hk (sq_nonneg _))
   unfold EulerTransversePacketForward.Budget.correctorAmplitude
     EulerTransversePacketForward.Budget.correctorTimeAmplitude
     EulerTransversePacketForward.Budget.pressureAmplitude
   calc
     _ ≤ commonEnvelope W+27*(normalEnvelope W)^2*(period*commonEnvelope W) +
-        108*(normalEnvelope W)^2*(period*commonEnvelope W)+3*(period*pressureEnvelope W) := by
-            gcongr
+        108*(normalEnvelope W)^2*(period*commonEnvelope W)+3*(period*pressureEnvelope W) :=
+      add_le_add (add_le_add (add_le_add hcommon (hprod 27 (by norm_num)))
+          (hprod 108 (by norm_num)))
+        (mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hp hP) zero_le_three)
     _ = _ := by unfold gradeEnvelope; ring
 
 variable {M : EulerMeanPacketProvider.Data} {Rm Tc : ℝ} {O : Operators}

@@ -1146,7 +1146,7 @@ theorem near_of_native_band (l : Index B N0) (n : ℕ) {p : PhaseCalculus.Slow}
         (ChartScales.Q (BaseChartJets.cellBand l.1)) p) ∈ Icc (1 / 2 : ℝ) 2) :
     ActualPrimaryBounds.near (l.2, l.1) n := by
   let q := ChartScales.Q n * SimilarityHomogeneity.chartQ ActualPrimary.h p
-  have hqpos : 0 < q := mul_pos (ChartScales.Q_pos _) (by linarith [hq0.1])
+  have hqpos : 0 < q := mul_pos (ChartScales.Q_pos _) (by linarith only [hq0, hq0.1])
   have he : SimilarityHomogeneity.chartQ ActualPrimary.h
       (ActualSignedGeometry.slowChange ActualPrimary.h (ChartScales.Q n)
         (ChartScales.Q (BaseChartJets.cellBand l.1)) p) =
@@ -1158,18 +1158,21 @@ theorem near_of_native_band (l : Index B N0) (n : ℕ) {p : PhaseCalculus.Slow}
     ring
   rw [he] at hq
   have hn := PhysicalWaveSum.logCoordinate_in_band hqpos
-    (show ChartScales.Q n / 2 ≤ q by dsimp [q]; nlinarith [ChartScales.Q_pos n, hq0.1])
-    (show q ≤ 2 * ChartScales.Q n by dsimp [q]; nlinarith [ChartScales.Q_pos n, hq0.2])
+    (show ChartScales.Q n / 2 ≤ q by dsimp [q]; nlinarith only [hqpos, hq0, ChartScales.Q_pos n,
+        hq0.1])
+    (show q ≤ 2 * ChartScales.Q n by dsimp [q]; nlinarith only [hq0, ChartScales.Q_pos n, hq0.2])
   have hL := PhysicalWaveSum.logCoordinate_in_band hqpos
     (show ChartScales.Q (BaseChartJets.cellBand l.1) / 2 ≤ q by
       have hh := (le_div_iff₀ (ChartScales.Q_pos _)).mp hq.1
-      linarith)
+      linarith only [hh])
     ((div_le_iff₀ (ChartScales.Q_pos _)).mp hq.2)
   have hnm : n ≤ BaseChartJets.cellBand l.1 + 2 := by
-    have hh : (n : ℝ) ≤ (BaseChartJets.cellBand l.1 : ℝ) + 2 := by linarith [hn.1, hL.2]
+    have hh : (n : ℝ) ≤ (BaseChartJets.cellBand l.1 : ℝ) + 2 := by linarith only [hn, hL, hn.1,
+        hL.2]
     exact_mod_cast hh
   have hmn : BaseChartJets.cellBand l.1 ≤ n + 2 := by
-    have hh : (BaseChartJets.cellBand l.1 : ℝ) ≤ (n : ℝ) + 2 := by linarith [hL.1, hn.2]
+    have hh : (BaseChartJets.cellBand l.1 : ℝ) ≤ (n : ℝ) + 2 := by linarith only [hL, hn, hL.1,
+        hn.2]
     exact_mod_cast hh
   have hm4 : 4 ≤ BaseChartJets.cellBand l.1 :=
     ((ActualPrimary.choice B N0).prepared.large _ l.1.property).four_le
@@ -1344,7 +1347,7 @@ theorem signed_patch_cover (l : Index B N0) (s : StripData Point)
           ?_).1
       apply ActualSignedStageControls.cutoff_zero_germ_outside_time l n k
       intro htime
-      exact ht ⟨by linarith [htime.1], by linarith [htime.2]⟩
+      exact ht ⟨by linarith only [htime, htime.1], by linarith only [htime, htime.2]⟩
   · exact Or.inr (((ActualSignedStageControls.parameters l).localized_zero_of_mask request
       (mask_zero_germ_outside_carrier l n k hx hc)).1)
 
@@ -1426,7 +1429,7 @@ theorem target_zero_outside {p : PhaseCalculus.Slow}
         (NominalConeAssembly.activeRight ActualPrimary.nominal) := by
     intro h
     rw [← PrimaryTargetBounds.profileRadius_sq (F := ActualPrimary.outgoing) ht] at h
-    exact hout ⟨by nlinarith [h.1], by nlinarith [h.2]⟩
+    exact hout ⟨by nlinarith only [hasq, h, hp, ha, h.1], by nlinarith only [hbsq, h, hp, hb, h.2]⟩
   have hz := PrimaryTargetBounds.stress_zero_of_not_active ActualPrimary.modulation
     (ProfileSpectralCone.normalized_X_pos ActualPrimary.outgoing.data.h_pos
       ActualPrimary.outgoing.data.h_lt_half ht hr)
@@ -1492,8 +1495,8 @@ theorem mask_zero_germ_outside_band (l : Index B N0) (n : ℕ) (k : Frequency)
   have hc : ContinuousAt (fun y : FullPoint => SimilarityHomogeneity.chartQ ActualPrimary.h
       (ActualSignedStageControls.nativePoint l n k y).1) x :=
     (SimilarityCoordinates.coordinateQ_smooth
-      (by linarith [ActualPrimary.outgoing.data.h_pos] : 0 < 2 * ActualPrimary.h)
-      (by linarith [ActualPrimary.outgoing.data.h_lt_half] : 2 * ActualPrimary.h < 1)
+      (by linarith only [ActualPrimary.outgoing.data.h_pos] : 0 < 2 * ActualPrimary.h)
+      (by linarith only [ActualPrimary.outgoing.data.h_lt_half] : 2 * ActualPrimary.h < 1)
       (native_time_pos l n k hx)).continuousAt.comp
         (hs.snd.snd.prodMk hs.snd.fst).continuousAt
   have hqg := hc (isClosed_Icc.isOpen_compl.mem_nhds hq)
@@ -2998,7 +3001,7 @@ theorem particular_coefficient_translations (l : ActualParticularStageControls.L
     simp only [p, v, ActualParticularStageControls.canonicalParameters,
         ActualParticularStageControls.directions,
       ParticularWaveBounds.reindex_radialField, ParticularWaveBounds.reindexVector,
-      nativeToFull_eq, map_add, LinearIsometryEquiv.symm_symm,
+      nativeToFull_eq, LinearIsometryEquiv.map_add, LinearIsometryEquiv.symm_symm,
       LinearIsometryEquiv.symm_apply_apply] at hh ⊢
     exact hh
   have hΦ : ActualWaveRegularity.TranslationOn Ω v (a.background.phase n) := by
@@ -3007,7 +3010,7 @@ theorem particular_coefficient_translations (l : ActualParticularStageControls.L
     rw [hphase]
     change (ActualPrimary.chartCoefficients l.1 l.2).phase n
       (ActualWaveRegularity.particularChart.symm (z+v)) = _
-    rw [map_add]
+    rw [LinearIsometryEquiv.map_add]
     change (ActualPrimary.chartCoefficients l.1 l.2).phase n
       (ActualWaveRegularity.particularChart.symm z + ActualWaveRegularity.deckShift m) = _
     exact phase_deck (l.2,l.1) n hn m (ActualWaveRegularity.particularChart.symm z) (mem_univ _)

@@ -196,9 +196,8 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 theorem exists_smooth_limit (f : ℕ → E → F) (hf : ∀ k, ContDiff ℝ ∞ (f k))
     (hC : ∀ m, UniformCauchySeqOn (fun k => iteratedFDeriv ℝ m (f k)) atTop Set.univ) :
     ∃ g : E → F, TendstoUniformly f g atTop ∧ ContDiff ℝ ∞ g := by
-  let L (m : ℕ) : (E [×(m+1)]→L[ℝ] F) →L[ℝ] (E →L[ℝ] (E [×m]→L[ℝ] F)) :=
-    (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (m+1) => E)
-        F).toContinuousLinearEquiv.toContinuousLinearMap
+  let L (m : ℕ) := (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (m+1) => E)
+    F).toContinuousLinearEquiv.toContinuousLinearMap
   have hD (m k : ℕ) (x : E) : HasFDerivAt (iteratedFDeriv ℝ m (f k))
       (L m (iteratedFDeriv ℝ (m+1) (f k) x)) x := by
     have hd := (hf k).differentiable_iteratedFDeriv

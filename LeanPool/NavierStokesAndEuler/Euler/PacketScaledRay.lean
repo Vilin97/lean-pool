@@ -56,11 +56,13 @@ entrywise errors are controlled in the existing propagation proof. -/
 theorem scaledRay_hasDerivAt (B M : Space →L[ℝ] Space)
     {m v r : ℝ → Space} {s₀ t₀ a ε τ : ℝ}
     (ha : a ≠ 0) (hε : ε ≠ 0) (hs₀ : s₀ ≠ 0)
-    (hm : HasDerivAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) (physicalTime t₀ a ε τ))
+    (hm : HasDerivAt m (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B
+      (m (physicalTime t₀ a ε τ))) (physicalTime t₀ a ε τ))
     (hv : HasDerivAt v (-B (v (physicalTime t₀ a ε τ)) +
       (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
         ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) (physicalTime t₀ a ε τ))
-    (hr : HasDerivAt r (-M.adjoint (r (physicalTime t₀ a ε τ))) (physicalTime t₀ a ε τ))
+    (hr : HasDerivAt r (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) M
+      (r (physicalTime t₀ a ε τ))) (physicalTime t₀ a ε τ))
     (hm0 : m (physicalTime t₀ a ε τ) ≠ 0) (hv0 : v (physicalTime t₀ a ε τ) ≠ 0)
     (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0) (i : Fin 3) :
     HasDerivAt (fun σ => scaledRay m v r s₀ t₀ a ε σ i)
@@ -79,11 +81,13 @@ theorem scaledRay_hasDerivWithinAt (B M : Space →L[ℝ] Space)
     {m v r : ℝ → Space} {s₀ t₀ a ε τ : ℝ} {S U : Set ℝ}
     (ha : a ≠ 0) (hε : ε ≠ 0) (hs₀ : s₀ ≠ 0)
     (hmap : MapsTo (physicalTime t₀ a ε) U S)
-    (hm : HasDerivWithinAt m (-B.adjoint (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
+    (hm : HasDerivWithinAt m (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) B
+      (m (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
     (hv : HasDerivWithinAt v (-B (v (physicalTime t₀ a ε τ)) +
       (2 * ⟪m (physicalTime t₀ a ε τ), B (v (physicalTime t₀ a ε τ))⟫_ℝ /
         ‖m (physicalTime t₀ a ε τ)‖ ^ 2) • m (physicalTime t₀ a ε τ)) S (physicalTime t₀ a ε τ))
-    (hr : HasDerivWithinAt r (-M.adjoint (r (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
+    (hr : HasDerivWithinAt r (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) M
+      (r (physicalTime t₀ a ε τ))) S (physicalTime t₀ a ε τ))
     (hm0 : m (physicalTime t₀ a ε τ) ≠ 0) (hv0 : v (physicalTime t₀ a ε τ) ≠ 0)
     (hmv : ⟪m (physicalTime t₀ a ε τ), v (physicalTime t₀ a ε τ)⟫_ℝ = 0) (i : Fin 3) :
     HasDerivWithinAt (fun σ => scaledRay m v r s₀ t₀ a ε σ i)

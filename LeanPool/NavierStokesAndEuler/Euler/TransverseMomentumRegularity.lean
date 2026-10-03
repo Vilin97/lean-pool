@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.Euler.TransverseVariationalInverse
 public import LeanPool.NavierStokesAndEuler.Euler.TimeH1OperatorProduct
 import LeanPool.NavierStokesAndEuler.Euler.TimeWeakDerivative
 import LeanPool.NavierStokesAndEuler.Euler.TransverseGramInverse
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # Actual momentum regularity of the transverse variational inverse
@@ -40,20 +41,22 @@ variable (T : ℝ) (hT : 0 ≤ T)
   (Q Q₁ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
 
 /-- The literal transverse momentum as an actual L² field. -/
-def momentum (u : TimeLp T E) : TimeLp T U := (timeMultiplier T hT Q).adjoint u
+def momentum (u : TimeLp T E) : TimeLp T U :=
+  adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q) u
 
 /-- The forcing for the momentum derivative, before using the frame ODE. -/
 def momentumForcing (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
     (u f : TimeLp T E) : TimeLp T U :=
-  (timeMultiplier T hT Q₁).adjoint u -
-    (timeMultiplier T hT Q).adjoint
+  adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q₁) u -
+    adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q)
       (timeMultiplier T hT H (primitiveTimeLp T hT u)) +
-    (timeMultiplier T hT Q).adjoint f
+    adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q) f
 
 /-- The momentum field is pointwise `Q(t)* u(t)` almost everywhere. -/
 theorem momentum_ae (u : TimeLp T E) :
     (momentum T hT Q u : ℝ → U) =ᵐ[timeMeasure T]
-      fun t => (extendPath T hT Q t).adjoint (u t) := by
+      fun t => adjoint (𝕜 := ℝ) (E := U) (F := E)
+        (extendPath (Y := U →L[ℝ] E) T hT Q t) (u t) := by
   unfold momentum
   rw [timeMultiplier_adjoint]
   exact timeMultiplier_ae T hT (adjointPath T Q) u
@@ -62,10 +65,11 @@ theorem momentum_ae (u : TimeLp T E) :
 theorem momentumForcing_ae (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
     (u f : TimeLp T E) :
     (momentumForcing T hT Q Q₁ H u f : ℝ → U) =ᵐ[timeMeasure T]
-      fun t => (extendPath T hT Q₁ t).adjoint (u t) -
-        (extendPath T hT Q t).adjoint
+      fun t => adjoint (𝕜 := ℝ) (E := U) (F := E)
+          (extendPath (Y := U →L[ℝ] E) T hT Q₁ t) (u t) -
+        adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q t)
           (extendPath T hT H t (realPrimitive T u t)) +
-        (extendPath T hT Q t).adjoint (f t) := by
+        adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q t) (f t) := by
   change (momentum T hT Q₁ u -
       momentum T hT Q (timeMultiplier T hT H (primitiveTimeLp T hT u)) +
       momentum T hT Q f : TimeLp T U) =ᵐ[timeMeasure T] _
@@ -81,7 +85,7 @@ theorem momentumForcing_ae (H : C(Icc (0 : ℝ) T, E →L[ℝ] E))
     timeMultiplier_ae T hT H (primitiveTimeLp T hT u),
     primitiveTimeLp_ae T hT u] with t hadd hsub hq₁ hq hqf hHu hJu
   simp only [Pi.add_apply, Pi.sub_apply] at hadd hsub
-  rw [hadd, hsub, hq₁, hq, hqf, hHu, hJu]
+  simp only [hadd, hsub, hq₁, hq, hqf, hHu, hJu]
 
 /-- Every zero-endpoint coordinate test gives a genuine admissible physical test. -/
 theorem productDerivative_mem_transverse
@@ -114,7 +118,7 @@ theorem momentum_weak_of_product_tests
   simp only [productDerivative, add_apply, comp_apply, inner_add_right] at htest
   simp only [momentum, momentumForcing, inner_add_left, inner_sub_left,
     adjoint_inner_left]
-  linarith only [htest]
+  linear_combination htest
 
 /-- The variational equation determines the weak derivative of actual momentum. -/
 theorem momentum_weak

@@ -32,8 +32,8 @@ theorem cross_norm_le (a b : Space) : ‖cross a b‖ ≤ ‖a‖*‖b‖ := by
 /-- Cross linear, bundling `toFun`, `map_add`, `map_smul`. -/
 def crossLinear (a : Space) : Space →ₗ[ℝ] Space where
   toFun := cross a
-  map_add' b c := by simp [cross, map_add]
-  map_smul' c b := by simp [cross, map_smul]
+  map_add' b c := by simp only [cross, ofLp_add, map_add, toLp_add]
+  map_smul' c b := by simp only [cross, ofLp_smul, map_smul, toLp_smul, RingHom.id_apply]
 
 /-- Cross left, given by `(crossLinear a).mkContinuous ‖a‖ (cross_norm_le a)`. -/
 def crossLeft (a : Space) : Space →L[ℝ] Space :=

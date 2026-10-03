@@ -89,7 +89,8 @@ theorem product_word_pointwise_le {q n : ℕ} (hq : 5 ≤ q) (hn : n ≤ q) (w :
     (fun j => EuclideanSpace.single (w j) (1 : ℝ))
   simp only [PiLp.norm_single, norm_one, Finset.prod_const_one, mul_one] at hA
   have hB := norm_iteratedFDeriv_mul_le (euclideanLift_smooth period f hf x)
-    (euclideanLift_smooth period g hg x) 0 (by simp : (n : ℕ∞ω) ≤ (∞ : ℕ∞ω))
+    (euclideanLift_smooth period g hg x) 0 (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true] : (n : ℕ∞ω) ≤ (∞ : ℕ∞ω))
   have hC : (∑ j ∈ Finset.range (n + 1), (n.choose j : ℝ) *
       ‖iteratedFDeriv ℝ j (euclideanLift period f x) 0‖ *
       ‖iteratedFDeriv ℝ (n - j) (euclideanLift period g x) 0‖) ≤
@@ -355,7 +356,9 @@ theorem product_wordH5Norm_bound (q n : ℕ)
         (fun l => wordSobolevNorm period 5 l f) (fun l => wordSobolevNorm period 5 l g) n := by
   induction n generalizing f g with
   | zero =>
-    simpa [leibnizConvolution, lowerProductConstant, mul_assoc] using
+    simpa only [wordSobolevNorm_zero, lowerProductConstant, leibnizConvolution, zero_add,
+        Finset.range_one, zero_tsub, mul_assoc, Finset.sum_singleton, Nat.choose_self, Nat.cast_one,
+        one_mul] using
       EulerH5CylinderAlgebra.cylinder_Hq_scalar_vector_product period (by
           norm_num : 5 ≤ 5) q f g hf hg (fun j _ w => hfL2 j w) (fun j _ w => hgL2 j w)
   | succ n ih =>

@@ -300,10 +300,10 @@ def forwardInitializedApproximationResidual (Cagree : SourceCoefficientAgreement
     (N : ℕ) (hN : 1 ≤ N) (k : ℝ) (hk : 4 ≤ k) :
     ApproximationResidual period D.T_pos
       (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k hk) := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := by linarith only [hk]
   have hκ : |k⁻¹| ≤ 1 := by
-    rw [abs_of_pos (inv_pos.mpr (by linarith : 0 < k))]
-    exact inv_le_one_of_one_le₀ (by linarith)
+    rw [abs_of_pos (inv_pos.mpr (by linarith only [hk] : 0 < k))]
+    exact inv_le_one_of_one_le₀ (by linarith only [hk])
   let Pa := forwardInitializedCoordinatePressureField M D hTime δ hδ ξ hs α N k hk0
   refine { pressure := Pa.toFieldTower, gradient := ?_, equation := ?_ }
   · intro t

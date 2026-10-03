@@ -67,16 +67,19 @@ theorem convolution_next_delta (M p : ℕ) (hp : 2 ≤ p) (hMp : p + 1 ≤ M)
     intro i hi
     have hi' : i ≤ p+1 := by have h := mem_range.mp hi; omega
     by_cases hi0 : i=0
-    · simp [hi0, hu 0 (by omega), hu0, show (0 : ℕ) ≠ p by omega]
+    · simp only [hi0, hu 0 (by omega), hu0, map_zero, tsub_zero, LinearMap.zero_apply,
+        show (0 : ℕ) ≠ p by omega, ↓reduceIte, add_zero, zero_ne_one]
     by_cases hiend : i=p+1
-    · simp [hiend, hu 0 (by omega), hu0, show p ≠ 0 by omega]
+    · simp only [hiend, tsub_self, hu 0 (by omega), hu0, map_zero, Nat.add_eq_left, one_ne_zero,
+        ↓reduceIte, add_zero, Nat.add_eq_right, show p ≠ 0 by omega]
     by_cases hip : i=p
-    · simp [hip, hδ, hu 1 (by omega), show p ≠ 1 by omega, map_add,
-        LinearMap.add_apply]
+    · simp only [hip, hδ, map_add, add_tsub_cancel_left, hu 1 (by omega), LinearMap.add_apply,
+        ↓reduceIte, show p ≠ 1 by omega, add_zero]
     by_cases hi1 : i=1
-    · simp [hi1, hδ, hu 1 (by omega), show 1 ≠ p by omega, map_add]
+    · simp only [hi1, hu 1 (by omega), add_tsub_cancel_right, hδ, map_add, show 1 ≠ p by omega,
+        ↓reduceIte, add_zero]
     rw [hu i (by omega), hu (p+1-i) (by omega)]
-    simp [hip, hi1]
+    simp only [hip, ↓reduceIte, add_zero, hi1]
   calc
     _ = ∑ i ∈ range (p+2),
         (B (u i) (u (p+1-i)) + (if i=p then B δ (u 1) else 0) +
@@ -103,11 +106,11 @@ open EulerSmoothLimit EulerFiniteGrades InnerProductSpace
 
 theorem fastAdvection_tangent_left (m : Space) (J K : VectorJet)
     (hJ : ⟪m, J.1⟫_ℝ = 0) : fastAdvection m J K=0 := by
-  simp [fastAdvection, hJ]
+  simp only [fastAdvection, LinearMap.coe_mk, AddHom.coe_mk, hJ, zero_smul]
 
 theorem fastAdvection_angleConstant_right (m : Space) (J K : VectorJet)
     (hK : K.2 angleDirection = 0) : fastAdvection m J K=0 := by
-  simp [fastAdvection, hK]
+  simp only [fastAdvection, LinearMap.coe_mk, AddHom.coe_mk, hK, smul_zero]
 
 /-- Nonlinear grade, given by `convolution M (slowAdvection FInv) u u p + convolution M
 (fastAdvection m) u u (p+1)`. -/
@@ -123,13 +126,16 @@ theorem nonlinearGrade_update (M p : ℕ) (hp : 2 ≤ p) (hMp : p + 1 ≤ M)
     (hnew : u' p = u p + (A + B)) (hprimary : ⟪m, (u 1).1⟫_ℝ = 0)
     (hA : ⟪m, A.1⟫_ℝ = 0) :
     nonlinearGrade M p FInv m u' = nonlinearGrade M p FInv m u + fastAdvection m B (u 1) := by
+  have h3 : fastAdvection m (A + B) (u 1) = fastAdvection m B (u 1) :=
+    (LinearMap.congr_fun ((fastAdvection m).map_add A B) (u 1)).trans
+      ((congrArg (· + _) (fastAdvection_tangent_left m A (u 1) hA)).trans (zero_add _))
   unfold nonlinearGrade
-  rw [convolution_strict_congr M p (by omega) (by omega) _ u u' hu0 hu,
-    convolution_next_delta M p hp hMp _ u u' (A+B) hu0 hu hnew]
-  rw [map_add, LinearMap.add_apply,
-    fastAdvection_tangent_left m A (u 1) hA,
-    fastAdvection_tangent_left m (u 1) (A+B) hprimary]
-  simp only [zero_add, add_zero, add_assoc]
+  exact (congrArg₂ (· + ·)
+    (convolution_strict_congr M p (by omega) (by omega) _ u u' hu0 hu)
+    ((convolution_next_delta M p hp hMp _ u u' (A+B) hu0 hu hnew).trans
+      ((congrArg₂ (· + ·) (congrArg (_ + ·) h3)
+        (fastAdvection_tangent_left m (u 1) (A+B) hprimary)).trans (add_zero _)))).trans
+    (add_assoc _ _ _).symm
 
 /-- The surviving unknown term is literally (m dot B) times the primary angular derivative. -/
 theorem nonlinearGrade_update_formula (M p : ℕ) (hp : 2 ≤ p) (hMp : p + 1 ≤ M)
@@ -179,11 +185,11 @@ theorem nonlinearGrade_eq_history (M p : ℕ) (hp : 2 ≤ p) (hMp : p + 1 ≤ M)
     (hprimary : ⟪m, (u 1).1⟫_ℝ = 0) (hA : ⟪m, A.1⟫_ℝ = 0) :
     nonlinearGrade M p FInv m u = nonlinearGrade M p FInv m (history p u c) +
       fastAdvection m B (u 1) := by
-  have h0 : history p u c 0=0 := by simp [history, show 0<p by omega, hu0]
-  have h1 : history p u c 1=u 1 := by simp [history, show 1<p by omega]
+  have h0 : history p u c 0=0 := by simp only [history, show 0 < p by omega, ↓reduceIte, hu0]
+  have h1 : history p u c 1=u 1 := by simp only [history, show 1 < p by omega, ↓reduceIte]
   have hsame : ∀ i<p, u i=history p u c i := by
     intro i hi
-    simp [history, hi]
+    simp only [history, hi, ↓reduceIte]
   have hnew' : u p=history p u c p+(A+B) := by simpa [history] using hnew
   simpa only [h1] using nonlinearGrade_update M p hp hMp FInv m (history p u c) u A B
     h0 hsame hnew' (by simpa only [h1] using hprimary) hA

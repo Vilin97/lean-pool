@@ -44,7 +44,9 @@ def integerShift (n : Fin 3 → ℤ) : Space :=
 @[simp] theorem integerShift_apply (n : Fin 3 → ℤ) (j : Fin 3) :
     integerShift n j = (n j : ℝ) := by
   change (EuclideanSpace.proj j) (integerShift n) = _
-  simp [integerShift, coordinateVector, zsmul_eq_mul]
+  simp only [integerShift, coordinateVector, map_sum, ContinuousLinearMap.map_smul_of_tower,
+      PiLp.proj_apply, PiLp.single_apply, smul_ite, zsmul_eq_mul, mul_one, smul_zero,
+      Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte]
 
 /-- The coordinatewise fractional part of a spatial point. -/
 def fractionalPoint (x : Space) : Space :=
@@ -72,7 +74,7 @@ theorem periodic_integerShift {g : SpaceTime → V}
   have hs (s : Finset (Fin 3)) : Function.Periodic (fun x : Space => g (t, x))
       (∑ i ∈ s, n i • coordinateVector i) := by
     induction s using Finset.induction_on with
-    | empty => intro x; simp
+    | empty => intro x; simp only [Finset.sum_empty, add_zero]
     | @insert i s hi ih =>
       rw [Finset.sum_insert hi]
       exact ((hbase i).zsmul (n i)).add_period ih
@@ -117,7 +119,7 @@ theorem iteratedFDeriv_periods {f : SpaceTime → V}
   have hd := iteratedFDeriv_comp_add_right (𝕜 := ℝ) (f := f)
     m (0, coordinateVector i) (t, x)
   rw [heq] at hd
-  simpa using hd.symm
+  simpa only [Prod.mk_add_mk, add_zero] using hd.symm
 
 /-- Differentiation is local: every full derivative vanishes at times strictly
 after a uniform zero-tail threshold, including derivative order zero. -/
@@ -133,7 +135,7 @@ theorem iteratedFDeriv_eq_zero_after {f : SpaceTime → V} {T : ℝ}
   have heq' : f =ᶠ[𝓝[univ] (t, x)] (fun _ => 0) := by
     simpa only [nhdsWithin_univ] using heq
   have hj := heq'.iteratedFDerivWithin_eq heq.self_of_nhds m (𝕜 := ℝ)
-  simpa [iteratedFDerivWithin_univ, iteratedFDeriv_fun_zero] using hj
+  simpa only [iteratedFDerivWithin_univ, iteratedFDeriv_fun_zero, Pi.zero_apply] using hj
 
 end Normed
 
@@ -152,24 +154,24 @@ theorem iteratedFDeriv_decay (f : VelocityField)
   obtain ⟨M, hMpos, hM⟩ := periodic_bound_on_timeInterval hcont
     (iteratedFDeriv_periods hper m) 0 (T + 1)
   let C : ℝ := M * (1 + (T + 1)) ^ K
-  have hbase : 0 < 1 + (T + 1) := by linarith
+  have hbase : 0 < 1 + (T + 1) := by linarith only [hT]
   have hCpos : 0 < C := mul_pos hMpos (Real.rpow_pos_of_pos hbase K)
   refine ⟨C, hCpos, ?_⟩
   intro t ht x
   by_cases hsmall : t ≤ T + 1
   · have hpow : (1 + (T + 1)) ^ (-K) ≤ (1 + t) ^ (-K) :=
-      Real.rpow_le_rpow_of_nonpos (by linarith) (by linarith)
+      Real.rpow_le_rpow_of_nonpos (by linarith only [ht]) (by linarith only [hsmall])
         (neg_nonpos.mpr hK)
     have hcancel : C * (1 + (T + 1)) ^ (-K) = M := by
-      dsimp [C]
+      dsimp only [C]
       rw [mul_assoc, ← Real.rpow_add hbase]
-      simp
+      simp only [add_neg_cancel, Real.rpow_zero, mul_one]
     calc
       ‖iteratedFDeriv ℝ m f (t, x)‖ ≤ M := hM t ⟨ht, hsmall⟩ x
       _ = C * (1 + (T + 1)) ^ (-K) := hcancel.symm
       _ ≤ C * (1 + t) ^ (-K) := mul_le_mul_of_nonneg_left hpow hCpos.le
-  · rw [iteratedFDeriv_eq_zero_after hzero m (by linarith : T < t) x, norm_zero]
-    exact mul_nonneg hCpos.le (Real.rpow_nonneg (by linarith) _)
+  · rw [iteratedFDeriv_eq_zero_after hzero m (by linarith only [hsmall] : T < t) x, norm_zero]
+    exact mul_nonneg hCpos.le (Real.rpow_nonneg (by linarith only [hT, hsmall]) _)
 
 /-- The four coordinate directions in the product spacetime norm. -/
 def spacetimeCoordinate : Fin 4 → SpaceTime :=
@@ -177,9 +179,11 @@ def spacetimeCoordinate : Fin 4 → SpaceTime :=
 
 @[simp] theorem norm_spacetimeCoordinate (i : Fin 4) : ‖spacetimeCoordinate i‖ = 1 := by
   refine Fin.cases ?_ ?_ i
-  · simp [spacetimeCoordinate, Prod.norm_def]
+  · simp only [spacetimeCoordinate, Nat.reduceAdd, Fin.isValue, Fin.cases_zero, Prod.norm_def,
+      norm_one, norm_zero, zero_le_one, sup_of_le_left]
   · intro j
-    simp [spacetimeCoordinate, Prod.norm_def, coordinateVector]
+    simp only [spacetimeCoordinate, Nat.reduceAdd, coordinateVector, Fin.cases_succ, Prod.norm_def,
+        norm_zero, PiLp.norm_single, norm_one, zero_le_one, sup_of_le_right]
 
 /-- Evaluating a full derivative on coordinate unit vectors, then taking one
 output component, is controlled by its full multilinear operator norm. -/
@@ -192,7 +196,8 @@ theorem mixed_component_le_full (f : VelocityField) (m : ℕ) (z : SpaceTime)
   have hop := (iteratedFDeriv ℝ m f z).le_opNorm
     (fun i => spacetimeCoordinate (directions i))
   have heval : ‖iteratedFDeriv ℝ m f z (fun i => spacetimeCoordinate (directions i))‖ ≤
-      ‖iteratedFDeriv ℝ m f z‖ := by simpa using hop
+      ‖iteratedFDeriv ℝ m f z‖ := by simpa only [norm_spacetimeCoordinate, Finset.prod_const_one,
+          mul_one] using hop
   simpa only [Real.norm_eq_abs] using hproj.trans heval
 
 /-- Arbitrary polynomial decay for every coordinate mixed differential of

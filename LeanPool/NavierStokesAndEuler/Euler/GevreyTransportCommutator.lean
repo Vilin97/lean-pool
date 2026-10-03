@@ -186,6 +186,7 @@ theorem weightedCommutator_bound {s : ℕ} (hs : 6 ≤ s) (N : ℕ) (hN : N + 6 
   apply le_of_tendsto_of_tendsto hleft hright
   apply Filter.Eventually.of_forall
   intro n
+  dsimp only [Function.comp_apply]
   obtain ⟨f,hf,hfs,hfL⟩ := smoothApprox_representative_all period n u
   obtain ⟨g,hg,hgs,hgL⟩ := smoothApprox_representative_all period n v
   exact weightedCommutator_smooth_bound period hs N hN ρ hρ L hL (U n) (V n) f g hf hg hfs hgs hfL

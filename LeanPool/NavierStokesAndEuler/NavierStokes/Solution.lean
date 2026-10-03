@@ -44,8 +44,9 @@ open scoped ContDiff
 
 @[simp] theorem viscousResidual_zero_fields (viscosity time : ℝ) (position : Space) :
     viscousResidual viscosity (fun _ => 0) (fun _ => 0) time position = 0 := by
-  simp [viscousResidual, temporalDerivative, advection, spatialLaplacian,
-    spatialDerivative, pressureGradient]
+  simp only [viscousResidual, temporalDerivative, fderiv_fun_const, Pi.zero_apply, zero_apply,
+      advection, spatialDerivative, add_zero, spatialLaplacian, Finset.sum_const_zero, smul_zero,
+      sub_self, pressureGradient, zero_smul]
 
 /-- A smooth incompressible solution with specified initial value. The initial
 value is required at `initialTime` even if the chosen time set omits that point.
@@ -82,8 +83,9 @@ theorem zero (viscosity initialTime : ℝ) (times : Set ℝ) :
   velocity_smooth := contDiffOn_const
   pressure_smooth := contDiffOn_const
   initial_velocity := fun _ => rfl
-  divergence_free := by simp [spatialDivergence, spatialDerivative]
-  navier_stokes := by simp
+  divergence_free := by simp only [spatialDivergence, spatialDerivative, fderiv_fun_const,
+      Pi.zero_apply, zero_apply, PiLp.zero_apply, Finset.sum_const_zero, implies_true]
+  navier_stokes := by simp only [viscousResidual_zero_fields, implies_true]
 
 end SolutionOn
 

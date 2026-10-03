@@ -94,7 +94,7 @@ theorem successor_square_le_four_two_pow (n : ℕ) :
     have hn : (2 : ℝ) ≤ n := by exact_mod_cast (show 2 ≤ n by omega)
     have hs : ((n+1+1 : ℕ) : ℝ)^2 ≤ 2*((n+1 : ℕ) : ℝ)^2 := by
       push_cast
-      nlinarith [sq_nonneg ((n : ℝ)-2)]
+      nlinarith only [hn, sq_nonneg ((n : ℝ)-2)]
     calc
       _ ≤ 2*((n+1 : ℕ) : ℝ)^2 := hs
       _ ≤ 2*(4*(2 : ℝ)^n) := mul_le_mul_of_nonneg_left ih (by norm_num)

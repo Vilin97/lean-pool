@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Calculus.BumpFunction.InnerProduct
 import Mathlib.Analysis.Calculus.ContDiff.Operations
 import Mathlib.Analysis.Normed.Group.Bounded
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # The dilated radius-1-to-2 bump cutoff
@@ -57,11 +58,11 @@ theorem baseCutoff_le_one (x : E) : baseCutoff E x ≤ 1 := (baseBump E).le_one
 
 theorem baseCutoff_eq_one {x : E} (hx : ‖x‖ ≤ 1) : baseCutoff E x = 1 := by
   apply (baseBump E).one_of_mem_closedBall
-  simpa [baseBump, mem_closedBall, dist_zero_right] using hx
+  simpa only [baseBump, mem_closedBall, dist_zero_right] using hx
 
 theorem baseCutoff_eq_zero {x : E} (hx : 2 ≤ ‖x‖) : baseCutoff E x = 0 := by
   apply (baseBump E).zero_of_le_dist
-  simpa [baseBump, dist_zero_right] using hx
+  simpa only [baseBump, dist_zero_right] using hx
 
 theorem cutoff_smooth (R : ℝ) : ContDiff ℝ ∞ (cutoff E R) :=
   baseCutoff_smooth.comp (contDiff_id.const_smul R⁻¹)
@@ -99,7 +100,7 @@ theorem cutoff_support_subset {R : ℝ} (hR : 0 < R) :
   intro x hx
   by_contra h
   apply hx
-  exact cutoff_eq_zero hR (by simpa [mem_ball, dist_zero_right, not_lt] using h)
+  exact cutoff_eq_zero hR (by simpa only [mem_ball, dist_zero_right, not_lt] using h)
 
 theorem cutoff_tsupport_subset {R : ℝ} (hR : 0 < R) :
     tsupport (cutoff E R) ⊆ closedBall (0 : E) (2 * R) :=
@@ -182,9 +183,10 @@ theorem iteratedFDeriv_comp_inv_smul_le {χ : D → F} {n : ℕ} (hχ : ContDiff
       calc
         ∏ _ : Fin n, ‖dilation D R‖ ≤ ∏ _ : Fin n, R⁻¹ :=
           Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _) (fun _ _ => norm_dilation_le hR)
-        _ = (R⁻¹) ^ n := by simp
+        _ = (R⁻¹) ^ n := by simp only [Finset.prod_inv_distrib, Finset.prod_const, Finset.card_univ,
+            Fintype.card_fin, inv_pow]
     _ ≤ C * (R⁻¹) ^ n := mul_le_mul_of_nonneg_right (hC _) (by positivity)
-    _ = C / R ^ n := by simp [div_eq_mul_inv]
+    _ = C / R ^ n := by simp only [inv_pow, div_eq_mul_inv]
 
 end Dilation
 

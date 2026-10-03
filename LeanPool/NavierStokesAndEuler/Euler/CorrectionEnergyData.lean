@@ -40,7 +40,7 @@ variable (period : ℝ) [Fact (0 < period)]
 theorem growthBase_budget (K : SmoothCoefficient period) (K' : LiftL2 period →L[ℝ] LiftL2 period)
     (c D L : ℝ) (hD : ‖K'‖ ≤ D) (hL : (K.firstBound : ℝ) ≤ L) :
     growthBase period K K' c ≤ growthBudgetBase c D L := by
-  have hsq : (K.firstBound : ℝ)^2 ≤ L^2 := by nlinarith [K.firstBound.coe_nonneg]
+  have hsq : (K.firstBound : ℝ)^2 ≤ L^2 := by nlinarith only [hL, K.firstBound.coe_nonneg]
   have hh := div_le_div_of_nonneg_right (mul_le_mul_of_nonneg_left hsq (by
       norm_num : (0 : ℝ) ≤ 4)) (sq_nonneg c)
   unfold growthBase growthBudgetBase heatEnergyConstant

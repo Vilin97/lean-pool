@@ -24,6 +24,10 @@ spatial translation regularity follows from the constructed coefficient families
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -107,7 +111,8 @@ def sourceCoordinateSolver : TimeLp T L2 →L[ℝ] TimeLp T solenoidalSpace :=
     (sourceFixedCoercivity_pos T hT F F₁ FInv)
     (sourceFixedForm_coercive T hT ℓ hℓ F F₁ H M0 FInv Be Bc L r hBe hBc hL hr hrquarter
       hext hcore hInv hF K hK hF0 hH hsmall)).comp
-    (-(fixedMeanPrimitive T hT (operatorPath T F.field) (operatorPath T F₁.field)).adjoint)
+    (-adjoint (𝕜 := ℝ) (F := TimeLp T L2)
+      (fixedMeanPrimitive T hT (operatorPath T F.field) (operatorPath T F₁.field)))
 
 /-- The new fixed representation is exactly the original actual source solver in coordinates. -/
 theorem sourceCoordinateSolver_eq_mean
@@ -119,8 +124,8 @@ theorem sourceCoordinateSolver_eq_mean
       (sourceMeanSolver T hT ℓ hℓ M0.field M0.field.continuous.aestronglyMeasurable
         ‖M0.field‖₊ M0.field.norm_coe_le_norm Be Bc L r hBe hBc hL hr hrquarter hext hcore
         FInv (operatorPath T H.field) K hK hF0 (operatorPath_quadratic_upper T H.field K hH) hsmall
-            f) :=
-  fixedMeanSolver_eq_mean T hT (operatorPath T F.field) (operatorPath T F₁.field)
+            f) := by
+  apply fixedMeanSolver_eq_mean T hT (operatorPath T F.field) (operatorPath T F₁.field)
     (operatorPath T H.field) (multiplier M0.field) (boundaryOperator (scaledCutoff ℓ hℓ)) L
     FInv hInv hF K (effectiveNegativeBound Be Bc r) hK
     (effectiveNegativeBound_nonneg Be Bc r hBe hBc hr) hF0

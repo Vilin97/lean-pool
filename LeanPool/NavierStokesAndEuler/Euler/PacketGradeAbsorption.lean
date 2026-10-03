@@ -62,7 +62,7 @@ namespace EulerPacketShiftArithmetic
 theorem padded_grade_count (p : ℕ) (hp : 2 ≤ p) :
     100*(p+2)^2 ≤ (meanForceShift p)^2 ∧ 100*(p+2)^2 ≤ (highForceShift p)^2 := by
   obtain ⟨hm,hh⟩ := force_shift_dominates_grade p hp
-  have hpoly : 100*(p+2)^2 ≤ (25*p)^2 := by nlinarith
+  have hpoly : 100*(p+2)^2 ≤ (25*p)^2 := by nlinarith only [hp]
   exact ⟨hpoly.trans (Nat.pow_le_pow_left hm 2),hpoly.trans (Nat.pow_le_pow_left hh 2)⟩
 
 end EulerPacketShiftArithmetic

@@ -10,6 +10,8 @@ public import LeanPool.NavierStokesAndEuler.Euler.Foundations.SchwartzDerivative
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 import Mathlib.Analysis.SpecialFunctions.JapaneseBracket
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # Sobolev weights and directional derivatives
@@ -75,7 +77,8 @@ theorem reciprocal_weight_memLp (d : ℕ) (s : ℝ) (hs : (d : ℝ) < 2 * s) :
     (besselWeight_temperate d (-s)).1.continuous.aestronglyMeasurable
   apply (memLp_two_iff_integrable_sq hm).2
   have hi : Integrable (fun ξ : Domain d => (1 + ‖ξ‖ ^ 2) ^ (-(2 * s) / 2)) volume :=
-    integrable_rpow_neg_one_add_norm_sq (by simpa [Domain] using hs)
+    integrable_rpow_neg_one_add_norm_sq (by simpa only [Domain, finrank_euclideanSpace,
+        Fintype.card_fin] using hs)
   apply hi.congr
   filter_upwards with ξ
   dsimp only [besselWeight]

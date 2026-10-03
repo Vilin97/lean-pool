@@ -78,7 +78,7 @@ theorem integral_viscousResidual {K f : ℝ → ℝ} {r : ℝ} (hr : 0 < r)
     exact boundary_hasDerivAt (ne_of_gt (hr.trans_le hu)) (hK u hu) (hf u hu)
   have he := integral_Ioi_of_hasDerivAt_of_tendsto' hd (hc.sub hv) hboundary
   rw [integral_sub hc hv] at he
-  linarith
+  linarith only [he]
 
 theorem backwardStress_formula {K f T : ℝ → ℝ} {r : ℝ} (hr : 0 < r)
     (hK : ∀ u ∈ Ici r, DifferentiableAt ℝ K u)
@@ -253,9 +253,10 @@ theorem radiusPoint_contDiff (t z : ℝ) : ContDiff ℝ ∞ (fun r => radiusPoin
 theorem radialSlice_hasDerivAt {G : PhysicalProfile} {t r z : ℝ}
     (hG : DifferentiableAt ℝ G (radiusPoint t r z)) :
     HasDerivAt (radialSlice G t z) (r * partialS G (radiusPoint t r z)) r := by
-  have hc := (hasDerivAt_const r t).prodMk
+  have hc := (hasDerivAt_const r t).prodMk (G := ℝ × ℝ)
     ((RadialHeatProfile.radiusSquared_hasDerivAt r).prodMk (hasDerivAt_const r z))
-  have hd := hG.hasFDerivAt.comp_hasDerivAt r hc
+  have hd := hG.hasFDerivAt.comp_hasDerivAt (F := PhysicalPoint)
+    (f := fun s => radiusPoint t s z) r hc
   apply hd.congr_deriv
   rw [show (0, (r, 0)) = r • ((0, (1, 0)) : PhysicalPoint) by ext <;> simp, map_smul]
   rfl
@@ -263,7 +264,8 @@ theorem radialSlice_hasDerivAt {G : PhysicalProfile} {t r z : ℝ}
 theorem timeSlice_hasDerivAt {G : PhysicalProfile} {p : PhysicalPoint}
     (hG : DifferentiableAt ℝ G p) :
     HasDerivAt (fun t => G (t, p.2)) (partialT G p) p.1 :=
-  hG.hasFDerivAt.comp_hasDerivAt p.1 ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))
+  hG.hasFDerivAt.comp_hasDerivAt (F := PhysicalPoint) (f := fun t => (t, p.2)) p.1
+    ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))
 
 theorem partialS_contDiffAt {G : PhysicalProfile} {p : PhysicalPoint} {m n : WithTop ℕ∞}
     (hG : ContDiffAt ℝ n G p) (hmn : m + 1 ≤ n) : ContDiffAt ℝ m (partialS G) p :=
@@ -326,7 +328,7 @@ theorem flattening_time_hasDerivAt {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
       (deriv f (Real.log (SimilarityProfile.X h p)) /
         (SimilarityProfile.q h p * CoordinateAlgebra.L h (SimilarityProfile.eta h p))) p.1 := by
   have hXpos : 0 < SimilarityProfile.X h p := div_pos hs (SimilarityProfile.q_pos hh hh1 ht)
-  have hd := hf.hasDerivAt.comp p.1
+  have hd := hf.hasDerivAt.comp (h := fun t => Real.log (SimilarityProfile.X h (t, p.2))) p.1
     ((SimilarityProfile.X_hasDerivAt_time hh hh1 ht).log hXpos.ne')
   apply hd.congr_deriv
   unfold CoordinateAlgebra.xTime
@@ -378,7 +380,7 @@ theorem terminal_radial_residual (C : ℝ) {h t r z : ℝ} (hh : 0 < h) (hh1 : h
   have hfr : ContDiffAt ℝ 2 (radialSlice (flattening h f) t z) r :=
     hflat.comp r ((radiusPoint_contDiff t z).contDiffAt.of_le (WithTop.coe_le_coe.mpr le_top))
   have he := heat_times_factor_residual C (f := fun u v => flattening h f (radiusPoint u v z))
-    (by linarith : 1 < 1 + h) ht hr hft.differentiableAt hfr
+    (by linarith only [hh] : 1 < 1 + h) ht hr hft.differentiableAt hfr
   have hft' := hft.deriv
   change deriv (fun u => flattening h f (radiusPoint u r z)) t = _ at hft'
   rw [hft'] at he
@@ -412,7 +414,7 @@ theorem swirlCoefficient_contDiffAt (C : ℝ) {h : ℝ} (hh : 0 < h) (hh1 : h < 
     (hf : ContDiffAt ℝ 2 f (Real.log (SimilarityProfile.X h p))) :
     ContDiffAt ℝ 2 (swirlCoefficient C h f) p := by
   have hK : ContDiffAt ℝ 2 (physicalHeat C (1 + h)) p :=
-    (physicalHeat_contDiffAt C (by linarith) ht hs).of_le (WithTop.coe_le_coe.mpr le_top)
+    (physicalHeat_contDiffAt C (by linarith only [hh]) ht hs).of_le (WithTop.coe_le_coe.mpr le_top)
   exact (hK.mul (flattening_contDiffAt hh hh1 ht hs hf)).div
     ((contDiffAt_const.mul contDiffAt_snd.fst).sqrt (show 2 * p.2.1 ≠ 0 by positivity))
     (ne_of_gt (Real.sqrt_pos.2 (by positivity)))
@@ -494,7 +496,7 @@ theorem neg_tailIntegral_hasDerivAt {g : ℝ → ℝ} {a b : ℝ} (hab : a < b)
     (Ioi_subset_Ioi hx.le)
   rw [Set.Ioi_sdiff_Ioi] at he
   rw [intervalIntegral.integral_of_le hx.le]
-  linarith
+  linarith only [he]
 
 /-- The radial pressure balance is derived from the defining improper integral.
 Joint pressure differentiability is a separate analytic regularity hypothesis. -/
@@ -505,8 +507,9 @@ theorem canonicalPressure_partialS {F : PhysicalProfile} {p : PhysicalPoint} {a 
     (hp : DifferentiableAt ℝ (canonicalPressure F) p) :
     partialS (canonicalPressure F) p = F p ^ 2 := by
   have hd := neg_tailIntegral_hasDerivAt ha hi hc
-  have hp' := hp.hasFDerivAt.comp_hasDerivAt p.2.1
-    ((hasDerivAt_const p.2.1 p.1).prodMk
+  have hp' := hp.hasFDerivAt.comp_hasDerivAt (F := PhysicalPoint)
+    (f := fun s => (p.1, (s, p.2.2))) p.2.1
+    ((hasDerivAt_const p.2.1 p.1).prodMk (G := ℝ × ℝ)
       ((hasDerivAt_id p.2.1).prodMk (hasDerivAt_const p.2.1 p.2.2)))
   exact hp'.unique hd
 
@@ -671,7 +674,7 @@ theorem forward_eq_backward_iff {R : ℝ → ℝ} {r : ℝ} (hr : 0 < r)
   unfold forwardStress backwardStress
   rw [intervalIntegral.integral_of_le hr.le]
   rw [div_left_inj' (pow_ne_zero 2 hr.ne')]
-  constructor <;> intro h <;> linarith
+  constructor <;> intro h <;> linarith only [he, h]
 
 /-- Time denominator, given by `SimilarityProfile.q h (t, (0, z)) * CoordinateAlgebra.L h
 (SimilarityProfile.eta h (t, (0, z)))`. -/
@@ -699,7 +702,7 @@ theorem timeResidual_nonneg {C h t r z : ℝ} (hC : 0 < C) (hh : 0 < h) (hh1 : h
     (ht : t < 1) (hr : 0 < r) {f : ℝ → ℝ}
     (hf : 0 ≤ deriv f (Real.log (SimilarityProfile.X h (radiusPoint t r z)))) :
     0 ≤ timeResidual C h f t z r :=
-  div_nonneg (mul_nonneg (heatAmplitude_pos hC (by linarith) ht hr).le hf)
+  div_nonneg (mul_nonneg (heatAmplitude_pos hC (by linarith only [hh]) ht hr).le hf)
     (timeDenominator_pos hh hh1 ht).le
 
 theorem terminal_correction_nonneg {C h t r z : ℝ} (hC : 0 < C) (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -707,8 +710,8 @@ theorem terminal_correction_nonneg {C h t r z : ℝ} (hC : 0 < C) (hh : 0 < h) (
     (hf : DifferentiableAt ℝ f (Real.log (SimilarityProfile.X h (radiusPoint t r z))))
     (hfpos : 0 ≤ deriv f (Real.log (SimilarityProfile.X h (radiusPoint t r z)))) :
     0 ≤ correction (heatAmplitude C (1 + h) t) (radialSlice (flattening h f) t z) r := by
-  apply correction_nonneg hr.le (heatAmplitude_pos hC (by linarith) ht hr).le
-    (heatAmplitude_deriv_neg hC (by linarith) ht hr).le
+  apply correction_nonneg hr.le (heatAmplitude_pos hC (by linarith only [hh]) ht hr).le
+    (heatAmplitude_deriv_neg hC (by linarith only [hh]) ht hr).le
   rw [(flattening_radial_hasDerivAt hh hh1 ht hr hf).deriv]
   exact div_nonneg (mul_nonneg (by norm_num) hfpos) hr.le
 
@@ -747,9 +750,9 @@ theorem timeResidual_lower_comparison {C h t r u R z : ℝ}
   have hu : 0 < u := hr.trans_le hru
   have hR : 0 < R := hu.trans_le huR
   rw [weighted_timeResidual hh hh1 ht hu hf]
-  have hmono := heatAmplitude_antitoneOn hC (by linarith : 1 < 1 + h) ht hu hR huR
+  have hmono := heatAmplitude_antitoneOn hC (by linarith only [hh] : 1 < 1 + h) ht hu hR huR
   have hp : r ^ 3 ≤ u ^ 3 := pow_le_pow_left₀ hr.le hru 3
-  have hnum := mul_le_mul hp hmono (heatAmplitude_pos hC (by linarith) ht hR).le
+  have hnum := mul_le_mul hp hmono (heatAmplitude_pos hC (by linarith only [hh]) ht hR).le
     (pow_nonneg hu.le 3)
   apply mul_le_mul_of_nonneg_right (div_le_div_of_nonneg_right hnum
     (mul_nonneg (by norm_num) (timeDenominator_pos hh hh1 ht).le))
@@ -835,7 +838,7 @@ theorem terminalStress_nonneg {C h t r z : ℝ}
       (radialSlice (flattening h f) t z)) atTop (𝓝 0)) :
     0 ≤ terminalStress C h f t z r := by
   apply le_trans _ (terminalStress_ge_boundary hC hh hh1 ht hr hf hmono hv hc hT hb)
-  apply mul_nonneg (heatAmplitude_pos hC (by linarith) ht hr).le
+  apply mul_nonneg (heatAmplitude_pos hC (by linarith only [hh]) ht hr).le
   rw [(flattening_radial_hasDerivAt hh hh1 ht hr (hf.differentiable (by norm_num) _)).deriv]
   exact div_nonneg (mul_nonneg (by norm_num) (hmono _)) hr.le
 
@@ -881,7 +884,7 @@ theorem outgoing_boundary_tendsto_zero (d : OutgoingTail.TailData) (C y₀ : ℝ
   apply boundary_tendsto_zero_of_plateau
   · apply radial_flattening_plateau d.h_pos d.h_lt_half ht
     · filter_upwards [eventually_ge_atTop (y₀ + 3)] with y hy
-      exact OutgoingTail.tailShape_late d (by linarith)
+      exact OutgoingTail.tailShape_late d (by linarith only [hy])
 
 /-! ## The actual terminal taper and its Gaussian edge -/
 

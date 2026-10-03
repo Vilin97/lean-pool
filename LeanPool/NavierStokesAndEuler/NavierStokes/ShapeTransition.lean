@@ -21,6 +21,10 @@ All constants in the estimates may be chosen before the final large `C`.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -97,22 +101,23 @@ theorem angular_before {C T y : ℝ} (hC : 0 < C) (hT : 0 < T) (hy : y ≤ 0)
     (li : ℝ → ℝ) (eta : ℝ) :
     angular C T li (y, eta) = C⁻¹ * Real.exp (y / 10 + li eta) := by
   rw [angular_eq_inv_mul hC]
-  simp [amplitude, blend,
-    OutgoingSchedule.sigma_zero (div_nonpos_of_nonpos_of_nonneg hy hT.le)]
+  simp only [amplitude, blend,
+      OutgoingSchedule.sigma_zero (div_nonpos_of_nonpos_of_nonneg hy hT.le), sub_zero, one_mul,
+      zero_mul, add_zero]
 
 theorem angular_after {C T y : ℝ} (hC : 0 < C) (hT : 0 < T) (hy : T ≤ y)
     (li : ℝ → ℝ) (eta : ℝ) :
     angular C T li (y, eta) = C⁻¹ * Real.exp (y / 10) * OutgoingSchedule.shape eta := by
   rw [angular_eq_inv_mul hC]
   simp only [amplitude, blend,
-    OutgoingSchedule.sigma_one ((le_div_iff₀ hT).mpr (by simpa using hy)),
+    OutgoingSchedule.sigma_one ((le_div_iff₀ hT).mpr (by simpa only [one_mul] using hy)),
     sub_self, zero_mul, one_mul, zero_add, Real.exp_add, exp_logShape]
   ring
 
 theorem angular_initial {C T : ℝ} (hC : 0 < C) (hT : 0 < T)
     (li : ℝ → ℝ) (eta : ℝ) :
     angular C T li (0, eta) = C⁻¹ * Real.exp (li eta) := by
-  simpa using angular_before hC hT (le_refl 0) li eta
+  simpa only [zero_div, zero_add] using angular_before hC hT (le_refl 0) li eta
 
 /-! Smoothness above and exact equalities on both closed half-lines give the
 actual smooth gluing. The following statement records all radial jets on the
@@ -156,12 +161,13 @@ theorem sigma_deriv_zero_right {x : ℝ} (hx : 1 < x) :
 theorem sigma_deriv_bounded :
     ∃ K : ℝ, 0 ≤ K ∧ ∀ x, |deriv OutgoingSchedule.sigma x| ≤ K := by
   obtain ⟨K, hK⟩ := (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).exists_bound_of_continuousOn
-    (OutgoingSchedule.sigma_contDiff.continuous_deriv (by simp)).continuousOn
+    (OutgoingSchedule.sigma_contDiff.continuous_deriv (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.one_ne_top, not_false_eq_true])).continuousOn
   refine ⟨max K 0, le_max_right _ _, fun x => ?_⟩
   by_cases hx : x < 0
-  · simp [sigma_deriv_zero_left hx]
+  · simp only [sigma_deriv_zero_left hx, abs_zero, le_max_iff, Std.le_refl, or_true]
   by_cases hx' : 1 < x
-  · simp [sigma_deriv_zero_right hx']
+  · simp only [sigma_deriv_zero_right hx', abs_zero, le_max_iff, Std.le_refl, or_true]
   exact (show |deriv OutgoingSchedule.sigma x| ≤ K from
     hK x ⟨le_of_not_gt hx, le_of_not_gt hx'⟩).trans (le_max_left _ _)
 
@@ -178,10 +184,10 @@ theorem logProfile_hasDerivAt (C T : ℝ) (li : ℝ → ℝ) (y eta : ℝ) :
           simp)).differentiableAt.hasDerivAt
   have hc : HasDerivAt (fun s => OutgoingSchedule.sigma (s / T))
       (deriv OutgoingSchedule.sigma (y / T) / T) y := by
-    convert! hs.comp y ((hasDerivAt_id y).div_const T) using 1; simp [div_eq_mul_inv]
+    convert! hs.comp y ((hasDerivAt_id y).div_const T) using 1; simp only [div_eq_mul_inv, one_mul]
   have h := ((hasDerivAt_const y (-Real.log C)).add ((hasDerivAt_id y).div_const 10)).add
     ((((hasDerivAt_const y 1).sub hc).mul_const (li eta)).add (hc.mul_const (logShape eta)))
-  convert! h using 1; dsimp [logProfile, blend, logarithmicSlope]; ring
+  convert! h using 1; dsimp only [logarithmicSlope]; ring
 
 theorem logarithmicSlope_eq (C T : ℝ) (li : ℝ → ℝ) (y eta : ℝ) :
     logarithmicSlope T li (y, eta) =
@@ -210,10 +216,10 @@ theorem logarithmicSlope_bounds {T K B : ℝ} {li : ℝ → ℝ}
         hData (abs_nonneg _) (div_nonneg hK hT.le)
       _ ≤ 1 / 20 := by
         rw [div_mul_eq_mul_div]
-        exact (div_le_iff₀ hT).mpr (by linarith)
+        exact (div_le_iff₀ hT).mpr (by linarith only [hDuration])
   have hab := abs_le.mp hb
-  dsimp [logarithmicSlope]
-  constructor <;> linarith
+  dsimp only [logarithmicSlope]
+  constructor <;> linarith only [hab]
 
 theorem exists_duration (B : ℝ) (hB : 0 ≤ B) :
     ∃ T : ℝ, 0 < T ∧ ∀ (li : ℝ → ℝ) (C y eta : ℝ),
@@ -223,7 +229,7 @@ theorem exists_duration (B : ℝ) (hB : 0 ≤ B) :
   obtain ⟨K, hK, hSigma⟩ := sigma_deriv_bounded
   refine ⟨1 + 20 * K * B, by positivity, fun li C y eta hData => ?_⟩
   rw [← logarithmicSlope_eq C]
-  exact logarithmicSlope_bounds (by positivity) hK hB hSigma (by linarith) hData
+  exact logarithmicSlope_bounds (by positivity) hK hB hSigma (by linarith only) hData
 
 theorem blend_abs_le {T B : ℝ} {li : ℝ → ℝ} {y eta : ℝ}
     (hli : |li eta| ≤ B) (hf : |logShape eta| ≤ B) : |blend T li (y, eta)| ≤ B := by
@@ -301,7 +307,7 @@ theorem amplitude_jet_bound {T y B : ℝ} {li : ℝ → ℝ} (hli : ContDiff ℝ
     intro i hi
     rw [norm_iteratedFDeriv_eq_norm_iteratedDeriv]
     have he : iteratedDeriv i Real.exp = Real.exp := by
-      simpa using iteratedDeriv_exp_const_mul i 1
+      simpa only [one_mul, one_pow] using iteratedDeriv_exp_const_mul i 1
     rw [he, Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)]
     exact Real.exp_le_exp.mpr hqle
   have hqjet : ∀ i, 1 ≤ i → i ≤ n → ‖iteratedFDeriv ℝ i q eta‖ ≤ B ^ i := by
@@ -405,23 +411,25 @@ theorem restore_contDiff {Gi : ℝ → ℝ} (hGi : ContDiff ℝ ∞ Gi) :
 
 theorem restore_before {z : ℝ} (hz : z ≤ -8) (Gi : ℝ → ℝ) (eta : ℝ) :
     restore Gi (z, eta) = Gi eta := by
-  simp [restore, OutgoingSchedule.sigma_zero (by linarith : z + 8 ≤ 0)]
+  simp only [restore, OutgoingSchedule.sigma_zero (by linarith only [hz] : z + 8 ≤ 0), sub_zero,
+      one_mul, zero_mul, add_zero]
 
 theorem restore_after {z : ℝ} (hz : -7 ≤ z) (Gi : ℝ → ℝ) (eta : ℝ) :
     restore Gi (z, eta) = 4 * eta := by
-  simp [restore, OutgoingSchedule.sigma_one (by linarith : 1 ≤ z + 8)]
+  simp only [restore, OutgoingSchedule.sigma_one (by linarith only [hz] : 1 ≤ z + 8), sub_self,
+      zero_mul, one_mul, zero_add]
 
 theorem restore_sub (Gi : ℝ → ℝ) (z eta : ℝ) :
     restore Gi (z, eta) - 4 * eta =
       (1 - OutgoingSchedule.sigma (z + 8)) * (Gi eta - 4 * eta) := by
-  dsimp [restore]
+  dsimp only [restore]
   ring
 
 theorem restore_error_le (Gi : ℝ → ℝ) (z eta : ℝ) :
     |restore Gi (z, eta) - 4 * eta| ≤ |Gi eta - 4 * eta| := by
   rw [restore_sub, abs_mul, abs_of_nonneg (sub_nonneg.mpr (OutgoingSchedule.sigma_le_one _))]
   exact mul_le_of_le_one_left (abs_nonneg _)
-    (by linarith [OutgoingSchedule.sigma_nonneg (z + 8)])
+    (by linarith only [OutgoingSchedule.sigma_nonneg (z + 8)])
 
 theorem restore_error_jet (Gi : ℝ → ℝ) (hGi : ContDiff ℝ ∞ Gi) (z eta : ℝ) (n : ℕ) :
     iteratedDeriv n (fun e => restore Gi (z, e) - 4 * e) eta =
@@ -439,7 +447,7 @@ theorem restore_error_jet_le (Gi : ℝ → ℝ) (hGi : ContDiff ℝ ∞ Gi) (z e
   rw [restore_error_jet Gi hGi, abs_mul,
     abs_of_nonneg (sub_nonneg.mpr (OutgoingSchedule.sigma_le_one _))]
   exact mul_le_of_le_one_left (abs_nonneg _)
-    (by linarith [OutgoingSchedule.sigma_nonneg (z + 8)])
+    (by linarith only [OutgoingSchedule.sigma_nonneg (z + 8)])
 
 /-! ## A smooth physical-radius implementation, including the old axis piece -/
 
@@ -456,7 +464,7 @@ theorem radialSwitch_zero {Xi T X : ℝ} (hXi : 0 < Xi) (hT : 0 < T) (hX : X ≤
   · apply OutgoingSchedule.sigma_zero
     apply div_nonpos_of_nonpos_of_nonneg _ hT.le
     apply Real.log_nonpos
-    · exact (div_pos (by linarith : 0 < X) hXi).le
+    · exact (div_pos (by linarith only [hXi, h] : 0 < X) hXi).le
     · exact (div_le_one hXi).mpr hX
 
 theorem radialSwitch_eq {Xi T X : ℝ} (hXi : 0 < Xi) (hT : 0 < T) (hX : 0 < X) :
@@ -466,7 +474,7 @@ theorem radialSwitch_eq {Xi T X : ℝ} (hXi : 0 < Xi) (hT : 0 < T) (hX : 0 < X) 
   · symm
     apply OutgoingSchedule.sigma_zero
     apply div_nonpos_of_nonpos_of_nonneg _ hT.le
-    exact Real.log_nonpos (div_pos hX hXi).le ((div_le_one hXi).mpr (by linarith))
+    exact Real.log_nonpos (div_pos hX hXi).le ((div_le_one hXi).mpr (by linarith only [hX, h]))
   · rfl
 
 theorem radialSwitch_contDiff {Xi T : ℝ} (hXi : 0 < Xi) (hT : 0 < T) :
@@ -501,7 +509,7 @@ theorem shapeField_contDiff {Xi T : ℝ} (hXi : 0 < Xi) (hT : 0 < T)
 theorem shapeField_before {Xi T X : ℝ} (hXi : 0 < Xi) (hT : 0 < T) (hX : X ≤ Xi)
     (li : ℝ → ℝ) (old : ℝ × ℝ → ℝ) (eta : ℝ) :
     shapeField Xi T li old (X, eta) = old (X, eta) := by
-  simp [shapeField, radialSwitch_zero hXi hT hX]
+  simp only [shapeField, radialSwitch_zero hXi hT hX, zero_mul, Real.exp_zero, mul_one]
 
 theorem shapeField_eq_profile {Xi C T X : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
     (hT : 0 < T) (hX : 0 < X) (li : ℝ → ℝ) (old : ℝ × ℝ → ℝ) (eta : ℝ)
@@ -541,7 +549,7 @@ theorem shapeField_jet_bound {Xi C T X B K : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
   · have hXpos : 0 < X := hXi.trans (lt_of_not_ge hXXi)
     have hy : Real.log (X / Xi) ≤ T :=
       (Real.log_le_iff_le_exp (div_pos hXpos hXi)).mpr
-        ((div_le_iff₀ hXi).mpr (by linarith))
+        ((div_le_iff₀ hXi).mpr (by linarith only [hXL]))
     have he : (fun e => shapeField Xi T li old (X, e)) =
         fun e => (Real.sqrt (2 * X))⁻¹ * angular C T li (Real.log (X / Xi), e) := by
       funext e
@@ -555,7 +563,7 @@ theorem shapeField_jet_bound {Xi C T X B K : ℝ} (hXi : 0 < Xi) (hC : 0 < C)
     have hb := angular_jet_bound hC hli hB hy n eta hl hf
     have hs : (Real.sqrt (2 * X))⁻¹ ≤ (Real.sqrt (2 * Xi))⁻¹ := by
       apply inv_anti₀ (Real.sqrt_pos.2 (by positivity))
-      exact Real.sqrt_le_sqrt (by linarith)
+      exact Real.sqrt_le_sqrt (by linarith only [hXXi])
     calc
       _ ≤ (Real.sqrt (2 * Xi))⁻¹ *
           ((n.factorial * Real.exp (T / 10 + B) * B ^ n) / C) :=
@@ -666,7 +674,7 @@ theorem sqrt_scaled_product {R x : ℝ} (hR : 0 ≤ R) (hx : 0 ≤ x) :
     Real.sqrt (2 * x) * Real.sqrt (2 * R * x) = 2 * Real.sqrt R * x := by
   rw [show 2 * R * x = R * (2 * x) by ring, Real.sqrt_mul hR]
   have hs := Real.sq_sqrt (show 0 ≤ 2 * x by positivity)
-  nlinarith [Real.sqrt_nonneg R]
+  nlinarith only [hs, Real.sqrt_nonneg R]
 
 theorem scaledE_sq {R x : ℝ} (hR : 0 ≤ R) (hx : 0 ≤ x)
     (f : ℝ × ℝ → ℝ) (eta : ℝ) :
@@ -731,6 +739,7 @@ theorem rows_jet_bounds {R r B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r)
       (2 ^ n * B ^ 2 + R * r * (2 ^ n * (K / C) ^ 2)) * r ∧
     |iteratedDeriv n (rowP R f r) eta| ≤ R * (2 ^ n * (K / C) ^ 2) * r := by
   have hKC : 0 ≤ K / C := div_nonneg hK hC.le
+  have hsR : 0 ≤ 2 * Real.sqrt R := mul_nonneg zero_le_two (Real.sqrt_nonneg R)
   have hus (x : ℝ) : ContDiff ℝ ∞ (fun e => u (x, e)) :=
     hu.comp (contDiff_const.prodMk contDiff_id)
   have hfs (x : ℝ) : ContDiff ℝ ∞ (fun e => f (x, e)) :=
@@ -760,9 +769,9 @@ theorem rows_jet_bounds {R r B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r)
       have hx0 : 0 ≤ x := hx.1.le
       dsimp only
       rw [iteratedDeriv_const_mul _ ((hfs x).of_le (nat_le_infty n)).contDiffAt,
-        abs_mul, abs_of_nonneg (by positivity : 0 ≤ 2 * Real.sqrt R * x)]
-      exact mul_le_mul (mul_le_mul_of_nonneg_left hx.2 (by positivity))
-        (hfb x hx n le_rfl) (abs_nonneg _) (by positivity)
+        abs_mul, abs_of_nonneg (mul_nonneg hsR hx0)]
+      exact mul_le_mul (mul_le_mul_of_nonneg_left hx.2 hsR)
+        (hfb x hx n le_rfl) (abs_nonneg _) (mul_nonneg hsR hr)
   · have he : rowJ R u f r = fun e => ∫ x in (0 : ℝ)..r,
         (2 * Real.sqrt R * x) * (u (x, e) * f (x, e)) :=
       funext (rowJ_normalized hR hr u f)
@@ -776,9 +785,9 @@ theorem rows_jet_bounds {R r B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r)
       have hx0 : 0 ≤ x := hx.1.le
       dsimp only
       rw [iteratedDeriv_const_mul _ (((hus x).mul (hfs x)).of_le (nat_le_infty n)).contDiffAt,
-        abs_mul, abs_of_nonneg (by positivity : 0 ≤ 2 * Real.sqrt R * x)]
-      exact mul_le_mul (mul_le_mul_of_nonneg_left hx.2 (by positivity))
-        (huf x hx) (abs_nonneg _) (by positivity)
+        abs_mul, abs_of_nonneg (mul_nonneg hsR hx0)]
+      exact mul_le_mul (mul_le_mul_of_nonneg_left hx.2 hsR)
+        (huf x hx) (abs_nonneg _) (mul_nonneg hsR hr)
   · have he : rowS R u f r = fun e => ∫ x in (0 : ℝ)..r,
         u (x, e) ^ 2 - (R * x) * f (x, e) ^ 2 := funext (rowS_normalized hR hr u f)
     rw [he]
@@ -829,36 +838,43 @@ theorem prefixJetSize_bound {R r L B K C : ℝ} (hR : 0 ≤ R) (hr : 0 ≤ r) (h
   have hKC : 0 ≤ K / C := div_nonneg hK hCpos.le
   have hKCle : K / C ≤ K := div_le_self hK hC
   have hroot : Real.sqrt R ≤ R + 1 := by
-    linarith [Real.sqrt_nonneg R, Real.sq_sqrt hR, sq_nonneg (Real.sqrt R - 1)]
+    linarith only [hR, Real.sqrt_nonneg R, Real.sq_sqrt hR, sq_nonneg (Real.sqrt R - 1)]
   have hrr : Real.sqrt R * r ≤ L + 1 := calc
     _ ≤ (R + 1) * r := mul_le_mul_of_nonneg_right hroot hr
     _ = L + r := by rw [add_mul, hRL, one_mul]
     _ ≤ L + 1 := add_le_add_right hr1 L
   obtain ⟨hM, hI, hJ, hS, hP⟩ := rows_jet_bounds hR hr hB hK hCpos hu hf n eta hub hfb
+  have h2 : 2 * (Real.sqrt R * r) ≤ 2 * (L + 1) := mul_le_mul_of_nonneg_left hrr zero_le_two
+  have hL2 : 0 ≤ 2 * (L + 1) := mul_nonneg zero_le_two (add_nonneg hL zero_le_one)
+  have hnB : 0 ≤ 2 ^ n * B := mul_nonneg (pow_nonneg zero_le_two n) hB
   have hI' : |iteratedDeriv n (rowI R f r) eta| ≤ (2 * (L + 1) * K) * r := by
     apply hI.trans
     calc
       _ = (2 * (Real.sqrt R * r) * (K / C)) * r := by ring
-      _ ≤ _ := by gcongr
+      _ ≤ _ := mul_le_mul_of_nonneg_right (mul_le_mul h2 hKCle hKC hL2) hr
   have hJ' : |iteratedDeriv n (rowJ R u f r) eta| ≤
       (2 * (L + 1) * (2 ^ n * B * K)) * r := by
     apply hJ.trans
     calc
       _ = (2 * (Real.sqrt R * r) * (2 ^ n * B * (K / C))) * r := by ring
-      _ ≤ _ := by gcongr
+      _ ≤ _ := mul_le_mul_of_nonneg_right (mul_le_mul h2
+          (mul_le_mul_of_nonneg_left hKCle hnB) (mul_nonneg hnB hKC) hL2) hr
   have hS' : |iteratedDeriv n (rowS R u f r) eta| ≤
       (2 ^ n * (B ^ 2 + L * K ^ 2)) * r := by
     apply hS.trans
     rw [hRL]
     calc
-      _ ≤ (2 ^ n * B ^ 2 + L * (2 ^ n * K ^ 2)) * r := by gcongr
+      _ ≤ (2 ^ n * B ^ 2 + L * (2 ^ n * K ^ 2)) * r :=
+        mul_le_mul_of_nonneg_right (add_le_add le_rfl (mul_le_mul_of_nonneg_left
+          (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hKC hKCle 2)
+            (pow_nonneg zero_le_two n)) hL)) hr
       _ = _ := by ring
   have hP' : |iteratedDeriv n (rowP R f r) eta| ≤ (2 ^ n * L * K ^ 2) / C ^ 2 := by
     apply hP.trans_eq
     rw [← hRL, div_pow]
     ring
-  dsimp [prefixJetSize, prefixCoefficient]
-  linarith
+  dsimp only [prefixJetSize, prefixCoefficient]
+  linarith only [hM, hI', hJ', hS', hP']
 
 theorem prefix_bound_tendsto (n : ℕ) (B K L T P : ℝ) :
     Tendsto (fun C : ℝ => prefixCoefficient n B K L * separation T C P +
@@ -871,7 +887,8 @@ theorem prefix_bound_tendsto (n : ℕ) (B K L T P : ℝ) :
   have hp := ((tendsto_inv_atTop_zero : Tendsto (fun C : ℝ => C⁻¹) atTop (𝓝 0)).pow 2).const_mul
     (2 ^ n * L * K ^ 2)
   convert! (hs.const_mul (prefixCoefficient n B K L)).add hp using 1 <;>
-    simp [div_eq_mul_inv, inv_pow]
+    simp only [div_eq_mul_inv, inv_pow, mul_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+        zero_pow, add_zero]
 
 /-- Uniformity in the external parameter is obtained from uniform input-jet
 bounds. The fixed duration, data bounds, and physical prefix length precede `C`. -/
@@ -921,7 +938,8 @@ theorem idealWeightI_bound {r : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1) :
         have hx0 : 0 ≤ x := hx'.1.le
         have hx1 : x ≤ 1 := hx'.2.trans hr1
         have hs : Real.sqrt (2 * x) ≤ 2 := by
-          nlinarith [Real.sq_sqrt (show 0 ≤ 2 * x by positivity), Real.sqrt_nonneg (2 * x)]
+          nlinarith only [hx1, hx0, Real.sq_sqrt (show 0 ≤ 2 * x by positivity),
+              Real.sqrt_nonneg (2 * x)]
         rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (Real.sqrt_nonneg _),
           abs_of_nonneg (Real.rpow_nonneg hx0 _)]
         exact (mul_le_mul hs (Real.rpow_le_one hx0 hx1 (by norm_num))
@@ -1007,7 +1025,8 @@ theorem ideal_rows_are_integrals {r : ℝ} (hr : 0 ≤ r) (G A : ℝ → ℝ) (e
       ring
     rw [he, intervalIntegral.integral_sub intervalIntegrable_const hpow,
       intervalIntegral.integral_mul_const]
-    simp [idealS, idealWeightS]
+    simp only [idealS, idealWeightS, one_div, intervalIntegral.integral_div,
+        intervalIntegral.integral_const, sub_zero, smul_eq_mul]
   · rw [idealP, idealWeightP, ← intervalIntegral.integral_mul_const]
     apply intervalIntegral.integral_congr
     intro x hx
@@ -1047,13 +1066,13 @@ theorem idealPrefixJetSize_bound {r B K : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1)
   have hi : |iteratedDeriv n (idealI A r) eta| ≤ 2 * K * r := by
     change |iteratedDeriv n (fun e => idealWeightI r * A e) eta| ≤ _
     rw [iteratedDeriv_const_mul _ (hA.of_le (nat_le_infty n)).contDiffAt, abs_mul]
-    convert! mul_le_mul (idealWeightI_bound hr hr1) (hAb n le_rfl)
-      (abs_nonneg _) (by positivity) using 1; ring
+    exact (mul_le_mul (idealWeightI_bound hr hr1) (hAb n le_rfl)
+      (abs_nonneg _) (mul_nonneg zero_le_two hr)).trans_eq (mul_right_comm _ _ _)
   have hj : |iteratedDeriv n (idealJ G A r) eta| ≤ 2 * (2 ^ n * B * K) * r := by
     change |iteratedDeriv n (fun e => idealWeightI r * (G e * A e)) eta| ≤ _
     rw [iteratedDeriv_const_mul _ ((hG.mul hA).of_le (nat_le_infty n)).contDiffAt, abs_mul]
-    convert! mul_le_mul (idealWeightI_bound hr hr1) hGA (abs_nonneg _) (by
-        positivity) using 1; ring
+    exact (mul_le_mul (idealWeightI_bound hr hr1) hGA (abs_nonneg _)
+      (mul_nonneg zero_le_two hr)).trans_eq (mul_right_comm _ _ _)
   have hs : |iteratedDeriv n (idealS G A r) eta| ≤
       (2 ^ n * B ^ 2 + (2 ^ n * K ^ 2) / 2) * r := by
     change |iteratedDeriv n ((fun e => r * G e ^ 2) - (fun e => idealWeightS r * A e ^ 2)) eta| ≤ _
@@ -1064,22 +1083,25 @@ theorem idealPrefixJetSize_bound {r B K : ℝ} (hr : 0 ≤ r) (hr1 : r ≤ 1)
     apply (abs_sub _ _).trans
     rw [abs_mul, abs_mul, abs_of_nonneg hr]
     have hleft := mul_le_mul_of_nonneg_left hGG hr
-    have hright := mul_le_mul (idealWeightS_bound hr hr1) hAA (abs_nonneg _) (by positivity)
-    linarith
+    have hright := mul_le_mul (idealWeightS_bound hr hr1) hAA (abs_nonneg _)
+      (div_nonneg hr zero_le_two)
+    exact (add_le_add hleft hright).trans_eq (by ring)
   have hp : |iteratedDeriv n (idealP A r) eta| ≤
       (5 / 2) * (2 ^ n * K ^ 2) * r ^ (1 / 5 : ℝ) := by
     change |iteratedDeriv n (fun e => idealWeightP r * A e ^ 2) eta| ≤ _
+    have h52 : 0 ≤ (5 / 2 : ℝ) * r ^ (1 / 5 : ℝ) :=
+      mul_nonneg (by norm_num) (Real.rpow_nonneg hr _)
     rw [iteratedDeriv_const_mul _ ((hA.pow 2).of_le (nat_le_infty n)).contDiffAt,
-      abs_mul, idealWeightP_eq hr, abs_of_nonneg (by positivity)]
-    convert! mul_le_mul_of_nonneg_left hAA
-      (show 0 ≤ (5 / 2 : ℝ) * r ^ (1 / 5 : ℝ) by positivity) using 1; ring
-  dsimp [idealPrefixJetSize, idealPrefixCoefficient]
-  linarith
+      abs_mul, idealWeightP_eq hr, abs_of_nonneg h52]
+    exact (mul_le_mul_of_nonneg_left hAA h52).trans_eq (mul_right_comm _ _ _)
+  dsimp only [idealPrefixJetSize, idealPrefixCoefficient]
+  exact (add_le_add (add_le_add (add_le_add (add_le_add hm hi) hj) hs) hp).trans_eq (by ring)
 
 theorem separation_fifth_tendsto (T : ℝ) {P : ℝ} (hP : P ≠ 0) :
     Tendsto (fun C : ℝ => separation T C P ^ (1 / 5 : ℝ)) atTop (𝓝 0) := by
   have h := (Real.continuous_rpow_const (by norm_num : (0 : ℝ) ≤ 1 / 5)).tendsto 0
-  simpa [Function.comp_def] using h.comp (separation_tendsto T hP)
+  simpa only [one_div, comp_def, ne_eq, inv_eq_zero, OfNat.ofNat_ne_zero, not_false_eq_true,
+      Real.zero_rpow] using h.comp (separation_tendsto T hP)
 
 /-! ## Genuine restoration debts on a positive compact interval -/
 
@@ -1104,8 +1126,8 @@ theorem smooth_parameter_interval {a b : ℝ} (hab : a ≤ b) {F : ℝ × ℝ �
       (fun x => iteratedDeriv k (fun q => F (x, q)) e) (volume.restrict (Ioc a b)) := by
     intro k e
     have hc : ContinuousOn (fun x => iteratedDeriv k (fun q => F (x, q)) e) (Icc a b) :=
-      (hj k).comp (continuous_id.prodMk continuous_const).continuousOn (fun x hx => ⟨hx, mem_univ
-          _⟩)
+      ((hj k).comp (continuous_id.prodMk continuous_const).continuousOn
+        (fun x hx => ⟨hx, mem_univ _⟩) :)
     exact (hc.mono Ioc_subset_Icc_self).aestronglyMeasurable measurableSet_Ioc
   have hd : SmoothParameterIntegral.LocallyDominatedDeriv (fun e x => F (x, e))
       (volume.restrict (Ioc a b)) := by
@@ -1152,12 +1174,12 @@ theorem restoreDensityJ_eq (Gi A : ℝ → ℝ) (p : ℝ × ℝ) :
     restoreDensityJ Gi A p =
       restore Gi (Real.log p.1, p.2) * Real.sqrt (2 * p.1) * (A p.2 * p.1 ^ (1 / 10 : ℝ)) -
         (4 * p.2) * Real.sqrt (2 * p.1) * (A p.2 * p.1 ^ (1 / 10 : ℝ)) := by
-  dsimp [restoreDensityJ, restoreDefect]
+  dsimp only [restoreDensityJ, restoreDefect]
   ring
 
 theorem restoreDensityS_eq (Gi : ℝ → ℝ) (p : ℝ × ℝ) :
     restoreDensityS Gi p = restore Gi (Real.log p.1, p.2) ^ 2 - (4 * p.2) ^ 2 := by
-  dsimp [restoreDensityS, restoreDefect]
+  dsimp only [restoreDensityS, restoreDefect]
   ring
 
 theorem restore_local_smooth {Gi A : ℝ → ℝ} (hGi : ContDiff ℝ ∞ Gi) (hA : ContDiff ℝ ∞ A)
@@ -1206,7 +1228,8 @@ theorem restoreJetSize_bound {a b B K delta : ℝ} (ha : 0 < a) (hab : a ≤ b) 
     restoreJetSize n Gi A a b eta ≤
       delta * (1 + 2 * (2 ^ n * K) + 2 ^ n * (delta + 2 * B)) := by
   have hlen : 0 ≤ b - a := sub_nonneg.mpr hab
-  have hlen1 : b - a ≤ 1 := by linarith
+  have hlen1 : b - a ≤ 1 := by linarith only [ha, hb]
+  have hdB : 0 ≤ delta + 2 * B := add_nonneg hd (mul_nonneg zero_le_two hB)
   have hrSmooth (x : ℝ) : ContDiff ℝ ∞ (fun e => restore Gi (Real.log x, e)) :=
     (restore_contDiff hGi).comp (contDiff_const.prodMk contDiff_id)
   have hdSmooth (x : ℝ) : ContDiff ℝ ∞ (fun e => restoreDefect Gi (x, e)) :=
@@ -1221,7 +1244,7 @@ theorem restoreJetSize_bound {a b B K delta : ℝ} (ha : 0 < a) (hab : a ≤ b) 
     have he : (fun e => restore Gi (Real.log x, e) + 4 * e) =
         (fun e => restoreDefect Gi (x, e)) + (fun e : ℝ => 2 * (4 * e)) := by
       funext e
-      dsimp [restoreDefect]
+      dsimp only [restoreDefect, Pi.add_apply]
       ring
     have hg4 : ContDiff ℝ ∞ (fun e : ℝ => 4 * e) := contDiff_const.mul contDiff_id
     have hg8 : ContDiff ℝ ∞ (fun e : ℝ => 2 * (4 * e)) := contDiff_const.mul hg4
@@ -1244,8 +1267,8 @@ theorem restoreJetSize_bound {a b B K delta : ℝ} (ha : 0 < a) (hab : a ≤ b) 
     have hx1 : x ≤ 1 := hx.2.trans hb
     have hw : |Real.sqrt (2 * x) * x ^ (1 / 10 : ℝ)| ≤ 2 := by
       rw [abs_mul, abs_of_nonneg (Real.sqrt_nonneg _), abs_of_nonneg (Real.rpow_nonneg hx0 _)]
-      have hs : Real.sqrt (2 * x) ≤ 2 := by
-        nlinarith [Real.sq_sqrt (show 0 ≤ 2 * x by positivity), Real.sqrt_nonneg (2 * x)]
+      have hs : Real.sqrt (2 * x) ≤ 2 :=
+        (Real.sqrt_le_left zero_le_two).mpr (by linarith only [hx1])
       exact (mul_le_mul hs (Real.rpow_le_one hx0 hx1 (by norm_num))
         (Real.rpow_nonneg hx0 _) (by norm_num)).trans_eq (by ring)
     change |iteratedDeriv n (fun e => (Real.sqrt (2 * x) * x ^ (1 / 10 : ℝ)) *
@@ -1260,12 +1283,13 @@ theorem restoreJetSize_bound {a b B K delta : ℝ} (ha : 0 < a) (hab : a ≤ b) 
         e).2.2)
       n eta
     intro x hx
-    exact product_jet_bound (hdSmooth x) (hpSmooth x) n eta hd (by positivity) (hdb x) (hpb x)
+    exact product_jet_bound (hdSmooth x) (hpSmooth x) n eta hd hdB (hdb x) (hpb x)
+  have h2d : 0 ≤ (2 : ℝ) ^ n * delta := mul_nonneg (pow_nonneg zero_le_two n) hd
   have hm' := hm.trans (mul_le_of_le_one_right hd hlen1)
-  have hj' := hj.trans (mul_le_of_le_one_right (by positivity) hlen1)
-  have hs' := hs.trans (mul_le_of_le_one_right (by positivity) hlen1)
-  dsimp [restoreJetSize]
-  linarith
+  have hj' := hj.trans (mul_le_of_le_one_right (mul_nonneg zero_le_two (mul_nonneg h2d hK)) hlen1)
+  have hs' := hs.trans (mul_le_of_le_one_right (mul_nonneg h2d hdB) hlen1)
+  dsimp only [restoreJetSize]
+  linarith only [hm', hj', hs']
 
 /-! ## Subtracting the ideal rows and including restoration -/
 
@@ -1379,7 +1403,7 @@ theorem resetDebtJetSize_le_parts {R r b : ℝ} (hR : 0 ≤ R) (hr : 0 < r) (hrb
   change |iteratedDeriv n (resetDebtJ R u f Gi A r b) eta| ≤ _ at hj
   change |iteratedDeriv n (resetDebtS R u f Gi A r b) eta| ≤ _ at hs
   change |iteratedDeriv n (resetDebtP R f A r) eta| ≤ _ at hp
-  dsimp [resetDebtJetSize, prefixJetSize, idealPrefixJetSize, restoreJetSize]
+  dsimp only [resetDebtJetSize, prefixJetSize, idealPrefixJetSize, restoreJetSize]
   linarith only [hm, hi, hj, hs, hp]
 
 /-- Vanishing debt bound as an element of `ℝ`. -/
@@ -1411,7 +1435,7 @@ theorem resetDebtJetSize_bound {R r b L B K C BG KA delta : ℝ}
   have ht := resetDebtJetSize_le_parts hR hr hrb hu hf hGi hA n eta
   apply ht.trans
   convert! add_le_add (add_le_add hp hi) hs using 1;
-    dsimp [vanishingDebtBound, restorationBound]; ring
+    dsimp only [vanishingDebtBound, restorationBound]; ring
 
 theorem vanishingDebtBound_tendsto (n : ℕ) (B K L BG KA T : ℝ) {P : ℝ} (hP : P ≠ 0) :
     Tendsto (fun C : ℝ => vanishingDebtBound n B K L BG KA (separation T C P) C)
@@ -1421,7 +1445,7 @@ theorem vanishingDebtBound_tendsto (n : ℕ) (B K L BG KA T : ℝ) {P : ℝ} (hP
   have hs := (separation_fifth_tendsto T hP).const_mul ((5 / 2) * (2 ^ n * KA ^ 2))
   convert! (hp.add hi).add hs using 1
   · funext C
-    dsimp [vanishingDebtBound]
+    dsimp only [vanishingDebtBound]
     ring
   · ring_nf
 

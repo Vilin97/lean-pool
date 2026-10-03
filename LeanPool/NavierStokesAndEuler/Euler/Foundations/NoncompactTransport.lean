@@ -92,13 +92,11 @@ theorem spatialCutoff_fderiv (n : ℕ) (x : LiftDomain period) (v : LiftTangent)
     fderiv ℝ (localLift period (spatialCutoff period n) x) 0 v =
       fderiv ℝ spatialBump (cutoffScale n • x.1) (cutoffScale n • v.1) := by
   have hi : HasFDerivAt (fun h : LiftTangent => cutoffScale n • (x.1 + h.1))
-      (cutoffScale n • ContinuousLinearMap.fst ℝ Vector3 ℝ) 0 := by
-    convert ((ContinuousLinearMap.fst ℝ Vector3 ℝ).hasFDerivAt.const_add x.1).const_smul
-      (cutoffScale n) using 1
-    rfl
+      (cutoffScale n • ContinuousLinearMap.fst ℝ Vector3 ℝ) 0 :=
+    ((ContinuousLinearMap.fst ℝ Vector3 ℝ).hasFDerivAt.const_add x.1).const_smul (cutoffScale n)
   have ho := ((spatialBump.contDiff : ContDiff ℝ ∞ spatialBump).differentiable
     (by simp)).differentiableAt.hasFDerivAt (x := cutoffScale n • (x.1 + (0 : LiftTangent).1))
-  have h := ho.comp 0 hi
+  have h := ho.comp (f := fun h : LiftTangent => cutoffScale n • (x.1 + h.1)) 0 hi
   have heq := congrArg (fun L : LiftTangent →L[ℝ] ℝ => L v) h.fderiv
   simpa +unfoldPartialApp [spatialCutoff, localLift, Function.comp_def] using heq
 
@@ -251,7 +249,7 @@ theorem aestronglyMeasurable_apply {V W : Type*} [NormedAddCommGroup V]
     (hA : AEStronglyMeasurable A (liftMeasure period))
     (hu : AEStronglyMeasurable u (liftMeasure period)) :
     AEStronglyMeasurable (fun x => A x (u x)) (liftMeasure period) :=
-  (continuous_fst.clm_apply continuous_snd).comp_aestronglyMeasurable (hA.prodMk hu)
+  ((continuous_fst.clm_apply continuous_snd).comp_aestronglyMeasurable (hA.prodMk hu) :)
 
 /-- Bounded metrics have integrable quadratic energy on every actual L² field. -/
 theorem metricEnergy_integrable (K : LiftDomain period → Vector3 →L[ℝ] Vector3)

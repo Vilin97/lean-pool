@@ -78,17 +78,19 @@ theorem acceleration_gevrey
     ‖iteratedFDeriv ℝ n
       (fun y => accelerationPath T (Q y) (Q₁ y) c hc (hLower y) (v y) (f y)) x‖ ≤
       majorant R (d+1) n := by
-  have hbQR (k y) : ‖iteratedFDeriv ℝ k Q y‖ ≤ C₀*majorant R 0 k :=
+  have hbQR := fun k y =>
     (hQb k y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 k) hC₀)
-  have hbQ₁R (k y) : ‖iteratedFDeriv ℝ k Q₁ y‖ ≤ C₁*majorant R 0 k :=
+  have hbQ₁R := fun k y =>
     (hQ₁b k y).trans (mul_le_mul_of_nonneg_left (majorant_radius_mono Rc R hRc hRcR 0 k) hC₁)
   let g := forcing Q Q₁ f v
   have hg : ContDiff ℝ ∞ g := forcing_contDiff Q Q₁ f v hQ hQ₁ hf hv
   have hgb : ∀ k y, ‖iteratedFDeriv ℝ k g y‖ ≤ (3*C₀*(Cf+6*C₁*Cv))*majorant R d k :=
     forcing_bound Q Q₁ f v hQ hQ₁ hf hv R C₀ C₁ Cf Cv hR hC₀ hC₁ hCf hCv d
       hbQR hbQ₁R hfb hvb
+  have hA : 0 ≤ 3*C₀*(Cf+6*C₁*Cv) := mul_nonneg (mul_nonneg zero_le_three hC₀)
+    (add_nonneg hCf (mul_nonneg (mul_nonneg (by norm_num) hC₁) hCv))
   have hs := EulerContinuousGramGevrey.solution_gevrey T Q c hc hLower hQ
-    Rc C₀ hRc hC₀ hQb g hg (3*C₀*(Cf+6*C₁*Cv)) R (by positivity) hstrong d hgb n x
+    Rc C₀ hRc hC₀ hQb g hg (3*C₀*(Cf+6*C₁*Cv)) R hA hstrong d hgb n x
   exact (congrArg (fun g : P → C(Icc (0 : ℝ) T,U) => ‖iteratedFDeriv ℝ n g x‖)
     (acceleration_eq_solve T Q Q₁ c hc hLower v f)).trans_le hs
 

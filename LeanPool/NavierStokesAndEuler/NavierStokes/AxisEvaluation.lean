@@ -60,7 +60,8 @@ def profile (I : Window) (ε : ℝ) (A : AxisSpace I ε) (p : ℝ × ℝ) : ℝ 
 theorem mixedSeries_zero (I : Window) (ε : ℝ) (A : AxisSpace I ε) :
     mixedSeries I ε A 0 0 = profile I ε A := by
   funext p
-  simp [mixedSeries, profile, term, polynomialJet, coefficient]
+  simp only [mixedSeries, term, polynomialJet, Nat.descFactorial_zero, Nat.cast_one, tsub_zero,
+      one_mul, profile, coefficient]
 
 /-- A deliberately simple polynomial-geometric majorant. -/
 def majorant (ε C R : ℝ) (k m n : ℕ) : ℝ :=
@@ -73,24 +74,20 @@ theorem weight_upper {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
   have hchoose : ((n + m).choose m : ℝ) ≤ ((n : ℝ) + m) ^ m := by
     exact_mod_cast Nat.choose_le_pow (n + m) m
   have hnm : (n : ℝ) + m ≤ ((m : ℝ) + 1) * ((n : ℝ) + 1) := by
-    nlinarith [show (0 : ℝ) ≤ n by positivity, show (0 : ℝ) ≤ m by positivity,
-      mul_nonneg (show (0 : ℝ) ≤ n by positivity) (show (0 : ℝ) ≤ m by positivity)]
+    have h : (0 : ℝ) ≤ (m : ℝ) * n := mul_nonneg m.cast_nonneg n.cast_nonneg
+    linarith only [h]
   have hc : ((n + m).choose m : ℝ) ≤ ((m : ℝ) + 1) ^ m * ((n : ℝ) + 1) ^ m := by
     calc
       _ ≤ ((n : ℝ) + m) ^ m := hchoose
       _ ≤ (((m : ℝ) + 1) * ((n : ℝ) + 1)) ^ m := by gcongr
       _ = _ := mul_pow _ _ _
-  have hden : (1 : ℝ) ≤ ((n : ℝ) + 1) ^ 2 * ((m : ℝ) + 1) ^ 2 := by
-    have hn : (1 : ℝ) ≤ ((n : ℝ) + 1) ^ 2 := by nlinarith [show (0 : ℝ) ≤ n by positivity]
-    have hm : (1 : ℝ) ≤ ((m : ℝ) + 1) ^ 2 := by nlinarith [show (0 : ℝ) ≤ m by positivity]
-    nlinarith
+  have hden : (1 : ℝ) ≤ ((n : ℝ) + 1) ^ 2 * ((m : ℝ) + 1) ^ 2 :=
+    one_le_mul_of_one_le_of_one_le (one_le_pow₀ (le_add_of_nonneg_left n.cast_nonneg))
+      (one_le_pow₀ (le_add_of_nonneg_left m.cast_nonneg))
   unfold weight
   calc
-    _ ≤ (1 / 20 : ℝ) ^ n * (ε⁻¹) ^ m * (m.factorial : ℝ) * ((n + m).choose m : ℝ) := by
-      apply (div_le_iff₀ (by positivity)).mpr
-      have hn : 0 ≤ (1 / 20 : ℝ) ^ n * (ε⁻¹) ^ m * (m.factorial : ℝ) *
-          ((n + m).choose m : ℝ) := by positivity
-      nlinarith
+    _ ≤ (1 / 20 : ℝ) ^ n * (ε⁻¹) ^ m * (m.factorial : ℝ) * ((n + m).choose m : ℝ) :=
+      div_le_self (by positivity) hden
     _ ≤ _ := mul_le_mul_of_nonneg_left hc (by positivity)
 
 theorem polynomialJet_bound {R Y : ℝ} (hR : 1 ≤ R) (hY : |Y| ≤ R) (n k : ℕ) :
@@ -201,7 +198,8 @@ theorem term_hasFDerivAt (I : Window) (ε : ℝ) (A : AxisSpace I ε) (k m n : �
   convert! hy.mul hη using 1
   apply ContinuousLinearMap.ext
   intro v
-  simp [linearForm, term]
+  simp only [linearForm, term, add_apply, smul_apply, ContinuousLinearMap.coe_fst', smul_eq_mul,
+      ContinuousLinearMap.coe_snd', Function.comp_apply]
   ring
 
 theorem linearForm_tsum {u v : ℕ → ℝ} (hu : Summable u) (hv : Summable v) :
@@ -281,8 +279,10 @@ theorem mixedSeries_hasDerivAt_Y (I : Window) {ε : ℝ} (hε : 0 < ε)
     HasDerivAt (fun y => mixedSeries I ε A k m (y, η))
       (mixedSeries I ε A (k + 1) m (Y, η)) Y := by
   have hd := mixedSeries_hasFDerivAt I hε A k m (p := (Y, η)) ⟨hY, hη⟩
-  simpa [linearForm, Function.comp_def] using hd.comp_hasDerivAt Y
-    ((hasDerivAt_id Y).prodMk (hasDerivAt_const Y η))
+  simpa only [id_eq, Function.comp_def, linearForm, add_apply, smul_apply,
+      ContinuousLinearMap.coe_fst', smul_eq_mul, mul_one, ContinuousLinearMap.coe_snd', mul_zero,
+      add_zero] using hd.comp_hasDerivAt (F := ℝ × ℝ)
+    (f := fun x : ℝ => (id x, η)) Y ((hasDerivAt_id Y).prodMk (hasDerivAt_const Y η))
 
 theorem mixedSeries_hasDerivAt_eta (I : Window) {ε : ℝ} (hε : 0 < ε)
     (A : AxisSpace I ε) (k m : ℕ) {Y η : ℝ}
@@ -299,7 +299,7 @@ theorem iteratedDeriv_Y (I : Window) {ε : ℝ} (hε : 0 < ε)
     iteratedDeriv r (fun y => mixedSeries I ε A k m (y, η)) Y =
       mixedSeries I ε A (k + r) m (Y, η) := by
   induction r generalizing Y with
-  | zero => simp
+  | zero => simp only [iteratedDeriv_zero, add_zero]
   | succ r ih =>
       rw [iteratedDeriv_succ]
       have heq : (iteratedDeriv r (fun y => mixedSeries I ε A k m (y, η))) =ᶠ[𝓝 Y]
@@ -315,7 +315,7 @@ theorem iteratedDeriv_eta (I : Window) {ε : ℝ} (hε : 0 < ε)
     iteratedDeriv r (fun x => mixedSeries I ε A k m (Y, x)) η =
       mixedSeries I ε A k (m + r) (Y, η) := by
   induction r generalizing η with
-  | zero => simp
+  | zero => simp only [iteratedDeriv_zero, add_zero]
   | succ r ih =>
       rw [iteratedDeriv_succ]
       have heq : (iteratedDeriv r (fun x => mixedSeries I ε A k m (Y, x))) =ᶠ[𝓝 η]
@@ -490,7 +490,7 @@ def enlargedUnitWindow (δ : ℝ) (hδ : 0 < δ) : Window where
 theorem unitInterval_in_enlargedWindow {δ : ℝ} (hδ : 0 < δ) :
     Icc (-1 : ℝ) 1 ⊆ Ioo (enlargedUnitWindow δ hδ).left (enlargedUnitWindow δ hδ).right := by
   intro x hx
-  constructor <;> dsimp [enlargedUnitWindow] <;> linarith [hx.1, hx.2]
+  constructor <;> dsimp only [enlargedUnitWindow] <;> linarith [hx.1, hx.2]
 
 /-- In particular both endpoints of the target interval `[-1,1]` have
 ordinary open-neighborhood smoothness; no endpoint extension is assumed. -/

@@ -43,12 +43,14 @@ variable (period : ℝ) [Fact (0 < period)]
 omit [Fact (0 < period)] in
 theorem euclideanCover_add (z w : Domain 4) :
     euclideanCover period (z+w) = euclideanCover period z + euclideanCover period w := by
-  simp [euclideanCover, coveringMap, map_add]
+  simp only [euclideanCover, Function.comp_apply, coveringMap, map_add, coordinateEquiv_apply,
+      Fin.isValue, Prod.mk_add_mk, QuotientAddGroup.mk_add]
 
 omit [Fact (0 < period)] in
 theorem euclideanCover_sub (z w : Domain 4) :
     euclideanCover period (z-w) = euclideanCover period z - euclideanCover period w := by
-  simp [euclideanCover, coveringMap, map_sub]
+  simp only [euclideanCover, Function.comp_apply, coveringMap, map_sub, coordinateEquiv_apply,
+      Fin.isValue, Prod.mk_sub_mk, QuotientAddGroup.mk_sub]
 
 omit [Fact (0 < period)] in
 theorem euclideanCover_surjective : Function.Surjective (euclideanCover period) := by
@@ -72,8 +74,8 @@ theorem locallyIntegrable_cover (f : LiftDomain period → F) (hf : MemLp f 2 (l
     have hc : |z 0-x 0| ≤ ‖z-x‖ := PiLp.norm_apply_le (z-x) 0
     have hh := abs_le.mp (hc.trans hd.le)
     change a < z 0 ∧ z 0 ≤ a+period
-    dsimp [a]
-    constructor <;> linarith
+    dsimp only [Fin.isValue, a]
+    constructor <;> linarith only [hT, hh]
   have hmeasure : (volume : Measure (Domain 4)).restrict (Metric.ball x (period/4)) ≤ stripMeasure
       period a :=
     Measure.restrict_mono hsubset le_rfl
@@ -141,8 +143,13 @@ theorem coverConvolution_periodic (φ : ContDiffBump (0 : Domain 4)) (f : LiftDo
   have hz : euclideanCover period (EuclideanSpace.single 0 period) = 0 := by
     apply Prod.ext
     · ext i
-      simp [euclideanCover, coveringMap]
-    · simp [euclideanCover, coveringMap]
+      simp only [euclideanCover, Fin.isValue, Function.comp_apply, coveringMap,
+          coordinateEquiv_apply, ne_eq, Fin.succ_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne,
+          PiLp.single_eq_same, Prod.fst_zero, PiLp.zero_apply]
+    · simp only [euclideanCover, Fin.isValue, Function.comp_apply, coveringMap,
+        coordinateEquiv_apply, ne_eq, Fin.succ_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne,
+        PiLp.single_eq_same, Prod.snd_zero, QuotientAddGroup.eq_zero_iff,
+        AddSubgroup.mem_zmultiples]
   rw [hz, add_zero]
 
 /-- Normalized shrinking bump convolutions recover the original covering-space function almost

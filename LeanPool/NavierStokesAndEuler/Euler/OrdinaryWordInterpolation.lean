@@ -111,7 +111,8 @@ theorem jet_norm_le_wordMaximum (A : SmoothL2Field Space) (n : ℕ) :
   calc
     _ ≤ ∑ _w : Fin n → Fin 3, wordMaximum n A :=
       sum_le_sum (fun w _ => word_norm_le_maximum A w)
-    _ = _ := by simp
+    _ = _ := by simp only [sum_const, card_univ, Fintype.card_pi, Fintype.card_fin, prod_const,
+        nsmul_eq_mul, Nat.cast_pow, Nat.cast_ofNat]
 
 theorem wordField_jet_maximum (A : SmoothL2Field Space) {k : ℕ} (w : Fin k → Fin 3) (n : ℕ) :
     ‖(wordField A w).jetLp n‖ ≤ (3 : ℝ)^n*wordMaximum (k+n) A := by

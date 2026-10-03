@@ -30,8 +30,8 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace K]
   (L : Space →L[ℝ] ℝ) (hL : ‖L‖ ≤ 1) (p q : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a q))
   (i : Fin 4)
 
 /-- The continuous L² path for one factor times an actual spatial or angular derivative. -/
@@ -39,8 +39,8 @@ def scalarDerivativeProductPath : C(K,LiftL2 P) :=
   scalarProductPath P L hL p (derivativePath P q i) hp (derivativePath_orbit P q hq i)
 
 theorem scalarDerivativeProductPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent =>
-      pathTranslate P a (scalarDerivativeProductPath P L hL p q hp hq i)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a
+      (scalarDerivativeProductPath P L hL p q hp hq i)) :=
   scalarProductPath_orbit P L hL p (derivativePath P q i) hp (derivativePath_orbit P q hq i)
 
 theorem pointField_scalarDerivativeProductPath (t : K) (x : LiftDomain P) :
@@ -56,16 +56,18 @@ theorem pointField_scalarDerivativeProductPath (t : K) (x : LiftDomain P) :
 /-- Fixed-H6 external word bounds preserve the same radius, with one derivative shift. -/
 theorem scalarDerivativeProductPath_majorant (R A C : ℝ)
     (hR : 0 ≤ R) (hA : 0 ≤ A) (hC : 0 ≤ C) (d e : ℕ) (a : LiftTangent)
-    (hb : ∀ n, block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) n a ≤
+    (hb : ∀ n, block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) n a ≤
       A*majorant R d n)
-    (hc : ∀ n, block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) n a ≤
+    (hc : ∀ n, block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b q) n a ≤
       C*majorant R e n) (n : ℕ) :
-    block standardDirection 6 (fun b : LiftTangent =>
-      pathTranslate P b (scalarDerivativeProductPath P L hL p q hp hq i)) n a ≤
+    block standardDirection 6 (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b
+      (scalarDerivativeProductPath P L hL p q hp hq i)) n a ≤
       (3*productBlockConstant P*A*C)*majorant R (d+e+1) n := by
   have hd (j : ℕ) : block standardDirection 6
-      (fun b : LiftTangent => pathTranslate P b (derivativePath P q i)) j a ≤
-        C*majorant R (e+1) j := by
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b (derivativePath P q i))
+        j a ≤ C*majorant R (e+1) j := by
     have h := (derivativePath_block_bound P q hq i 6 j a).trans (hc (j+1))
     simpa only [majorant, show j+1+e=j+(e+1) by omega] using h
   simpa only [scalarDerivativeProductPath, Nat.add_assoc] using
@@ -101,15 +103,16 @@ theorem spatial_advection_components (D : LiftTangent →L[ℝ] Space) (u : Spac
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type*} [TopologicalSpace K] [CompactSpace K]
   (p q : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a q))
 
 /-- The actual path representing p·∇q, where the derivative is spatial and the angle is retained. -/
 def advectionPath : C(K,LiftL2 P) :=
   ∑ i : Fin 3, scalarDerivativeProductPath P (component i) (component_norm i) p q hp hq i.succ
 
 theorem advectionPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (advectionPath P p q hp hq)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (advectionPath P p q hp hq)) := by
   simp only [advectionPath, map_sum]
   exact ContDiff.sum (fun i _ =>
     scalarDerivativeProductPath_orbit P (component i) (component_norm i) p q hp hq i.succ)
@@ -151,16 +154,19 @@ theorem pointField_advectionPath (t : K) (x : LiftDomain P) :
 /-- Actual H6 word blocks for spatial advection consume just one derivative shift. -/
 theorem advectionPath_majorant (R A C : ℝ) (hR : 0 ≤ R) (hA : 0 ≤ A) (hC : 0 ≤ C)
     (d e : ℕ) (a : LiftTangent)
-    (hb : ∀ n, block standardDirection 6 (fun b : LiftTangent => pathTranslate P b p) n a ≤
+    (hb : ∀ n, block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b p) n a ≤
       A*majorant R d n)
-    (hc : ∀ n, block standardDirection 6 (fun b : LiftTangent => pathTranslate P b q) n a ≤
+    (hc : ∀ n, block standardDirection 6
+      (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b q) n a ≤
       C*majorant R e n) (n : ℕ) :
-    block standardDirection 6 (fun b : LiftTangent => pathTranslate P b (advectionPath P p q hp
-        hq)) n a ≤
+    block standardDirection 6 (fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b
+      (advectionPath P p q hp hq)) n a ≤
       (9*productBlockConstant P*A*C)*majorant R (d+e+1) n := by
-  let f := fun i : Fin 3 => fun b : LiftTangent => pathTranslate P b
+  let f := fun i : Fin 3 => fun b : LiftTangent => pathTranslate (K := K) (V := Vector3) P b
     (scalarDerivativeProductPath P (component i) (component_norm i) p q hp hq i.succ)
-  have he : (fun b : LiftTangent => pathTranslate P b (advectionPath P p q hp hq)) =
+  have he : (fun b : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P b (advectionPath P p q hp hq)) =
       ∑ i : Fin 3, f i := by
     funext b
     simp only [advectionPath, map_sum, f, Finset.sum_apply]

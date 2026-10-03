@@ -45,33 +45,40 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
   (D : EulerTransversePacketProvider.Data U)
 
 theorem frame_adjoint_inverse (t : Icc (0 : ℝ) D.T) (x v : Space) :
-    (D.F.field t x).adjoint ((D.FInv.field t x).adjoint v) = v := by
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x)
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) v) = v := by
   apply ext_inner_right ℝ
   intro w
   rw [adjoint_inner_left,adjoint_inner_left,D.inverse_left]
 
 theorem inverse_adjoint_frame (t : Icc (0 : ℝ) D.T) (x v : Space) :
-    (D.FInv.field t x).adjoint ((D.F.field t x).adjoint v) = v := by
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x)
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x) v) = v := by
   apply ext_inner_right ℝ
   intro w
   rw [adjoint_inner_left,adjoint_inner_left,D.inverse_right]
 
 theorem metric_inner (t : Icc (0 : ℝ) D.T) (x v w : Space) :
     ⟪(metricCoefficient D).path t x v,w⟫_ℝ =
-      ⟪(D.FInv.field t x).adjoint v,(D.FInv.field t x).adjoint w⟫_ℝ := by
-  change ⟪D.FInv.field t x ((D.FInv.field t x).adjoint v),w⟫_ℝ = _
+      ⟪adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) v,
+        adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) w⟫_ℝ := by
+  change ⟪D.FInv.field t x
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) v),w⟫_ℝ = _
   rw [← adjoint_inner_right]
 
 theorem inverseMetric_inner (t : Icc (0 : ℝ) D.T) (x v w : Space) :
     ⟪(inverseMetricCoefficient D).path t x v,w⟫_ℝ =
       ⟪D.F.field t x v,D.F.field t x w⟫_ℝ := by
-  change ⟪(D.F.field t x).adjoint (D.F.field t x v),w⟫_ℝ = _
+  change ⟪adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x)
+    (D.F.field t x v),w⟫_ℝ = _
   rw [adjoint_inner_left]
 
 theorem metric_coercive (t : Icc (0 : ℝ) D.T) (x v : Space) :
     D.normalLower*‖v‖^2 ≤ ⟪(metricCoefficient D).path t x v,v⟫_ℝ := by
   rw [metric_inner,real_inner_self_eq_norm_sq]
-  exact norm_sq_lower_of_inverse (D.FInv.field t x).adjoint (D.F.field t x).adjoint
+  exact norm_sq_lower_of_inverse
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x))
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x))
     D.frameBound D.frameBound_pos (frame_adjoint_inverse D t x)
     (by simpa only [ContinuousLinearMap.adjoint.norm_map] using D.frame_norm t x) v
 
@@ -83,23 +90,27 @@ theorem inverseMetric_coercive (t : Icc (0 : ℝ) D.T) (x v : Space) :
 
 theorem inverseMetric_inverse (t : Icc (0 : ℝ) D.T) (x v : Space) :
     (inverseMetricCoefficient D).path t x ((metricCoefficient D).path t x v) = v := by
-  change (D.F.field t x).adjoint
-    (D.F.field t x (D.FInv.field t x ((D.FInv.field t x).adjoint v))) = v
+  change adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x)
+    (D.F.field t x (D.FInv.field t x
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) v))) = v
   rw [D.inverse_right,frame_adjoint_inverse]
 
 theorem metric_inverseMetric (t : Icc (0 : ℝ) D.T) (x v : Space) :
     (metricCoefficient D).path t x ((inverseMetricCoefficient D).path t x v) = v := by
   change D.FInv.field t x
-    ((D.FInv.field t x).adjoint ((D.F.field t x).adjoint (D.F.field t x v))) = v
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x)
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x) (D.F.field t x v))) = v
   rw [inverse_adjoint_frame,D.inverse_left]
 
 theorem metric_symmetric (t : Icc (0 : ℝ) D.T) (x v w : Space) :
     ⟪(metricCoefficient D).path t x v,w⟫_ℝ =
       ⟪v,(metricCoefficient D).path t x w⟫_ℝ := by
   calc
-    _ = ⟪(D.FInv.field t x).adjoint v,(D.FInv.field t x).adjoint w⟫_ℝ :=
+    _ = ⟪adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) v,
+        adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) w⟫_ℝ :=
       metric_inner D t x v w
-    _ = ⟪(D.FInv.field t x).adjoint w,(D.FInv.field t x).adjoint v⟫_ℝ :=
+    _ = ⟪adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) w,
+        adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) v⟫_ℝ :=
       real_inner_comm _ _
     _ = ⟪(metricCoefficient D).path t x w,v⟫_ℝ := (metric_inner D t x w v).symm
     _ = _ := real_inner_comm _ _
@@ -179,7 +190,9 @@ def correctionDataOfFields (κ : ℝ) (hκ : |κ| ≤ 1)
 @[simp] theorem correctionData_metric (κ : ℝ) (hκ : |κ| ≤ 1)
     (Z G : FieldTower P D.T) (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
     (((correctionData D P κ hκ Z G).metric).coefficient t).coefficient x =
-      (D.FInv.field t x.1).comp (D.FInv.field t x.1).adjoint := rfl
+      (D.FInv.field t x.1).comp
+        (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+          (D.FInv.field t x.1)) := rfl
 
 @[simp] theorem correctionData_linear (κ : ℝ) (hκ : |κ| ≤ 1)
     (Z G : FieldTower P D.T) (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :

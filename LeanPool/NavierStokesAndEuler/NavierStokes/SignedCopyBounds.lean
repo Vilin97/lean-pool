@@ -154,7 +154,7 @@ theorem local_compact_comp {f : ℕ → I → D → ℝ}
   intro n i x hx hi j hj
   have hG := s.one_le_growth n x
   have hJ : 1 ≤ (A + 1) * s.growth n x ^ p :=
-    one_le_mul_of_one_le_of_one_le (by linarith) (one_le_pow₀ hG)
+    one_le_mul_of_one_le_of_one_le (by linarith only [hA]) (one_le_pow₀ hG)
   have hfJ (k : ℕ) (hk : k ≤ m) :
       ‖iteratedFDeriv ℝ k (f n i) x‖ ≤ (A + 1) * s.growth n x ^ p := by
     have h := ha n i x hx hi k hk
@@ -189,7 +189,7 @@ theorem local_inv {f : ℕ → I → D → ℝ}
   · intro x hx he
     have hh : b ≤ |x| := hx.2
     rw [Set.mem_singleton_iff.mp he, abs_zero] at hh
-    linarith
+    linarith only [hb, hh]
   · intro n i x hx hi
     exact ⟨by
         simpa only [Metric.mem_closedBall, dist_zero_right, Real.norm_eq_abs] using hu n i x hx hi,
@@ -308,7 +308,7 @@ theorem local_input_envelope (hw : ∀ n x, x ∈ s.domain → 0 < w n x)
   obtain ⟨Cr, hCr, pr, hrj⟩ := hr.bounds m
   let C := Cg + Cr + c⁻¹ + 1
   let p := pg + pr
-  have hC : 1 ≤ C := by dsimp [C]; linarith [(inv_pos.mpr hc).le]
+  have hC : 1 ≤ C := by dsimp [C]; linarith only [hCg, hCr, hc, (inv_pos.mpr hc).le]
   refine ⟨C, hC, p, ?_⟩
   intro n i x hx hi
   have hm (A : ℝ) (hA : 0 ≤ A) (hAC : A ≤ C) (k : ℕ) (hkp : k ≤ p) :
@@ -323,7 +323,7 @@ theorem local_input_envelope (hw : ∀ n x, x ∈ s.domain → 0 < w n x)
       have hh := mul_le_mul_of_nonneg_left (hl n i x hx hi) (inv_pos.mpr hc).le
       simpa only [← mul_assoc, inv_mul_cancel₀ hc.ne', one_mul] using hh
     have hratio : w n x / g n i x ≤ c⁻¹ := (div_le_iff₀ hp).mpr hwg
-    have hC0 : c⁻¹ ≤ C := by dsimp [C]; linarith
+    have hC0 : c⁻¹ ≤ C := by dsimp [C]; linarith only [hCg, hCr]
     have hb0 := hm (c⁻¹) (inv_pos.mpr hc).le hC0 0 (Nat.zero_le _)
     have hh : w n x / g n i x ≤ C * s.growth n x ^ p := hratio.trans
       (by simpa only [pow_zero, mul_one] using hb0)
@@ -334,14 +334,14 @@ theorem local_input_envelope (hw : ∀ n x, x ∈ s.domain → 0 < w n x)
     simp only [majorant, Real.rpow_zero, mul_one] at hh
     exact hh.trans ((mul_le_mul_of_nonneg_right
       (hm Cg hCg (by
-          dsimp [C]; linarith [(inv_pos.mpr hc).le]) pg (by
+          dsimp [C]; linarith only [hCr, hc, (inv_pos.mpr hc).le]) pg (by
               dsimp [p]; omega)) (hw n x hx).le).trans_eq (by ring))
   · intro j hj
     have hh := hrj n i x hx hi j hj
     simp only [majorant, Real.rpow_zero, mul_one] at hh
     exact hh.trans ((mul_le_mul_of_nonneg_right
       (hm Cr hCr (by
-          dsimp [C]; linarith [(inv_pos.mpr hc).le]) pr (by
+          dsimp [C]; linarith only [hCg, hc, (inv_pos.mpr hc).le]) pr (by
               dsimp [p]; omega)) (hw n x hx).le).trans_eq (by ring))
 
 theorem local_signed_quotient_zero (hw : ∀ n x, x ∈ s.domain → 0 < w n x)
@@ -475,7 +475,7 @@ theorem weights_jets {R : I → ℕ → D → Vec2} {w : ℕ → D → ℝ} {β 
     have hB := mul_le_mul (h.entries n i x hx hi 0 1) (h.entries n i x hx hi 1 0)
       (abs_nonneg _) (zero_le_one.trans h.entry_one)
     simp only [abs_mul] at hA hB ⊢
-    nlinarith
+    nlinarith only [hA, hB]
   have hinv := local_inv hD h.gap_pos h.determinant hupper
   have hscale := local_coeff_mul (local_coeff_mul hr hr h1) hinv h1
   have hprod (a b k : Fin 2) := local_coeff_mul (h.matrix_jets a b) (hR k) hw

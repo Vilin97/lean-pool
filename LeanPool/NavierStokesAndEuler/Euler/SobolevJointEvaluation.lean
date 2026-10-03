@@ -45,6 +45,7 @@ theorem path_representative_joint_continuous {T : Type*} [TopologicalSpace T]
     (u : C(T, SobolevSpace period 3)) :
     Continuous (fun p : T × LiftDomain period => pointEvaluation period p.2 (u p.1)) :=
   (pointEvaluation_joint_continuous period).comp
+    (f := fun p : T × LiftDomain period => (u p.1, p.2))
     ((u.continuous.comp continuous_fst).prodMk continuous_snd)
 
 end EulerSobolevJointEvaluation

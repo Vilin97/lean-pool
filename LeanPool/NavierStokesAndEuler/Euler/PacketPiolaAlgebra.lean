@@ -35,9 +35,11 @@ theorem matrixAntisym_congruence (F A : Mat3) :
     matrixAntisym (F.transpose * A * F) = F.adjugate.mulVec (matrixAntisym A) := by
   ext i
   fin_cases i <;>
-    norm_num [matrixAntisym, Matrix.mul_apply, Matrix.transpose_apply,
-      Matrix.mulVec, dotProduct, Fin.sum_univ_three, Matrix.adjugate_fin_three,
-      Matrix.cons_val_two] <;>
+    simp only [matrixAntisym, Matrix.mul_apply, Matrix.transpose_apply,
+      Matrix.mulVec, dotProduct, Fin.sum_univ_three, Matrix.adjugate_fin_three, Matrix.of_apply,
+      Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two,
+      Matrix.head_cons, Matrix.tail_cons, Matrix.empty_val', Matrix.cons_val_fin_one,
+      Matrix.head_fin_const, Fin.reduceFinMk, Fin.isValue] <;>
     ring
 
 /-- Operator matrix, defined pointwise by `(A (EuclideanSpace.single j 1)) i`. -/
@@ -48,7 +50,9 @@ theorem operatorMatrix_apply (A : Space →L[ℝ] Space) (x : Space) (i : Fin 3)
     (A x) i = (operatorMatrix A).mulVec (WithLp.ofLp x) i := by
   have hx : (∑ j : Fin 3, x j • EuclideanSpace.single j (1 : ℝ)) = x := by
     ext j
-    simp [Pi.single_apply, mul_ite]
+    simp only [WithLp.ofLp_sum, WithLp.ofLp_smul, PiLp.ofLp_single, Finset.sum_apply, Pi.smul_apply,
+        Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+        Finset.mem_univ, ↓reduceIte]
   calc
     (A x) i = (A (∑ j : Fin 3, x j • EuclideanSpace.single j (1 : ℝ))) i := by rw [hx]
     _ = (operatorMatrix A).mulVec (WithLp.ofLp x) i := by
@@ -65,10 +69,11 @@ theorem operatorMatrix_comp (A B : Space →L[ℝ] Space) :
 
 theorem operatorMatrix_id : operatorMatrix (ContinuousLinearMap.id ℝ Space) = 1 := by
   ext i j
-  simp [operatorMatrix, Matrix.one_apply]
+  simp only [operatorMatrix, ContinuousLinearMap.id_apply, PiLp.single_apply, Matrix.one_apply]
 
 theorem operatorMatrix_adjoint (A : Space →L[ℝ] Space) :
-    operatorMatrix A.adjoint = (operatorMatrix A).transpose := by
+    operatorMatrix (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) A) =
+      (operatorMatrix A).transpose := by
   ext i j
   have hi := A.adjoint_inner_right (EuclideanSpace.single i 1) (EuclideanSpace.single j 1)
   simpa only [operatorMatrix, Matrix.transpose_apply, EuclideanSpace.inner_single_left,
@@ -83,7 +88,8 @@ theorem operatorMatrix_inverse (F : Space ≃L[ℝ] Space) :
     operatorMatrix F.toContinuousLinearMap * operatorMatrix F.symm.toContinuousLinearMap = 1 := by
   rw [← operatorMatrix_comp]
   have he : F.toContinuousLinearMap.comp F.symm.toContinuousLinearMap =
-      ContinuousLinearMap.id ℝ Space := by ext x; simp
+      ContinuousLinearMap.id ℝ Space := by ext x; simp only [
+          ContinuousLinearEquiv.coe_comp_coe_symm, ContinuousLinearMap.id_apply]
   rw [he, operatorMatrix_id]
 
 theorem adjugate_operatorMatrix (F : Space ≃L[ℝ] Space)
@@ -106,12 +112,14 @@ theorem adjugate_operatorMatrix (F : Space ≃L[ℝ] Space)
 theorem curlMatrix_congruence (F : Space ≃L[ℝ] Space)
     (hdet : (operatorMatrix F.toContinuousLinearMap).det = 1)
     (A : Space →L[ℝ] Space) :
-    curlMatrix (F.toContinuousLinearMap.adjoint.comp (A.comp F.toContinuousLinearMap)) =
+    curlMatrix ((ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        F.toContinuousLinearMap).comp (A.comp F.toContinuousLinearMap)) =
       F.symm (curlMatrix A) := by
   have hm := matrixAntisym_congruence (operatorMatrix F.toContinuousLinearMap) (operatorMatrix A)
   rw [adjugate_operatorMatrix F hdet] at hm
   ext i
-  change (curlMatrix (F.toContinuousLinearMap.adjoint.comp (A.comp F.toContinuousLinearMap))) i =
+  change (curlMatrix ((ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      F.toContinuousLinearMap).comp (A.comp F.toContinuousLinearMap))) i =
     (F.symm.toContinuousLinearMap (curlMatrix A)) i
   rw [operatorMatrix_apply F.symm.toContinuousLinearMap (curlMatrix A) i]
   have he := congrFun hm i
@@ -123,12 +131,14 @@ theorem curlMatrix_congruence (F : Space ≃L[ℝ] Space)
 theorem curlMatrix_piola (F : Space ≃L[ℝ] Space)
     (hdet : (operatorMatrix F.toContinuousLinearMap).det = 1)
     (B : Space →L[ℝ] Space) :
-    curlMatrix (F.toContinuousLinearMap.adjoint.comp B) =
+    curlMatrix ((ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        F.toContinuousLinearMap).comp B) =
       F.symm (curlMatrix (B.comp F.symm.toContinuousLinearMap)) := by
   have h := curlMatrix_congruence F hdet (B.comp F.symm.toContinuousLinearMap)
   have he : (B.comp F.symm.toContinuousLinearMap).comp F.toContinuousLinearMap = B := by
     ext x
-    simp
+    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
+        ContinuousLinearEquiv.symm_apply_apply]
   rw [he] at h
   exact h
 

@@ -107,7 +107,7 @@ theorem nonlinear_externalPressure_bound {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoe
     externalPressureNorm period K (N+1) ρ (transportPressure period hs K κ m c hc hpos L hL u v) ≤
       (32*Rc*M*productConstant period 3)*weightedNorm period 6 (N+1) ρ u*weightedLoss period 6
           (N+1) ρ v := by
-  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith [mul_nonneg hρ.le hRc]
+  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith only [hM, hsmall, mul_nonneg hρ.le hRc]
   have hcN : ∀ l, 1 ≤ l → l ≤ N → coefficientBlock period K 6 l ≤ Rc^l*(l.factorial : ℝ)^2 :=
     fun l hl hn => hcoeff l hl (by omega)
   have hp := transportPressure_shifted period hs K κ m c hc hpos N (by

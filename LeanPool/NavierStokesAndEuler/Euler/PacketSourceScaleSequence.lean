@@ -13,6 +13,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketUniformScaleSums
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketScaleGeometry
 import Mathlib.Algebra.Order.Star.Real
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 The literal sequences in (37), including the polynomial initial shear and
@@ -80,7 +81,7 @@ theorem sourceTheta_bounds {J : ℕ} (hJ : 1 ≤ J) {C : ℝ} (hC : 1 ≤ C)
   have hjx : 1 ≤ ((J + n : ℕ) : ℝ) ^ 2 * (x n) ^ 2 :=
     one_le_mul_of_one_le_of_one_le (one_le_pow₀ hj) (one_le_pow₀ (hx n))
   unfold sourceTheta
-  have hC₀ : 0 ≤ C := by linarith
+  have hC₀ : 0 ≤ C := by linarith only [hC]
   constructor
   · linarith only [hC, hjx, mul_nonneg hC₀ (by linarith only [hjx] :
       0 ≤ ((J + n : ℕ) : ℝ) ^ 2 * (x n) ^ 2)]
@@ -111,10 +112,10 @@ theorem source_neighbor_error_summable
     (C c : ℝ) (hC : 1 ≤ C) (hc : 0 ≤ c) (A : ℕ) :
     Summable (fun n => sourceNeighborError J c x n * sourceTheta J C x n ^ A) := by
   have hJ1 : 1 ≤ J := by omega
-  have hxp := quadratic_growth_pos J hJ1 x (by linarith) hx
+  have hxp := quadratic_growth_pos J hJ1 x (by linarith only [hx0]) hx
   have hx1 := quadratic_growth_one_le J hJ1 x hx0 hx
-  have hC₀ : 0 < C := by linarith
-  have hsum := polynomial_source_scale_summable J 1 4 (by omega) x (by linarith) hx
+  have hC₀ : 0 < C := by linarith only [hC]
+  have hsum := polynomial_source_scale_summable J 1 4 (by omega) x (by linarith only [hx0]) hx
     (7 / 2) 1 (2 * c) ((2 * C) ^ A) (2 * A) (2 * A)
     (by norm_num) (by norm_num) (by norm_num) (by positivity)
   apply hsum.of_nonneg_of_le
@@ -135,9 +136,11 @@ theorem source_neighbor_error_summable
         (by positivity : 0 < ((J - 1 + n : ℕ) : ℝ) ^ 4) hp4
       simp only [div_eq_mul_inv] at hd ⊢
       linarith only [hd]
-    have hθ := pow_le_pow_left₀ (by linarith [(sourceTheta_bounds hJ1 hC hx1 n).1] :
+    have hθ := pow_le_pow_left₀ (by linarith only [hJ1, hC, hx1,
+        (sourceTheta_bounds hJ1 hC hx1 n).1] :
       0 ≤ sourceTheta J C x n) (sourceTheta_bounds hJ1 hC hx1 n).2 A
-    have hh := mul_le_mul herr hθ (pow_nonneg (by linarith [(sourceTheta_bounds hJ1 hC hx1 n).1]) A)
+    have hh := mul_le_mul herr hθ (pow_nonneg (by linarith only [hJ1, hC, hx1,
+        (sourceTheta_bounds hJ1 hC hx1 n).1]) A)
       (exp_pos _).le
     convert! hh using 1
     simp only [neg_one_mul, mul_pow, ← pow_mul]
@@ -154,7 +157,7 @@ theorem theta_weighted_source_exponential_summable
         c * (x n / ((J - d + n : ℕ) : ℝ) ^ B))) := by
   have hJ1 : 1 ≤ J := by omega
   have hx1 := quadratic_growth_one_le J hJ1 x hx0 hx
-  have hsum := polynomial_source_scale_summable J d B hJ x (by linarith) hx a b c
+  have hsum := polynomial_source_scale_summable J d B hJ x (by linarith only [hx0]) hx a b c
     ((2 * C) ^ A) (2 * A) (2 * A) ha haB hb (by positivity)
   apply hsum.of_nonneg_of_le
   · intro n
@@ -210,7 +213,7 @@ theorem source_shear_gradient_bound
   have hop : ((J - 2 + n : ℕ) : ℝ) ≤ ((J - 1 + n : ℕ) : ℝ) := by
     exact_mod_cast (show J - 2 + n ≤ J - 1 + n by omega)
   have hp : (0 : ℝ) < (J - 1 + n : ℕ) := lt_of_lt_of_le (by
-      linarith : (0 : ℝ) < (J - 2 + n : ℕ)) hop
+      linarith only [ho] : (0 : ℝ) < (J - 2 + n : ℕ)) hop
   have hpj : ((J - 1 + n : ℕ) : ℝ) ≤ ((J + n : ℕ) : ℝ) := by
     exact_mod_cast (show J - 1 + n ≤ J + n by omega)
   have hpow := pow_le_pow_left₀ hp.le hpj 7
@@ -233,7 +236,7 @@ theorem source_shear_gradient_bound
     have h1 : 1 ≤ exp (x n / ((J - 2 + n : ℕ) : ℝ) ^ 9) :=
       one_le_exp_iff.mpr (div_nonneg (hx n) (by positivity))
     unfold sourceOlderGradient
-    linarith
+    linarith only [hle, h1]
   have hg₀ : 0 ≤ sourceOlderGradient J x n := by unfold sourceOlderGradient; positivity
   have hh := mul_le_mul he (pow_le_pow_left₀ hg₀ hg 2) (sq_nonneg _) (by positivity)
   convert! hh using 1
@@ -334,7 +337,7 @@ theorem preceding_scale_identities {p q x X Y : ℝ} (hp : p ≠ 0) (hq : q ≠ 
 /-- A frame normalization `a≤2` gives the explicit source epsilon bound. -/
 theorem epsilon_of_shear_bound {a L : ℝ} (ha : 0 ≤ a) (ha₂ : a ≤ 2) :
     sqrt (a / exp L) ≤ 2 * exp (-L / 2) := by
-  have hs : sqrt a ≤ 2 := (sqrt_le_iff).2 ⟨by norm_num, by linarith⟩
+  have hs : sqrt a ≤ 2 := (sqrt_le_iff).2 ⟨by norm_num, by linarith only [ha₂]⟩
   rw [sqrt_div ha, ← exp_half]
   have hid : -L / 2 = -(L / 2) := by ring
   rw [hid, exp_neg]
@@ -375,7 +378,7 @@ theorem source_time_ratio_summable
     (J : ℕ) (hJ : 3 ≤ J) (x : ℕ → ℝ) (hx0 : 1 ≤ x 0)
     (hx : ∀ n, x (n + 1) = ((J + n : ℕ) : ℝ) ^ 2 * x n) :
     Summable (sourceTimeRatio J x) := by
-  have hsum := polynomial_source_scale_summable J 1 7 (by omega) x (by linarith) hx
+  have hsum := polynomial_source_scale_summable J 1 7 (by omega) x (by linarith only [hx0]) hx
     5 (1 / 2) (1 / 2) 4 4 0 (by norm_num) (by norm_num) (by norm_num) (by norm_num)
   simp only [rpow_ofNat, pow_zero, mul_one] at hsum
   apply hsum.of_nonneg_of_le
@@ -417,7 +420,7 @@ theorem source_extra_time_bound
         exp (-(1 / 2) * (x n / ((J + n : ℕ) : ℝ) ^ 5) +
           (1 / 2) * (x n / ((J - 1 + n : ℕ) : ℝ) ^ 7)) := by
   have hj : (1 : ℝ) ≤ (J + n : ℕ) := by exact_mod_cast (show 1 ≤ J + n by omega)
-  have hs : sqrt a ≤ 2 := (sqrt_le_iff).2 ⟨by norm_num, by linarith⟩
+  have hs : sqrt a ≤ 2 := (sqrt_le_iff).2 ⟨by norm_num, by linarith only [ha₂]⟩
   have hroot : sqrt (a * exp (x n / ((J - 1 + n : ℕ) : ℝ) ^ 7)) ≤
       2 * exp (x n / (2 * ((J - 1 + n : ℕ) : ℝ) ^ 7)) := by
     rw [sqrt_mul ha, ← exp_half]
@@ -456,7 +459,7 @@ theorem source_extra_time_summable
       sourceNextTimeWidth J x n * sourceTheta J C x n ^ A) := by
   have hJ1 : 1 ≤ J := by omega
   have hx1 := quadratic_growth_one_le J hJ1 x hx0 hx
-  have hsum := polynomial_source_scale_summable J 1 7 (by omega) x (by linarith) hx
+  have hsum := polynomial_source_scale_summable J 1 7 (by omega) x (by linarith only [hx0]) hx
     5 (1 / 2) (1 / 2) (48 * (2 * C) ^ A) (6 + 2 * A) (2 + 2 * A)
     (by norm_num) (by norm_num) (by norm_num) (by positivity)
   simp only [rpow_ofNat] at hsum
@@ -480,7 +483,7 @@ theorem source_parent_shear_square_ratio_summable
     (hx : ∀ n, x (n + 1) = ((J + n : ℕ) : ℝ) ^ 2 * x n) :
     Summable (fun n => exp (2 * x n / ((J - 1 + n : ℕ) : ℝ) ^ 7) /
       exp (x n / ((J + n : ℕ) : ℝ) ^ 5)) := by
-  have hh := source_scale_exponential_summable J 1 7 (by omega) x (by linarith) hx
+  have hh := source_scale_exponential_summable J 1 7 (by omega) x (by linarith only [hx0]) hx
     5 1 2 0 0 0 (by norm_num) (by norm_num) (by norm_num)
   simp only [rpow_ofNat, neg_one_mul, zero_mul, add_zero] at hh
   apply hh.congr
@@ -496,7 +499,7 @@ theorem source_good_interval_cost_summable
     Summable (fun n => exp (-x n / ((J + n : ℕ) : ℝ) ^ 3) *
       exp (x n / ((J + n : ℕ) : ℝ) ^ 5) *
       exp (x n / ((J - 1 + n : ℕ) : ℝ) ^ 7)) := by
-  have hsum := source_scale_exponential_summable J 1 5 (by omega) x (by linarith) hx
+  have hsum := source_scale_exponential_summable J 1 5 (by omega) x (by linarith only [hx0]) hx
     3 1 2 0 0 0 (by norm_num) (by norm_num) (by norm_num)
   simp only [rpow_ofNat, neg_one_mul, zero_mul, add_zero] at hsum
   have hx1 := quadratic_growth_one_le J (by omega) x hx0 hx
@@ -730,17 +733,17 @@ open Real EulerScale EulerPacketUniformScaleSums
 the stage and the square root of the scale. -/
 theorem polynomial_log_bound {j X C p q : ℝ} (hj : 1 ≤ j) (hX : 1 ≤ X) :
     C + p * log j + q * log X ≤ (|C| + |p| + 2 * |q|) * j * sqrt X := by
-  have hjp : 0 < j := by linarith
-  have hXp : 0 < X := by linarith
+  have hjp : 0 < j := by linarith only [hj]
+  have hXp : 0 < X := by linarith only [hX]
   have hs : 1 ≤ sqrt X := one_le_sqrt.mpr hX
   have hsj : 1 ≤ j * sqrt X := one_le_mul_of_one_le_of_one_le hj hs
   have hlj : 0 ≤ log j := log_nonneg hj
   have hlX : 0 ≤ log X := log_nonneg hX
-  have hljb : log j ≤ j := (log_le_sub_one_of_pos hjp).trans (by linarith)
+  have hljb : log j ≤ j := (log_le_sub_one_of_pos hjp).trans (by linarith only)
   have hlXb : log X ≤ 2 * sqrt X := by
     have hh := log_le_sub_one_of_pos (sqrt_pos.mpr hXp)
     rw [log_sqrt hXp.le] at hh
-    linarith
+    linarith only [hh]
   have hCb : C ≤ |C| * j * sqrt X := by
     have hh := mul_le_mul_of_nonneg_left hsj (abs_nonneg C)
     linarith only [hh, le_abs_self C]
@@ -766,15 +769,17 @@ theorem polynomial_logs_uniformly_absorbed
       (b / 2) * (x n / ((J + n : ℕ) : ℝ) ^ A) := by
   let S := |C| + |p| + 2 * |q|
   let L := 2 * S / b
-  have hS : 0 ≤ S := by dsimp [S]; positivity
-  have hL : 0 ≤ L := by dsimp [L]; positivity
+  have hS : 0 ≤ S :=
+    add_nonneg (add_nonneg (abs_nonneg C) (abs_nonneg p)) (mul_nonneg zero_le_two (abs_nonneg q))
+  have hL : 0 ≤ L := div_nonneg (mul_nonneg zero_le_two hS) hb.le
   have hJp : (0 : ℝ) < J := by exact_mod_cast (show 0 < J by omega)
   have hx1 := quadratic_growth_one_le J hJ x hx0 hx
   have hgeom := polynomial_scale_geometric_lower J (2 * A + 2) hJ
-    (by simpa only [show 2 * A + 2 + 1 = 2 * A + 3 by omega] using hJA) x (by linarith) hx
+    (by simpa only [show 2 * A + 2 + 1 = 2 * A + 3 by omega] using hJA) x
+    (zero_lt_one.trans_le hx0) hx
   intro n
   have hj1 : (1 : ℝ) ≤ (J + n : ℕ) := by exact_mod_cast (show 1 ≤ J + n by omega)
-  have hj : (0 : ℝ) < (J + n : ℕ) := by linarith
+  have hj : (0 : ℝ) < (J + n : ℕ) := zero_lt_one.trans_le hj1
   have hstart : L ^ 2 ≤ x 0 / (J : ℝ) ^ (2 * A + 2) := by
     apply (le_div_iff₀ (pow_pos hJp _)).2
     exact hlarge
@@ -789,9 +794,10 @@ theorem polynomial_logs_uniformly_absorbed
       rw [← pow_mul]
       congr 1
       omega
-    have hs := sq_sqrt (le_trans zero_le_one (hx1 n))
-    have hn : 0 ≤ L * ((J + n : ℕ) : ℝ) ^ (A + 1) := by positivity
-    nlinarith only [hsquare, hp, hs, hn, sqrt_nonneg (x n)]
+    have hn : 0 ≤ L * ((J + n : ℕ) : ℝ) ^ (A + 1) := mul_nonneg hL (pow_nonneg hj.le _)
+    refine (Real.le_sqrt hn (le_trans zero_le_one (hx1 n))).2 ?_
+    rw [mul_pow, hp]
+    exact hsquare
   have hlog := polynomial_log_bound (C := C) (p := p) (q := q) hj1 (hx1 n)
   have hlogmul := mul_le_mul_of_nonneg_right hlog (pow_nonneg hj.le A)
   have hrootmul := mul_le_mul_of_nonneg_right hroot
@@ -873,9 +879,9 @@ theorem uniform_source_exponent_bound
     (by positivity) (by convert! hlarge using 1; ring)
   intro n
   have hj1 : (1 : ℝ) ≤ (J + n : ℕ) := by exact_mod_cast (show 1 ≤ J + n by omega)
-  have hj : (0 : ℝ) < (J + n : ℕ) := by linarith
+  have hj : (0 : ℝ) < (J + n : ℕ) := by linarith only [hj1]
   have hp : (0 : ℝ) < (J - d + n : ℕ) := by exact_mod_cast (show 0 < J - d + n by omega)
-  have hxn : 0 < x n := by linarith [hx1 n]
+  have hxn : 0 < x n := by linarith only [hx1, hx1 n]
   have hpow : ((J + n : ℕ) : ℝ) ^ a ≤ ((J + n : ℕ) : ℝ) ^ N := by
     simpa only [rpow_natCast] using rpow_le_rpow_of_exponent_le hj1 haN
   have hscales := div_le_div_of_nonneg_left hxn.le (rpow_pos_of_pos hj a) hpow
@@ -912,7 +918,7 @@ theorem uniform_source_cost_tsum_bound
   have hpower : (2 : ℝ) ^ (N + 1) ≤ (J : ℝ) ^ 2 := by
     exact (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2) (by omega : N + 1 ≤ 2 * N + 3)).trans hJN
   exact hh.trans (source_exponential_tsum_bound J N hJ hpower x (by
-      linarith) hx (b / 2) (by positivity))
+      linarith only [hx0]) hx (b / 2) (by positivity))
 
 /-- The source's order of parameter choice is valid: first one chooses
 the stage `J`, then the base scale `x₀`, and the whole infinite sum is

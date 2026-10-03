@@ -11,6 +11,7 @@ public import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
 public import LeanPool.NavierStokesAndEuler.Euler.MeanSolenoidalSpace
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.BoundedContinuousFunctionShortcuts
 
 /-! Continuous matrix fields act as genuine bounded operators on ordinary R³ L². -/
 
@@ -103,8 +104,9 @@ theorem multiplier_inverse (A B : Field) (hAB : ∀ x v, A x (B x v) = v) (u : L
   filter_upwards [multiplier_ae A (multiplier B u), multiplier_ae B u] with x ha hb
   rw [ha, hb, hAB]
 
-theorem multiplier_adjoint (A B : Field) (hB : ∀ x, B x = (A x).adjoint) :
-    multiplier B = (multiplier A).adjoint := by
+theorem multiplier_adjoint (A B : Field)
+    (hB : ∀ x, B x = ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (A x)) :
+    multiplier B = ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2) (multiplier A) := by
   apply ContinuousLinearMap.ext
   intro u
   apply ext_inner_right ℝ
@@ -130,8 +132,8 @@ theorem multiplier_quadratic_upper (A : Field) (K : ℝ)
     ⟪multiplier A u, u⟫_ℝ ≤ K * ‖u‖^2 := by
   rw [← real_inner_self_eq_norm_sq, MeasureTheory.L2.inner_def, MeasureTheory.L2.inner_def,
     ← integral_const_mul]
-  apply integral_mono_ae (MeasureTheory.L2.integrable_inner (multiplier A u) u)
-    ((MeasureTheory.L2.integrable_inner u u).const_mul K)
+  apply integral_mono_ae (MeasureTheory.L2.integrable_inner (𝕜 := ℝ) (multiplier A u) u)
+    ((MeasureTheory.L2.integrable_inner (𝕜 := ℝ) u u).const_mul K)
   filter_upwards [multiplier_ae A u] with x hx
   rw [hx, real_inner_self_eq_norm_sq]
   exact hA x (u x)

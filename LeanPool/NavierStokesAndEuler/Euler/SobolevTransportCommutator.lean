@@ -91,6 +91,11 @@ theorem transport_ae_velocityMap {s : ℕ} (hs : 6 ≤ s)
   rw [← heq]
   exact transportBilinear_ae period hs L hL u v f g hu hv hg
 
+theorem value_sub_ae {q : ℕ} (u v : SobolevSpace period q) :
+    (value period (u - v) : LiftDomain period → Vector3) =ᵐ[liftMeasure period]
+      (value period u : LiftDomain period → Vector3) - value period v :=
+  Lp.coeFn_sub _ _
+
 /-- On genuine smooth representatives the bounded Sobolev commutator is exactly the classical
 derivative commutator. -/
 theorem externalCommutator_ae {s : ℕ} (hs : 6 ≤ s) (n : ℕ) (w : Fin n → Fin 4) (hn : n + 6 ≤ s)
@@ -113,16 +118,7 @@ theorem externalCommutator_ae {s : ℕ} (hs : 6 ≤ s) (n : ℕ) (w : Fin n → 
     (restrictOperator period (by omega : 7 ≤ s+1) u) (wordAtLevel period 7 n w (by omega) v)
     f (iteratedFieldDerivative period w g) hu hw (iteratedFieldDerivative_smooth period w g hg)
   rw [externalCommutator_apply]
-  change ((valueOperator period 6) (_-_) : LiftDomain period → Vector3) =ᵐ[liftMeasure period] _
-  rw [map_sub]
-  filter_upwards [Lp.coeFn_sub (value period (wordAtLevel period 6 n w hn (transportBilinear period
-      hs L hL u v)))
-    (value period (transportBilinear period (by norm_num : 6 ≤ 6) L hL
-      (restrictOperator period (by
-          omega : 7 ≤ s+1) u) (wordAtLevel period 7 n w (by omega) v))), hfirst,hsecond]
-    with x hx h1 h2
-  simp only [Pi.sub_apply] at hx
-  exact hx.trans (by rw [h1,h2]; rfl)
+  exact (value_sub_ae period _ _).trans (hfirst.sub hsecond)
 
 omit [Fact (0 < period)] in
 /-- The classical external transport commutator is smooth for smooth fields. -/

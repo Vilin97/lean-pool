@@ -38,13 +38,15 @@ open ProfileHistories NaturalAxisCoefficients NaturalAxisBridge NaturalProfile N
 theorem parameter_deriv {F : ProfileHistories.Field} {p : Point} (hF : ContDiffAt ℝ ∞ F p) :
     HasDerivAt (fun η => F (p.1, η)) (parameterPartial F p) p.2 := by
   simpa only [parameterPartial, Function.comp_def, id_eq, Prod.eta] using
-    (hF.differentiableAt (by simp)).hasFDerivAt.comp_hasDerivAt p.2
+    (hF.differentiableAt (by simp)).hasFDerivAt.comp_hasDerivAt (F := ℝ × ℝ)
+      (f := fun η => (p.1, η)) p.2
       ((hasDerivAt_const p.2 p.1).prodMk (hasDerivAt_id p.2))
 
 theorem radial_deriv {F : ProfileHistories.Field} {p : Point} (hF : ContDiffAt ℝ ∞ F p) :
     HasDerivAt (fun X => F (X, p.2)) (radialPartial F p) p.1 := by
   simpa only [radialPartial, Function.comp_def, id_eq, Prod.eta] using
-    (hF.differentiableAt (by simp)).hasFDerivAt.comp_hasDerivAt p.1
+    (hF.differentiableAt (by simp)).hasFDerivAt.comp_hasDerivAt (F := ℝ × ℝ)
+      (f := fun X => (X, p.2)) p.1
       ((hasDerivAt_id p.1).prodMk (hasDerivAt_const p.1 p.2))
 
 theorem parameterPartial_eq_partialEta {F : ProfileHistories.Field} {p : Point} (hF : ContDiffAt ℝ
@@ -70,7 +72,7 @@ theorem norm_pair_le {h j σ : ℝ} {P0 : ℝ → ℝ}
   calc
     ‖x‖ = ‖(x - referencePair v) + referencePair v‖ := by rw [sub_add_cancel]
     _ ≤ ‖x - referencePair v‖ + ‖referencePair v‖ := norm_add_le _ _
-    _ ≤ _ := by linarith
+    _ ≤ _ := by linarith only [hx]
 
 theorem coefficient_jet_bound {h j σ : ℝ} {P0 : ℝ → ℝ}
     (v : CoefficientFamily h j σ P0) (x : CoefficientPair v.epsilon)
@@ -195,7 +197,7 @@ theorem natural_log_bound (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
   rw [partialEta_profile window d.coefficients.epsilon_pos _ (entrance_mem_strip hp)]
   apply (div_le_iff₀ hφpos).2
   have hE := jetConstant_nonneg d.coefficients 0 1
-  nlinarith
+  nlinarith only [hη, hφ, hE]
 
 /-- Amplitude constant, given by `d.normalizationThreshold Λ * jetConstant d.coefficients 0 0 *
 (1 + Λ * G + 8 * jetConstant d.coefficients 0 1)`. -/
@@ -239,7 +241,7 @@ theorem natural_amplitude_bounds (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
       d.coefficients 0 1 := by
     calc
       _ = |(parameterPartial F.family.f p / F.family.f p - Λ * realGradient h j σ p.2) +
-          Λ * realGradient h j σ p.2| := by ring_nf
+          Λ * realGradient h j σ p.2| := (congrArg abs (sub_add_cancel _ _)).symm
       _ ≤ |parameterPartial F.family.f p / F.family.f p - Λ * realGradient h j σ p.2| +
           |Λ * realGradient h j σ p.2| := abs_add_le _ _
       _ ≤ 8 * jetConstant d.coefficients 0 1 + Λ * G := by
@@ -256,13 +258,15 @@ theorem natural_amplitude_bounds (hσ : 0 < σ) (hΛ : 0 < Λ) (hC : 0 < C)
   constructor
   · apply hf0.trans
     have hb := mul_le_mul_of_nonneg_left
-      (show (1 : ℝ) ≤ 1 + Λ * G + 8 * jetConstant d.coefficients 0 1 by
-        nlinarith [mul_nonneg hΛ.le hG]) hbase
+      (show (1 : ℝ) ≤ 1 + Λ * G + 8 * jetConstant d.coefficients 0 1 from
+        le_add_of_le_of_nonneg (le_add_of_nonneg_right (mul_nonneg hΛ.le hG))
+          (mul_nonneg (by norm_num) hE1)) hbase
     simpa only [mul_one, amplitudeConstant, mul_div_assoc, div_mul_eq_mul_div, mul_assoc] using hb
   · apply hfη.trans
     have hb := mul_le_mul_of_nonneg_left
       (show Λ * G + 8 * jetConstant d.coefficients 0 1 ≤
-        1 + Λ * G + 8 * jetConstant d.coefficients 0 1 by linarith) hbase
+        1 + Λ * G + 8 * jetConstant d.coefficients 0 1 from
+        add_le_add (le_add_of_nonneg_left zero_le_one) le_rfl) hbase
     simpa only [amplitudeConstant, mul_div_assoc, div_mul_eq_mul_div, mul_assoc] using hb
 
 end Natural
@@ -344,7 +348,7 @@ theorem exists_transition_control (N : ReferencePath.Input) {εU εF : ℝ}
   have htail3 := htail2.trans_le (min_le_right _ _)
   have hδf0 : δ < f0 := htail3.trans_le (min_le_left _ _)
   have hδf1 : δ < f1 := htail3.trans_le (min_le_right _ _)
-  have hδT : 2 * δ < ReferencePath.rampLimit := by linarith
+  have hδT : 2 * δ < ReferencePath.rampLimit := by linarith only [hδ, hlim]
   refine ⟨hδ, hδT, ?_, ?_, ?_, ?_, ?_⟩
   · intro p hX hη
     simpa only [iteratedDeriv_zero, Prod.eta] using hU0 δ hδ hδu0 p.1 hX p.2 hη
@@ -379,7 +383,7 @@ theorem reference_initial_eventually (N : ReferencePath.Input) {δ : ℝ}
     (hX : p.1 ≤ N.endpoint) (hη : p.2 ∈ Icc (-1 : ℝ) 1) :
     (N.refF δ =ᶠ[𝓝 p] N.f) ∧ (N.refU δ =ᶠ[𝓝 p] N.U) := by
   have he : 1 < Real.exp δ := Real.one_lt_exp_iff.mpr hδ
-  have hm : p.1 < N.endpoint * Real.exp δ := by nlinarith [N.endpoint_pos]
+  have hm : p.1 < N.endpoint * Real.exp δ := by nlinarith only [hX, he, N.endpoint_pos]
   have hn : ∀ᶠ q in 𝓝 p, q.1 < N.endpoint * Real.exp δ ∧ q.2 ∈ ReferencePath.parameterInterval :=
     (continuousAt_fst.eventually (Iio_mem_nhds hm)).and
       (continuousAt_snd.eventually (ReferencePath.parameterInterval_open.mem_nhds
@@ -408,7 +412,7 @@ theorem initial_entrance {Λ : ℝ} (hΛ : 0 < Λ) {p : Point}
   have hh := mul_le_mul_of_nonneg_left hupper hΛ.le
   have he : Λ * (4 / Λ) = 4 := by field_simp
   rw [he] at hh
-  exact ⟨⟨mul_nonneg hΛ.le hX, by linarith⟩, hη⟩
+  exact ⟨⟨mul_nonneg hΛ.le hX, by linarith only [hh]⟩, hη⟩
 
 theorem logtime_entrance (N : ReferencePath.Input) {p : Point} (hX : 0 < p.1)
     (hη : p.2 ∈ Icc (-1 : ℝ) 1) (ht : N.logTime p.1 < ReferencePath.rampLimit) :
@@ -422,7 +426,7 @@ theorem logtime_entrance (N : ReferencePath.Input) {p : Point} (hX : 0 < p.1)
   refine ⟨⟨(mul_pos N.scale_pos hX).le, ?_⟩, hη⟩
   dsimp only at hs
   rw [hs]
-  linarith
+  linarith only [he]
 
 /-- Uniform bound, given by `2 + jetConstant v 0 0 + 9 * jetConstant v 0 1 + 5 * jetConstant v 1
 0`. -/
@@ -438,12 +442,12 @@ theorem uniformBound_controls {h j σ : ℝ} {P0 : ℝ → ℝ} (v : Coefficient
   have hx := jetConstant_nonneg v 1 0
   dsimp [uniformBound]
   constructor
-  · linarith
+  · linarith only [h0, h1, hx]
   constructor
-  · linarith
+  · linarith only [h1, hx]
   constructor
-  · linarith
-  constructor <;> linarith
+  · linarith only [h0, h1, hx]
+  constructor <;> linarith only [h0, h1, hx]
 
 /-- Jet bounds data, collecting `axial_value`, `axial_parameter`, `axial_radial`,
 `log_parameter`, `angular_value`, `angular_parameter`. -/
@@ -541,21 +545,21 @@ theorem bounds_of_control (hσ : 0 < σ) (hC : 0 < C)
       rescalePoint Λ (N.endpoint, η) ∈ entranceSet :=
     initial_entrance hΛ N.endpoint_pos.le le_rfl hη
   have hKle : amplitudeConstant d Λ G / C ≤ (1 + amplitudeConstant d Λ G) / C :=
-    div_le_div_of_nonneg_right (by linarith) hC.le
+    div_le_div_of_nonneg_right (by linarith only) hC.le
   change JetBounds h j σ Λ C (uniformBound d.coefficients) (1 + amplitudeConstant d Λ G)
     (N.refF δ) (N.refU δ)
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · intro p hp
     by_cases hx : p.1 ≤ N.endpoint
     · rw [N.refU_eq_natural_initial δ hx]
-      exact (natural_U_bounds F hΛ (hinit p hp hx)).1.trans (by linarith [hB.2.1])
+      exact (natural_U_bounds F hΛ (hinit p hp hx)).1.trans (by linarith only [hB, hB.2.1])
     · have hxe := (lt_of_not_ge hx).le
       have hb := (natural_U_bounds F hΛ (hend p.2 hp.2)).1
       exact (scaled_transfer hΛ (hc.U_value p hxe hp.2).le hb).trans hB.2.1
   · intro p hp
     by_cases hx : p.1 ≤ N.endpoint
     · rw [(reference_initial_partials N hc.length_pos hc.length_bound hx hp.2).2.1]
-      exact (natural_U_bounds F hΛ (hinit p hp hx)).2.1.trans (by linarith [hB.2.2.1])
+      exact (natural_U_bounds F hΛ (hinit p hp hx)).2.1.trans (by linarith only [hB, hB.2.2.1])
     · have hxe := (lt_of_not_ge hx).le
       have hb := (natural_U_bounds F hΛ (hend p.2 hp.2)).2.1
       exact (scaled_transfer hΛ (hc.U_parameter p hxe hp.2).le hb).trans hB.2.2.1
@@ -565,7 +569,8 @@ theorem bounds_of_control (hσ : 0 < σ) (hC : 0 < C)
     by_cases hx : p.1 ≤ N.endpoint
     · rw [N.refF_eq_natural_initial δ hx,
         (reference_initial_partials N hc.length_pos hc.length_bound hx hp.2).1]
-      exact (natural_log_bound F hσ hΛ hC hscale (hinit p hp hx)).trans (by linarith [hB.2.2.2.2])
+      exact (natural_log_bound F hσ hΛ hC hscale (hinit p hp hx)).trans (by linarith only [hB,
+          hB.2.2.2.2])
     · have hxe := (lt_of_not_ge hx).le
       have hb := natural_log_bound F hσ hΛ hC hscale (hend p.2 hp.2)
       exact (transfer_difference (hc.log_parameter p hxe hp.2).le hb).trans hB.2.2.2.2
@@ -626,7 +631,7 @@ theorem natural_radial_jet_error {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Ana
     field_simp [hΛ.ne']
   rw [he]
   have hnn : 0 ≤ radialErrorConstant d / Λ := div_nonneg (radialErrorConstant_nonneg d) hΛ.le
-  linarith
+  linarith only [hnn]
 
 /-- A genuine finite-dimensional source sample, with the radial jet error
 still controlled by the coefficient norm. -/
@@ -691,7 +696,7 @@ theorem reference_slope_sample {h j σ Λ C : ℝ} {P0 : ℝ → ℝ} {d : Analy
         (entrance_abs_le_five hp)).1
       rw [AxisEvaluation.mixedSeries_zero] at hb
       exact (le_abs_self φ).trans (hb.trans (by
-          linarith [(uniformBound_controls d.coefficients).2.1]))
+          linarith only [(uniformBound_controls d.coefficients).2.1]))
     · have hs := N.same_radius_log_slope hδ hδT (original_interval_interior hη) hXp ht
       rw [hd] at hs
       change p.1 * (radialPartial (N.refF δ) p / N.refF δ p) =
@@ -725,7 +730,7 @@ theorem exists_gradient_bound (h j : ℝ) {σ : ℝ} (hσ : 0 < σ) :
   intro η hη
   have hb := hR η hη
   rw [Real.norm_eq_abs] at hb
-  linarith [le_abs_self R]
+  linarith only [hb, le_abs_self R]
 
 /-- All constants used to choose C precede C. The actual short transition
 is selected only after C and the actual natural coefficient profile. -/
@@ -749,7 +754,7 @@ theorem ordered_reference_bounds {h j σ : ℝ} {P0 : ℝ → ℝ}
     (le_max_right _ _).trans hM
   refine ⟨1 + amplitudeConstant d Λ G, ?_, ?_⟩
   · have hb := amplitudeConstant_nonneg (d := d) hΛ.le hG.le
-    linarith
+    linarith only [hb]
   intro C hC F
   have hCp : 0 < C := (Real.exp_pos _).trans_le hC
   obtain ⟨r, hr, hc⟩ := exists_transition_control (referenceInput F hΛ)

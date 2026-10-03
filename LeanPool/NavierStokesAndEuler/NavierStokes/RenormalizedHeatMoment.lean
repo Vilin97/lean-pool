@@ -21,6 +21,10 @@ carrier supplies compact support for every axial derivative of the difference.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -81,14 +85,14 @@ theorem supported_locally_dominated {F : ℝ × ℝ → ℝ} (hF : ContDiff ℝ 
     have hc : IntegrableOn (fun _ : ℝ => max C 0) (Icc (0 : ℝ) B) :=
         continuous_const.integrableOn_Icc
     exact (hc.integrable_indicator measurableSet_Icc).restrict
-  refine ⟨ε / 2, by linarith, bound, hb, ?_⟩
+  refine ⟨ε / 2, by linarith only [hε], bound, hb, ?_⟩
   filter_upwards [ae_restrict_mem measurableSet_Ioi] with r hr
   intro y hy
   by_cases hrB : r ≤ B
   · have hp : r ∈ Icc (0 : ℝ) B := ⟨hr.le, hrB⟩
     rw [show bound r = max C 0 by exact indicator_of_mem hp _]
     exact (hC (y, r) ⟨Metric.ball_subset_closedBall hy, hp⟩).trans (le_max_left _ _)
-  · have hy' : y ∈ Metric.ball z ε := Metric.ball_subset_ball (by linarith) hy
+  · have hy' : y ∈ Metric.ball z ε := Metric.ball_subset_ball (by linarith only [hε]) hy
     have hj := parameterJet_zero_of_support hsupport hy' (le_of_not_ge hrB) n
     change ‖parameterJet F n (y, r)‖ ≤ bound r
     rw [hj, norm_zero]
@@ -216,21 +220,21 @@ noncomputable def velocity (h τ : ℝ) (F : ℝ × ℝ → ℝ) (p : ℝ × ℝ
 
 theorem Q_pos {h τ : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hτ : 0 < τ) (z : ℝ) :
     0 < Q h τ z :=
-  (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith) (p := (τ, z)) hτ).1
+  (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith only [hh1]) (p := (τ, z)) hτ).1
 
 theorem Q_implicit {h τ : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hτ : 0 < τ) (z : ℝ) :
     Q h τ z - z ^ 2 * Q h τ z ^ (2 * h) = τ :=
-  (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith) (p := (τ, z)) hτ).2
+  (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith only [hh1]) (p := (τ, z)) hτ).2
 
 theorem eta_mem {h τ : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hτ : 0 < τ) (z : ℝ) :
     eta h τ z ∈ Ioo (-1 : ℝ) 1 :=
   abs_lt.mp (SimilarityCoordinates.coordinateEta_abs_lt_one
-    (by linarith) (by linarith) (p := (τ, z)) hτ)
+    (by linarith only [hh]) (by linarith only [hh1]) (p := (τ, z)) hτ)
 
 theorem diffusion_identity {h τ : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (hτ : 0 < τ) (z : ℝ) : 1 - eta h τ z ^ 2 = τ / Q h τ z := by
   have he := SimilarityCoordinates.tau_coordinate_identity
-    (by linarith : 0 < 2 * h) (by linarith : 2 * h < 1) (p := (τ, z)) hτ
+    (by linarith only [hh] : 0 < 2 * h) (by linarith only [hh1] : 2 * h < 1) (p := (τ, z)) hτ
   apply (eq_div_iff (Q_pos hh hh1 hτ z).ne').mpr
   simpa only [Q, eta, mul_comm] using he.symm
 
@@ -240,14 +244,14 @@ theorem normalized_coordinates {h e : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     (he : e ∈ Ioo (-1 : ℝ) 1) :
     e ^ 2 < 1 ∧ Q h (1 - e ^ 2) e = 1 ∧ eta h (1 - e ^ 2) e = e := by
   have hτ : 0 < 1 - e ^ 2 := by
-    have hp := mul_pos (show 0 < 1 - e by linarith [he.2])
-      (show 0 < 1 + e by linarith [he.1])
-    linarith
+    have hp := mul_pos (show 0 < 1 - e by linarith only [he, he.2])
+      (show 0 < 1 + e by linarith only [he, he.1])
+    linarith only [hp]
   have hq : Q h (1 - e ^ 2) e = 1 :=
-    (SimilarityCoordinates.eq_coordinateQ (by linarith : 0 < 2 * h)
-      (by linarith : 2 * h < 1) (p := (1 - e ^ 2, e)) hτ zero_lt_one
+    (SimilarityCoordinates.eq_coordinateQ (by linarith only [hh] : 0 < 2 * h)
+      (by linarith only [hh1] : 2 * h < 1) (p := (1 - e ^ 2, e)) hτ zero_lt_one
       (by simp [SimilarityCoordinates.forwardScalar])).symm
-  refine ⟨by linarith, hq, ?_⟩
+  refine ⟨by linarith only [hτ], hq, ?_⟩
   change e / Q h (1 - e ^ 2) e ^ ((1 - 2 * h) / 2) = e
   rw [hq, Real.one_rpow, div_one]
 
@@ -255,14 +259,14 @@ theorem Q_contDiff {h τ : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hτ : 0 < τ) :
     ContDiff ℝ ∞ (Q h τ) := by
   apply contDiff_iff_contDiffAt.mpr
   intro z
-  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith) (by linarith)
+  exact (SimilarityCoordinates.coordinateQ_smooth (by linarith only [hh]) (by linarith only [hh1])
     (p := (τ, z)) hτ).comp z (contDiffAt_const.prodMk contDiffAt_id)
 
 theorem eta_contDiff {h τ : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hτ : 0 < τ) :
     ContDiff ℝ ∞ (eta h τ) := by
   apply contDiff_iff_contDiffAt.mpr
   intro z
-  exact (SimilarityCoordinates.coordinateEta_smooth (by linarith) (by linarith)
+  exact (SimilarityCoordinates.coordinateEta_smooth (by linarith only [hh]) (by linarith only [hh1])
     (p := (τ, z)) hτ).comp z (contDiffAt_const.prodMk contDiffAt_id)
 
 theorem velocity_contDiff {h τ : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (hτ : 0 < τ)
@@ -316,7 +320,7 @@ theorem velocity_commonExterior {h τ C B : ℝ}
   have hc : Continuous (fun y => B * Real.sqrt (Q h τ y)) :=
     continuous_const.mul (Real.continuous_sqrt.comp (Q_contDiff hh hh1 hτ).continuous)
   have hev : ∀ᶠ y in 𝓝 z, B * Real.sqrt (Q h τ y) < Bz :=
-    hc.continuousAt.eventually (gt_mem_nhds (by dsimp [Bz]; linarith))
+    hc.continuousAt.eventually (gt_mem_nhds (by dsimp [Bz]; linarith only [hh, hh1]))
   obtain ⟨ε, hε, hεs⟩ := Metric.mem_nhds_iff.mp hev
   refine ⟨ε, Bz, hε, hBz, ?_⟩
   intro y hy r hr
@@ -406,7 +410,7 @@ theorem weighted_referencePower_nonneg_radius {h : ℝ} (hh1 : h < 1 / 2)
     (C : ℝ) {r : ℝ} (hr : 0 ≤ r) :
     r ^ 2 * referencePower h C r = C * (2 : ℝ) ^ A h * r ^ (1 - 2 * h) := by
   rcases eq_or_lt_of_le hr with rfl | hr
-  · simp [referencePower, Real.zero_rpow (by linarith : 1 - 2 * h ≠ 0)]
+  · simp [referencePower, Real.zero_rpow (by linarith only [hh1] : 1 - 2 * h ≠ 0)]
   · exact weighted_referencePower h C hr
 
 theorem radialDifference_continuousOn {h C : ℝ} {F : ℝ × ℝ → ℝ}
@@ -431,7 +435,7 @@ theorem radialDifference_integrable_near_axis {h C B : ℝ} (hh1 : h < 1 / 2)
     hF.continuousOn.comp_continuous (continuous_id.prodMk continuous_const)
       (fun _ => ⟨mem_univ _, hη⟩)
   have hp : ContinuousOn (fun r : ℝ => C * (2 : ℝ) ^ A h * r ^ (1 - 2 * h)) (Icc 0 B) :=
-    continuousOn_const.mul (continuousOn_id.rpow_const (fun _ _ => Or.inr (by linarith)))
+    continuousOn_const.mul (continuousOn_id.rpow_const (fun _ _ => Or.inr (by linarith only [hh1])))
   have hc : IntegrableOn
       (fun r : ℝ => r ^ 2 * F (r, eta) - C * (2 : ℝ) ^ A h * r ^ (1 - 2 * h)) (Icc 0 B) :=
     (((continuous_id.pow 2).mul hf).continuousOn.sub hp).integrableOn_Icc
@@ -484,7 +488,7 @@ theorem radialDifference_integrable {h C B : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
   have hν : 1 - eta ^ 2 ∈ Icc (0 : ℝ) 1 := by
     exact ParametricHeatTail.diffusion_mem ⟨hη.1.le, hη.2.le⟩
   have hout : IntegrableOn (radialDifference h C F eta) (Ioi B) := by
-    apply ((integrableOn_Ioi_rpow_of_lt (a := -1 - 2 * h) (by linarith) hB).const_mul
+    apply ((integrableOn_Ioi_rpow_of_lt (a := -1 - 2 * h) (by linarith only [hh]) hB).const_mul
       (4 * |C| * (2 : ℝ) ^ A h * h * (1 + h))).mono'
         (((radialDifference_continuousOn hF hη).mono (Ioi_subset_Ioi hB.le)).aestronglyMeasurable
           measurableSet_Ioi)
@@ -530,7 +534,7 @@ theorem squareHalf_image : (fun r : ℝ => r ^ 2 / 2) '' Ioi 0 = Ioi 0 := by
 theorem squareHalf_injective : InjOn (fun r : ℝ => r ^ 2 / 2) (Ioi 0) := by
   intro r hr s hs h
   apply (sq_eq_sq₀ hr.le hs.le).mp
-  linarith
+  linarith only [h]
 
 theorem squareHalf_derivative (r : ℝ) : HasDerivAt (fun r : ℝ => r ^ 2 / 2) r r := by
   convert! ((hasDerivAt_id r).pow 2).div_const 2 using 1; simp
@@ -602,7 +606,7 @@ theorem radial_exterior_of_X_exterior {h C T : ℝ} (hT : 0 < T) {F E : ℝ × �
   have hXT : T ≤ R ^ 2 / 2 := by
     have hs := Real.sq_sqrt (show 0 ≤ 2 * T from mul_nonneg (by norm_num) hT.le)
     have hsq := sq_le_sq₀ (Real.sqrt_nonneg (2 * T)) hRp.le
-    linarith [(hsq.mpr hR)]
+    linarith only [hs, hsq, hR, (hsq.mpr hR)]
   rw [hFE R hRp eta hη, he eta hη _ hXT]
   have hexp : RadialHeatProfile.spatialExponent (1 + h) = -A h := by
     unfold RadialHeatProfile.spatialExponent A
@@ -770,7 +774,7 @@ theorem heated_exterior (P : OutgoingProfile.Profile) {XR : ℝ} (hXR : 0 < XR)
     simpa only [heatThreshold, mul_comm] using hX
   have hlog : 3 ≤ Real.log (X / OutgoingDilation.switchRadius P XR) := by
     simpa only [Real.log_exp] using Real.log_le_log (Real.exp_pos 3) hdiv
-  have he := HeatedOutgoing.E_eventual_heat P XR c eta X hXR hXp (by linarith)
+  have he := HeatedOutgoing.E_eventual_heat P XR c eta X hXR hXp (by linarith only [hlog])
   rw [← outgoing_amplitude_eq_heat P hXR] at he
   have hexp : RadialHeatProfile.spatialExponent (1 + P.data.h) = -A P.data.h := by
     unfold RadialHeatProfile.spatialExponent A

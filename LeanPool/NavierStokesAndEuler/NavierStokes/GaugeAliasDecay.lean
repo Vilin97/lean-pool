@@ -314,8 +314,10 @@ theorem compactAlias_finiteJets_local {coord a b d : ℝ} (U : SlowRegion coord)
     (fun _ hz => hz.2) m
   have hC := cutoffRadialDerivative_contDiffOn ha d b
     ((qLength_contDiffOn U.coord_pos U.coord_lt_one).mono (fun s hs => U.time_pos s hs)) hl
-  refine ⟨(2 : ℝ) ^ m * B * K, by positivity, ?_⟩
+  have h2BK : 0 ≤ (2 : ℝ) ^ m * B * K := mul_nonneg (mul_nonneg (pow_nonneg zero_le_two m) hB) hK
+  refine ⟨(2 : ℝ) ^ m * B * K, h2BK, ?_⟩
   intro f hf hs hp hm A hA M hM z hz hin j hj
+  have hMp : 0 ≤ (|M|⁻¹) ^ p := pow_nonneg (inv_nonneg.mpr (abs_nonneg M)) p
   have hfixed : PhysicalMeanDomain.SupportedOn c e U.carrier f := fun x hx hn =>
     ⟨(hleft _ hx).trans (hs x hx hn).1, (hs x hx hn).2.trans (hright _ hx)⟩
   have hAfixed : PhysicalMeanDomain.SupportedOn c e U.carrier
@@ -333,14 +335,14 @@ theorem compactAlias_finiteJets_local {coord a b d : ℝ} (U : SlowRegion coord)
       exact compactAlias_reference hc ha hab hd (qLength coord) (vector direction) hl hleft hs x hx
     rw [MeanRankUpdate.iteratedFDeriv_congr_germ he j]
     have hh := product_jet_bound (PhysicalMeanDomain.slowDomain_open U.isOpen) hC hJ hz hj hB
-      (show 0 ≤ K * A * (|M|⁻¹) ^ p by positivity)
+      (mul_nonneg (mul_nonneg hK hA) hMp)
       (fun i hi => hbB i hi z ⟨hz, hr.1.le, hr.2.le⟩)
       (fun i hi => hbK U.carrier U.isOpen f hf hfixed hp hm A hA M hM z hz
         ⟨hr.1.le, hr.2.le⟩ (fun k hk R _ Y => hin k hk R Y) i hi)
     exact hh.trans_eq (by ring)
   · rw [PhysicalMeanDomain.jet_zero_outside U.isOpen
       (compactAlias_q_contDiffOn U ha hab hd M (vector direction) hf hs) hAfixed hz hr j, norm_zero]
-    positivity
+    exact mul_nonneg (mul_nonneg h2BK hA) hMp
 
 theorem localBandJets_compactAlias_gain {coord a b d α κ B : ℝ} (U : SlowRegion coord)
     (ha : 0 < a) (hab : a < b) (hd : 0 < d) (direction : Direction)
@@ -358,7 +360,7 @@ theorem localBandJets_compactAlias_gain {coord a b d α κ B : ℝ} (U : SlowReg
   obtain ⟨p, hpnat⟩ := exists_nat_gt ((β - α) / κ)
   have horder : β ≤ α + κ * (p : ℝ) := by
     have hh := (div_lt_iff₀ hκ).mp hpnat
-    nlinarith
+    nlinarith only [hh]
   intro m
   obtain ⟨K, hK, hbK⟩ := compactAlias_finiteJets_local U ha hab hd direction m p
   obtain ⟨C, hC, k, hbC⟩ := hsource (m + 6 * p + 4)
@@ -431,7 +433,7 @@ theorem radialFrequency_inv_compare {h Mbase : ℝ} {n i D : ℕ} (hM : Mbase �
     calc
       _ ≤ ChartScales.Lambda ^ (i + D) * ChartScales.Q n ^ (ChartScales.radialExponent h / 2) :=
         mul_le_mul_of_nonneg_right
-          (pow_le_pow_right₀ (by linarith [ChartScales.Lambda_two_lt]) hgap)
+          (pow_le_pow_right₀ (by linarith only [ChartScales.Lambda_two_lt]) hgap)
           (Real.rpow_pos_of_pos (ChartScales.Q_pos n) _).le
       _ = _ := by
         rw [radialFrequency_abs, pow_add]

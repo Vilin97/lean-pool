@@ -50,7 +50,7 @@ theorem physicalDerivative_range (f : TimeLp T E) (t : Icc (0 : ℝ) T) :
     ∃ v : U, Q t v = realPrimitive T
       (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) t := by
   let w := fixedFrameSolver T hT Q Q₁ H c hc hQ hd K hK hH hsmall f
-  refine ⟨terminalPrimitive T hT (w : TimeLp T U) t, ?_⟩
+  refine ⟨terminalPrimitive (E := U) T hT (w : TimeLp T U) t, ?_⟩
   exact (terminalPrimitive_productDerivative T hT Q Q₁ hd (w : TimeLp T U) t).symm
 
 /-- The existing coordinate derivative is exactly the solved fixed-space field. -/
@@ -62,11 +62,11 @@ theorem coordinateDerivative_eq (f : TimeLp T E) :
 
 /-- Actual product tests supply the weak momentum identity for this inverse. -/
 theorem momentum_weak (f : TimeLp T E) (v : TimeLp T U)
-    (hv : initialTrace T hT v = 0) :
+    (hv : initialTrace (E := U) T hT v = 0) :
     ⟪momentum T hT Q (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f),v⟫_ℝ =
       -⟪momentumForcing T hT Q Q₁ H
         (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) f,
-        primitiveTimeLp T hT v⟫_ℝ := by
+        primitiveTimeLp (E := U) T hT v⟫_ℝ := by
   apply momentum_weak_of_product_tests T hT Q Q₁ hd H
     (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) f v
   exact fixedFrameSolver_weak T hT Q Q₁ H c hc hQ hd K hK hH hsmall f ⟨v,hv⟩
@@ -88,16 +88,15 @@ theorem exists_strong (hTpos : 0 < T) (f : TimeLp T E) :
         HasDerivAt v (coordinateSecondDerivative T hT Q Q₁ Q₂ c hc hQ H u f t) t) ∧
       ∀ᵐ t ∂timeMeasure T,
         gram (extendPath T hT Q t) (coordinateSecondDerivative T hT Q Q₁ Q₂ c hc hQ H u f t) =
-          (extendPath T hT Q t).adjoint (f t-(2 : ℝ) • extendPath T hT Q₁ t (v t)) := by
+          ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := U) (F := E)
+            (extendPath (Y := U →L[ℝ] E) T hT Q t)
+            (f t-(2 : ℝ) • extendPath T hT Q₁ t (v t)) := by
   let u := physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f
   obtain ⟨v,_,hv,hrep,_,hder,heq⟩ := exists_strong_of_weak_momentum T hT Q Q₁ Q₂ c hc hQ hd hd₁
     hTpos H u f (physicalDerivative_range T hT Q Q₁ H c hc hQ hd K hK hH hsmall f)
     hframe (momentum_weak T hT Q Q₁ H c hc hQ hd K hK hH hsmall f)
   refine ⟨v,hv,?_,hder,heq⟩
-  change (coordinateDerivative T hT Q Q₁ c hc hQ
-    (physicalDerivative T hT Q Q₁ H c hc hQ hd K hK hH hsmall f) : ℝ → U) =ᵐ[timeMeasure T] v
-        at hrep
-  rw [coordinateDerivative_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall f] at hrep
+  rw [← coordinateDerivative_eq T hT Q Q₁ H c hc hQ hd K hK hH hsmall f]
   exact hrep
 
 end EulerTransverseFixedStrong

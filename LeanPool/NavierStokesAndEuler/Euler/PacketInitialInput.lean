@@ -142,7 +142,7 @@ theorem highGrade_bound (n : ℕ) :
     6 R (fun i => S.growth t*S.H0^(2*i)) highShift (zero_le_one.trans hR)
     (fun i => mul_nonneg hγ (pow_nonneg hH _)) hc
   cases n with
-  | zero => exact (hf' 0).mono_amplitude (zero_le_one.trans hR) (by norm_num; linarith)
+  | zero => exact (hf' 0).mono_amplitude (zero_le_one.trans hR) (by norm_num; linarith only [hγ])
   | succ n =>
     have hh := (hc' n).mono_shift hR (mul_nonneg hγ (pow_nonneg hH _))
       (show highShift n ≤ highShift (n+1) by unfold highShift; omega)
@@ -150,7 +150,7 @@ theorem highGrade_bound (n : ℕ) :
         omega : 2*n ≤ 2*(n+1))) hγ
     exact ((hf' (n+1)).add hh).mono_amplitude (zero_le_one.trans hR) (by
       have := mul_nonneg hγ (pow_nonneg hH (2*(n+1)))
-      nlinarith)
+      nlinarith only [hp, this])
 
 theorem meanGrade_bound (n : ℕ) :
     (meanGradeField G t n).WordBound 6 R (3*S.H0^(2*n)) (highShift n) := by
@@ -167,7 +167,7 @@ theorem meanGrade_bound (n : ℕ) :
     apply h.mono_amplitude (zero_le_one.trans hR)
     have hp := S.mean_le_coarse i t
     have hH := pow_nonneg S.H0_pos.le (2*i)
-    nlinarith
+    nlinarith only [hp, hH]
 
 theorem high_bound (hN : 1 ≤ N) (C κ : ℝ) (hC : 1 ≤ C) (hκ : 0 ≤ κ)
     (hsmall : κ * tailBase R S.H0 C N ≤ 1 / 2) :
@@ -177,7 +177,7 @@ theorem high_bound (hN : 1 ≤ N) (C κ : ℝ) (hC : 1 ≤ C) (hκ : 0 ≤ κ)
   apply Field.wordBound_evaluate_low_high_scaled N hN κ (tailBase R S.H0 C N)
     (fixedVelocityGradeCost R S.H0 1) (fixedVelocityGradeCost R S.H0 2) (S.growth t)
     hκ (tailBase_nonneg R S.H0 C (zero_le_one.trans hC) N) (S.growth_pos t) hsmall
-    _ _ 6 (4*R) (by linarith)
+    _ _ 6 (4*R) (by linarith only [hR])
   · intro s x θ
     have hz : timeSlice t (a 0).high = 0 := by rw [ha]; rfl
     rw [highGrade,assemble_zero N _ _ hz]
@@ -201,7 +201,7 @@ theorem mean_bound (hN : 1 ≤ N) (ha1 : (a 1).mean = 0) (C κ : ℝ) (hC : 1 �
   have h := Field.wordBound_evaluate_low_high N hN κ (tailBase R S.H0 C N)
     0 (fixedVelocityGradeCost R S.H0 2) hκ
     (tailBase_nonneg R S.H0 C (zero_le_one.trans hC) N) hsmall
-    (meanGrade N t a) (meanGradeField G t) 6 (4*R) (by linarith)
+    (meanGrade N t a) (meanGradeField G t) 6 (4*R) (by linarith only [hR])
     (by intro s x θ; simp only [meanGrade,truncate_of_le N 0 _ (Nat.zero_le N)]; rw [ha]; rfl)
     (Field.wordBound_of_zero _
       (by intro s x θ; simp only [meanGrade,truncate_of_le N 1 _ hN]; rw [ha1]; rfl) 6 (4*R) 0)
@@ -256,32 +256,32 @@ include hG hR ha hN hC hk hbase
 
 theorem high_frequency_bound :
     (highField G t k⁻¹).WordBound 6 (4*R) (S.growth t*highCost R S.H0) 0 := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hB0 := tailBase_nonneg R S.H0 C (zero_le_one.trans hC) N
   have hsmall : k⁻¹*tailBase R S.H0 C N ≤ 1/2 := by
     simpa only [div_eq_mul_inv,mul_comm] using grade_ratio_le_half k (tailBase R S.H0 C N) hk hbase
   have h := high_bound G S R hG hR ha t hN C k⁻¹ hC (inv_nonneg.mpr hk0.le) hsmall
-  have h4 := fourth_power_le_frequency k _ (by linarith) hB0 hbase
+  have h4 := fourth_power_le_frequency k _ (by linarith only [hk]) hB0 hbase
   have hc1 := fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 1
   have hc2 := fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 2
   have hn := normalized_low_high_le k (tailBase R S.H0 C N)
     (fixedVelocityGradeCost R S.H0 1) (fixedVelocityGradeCost R S.H0 2) (by linarith) hc2 h4
-  apply h.mono_amplitude (by linarith)
+  apply h.mono_amplitude (by linarith only [hR])
   apply mul_le_mul_of_nonneg_left _ (S.growth_pos t).le
   apply le_trans _ hn
   apply le_mul_of_one_le_left
   · positivity
-  · linarith
+  · linarith only [hk]
 
 theorem mean_frequency_bound (ha1 : (a 1).mean = 0) :
     (meanField G t k⁻¹).WordBound 6 (4*R) (meanCost R S.H0/k^2) 0 := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hB0 := tailBase_nonneg R S.H0 C (zero_le_one.trans hC) N
   have hsmall : k⁻¹*tailBase R S.H0 C N ≤ 1/2 := by
     simpa only [div_eq_mul_inv,mul_comm] using grade_ratio_le_half k (tailBase R S.H0 C N) hk hbase
   have h := mean_bound G S R hG hR ha t hN ha1 C k⁻¹ hC (inv_nonneg.mpr hk0.le) hsmall
-  have h4 := fourth_power_le_frequency k _ (by linarith) hB0 hbase
-  exact h.mono_amplitude (by linarith)
+  have h4 := fourth_power_le_frequency k _ (by linarith only [hk]) hB0 hbase
+  exact h.mono_amplitude (by linarith only [hR])
     (remainder_low_high_le k _ (fixedVelocityGradeCost R S.H0 2) hk0 h4)
 
 theorem high_physical_bound (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
@@ -291,10 +291,10 @@ theorem high_physical_bound (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
         physicalDerivativeCost P (4*R) (‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+‖m‖)) s) :=
             by
   have h := high_frequency_bound G S R hG hR ha t hN C k hC hk hbase
-  have hs := h.scaled_graph_derivativeSum_le (by linarith)
+  have hs := h.scaled_graph_derivativeSum_le (by linarith only [hR])
     (mul_nonneg (S.growth_pos t).le (highCost_nonneg R S.H0 (zero_le_one.trans hR)))
     t ell hell hell1 k m (‖coordinateEquiv.symm.toContinuousLinearMap‖*(1+‖m‖)) k
-    (by positivity) (by linarith) (frequencyFactor_le_linear k (by linarith) m) s
+    (by positivity) (by linarith) (frequencyFactor_le_linear k (by linarith only [hk]) m) s
   exact hs.trans_eq (by ring)
 
 theorem mean_physical_bound (ha1 : (a 1).mean = 0) (ell : ℝ) (hell : 0 < ell) (hell1 : ell ≤ 1)
@@ -303,7 +303,7 @@ theorem mean_physical_bound (ha1 : (a 1).mean = 0) (ell : ℝ) (hell : 0 < ell) 
       (ell⁻¹)^s/k^2*(meanCost R S.H0 *
         physicalDerivativeCost P (4*R) ‖coordinateEquiv.symm.toContinuousLinearMap‖ s) := by
   have h := mean_frequency_bound G S R hG hR ha t hN C k hC hk hbase ha1
-  have hs := h.scaled_graph_derivativeSum_le (by linarith)
+  have hs := h.scaled_graph_derivativeSum_le (by linarith only [hR])
     (div_nonneg (meanCost_nonneg R S.H0 (zero_le_one.trans hR)) (sq_nonneg k))
     t ell hell hell1 0 m ‖coordinateEquiv.symm.toContinuousLinearMap‖ 1
     (norm_nonneg _) le_rfl (by simp [frequencyFactor]) s
@@ -395,7 +395,7 @@ theorem initializedInitial_common_support
       tsupport (initializedInitialMean M D τ hτ hτT B δ hδ ξ hs α N k) ⊆ Metric.closedBall 0 2 := by
   refine ⟨(initializedInitialHigh_support M D hTime τ hτ hτT B δ hδ ξ hs α hS N k).trans ?_,
     initializedInitialMean_support M D hTime τ hτ hτT B δ hδ ξ hs α N k⟩
-  exact Metric.closedBall_subset_closedBall (by have := M.ℓ_le_one; linarith)
+  exact Metric.closedBall_subset_closedBall (by have := M.ℓ_le_one; linarith only [this])
 
 include hTime in
 theorem initializedInitialMean_zero (hL : M.L = 0) (N : ℕ) (k : ℝ) :
@@ -689,12 +689,12 @@ theorem costs_le_envelope (s : ℕ) (R H X : ℝ) (hR : 0 ≤ R) (hH : 0 ≤ H)
   have hc : 0 ≤ coordinateCost := norm_nonneg _
   have h1 := gradeCost_mono R H X hR hH hRX hHX 1
   have h2 := gradeCost_mono R H X hR hH hRX hHX 2
-  have hhigh : highCost R H ≤ highCost X X := by unfold highCost; linarith
-  have hmean : meanCost R H ≤ meanCost X X := by unfold meanCost; linarith
+  have hhigh : highCost R H ≤ highCost X X := by unfold highCost; linarith only [h1, h2]
+  have hmean : meanCost R H ≤ meanCost X X := by unfold meanCost; linarith only [h2]
   have hd1 := physicalDerivativeCost_mono (by positivity : 0 ≤ 4*R)
-    (by positivity : 0 ≤ coordinateCost*2) (by linarith : 4*R ≤ 4*X) le_rfl s
+    (by positivity : 0 ≤ coordinateCost*2) (by linarith only [hRX] : 4*R ≤ 4*X) le_rfl s
   have hd2 := physicalDerivativeCost_mono (by positivity : 0 ≤ 4*R)
-    hc (by linarith : 4*R ≤ 4*X) (by linarith : coordinateCost ≤ coordinateCost*2) s
+    hc (by linarith : 4*R ≤ 4*X) (by linarith only [hc] : coordinateCost ≤ coordinateCost*2) s
   have hv := highCost_nonneg X X hX
   have hm := meanCost_nonneg X X hX
   have hd := physicalDerivativeCost_nonneg period (4*X) (coordinateCost*2) (by
@@ -900,8 +900,8 @@ theorem initialized_uniform_initial_bounds (s : ℕ) :
   have hbase : EulerPacketCoarseMajorant.tailBase L'.R S.H0 BC.termCost (truncation k) ≤ k^(1/100 :
       ℝ) :=
     tailBase_frequency L'.R S.H0 BC.termCost k BC.termCost_nonneg (by
-        linarith) (costs.1.trans hfrequency)
-  have hn := (truncation_bounds k (by linarith)).1
+        linarith only [hk]) (costs.1.trans hfrequency)
+  have hn := (truncation_bounds k (by linarith only [hk])).1
   have hh := initializedInitialHigh_Hm M D hTime τ hτ hτT B δ hδ ξ hs α
     L' H' NB' guards.1 LM' guards.2.1 BC guards.2.2.2.2.2 guards.2.2.2.2.1
     hδ1 hα guards.2.2.2.1 guards.2.2.1 S hgrowth (truncation k) hn k hk hbase s
@@ -918,7 +918,7 @@ theorem initialized_uniform_initial_bounds (s : ℕ) :
       EulerPacketInitialCost.envelope s (EulerPacketInitializedCost.envelope W) := by
     simpa only [D.m₀_unit,show (1 : ℝ)+1=2 by norm_num,coordinateCost] using hp.1
   have hell : 0 ≤ M.ℓ⁻¹ := (inv_pos.mpr M.ℓ_pos).le
-  have hk0 : 0 ≤ k := by linarith
+  have hk0 : 0 ≤ k := by linarith only [hk]
   exact ⟨hh.trans (mul_le_mul_of_nonneg_left hhigh (by positivity)),
     hm.trans (mul_le_mul_of_nonneg_left hp.2 (by positivity))⟩
 
@@ -928,12 +928,11 @@ variable (Cagree : SourceCoefficientAgreement M D)
   (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
   (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
-local notation "Q" => initializedUniformBudget M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα
-  L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet
-
 theorem initializedUniformBudget_initial (s : ℕ) :
     scale M.ℓ (initializedExactPhysicalVelocity M D hTime τ hτ hτT B δ hδ ξ hs α
-      Cagree (truncation k) (truncation_bounds k (by linarith)).1 k hk Q
+      Cagree (truncation k) (truncation_bounds k (by linarith only [hk])).1 k hk
+      (initializedUniformBudget M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα
+        L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet)
       ⟨0,le_rfl,D.T_pos.le⟩ id) =
       initializedInitialHigh M D τ hτ hτT B δ hδ ξ hs α (truncation k) k +
       initializedInitialMean M D τ hτ hτT B δ hδ ξ hs α (truncation k) k ∧
@@ -942,7 +941,9 @@ theorem initializedUniformBudget_initial (s : ℕ) :
     derivativeSum s (initializedInitialMean M D τ hτ hτT B δ hδ ξ hs α (truncation k) k) ≤
       (M.ℓ⁻¹)^s/k^2*EulerPacketInitialCost.envelope s (EulerPacketInitializedCost.envelope W) :=
   ⟨initializedExactPhysicalVelocity_initial_split M D hTime τ hτ hτT B δ hδ ξ hs α
-    Cagree (truncation k) (truncation_bounds k (by linarith)).1 k hk Q,
+    Cagree (truncation k) (truncation_bounds k (by linarith only [hk])).1 k hk
+    (initializedUniformBudget M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα
+      L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet),
    initialized_uniform_initial_bounds M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα
     L NB LM W hW hprofile k hk hfrequency s⟩
 
@@ -1043,11 +1044,11 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
   (Ω : Set Space) (hΩ : MeasurableSet Ω) (hΩo : IsOpen Ω)
   (hsub : S ⊆ Ω) (hΩball : ∀ x ∈ Ω, ‖x‖ ≤ (1 / 2 : ℝ))
 
-local notation "A" => L.geometryInputs H m hm R S hS τ hτ hτT P J hball Ti TiTotal
-  hτ1 hTi hT1 hTiTotal Ω hΩ hΩo hsub hΩball
-local notation "BC" => joinedCoefficientBudget period (G.meanData H)
+local notation "A" => (L.geometryInputs H m hm R S hS τ hτ hτT P J hball Ti TiTotal
+  hτ1 hTi hT1 hTiTotal Ω hΩ hΩo hsub hΩball)
+local notation "BC" => (joinedCoefficientBudget period (G.meanData H)
   (G.transverseData m hm R S hS) rfl τ hτ hτT (G.historyOn H m hm R S hS τ hτ hτT)
-  (JoinedInputs.normal A)
+  (JoinedInputs.normal A))
 
 theorem geometry_initial_primitives (ξ : U) (hδ : 0 < J.δ) :
     let X := L.geometryParameterSize H m hm R S hS τ hτ hτT P J Ti TiTotal ξ

@@ -52,23 +52,24 @@ def residualPath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourceResidual P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y)
 
-theorem residualPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (residualPath τ hτ hτT B Y))
-    :=
+theorem residualPath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := ℝ) P a (residualPath τ hτ hτT B Y)) :=
   sourceResidual_contDiff P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y) (by simpa only [map_zero] using (contDiff_const :
       ContDiff ℝ ∞ (fun _ : LiftTangent => (0 : C(Icc (0 : ℝ) D.T,LiftL2 P)))))
     (velocityPath_orbit τ hτ hτT B Y)
 
 theorem residualPath_slice_smooth (t : Icc (0 : ℝ) D.T) :
-    ContDiff ℝ ∞ (fun a => translate P a (residualPath τ hτ hτT B Y t)) :=
+    ContDiff ℝ ∞ (fun a => translate (V := ℝ) P a (residualPath τ hτ hτT B Y t)) :=
   (ContinuousMap.evalCLM ℝ t : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) →L[ℝ]
     CylinderL2 P ℝ).contDiff.comp (residualPath_orbit τ hτ hτT B Y)
 
 theorem residualPath_average_zero (t : Icc (0 : ℝ) D.T) :
     average P (residualPath τ hτ hτT B Y t) = 0 := by
-  change average P (fullOperatorMap P
+  change average P (fullOperatorMap (E := Space) (F := ℝ) P
     (normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower t)
-    (0-(2 : ℝ) • fullOperatorMap P (D.M.field t) (velocityPath τ hτ hτT B Y t))) = 0
+    (0-(2 : ℝ) • fullOperatorMap (E := Space) (F := Space) P (D.M.field t)
+      (velocityPath τ hτ hτT B Y t))) = 0
   simp only [average_fullOperator,map_sub,map_smul,map_zero,
     velocityPath_mean_zero τ hτ hτT B Y t,smul_zero,sub_self]
 
@@ -104,21 +105,23 @@ theorem normalResidual_smooth (t : Icc (0 : ℝ) D.T) (x : LiftDomain P) :
 theorem residualPath_ae (t : Icc (0 : ℝ) D.T) :
     residualPath τ hτ hτT B Y t =ᵐ[liftMeasure P] normalResidual τ hτ hτT B Y t := by
   let v := velocityPath τ hτ hτT B Y t
-  let w := fullOperatorMap P (D.M.field t) v
+  let w := fullOperatorMap (E := Space) (F := Space) P (D.M.field t) v
   let N := normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower t
-  have he : residualPath τ hτ hτT B Y t = (-2 : ℝ) • fullOperatorMap P N w := by
-    change fullOperatorMap P N (0-(2 : ℝ) • w) = _
+  have he : residualPath τ hτ hτT B Y t =
+      (-2 : ℝ) • fullOperatorMap (E := Space) (F := ℝ) P N w := by
+    change fullOperatorMap (E := Space) (F := ℝ) P N (0-(2 : ℝ) • w) = _
     simp only [zero_sub,map_neg,map_smul,neg_smul]
   rw [he]
-  filter_upwards [Lp.coeFn_smul (-2 : ℝ) (fullOperatorMap P N w),
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P N) w,
-    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (D.M.field t)) v,
+  filter_upwards [Lp.coeFn_smul (-2 : ℝ) (fullOperatorMap (E := Space) (F := ℝ) P N w),
+    EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift (W := Space →L[ℝ] ℝ) P N) w,
+    EulerLpOperatorField.full_ae (liftMeasure P)
+      (fieldLift (W := Space →L[ℝ] Space) P (D.M.field t)) v,
     pointField_ae P (velocityPath τ hτ hτT B Y) (velocityPath_orbit τ hτ hτT B Y) t]
     with x hs hn hm hv
   rw [hs]
-  change (fullOperatorMap P N w) x = N x.1 (w x) at hn
+  change (fullOperatorMap (E := Space) (F := ℝ) P N w) x = N x.1 (w x) at hn
   change w x = D.M.field t x.1 (v x) at hm
-  change (-2 : ℝ)*((fullOperatorMap P N w) x) = _
+  change (-2 : ℝ)*((fullOperatorMap (E := Space) (F := ℝ) P N w) x) = _
   rw [hn]
   change (-2 : ℝ)*(normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower
     t x.1 (w x)) = _
@@ -246,7 +249,7 @@ variable (hSym : ∀ x, -x ∈ D.support ↔ x ∈ D.support)
   (hF : ∀ t x, D.F.field t (-x) = D.F.field t x)
   (hM : ∀ t x, D.M.field t (-x) = D.M.field t x)
   (hH : ∀ t x, B.H.field t (-x) = B.H.field t x)
-  (hY : reflection P (Y.value : CylinderL2 P U) = -(Y.value : CylinderL2 P U))
+  (hY : reflection (V := U) P (Y.value : CylinderL2 P U) = -(Y.value : CylinderL2 P U))
 
 include hSym hF hM hH hY
 

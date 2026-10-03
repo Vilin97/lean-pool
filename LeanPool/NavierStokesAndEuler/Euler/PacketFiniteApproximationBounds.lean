@@ -45,7 +45,7 @@ theorem velocity_bound (κ : ℝ) (hκ : 0 ≤ κ)
   exact Field.wordBound_evaluate_low_high N hN κ (tailBase R S.H0 C N)
     (fixedVelocityGradeCost R S.H0 1) (fixedVelocityGradeCost R S.H0 2) hκ
     (tailBase_nonneg R S.H0 C (zero_le_one.trans hC) N) hsmall
-    (assembledVelocity N a) (velocityGradeField hT G) 6 (4*R) (by linarith)
+    (assembledVelocity N a) (velocityGradeField hT G) 6 (4*R) (by linarith only [hR])
     (fun _ _ _ => by rw [hz]; rfl)
     ((velocityGrade_bound hT G hG hR ha 1).fixed_velocity_grade (zero_le_one.trans hR) S.H0_pos.le)
     ((velocityGrade_bound hT G hG hR ha 2).fixed_velocity_grade (zero_le_one.trans hR) S.H0_pos.le)
@@ -68,7 +68,7 @@ theorem velocityDerivative_bound (κ : ℝ) (hκ : 0 ≤ κ)
     (fixedVelocityGradeCost R S.H0 1) (fixedVelocityGradeCost R S.H0 2) hκ
     (tailBase_nonneg R S.H0 C (zero_le_one.trans hC) N) hsmall
     (velocityTimeCoefficients (T := T) (N := N) (a := a)) (velocityGradeDerivativeField hT G)
-    6 (4*R) (by linarith) (fun _ _ _ => by rw [hz]; rfl)
+    6 (4*R) (by linarith only [hR]) (fun _ _ _ => by rw [hz]; rfl)
     ((velocityGradeDerivative_bound hT G hG hR ha 1).fixed_velocity_grade (zero_le_one.trans hR)
         S.H0_pos.le)
     ((velocityGradeDerivative_bound hT G hG hR ha 2).fixed_velocity_grade (zero_le_one.trans hR)

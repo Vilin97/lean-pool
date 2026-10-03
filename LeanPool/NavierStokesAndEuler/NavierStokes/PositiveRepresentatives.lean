@@ -52,7 +52,7 @@ theorem positiveTime_convex : Convex ℝ positiveTime := by
   intro x hx y hy a b ha hb hab
   change 0 < a * x.2.2 + b * y.2.2
   rcases eq_or_lt_of_le ha with rfl | ha'
-  · have hb' : b = 1 := by linarith
+  · have hb' : b = 1 := by linarith only [hab]
     simpa only [zero_mul, zero_add, hb', one_mul, positiveTime, Set.mem_ofPred_eq] using hy
   · exact add_pos_of_pos_of_nonneg (mul_pos ha' hx) (mul_nonneg hb hy.le)
 
@@ -117,11 +117,11 @@ theorem scalarSlope_lower_of_nonnegative {a q z : ℝ} (ha : 0 ≤ a) (hq : 0 < 
     (hf : 0 ≤ forwardScalar a z q) : 1 - a ≤ scalarSlope a z q := by
   have hs : z ^ 2 * q ^ a / q ≤ 1 := (div_le_one hq).mpr (by
     dsimp only [forwardScalar] at hf
-    linarith)
+    linarith only [hf])
   have hm := mul_le_mul_of_nonneg_left hs ha
   rw [scalarSlope, Real.rpow_sub_one hq.ne']
   calc
-    1 - a ≤ 1 - a * (z ^ 2 * q ^ a / q) := by linarith
+    1 - a ≤ 1 - a * (z ^ 2 * q ^ a / q) := by linarith only [hm]
     _ = _ := by ring
 
 theorem scalarSlope_mono {a z q r : ℝ} (ha : 0 ≤ a) (ha1 : a ≤ 1)
@@ -129,7 +129,7 @@ theorem scalarSlope_mono {a z q r : ℝ} (ha : 0 ≤ a) (ha1 : a ≤ 1)
   have hp := Real.rpow_le_rpow_of_nonpos hq hqr (sub_nonpos.mpr ha1)
   have hm := mul_le_mul_of_nonneg_left hp (mul_nonneg (sq_nonneg z) ha)
   dsimp only [scalarSlope]
-  linarith
+  linarith only [hm]
 
 theorem forwardScalar_hasDerivAt {a z q : ℝ} (hq : q ≠ 0) :
     HasDerivAt (forwardScalar a z) (scalarSlope a z q) q := by
@@ -241,7 +241,7 @@ noncomputable def liftedReference (h a b : ℝ) : Set Slow :=
 theorem forwardSlow_continuous {h : ℝ} (hh : 0 ≤ h) : Continuous (forwardSlow h) :=
   continuous_fst.prodMk (continuous_snd.fst.prodMk (continuous_snd.snd.sub
     ((continuous_snd.fst.pow 2).mul
-      ((Real.continuous_rpow_const (by linarith : 0 ≤ 2 * h)).comp continuous_snd.snd))))
+      ((Real.continuous_rpow_const (by linarith only [hh] : 0 ≤ 2 * h)).comp continuous_snd.snd))))
 
 theorem liftedReference_isCompact {h a b : ℝ} (hh : 0 ≤ h) :
     IsCompact (liftedReference h a b) := by
@@ -323,25 +323,26 @@ theorem stableQ_spec {h : ℝ} {p : Slow} (hp : p ∈ stableDomain h) :
 
 theorem stableQ_smoothAt {h : ℝ} (hh : 0 ≤ h) (hh1 : h ≤ 1 / 2)
     {p : Slow} (hp : p ∈ stableDomain h) : ContDiffAt ℝ ∞ (stableQ h) p :=
-  ((stableInverse_smoothAt (by linarith) (by linarith) hp.2).comp p
+  ((stableInverse_smoothAt (by linarith only [hh]) (by linarith only [hh1]) hp.2).comp p
     (contDiffAt_snd.snd.prodMk contDiffAt_snd.fst)).fst
 
 theorem stableInner_smoothAt {h : ℝ} (hh : 0 ≤ h) (hh1 : h ≤ 1 / 2)
     {p : Slow} (hp : p ∈ stableDomain h) : ContDiffAt ℝ ∞ (stableInner h) p := by
   have hq := stableQ_smoothAt hh hh1 hp
   have hpos := (stableQ_spec hp).1
-  exact ((contDiffAt_fst.pow 2).div (contDiffAt_const.mul hq) (by positivity)).prodMk
-    (contDiffAt_snd.fst.div (hq.rpow_const_of_ne hpos.ne')
+  exact (((contDiffAt_fst (𝕜 := ℝ) (E := ℝ) (F := ℝ × ℝ)).pow 2).div (contDiffAt_const.mul hq)
+    (by positivity)).prodMk
+    ((contDiffAt_snd (𝕜 := ℝ) (E := ℝ) (F := ℝ × ℝ)).fst.div (hq.rpow_const_of_ne hpos.ne')
       (Real.rpow_pos_of_pos hpos _).ne')
 
 theorem positiveTime_mem_stableDomain {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : Slow} (hR : 0 < p.1) (hT : 0 < p.2.2) : p ∈ stableDomain h :=
-  ⟨hR, positiveTime_mem_stableTarget (by linarith) (by linarith) hT⟩
+  ⟨hR, positiveTime_mem_stableTarget (by linarith only [hh]) (by linarith only [hh1]) hT⟩
 
 theorem stableQ_eq_chartQ {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : Slow} (hp : 0 < p.2.2) : stableQ h p = SimilarityHomogeneity.chartQ h p := by
   unfold stableQ
-  rw [stableInverse_eq_inverseMap (by linarith) (by linarith) hp]
+  rw [stableInverse_eq_inverseMap (by linarith only [hh]) (by linarith only [hh1]) hp]
   rfl
 
 theorem stableInner_eq_chartInner {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -364,9 +365,9 @@ theorem referenceCompact_subset_stableDomain {h a b : ℝ} (hh : 0 ≤ h) (hh1 :
   obtain ⟨_, hT, rho, hrho, he, _⟩ := hp
   have hrhopos : 0 < rho := lt_of_lt_of_le (by norm_num) hrho.1
   refine ⟨hR, ⟨(rho, p.2.1), ⟨hrhopos, ?_⟩, Prod.ext he rfl⟩⟩
-  have hm := scalarSlope_lower_of_nonnegative (show 0 ≤ 2 * h by linarith) hrhopos
+  have hm := scalarSlope_lower_of_nonnegative (show 0 ≤ 2 * h by linarith only [hh]) hrhopos
     (show 0 ≤ forwardScalar (2 * h) p.2.1 rho by rwa [he])
-  linarith
+  linarith only [hh1, hm]
 
 theorem stableQ_bounds_reference {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
     (ha : 0 < a) (hab : a ≤ b) {p : Slow}
@@ -375,12 +376,12 @@ theorem stableQ_bounds_reference {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
   rw [referenceCompact_eq_activeReference hh hh1 ha hab] at hp
   obtain ⟨_, hT, rho, hrho, he, hX⟩ := hp
   have hrhopos : 0 < rho := lt_of_lt_of_le (by norm_num) hrho.1
-  have hm := scalarSlope_lower_of_nonnegative (show 0 ≤ 2 * h by linarith) hrhopos
+  have hm := scalarSlope_lower_of_nonnegative (show 0 ≤ 2 * h by linarith only [hh]) hrhopos
     (show 0 ≤ forwardScalar (2 * h) p.2.1 rho by rwa [he])
-  have hs : (rho, p.2.1) ∈ stableSource (2 * h) := ⟨hrhopos, by dsimp; linarith⟩
+  have hs : (rho, p.2.1) ∈ stableSource (2 * h) := ⟨hrhopos, by dsimp; linarith only [hh1, hm]⟩
   have ht : forwardMap (2 * h) (rho, p.2.1) = (p.2.2, p.2.1) := Prod.ext he rfl
   have hq := congrArg (fun x : ℝ × ℝ => x.1)
-    (stableInverse_forwardMap (by linarith : 0 ≤ 2 * h) (by linarith : 2 * h ≤ 1) hs)
+    (stableInverse_forwardMap (by linarith : 0 ≤ 2 * h) (by linarith only [hh1] : 2 * h ≤ 1) hs)
   rw [ht] at hq
   change stableQ h p = rho at hq
   simpa only [stableX, hq] using And.intro hrho hX
@@ -404,7 +405,7 @@ theorem stableEta_mem_reference {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
     rw [stableEta_sq hd]
     apply (div_le_one hq.1).mpr
     dsimp only [forwardScalar] at hq
-    linarith [hq.2]
+    linarith only [hq, ht, hq.2]
   exact abs_le.mp ((sq_le_one_iff_abs_le_one _).mp hs)
 
 theorem reference_zeroTime_axial_ne {h a b : ℝ} (hh : 0 ≤ h) (hh1 : h < 1 / 2)
@@ -437,8 +438,8 @@ theorem referenceCompact_subset_boundedDomain {h a b : ℝ} (hh : 0 ≤ h) (hh1 
   intro p hp
   have hb := stableQ_bounds_reference hh hh1 ha hab hp
   refine ⟨referenceCompact_subset_stableDomain hh hh1 ha hab hp, ?_, ?_⟩
-  · exact ⟨by linarith [hb.1.1], by linarith [hb.1.2]⟩
-  · exact ⟨by linarith [hb.2.1], by linarith [hb.2.2]⟩
+  · exact ⟨by linarith only [hb, hb.1.1], by linarith only [hb, hb.1.2]⟩
+  · exact ⟨by linarith only [ha, hb, hb.2.1], by linarith only [ha, hab, hb, hb.2.2]⟩
 
 /-- Three-mesh open box; the actual enlarged support uses two meshes. -/
 noncomputable def openGrid (n : ℕ) (k : SlotColoring.Grid) : Set Slow :=
@@ -468,7 +469,7 @@ theorem openGrid_subset_gridBox (n : ℕ) (k : SlotColoring.Grid) :
     · exact hp.1
     · exact hp.2.1
     · exact hp.2.2
-  exact abs_le.mpr ⟨by linarith [hj.1], by linarith [hj.2]⟩
+  exact abs_le.mpr ⟨by linarith only [hj, hj.1], by linarith only [hj, hj.2]⟩
 
 theorem gridBox_two_subset_openGrid {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.Grid) :
     PrimaryRepresentatives.gridBox n k 2 ⊆ openGrid n k := by
@@ -480,7 +481,7 @@ theorem gridBox_two_subset_openGrid {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.G
       PrimaryRepresentatives.position p j <
         SquaredPartition.nativeSpacing n * (k j : ℝ) + 3 * SquaredPartition.nativeSpacing n := by
     have hj := abs_le.mp (hp j)
-    constructor <;> linarith [hj.1, hj.2]
+    constructor <;> linarith only [hs, hj, hj.1, hj.2]
   exact ⟨hc 0, hc 1, hc 2⟩
 
 theorem representative_mem_cell (K : Set Slow) (L : ActiveLabel K) :
@@ -490,7 +491,7 @@ theorem representative_mem_cell (K : Set Slow) (L : ActiveLabel K) :
     (representative_mem_tsupport K L)
   refine ⟨gridBox_two_subset_openGrid L.property.1 L.val.2 (fun j => ?_), representative_time_pos K
       L⟩
-  exact (hr j).trans (by nlinarith)
+  exact (hr j).trans (by nlinarith only [hs])
 
 theorem enlarged_positive_subset_cell {n : ℕ} (hn : 1 ≤ n) (k : SlotColoring.Grid) :
     PrimaryRepresentatives.gridBox n k 2 ∩ positiveTime ⊆ positiveCell n k :=
@@ -539,7 +540,7 @@ theorem baseChart_norm_bound {a b : ℝ} (ha : 0 < a) {p : Slow}
   · apply max_le
     · exact (abs_le.mpr ⟨hp.2.1.1.le, hp.2.1.2.le⟩).trans (le_max_right _ _)
     · apply le_trans _ (le_max_right _ _)
-      exact abs_le.mpr ⟨by linarith [hp.2.2.1], hp.2.2.2.le⟩
+      exact abs_le.mpr ⟨by linarith only [hp, hp.2.2.1], hp.2.2.2.le⟩
 
 /-- The same positive representative and a convex open domain work for
 every positive-time point in its enlarged two-mesh box. All coordinate
@@ -611,7 +612,7 @@ theorem compact_jet_bound {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     ∃ C : ℝ, 0 < C ∧ ∀ p ∈ K, ‖iteratedFDeriv ℝ n f p‖ ≤ C := by
   have hc : ContinuousOn (iteratedFDeriv ℝ n f) K := by
     intro p hp
-    apply ((hf p hp).iteratedFDeriv_right (m := 0) ?_).continuousAt.continuousWithinAt
+    apply ((hf p hp).iteratedFDeriv_right (m := 0) (i := n) ?_).continuousAt.continuousWithinAt
     simpa only [zero_add] using
       (ENat.natCast_lt_of_coe_top_le_withTop le_rfl n).le
   obtain ⟨C, hC, hb⟩ := (hK.image_of_continuousOn hc).isBounded.exists_pos_norm_le

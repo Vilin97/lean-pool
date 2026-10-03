@@ -94,7 +94,8 @@ theorem forwardMap_hasFDerivAt_equiv (d : E → CircleDensity) (z : E × ℝ)
       (D.comp (ContinuousLinearMap.inr ℝ E ℝ)) z.2 := by
     change HasFDerivAt ((familyPhase d) ∘ fun t : ℝ => (z.1, t))
       (D.comp (ContinuousLinearMap.inr ℝ E ℝ)) z.2
-    exact hphase.hasFDerivAt.comp z.2 (hasFDerivAt_prodMk_right (𝕜 := ℝ) z.1 z.2)
+    exact hphase.hasFDerivAt.comp z.2 (f := fun t : ℝ => (z.1, t))
+      (hasFDerivAt_prodMk_right (𝕜 := ℝ) z.1 z.2)
   have hvertical₂ : HasFDerivAt (phaseMap (d z.1)) (B : ℝ →L[ℝ] ℝ) z.2 :=
     (phaseMap_hasDerivAt (d z.1) z.2).hasFDerivAt_equiv
       (ne_of_gt ((d z.1).positive z.2))
@@ -108,11 +109,10 @@ theorem forwardMap_hasFDerivAt_equiv (d : E → CircleDensity) (z : E × ℝ)
     · rfl
     · change B y.2 + D (y.1, 0) = D y
       have hv : D (0, y.2) = B y.2 := congrArg (fun f : ℝ →L[ℝ] ℝ => f y.2) hvertical
-      rw [← hv, ← map_add]
-      simp
+      rw [← hv, ← ContinuousLinearMap.map_add, Prod.mk_add_mk, zero_add, add_zero]
   refine ⟨L, ?_⟩
   rw [hL]
-  exact hasFDerivAt_fst.prodMk hphase.hasFDerivAt
+  exact (hasFDerivAt_fst.prodMk hphase.hasFDerivAt :)
 
 section InverseSmoothness
 
@@ -212,8 +212,7 @@ theorem parameterJet_contDiffOn (F : E × ℝ → V) (U : Set E) (hU : IsOpen U)
     ContDiffOn ℝ ∞ (parameterJet F k) (U ×ˢ univ) := by
   induction k with
   | zero =>
-      exact hF.continuousLinearMap_comp
-        ((continuousMultilinearCurryFin0 ℝ E V).symm : V →L[ℝ] E [×0]→L[ℝ] V)
+      exact (continuousMultilinearCurryFin0 ℝ E V).symm.contDiff.comp_contDiffOn hF
   | succ k ih =>
       intro z hz
       have hjet : ContDiffAt ℝ ∞ (parameterJet F k) z :=
@@ -224,9 +223,8 @@ theorem parameterJet_contDiffOn (F : E × ℝ → V) (U : Set E) (hU : IsOpen U)
       have hD : ContDiffAt ℝ ∞
           (fun w : E × ℝ => fderiv ℝ (fun p : E => parameterJet F k (p, w.2)) w.1) z :=
         hG.fderiv contDiffAt_fst (by simp)
-      exact (hD.continuousLinearMap_comp
-        ((continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => E) V).symm :
-          (E →L[ℝ] E [×k]→L[ℝ] V) →L[ℝ] E [×(k + 1)]→L[ℝ] V)).contDiffWithinAt
+      exact ((continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => E) V).symm.contDiff
+        |>.contDiffAt.comp z hD).contDiffWithinAt
 
 /-- Integration over a fixed compact interval preserves joint smoothness.
 All derivative domination is derived from compactness in the imported theorem. -/

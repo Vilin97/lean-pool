@@ -58,7 +58,7 @@ theorem lpNorm_inv_dilation (f : Space → V) (hf : MemLp f 2 volume)
   have hleft := lpNorm_nonneg (f := fun x => f (ell⁻¹ • x)) (p := 2) (μ := volume)
   have hright : 0 ≤ Real.sqrt (ell^3)*lpNorm f 2 volume :=
     mul_nonneg (Real.sqrt_nonneg _) lpNorm_nonneg
-  nlinarith [sq_nonneg (lpNorm f 2 volume)]
+  nlinarith only [he, hs, hleft, hright, sq_nonneg (lpNorm f 2 volume)]
 
 variable [NormedSpace ℝ V]
 

@@ -37,9 +37,10 @@ theorem truncate_transport {q : ℕ} (hq : 6 ≤ q)
           (q+1) v) := by
   have h := restrict_asymmetricTransport period (by omega : 6 ≤ q+1) hq (by omega : q ≤ q+1)
     L hL (truncateOperator period (q+1) u) v
-  rw [asymmetricTransport_eq period (by omega : 6 ≤ q+1) L hL u v] at h
-  exact h.trans (asymmetricTransport_eq period hq L hL
-    (truncateOperator period (q+1) u) (truncateOperator period (q+1) v))
+  apply ((congrArg (restrictOperator period (by omega : q ≤ q+1))
+    (asymmetricTransport_eq period (by omega : 6 ≤ q+1) L hL u v)).symm.trans h).trans
+    (asymmetricTransport_eq period hq L hL
+      (truncateOperator period (q+1) u) (truncateOperator period (q+1) v))
 
 /-- Restricting the literal nonlinear raw source gives the raw source of the actual lower data. -/
 theorem truncate_rawSource {q : ℕ} (hq : 6 ≤ q) {T : ℝ}
@@ -65,6 +66,17 @@ theorem truncate_rawSource {q : ℕ} (hq : 6 ≤ q) {T : ℝ}
   rw [correctionData_rawSource_split period (lowerData period D KG KL KQ hG hL hQ) hq]
   exact congrArg₂ (fun x y : SobolevSpace period q => x+y) ht hf
 
+theorem restrictOperator_succ_eq_truncate {q : ℕ} (h : q ≤ q + 1)
+    (u : SobolevSpace period (q + 1)) :
+    restrictOperator period h u = truncateOperator period q u := by
+  rw [← truncate_restrictOperator period (le_refl (q + 1)) u, restrictOperator_self]
+
+theorem coefficients_apply_eq {q : ℕ} {T : Type*} [TopologicalSpace T]
+    (D : CorrectionData period q T) (hq : 6 ≤ q) (t : T) (u : SobolevSpace period (q + 1)) :
+    (D.coefficients period hq).apply t u =
+      -projectedSourceOperator period (D.metric.jet t) D.κ D.direction D.coercivity
+        D.coercivity_pos (D.metric_pos t) (D.rawSource period hq t u) := rfl
+
 /-- The actual projected nonlinear mild source commutes exactly with Sobolev restriction. -/
 theorem truncate_source {q : ℕ} (hq : 6 ≤ q) {T : ℝ}
     (D : CorrectionData period (q + 1) (Icc (0 : ℝ) T))
@@ -78,19 +90,12 @@ theorem truncate_source {q : ℕ} (hq : 6 ≤ q) {T : ℝ}
     truncateOperator period q ((D.coefficients period (by omega : 6 ≤ q+1)).apply t u) =
       ((lowerData period D KG KL KQ hG hL hQ).coefficients period hq).apply t (truncateOperator
           period (q+1) u) := by
-  change truncateOperator period q (-projectedSourceOperator period (D.metric.jet t) D.κ D.direction
-    D.coercivity D.coercivity_pos (D.metric_pos t) (D.rawSource period (by omega : 6 ≤ q+1) t u)) =
-    -projectedSourceOperator period (KG t) D.κ D.direction D.coercivity D.coercivity_pos
-        (D.metric_pos t)
-      ((lowerData period D KG KL KQ hG hL hQ).rawSource period hq t (truncateOperator period (q+1)
-          u))
-  rw [map_neg]
+  rw [coefficients_apply_eq, coefficients_apply_eq, (truncateOperator period q).map_neg]
   have hp := restrict_projectedSource period (by omega : q ≤ q+1) (D.metric.jet t) (KG t)
     D.κ D.direction D.coercivity D.coercivity_pos (D.metric_pos t) (D.rawSource period (by
         omega : 6 ≤ q+1) t u)
-  exact (congrArg Neg.neg hp).trans
-    (congrArg (fun v => -projectedSourceOperator period (KG t) D.κ D.direction D.coercivity
-        D.coercivity_pos (D.metric_pos t) v)
-      (truncate_rawSource period hq D KG KL KQ hG hL hQ t u))
+  rw [restrictOperator_succ_eq_truncate, restrictOperator_succ_eq_truncate] at hp
+  rw [hp, truncate_rawSource period hq D KG KL KQ hG hL hQ t u]
+  rfl
 
 end EulerCorrectionSourceRestriction

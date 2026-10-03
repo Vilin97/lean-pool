@@ -27,6 +27,10 @@ section
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 open Set MeasureTheory
@@ -57,7 +61,7 @@ theorem integral_sq_le_length_mul (g : ℝ → ℝ) {a b : ℝ} (hab : a ≤ b)
   have hlen : 0 < b - a := sub_pos.mpr hab
   have hc : c * (b - a) = ∫ t in a..b, g t := div_mul_cancel₀ _ hlen.ne'
   have := mul_nonneg hlen.le hn
-  nlinarith [sq_nonneg ((b - a) * c - ∫ t in a..b, g t)]
+  nlinarith only [this, hc, sq_nonneg ((b - a) * c - ∫ t in a..b, g t)]
 
 theorem norm_integral_sq_le_length_mul {E : Type*} [NormedAddCommGroup E]
     [NormedSpace ℝ E] (g : ℝ → E) {a b : ℝ} (hab : a ≤ b)
@@ -122,7 +126,7 @@ theorem localized_boundary_lower_bound {E : Type*} [NormedAddCommGroup E]
       ⟪M z, z⟫_ℝ + L * ⟪A z, z⟫_ℝ := by
   have h1 := mul_le_mul_of_nonneg_left (hR z) hBc
   have h2 := mul_nonneg hC (hA z)
-  linarith [hM z]
+  linarith only [h1, h2, hM, hM z]
 
 theorem mean_form_coercive {E : Type*} [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -156,7 +160,7 @@ theorem mean_form_coercive {E : Type*} [NormedAddCommGroup E]
     intervalIntegral.integral_nonneg hS0 (fun t _ => sq_nonneg ‖v t‖)
   have h3 := mul_le_mul_of_nonneg_right hsmall he
   rw [intervalIntegral.integral_sub hvi hHi]
-  linarith [hboundary (η 0)]
+  linarith only [hip, h1, h2, h3, hboundary, hboundary (η 0)]
 
 end EulerTerminalEnergy
 
@@ -201,7 +205,7 @@ theorem norm_sub_sq_le_interval_energy (f v : ℝ → E) (a b : ℝ) (hab : a �
   have hi := intervalIntegral.integral_mono_interval hs.1 hst ht.2
     (Filter.Eventually.of_forall (fun r => sq_nonneg ‖v r‖)) hvi
   exact hq.trans ((mul_le_mul_of_nonneg_left hi (sub_nonneg.mpr hst)).trans
-    (mul_le_mul_of_nonneg_right (by linarith [hs.1, ht.2] : t - s ≤ b - a) hpos))
+    (mul_le_mul_of_nonneg_right (by linarith only [hs, ht, hs.1, ht.2] : t - s ≤ b - a) hpos))
 
 /-- Point evaluation on an interval is bounded by the actual zeroth and first derivative energies.
 -/
@@ -221,8 +225,8 @@ theorem pointwise_H1_trace (f v : ℝ → E) (a b : ℝ) (hab : a < b)
         _ = ‖(f t - f s) + f s‖ := by rw [sub_add_cancel]
         _ ≤ _ := norm_add_le _ _
     dsimp [V]
-    nlinarith [norm_nonneg (f t), norm_nonneg (f s), norm_nonneg (f t - f s),
-      sq_nonneg (‖f t - f s‖ - ‖f s‖)]
+    nlinarith only [hd, hn, norm_nonneg (f t), norm_nonneg (f s), norm_nonneg (f t - f s),
+        sq_nonneg (‖f t - f s‖ - ‖f s‖)]
   have hi := intervalIntegral.integral_mono_on (μ := volume) hab.le
     (intervalIntegrable_const (c := ‖f t‖ ^ 2))
     ((hfi.const_mul 2).add intervalIntegrable_const) hp
@@ -338,7 +342,9 @@ theorem graph_memLp_and_energy_bound (f : LiftDomain period → F)
   simp only [Pi.add_apply] at hbound
   rw [integral_add (hfint.integral_prod_left.const_mul (2 / period))
     (hdint.integral_prod_left.const_mul (2 * period)), integral_const_mul, integral_const_mul,
-    integral_integral hfint, integral_integral hdint] at hbound
+    integral_integral (f := fun x s => ‖f (x, s)‖ ^ 2) hfint,
+    integral_integral (f := fun x s => ‖fieldDerivative period (0, 1) f (x, s)‖ ^ 2)
+      hdint] at hbound
   exact hbound
 
 end EulerCylinderGraphTrace

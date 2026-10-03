@@ -48,11 +48,13 @@ def crossOperatorLinear : Space →ₗ[ℝ] (Space →L[ℝ] Space) where
   map_add' a b := by
     apply ContinuousLinearMap.ext
     intro v
-    simp [crossLeft_apply, cross, map_add]
+    simp only [crossLeft_apply, cross, ofLp_add, map_add, LinearMap.add_apply, toLp_add,
+        _root_.add_apply]
   map_smul' r a := by
     apply ContinuousLinearMap.ext
     intro v
-    simp [crossLeft_apply, cross, map_smul]
+    simp only [crossLeft_apply, cross, ofLp_smul, map_smul, LinearMap.smul_apply, toLp_smul,
+        RingHom.id_apply, _root_.smul_apply]
 
 /-- Cross operator, given by `crossOperatorLinear.mkContinuous 1 (fun a => by change ‖crossLeft
 a‖ ≤ 1*‖a‖ simpa only [one_mul] using crossLeft_norm_le a)`. -/
@@ -93,9 +95,8 @@ theorem potentialMultiplier_hasDerivWithinAt (s : Set ℝ) (t : ℝ)
   have hInv := hnorm.inv (pow_ne_zero 2 (norm_ne_zero_iff.mpr hnz))
   have hcross : HasDerivWithinAt (fun r => crossLeft (m r)) (crossLeft mt) s t :=
     crossOperator.hasFDerivAt.comp_hasDerivWithinAt t hm
-  have h := hInv.neg.smul hcross
-  simpa only [potentialMultiplier, potentialMultiplierDerivative, Pi.neg_apply,
-    Pi.inv_apply, Pi.smul_def', Pi.neg_def, neg_div, neg_neg, sub_eq_add_neg, neg_smul, add_comm]
-        using h
+  exact (hInv.neg.smul hcross).congr_deriv
+    (by rw [potentialMultiplierDerivative, neg_div, neg_neg, Pi.neg_apply, Pi.inv_apply, neg_smul,
+      neg_add_eq_sub])
 
 end EulerPacketCrossProduct

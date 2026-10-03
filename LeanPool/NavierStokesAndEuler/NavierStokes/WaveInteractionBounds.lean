@@ -124,7 +124,7 @@ theorem class_along {s : StripData D} {w : ℕ → D → ℝ} {α β : ℝ}
 theorem bandBound_const (s : StripData D) (c : ℝ) : BandBound s 0 (fun _ => c) := by
   refine ⟨‖c‖, norm_nonneg c, 0, ?_⟩
   intro n
-  simp
+  simp only [Real.norm_eq_abs, Real.rpow_zero, mul_one, pow_zero, Std.le_refl]
 
 /-- Actual geometric coefficient fields, rather than assumed derivative closure. -/
 structure Geometry (s : StripData D) (κ : ℝ) where
@@ -331,7 +331,7 @@ theorem carrier_add (κ κ' : ℝ) (Φ : D → ℝ) (x : D) :
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem carrier_zero (Φ : D → ℝ) (x : D) : carrier 0 Φ x = 1 := by
-  simp [carrier, phaseFactor]
+  simp only [carrier, phaseFactor, Complex.ofReal_zero, zero_mul, Complex.exp_zero]
 
 theorem transport_mode_left (R : D → ℝ) (Vr Vθ Vz : D → D) (κ : ℝ)
     (Φ : D → ℝ) (a b : D → ComplexVector) (x : D) (i : Fin 3) :
@@ -352,7 +352,10 @@ theorem transport_mode_right (R : D → ℝ) (Vr Vθ Vz : D → D) (κ : ℝ)
         (along V (fun y => b y j) x + phaseFactor κ * Complex.ofReal (along V Φ x) * b x j) *
           carrier κ Φ x := along_mode V κ hΦ (hb j)
   simp only [LinearWaveResidual.transport, hd]
-  fin_cases i <;> simp [angularGenerator, vectorMode, mode, normalDot, phaseNormal, div_eq_mul_inv]
+  fin_cases i <;> simp only [Fin.isValue, Fin.zero_eta, div_eq_mul_inv, angularGenerator,
+      vectorMode, mode, Matrix.cons_val_zero, normalDot, phaseNormal, Matrix.cons_val_one,
+      Complex.ofReal_mul, Complex.ofReal_inv, Matrix.cons_val, Fin.mk_one, Fin.reduceFinMk,
+      add_zero]
       <;> ring
 
 /-- The exact phase-sum coefficient of the actual bilinear differential operator. -/
@@ -504,9 +507,10 @@ theorem same_label_raw_bound {s : StripData D} {P : ℕ → D → ℝ} {α β κ
           := by
     apply class_congr hprod'
     intro n x hx
-    have hp := ((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp)
-    have hd j := (((ha j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-        simp)
+    have hp := ((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp only [
+        ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
+    have hd j := (((ha j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
     dsimp only
     rw [switched_longitudinal _ _ _ _ (ν n) (ξ n) (hν n) hp hd (haθ n 1 x hx) (hdiv n x hx)]
   exact (strippedTransport_class G hκ ha hb i).add hp
@@ -616,7 +620,7 @@ theorem carrier_neg (ν : ℝ) (Φ : D → ℝ) (x : D) : carrier (-ν) Φ x = s
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem vectorMode_conjugate (ν : ℝ) (Φ : D → ℝ) (a : D → ComplexVector) (x : D) (i : Fin 3) :
     vectorMode (-ν) Φ (fun y j => star (a y j)) x i = star (vectorMode ν Φ a x i) := by
-  simp [vectorMode, mode, carrier_neg, star_mul, mul_comm]
+  simp only [vectorMode, mode, RCLike.star_def, carrier_neg, star_mul, mul_comm]
 
 theorem opposite_identity {s : StripData D} {κ : ℝ} (G : Geometry s κ)
     (Φ : ℕ → D → ℝ) (ν : ℕ → ℝ) (a b : Family D)
@@ -691,14 +695,14 @@ theorem mul_along_zero {U : Set D} (hU : IsOpen U) {f g : D → ℂ} {x : D}
     (hx : x ∈ U) (hf : ContinuousAt f x)
     (hfg : ∀ y ∈ U, f y * g y = 0) (V : D → D) : f x * along V g x = 0 := by
   by_cases hz : f x = 0
-  · simp [hz]
+  · simp only [hz, zero_mul]
   have hfnz : ∀ᶠ y in 𝓝 x, f y ≠ 0 := hf.eventually_ne hz
   have hgn : g =ᶠ[𝓝 x] (fun _ => 0) := by
     filter_upwards [hfnz, hU.mem_nhds hx] with y hfy hy
     exact (mul_eq_zero.mp (hfg y hy)).resolve_left hfy
   unfold along
   rw [hgn.fderiv_eq]
-  simp
+  simp only [fderiv_fun_const, Pi.zero_apply, zero_apply, mul_zero]
 
 theorem transport_zero_of_products {U : Set D} (hU : IsOpen U)
     (R : D → ℝ) (Vr Vθ Vz : D → D) {a b : D → ComplexVector}
@@ -722,7 +726,7 @@ theorem transport_zero_of_products {U : Set D} (hU : IsOpen U)
     _ = a x 0 * along Vr (fun y => b y i) x +
         (a x 1 * along Vθ (fun y => b y i) x + a x 1 * angularGenerator (b x) i) / (R x : ℂ) +
         a x 2 * along Vz (fun y => b y i) x := by unfold LinearWaveResidual.transport; ring
-    _ = 0 := by rw [hr, hθ, hc, hz]; simp
+    _ = 0 := by rw [hr, hθ, hc, hz]; simp only [add_zero, zero_div]
 
 theorem cross_transport_every_class {s : StripData D} {P : ℕ → D → ℝ} {γ κ : ℝ}
     (G : Geometry s κ) {a b : Family D}
@@ -801,9 +805,11 @@ theorem transport_realLift (R : D → ℝ) (Vr Vθ Vz : D → D)
         (LinearWaveResidual.realTransport R Vr Vθ Vz u v x i : ℂ) := by
   have hd (V : D → D) (j : Fin 3) := along_ofReal V (hv j)
   fin_cases i <;>
-    simp [LinearWaveResidual.transport, LinearWaveResidual.realTransport,
-      LinearWaveResidual.realLift, angularGenerator, LinearWaveResidual.realAngularGenerator,
-      hd, Complex.ofReal_add, Complex.ofReal_mul, Complex.ofReal_div]
+    simp only [LinearWaveResidual.transport, LinearWaveResidual.realLift, Fin.isValue, Fin.zero_eta,
+        hd, angularGenerator, Matrix.cons_val_zero, LinearWaveResidual.realTransport,
+        LinearWaveResidual.realAngularGenerator, Complex.ofReal_add, Complex.ofReal_mul,
+        Complex.ofReal_div, Complex.ofReal_neg, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val, add_zero]
 
 /-- Real bilinear products require both ordinary and conjugate harmonic pairs. -/
 theorem transport_real_parts (R : D → ℝ) (Vr Vθ Vz : D → D)
@@ -820,9 +826,13 @@ theorem transport_real_parts (R : D → ℝ) (Vr Vθ Vz : D → D)
       along V (fun y => (starRingEnd ℂ) (v y j)) x = (starRingEnd ℂ) (along V (fun y => v y j) x) :=
     LinearWaveResidual.along_map (Complex.conjCLE : ℂ →L[ℝ] ℂ) V (hv j)
   fin_cases i <;>
-    simp [LinearWaveResidual.transport, LinearWaveResidual.realTransport,
-      angularGenerator, LinearWaveResidual.realAngularGenerator, hd, hc,
-      div_eq_mul_inv, ← Complex.ofReal_inv, Complex.mul_re, Complex.mul_im] <;> ring
+    simp only [LinearWaveResidual.realTransport, Fin.isValue, Fin.zero_eta, hd, div_eq_mul_inv,
+        LinearWaveResidual.realAngularGenerator, Matrix.cons_val_zero, LinearWaveResidual.transport,
+        ← Complex.ofReal_inv, angularGenerator, Complex.add_re, Complex.mul_re, Complex.ofReal_re,
+        Complex.ofReal_im, mul_zero, sub_zero, Complex.neg_re, Complex.mul_im, zero_add,
+        Complex.add_im, Complex.neg_im, RCLike.star_def, hc, Complex.conj_re, Complex.conj_im,
+        mul_neg, sub_neg_eq_add, neg_neg, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val, add_zero] <;> ring
 
 theorem conjugate_angularIndependent {s : StripData D} {P : ℕ → D → ℝ} {α κ : ℝ}
     (G : Geometry s κ) {a : Family D} (ha : WaveVector s P α a)
@@ -845,15 +855,16 @@ theorem real_modes_identity {s : StripData D} {P : ℕ → D → ℝ} {β κ : �
       ((sameCoefficient G Φ ξ a b n x i * carrier (ν n + ξ n) (Φ n) x).re +
         (sameCoefficient G Φ (fun n => -(ξ n)) a (conjugateFamily b) n x i *
           carrier (ν n - ξ n) (Φ n) x).re) / 2 := by
-  have hp := ((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp)
-  have hbd j := (((hb j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-      simp)
+  have hp := ((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp only [
+      ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
+  have hbd j := (((hb j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hbc := conjugate_wave hb
-  have hbcd j := (((hbc j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-      simp)
+  have hbcd j := (((hbc j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hmode j : DifferentiableAt ℝ (fun y => vectorMode (ξ n) (Φ n) (b n) y j) x :=
     ((contDiffOn_mode (ξ n) (hΦ n) ((hb j).smooth n)).contDiffAt
-      (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp)
+      (s.isOpen_domain.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   rw [transport_real_parts _ _ _ _ _ hmode]
   have hc : (fun y j => star (vectorMode (ξ n) (Φ n) (b n) y j)) =
       vectorMode (-(ξ n)) (Φ n) (conjugateFamily b n) := by
@@ -1217,9 +1228,10 @@ theorem same_label_curl_interaction {s : StripData D} {P : ℕ → D → ℝ} {�
   intro n x hx
   funext i
   exact same_label_identity G Φ ν ξ a b hbθ n hx
-    (((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by simp))
-    (fun j => (((hb j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt (by
-        simp)) i
+    (((hΦ n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+    (fun j => (((hb j).smooth n).contDiffAt (s.isOpen_domain.mem_nhds hx)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) i
 
 end
 

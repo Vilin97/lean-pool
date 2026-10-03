@@ -40,7 +40,7 @@ theorem lpNorm_dilation_sq {V : Type*} [NormedAddCommGroup V]
   rw [lpNorm_sq_eq_integral_norm_sq _ (memLp_dilation f hf a ha.ne'),
     lpNorm_sq_eq_integral_norm_sq f hf]
   rw [Measure.integral_comp_smul_of_nonneg volume (fun x => ‖f x‖^2) a (hR := ha.le)]
-  simp [Space, smul_eq_mul]
+  simp only [Space, finrank_euclideanSpace, Fintype.card_fin, smul_eq_mul]
 
 /-- The distributional harmonic test identity is preserved by spatial dilation. -/
 theorem scalarWeakHarmonicOn_dilation (f : Space → ℝ) (R : ℝ) (hR : 0 < R)

@@ -23,6 +23,10 @@ of a pre-existing inverse is assumed.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -89,7 +93,8 @@ variable {P : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P]
 /-- The actual Gram path is smoothly parameterized in the uniform time norm. -/
 theorem gramPath_contDiff (Qp : P → C(Icc (0 : ℝ) T, U →L[ℝ] E)) {n : ℕ∞ω}
     (hQp : ContDiff ℝ n Qp) : ContDiff ℝ n (fun x => gramPath T (Qp x)) :=
-  contDiff_compose (fun x => adjointMap (Qp x)) Qp (contDiff_adjoint Qp hQp) hQp
+  contDiff_compose (fun x => adjointMap (K := Icc (0 : ℝ) T) (U := U) (E := E) (Qp x)) Qp
+    (contDiff_adjoint Qp hQp) hQp
 
 /-- Actual inverse-path regularity follows from the constructed Banach-algebra unit. -/
 theorem gramInversePath_contDiff (Qp : P → C(Icc (0 : ℝ) T, U →L[ℝ] E))
@@ -118,12 +123,12 @@ theorem gramPath_bound (Qp : P → C(Icc (0 : ℝ) T, U →L[ℝ] E)) (hQp : Con
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n Qp x‖ ≤ C * majorant R 0 n) (n : ℕ) (x : P) :
     ‖iteratedFDeriv ℝ n (fun y => gramPath T (Qp y)) x‖ ≤ (3*C^2)*majorant R 0 n := by
-  have h := compose_bound (fun y => adjointMap (Qp y)) Qp
+  have h := compose_bound (fun y => adjointMap (K := Icc (0 : ℝ) T) (U := U) (E := E) (Qp y)) Qp
     (contDiff_adjoint Qp hQp) hQp R C C hR hC hC 0 0
     (EulerContinuousPathComposition.adjoint_bound Qp hQp R C hR hC 0 hb) hb n x
   have he : 3*C*C = 3*C^2 := by ring
   have hfun : (fun y => gramPath T (Qp y)) =
-      fun y => compose (adjointMap (Qp y)) (Qp y) := by
+      fun y => compose (adjointMap (K := Icc (0 : ℝ) T) (U := U) (E := E) (Qp y)) (Qp y) := by
     funext y
     apply ContinuousMap.ext
     intro t

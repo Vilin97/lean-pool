@@ -26,7 +26,7 @@ variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 theorem pointField_zero_of_value_zero (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
     (t : K) (ht : p t = 0) (x : LiftDomain P) : pointField P p hp t x = 0 := by
   have hrep := pointField_ae P p hp t
   rw [ht] at hrep
@@ -55,9 +55,9 @@ theorem coordinatePath_initial : G.coordinatePath I ⟨0,le_rfl,D.T_pos.le⟩ = 
 
 theorem velocityPath_initial :
     G.velocityPath I ⟨0,le_rfl,D.T_pos.le⟩ =
-      supportedOperatorMap P D.support D.support_measurable
+      supportedOperatorMap (E := U) (F := Space) P D.support D.support_measurable
         (D.frame.field ⟨0,le_rfl,D.T_pos.le⟩) I.value := by
-  change supportedOperatorMap P D.support D.support_measurable
+  change supportedOperatorMap (E := U) (F := Space) P D.support D.support_measurable
     (D.frame.field ⟨0,le_rfl,D.T_pos.le⟩) (G.coordinatePath I ⟨0,le_rfl,D.T_pos.le⟩) = _
   rw [G.coordinatePath_initial I]
 
@@ -65,10 +65,11 @@ theorem vector_initial_of_zero (hi : I.value = 0) (x : Space) (θ : ℝ) :
     G.vector I (0,(x,θ)) = 0 := by
   have hv : G.velocityPath I ⟨0,le_rfl,D.T_pos.le⟩ = 0 := by
     rw [G.velocityPath_initial I,hi,map_zero]
-  have hfull : includePath P D.support D.support_measurable (G.velocityPath I)
-      ⟨0,le_rfl,D.T_pos.le⟩ = 0 := congrArg Subtype.val hv
+  have hfull : includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+      (G.velocityPath I) ⟨0,le_rfl,D.T_pos.le⟩ = 0 := congrArg Subtype.val hv
   have h := pointField_zero_of_value_zero P
-    (includePath P D.support D.support_measurable (G.velocityPath I))
+    (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+      (G.velocityPath I))
     (G.velocityPath_orbit I) ⟨0,le_rfl,D.T_pos.le⟩ hfull (x,(θ : AddCircle P))
   simpa only [vector,EulerSourceCylinderClassical.field,Data.clamp,
     projIcc_of_mem D.T_pos.le (show (0 : ℝ) ∈ Icc 0 D.T from ⟨le_rfl,D.T_pos.le⟩)] using h

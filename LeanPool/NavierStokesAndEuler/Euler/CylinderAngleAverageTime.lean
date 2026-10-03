@@ -28,8 +28,9 @@ variable (P : ℝ) [Fact (0 < P)]
 
 /-- The actual L² kernel condition and the literal classical mean agree at every time. -/
 theorem pointField_mean_zero_iff (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (t : K) :
-    average P (p t) = 0 ↔
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+    (t : K) :
+    average (V := Vector3) P (p t) = 0 ↔
       ∀ y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P))) = 0 := by
   have h := average_eq_zero_iff P (sobolevPath P 3 p hp t) (pointField P p hp t)
     (smoothField_continuous P _ (pointField_smooth P p hp t))
@@ -37,8 +38,8 @@ theorem pointField_mean_zero_iff (p : C(K, LiftL2 P))
   simpa only [sobolevPath_value] using h
 
 theorem pathAverage_eq_zero_iff (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
-    pathAverage P p = 0 ↔
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
+    pathAverage (K := K) (V := Vector3) P p = 0 ↔
       ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P))) = 0 := by
   constructor
   · intro h t
@@ -50,8 +51,9 @@ theorem pathAverage_eq_zero_iff (p : C(K, LiftL2 P))
     exact (pointField_mean_zero_iff P p hp t).mpr (h t)
 
 theorem pathAverage_orbit_contDiff (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (pathAverage P p)) := by
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (pathAverage (K := K) (V := Vector3) P p)) := by
   simpa only [Function.comp_def, pathAverage_translation] using
     (pathAverage (K := K) (V := Vector3) P).contDiff.comp hp
 

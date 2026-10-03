@@ -35,12 +35,13 @@ variable (T : ℝ) (Q Q₁ Q₂ : C(Icc (0 : ℝ) T, U →L[ℝ] E))
 
 /-- The mixed coefficient `Q* Q_t` in the transverse momentum. -/
 def mixedPath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
-  ⟨fun t => (Q t).adjoint.comp (Q₁ t),
+  ⟨fun t => (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)).comp (Q₁ t),
     ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous).clm_comp Q₁.continuous⟩
 
 /-- The actual product-rule derivative `Q_t* Q_t + Q* Q_tt`. -/
 def mixedDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
-  ⟨fun t => (Q₁ t).adjoint.comp (Q₁ t) + (Q t).adjoint.comp (Q₂ t),
+  ⟨fun t => (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q₁ t)).comp (Q₁ t) +
+      (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)).comp (Q₂ t),
     (((realAdjoint (U := U) (E := E)).continuous.comp Q₁.continuous).clm_comp
       Q₁.continuous).add
       (((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous).clm_comp
@@ -79,7 +80,8 @@ theorem mixedPath_hasDerivWithinAt (t : Icc (0 : ℝ) T) :
 theorem inverse_momentum_identity (Q Q₁ : U →L[ℝ] E)
     (c : ℝ) (hc : 0 < c) (hQ : ∀ x, c * ‖x‖ ^ 2 ≤ ‖Q x‖ ^ 2)
     (ξ v : U) (u : E) (hu : u = Q₁ ξ + Q v) :
-    gramInverse Q c hc hQ (Q.adjoint u - Q.adjoint (Q₁ ξ)) = v := by
+    gramInverse Q c hc hQ (adjoint (𝕜 := ℝ) (E := U) (F := E) Q u -
+      adjoint (𝕜 := ℝ) (E := U) (F := E) Q (Q₁ ξ)) = v := by
   rw [hu, map_add, add_sub_cancel_left]
   exact inverse_gram_apply Q c hc hQ v
 
@@ -90,12 +92,18 @@ theorem projected_equation_of_momentum_balance
     (ξ v a : U) (u f : E)
     (hu : u = Q₁ ξ + Q v)
     (hframe : Q₂ = -(H.comp Q))
-    (hbalance : Q₁.adjoint u - Q.adjoint (H (Q ξ)) + Q.adjoint f =
-      (Q₁.adjoint.comp Q + Q.adjoint.comp Q₁) v + gram Q a +
-      (Q₁.adjoint.comp Q₁ + Q.adjoint.comp Q₂) ξ + Q.adjoint (Q₁ v)) :
-    gram Q a = Q.adjoint (f - (2 : ℝ) • Q₁ v) := by
-  simp only [hu, hframe, comp_apply, add_apply, neg_apply, map_add, map_neg] at hbalance
-  simp only [map_sub, map_smul]
-  linear_combination (norm := module) -hbalance
+    (hbalance : adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁ u -
+        adjoint (𝕜 := ℝ) (E := U) (F := E) Q (H (Q ξ)) +
+        adjoint (𝕜 := ℝ) (E := U) (F := E) Q f =
+      ((adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁).comp Q +
+        (adjoint (𝕜 := ℝ) (E := U) (F := E) Q).comp Q₁) v + gram Q a +
+      ((adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁).comp Q₁ +
+        (adjoint (𝕜 := ℝ) (E := U) (F := E) Q).comp Q₂) ξ +
+      adjoint (𝕜 := ℝ) (E := U) (F := E) Q (Q₁ v)) :
+    gram Q a = adjoint (𝕜 := ℝ) (E := U) (F := E) Q (f - (2 : ℝ) • Q₁ v) := by
+  simp only [hu, hframe, comp_apply, add_apply, neg_apply, ContinuousLinearMap.map_add,
+    ContinuousLinearMap.map_neg] at hbalance
+  simp only [ContinuousLinearMap.map_sub, two_smul, ContinuousLinearMap.map_add]
+  linear_combination (norm := abel) -hbalance
 
 end EulerTransverseStrongAlgebra

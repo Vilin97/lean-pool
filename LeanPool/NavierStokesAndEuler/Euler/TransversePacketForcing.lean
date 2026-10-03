@@ -38,18 +38,19 @@ structure Forcing (D : Data U) (raw : VectorField) where
   /-- Time-dependent path of `Forcing`, of type `C(Icc (0 : ℝ) D.T,Supported P Space D.support
   D.support_measurable)`. -/
   path : C(Icc (0 : ℝ) D.T,Supported P Space D.support D.support_measurable)
-  path_orbit : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a
-    (includePath P D.support D.support_measurable path))
+  path_orbit : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable path))
   raw_eq : ∀ (t : Icc (0 : ℝ) D.T) x θ, raw (t,(x,θ)) =
-    pointField P (includePath P D.support D.support_measurable path) path_orbit t (x,(θ : AddCircle
-        P))
+    pointField P (includePath (K := Icc (0 : ℝ) D.T) (V := Vector3) P D.support
+      D.support_measurable path) path_orbit t (x,(θ : AddCircle P))
   mean_zero : ∀ t, average P (path t : CylinderL2 P Space) = 0
 
 /-- Initial data, collecting `value`, `orbit`, `mean_zero`. -/
 structure InitialData (D : Data U) where
   /-- Value of `InitialData`, of type `Supported P U D.support D.support_measurable`. -/
   value : Supported P U D.support D.support_measurable
-  orbit : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a (value : CylinderL2 P U))
+  orbit : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a (value : CylinderL2 P U))
   mean_zero : average P (value : CylinderL2 P U) = 0
 
 /-- Zero, bundling `value`, `orbit`, `mean_zero`. -/
@@ -106,22 +107,25 @@ abbrev pressurePath := EulerSourceCylinderEquation.pressurePath P D.support D.su
   D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
 
 theorem velocityPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a
-      (includePath P D.support D.support_measurable (G.velocityPath I))) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+        (G.velocityPath I))) :=
   EulerSourceCylinderEquation.velocity_contDiff P D.support D.support_measurable D.support_compact
     D.T D.T_pos.le D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
     G.path I.value G.path_orbit I.orbit
 
 theorem derivativePath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a
-      (includePath P D.support D.support_measurable (G.derivativePath I))) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+        (G.derivativePath I))) :=
   EulerSourceCylinderEquation.velocityDerivative_contDiff P D.support D.support_measurable
       D.support_compact
     D.T D.T_pos.le D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
     G.path I.value G.path_orbit I.orbit
 
 theorem pressurePath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.pressurePath I)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := ℝ) P a (G.pressurePath I)) :=
   EulerSourceCylinderEquation.pressurePath_contDiff P D.support D.support_measurable
     D.T D.T_pos.le D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
     G.path I.value D.M D.normal D.normalLower D.normalLower_pos D.normal_lower

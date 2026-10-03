@@ -157,7 +157,10 @@ theorem absoluteCancelledTimeKernel_le {K : ℝ → Space → ℝ}
     absoluteCancelledTimeKernel K φ x y ≤
       (C * max (2 * L) 1) * (‖x - y‖ ^ (-3 : ℝ) * min (‖x - y‖ / R) 1) := by
   by_cases hxy : x = y
-  · simp [absoluteCancelledTimeKernel, hxy, cutoffSquareDifference_self]
+  · simp only [absoluteCancelledTimeKernel, hxy, sub_self, cutoffSquareDifference_self, mul_zero,
+      abs_zero, integral_zero, norm_zero, Real.rpow_neg_ofNat, Int.reduceNeg, zpow_neg, zpow_ofNat,
+      ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, inv_zero, zero_div, zero_le_one,
+      inf_of_le_left, Std.le_refl]
   have hc : 0 ≤ C * ‖x - y‖ ^ (-3 : ℝ) := by positivity
   calc
     absoluteCancelledTimeKernel K φ x y =
@@ -283,8 +286,9 @@ theorem partial_heatKernel {s : ℝ} (hs : 0 < s) (i : Fin 3) (z : Space) :
     partialD i (heatKernel s) z = -(z i / (2 * s)) * heatKernel s z := by
   unfold partialD NavierStokes.SolutionDifference.spatialPartial
   rw [(hasFDerivAt_heatKernel hs z).fderiv]
-  simp [NavierStokes.ProblemStatement.coordinateVector,
-    EuclideanSpace.inner_single_right]
+  simp only [neg_smul, NavierStokes.ProblemStatement.coordinateVector, neg_apply, smul_apply,
+      coe_innerSL_apply, EuclideanSpace.inner_single_right, conj_trivial, one_mul, smul_eq_mul,
+      neg_mul, neg_inj]
   ring
 
 theorem differentiable_heatKernel {s : ℝ} (hs : 0 < s) :
@@ -307,8 +311,8 @@ theorem heatKernelSecond_eq_partial {s : ℝ} (hs : 0 < s)
     convert! (innerSL ℝ (NavierStokes.ProblemStatement.coordinateVector j)).hasFDerivAt
       (x := z) using 1
     ext x
-    simp [NavierStokes.ProblemStatement.coordinateVector,
-      EuclideanSpace.inner_single_left]
+    simp only [NavierStokes.ProblemStatement.coordinateVector, coe_innerSL_apply,
+        EuclideanSpace.inner_single_left, conj_trivial, one_mul]
   have hg : HasFDerivAt (fun x : Space => -(x j / (2 * s)))
       ((-((2 * s)⁻¹)) • innerSL ℝ (NavierStokes.ProblemStatement.coordinateVector j)) z := by
     convert! hc.const_mul (-((2 * s)⁻¹)) using 1
@@ -319,15 +323,19 @@ theorem heatKernelSecond_eq_partial {s : ℝ} (hs : 0 < s)
   change heatKernelSecond s i j z = fderiv ℝ ((fun x : Space => -(x j / (2 * s))) * heatKernel s) z
       (NavierStokes.ProblemStatement.coordinateVector i)
   rw [(hg.mul (hasFDerivAt_heatKernel hs z)).fderiv]
+  simp only [add_apply, smul_apply, coe_innerSL_apply, smul_eq_mul]
   by_cases hij : i = j
   · subst i
-    simp [heatKernelSecond, NavierStokes.ProblemStatement.coordinateVector,
-        EuclideanSpace.inner_single_right]
-    field_simp
+    simp only [heatKernelSecond, ↓reduceIte, one_div, mul_inv_rev,
+      NavierStokes.ProblemStatement.coordinateVector,
+      EuclideanSpace.inner_single_right, conj_trivial, one_mul,
+      inner_self_eq_norm_sq_to_K, PiLp.norm_single, norm_one, RCLike.ofReal_real_eq_id, id_eq,
+      one_pow, mul_one]
     ring
-  · simp [heatKernelSecond, hij,
-      NavierStokes.ProblemStatement.coordinateVector, EuclideanSpace.inner_single_right]
-    field_simp
+  · simp only [heatKernelSecond, hij, ↓reduceIte, zero_div, sub_zero,
+      mul_inv_rev, NavierStokes.ProblemStatement.coordinateVector,
+      EuclideanSpace.inner_single_right, conj_trivial, one_mul,
+      ne_eq, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero]
     ring
 
 /-- A radial envelope for every component of the Gaussian Hessian. -/

@@ -136,9 +136,9 @@ theorem logCoordinate_in_broad_band {q : ℝ} (hq : 0 < q) {n : ℕ}
     -Real.log q / Real.log 2 < (n : ℝ) + 2
   constructor
   · apply (lt_div_iff₀ h2).mpr
-    nlinarith
+    nlinarith only [hu]
   · apply (div_lt_iff₀ h2).mpr
-    nlinarith
+    nlinarith only [hl]
 
 variable {B N0 : ℕ}
 
@@ -155,10 +155,10 @@ theorem labelCarrier_log_band (hN : geometricThreshold ≤ N0)
       physicalScale n x at he
   have hlo : ChartScales.Q (BaseChartJets.cellBand l.2) / 4 < physicalScale n x := by
     rw [← he]
-    nlinarith [ChartScales.Q_pos (BaseChartJets.cellBand l.2), hq.1]
+    nlinarith only [hq, ChartScales.Q_pos (BaseChartJets.cellBand l.2), hq.1]
   have hhi : physicalScale n x < 4 * ChartScales.Q (BaseChartJets.cellBand l.2) := by
     rw [← he]
-    nlinarith [ChartScales.Q_pos (BaseChartJets.cellBand l.2), hq.2]
+    nlinarith only [hq, ChartScales.Q_pos (BaseChartJets.cellBand l.2), hq.2]
   exact logCoordinate_in_broad_band
     ((div_pos (ChartScales.Q_pos _) (by norm_num : (0 : ℝ) < 4)).trans hlo) hlo hhi
 
@@ -171,9 +171,9 @@ theorem strip_log_band (n : ℕ) {x : Point}
   · change 0 < ChartScales.Q n * _
     exact mul_pos (ChartScales.Q_pos n) (lt_trans (by norm_num) hq.1)
   · change ChartScales.Q n / 2 ≤ ChartScales.Q n * _
-    nlinarith [ChartScales.Q_pos n, hq.1]
+    nlinarith only [hq, ChartScales.Q_pos n, hq.1]
   · change ChartScales.Q n * _ ≤ 2 * ChartScales.Q n
-    nlinarith [ChartScales.Q_pos n, hq.2]
+    nlinarith only [hq, ChartScales.Q_pos n, hq.2]
 
 /-- The strict broad-cell range saves one integer level: the true band
 distance is at most two, despite the absence of the dyadic mask. -/
@@ -186,10 +186,12 @@ theorem labelCarrier_band_distance (hN : geometricThreshold ≤ N0)
   have hn := strip_log_band n hx
   have hm := labelCarrier_log_band hN l n ht hc
   have hnm : n < BaseChartJets.cellBand l.2 + 3 := by
-    have he : (n : ℝ) < (BaseChartJets.cellBand l.2 : ℝ) + 3 := by linarith [hn.1, hm.2]
+    have he : (n : ℝ) < (BaseChartJets.cellBand l.2 : ℝ) + 3 := by linarith only [hn, hm, hn.1,
+        hm.2]
     exact_mod_cast he
   have hmn : BaseChartJets.cellBand l.2 < n + 3 := by
-    have he : (BaseChartJets.cellBand l.2 : ℝ) < (n : ℝ) + 3 := by linarith [hm.1, hn.2]
+    have he : (BaseChartJets.cellBand l.2 : ℝ) < (n : ℝ) + 3 := by linarith only [hm, hn, hm.1,
+        hn.2]
     exact_mod_cast he
   omega
 
@@ -278,7 +280,7 @@ theorem nativeSlowCore_physicalBox (l : ActualPrimaryBounds.SignedLabel B N0)
       mul_le_mul_of_nonneg_left (by have hh := hb j; simp only [one_mul] at hh; exact hh) ha.le
     _ = SlotColoring.width (CoordinateAlgebra.D h) j (BaseChartJets.cellBand l.2) :=
       (width_eq _ _ _).symm
-    _ ≤ _ := by linarith
+    _ ≤ _ := by linarith only [hw]
 
 /-- The broad source carrier fits the existing closed two-level,
 two-mesh window.  Its missing dyadic factor is not restored or assumed. -/

@@ -78,7 +78,7 @@ theorem integrable_cube {E : Type*} [NormedAddCommGroup E]
   (hf.comp toSpace.continuous).integrableOn_Icc
 
 @[simp] theorem cubeIntegral_zero : cubeIntegral (fun _ : Space => (0 : ℝ)) = 0 := by
-  simp [cubeIntegral]
+  simp only [cubeIntegral, integral_zero]
 
 theorem cubeIntegral_add {f g : Space → ℝ} (hf : Continuous f) (hg : Continuous g) :
     cubeIntegral (fun x => f x + g x) = cubeIntegral f + cubeIntegral g := by
@@ -125,9 +125,10 @@ private theorem insertNth_one_eq (i : Fin 3) (y : Fin 2 → ℝ) :
   ext k
   by_cases hk : k = i
   · subst k
-    simp
+    simp only [Nat.reduceAdd, Fin.insertNth_apply_same, Pi.add_apply, Pi.single_eq_same, zero_add]
   · obtain ⟨l, rfl⟩ := Fin.exists_succAbove_eq hk
-    simp
+    simp only [Nat.reduceAdd, Fin.insertNth_apply_succAbove, Pi.add_apply, ne_eq, Fin.succAbove_ne,
+        not_false_eq_true, Pi.single_eq_of_ne, add_zero]
 
 private theorem coord_partial_eq {f : Space → ℝ} (hf : ContDiff ℝ 1 f)
     (i : Fin 3) (y : Coords) :
@@ -150,9 +151,9 @@ theorem cubeIntegral_partial_eq_zero {f : Space → ℝ} (hf : ContDiff ℝ 1 f)
   have hsum (y : Coords) :
       (∑ k : Fin 3, F' k y (Pi.single k 1)) = fderiv ℝ g y (Pi.single i 1) := by
     rw [Finset.sum_eq_single i]
-    · simp [F']
+    · simp only [↓reduceIte, F']
     · intro k _ hki
-      simp [F', hki]
+      simp only [hki, ↓reduceIte, zero_apply, F']
     · intro hi
       exact (hi (Finset.mem_univ _)).elim
   have Hc : ∀ k, ContinuousOn (F k) (Icc (0 : Coords) 1) := by
@@ -183,10 +184,11 @@ theorem cubeIntegral_partial_eq_zero {f : Space → ℝ} (hf : ContDiff ℝ 1 f)
       simp only [F, ite_eq_left rfl, g]
       rw [insertNth_one_eq, map_add, toSpace_single]
       exact hp _ i
-    · simp [F, hk]
+    · simp only [hk, ↓reduceIte, F]
   have hzero : (∫ y in Icc (0 : Coords) 1,
       fderiv ℝ g y (Pi.single i 1)) = 0 := by
-    simpa [hsum, hboundary] using hdiv
+    simpa only [Nat.reduceAdd, hsum, Pi.zero_comp, Pi.one_comp, Pi.one_apply, hboundary,
+        Pi.zero_apply, sub_self, Finset.sum_const_zero] using hdiv
   change (∫ y in Icc (0 : Coords) 1, spatialPartial i f (toSpace y)) = 0
   simpa only [g, coord_partial_eq hf i] using hzero
 

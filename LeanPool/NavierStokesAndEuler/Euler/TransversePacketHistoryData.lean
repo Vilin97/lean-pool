@@ -83,7 +83,8 @@ local instance instTransversePacketHistoryData8 : NormedSpace ℝ (Space →ᵇ 
 
 /-- The second frame derivative is the prescribed Hessian product. -/
 def frameSecond : C(Icc (0 : ℝ) D.T,Space →ᵇ U →L[ℝ] Space) :=
-  -pathCompositionMap B.H.field D.frame.field
+  -pathCompositionMap (α := Space) (K := Icc (0 : ℝ) D.T) (U := U) (E := Space) (F := Space)
+    B.H.field D.frame.field
 
 @[simp] theorem frameSecond_apply (t : Icc (0 : ℝ) D.T) (x : Space) (v : U) :
     B.frameSecond t x v = -(B.H.field t x (D.frame.field t x v)) := rfl

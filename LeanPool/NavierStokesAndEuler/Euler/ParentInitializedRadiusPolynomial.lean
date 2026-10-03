@@ -27,6 +27,10 @@ coefficient leaves of the normal, joined and mean packet budgets. -/
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 namespace EulerParentCoefficientPolynomial
@@ -100,7 +104,7 @@ theorem leafEnvelope_power (K : ℝ) (hK : 1 ≤ K) :
 
 theorem radiusCeiling_le (K : ℝ) (hK : 0 ≤ K) : coefficientRadius K ≤ radiusCeiling K := by
   unfold coefficientRadius radiusCeiling
-  exact max_le (by linarith) (by linarith)
+  exact max_le (by linarith only [hK]) (by linarith only)
 
 theorem leaf_bounds (K : ℝ) (hK : 0 ≤ K) :
     1 ≤ leafEnvelope K ∧ coefficientRadius K ≤ leafEnvelope K ∧
@@ -128,20 +132,25 @@ theorem leaf_bounds (K : ℝ) (hK : 0 ≤ K) :
   have hi : EulerPacketParentNormalBudget.inverseRadius (coefficientRadius K)
       (frameAmplitude K) (gradientAmplitude K) ≤ normalInverse K := by
     unfold normalInverse EulerPacketParentNormalBudget.inverseRadius
-    gcongr
+    exact mul_le_mul_of_nonneg_left (add_le_add hr le_rfl) (mul_nonneg zero_le_two
+      (add_nonneg zero_le_one (mul_nonneg (sq_nonneg _)
+        (add_nonneg (mul_nonneg zero_le_three (sq_nonneg _)) zero_le_two))))
   have hn : EulerPacketParentNormalBudget.radius (coefficientRadius K)
       (frameAmplitude K) (gradientAmplitude K) ≤ normalRadius K := by
     unfold normalRadius EulerPacketParentNormalBudget.radius
     change 16*(coefficientRadius K+4*EulerPacketParentNormalBudget.inverseRadius
       (coefficientRadius K) (frameAmplitude K) (gradientAmplitude K)+1) ≤
       16*(radiusCeiling K+4*normalInverse K+1)
-    linarith
+    linarith only [hr, hi]
   have hj : EulerPacketParentTransverseCosts.inverseRadius (coefficientRadius K)
       (frameAmplitude K) ≤ transverseInverse K := by
     unfold transverseInverse EulerPacketParentTransverseCosts.inverseRadius
-    gcongr
+    exact mul_le_mul_of_nonneg_left (add_le_add hr le_rfl) (mul_nonneg zero_le_two
+      (add_nonneg zero_le_one (mul_nonneg hC
+        (add_nonneg (mul_nonneg zero_le_three (sq_nonneg _)) zero_le_two))))
   unfold leafEnvelope
-  refine ⟨?_,?_,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩ <;> linarith
+  refine ⟨?_,?_,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩ <;> linarith only [hG, hF, hR, hH, hA, hI, hN, hC, hJ,
+      hV, hr, hi, hn, hj]
 
 open EulerSmoothLimit EulerPacketPiola
 
@@ -326,7 +335,9 @@ theorem parameterSize_bounds (K Ti TiTotal Cp B δ N : ℝ)
   have hi := (inv_pos.mpr hδ).le
   unfold parameterSize
   exact ⟨by
-      linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by linarith,by linarith⟩
+      linarith,by linarith,by linarith,by linarith,by linarith,by linarith only [hK, hTi, hTiTotal,
+          hCp, hN, hi],by linarith only [hK,
+          hTi, hTiTotal, hCp, hB, hN],by linarith⟩
 
 /-- Full envelope, given by `radiusEnvelope (sourceEnvelope X)`. -/
 def fullEnvelope (X : ℝ) : ℝ := radiusEnvelope (sourceEnvelope X)
@@ -375,10 +386,11 @@ variable {U : Type} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSp
     EulerPacketParentPhysicalBudgets.halfBall g Cp)
   (TiTotal : ℝ) (hT1 : G.T ≤ 1) (hTiTotal : G.T⁻¹ ≤ TiTotal)
 
-local notation "J" => L.joinedInputs H m hm R S hS τ hτ hτT Ti Cp hτ1 hTi hCp
-  g hg hg0 Ω hΩ hΩo hsub hΩball hphysical TiTotal hT1 hTiTotal
-local notation "BC" => joinedCoefficientBudget period (G.meanData H) (G.transverseData m hm R S hS)
-  rfl τ hτ hτT (G.historyOn H m hm R S hS τ hτ hτT) (JoinedInputs.normal J)
+local notation "J" => (L.joinedInputs H m hm R S hS τ hτ hτT Ti Cp hτ1 hTi hCp
+  g hg hg0 Ω hΩ hΩo hsub hΩball hphysical TiTotal hT1 hTiTotal)
+local notation "BC" => (joinedCoefficientBudget period (G.meanData H)
+  (G.transverseData m hm R S hS) rfl τ hτ hτT (G.historyOn H m hm R S hS τ hτ hτT)
+  (JoinedInputs.normal J))
 
 /-- Canonical initialized radius, given by `initializedRadius (J).mean (J).linear (J).normal BC
 δ ξ`. -/
@@ -412,7 +424,7 @@ theorem joined_radius_primitives (δ : ℝ) (ξ : U) (X : ℝ)
     joined_radius_le τ (G.T-τ) Ti (coefficientRadius L.K) (frameAmplitude L.K)
       (gradientAmplitude L.K) (gradientAmplitude L.K)
       (EulerPacketParentPhysicalBudgets.physicalCost L.K Cp) W hW hτ.le hτ1
-      (sub_pos.mpr hτT).le (by linarith) hTi0 (hTiX.trans hb.2.1)
+      (sub_pos.mpr hτT).le (by linarith only [hτ, hT1]) hTi0 (hTiX.trans hb.2.1)
       (coefficientRadius_nonneg L.K) (hr.trans hLW) (frameAmplitude_nonneg L.K) (hf.trans hLW)
       (gradientAmplitude_nonneg L.K) (hgK.trans hLW) (gradientAmplitude_nonneg L.K)
       (EulerPacketParentPhysicalBudgets.physicalCost_nonneg L.K Cp hCp) hPW

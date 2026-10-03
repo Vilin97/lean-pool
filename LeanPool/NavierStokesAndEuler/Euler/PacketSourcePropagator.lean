@@ -133,11 +133,14 @@ theorem physical_hasDerivWithinAt (s t : Icc (0 : ℝ) D.T) (x : Space) (v : U) 
     rw [hz,norm_zero,zero_pow (by omega : 2 ≠ 0)] at hn
     exact (not_le_of_gt D.normalLower_pos) hn
   have he : gram (D.frame.field t x) b =
-      (D.frame.field t x).adjoint (0-(2 : ℝ) • D.frameDerivative.field t x a) := by
+      adjoint (𝕜 := ℝ) (E := U) (F := Space) (D.frame.field t x)
+        (0-(2 : ℝ) • D.frameDerivative.field t x a) := by
     change gram (D.frame.field t x) ((-2 : ℝ) •
       gramInverse (D.frame.field t x) D.frameLower D.frameLower_pos (D.frame_lower t x)
-        ((D.frame.field t x).adjoint (D.frameDerivative.field t x a))) = _
-    rw [map_smul,gram_inverse_apply,map_sub,map_zero,map_smul]
+        (adjoint (𝕜 := ℝ) (E := U) (F := Space) (D.frame.field t x)
+          (D.frameDerivative.field t x a))) = _
+    simp only [ContinuousLinearMap.map_smul, gram_inverse_apply, ContinuousLinearMap.map_sub,
+      ContinuousLinearMap.map_zero]
     module
   have hb := physical_velocity_balance (D.frame.field t x) (D.frameDerivative.field t x)
     (D.M.field t x) (D.normal.field t x) hnormal (D.frame_tangent t x) (D.frame_range t x)

@@ -73,8 +73,9 @@ theorem scaledVelocity_initial_difference_le {m v x y : ℝ → Space}
     (hε : 0 < ε) (hε1 : ε ≤ 1) (hxy : ‖x t₀ - y t₀‖ ≤ D) :
     |scaledVelocity m v x t₀ a ε 0 0-scaledVelocity m v y t₀ a ε 0 0| +
       |scaledVelocity m v x t₀ a ε 0 1-scaledVelocity m v y t₀ a ε 0 1| ≤ 2*D/ε := by
-  simpa [scaledVelocity, movingVelocity, physicalTime, normalizedFrame, frame,
-    velocityScale, Fin.ext_iff] using
+  simpa only [scaledVelocity, movingVelocity, normalizedFrame, frame, physicalTime, mul_zero,
+      add_zero, Fin.isValue, Matrix.cons_val_zero, velocityScale, zero_ne_one, ↓reduceIte,
+      Matrix.cons_val_one, div_one] using
       frame_pair_difference_le (unit_norm hm0) (unit_norm hv0) hε hε1 hxy
 
 theorem scaled_inner_difference_le {p x y : Space} {b D : ℝ}
@@ -102,8 +103,10 @@ theorem scaledRay_initial_difference_le {m v x y : ℝ → Space} {s₀ t₀ a �
   have hall := add_le_add (add_le_add (hpn.trans hden) hqn) (hnn.trans hden)
   have hthree : D/(s₀*ε)+D/(s₀*ε)+D/(s₀*ε) = 3*D/(s₀*ε) := by ring
   rw [hthree] at hall
-  simpa [norm3, scaledRay, movingRay, physicalTime, normalizedFrame, frame, rayScale,
-    Fin.ext_iff] using hall
+  simpa only [norm3, scaledRay, movingRay, normalizedFrame, frame, physicalTime, mul_zero, add_zero,
+      Fin.isValue, Matrix.cons_val_zero, rayScale, zero_ne_one, ↓reduceIte, mul_one,
+      Matrix.cons_val_one, Matrix.cons_val, Fin.ext_iff, Fin.coe_ofNat_eq_mod, Nat.mod_succ,
+      Nat.one_mod, OfNat.ofNat_ne_one, ge_iff_le] using hall
 
 /-- A physical initial-ray error around the chosen normal becomes the
 source's scaled ray error with the fixed factor `(s₀ ε)⁻¹`. -/
@@ -117,7 +120,8 @@ theorem scaledRay_initial_error {m v r : ℝ → Space} {s₀ t₀ a ε D : ℝ}
   have hi : scaledRay m v r₀ s₀ t₀ a ε 0 = ![0,0,1] :=
     scaledRay_initial (ne_of_gt hs₀) hm0 hv0 hmv rfl
   have h := scaledRay_initial_difference_le (a := a) hs₀ hm0 hv0 hmv hε hε1 (y := r₀) hr
-  simpa [hi] using h
+  simpa only [Fin.isValue, ge_iff_le, hi, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.cons_val_zero,
+      sub_zero, Matrix.cons_val_one, Matrix.cons_val] using h
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
 
@@ -271,7 +275,8 @@ theorem activation_coupling_match (B : ℝ → Space →L[ℝ] Space)
     (m v : ℝ → Space) (t₀ ε : ℝ) :
     let a := normalizedCoupling (B t₀) (m t₀) (v t₀)
     rescaledFrame B m v t₀ a ε 0 0 1 = a := by
-  simp [rescaledFrame,physicalTime,frameMatrix,frame,normalizedCoupling]
+  simp only [rescaledFrame, frameMatrix, frame, physicalTime, normalizedCoupling, mul_zero,
+      add_zero, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one]
 
 theorem activation_tilt_match (B : ℝ → Space →L[ℝ] Space)
     (m v : ℝ → Space) (t₀ ε : ℝ)
@@ -351,7 +356,8 @@ variable [CompleteSpace U] {D : Data U} {τ : ℝ}
 /-- Source error, given by `sourceMatrix D x t-P.B t-primaryShear P.c P.m P.v t • rankOne ℝ
 (unit (P.v t)) (unit (P.m t))`. -/
 def ParentFrame.sourceError (x : Space) (t : ℝ) : Space →L[ℝ] Space :=
-  sourceMatrix D x t-P.B t-primaryShear P.c P.m P.v t • rankOne ℝ (unit (P.v t)) (unit (P.m t))
+  sourceMatrix D x t-P.B t-primaryShear P.c P.m P.v t •
+    rankOne (E := Space) (F := Space) ℝ (unit (P.v t)) (unit (P.m t))
 
 namespace Guards
 
@@ -363,12 +369,15 @@ def sourceVelocity (x : Space) (t : ℝ) : Space := uncutVelocity τ hτ hτT H 
 omit [CompleteSpace U] in
 include hτ in
 theorem sourceRay_equation (x : Space) (t : ℝ) (ht : t ∈ Icc τ D.T) :
-    HasDerivWithinAt (sourceRay D x) (-(sourceMatrix D x t).adjoint (sourceRay D x t))
+    HasDerivWithinAt (sourceRay D x)
+      (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (sourceMatrix D x t)
+        (sourceRay D x t))
       (Icc τ D.T) t := by
   have hsub : Icc τ D.T ⊆ Icc (0 : ℝ) D.T := fun _ hs => ⟨hτ.le.trans hs.1,hs.2⟩
   have hclamp : D.clamp t=⟨t,hsub ht⟩ := Data.clamp_coe D ⟨t,hsub ht⟩
   change HasDerivWithinAt (fun s => D.normal.field (D.clamp s) x)
-    (-(D.M.field (D.clamp t) x).adjoint (D.normal.field (D.clamp t) x)) (Icc τ D.T) t
+    (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.M.field (D.clamp t) x)
+      (D.normal.field (D.clamp t) x)) (Icc τ D.T) t
   rw [hclamp]
   exact (canonicalNormal_equation (D := D) ⟨t,hsub ht⟩ x).mono hsub
 
@@ -405,12 +414,13 @@ theorem neighbor_components :
   have ht := A.terminalBound_nonneg
   have hc := historyLabelDifferenceCost_nonneg H
   have hn := norm_nonneg (D.M.derivative.field)
-  have hr : 0 ≤ 3*‖D.normal.derivative.field‖/(P.rayScale hτ hτT*P.epsilon) := by positivity
-  have hv : 0 ≤ 2*historyLabelDifferenceCost H*P.terminalBound A.CM A.CH/P.epsilon := by positivity
+  have hr : 0 ≤ 3*‖D.normal.derivative.field‖/(P.rayScale hτ hτT*P.epsilon) :=
+    div_nonneg (mul_nonneg zero_le_three (norm_nonneg _)) (mul_pos hs he).le
+  have hv : 0 ≤ 2*historyLabelDifferenceCost H*P.terminalBound A.CM A.CH/P.epsilon :=
+    div_nonneg (mul_nonneg (mul_nonneg zero_le_two hc) ht) he.le
   unfold ParentFrame.neighborCost
-  constructor
-  · linarith only [hr,hv]
-  constructor <;> linarith only [hn,hr,hv]
+  exact ⟨by linear_combination hr + hv, by linear_combination hn + hv,
+    by linear_combination hn + hr⟩
 
 omit [CompleteSpace U] in
 theorem radius_cost_le_error : P.neighborCost hτ hτT H A.CM A.CH*A.radius ≤

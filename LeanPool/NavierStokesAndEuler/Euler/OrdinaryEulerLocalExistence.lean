@@ -229,14 +229,14 @@ theorem radial_sub_norm (x y : E) : ‖radial x-radial y‖ ≤ 2*‖x-y‖ := b
   have ha1 : (1+‖x‖)⁻¹ ≤ 1 := (inv_le_one₀ hx).mpr (by linarith [norm_nonneg x])
   have he : (1+‖x‖)⁻¹-(1+‖y‖)⁻¹ =
       ((1+‖x‖)⁻¹*(‖y‖-‖x‖))*(1+‖y‖)⁻¹ := by
-    field_simp
+    rw [inv_sub_inv hx.ne' hy.ne', div_eq_mul_inv, mul_inv]
     ring
   have hv : radial x-radial y = (1+‖x‖)⁻¹ • (x-y) +
       ((1+‖x‖)⁻¹*(‖y‖-‖x‖)) • radial y := by
     calc
       _ = (1+‖x‖)⁻¹ • (x-y)+((1+‖x‖)⁻¹-(1+‖y‖)⁻¹) • y := by
-        dsimp [radial]
-        module
+        dsimp only [radial]
+        rw [smul_sub, sub_smul, sub_add_sub_cancel]
       _ = _ := by rw [he,radial,smul_smul]
   have hd : |‖y‖-‖x‖| ≤ ‖x-y‖ := by
     simpa only [norm_sub_rev] using abs_norm_sub_norm_le y x
@@ -252,7 +252,7 @@ theorem radial_sub_norm (x y : E) : ‖radial x-radial y‖ ≤ 2*‖x-y‖ := b
         mul_le_mul (mul_le_mul_of_nonneg_left hd ha) (radial_norm y)
           (norm_nonneg _) (mul_nonneg ha (norm_nonneg _))
       _ ≤ _ := by simpa only [mul_one] using h1
-  linarith
+  exact (add_le_add h1 h2).trans_eq (two_mul _).symm
 
 theorem radial_lipschitz : LipschitzWith 2 (radial : E → E) :=
   lipschitzWith_iff_norm_sub_le.mpr radial_sub_norm
@@ -310,7 +310,7 @@ theorem exists_global_quadratic (B : E →L[ℝ] E →L[ℝ] E)
     have he := is_const_of_deriv_eq_zero (fun s => (hd s).differentiableAt)
       (fun s => (hd s).deriv) t 0
     rw [hv0] at he
-    nlinarith [norm_nonneg (v t),norm_nonneg x]
+    exact (pow_left_inj₀ (norm_nonneg _) (norm_nonneg _) two_ne_zero).mp he
   let c := (1+‖x‖)^2
   refine ⟨fun t => v (c*t),by simpa only [mul_zero] using hv0,?_,fun t => hn (c*t)⟩
   intro t
@@ -320,7 +320,7 @@ theorem exists_global_quadratic (B : E →L[ℝ] E →L[ℝ] E)
   have he : c • normalized B (v (c*t))=B (v (c*t)) (v (c*t)) := by
     rw [normalized_eq,hn,smul_smul]
     have hp : c*((1+‖x‖)⁻¹)^2=1 := by
-      dsimp [c]
+      dsimp only [c]
       field_simp
     rw [hp,one_smul]
   simpa only [he,Function.comp_def] using h
@@ -362,7 +362,7 @@ theorem advection_add_right (A B C : SmoothL2Field Space) :
   have he : (addField B C).field=B.field+C.field := rfl
   simp only [advectionField_field,addField_field,he,
     fderiv_add (B.smooth.differentiable (by
-        simp) x) (C.smooth.differentiable (by simp) x),add_apply]
+        simp) x) (C.smooth.differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x),add_apply]
 
 theorem advection_smul_left (c : ℝ) (A B : SmoothL2Field Space) :
     advectionField (scaleField c A) B=scaleField c (advectionField A B) := by
@@ -410,7 +410,7 @@ theorem advectionLinear_bound (u v : L2) :
   rw [← (S.field v).derivative.norm_jetLp_zero,(S.field v).norm_derivative_jetLp]
   apply (mul_le_mul_of_nonneg_left (S.field_jet_norm v 1)
     (mul_nonneg S.pointwiseCost_nonneg (norm_nonneg u))).trans_eq
-  dsimp [advectionCost]
+  dsimp only [advectionCost]
   ring
 
 /-- Advection, given by `S.advectionLinear.mkContinuous₂ S.advectionCost
@@ -532,7 +532,7 @@ theorem exists_smooth (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace
     ⟨fun t => S.advection (u t) (u t),
       (S.advection.continuous.comp (huc.comp continuous_subtype_val)).clm_apply
         (huc.comp continuous_subtype_val)⟩
-  let z : C(Icc (0 : ℝ) T,L2) := -integral T hT a
+  let z : C(Icc (0 : ℝ) T,L2) := -EulerContinuousTimeIntegral.integral (E := L2) T hT a
   let v : Icc (0 : ℝ) T → SmoothL2Field Space := fun t => addField A (S.field (z t))
   have hv : ∀ t, (v t).toLp=u t := by
     intro t
@@ -541,8 +541,8 @@ theorem exists_smooth (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace
       (fun s => by
         change HasDerivWithinAt u (-S.op (S.advection (u s) (u s))) _ _
         exact (hu (s : ℝ)).hasDerivWithinAt) t
-    have hi : integral T hT ((-S.op).compLeftContinuous ℝ (Icc (0 : ℝ) T) a) t =
-        S.op (z t) := by
+    have hi : EulerContinuousTimeIntegral.integral (E := L2) T hT
+        ((-S.op).compLeftContinuous ℝ (Icc (0 : ℝ) T) a) t = S.op (z t) := by
       change (∫ r in (0 : ℝ)..(t : ℝ), (-S.op) (extendPath T hT a r))=S.op (z t)
       rw [(-S.op).intervalIntegral_comp_comm
         ((extendPath_continuous T hT a).intervalIntegrable 0 t)]
@@ -551,7 +551,7 @@ theorem exists_smooth (A : SmoothL2Field Space) (hA : A.toLp ∈ solenoidalSpace
     have he' := he.trans (congrArg₂ (fun x y : L2 => x + y) hu0 hi)
     simpa only [v,toLp_addField,field_toLp] using he'.symm
   have hvcont : ∀ n, Continuous (fun t => (v t).jetLp n) :=
-    fun n => continuous_jetLp_addField _ _ (fun _ => continuous_const)
+    fun n => continuous_jetLp_addField (V := Space) _ _ (fun _ => continuous_const)
       (S.field_jet_continuous z z.continuous) n
   have hv0 : v ⟨0,le_rfl,hT⟩=A := by
     apply smoothField_eq_of_toLp_eq
@@ -778,16 +778,14 @@ theorem mollify_error (n : ℕ) (A : EulerLpTranslation.SmoothL2Field Space) :
   · simpa only [integral_mul_const,kernel_integral,one_mul] using h
   apply Eventually.of_forall
   intro y
-  rw [norm_smul,Real.norm_eq_abs,abs_of_nonneg (kernel_nonneg n y)]
+  have hk := kernel_nonneg n y
   by_cases hy : kernel n y=0
-  · simp only [hy,zero_mul,le_refl]
-  apply mul_le_mul_of_nonneg_left _ (kernel_nonneg n y)
-  apply (translation_increment A (-y)).trans
-  rw [norm_neg,mul_comm (2*cutoffScale n)]
-  apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
+  · simp only [hy,zero_smul,norm_zero,zero_mul,le_refl]
   have hs : y ∈ Function.support ((bump n).normed volume) := hy
   rw [(bump n).support_normed_eq,Metric.mem_ball,dist_zero_right] at hs
-  exact hs.le
+  refine (norm_smul_of_nonneg hk _).trans_le (mul_le_mul_of_nonneg_left ?_ hk)
+  exact (translation_increment A (-y)).trans ((mul_le_mul_of_nonneg_left
+    ((norm_neg y).trans_le hs.le) (norm_nonneg _)).trans_eq (mul_comm _ _))
 
 end EulerOrdinaryMollifier
 
@@ -1036,7 +1034,9 @@ theorem projected_difference_energy (A B : SmoothL2Field Space)
     funext x
     have hw : W.field=B.field-A.field := funext (fieldSub_field B A)
     simp only [fieldSub_field,projectedRhs_field,differenceRhs_field,hw,P]
-    rw [fderiv_sub (B.smooth.differentiable (by simp) x) (A.smooth.differentiable (by simp) x)]
+    rw [fderiv_sub (B.smooth.differentiable
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero) x) (A.smooth.differentiable (by simp only [
+        ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]) x)]
     simp only [Pi.sub_apply,sub_apply,map_sub]
     abel_nf
   have hd : ∀ x, divergence (addField A W).field x=0 := by
@@ -1064,7 +1064,7 @@ theorem perturbed_difference_energy (A B : SmoothL2Field Space)
     2*⟪B.toLp-A.toLp,RB-RA⟫_ℝ ≤ (2*K+1)*‖B.toLp-A.toLp‖^2+(ea+eb)^2 := by
   let W := B.toLp-A.toLp
   let e := (RB-(projectedRhs B).toLp)-(RA-(projectedRhs A).toLp)
-  have he : RB-RA=((projectedRhs B).toLp-(projectedRhs A).toLp)+e := by dsimp [e]; abel
+  have he : RB-RA=((projectedRhs B).toLp-(projectedRhs A).toLp)+e := by dsimp only [e]; abel
   have hn : ‖e‖ ≤ ea+eb := by
     exact (norm_sub_le _ _).trans ((add_le_add hb ha).trans_eq (add_comm eb ea))
   have he0 : 0 ≤ ea+eb := (norm_nonneg e).trans hn
@@ -1074,14 +1074,14 @@ theorem perturbed_difference_energy (A B : SmoothL2Field Space)
     linarith [sq_nonneg (‖W‖-(ea+eb))]
   rw [he,inner_add_right,mul_add]
   exact (add_le_add (projected_difference_energy A B hA hB K hK) hpair).trans_eq (by
-      dsimp [W]; ring)
+      dsimp only [W]; ring)
 
 theorem forced_linear_zero_bound (T C E : ℝ) (hC : 1 ≤ C)
     (X X' : ℝ → ℝ) (hX : ContinuousOn X (Icc 0 T)) (hX0 : X 0 = 0)
     (hd : ∀ t ∈ Icc 0 T, HasDerivWithinAt X (X' t) (Icc 0 T) t)
     (hb : ∀ t ∈ Icc 0 T, X' t ≤ C * X t + E ^ 2)
     (t : ℝ) (ht : t ∈ Icc 0 T) : X t ≤ E^2*Real.exp (C*T) := by
-  have hh := linear_stability_within (fun r => X r+E^2) X' C T
+  have hh := linear_stability_within (fun r => X r+E^(2 : ℕ)) X' C T
     (hX.add continuousOn_const)
     (fun r hr => (hd r ⟨hr.1,hr.2.le⟩).add_const _)
     (fun r hr => (hb r ⟨hr.1,hr.2.le⟩).trans (by nlinarith [sq_nonneg E])) t ht
@@ -1130,7 +1130,7 @@ theorem regularized_l2_comparison {T : ℝ} {hT : 0 ≤ T} {j k : ℕ}
   let E := (regularizerError j+regularizerError k)*regularizationCost M
   have hM : 0 ≤ M := wordBound_nonneg (hU ⟨0,le_rfl,hT⟩)
   have hG : 0 ≤ G := mul_nonneg (mul_nonneg (by norm_num) smoothEmbeddingConstant_nonneg) hM
-  have hC : 1 ≤ C := by dsimp [C]; linarith
+  have hC : 1 ≤ C := by dsimp only [C]; linarith
   have hE : 0 ≤ E := mul_nonneg (add_nonneg (regularizerError_nonneg j) (regularizerError_nonneg k))
     (regularizationCost_nonneg M)
   let X (r : ℝ) := ‖(V.velocity (projIcc 0 T hT r)).toLp-(U.velocity (projIcc 0 T hT r)).toLp‖^2
@@ -1167,7 +1167,7 @@ theorem regularized_l2_comparison {T : ℝ} {hT : 0 ≤ T} {j k : ℕ}
     (add_nonneg (regularizerError_nonneg j) (regularizerError_nonneg k))
     (regularizedComparisonCost_nonneg T M))).mpr
   intro t
-  exact (hnorm t).trans_eq (by dsimp [E,C,G,regularizedComparisonCost]; ring)
+  exact (hnorm t).trans_eq (by dsimp only [regularizedComparisonCost, E, C, G]; ring)
 
 theorem regularized_cauchy {T : ℝ} {hT : 0 ≤ T}
     (U : ∀ n, RegularizedEvolution (regularizer n) T hT)
@@ -1236,7 +1236,7 @@ theorem quadratic_energy_bound (T C : ℝ) (hT : 0 ≤ T)
   have hfn (r : ℝ) (hr : r ∈ Icc 0 T) : 0 ≤ f' r := by
     have hdv : X' r/(1+X r)^2 ≤ C := (div_le_iff₀ (sq_pos_of_pos (hp r hr))).mpr (by
       simpa only [mul_comm C] using hb r hr)
-    dsimp [f']
+    dsimp only [f']
     rw [neg_div]
     linarith
   have hm : MonotoneOn f (Icc 0 T) :=
@@ -1244,7 +1244,7 @@ theorem quadratic_energy_bound (T C : ℝ) (hT : 0 ≤ T)
       (fun r hr => (hfd r (interior_subset hr)).mono interior_subset)
       (fun r hr => hfn r (interior_subset hr))
   have hmono := hm hz ht ht.1
-  dsimp [f] at hmono
+  dsimp only [f] at hmono
   have hCt : C*t ≤ (1+X 0)⁻¹/2 :=
     (mul_le_mul_of_nonneg_left ht.2 hC).trans hsmall
   have hi : (1 : ℝ)/(2*(1+X 0)) ≤ 1/(1+X t) := by
@@ -1459,7 +1459,7 @@ def derivativePath : C(Icc (0 : ℝ) T,L2) := fieldPath U.derivative U.derivativ
 
 theorem integral_equation (t : Icc (0 : ℝ) T) :
     (U.velocity t).toLp=(U.velocity ⟨0,le_rfl,hT⟩).toLp +
-      integral T hT U.derivativePath t := by
+      EulerContinuousTimeIntegral.integral (E := L2) T hT U.derivativePath t := by
   have h := eq_initial_add_integral T hT U.derivativePath
     (fun r => (U.velocity (projIcc 0 T hT r)).toLp) U.l2_time t
   simpa only [projIcc_of_mem hT t.property,
@@ -1501,10 +1501,12 @@ theorem regularized_derivative_convergence (M : ℝ)
 theorem regularized_integral_equation (M : ℝ)
     (hM : ∀ n t, WordBound 4 M ((U n).velocity t)) (t : Icc (0 : ℝ) T) :
     (L.field t).toLp=(L.field ⟨0,le_rfl,hT⟩).toLp +
-      integral T hT (projectedRhsPath L.field L.field_continuous) t := by
+      EulerContinuousTimeIntegral.integral (E := L2) T hT
+        (projectedRhsPath L.field L.field_continuous) t := by
   have hi := (ContinuousMap.evalCLM ℝ t).continuous.tendsto
-    (integral T hT (projectedRhsPath L.field L.field_continuous)) |>.comp
-      (((integral (E := L2) T hT).continuous.tendsto _).comp
+    (EulerContinuousTimeIntegral.integral (E := L2) T hT
+      (projectedRhsPath L.field L.field_continuous)) |>.comp
+      (((EulerContinuousTimeIntegral.integral (E := L2) T hT).continuous.tendsto _).comp
         (L.regularized_derivative_convergence M hM))
   have hs := (L.toLp_convergence ⟨0,le_rfl,hT⟩).add hi
   exact tendsto_nhds_unique (L.toLp_convergence t)
@@ -1516,7 +1518,8 @@ theorem regularized_time (M : ℝ) (hM : ∀ n t, WordBound 4 M ((U n).velocity 
       (projectedRhs (L.field t)).toLp (Icc (0 : ℝ) T) t := by
   have he : (fun r => (L.field (projIcc 0 T hT r)).toLp) =
       fun r => (L.field ⟨0,le_rfl,hT⟩).toLp +
-        extendPath T hT (integral T hT (projectedRhsPath L.field L.field_continuous)) r := by
+        extendPath T hT (EulerContinuousTimeIntegral.integral (E := L2) T hT
+          (projectedRhsPath L.field L.field_continuous)) r := by
     funext r
     exact L.regularized_integral_equation M hM (projIcc 0 T hT r)
   rw [he]

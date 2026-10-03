@@ -89,9 +89,9 @@ def reassembly (n : ℕ) :
   ((coordinates (E := E) (V := V) n).toLinearMap.leftInverse).toContinuousLinearMap
 
 private theorem reassembly_coordinates (n : ℕ) (A : E [×n]→L[ℝ] V) :
-    reassembly n (coordinates n A) = A :=
+    reassembly (E := E) (V := V) n (coordinates (E := E) (V := V) n A) = A :=
   LinearMap.leftInverse_apply_of_inj
-    (LinearMap.ker_eq_bot.mpr (coordinates_injective n)) A
+    (LinearMap.ker_eq_bot.mpr (coordinates_injective (E := E) (V := V) n)) A
 
 /-- Tuple bounded as an element of `(ι → (X →ᵇ V)) →L[ℝ] (X →ᵇ (ι → V))`. -/
 def tupleBounded {ι : Type*} [Fintype ι] :
@@ -104,32 +104,31 @@ def tupleBounded {ι : Type*} [Fintype ι] :
 omit [FiniteDimensional ℝ V] in
 private theorem tupleBounded_apply {ι : Type*} [Fintype ι]
     (u : ι → (X →ᵇ V)) (x : X) (i : ι) :
-    tupleBounded u x i = u i x := by
+    tupleBounded (X := X) (V := V) (ι := ι) u x i = u i x := by
   classical
-  simp [tupleBounded]
+  simp only [tupleBounded, sum_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.proj_apply, BoundedContinuousFunction.coe_sum, Finset.sum_apply,
+      ContinuousLinearMap.compLeftContinuousBounded_apply, ContinuousLinearMap.single_apply,
+      Finset.sum_pi_single, Finset.mem_univ, ↓reduceIte]
 
 /-- Tensor path, bundling `toFun`, `continuous_toFun`. -/
 def tensorPath (n : ℕ) (A : E [×n]→L[ℝ] C(K, X →ᵇ V)) :
     C(K, X →ᵇ (E [×n]→L[ℝ] V)) where
   toFun t := (reassembly (E := E) (V := V) n).compLeftContinuousBounded X
-    (tupleBounded (fun w => A (fun i => Module.finBasis ℝ E (w i)) t))
+    (tupleBounded (X := X) (V := V) (ι := Fin n → Fin (Module.finrank ℝ E))
+      (fun w => A (fun i => Module.finBasis ℝ E (w i)) t))
   continuous_toFun :=
     ((reassembly (E := E) (V := V) n).compLeftContinuousBounded X).continuous.comp
-      ((tupleBounded (X := X) (V := V)).continuous.comp
+      ((tupleBounded (X := X) (V := V) (ι := Fin n → Fin (Module.finrank ℝ E))).continuous.comp
         (continuous_pi (fun w => (A (fun i => Module.finBasis ℝ E (w i))).continuous)))
 
 omit [CompactSpace K] in
 theorem tensorPath_eq (n : ℕ) (A : E [×n]→L[ℝ] C(K, X →ᵇ V)) (t : K) (x : X) :
     tensorPath n A t x = (BoundedContinuousFunction.evalCLM ℝ x).compContinuousMultilinearMap
       ((ContinuousMap.evalCLM ℝ t).compContinuousMultilinearMap A) := by
-  change reassembly n (tupleBounded _ x) = _
-  have he : tupleBounded (fun w => A (fun i => Module.finBasis ℝ E (w i)) t) x =
-      coordinates n ((BoundedContinuousFunction.evalCLM ℝ x).compContinuousMultilinearMap
-        ((ContinuousMap.evalCLM ℝ t).compContinuousMultilinearMap A)) := by
-    funext w
-    rw [tupleBounded_apply]
-    rfl
-  rw [he, reassembly_coordinates]
+  refine Eq.trans (congrArg (reassembly (E := E) (V := V) n) ?_) (reassembly_coordinates n _)
+  funext w
+  exact tupleBounded_apply _ x w
 
 omit [CompactSpace K] in
 @[simp] theorem tensorPath_apply (n : ℕ) (A : E [×n]→L[ℝ] C(K, X →ᵇ V))
@@ -199,7 +198,8 @@ def tensorPathMap (n : ℕ) :
       simpa only [one_mul] using tensorPath_norm_le n A)
 
 @[simp] theorem tensorPathMap_apply (n : ℕ) (A : E [×n]→L[ℝ] C(K, X →ᵇ V))
-    (t : K) (x : X) (v : Fin n → E) : tensorPathMap n A t x v = A v t x :=
+    (t : K) (x : X) (v : Fin n → E) :
+    tensorPathMap (K := K) (X := X) (E := E) (V := V) n A t x v = A v t x :=
   tensorPath_apply n A t x v
 
 theorem tensorPathMap_norm_le (n : ℕ) :
@@ -211,16 +211,18 @@ theorem tensorPathMap_norm_le (n : ℕ) :
 
 theorem tensorPath_iteratedFDeriv (f : E → C(K, X →ᵇ V)) (hf : ContDiff ℝ ∞ f)
     (n : ℕ) (a : E) (t : K) (x : X) :
-    tensorPathMap n (iteratedFDeriv ℝ n f a) t x =
+    tensorPathMap (K := K) (X := X) (E := E) (V := V) n (iteratedFDeriv ℝ n f a) t x =
       iteratedFDeriv ℝ n (fun b => f b t x) a := by
   change tensorPath n (iteratedFDeriv ℝ n f a) t x = _
   rw [tensorPath_eq]
-  have ht := (ContinuousMap.evalCLM ℝ t).iteratedFDeriv_comp_left (x := a) hf.contDiffAt
-    (show (n : ℕ∞) ≤ ∞ by simp)
+  have ht := (ContinuousMap.evalCLM ℝ (M := X →ᵇ V) t).iteratedFDeriv_comp_left (x := a)
+    hf.contDiffAt (show (n : ℕ∞) ≤ ∞ by simp only [WithTop.coe_natCast, WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true])
   rw [← ht]
-  exact ((BoundedContinuousFunction.evalCLM ℝ x).iteratedFDeriv_comp_left
-    ((ContinuousMap.evalCLM ℝ t).contDiff.comp hf).contDiffAt
-    (show (n : ℕ∞) ≤ ∞ by simp)).symm
+  exact ((BoundedContinuousFunction.evalCLM ℝ (β := V) x).iteratedFDeriv_comp_left
+    ((ContinuousMap.evalCLM ℝ (M := X →ᵇ V) t).contDiff.comp hf).contDiffAt
+    (show (n : ℕ∞) ≤ ∞ by simp only [WithTop.coe_natCast, WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true])).symm
 
 end EulerContinuousBoundedTensor
 
@@ -254,7 +256,7 @@ open scoped ContDiff BoundedContinuousFunction
 
 variable (P : ℝ) [Fact (0 < P)] {K : Type} [TopologicalSpace K] [CompactSpace K]
   (p : C(K, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
 
 /-- Cache the standard `NormedAddCommGroup (LiftTangent [×n]→L[ℝ] Space)` instance to shorten
 typeclass synthesis. -/
@@ -275,7 +277,8 @@ local instance instCylinderSmoothTimeField4 (n : ℕ) : NormedSpace ℝ
 
 /-- Cover jet, given by `tensorPathMap n (iteratedFDeriv ℝ n (coverOrbit P p hp) 0)`. -/
 def coverJet (n : ℕ) : C(K, LiftTangent →ᵇ (LiftTangent [×n]→L[ℝ] Space)) :=
-  tensorPathMap n (iteratedFDeriv ℝ n (coverOrbit P p hp) 0)
+  tensorPathMap (K := K) (X := LiftTangent) (E := LiftTangent) (V := Space) n
+    (iteratedFDeriv ℝ n (coverOrbit P p hp) 0)
 
 theorem coverJet_eq (n : ℕ) (t : K) (x : LiftTangent) :
     coverJet P p hp n t x = iteratedFDeriv ℝ n (coverPath P p hp t : LiftTangent → Space) x := by
@@ -287,8 +290,9 @@ theorem coverJet_eq (n : ℕ) (t : K) (x : LiftTangent) :
 
 theorem coverPath_smooth (t : K) :
     ContDiff ℝ ∞ (coverPath P p hp t : LiftTangent → Space) := by
-  have hc := (BoundedContinuousFunction.evalCLM ℝ (0 : LiftTangent)).contDiff.comp
-    ((ContinuousMap.evalCLM ℝ t).contDiff.comp (coverOrbit_contDiff P p hp))
+  have hc := (BoundedContinuousFunction.evalCLM ℝ (β := Space) (0 : LiftTangent)).contDiff.comp
+    ((ContinuousMap.evalCLM ℝ (M := LiftTangent →ᵇ Space) t).contDiff.comp
+      (coverOrbit_contDiff P p hp))
   have he : (fun a => coverOrbit P p hp a t 0) =
       (coverPath P p hp t : LiftTangent → Space) := by
     funext a

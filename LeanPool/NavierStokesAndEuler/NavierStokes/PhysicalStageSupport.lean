@@ -103,7 +103,7 @@ theorem wave_scalar_support (W : WaveData h D I K J) (i : J) {qbig R : ℝ}
   apply support_mono
     (SublevelShrinkingSupport.of_global (localCopy_sum_support (W.support i)))
   dsimp only [outerConstant]
-  nlinarith [Real.sqrt_nonneg (2 : ℝ)]
+  nlinarith only [hR, Real.sqrt_nonneg (2 : ℝ)]
 
 theorem wave_vector_support (W : WaveData h D I K (Fin 3)) {qbig R : ℝ}
     (hR : W.upperRadius ≤ 2 * R) :
@@ -111,7 +111,7 @@ theorem wave_vector_support (W : WaveData h D I K (Fin 3)) {qbig R : ℝ}
   apply support_mono
     (SublevelShrinkingSupport.of_global (localCopy_vector_support W.support))
   dsimp only [outerConstant]
-  nlinarith [Real.sqrt_nonneg (2 : ℝ)]
+  nlinarith only [hR, Real.sqrt_nonneg (2 : ℝ)]
 
 theorem wave_pressure_support (W : WaveData h D I K Unit) {qbig R : ℝ}
     (hR : W.upperRadius ≤ 2 * R) :
@@ -134,7 +134,7 @@ theorem mean_field_support (M : MeanData h degree)
   have hqpos := PhysicalWaveSum.physicalQ_pos hh hh1 ht
   obtain ⟨n, hnN, hqn, hnq⟩ := PhysicalMeanJetBounds.exists_comparable_band
     M.firstBand hqpos (hqw.le.trans hq)
-  have hlo : PhysicalWaveSum.physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+  have hlo : PhysicalWaveSum.physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hqpos, hqn]
   have hu := M.region_covers (PhysicalMeanJetBounds.graph_slow_normalized
     hh hh1 n (M.family.gap n) ht hlo hnq.le)
   have hann := M.family.annulus_on_tsupport hh hh1 M.lower_pos M.radii_lt M.region_open
@@ -143,7 +143,7 @@ theorem mean_field_support (M : MeanData h degree)
   apply hb.trans
   apply mul_le_mul_of_nonneg_right _ (Real.sqrt_nonneg _)
   dsimp only [outerConstant]
-  nlinarith [Real.sqrt_nonneg (2 : ℝ)]
+  nlinarith only [hh, hh1, hR, Real.sqrt_nonneg (2 : ℝ)]
 
 /-- The Cartesian angular reconstruction is pointwise zero-preserving. -/
 theorem mean_angular_support (M : MeanData h degree)
@@ -174,9 +174,9 @@ theorem comparable_graph_mem (hh : 0 < h) (hh1 : h < 1 / 2)
   have hQ := ChartScales.Q_pos n
   constructor
   · apply (lt_div_iff₀ hQ).mpr
-    linarith
+    linarith only [hhi]
   · apply (div_lt_iff₀ hQ).mpr
-    linarith
+    linarith only [hlo, hhi]
 
 theorem coherent_field_support (D : PhysicalMeanJetBounds.CoherentFamily h degree N gap U E)
     (hh : 0 < h) (hh1 : h < 1 / 2) {a b qbig R : ℝ}
@@ -189,7 +189,7 @@ theorem coherent_field_support (D : PhysicalMeanJetBounds.CoherentFamily h degre
   have hqpos := PhysicalWaveSum.physicalQ_pos hh hh1 ht
   obtain ⟨n, hnN, hqn, hnq⟩ := PhysicalMeanJetBounds.exists_comparable_band
     N hqpos (hqw.le.trans hq)
-  have hlo : PhysicalWaveSum.physicalQ h w / 2 ≤ ChartScales.Q n := by linarith
+  have hlo : PhysicalWaveSum.physicalQ h w / 2 ≤ ChartScales.Q n := by linarith only [hqpos, hqn]
   have hu := hcover (comparable_graph_mem hh hh1 n (D.gap n) ht hqn hnq)
   have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hnN ht hu hlo hnq.le
     (subset_tsupport _ hn)
@@ -197,7 +197,7 @@ theorem coherent_field_support (D : PhysicalMeanJetBounds.CoherentFamily h degre
   apply hb.trans
   apply mul_le_mul_of_nonneg_right _ (Real.sqrt_nonneg _)
   dsimp only [outerConstant]
-  nlinarith [Real.sqrt_nonneg (2 : ℝ)]
+  nlinarith only [hh, hh1, hR, Real.sqrt_nonneg (2 : ℝ)]
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
 theorem coherent_angular_support (D : PhysicalMeanJetBounds.CoherentFamily h degree N gap U ℝ)

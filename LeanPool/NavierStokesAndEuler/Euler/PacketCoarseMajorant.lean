@@ -33,7 +33,7 @@ theorem gradeBase_nonneg (R : ℝ) (N : ℕ) : 0 ≤ gradeBase R N := by
 theorem gradeBase_ge_one (R : ℝ) (hR : 1 ≤ R) (N : ℕ) (hN : 1 ≤ N) :
     1 ≤ gradeBase R N := by
   have hn : (1 : ℝ) ≤ N := by exact_mod_cast hN
-  have hbase : (1 : ℝ) ≤ 4*R*(550*(N : ℝ))^2 := by nlinarith
+  have hbase : (1 : ℝ) ≤ 4*R*(550*(N : ℝ))^2 := by nlinarith only [hn, hR]
   exact one_le_pow₀ hbase
 
 theorem factorial_le_grade_power (N p d : ℕ) (hN : 1 ≤ N) (hp : p ≤ 2 * N + 2)
@@ -49,14 +49,14 @@ theorem majorant_grade_bound (R : ℝ) (hR : 1 ≤ R) (N p d n : ℕ)
     majorant R d n ≤ (gradeBase R N)^(p+1)*majorant (4*R) 0 n := by
   have hB : (1 : ℝ) ≤ 550*(N : ℝ) := by
     have hn : (1 : ℝ) ≤ N := by exact_mod_cast hN
-    linarith
-  have hbase : (1 : ℝ) ≤ 4*R*(550*(N : ℝ))^2 := by nlinarith
+    linarith only [hn]
+  have hbase : (1 : ℝ) ≤ 4*R*(550*(N : ℝ))^2 := by nlinarith only [hB, hR]
   have hfac := factorial_le_grade_power N p d hN hp hd
   have hfac2 := pow_le_pow_left₀ (show (0 : ℝ) ≤ (d.factorial : ℝ) by positivity) hfac 2
   have hfactor : (4*R)^d*(d.factorial : ℝ)^2 ≤ (gradeBase R N)^(p+1) := by
     calc
       _ ≤ (4*R)^d*((550*(N : ℝ))^d)^2 :=
-        mul_le_mul_of_nonneg_left hfac2 (pow_nonneg (by linarith) _)
+        mul_le_mul_of_nonneg_left hfac2 (pow_nonneg (by linarith only [hR]) _)
       _ = (4*R*(550*(N : ℝ))^2)^d := by
         have hpow : ((550*(N : ℝ))^d)^2=((550*(N : ℝ))^2)^d := by
           rw [← pow_mul, ← pow_mul, Nat.mul_comm d 2]
@@ -64,7 +64,7 @@ theorem majorant_grade_bound (R : ℝ) (hR : 1 ≤ R) (N p d n : ℕ)
         exact (mul_pow (4*R) ((550*(N : ℝ))^2) d).symm
       _ ≤ (4*R*(550*(N : ℝ))^2)^(110*(p+1)) := pow_le_pow_right₀ hbase hd
       _ = (gradeBase R N)^(p+1) := by rw [pow_mul]; rfl
-  exact (majorant_coarse_split R (by linarith) d n).trans
-    (mul_le_mul_of_nonneg_right hfactor (majorant_nonneg (4*R) (by linarith) 0 n))
+  exact (majorant_coarse_split R (by linarith only [hR]) d n).trans
+    (mul_le_mul_of_nonneg_right hfactor (majorant_nonneg (4*R) (by linarith only [hR]) 0 n))
 
 end EulerPacketCoarseMajorant

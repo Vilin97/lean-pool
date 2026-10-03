@@ -31,7 +31,7 @@ open scoped ContDiff Topology
 
 namespace Euler.EulerExistenceAndSmoothnessR3
 
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 variable {u₀ : ℝ³ → ℝ³} {v : ℝ³ → ℝ → ℝ³} {p : ℝ³ → ℝ → ℝ}
   (h : EulerExistenceAndSmoothnessR3 u₀ v p)

@@ -97,13 +97,10 @@ def derivative (A : SmoothFamily μ P V) : SmoothFamily μ P (P →L[ℝ] V) whe
       V).toContinuousLinearEquiv.toContinuousLinearMap.compLpL
     2 μ (A.jet (n+1) a)
   jet_ae n a := by
-    let L : (P [×(n+1)]→L[ℝ] V) →L[ℝ] (P [×n]→L[ℝ] (P →L[ℝ] V)) :=
-      (continuousMultilinearCurryRightEquiv' ℝ n P V).toContinuousLinearEquiv.toContinuousLinearMap
-    filter_upwards [ContinuousLinearMap.coeFn_compLpL (𝕜 := ℝ) (𝕜' := ℝ)
-      (E := P [×(n+1)]→L[ℝ] V) (F := P [×n]→L[ℝ] (P →L[ℝ] V))
-      (σ := RingHom.id ℝ) L (A.jet (n+1) a), A.jet_ae (n+1) a] with x hx hj
-    rw [hx, hj, iteratedFDeriv_succ_eq_comp_right]
-    exact (continuousMultilinearCurryRightEquiv' ℝ n P V).apply_symm_apply _
+    refine Filter.EventuallyEq.trans (ContinuousLinearMap.coeFn_compLpL _ _) ?_
+    filter_upwards [A.jet_ae (n+1) a] with x hj
+    exact (congrArg _ (hj.trans iteratedFDeriv_succ_eq_comp_right)).trans
+      ((continuousMultilinearCurryRightEquiv' ℝ n P V).apply_symm_apply _)
   bound n := A.bound (n+1)
   bounded n := (A.bounded (n+1)).mono (fun x hx a => by
     simpa only [norm_iteratedFDeriv_fderiv] using hx a)
@@ -138,7 +135,7 @@ theorem hasFDerivAt_value (A : SmoothFamily μ P V) (a : P) :
   simpa only [zero_add] using (hasFDerivAt_comp_add_right a).mp hshift
 
 theorem fderiv_value (A : SmoothFamily μ P V) :
-    fderiv ℝ A.value = fun a => derivativeBundling μ (A.derivative.value a) :=
+    fderiv ℝ A.value = fun a => derivativeBundling (P := P) (V := V) μ (A.derivative.value a) :=
   funext (fun a => (A.hasFDerivAt_value a).fderiv)
 
 end SmoothFamily
@@ -182,9 +179,7 @@ private theorem contDiff_value_nat_aux (n : ℕ) :
     rw [Nat.cast_add, Nat.cast_one, contDiff_succ_iff_fderiv]
     refine ⟨fun a => (A.hasFDerivAt_value a).differentiableAt, by simp, ?_⟩
     rw [A.fderiv_value]
-    exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := (n : WithTop ℕ∞))
-      (E := Lp (P →L[ℝ] V) 2 μ) (F := P →L[ℝ] Lp V 2 μ)
-      (derivativeBundling μ)).comp (ih (P →L[ℝ] V) A.derivative)
+    exact (derivativeBundling (P := P) (V := V) μ).contDiff.comp (ih (P →L[ℝ] V) A.derivative)
 
 /-- Genuine smoothness in the full L² norm, not merely pointwise in the measured variable. -/
 theorem contDiff_value (A : SmoothFamily μ P V) : ContDiff ℝ ∞ A.value :=
@@ -208,14 +203,11 @@ private theorem norm_iteratedFDeriv_value_aux (n : ℕ) :
   | succ n ih =>
     intro V _ _ A a
     rw [← norm_iteratedFDeriv_fderiv, A.fderiv_value]
-    have h := ContinuousLinearMap.norm_iteratedFDeriv_comp_left (𝕜 := ℝ) (E := P)
-      (F := Lp (P →L[ℝ] V) 2 μ) (G := P →L[ℝ] Lp V 2 μ)
-      (derivativeBundling μ) (A.derivative.contDiff_value.contDiffAt (x := a)) (n := n) (by simp)
-    have hi := ih (P →L[ℝ] V) A.derivative a
-    rw [show A.derivative.bound n = A.bound (n+1) from rfl] at hi
+    have h := (derivativeBundling (P := P) (V := V) μ).norm_iteratedFDeriv_comp_left
+      (A.derivative.contDiff_value.contDiffAt (x := a)) (n := n) (by simp)
     exact h.trans ((mul_le_mul_of_nonneg_right
       (derivativeBundling_norm_le_one (P := P) (V := V) μ) (norm_nonneg _)).trans
-      (by simpa only [one_mul] using hi))
+      ((one_mul _).trans_le (ih (P →L[ℝ] V) A.derivative a)))
 
 /-- Each true L² derivative inherits its original fiberwise L² majorant with constant one. -/
 theorem norm_iteratedFDeriv_value_le (A : SmoothFamily μ P V) (n : ℕ) (a : P) :
@@ -242,7 +234,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 theorem orbitJet_memLp (T : ℝ) (A : ℝ → SmoothL2Field V)
     (hA : ∀ n, MemLp (fun t => (A t).jetLp n) 2 (timeMeasure T)) (n : ℕ) (a : Space) :
-    MemLp (fun t => iteratedFDeriv ℝ n (fun b : Space => translation b (A t).toLp) a)
+    MemLp (fun t => iteratedFDeriv ℝ n (fun b : Space => translation (V := V) b (A t).toLp) a)
       2 (timeMeasure T) := by
   have h := ((hA n).continuousLinearMap_comp (translation (V := Space [×n]→L[ℝ] V)
       a).toContinuousLinearMap).continuousLinearMap_comp
@@ -254,10 +246,10 @@ proofs. -/
 def forcingFamily (T : ℝ) (A : ℝ → SmoothL2Field V)
     (hA : ∀ n, MemLp (fun t => (A t).jetLp n) 2 (timeMeasure T)) :
     SmoothFamily (timeMeasure T) Space (L2Space V) where
-  field a t := translation a (A t).toLp
+  field a t := translation (V := V) a (A t).toLp
   smooth := Eventually.of_forall (fun t => (A t).translation_contDiff)
   jet n a := (orbitJet_memLp T A hA n a).toLp
-    (fun t => iteratedFDeriv ℝ n (fun b : Space => translation b (A t).toLp) a)
+    (fun t => iteratedFDeriv ℝ n (fun b : Space => translation (V := V) b (A t).toLp) a)
   jet_ae n a := (orbitJet_memLp T A hA n a).coeFn_toLp
   bound n := (hA n).norm.toLp (fun t => ‖(A t).jetLp n‖)
   bounded n := by
@@ -269,11 +261,13 @@ def forcingFamily (T : ℝ) (A : ℝ → SmoothL2Field V)
 theorem forcingFamily_value_eq (T : ℝ) (A : ℝ → SmoothL2Field V)
     (hA : ∀ n, MemLp (fun t => (A t).jetLp n) 2 (timeMeasure T))
     (f : TimeLp T (L2Space V)) (hf : f =ᵐ[timeMeasure T] fun t => (A t).toLp) (a : Space) :
-    (forcingFamily T A hA).value a = timeLiftIsometry T (translation a) f := by
+    (forcingFamily T A hA).value a =
+      (timeLiftIsometry T (translation a) : TimeLp T (L2Space V) →ₗᵢ[ℝ] _) f := by
   apply Lp.ext
   filter_upwards [(forcingFamily T A hA).value_ae a,
-    timeLift_ae T (translation a).toContinuousLinearMap f, hf] with t hv ht he
-  change (forcingFamily T A hA).value a t = timeLift T (translation a).toContinuousLinearMap f t
+    timeLift_ae T (translation (V := V) a).toContinuousLinearMap f, hf] with t hv ht he
+  change (forcingFamily T A hA).value a t =
+    timeLift T (translation (V := V) a).toContinuousLinearMap f t
   rw [hv, ht, he]
   rfl
 
@@ -283,8 +277,8 @@ theorem forcing_translation_contDiff (T : ℝ) (A : ℝ → SmoothL2Field V)
     (hA : ∀ n, MemLp (fun t => (A t).jetLp n) 2 (timeMeasure T))
     (f : TimeLp T (L2Space V)) (hf : f =ᵐ[timeMeasure T] fun t => (A t).toLp) :
     ContDiff ℝ ∞ (fun a : Space => timeLiftIsometry T (translation a) f) := by
-  have he : (fun a : Space => timeLiftIsometry T (translation a) f) = (forcingFamily T A hA).value
-      :=
+  have he : (fun a : Space => timeLiftIsometry T (translation (V := V) a) f) =
+      (forcingFamily T A hA).value :=
     funext (fun a => (forcingFamily_value_eq T A hA f hf a).symm)
   rw [he]
   exact (forcingFamily T A hA).contDiff_value
@@ -297,8 +291,8 @@ theorem forcing_translation_jet_bound (T : ℝ) (A : ℝ → SmoothL2Field V)
     (n : ℕ) (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b : Space => timeLiftIsometry T (translation b) f) a‖ ≤
       ‖(hA n).toLp (fun t => (A t).jetLp n)‖ := by
-  have he : (fun b : Space => timeLiftIsometry T (translation b) f) = (forcingFamily T A hA).value
-      :=
+  have he : (fun b : Space => timeLiftIsometry T (translation (V := V) b) f) =
+      (forcingFamily T A hA).value :=
     funext (fun b => (forcingFamily_value_eq T A hA f hf b).symm)
   have h := (forcingFamily T A hA).norm_iteratedFDeriv_value_le n a
   have hn : ‖(forcingFamily T A hA).bound n‖ = ‖(hA n).toLp (fun t => (A t).jetLp n)‖ := by

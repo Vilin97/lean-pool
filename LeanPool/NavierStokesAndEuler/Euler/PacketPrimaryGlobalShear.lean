@@ -42,17 +42,17 @@ theorem graph_vector_hasFDerivAt (q : LiftTangent → Space) (k : ℝ) (hk : k �
     (m : Space) (Y : Space → Space) (J : Space →L[ℝ] Space) (x : Space)
     (hY : HasFDerivAt Y J x) (hq : DifferentiableAt ℝ q (graphMap k m (Y x))) :
     HasFDerivAt (fun y => k⁻¹ • q (graphMap k m (Y y)))
-      (rankOne ℝ (fderiv ℝ q (graphMap k m (Y x)) (0,1)) (J.adjoint m) +
+      (rankOne ℝ (E := Space) (F := Space) (fderiv ℝ q (graphMap k m (Y x)) (0,1))
+          (adjoint (𝕜 := ℝ) (E := Space) (F := Space) J m) +
         slowGraphDerivative q k m Y J x) x := by
-  have hg : HasFDerivAt (fun y => graphMap k m (Y y)) ((graphMap k m).comp J) x :=
-    (graphMap k m).hasFDerivAt.comp x hY
-  convert! (hq.hasFDerivAt.comp x hg).const_smul k⁻¹ using 1
+  have hg := (graphMap k m).hasFDerivAt.comp x hY
+  refine ((hq.hasFDerivAt.comp (f := graphMap k m ∘ Y) x hg).const_smul k⁻¹).congr_fderiv ?_
   apply ContinuousLinearMap.ext
   intro v
-  simp only [slowGraphDerivative,add_apply,smul_apply,comp_apply,rankOne_apply,
-    graph_decomposition,map_add,map_smul,inl_apply,smul_add,smul_smul]
-  rw [← J.adjoint_inner_left v m]
-  match_scalars <;> field_simp
+  simp only [slowGraphDerivative, add_apply, smul_apply, comp_apply, rankOne_apply,
+    graph_decomposition, map_add, map_smul, inl_apply, smul_add, smul_smul,
+    inv_mul_cancel_left₀ hk, ← J.adjoint_inner_left v m]
+  exact add_comm _ _
 
 theorem slowGraphDerivative_norm_le (q : LiftTangent → Space) (k : ℝ) (m : Space)
     (Y : Space → Space) (J : Space →L[ℝ] Space) (x : Space) :
@@ -86,7 +86,7 @@ theorem scaled_terminal_angular_fderiv (a : ℝ) (t : Icc (0 : ℝ) D.T) (z : Li
   have hq : DifferentiableAt ℝ q z :=
     ((vectorField τ hτ hτT B (initialData D δ hδ (a • ξ) hs)).raw_smooth t).differentiable (by
         simp) z
-  have hv := (hq.hasFDerivAt.comp_hasDerivAt z.2
+  have hv := (hq.hasFDerivAt.comp_hasDerivAt (F := LiftTangent) (f := fun x => (z.1, id x)) z.2
     ((hasDerivAt_const z.2 z.1).prodMk (hasDerivAt_id z.2))).deriv
   change deriv (fun θ => q (z.1,θ)) z.2 = _ at hv
   have hd' : deriv (fun θ => a • (profile δ θ • canonicalVelocity τ hτ hτT B ξ hs t z.1)) z.2 =
@@ -100,7 +100,8 @@ theorem scaled_terminal_global_gradient (a k : ℝ) (hk : k ≠ 0)
     fderiv ℝ (fun y => k⁻¹ • vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs)
       (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x =
       (a*deriv (profile δ) (k*⟪D.m₀,Y x⟫_ℝ)) •
-        rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t (Y x)) (D.normal.field t (Y x)) +
+        rankOne ℝ (E := Space) (F := Space) (canonicalVelocity τ hτ hτT B ξ hs t (Y x))
+          (D.normal.field t (Y x)) +
       slowGraphDerivative (fun z => vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs) (t,z))
         k D.m₀ Y (D.FInv.field t (Y x)) x := by
   have hq := ((vectorField τ hτ hτT B (initialData D δ hδ (a • ξ) hs)).raw_smooth t).differentiable
@@ -109,12 +110,11 @@ theorem scaled_terminal_global_gradient (a k : ℝ) (hk : k ≠ 0)
   have he := (graph_vector_hasFDerivAt
     (fun z => vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs) (t,z))
     k hk D.m₀ Y _ x hY (hq _)).fderiv
-  rw [scaled_terminal_angular_fderiv τ hτ hτT B δ hδ ξ hs] at he
-  convert! he using 1
-  apply congrArg (fun V : Space →L[ℝ] Space => V + _)
+  refine he.trans (congrArg (fun V : Space →L[ℝ] Space => V + _) ?_).symm
   apply ContinuousLinearMap.ext
   intro v
-  simp only [smul_apply,rankOne_apply,smul_smul,graphMap_apply]
+  simp only [smul_apply, rankOne_apply, smul_smul, graphMap_apply,
+    scaled_terminal_angular_fderiv τ hτ hτT B δ hδ ξ hs]
   rw [mul_comm]
   rfl
 
@@ -126,7 +126,8 @@ theorem scaled_terminal_global_gradient_bound (a k : ℝ) (hk : 0 < k)
     ‖fderiv ℝ (fun y => k⁻¹ • vector τ hτ hτT B (initialData D δ hδ (a • ξ) hs)
       (t,(Y y,k*⟪D.m₀,Y y⟫_ℝ))) x -
       (a*deriv (profile δ) (k*⟪D.m₀,Y x⟫_ℝ)) •
-        rankOne ℝ (canonicalVelocity τ hτ hτT B ξ hs t (Y x)) (D.normal.field t (Y x))‖ ≤
+        rankOne ℝ (E := Space) (F := Space) (canonicalVelocity τ hτ hτT B ξ hs t (Y x))
+          (D.normal.field t (Y x))‖ ≤
       (‖coordinateEquiv.symm.toContinuousLinearMap‖*(sobolevEmbeddingConstant period 3*A*R)*C)/k :=
           by
   rw [scaled_terminal_global_gradient τ hτ hτT B δ hδ ξ hs a k hk.ne' t Y x hY,
@@ -143,7 +144,8 @@ theorem scaled_terminal_global_gradient_bound (a k : ℝ) (hk : 0 < k)
         ‖D.FInv.field t (Y x)‖ := hn
     _ ≤ |k⁻¹| * (‖coordinateEquiv.symm.toContinuousLinearMap‖*
         (sobolevEmbeddingConstant period 3*A*R)) * C :=
-      mul_le_mul (mul_le_mul_of_nonneg_left hd (abs_nonneg _)) hJ (norm_nonneg _) (by positivity)
+      mul_le_mul (mul_le_mul_of_nonneg_left hd (abs_nonneg _)) hJ (norm_nonneg _)
+        (mul_nonneg (abs_nonneg _) (mul_nonneg (norm_nonneg _) (mul_nonneg (mul_nonneg hb hA) hR)))
     _ = _ := by rw [abs_of_pos (inv_pos.mpr hk)]; ring
 
 end EulerPacketPrimaryShear

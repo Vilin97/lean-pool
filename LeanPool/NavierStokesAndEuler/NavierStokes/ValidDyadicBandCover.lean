@@ -233,7 +233,7 @@ theorem mem_band_iff {h : ℝ} {n : ℕ} {w : SpaceTime} :
       physicalQ h w / ChartScales.Q n ∈ Ioo (1 / 2 : ℝ) 2 := by
   have hQ := ChartScales.Q_pos n
   simp only [band, Set.mem_ofPred_eq, mem_Ioo, lt_div_iff₀ hQ, div_lt_iff₀ hQ]
-  constructor <;> rintro ⟨ht, hl, hr⟩ <;> refine ⟨ht, ?_, hr⟩ <;> linarith
+  constructor <;> rintro ⟨ht, hl, hr⟩ <;> refine ⟨ht, ?_, hr⟩ <;> linarith only [hl]
 
 theorem band_open {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (n : ℕ) :
     IsOpen (band h n) := by
@@ -251,9 +251,9 @@ theorem exists_band {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
   obtain ⟨n, hn, hlo, hhi⟩ := PhysicalMeanJetBounds.exists_comparable_band N
     (physicalQ_pos hh hh1 ht) hq
   refine ⟨n, hn, ⟨ht, ?_, ?_⟩, hlo⟩
-  · linarith
+  · linarith only [hhi]
   · have := ChartScales.Q_pos n
-    linarith
+    linarith only [hlo, hhi]
 
 /-- Index: an abbreviation for `{n : ℕ // N ≤ n}`. -/
 abbrev Index (N : ℕ) := {n : ℕ // N ≤ n}
@@ -357,10 +357,10 @@ theorem endpoint_band {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (N : ℕ)
   obtain ⟨n, hn, hlo, hhi⟩ := PhysicalMeanJetBounds.exists_comparable_band N
     (EndpointCoordinates.endpointRoot_pos (2 * h) hx) hq
   have hl : ChartScales.Q n / 2 < EndpointCoordinates.endpointRoot (2 * h) (x 2) := by
-    linarith
+    linarith only [hhi]
   have hr : EndpointCoordinates.endpointRoot (2 * h) (x 2) < 2 * ChartScales.Q n := by
     have := ChartScales.Q_pos n
-    linarith
+    linarith only [hlo, hhi]
   refine ⟨n, hn, hl, hr, ?_⟩
   have ht := MixedDiagonalExtensions.physicalQ_tendsto_endpoint hh hh1 hx
   filter_upwards [self_mem_nhdsWithin, ht.eventually (isOpen_Ioo.mem_nhds ⟨hl, hr⟩)] with w hw hq

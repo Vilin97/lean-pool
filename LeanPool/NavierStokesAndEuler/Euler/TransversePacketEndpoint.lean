@@ -65,22 +65,26 @@ theorem displacement_terminal : displacementPath B Y ⟨D.T,D.T_pos.le,le_rfl⟩
   B.coefficients.endpointDisplacement_terminal P Y.value
 
 theorem coordinatePath_orbit :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (coordinatePath B Y)) :=
+    ContDiff ℝ ∞ (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := U) P a (coordinatePath B Y)) :=
   B.coefficients.endpointCoordinate_orbit_contDiff P D.frame.translation_contDiff
     D.frameDerivative.translation_contDiff B.H.translation_contDiff Y.value Y.orbit
 
 theorem coordinateDerivativePath_orbit :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (coordinateDerivativePath B Y)) :=
+    ContDiff ℝ ∞ (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := U) P a (coordinateDerivativePath B Y)) :=
   B.coefficients.endpointAcceleration_orbit_contDiff P D.frame.translation_contDiff
     D.frameDerivative.translation_contDiff B.H.translation_contDiff Y.value Y.orbit
 
 theorem velocityPath_orbit :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (velocityPath B Y)) :=
+    ContDiff ℝ ∞ (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a (velocityPath B Y)) :=
   B.coefficients.endpointVelocity_orbit_contDiff P D.frame.translation_contDiff
     D.frameDerivative.translation_contDiff B.H.translation_contDiff Y.value Y.orbit
 
 theorem derivativePath_orbit :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (derivativePath B Y)) :=
+    ContDiff ℝ ∞ (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Space) P a (derivativePath B Y)) :=
   B.coefficients.endpointDerivative_orbit_contDiff P D.frame.translation_contDiff
     D.frameDerivative.translation_contDiff B.H.translation_contDiff Y.value Y.orbit
 
@@ -115,15 +119,15 @@ theorem derivativePath_supported (t : Icc (0 : ℝ) D.T) :
     Y.value Y.value.property t
 
 theorem coordinatePath_mean_zero (t : Icc (0 : ℝ) D.T) :
-    average P (coordinatePath B Y t) = 0 :=
+    average (V := U) P (coordinatePath B Y t) = 0 :=
   B.coefficients.endpointCoordinate_mean_zero P Y.value Y.mean_zero t
 
 theorem velocityPath_mean_zero (t : Icc (0 : ℝ) D.T) :
-    average P (velocityPath B Y t) = 0 :=
+    average (V := Space) P (velocityPath B Y t) = 0 :=
   B.coefficients.endpointVelocity_mean_zero P Y.value Y.mean_zero t
 
 theorem derivativePath_mean_zero (t : Icc (0 : ℝ) D.T) :
-    average P (derivativePath B Y t) = 0 :=
+    average (V := Space) P (derivativePath B Y t) = 0 :=
   B.coefficients.endpointDerivative_mean_zero P Y.value Y.mean_zero t
 
 /-- Terminal initial, bundling `value`, `orbit`, `mean_zero`. -/

@@ -102,10 +102,14 @@ local instance instTransversePacketCorrector12 : NormedSpace ℝ C(Icc (0 : ℝ)
 
 /-- Full velocity path: an abbreviation for `includePath P D.support D.support_measurable
 (G.velocityPath I)`. -/
-abbrev fullVelocityPath := includePath P D.support D.support_measurable (G.velocityPath I)
+abbrev fullVelocityPath :=
+  includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+    (G.velocityPath I)
 /-- Full derivative path: an abbreviation for `includePath P D.support D.support_measurable
 (G.derivativePath I)`. -/
-abbrev fullDerivativePath := includePath P D.support D.support_measurable (G.derivativePath I)
+abbrev fullDerivativePath :=
+  includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable
+    (G.derivativePath I)
 
 theorem fullVelocityPath_time (t : Icc (0 : ℝ) D.T) :
     HasDerivWithinAt (extendPath D.T D.T_pos.le (G.fullVelocityPath I))
@@ -124,13 +128,15 @@ def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
     (G.fullVelocityPath I) (G.fullDerivativePath I)
 
 theorem potentialPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.potentialPath I)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (G.potentialPath I)) :=
   EulerCylinderPotential.potentialPath_orbit P D.potentialCoefficientPath
       D.potentialCoefficientPath_orbit
     (G.fullVelocityPath I) (G.velocityPath_orbit I)
 
 theorem potentialTimePath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.potentialTimePath I)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (G.potentialTimePath I)) :=
   EulerCylinderPotential.potentialDerivative_orbit P D.T D.potentialCoefficientPath
       D.potentialDerivative
     D.potentialCoefficientPath_orbit D.potentialDerivative_orbit
@@ -155,12 +161,14 @@ def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
     (G.potentialPath I) (G.potentialTimePath I)
 
 theorem correctorPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.correctorPath I)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (G.correctorPath I)) :=
   EulerCylinderSlowCurl.path_orbit P D.FInv.field D.FInv.translation_contDiff
     (G.potentialPath I) (G.potentialPath_orbit I)
 
 theorem correctorTimePath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (G.correctorTimePath I)) :=
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (G.correctorTimePath I)) :=
   EulerCylinderSlowCurl.derivative_orbit P D.T D.FInv.field D.inverseDerivative
     D.FInv.translation_contDiff D.inverseDerivative_orbit (G.potentialPath I) (G.potentialTimePath
         I)

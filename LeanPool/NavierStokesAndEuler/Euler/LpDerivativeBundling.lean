@@ -46,7 +46,7 @@ def derivativeBundling : Lp (P →L[ℝ] V) 2 μ →L[ℝ] (P →L[ℝ] Lp V 2 �
       simpa only [one_mul] using derivativeMap_norm_le μ D)
 
 @[simp] theorem derivativeBundling_apply (D : Lp (P →L[ℝ] V) 2 μ) :
-    derivativeBundling μ D = derivativeMap μ D := rfl
+    derivativeBundling (P := P) (V := V) μ D = derivativeMap μ D := rfl
 
 theorem derivativeBundling_norm_le_one : ‖derivativeBundling (P := P) (V := V) μ‖ ≤ 1 :=
   (derivativeBundling (P := P) (V := V) μ).opNorm_le_bound zero_le_one (fun D => by

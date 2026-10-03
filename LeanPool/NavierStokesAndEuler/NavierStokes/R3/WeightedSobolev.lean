@@ -20,6 +20,10 @@ The derivative estimate is local: the unweighted velocity only needs to be in
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 
 noncomputable section
@@ -86,20 +90,14 @@ theorem norm_fderiv_cutoff_four_le {φ : Space → ℝ} {w : Space → Space}
         4 * φ x ^ 3 * ‖fderiv ℝ φ x‖ * ‖w x‖ := by
   rw [fderiv_fun_smul (c := fun y => φ y ^ 4) (hφ.pow 4) hw,
     fderiv_cutoff_four hφ]
-  calc
-    ‖φ x ^ 4 • fderiv ℝ w x +
-        ((4 * φ x ^ 3) • fderiv ℝ φ x).smulRight (w x)‖ ≤
-        ‖φ x ^ 4 • fderiv ℝ w x‖ +
-          ‖((4 * φ x ^ 3) • fderiv ℝ φ x).smulRight (w x)‖ := norm_add_le _ _
-    _ ≤ ‖φ x ^ 4‖ * ‖fderiv ℝ w x‖ +
-        (‖4 * φ x ^ 3‖ * ‖fderiv ℝ φ x‖) * ‖w x‖ := by
-      rw [ContinuousLinearMap.norm_smulRight_apply]
-      exact add_le_add
-        (ContinuousLinearMap.opNorm_smul_le (φ x ^ 4) (fderiv ℝ w x))
-        (mul_le_mul_of_nonneg_right
-          (ContinuousLinearMap.opNorm_smul_le (4 * φ x ^ 3) (fderiv ℝ φ x))
-          (norm_nonneg _))
-    _ = _ := by simp [Real.norm_eq_abs, abs_of_nonneg hφ0]
+  have h4 : ‖φ x ^ 4‖ = φ x ^ 4 := Real.norm_of_nonneg (pow_nonneg hφ0 4)
+  have h3 : ‖4 * φ x ^ 3‖ = 4 * φ x ^ 3 :=
+    Real.norm_of_nonneg (mul_nonneg zero_le_four (pow_nonneg hφ0 3))
+  refine (norm_add_le _ _).trans (add_le_add ?_ ?_)
+  · exact (ContinuousLinearMap.opNorm_smul_le _ _).trans_eq (by rw [h4])
+  · rw [ContinuousLinearMap.norm_smulRight_apply]
+    exact mul_le_mul_of_nonneg_right
+      ((ContinuousLinearMap.opNorm_smul_le _ _).trans_eq (by rw [h3])) (norm_nonneg _)
 
 /-- The pointwise magnitude of the weighted coordinate gradient. -/
 def cutoffGradientAmplitude (φ : Space → ℝ) (w : Space → Space) (x : Space) : ℝ :=
@@ -171,7 +169,7 @@ theorem norm_fderiv_cutoff_four_le_amplitude {φ : Space → ℝ} {w : Space →
         (4 * L) * ‖w x‖ := by
       apply add_le_add
       · exact mul_le_mul_of_nonneg_left hg (by positivity)
-      · nlinarith [mul_le_mul_of_nonneg_right hd (norm_nonneg (w x))]
+      · nlinarith only [hd, mul_le_mul_of_nonneg_right hd (norm_nonneg (w x))]
     _ = _ := by unfold cutoffGradientAmplitude; ring
 
 /-- The derivative of the cutoff velocity has a finite `L²` bound involving
@@ -234,7 +232,7 @@ theorem weighted_sobolev {φ : Space → ℝ} {w : Space → Space}
   apply hSob.trans
   apply (mul_le_mul_of_nonneg_left hDer hS).trans
   unfold weightedSobolevConstant
-  nlinarith [mul_nonneg hS hA, mul_nonneg hL0 hM]
+  nlinarith only [hA, hS, hL0, hM, mul_nonneg hS hA, mul_nonneg hL0 hM]
 
 /-- Time-slice form using precisely the common comparison definitions. -/
 theorem cutoffL6_le {φ : Space → ℝ} {w : VelocityField} {t : ℝ}

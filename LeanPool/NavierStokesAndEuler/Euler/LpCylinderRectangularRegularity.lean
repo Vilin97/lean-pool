@@ -154,26 +154,31 @@ variable (A : C(K, Space →ᵇ E →L[ℝ] F)) (hA : ContDiff ℝ ∞ (translat
 
 /-- The actual rectangular multiplier family under all four covering translations. -/
 def mixedMultiplier (a : LiftTangent) : C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period F) :=
-  fullMultiplierMap period (translateCoefficientPath A a.1)
+  fullMultiplierMap (K := K) (E := E) (F := F) period (translateCoefficientPath A a.1)
+
+theorem mixedMultiplier_eq_comp : mixedMultiplier period A =
+    ⇑(fullMultiplierMap (K := K) (E := E) (F := F) period) ∘
+      (translateCoefficientPath A ∘ ⇑(ContinuousLinearMap.fst ℝ Space ℝ)) := by
+  funext a
+  simp only [Function.comp_apply, ContinuousLinearMap.coe_fst']
+  rfl
 
 include hA in
 theorem mixedMultiplier_contDiff : ContDiff ℝ ∞ (mixedMultiplier period A) :=
-  (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
-    (E := C(K,Space →ᵇ E →L[ℝ] F))
-    (F := C(K,CylinderL2 period E) →L[ℝ] C(K,CylinderL2 period F))
-    (fullMultiplierMap period)).comp (hA.comp (ContinuousLinearMap.fst ℝ Space ℝ).contDiff)
+  (fullMultiplierMap (K := K) (E := E) (F := F) period).contDiff.comp (hA.comp contDiff_fst)
 
 include hA in
 /-- The genuine mixed multiplier jets have exactly the bounded-field coefficient bound. -/
 theorem mixedMultiplier_bound (n : ℕ) (C : ℝ)
     (hb : ∀ a, ‖iteratedFDeriv ℝ n (translateCoefficientPath A) a‖ ≤ C) (a : LiftTangent) :
     ‖iteratedFDeriv ℝ n (mixedMultiplier period A) a‖ ≤ C := by
-  let f := translateCoefficientPath A
-  have hright : ‖iteratedFDeriv ℝ n (f ∘ ContinuousLinearMap.fst ℝ Space ℝ) a‖ ≤ C := by
+  let _ : SeminormedAddCommGroup (E →L[ℝ] F) := inferInstance
+  have hright : ‖iteratedFDeriv ℝ n
+      (translateCoefficientPath A ∘ ContinuousLinearMap.fst ℝ Space ℝ) a‖ ≤ C := by
     rw [(ContinuousLinearMap.fst ℝ Space ℝ).iteratedFDeriv_comp_right hA a (by simp)]
     apply (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans
     calc
-      _ ≤ ‖iteratedFDeriv ℝ n f a.1‖ * ∏ _i : Fin n, (1 : ℝ) := by
+      _ ≤ ‖iteratedFDeriv ℝ n (translateCoefficientPath A) a.1‖ * ∏ _i : Fin n, (1 : ℝ) := by
         apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
         exact Finset.prod_le_prod₀ (fun _ _ => norm_nonneg _)
           (fun _ _ => ContinuousLinearMap.norm_fst_le ℝ Space ℝ)
@@ -190,11 +195,12 @@ include hA in
 /-- Applying the physical frame or projected-forcing coefficient preserves actual mixed smoothness.
 -/
 theorem product_orbit_contDiff (u : C(K, CylinderL2 period E))
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A u)) :=
-        by
-  have he : (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A u)) =
-      (fun a => mixedMultiplier period A a (pathTranslate period a u)) :=
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := E) period a u)) :
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := F) period a
+      (fullMultiplierMap (K := K) (E := E) (F := F) period A u)) := by
+  have he : (fun a : LiftTangent => pathTranslate (K := K) (V := F) period a
+      (fullMultiplierMap (K := K) (E := E) (F := F) period A u)) =
+      (fun a => mixedMultiplier period A a (pathTranslate (K := K) (V := E) period a u)) :=
     funext (fun a => (fullMultiplier_translation period a A u).symm)
   rw [he]
   exact (mixedMultiplier_contDiff period A hA).clm_apply hu
@@ -205,21 +211,24 @@ field radius R is identical on both sides. -/
 theorem product_orbit_block_bound (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q
     : ℕ)
     (u : C(K, CylinderL2 period E))
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u))
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := E) period a u))
     (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius ι Rc ≤ R)
     (hbA : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath A) a‖ ≤ C*majorant Rc 0 n)
-    (d : ℕ) (hbu : ∀ n, block directions q (fun a : LiftTangent => pathTranslate period a u) n 0 ≤
+    (d : ℕ) (hbu : ∀ n, block directions q
+      (fun a : LiftTangent => pathTranslate (K := K) (V := E) period a u) n 0 ≤
       D*majorant R d n) (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A
-        u)) n 0 ≤
+    block directions q (fun a : LiftTangent => pathTranslate (K := K) (V := F) period a
+        (fullMultiplierMap (K := K) (E := E) (F := F) period A u)) n 0 ≤
       (3*sobolevCoefficientAmplitude ι q Rc C*D)*majorant R d n := by
-  have he : (fun a : LiftTangent => pathTranslate period a (fullMultiplierMap period A u)) =
-      (fun a => mixedMultiplier period A a (pathTranslate period a u)) :=
+  have he : (fun a : LiftTangent => pathTranslate (K := K) (V := F) period a
+      (fullMultiplierMap (K := K) (E := E) (F := F) period A u)) =
+      (fun a => mixedMultiplier period A a (pathTranslate (K := K) (V := E) period a u)) :=
     funext (fun a => (fullMultiplier_translation period a A u).symm)
   rw [he]
   exact block_clm_apply_gevrey_at directions q (mixedMultiplier period A)
-    (fun a : LiftTangent => pathTranslate period a u) (mixedMultiplier_contDiff period A hA) hu 0
+    (fun a : LiftTangent => pathTranslate (K := K) (V := E) period a u)
+    (mixedMultiplier_contDiff period A hA) hu 0
     (sobolevCoefficientRadius ι Rc) R (sobolevCoefficientAmplitude ι q Rc C) D
     (sobolevCoefficientRadius_nonneg Rc hRc) hR (sobolevCoefficientAmplitude_nonneg q Rc C hRc hC)
         hD
@@ -231,11 +240,12 @@ theorem product_orbit_block_bound (directions : ι → LiftTangent) (hd : ∀ i,
 include hA in
 theorem supported_product_orbit_contDiff (S : Set Space) (hS : MeasurableSet S)
     (u : C(K, Supported period E S hS))
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS u)))
-        :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (includePath period S hS
-      (supportedMultiplierMap period S hS A u))) := by
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := E) period a
+      (includePath (K := K) (V := E) period S hS u))) :
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := F) period a
+      (includePath (K := K) (V := F) period S hS
+        (supportedMultiplierMap (K := K) (E := E) (F := F) period S hS A u))) := by
   rw [include_supportedMultiplier]
-  exact product_orbit_contDiff period A hA (includePath period S hS u) hu
+  exact product_orbit_contDiff period A hA (includePath (K := K) (V := E) period S hS u) hu
 
 end EulerLpCylinderRectangular

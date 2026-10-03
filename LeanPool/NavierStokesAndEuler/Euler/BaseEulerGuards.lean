@@ -81,7 +81,7 @@ theorem uncut_numerator_variation (t : Icc (0 : ℝ) D.T) :
   let m : ℝ → Space := fun r => extendPath D.T D.T_pos.le D.normal.field r x
   let v : ℝ → Space := fun r => uncutVelocity D ξ r x
   let A : ℝ → (Space →L[ℝ] Space) := fun r => extendPath D.T D.T_pos.le D.M.field r x
-  let m₁ : ℝ → Space := fun r => -(A r).adjoint (m r)
+  let m₁ : ℝ → Space := fun r => -adjoint (𝕜 := ℝ) (E := Space) (F := Space) (A r) (m r)
   let v₁ : ℝ → Space := fun r => -(A r) (v r)+(2*⟪m r,A r (v r)⟫_ℝ/‖m r‖^2) • m r
   let A₁ : ℝ → (Space →L[ℝ] Space) :=
     fun r => -(A r).comp (A r)-H (projIcc 0 D.T D.T_pos.le r)
@@ -99,12 +99,11 @@ theorem uncut_numerator_variation (t : Icc (0 : ℝ) D.T) :
     simpa only [A,A₁,extendPath,projIcc_of_mem D.T_pos.le hr] using hRiccati ⟨r,hr⟩
   have hAb (r : ℝ) (hr : r ∈ Icc (0 : ℝ) D.T) : ‖A r‖ ≤ CM := by
     simpa only [A,extendPath,projIcc_of_mem D.T_pos.le hr] using hM ⟨r,hr⟩
-  have hm₁b (r : ℝ) (hr : r ∈ Icc (0 : ℝ) D.T) : ‖m₁ r‖ ≤ CM*‖m r‖ := by
-    change ‖-(A r).adjoint (m r)‖ ≤ _
-    rw [norm_neg]
-    apply ((A r).adjoint.le_opNorm _).trans
-    rw [LinearIsometryEquiv.norm_map]
-    exact mul_le_mul_of_nonneg_right (hAb r hr) (norm_nonneg _)
+  have hm₁b (r : ℝ) (hr : r ∈ Icc (0 : ℝ) D.T) : ‖m₁ r‖ ≤ CM*‖m r‖ :=
+    (norm_neg _).trans_le (((adjoint (𝕜 := ℝ) (E := Space) (F := Space) (A r)).le_opNorm _).trans
+      (mul_le_mul_of_nonneg_right
+        (((adjoint (𝕜 := ℝ) (E := Space) (F := Space)).norm_map (A r)).trans_le (hAb r hr))
+        (norm_nonneg _)))
   have hv₁b (r : ℝ) (hr : r ∈ Icc (0 : ℝ) D.T) : ‖v₁ r‖ ≤ CM*‖v r‖ := by
     change ‖-(A r) (v r)+(2*⟪m r,A r (v r)⟫_ℝ/‖m r‖^2) • m r‖ ≤ _
     rw [normal_reflection_norm]
@@ -217,11 +216,11 @@ theorem guardTime_small (T K : ℝ) :
   have hc' : C*(1/(4*(1+C+R))) ≤ 1/4 := by
     rw [mul_one_div]
     apply (div_le_iff₀ hd).mpr
-    nlinarith
+    nlinarith only [hR]
   have hr' : R*(1/(4*(1+C+R))) ≤ 1/4 := by
     rw [mul_one_div]
     apply (div_le_iff₀ hd).mpr
-    nlinarith
+    nlinarith only [hC]
   exact ⟨hc.trans hc',hr.trans hr'⟩
 
 theorem inner_bounds_of_norm (A : Space →L[ℝ] Space) (C : ℝ)
@@ -236,7 +235,7 @@ theorem inner_bounds_of_norm (A : Space →L[ℝ] Space) (C : ℝ)
       _ ≤ (C*‖v‖)*‖v‖ := mul_le_mul_of_nonneg_right hn (norm_nonneg _)
       _ = _ := by ring
   constructor
-  · nlinarith [(abs_le.mp hi).1]
+  · nlinarith only [hi, (abs_le.mp hi).1]
   · exact (abs_le.mp hi).2
 
 variable {G : Parent} (L : LabelData G)
@@ -288,9 +287,9 @@ def lowBoundsOn (S : ℝ) (hS : 0 < S) (hST : S ≤ G.T)
   small := by
     change coefficientCost L.K*(S^2/2)+coefficientCost L.K*S+_ ≤ 1/2
     simp only [mul_zero,zero_mul,zero_pow (by decide : 3 ≠ 0),add_zero]
-    have hsquare : S^2 ≤ S := by nlinarith [mul_nonneg hS.le (sub_nonneg.mpr hSone)]
+    have hsquare : S^2 ≤ S := by nlinarith only [hS, hSone, mul_nonneg hS.le (sub_nonneg.mpr hSone)]
     have hc := mul_le_mul_of_nonneg_left hsquare (coefficientCost_nonneg L.K)
-    nlinarith
+    nlinarith only [hsmall, hc]
 
 /-- Low bounds, given by `lowBoundsOn L _ _ _ (guardTime_le_one G.T L.K) (guardTime_small G.T
 L.K).1`. -/

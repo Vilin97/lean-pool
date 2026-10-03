@@ -8,6 +8,7 @@ module
 
 import Mathlib.Tactic.NormNum.RealSqrt
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! The source's exponential tail follows quantitatively from its polynomial grade base. -/
 
@@ -30,14 +31,14 @@ theorem grade_ratio_le_decay (k B : ℝ) (hk : 0 < k) (hB : B ≤ k ^ (1 / 100 :
 
 theorem grade_ratio_le_half (k B : ℝ) (hk : 4 ≤ k) (hB : B ≤ k ^ (1 / 100 : ℝ)) :
     B/k ≤ 1/2 := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hsqrt : (2 : ℝ) ≤ Real.sqrt k := by
     have h := Real.sqrt_le_sqrt hk
     norm_num at h
     exact h
   calc
     B/k ≤ k^(-99/100 : ℝ) := grade_ratio_le_decay k B hk0 hB
-    _ ≤ k^(-(1/2) : ℝ) := Real.rpow_le_rpow_of_exponent_le (by linarith) (by norm_num)
+    _ ≤ k^(-(1/2) : ℝ) := Real.rpow_le_rpow_of_exponent_le (by linarith only [hk]) (by norm_num)
     _ = (Real.sqrt k)⁻¹ := by rw [Real.rpow_neg hk0.le, ← Real.sqrt_eq_rpow]
     _ ≤ 1/2 := by
       simpa only [one_div] using one_div_le_one_div_of_le (by norm_num : (0 : ℝ)<2) hsqrt
@@ -46,7 +47,7 @@ theorem normalized_tail_exponential (k B C X : ℝ) (hk : 4 ≤ k) (hB0 : 0 ≤ 
     (hC0 : 0 ≤ C) (hB : B ≤ k ^ (1 / 100 : ℝ)) (hC : C ≤ k ^ (1 / 100 : ℝ))
     (N : ℕ) (hX : 6 ≤ X) (hN : X - 1 ≤ (N : ℝ)) :
     2*C*k*B*(B/k)^(N+1) ≤ Real.exp (-(7/10)*X*Real.log k) := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have htwo : (2 : ℝ) ≤ k^(1/2 : ℝ) := by
     rw [← Real.sqrt_eq_rpow]
     have h := Real.sqrt_le_sqrt hk
@@ -72,7 +73,7 @@ theorem normalized_tail_exponential (k B C X : ℝ) (hk : 4 ≤ k) (hB0 : 0 ≤ 
       congr 1
       push_cast
       ring
-    _ ≤ k^(-(7/10)*X) := Real.rpow_le_rpow_of_exponent_le (by linarith) (by linarith)
+    _ ≤ k^(-(7/10)*X) := Real.rpow_le_rpow_of_exponent_le (by linarith) (by linarith only [hX, hN])
     _ = Real.exp (-(7/10)*X*Real.log k) := by
       rw [Real.rpow_def_of_pos hk0]
       congr 1

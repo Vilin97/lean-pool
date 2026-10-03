@@ -39,13 +39,14 @@ variable {K P U E : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The literal continuous forcing in the projected acceleration equation. -/
 def forcing (Q Q₁ : P → C(K, U →L[ℝ] E)) (f : P → C(K, E)) (v : P → C(K, U)) (x : P) : C(K,U) :=
-  multiplier (adjointMap (Q x)) (f x - (2 : ℝ) • multiplier (Q₁ x) (v x))
+  multiplier (adjointMap (K := K) (U := U) (E := E) (Q x))
+    (f x - (2 : ℝ) • multiplier (Q₁ x) (v x))
 
 /-- Actual uniform-time regularity of the acceleration forcing. -/
 theorem forcing_contDiff (Q Q₁ : P → C(K, U →L[ℝ] E)) (f : P → C(K, E)) (v : P → C(K, U))
     {n : ℕ∞ω} (hQ : ContDiff ℝ n Q) (hQ₁ : ContDiff ℝ n Q₁)
     (hf : ContDiff ℝ n f) (hv : ContDiff ℝ n v) : ContDiff ℝ n (forcing Q Q₁ f v) :=
-  contDiff_apply (fun x => adjointMap (Q x)) _ (contDiff_adjoint Q hQ)
+  contDiff_apply (fun x => adjointMap (K := K) (U := U) (E := E) (Q x)) _ (contDiff_adjoint Q hQ)
     (hf.sub ((contDiff_apply Q₁ v hQ₁ hv).const_smul (2 : ℝ)))
 
 /-- One fixed amplitude controls the genuine derivatives at every order. -/
@@ -68,13 +69,14 @@ theorem forcing_bound (Q Q₁ : P → C(K, U →L[ℝ] E)) (f : P → C(K, E)) (
       ‖iteratedFDeriv ℝ j (fun z => (2 : ℝ) • w z) y‖ ≤ (6*C₁*V)*majorant R d j := by
     rw [iteratedFDeriv_const_smul_apply' (hw.contDiffAt.of_le (by simp)), norm_smul]
     norm_num only [Real.norm_ofNat]
-    nlinarith [hbw j y]
+    linarith only [hbw j y]
   let r := fun y => f y - (2 : ℝ) • w y
   have hr : ContDiff ℝ ∞ r := hf.sub (hw.const_smul (2 : ℝ))
   have hbr := sub_bound f (fun y => (2 : ℝ) • w y) hf (hw.const_smul (2 : ℝ))
     R F (6*C₁*V) d hbf hb2w
-  have h := apply_bound (fun y => adjointMap (Q y)) r (contDiff_adjoint Q hQ) hr
-    R C₀ (F+6*C₁*V) hR hC₀ (by positivity) 0 d
+  have h := apply_bound (fun y => adjointMap (K := K) (U := U) (E := E) (Q y)) r
+    (contDiff_adjoint Q hQ) hr
+    R C₀ (F+6*C₁*V) hR hC₀ (add_nonneg hF (mul_nonneg (mul_nonneg (by norm_num) hC₁) hV)) 0 d
     (EulerContinuousPathComposition.adjoint_bound Q hQ R C₀ hR hC₀ 0 hbQ) hbr n x
   simp only [Nat.zero_add] at h
   convert h using 1

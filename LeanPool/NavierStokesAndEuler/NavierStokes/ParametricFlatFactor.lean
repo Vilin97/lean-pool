@@ -42,8 +42,7 @@ theorem contDiffAt_partial_iteratedFDeriv (F : P → Y → Z) (n : ℕ) (p : P) 
   induction n with
   | zero =>
       simp only [iteratedFDeriv_zero_eq_comp, Function.comp_apply]
-      exact hF.continuousLinearMap_comp
-          ((continuousMultilinearCurryFin0 ℝ Y Z).symm : Z →L[ℝ] Y [×0]→L[ℝ] Z)
+      exact (continuousMultilinearCurryFin0 ℝ Y Z).symm.contDiff.contDiffAt.comp (p, y) hF
   | succ n ih =>
       have hdup : ContDiffAt ℝ ∞
           (fun q : (P × Y) × Y => iteratedFDeriv ℝ n (F q.1.1) q.2)
@@ -53,9 +52,8 @@ theorem contDiffAt_partial_iteratedFDeriv (F : P → Y → Z) (n : ℕ) (p : P) 
           (fun z : P × Y => fderiv ℝ (iteratedFDeriv ℝ n (F z.1)) z.2) (p, y) :=
         hdup.fderiv contDiffAt_snd (by simp)
       simp only [iteratedFDeriv_succ_eq_comp_left, Function.comp_apply]
-      exact hd.continuousLinearMap_comp
-          ((continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => Y) Z).symm :
-            (Y →L[ℝ] Y [×n]→L[ℝ] Z) →L[ℝ] Y [×(n + 1)]→L[ℝ] Z)
+      exact (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => Y)
+        Z).symm.contDiff.contDiffAt.comp (p, y) hd
 
 end PartialJets
 

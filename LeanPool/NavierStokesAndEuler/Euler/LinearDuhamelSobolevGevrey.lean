@@ -215,11 +215,11 @@ theorem frozenOperator_bound (hB : ContDiff ℝ ∞ B)
   have hKb : ‖K‖ ≤ C*T := (U x).weightedForcing_norm g hg hg₀ C hC hU
   have hKD (j : ℕ) (z : P) : ‖iteratedFDeriv ℝ j (fun w => K.comp (D w)) z‖ ≤
       (2*C*T*CB)*majorant Rc 0 j := by
-    have h := clm_comp_const_left_bound K D hD Rc (CB+CB) hRc (by positivity) 0 hDb j z
+    have h := clm_comp_const_left_bound K D hD Rc (CB+CB) hRc (add_nonneg hCB hCB) 0 hDb j z
     apply h.trans
     apply mul_le_mul_of_nonneg_right _ (majorant_nonneg Rc hRc 0 j)
     calc
-      ‖K‖*(CB+CB) ≤ (C*T)*(CB+CB) := mul_le_mul_of_nonneg_right hKb (by positivity)
+      ‖K‖*(CB+CB) ≤ (C*T)*(CB+CB) := mul_le_mul_of_nonneg_right hKb (add_nonneg hCB hCB)
       _ = 2*C*T*CB := by ring
   have h := sub_bound (fun _ : P => ContinuousLinearMap.id ℝ C(Icc (0 : ℝ) T,E))
     (fun z => K.comp (D z)) contDiff_const (contDiff_const.clm_comp hD)
@@ -295,7 +295,7 @@ theorem block_inverse_gevrey_at (directions : ι → P) (q : ℕ)
         1).factorial : ℝ) ^ 2))
     (d : ℕ) (hforce : ∀ n, block directions q f n x ≤ D * majorant R d n)
     (n : ℕ) : block directions q u n x ≤ majorant R (d+1) n := by
-  have hR0 : 0 ≤ R := by nlinarith
+  have hR0 : 0 ≤ R := by nlinarith only [hM, hRc, hR]
   have hI : 0 ≤ I := (norm_nonneg inverse).trans hinv
   have hB : 0 ≤ B := (baseSize_nonneg directions q A x).trans hbase
   have hcost := sobolevInverseCost_nonneg I B hI hB q
@@ -325,7 +325,7 @@ theorem block_inverse_gevrey_at (directions : ι → P) (q : ℕ)
   have h₁ := mul_le_mul_of_nonneg_right hMC hS
   have h₂ := mul_le_mul_of_nonneg_right hMD (majorant_nonneg R hR0 d k)
   change block directions q u k x ≤ M*(majorant R d k+S)
-  linarith
+  linarith only [hb, h₁, h₂]
 
 end EulerParameterWordGevrey
 
@@ -413,9 +413,10 @@ theorem weightedSolution_block_gevrey_at
   let CF := forwardSobolevAmplitude ι q T C CB Rc
   let DF := C*A+C*T*D
   let M := forwardSobolevCost ι q T C A D CB Rc
-  have hfrozen : 0 ≤ frozenAmplitude T C CB := by unfold frozenAmplitude; positivity
+  have hfrozen : 0 ≤ frozenAmplitude T C CB :=
+    add_nonneg zero_le_one (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two hC) hT) hCB)
   have hCF : 0 ≤ CF := sobolevCoefficientAmplitude_nonneg q Rc (frozenAmplitude T C CB) hRc hfrozen
-  have hDF : 0 ≤ DF := by dsimp [DF]; positivity
+  have hDF : 0 ≤ DF := add_nonneg (mul_nonneg hC hA) (mul_nonneg (mul_nonneg hC hT) hD)
   have hcost : 0 ≤ sobolevInverseCost 1 CF q := sobolevInverseCost_nonneg 1 CF zero_le_one hCF q
   have hMeq : M = 1+sobolevInverseCost 1 CF q*(CF+DF) := by
     dsimp only [M, forwardSobolevCost, CF, DF]
@@ -425,10 +426,10 @@ theorem weightedSolution_block_gevrey_at
     exact le_add_of_nonneg_right (mul_nonneg hcost (add_nonneg hCF hDF))
   have hMC : sobolevInverseCost 1 CF q*CF ≤ M := by
     rw [hMeq]
-    linarith [mul_nonneg hcost hDF]
+    linarith only [hcost, hDF, mul_nonneg hcost hDF]
   have hMD : sobolevInverseCost 1 CF q*DF ≤ M := by
     rw [hMeq]
-    linarith [mul_nonneg hcost hCF]
+    linarith only [hcost, hCF, mul_nonneg hcost hCF]
   have hAₓ : ContDiff ℝ ∞ Aₓ := frozenOperator_contDiff T hT B U g hg hB x
   have hFₓ : ContDiff ℝ ∞ Fₓ := frozenForcing_contDiff T hT B U g hg f a₀ hf ha₀ x
   have hu : ContDiff ℝ ∞ u := weightedSolution_contDiff T hT B U g hg f a₀ hB hf ha₀

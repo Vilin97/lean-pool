@@ -46,15 +46,18 @@ open scoped ContDiff Laplacian RealInnerProductSpace
 theorem divergence_eq (v : VelocityField) (t : ℝ) (x : Space) :
     spatialDivergence v t x = Comparator.divergence (fun y => v (t, y)) x := by
   rw [Comparator.divergence, LinearMap.trace_eq_sum_inner _ (EuclideanSpace.basisFun (Fin 3) ℝ)]
-  simp [spatialDivergence, spatialDerivative, coordinateVector,
-    EuclideanSpace.basisFun_apply, EuclideanSpace.inner_single_left]
+  simp only [spatialDivergence, spatialDerivative, coordinateVector, EuclideanSpace.basisFun_apply,
+      ContinuousLinearMap.coe_coe, EuclideanSpace.inner_single_left, conj_trivial, one_mul]
 
 theorem gradient_eq (p : PressureField) (t : ℝ) (x : Space) :
     pressureGradient p t x = gradient (fun y => p (t, y)) x := by
   apply ext_inner_left_basis (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis
   intro i
-  simp [pressureGradient, coordinateVector, EuclideanSpace.basisFun_apply,
-    inner_gradient_right, EuclideanSpace.inner_single_left, Pi.single_apply]
+  simp only [OrthonormalBasis.coe_toBasis, EuclideanSpace.basisFun_apply, pressureGradient,
+      coordinateVector, EuclideanSpace.inner_single_left, conj_trivial, WithLp.ofLp_sum,
+      WithLp.ofLp_smul, PiLp.ofLp_single, Finset.sum_apply, Pi.smul_apply, Pi.single_apply,
+      smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ↓reduceIte,
+      one_mul, inner_gradient_right]
 
 theorem laplacian_eq (v : VelocityField) (t : ℝ) (x : Space)
     (hv : ContDiff ℝ 2 (fun y => v (t, y))) :
@@ -68,7 +71,9 @@ theorem laplacian_eq (v : VelocityField) (t : ℝ) (x : Space)
   have hd : DifferentiableAt ℝ (fderiv ℝ (fun y => v (t, y))) x :=
     (hv.fderiv_right (m := 1) (by norm_num)).differentiable (by norm_num) x
   rw [fderiv_clm_apply hd (differentiableAt_const _)]
-  simp
+  simp only [fderiv_fun_const, Pi.zero_apply, ContinuousLinearMap.comp_zero, zero_add,
+      ContinuousLinearMap.flip_apply, Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.cons_val_fin_one]
 
 theorem temporalDerivative_eq (v : VelocityField) {t : ℝ} (ht : 0 < t) (x : Space) :
     temporalDerivative v t x = derivWithin (fun s => v (s, x)) (Ici 0) t := by
@@ -101,7 +106,7 @@ theorem rescale_support {f : VelocityField} (hf : CompactFutureTimeSupport f)
   obtain ⟨T, hT, hz⟩ := hf
   refine ⟨T / c, div_nonneg hT hc.le, ?_⟩
   intro t ht x
-  dsimp [rescale]
+  dsimp only [rescale]
   rw [hz (c * t) (by nlinarith [(div_le_iff₀ hc).mp ht]) x, smul_zero]
 
 theorem fromComparator_smooth {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
@@ -126,8 +131,9 @@ theorem toComparator_jet_norm (f : VelocityField) (m : ℕ) (x : Space)
     (uniqueDiffOn_Ici 0).prod uniqueDiffOn_univ
   have he : (LinearIsometryEquiv.prodComm ℝ Space ℝ) ⁻¹' futureDomain = univ ×ˢ Ici 0 := by
     ext z
-    simp [futureDomain, and_comm]
-  simpa [he, Function.comp_def, Prod.swap] using
+    simp only [futureDomain, mem_preimage, LinearIsometryEquiv.prodComm_apply, mem_prod,
+        Prod.fst_swap, mem_Ici, Prod.snd_swap, mem_univ, and_comm, true_and]
+  simpa only [comp_def, LinearIsometryEquiv.prodComm_apply, Prod.swap, he] using
     (LinearIsometryEquiv.prodComm ℝ Space ℝ).norm_iteratedFDerivWithin_comp_right f hs
       (x := (x, t)) ⟨ht, mem_univ _⟩ m
 
@@ -165,23 +171,25 @@ theorem rescale_spatialDerivative (a c : ℝ) (v : VelocityField) (t : ℝ) (x :
 
 theorem rescale_divergence (a c : ℝ) (v : VelocityField) (t : ℝ) (x : Space) :
     spatialDivergence (rescale a c v) t x = a * spatialDivergence v (c * t) x := by
-  simp [spatialDivergence, rescale_spatialDerivative, Finset.mul_sum]
+  simp only [spatialDivergence, rescale_spatialDerivative, smul_apply, PiLp.smul_apply, smul_eq_mul,
+      Finset.mul_sum]
 
 theorem rescale_advection (a c : ℝ) (v : VelocityField) (t : ℝ) (x : Space) :
     advection (rescale a c v) t x = a ^ 2 • advection v (c * t) x := by
-  simp [advection, rescale_spatialDerivative, rescale, smul_smul, pow_two]
+  simp only [advection, rescale_spatialDerivative, rescale, map_smul, smul_apply, smul_smul,
+      pow_two]
 
 theorem rescale_gradient (a c : ℝ) (p : PressureField) (t : ℝ) (x : Space) :
     pressureGradient (rescale a c p) t x = a • pressureGradient p (c * t) x := by
   unfold pressureGradient rescale
   simp only [← Pi.smul_def, fderiv_const_smul_field]
-  simp [smul_smul, Finset.smul_sum]
+  simp only [Pi.smul_apply, smul_apply, smul_eq_mul, Finset.smul_sum, smul_smul]
 
 theorem rescale_laplacian (a c : ℝ) (v : VelocityField) (t : ℝ) (x : Space) :
     spatialLaplacian (rescale a c v) t x = a • spatialLaplacian v (c * t) x := by
   simp only [spatialLaplacian, rescale_spatialDerivative, smul_apply]
   simp only [← Pi.smul_def, fderiv_const_smul_field]
-  simp [Finset.smul_sum]
+  simp only [Pi.smul_apply, smul_apply, Finset.smul_sum]
 
 theorem rescale_temporalDerivative (a c : ℝ) (v : VelocityField) (t : ℝ) (x : Space)
     (hv : DifferentiableAt ℝ (fun s => v (s, x)) (c * t)) :
@@ -204,7 +212,7 @@ theorem differentiable_time_slice {v : VelocityField}
   have h : ContDiffAt ℝ ∞ v (t, x) :=
     hv.contDiffAt (prod_mem_nhds (Ici_mem_nhds ht) Filter.univ_mem)
   exact (h.comp t (contDiffAt_id.prodMk contDiffAt_const)).differentiableAt
-    (by simp)
+    (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
 
 /-- The original project conventions for a global viscosity-one solution. -/
 structure GlobalSolutionOne (f : VelocityField) (v : VelocityField) (p : PressureField) : Prop where
@@ -286,7 +294,7 @@ theorem normalized_solution_core {ν : ℝ} (hν : 0 < ν) {f : VelocityField}
   have hp := fromComparator_smooth h.pressure_smooth
   refine ⟨rescale_smooth hv _ hc.le, rescale_smooth hp _ hc.le, ?_, ?_, ?_⟩
   · intro x
-    simp [rescale, fromComparator, h.initial_condition]
+    simp only [rescale, fromComparator, mul_zero, h.initial_condition, smul_zero]
   · intro t ht x
     rw [rescale_divergence, divergence_eq]
     change ν⁻¹ * Comparator.divergence (v · (ν⁻¹ * t)) x = 0
@@ -294,7 +302,9 @@ theorem normalized_solution_core {ν : ℝ} (hν : 0 < ν) {f : VelocityField}
   · intro t _ ht x
     rw [viscousResidual_one, rescale_residual hν hv ht x, viscousResidual,
       comparator_equation_core h (mul_pos hc ht) x]
-    simp [toComparator, rescaledForce, rescale, smul_smul, hν.ne']
+    simp only [inv_pow, toComparator, rescaledForce, rescale, ne_eq, hν.ne', not_false_eq_true,
+        mul_inv_cancel_left₀, smul_smul, OfNat.ofNat_ne_zero, pow_eq_zero_iff, inv_mul_cancel₀,
+        one_smul]
 
 /-- Pull a hypothetical viscosity-`ν` solution back to viscosity one. -/
 theorem normalized_solution {ν : ℝ} (hν : 0 < ν) {f : VelocityField}

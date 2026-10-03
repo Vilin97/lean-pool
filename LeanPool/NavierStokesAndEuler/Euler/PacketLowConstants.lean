@@ -35,7 +35,7 @@ theorem gradient_properties : 4 ≤ gradientConstant ∧
   have h1 := firstRatio_pos
   have h2 := goodRatio_pos
   unfold gradientConstant
-  exact ⟨by linarith,by linarith,by linarith⟩
+  exact ⟨by linarith only [h0, h1, h2],by linarith only [h0, h1, h2],by linarith only [h0, h1, h2]⟩
 
 theorem gradient_nonneg : 0 ≤ gradientConstant := (by
     norm_num : (0 : ℝ) ≤ 4).trans gradient_properties.1
@@ -53,7 +53,7 @@ theorem hessian_properties : 4 ≤ hessianConstant ∧
   have hff := mul_nonneg h0M h1.le
   have hfg := mul_nonneg h0M h2.le
   unfold hessianConstant
-  exact ⟨by nlinarith,by nlinarith,by nlinarith⟩
+  exact ⟨by nlinarith,by nlinarith only [h0, hf, hff, hfg],by nlinarith only [h0, hff, hfg]⟩
 
 theorem hessian_nonneg : 0 ≤ hessianConstant := (by
     norm_num : (0 : ℝ) ≤ 4).trans hessian_properties.1
@@ -63,7 +63,7 @@ theorem frame_properties : 1 ≤ frameConstant ∧ gradientConstant ≤ frameCon
   have hm := gradient_nonneg
   have hh := hessian_nonneg
   unfold frameConstant
-  exact ⟨by linarith,by linarith,by nlinarith [sq_nonneg hessianConstant]⟩
+  exact ⟨by linarith,by linarith only [hh],by nlinarith only [hm, hh, sq_nonneg hessianConstant]⟩
 
 theorem initial_bounds (h e : ℝ) (hh : 1 ≤ h) (he : e ≤ 1) :
     initialCoefficientCost+h*firstRatio+e ≤ gradientConstant*h ∧

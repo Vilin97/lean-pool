@@ -293,7 +293,7 @@ theorem normalizeSource_anchor_eq {c a b d : ℝ} (hc : 0 < c) (hca : c ≤ a)
 theorem powerChart_anchor_lt {c a d R : ℝ} (hc : 0 < c) (hca : c ≤ a) (hd : 0 < d)
     (hR : R < a) : RadialPullback.powerChart d c R < a ^ d := by
   apply Real.rpow_lt_rpow (RadialPullback.positiveRadius_pos (by positivity) R).le _ hd
-  exact RadialPullback.positiveRadius_lt (by positivity) (by linarith) hR
+  exact RadialPullback.positiveRadius_lt (by positivity) (by linarith only [hc, hca]) hR
 
 /-- Changing the auxiliary regularization radius leaves the actual primitive
 unchanged; only the compactification cutoff remains. -/
@@ -309,8 +309,8 @@ theorem physicalCompact_reference {c a b d M : ℝ} (hc : 0 < c) (hca : c ≤ a)
       physicalPast PressureStream.physicalTotal RadialPullback.physicalCutoff
           RadialPullback.liftChart
     simp only [Function.comp_apply, smul_eq_mul]
-    rw [RadialPullback.powerChart_eq ha (by linarith) d,
-      RadialPullback.powerChart_eq hc (by linarith) d, he]
+    rw [RadialPullback.powerChart_eq ha (by linarith only [hc, hca, hz]) d,
+      RadialPullback.powerChart_eq hc (by linarith only [hc, hca, hz]) d, he]
   · have hlt : z.1 < a := lt_of_not_ge hz
     rw [TransportPrimitive.radial_zero_of_lt
       (RadialPullback.physicalCompact_supported ha hab hd hf hs M v) hlt,
@@ -1001,8 +1001,8 @@ theorem physicalMeanPressure_naturality {h d a b : ℝ} (hh : 0 < h) (hh1 : h < 
     fieldOnPhysicalTZ h n i (2 * CoordinateAlgebra.A h)
       (meanPressure d a b (radialFrequency h n i d M) hab (qLength (2 * h)) (vector .radial) f) z
           := by
-  have hc : 0 < 2 * h := by linarith
-  have hc1 : 2 * h < 1 := by linarith
+  have hc : 0 < 2 * h := by linarith only [hh]
+  have hc1 : 2 * h < 1 := by linarith only [hh1]
   have he := meanPressure_coverPull (chartScale_pos n) ha hab hd (slowToChartTZ h n) i M
     (radialFrequency h n i d M) (ChartScales.Q n ^ (-(2 * CoordinateAlgebra.A h + 1 / 2)))
     (vector .radial) (vector .radial) (radialFrequency_shift h n i d M)
@@ -1029,8 +1029,8 @@ theorem physicalStreamPotential_naturality {h d a b : ℝ} (hh : 0 < h) (hh1 : h
     fieldOnPhysicalTZ h n i (CoordinateAlgebra.A h - 1 / 2)
       (streamPotential d a b (radialFrequency h n i d M) (qLength (2 * h)) (vector .radial) f) z :=
           by
-  have hc : 0 < 2 * h := by linarith
-  have hc1 : 2 * h < 1 := by linarith
+  have hc : 0 < 2 * h := by linarith only [hh]
+  have hc1 : 2 * h < 1 := by linarith only [hh1]
   have he := streamPotential_coverPull (chartScale_pos n) ha hab hd (slowToChartTZ h n) i M
     (radialFrequency h n i d M) (ChartScales.Q n ^ (-CoordinateAlgebra.A h))
     (vector .radial) (vector .radial) (radialFrequency_shift h n i d M)
@@ -1241,10 +1241,10 @@ theorem normalizeSource_gauge_finiteJets {c e a b d : ℝ}
   have hlp := Real.rpow_pos_of_pos hl d
   have hlaz : (l * a) ^ d < z.1 := by
     rw [Real.mul_rpow hl.le ha.le]
-    linarith [(lt_div_iff₀ hlp).mp hz.1]
+    linarith only [hlp, hz, (lt_div_iff₀ hlp).mp hz.1]
   have hlbz : z.1 < (l * b) ^ d := by
     rw [Real.mul_rpow hl.le (ha.trans hab).le]
-    linarith [(div_lt_iff₀ hlp).mp hz.2]
+    linarith only [hlp, hz, (div_lt_iff₀ hlp).mp hz.2]
   have hzce : z.1 ∈ Ioo (c ^ d) (e ^ d) :=
     ⟨(Real.rpow_le_rpow hc.le hca hd.le).trans_lt hlaz,
       hlbz.trans_le (Real.rpow_le_rpow (mul_pos hl (ha.trans hab)).le hbe hd.le)⟩
@@ -1257,7 +1257,7 @@ theorem normalizeSource_gauge_finiteJets {c e a b d : ℝ}
     (Real.rpow_lt_rpow_iff hrp.le (mul_pos hl (ha.trans hab)).le hd).mp (by
         simpa only [hrpow] using hlbz)
   have hr : inverseChart d c z.1 / l ∈ Ioo a b :=
-    ⟨(lt_div_iff₀ hl).mpr (by linarith), (div_lt_iff₀ hl).mpr (by linarith)⟩
+    ⟨(lt_div_iff₀ hl).mpr (by linarith only [har]), (div_lt_iff₀ hl).mpr (by linarith only [hrb])⟩
   have hratio : (inverseChart d c z.1 / l) ^ d = z.1 / l ^ d := by
     rw [Real.div_rpow hrp.le hl.le, hrpow]
   have hw : 0 ≤ logWeight cL cR a b p (inverseChart d c z.1 / l) :=
@@ -1411,8 +1411,8 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
           (mul_le_mul_of_nonneg_left (hweight _ (logPosition_mem ha hp)) hA)
       · have hp' : R ∉ Ioo (ell z.2.1 * a) (ell z.2.1 * b) := by
           intro h
-          exact hp ⟨(lt_div_iff₀ (hl _ hz)).mpr (by linarith [h.1]),
-            (div_lt_iff₀ (hl _ hz)).mpr (by linarith [h.2])⟩
+          exact hp ⟨(lt_div_iff₀ (hl _ hz)).mpr ((mul_comm _ _).trans_lt h.1),
+            (div_lt_iff₀ (hl _ hz)).mpr (h.2.trans_eq (mul_comm _ _))⟩
         rw [iteratedFDeriv_zero_outsideGauge (z := (R, (z.2.1, Y)))
           hU hell.continuousOn hf hsg hz hp' i, norm_zero]
         exact mul_nonneg hA hW
@@ -1484,17 +1484,21 @@ theorem transportGauge_finiteJets {c e a b cL cR L : ℝ} (hce : c < e)
         (sub_jet_norm_le (PhysicalMeanDomain.slowDomain_open hU) hI (hC.mul hJ) hz j).trans
           (add_le_add (hmass j hj).1 hprod)
       have hmid : massK * A + (2 : ℝ) ^ m * B * (massK * A) ≤ midK * (1 + B) * A * δ := by
-        dsimp [midK]
-        have hpow : 0 ≤ (2 : ℝ) ^ m := by positivity
-        have : 1 + (2 : ℝ) ^ m * B ≤ (1 + (2 : ℝ) ^ m) * (1 + B) := by
+        have hpow : 0 ≤ (2 : ℝ) ^ m := pow_nonneg zero_le_two m
+        have hfac : 1 + (2 : ℝ) ^ m * B ≤ (1 + (2 : ℝ) ^ m) * (1 + B) := by
           linarith only [hpow, hB]
-        field_simp [hδ.ne']
-        linarith only [mul_nonneg (mul_nonneg hmassK hA) (sub_nonneg.mpr this)]
+        have hcancel : midK * δ = massK * (1 + (2 : ℝ) ^ m) := div_mul_cancel₀ _ hδ.ne'
+        calc massK * A + (2 : ℝ) ^ m * B * (massK * A)
+            = massK * A * (1 + (2 : ℝ) ^ m * B) := by ring
+          _ ≤ massK * A * ((1 + (2 : ℝ) ^ m) * (1 + B)) :=
+            mul_le_mul_of_nonneg_left hfac (mul_nonneg hmassK hA)
+          _ = midK * δ * (1 + B) * A := by rw [hcancel]; ring
+          _ = midK * (1 + B) * A * δ := by ring
       exact (hb.trans hmid).trans ((mul_le_mul_of_nonneg_left hw
-        (mul_nonneg (mul_nonneg hmidK (by positivity)) hA)).trans
+        (mul_nonneg (mul_nonneg hmidK (add_nonneg zero_le_one hB)) hA)).trans
           (mul_le_mul_of_nonneg_right
-            (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hmiddleK (by
-                positivity)) hA) hnorm))
+            (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hmiddleK
+              (add_nonneg zero_le_one hB)) hA) hnorm))
 
 end VariableTransport
 
@@ -1532,10 +1536,10 @@ theorem cutoff_eq_normalizedCutoff {c a b d : ℝ} (hc : 0 < c) (ha : 0 < a)
     (hleft : c ≤ ell z.2.1 * a) (hR : z.1 / ell z.2.1 ∈ Ioo a b) :
     cutoff d a b ell z = normalizedCutoff (a ^ d) (b ^ d) (fun s => ell s ^ d)
       (liftChart (powerChart d c) z) := by
-  have hr : c < z.1 := hleft.trans_lt (by linarith [(lt_div_iff₀ hl).mp hR.1])
+  have hr : c < z.1 := hleft.trans_lt (by linarith only [hl, hR, (lt_div_iff₀ hl).mp hR.1])
   have hratio : 0 < z.1 / ell z.2.1 := ha.trans hR.1
   simp only [cutoff, radialRatio, physicalCutoff, normalizedCutoff, liftChart]
-  rw [powerChart_eq ha (by linarith [hR.1]) d, powerChart_eq hc (by linarith) d,
+  rw [powerChart_eq ha (by linarith [hR.1]) d, powerChart_eq hc (by linarith only [hc, hr]) d,
     Real.div_rpow (hc.trans hr).le hl.le]
 
 theorem compactPrimitive_eq_transportGauge {c a b d M : ℝ}
@@ -1586,26 +1590,26 @@ theorem qLength_reference_bounds {coord a b : ℝ} (U : SlowRegion coord)
   let L := Real.sqrt (|U.qhi| + U.qlo + 1)
   have hl : 0 < l := Real.sqrt_pos.mpr U.qlo_pos
   have hL : 0 < L := Real.sqrt_pos.mpr (by have := abs_nonneg U.qhi; linarith [U.qlo_pos])
-  have hlL : l ≤ L := Real.sqrt_le_sqrt (by have := abs_nonneg U.qhi; linarith)
+  have hlL : l ≤ L := Real.sqrt_le_sqrt (by have := abs_nonneg U.qhi; linarith only [this])
   have hlow : ∀ s ∈ U.carrier, l ≤ qLength coord s :=
     fun s hs => Real.sqrt_le_sqrt (U.q_mem s hs).1
   have hupp : ∀ s ∈ U.carrier, qLength coord s ≤ L := by
     intro s hs
     apply Real.sqrt_le_sqrt
-    exact (U.q_mem s hs).2.trans (by have := le_abs_self U.qhi; linarith [U.qlo_pos])
+    exact (U.q_mem s hs).2.trans (by have := le_abs_self U.qhi; linarith only [this, U.qlo_pos])
   refine ⟨l * a / 2, L * b + 1, L, by positivity, ?_, hL,
     fun s hs => hl.trans_le (hlow s hs), ?_, ?_, hupp⟩
   · have h1 : l * a ≤ L * a := mul_le_mul_of_nonneg_right hlL ha.le
     have h2 : L * a < L * b := mul_lt_mul_of_pos_left hab hL
     have hp : 0 < l * a := mul_pos hl ha
-    linarith
+    linarith only [h1, h2, hp]
   · intro s hs
     have hh := mul_le_mul_of_nonneg_right (hlow s hs) ha.le
     have hp : 0 < l * a := mul_pos hl ha
-    linarith
+    linarith only [hh, hp]
   · intro s hs
     have hh := mul_le_mul_of_nonneg_right (hupp s hs) (ha.trans hab).le
-    linarith
+    linarith only [hh]
 
 /-- Normalized cutoff model, given by `TransportPrimitive.interiorCutoff (a ^ d) (b ^ d) (y.2.1
 / (Real.sqrt y.1) ^ d)`. -/
@@ -1680,7 +1684,10 @@ theorem compactPrimitive_q_finiteJets_global {coord a b c e d cL cR L : ℝ}
       (powerChart_contDiff hc d) m
   let Q := ((min 1 d) ^ p)⁻¹
   have hQ : 0 ≤ Q := (inv_pos.mpr (pow_pos (lt_min zero_lt_one hd) p)).le
-  refine ⟨KP * KT * (1 + B) * KN * Q, by positivity, ?_⟩
+  have hKB : 0 ≤ KT * (1 + B) := mul_nonneg hKT (add_nonneg zero_le_one hB)
+  refine ⟨KP * KT * (1 + B) * KN * Q,
+    mul_nonneg (mul_nonneg (mul_nonneg (mul_nonneg hKP hKT) (add_nonneg zero_le_one hB)) hKN) hQ,
+    ?_⟩
   intro M v f hf hs hsg A hA z hz hR hin j hj
   have hrleft : c < z.1 := (hleft _ hz).trans_lt (by linarith [(lt_div_iff₀ (hl _ hz)).mp hR.1])
   have hrright : z.1 < e := (show z.1 < qLength coord z.2.1 * b by
@@ -1719,7 +1726,7 @@ theorem compactPrimitive_q_finiteJets_global {coord a b c e d cL cR L : ℝ}
       (fun k hk => hbB k hk zU ⟨hz, hzU⟩) i hi
   have hn : 0 ≤ KT * (1 + B) * (KN * A) *
       logWeight (d ^ 2 * cL) (d ^ 2 * cR) (a ^ d) (b ^ d) p (zU.1 / qLength coord z.2.1 ^ d) :=
-    mul_nonneg (by positivity) (weight_pos _ _ p (logPosition_mem haU hR_U)).le
+    mul_nonneg (mul_nonneg hKB (mul_nonneg hKN hA)) (weight_pos _ _ p (logPosition_mem haU hR_U)).le
   have hp := hbP U.carrier U.isOpen _ hgp z hz ⟨hrleft.le, hrright.le⟩ _ hn hbound j hj
   have he := compactPrimitive_transportGauge_germ (M := M) hc ha hab hd (qLength coord) v U.isOpen
     hell hl hleft hf.contDiffOn hsg z hz hR
@@ -1735,7 +1742,7 @@ theorem compactPrimitive_q_finiteJets_global {coord a b c e d cL cR L : ℝ}
             ring
     _ ≤ (KP * (KT * (1 + B) * (KN * A))) *
         (Q * logWeight cL cR a b p (z.1 / qLength coord z.2.1)) :=
-      mul_le_mul_of_nonneg_left hw (by positivity)
+      mul_le_mul_of_nonneg_left hw (mul_nonneg hKP (mul_nonneg hKB (mul_nonneg hKN hA)))
     _ = _ := by ring
 
 end QWeighted
@@ -1870,8 +1877,8 @@ theorem meanClass_moving_localBandJets {α : ℝ} {f : ℕ → Point → ℝ}
         ring)
   · have hR' : z.1 ∉ Ioo (qLength coord z.2.1 * a) (qLength coord z.2.1 * b) := by
       intro h
-      exact hR ⟨(lt_div_iff₀ hp).mpr (by
-          linarith [h.1]), (div_lt_iff₀ hp).mpr (by linarith [h.2])⟩
+      exact hR ⟨(lt_div_iff₀ hp).mpr ((mul_comm _ _).trans_lt h.1),
+        (div_lt_iff₀ hp).mpr (h.2.trans_eq (mul_comm _ _))⟩
     have hell : ContinuousOn (qLength coord) U.carrier :=
       ((qLength_contDiffOn U.coord_pos U.coord_lt_one).mono (fun s hs => U.time_pos s
           hs)).continuousOn
@@ -2106,13 +2113,14 @@ theorem localBandJets_meanClass_of_gaugeInteriorSupport {c e α : ℝ}
       _ ≤ C * ε n ^ α * L n ^ k := hbound n z hzs j hj
       _ ≤ C * ε n ^ α * st.growth n z ^ k :=
         mul_le_mul_of_nonneg_left hgr (mul_nonneg hC (Real.rpow_pos_of_pos (hε n) α).le)
-      _ = (C / δ * ε n ^ α * st.growth n z ^ k) * δ := by field_simp
+      _ = (C / δ * ε n ^ α * st.growth n z ^ k) * δ := by
+        rw [div_mul_eq_mul_div, div_mul_eq_mul_div, div_mul_cancel₀ _ hδ.ne']
       _ ≤ (C / δ * ε n ^ α * st.growth n z ^ k) * st.zeta z := mul_le_mul_of_nonneg_left hζ hA
       _ = _ := rfl
   · have hr : z.1 ∉ Ioo (qLength coord z.2.1 * c) (qLength coord z.2.1 * e) := by
       intro h
-      exact hpi ⟨((lt_div_iff₀ hEll).mpr (by linarith [h.1])).le,
-        ((div_lt_iff₀ hEll).mpr (by linarith [h.2])).le⟩
+      exact hpi ⟨((lt_div_iff₀ hEll).mpr ((mul_comm _ _).trans_lt h.1)).le,
+        ((div_lt_iff₀ hEll).mpr (h.2.trans_eq (mul_comm _ _))).le⟩
     rw [iteratedFDeriv_zero_outsideGauge_on U.isOpen
       ((qLength_contDiffOn U.coord_pos U.coord_lt_one).mono (fun s hs => U.time_pos s
           hs)).continuousOn
@@ -2158,7 +2166,8 @@ theorem meanClass_divideRadius_moving {α : ℝ} {f : ℕ → Point → ℝ}
     ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).1
     ((movingStrip_domain U a b cL cR ha hcL hcR ε L hε hεone hL z).mp hz).2
   have hcz : 2 * c ≤ z.1 := by
-      dsimp [c]; have := mul_pos (Real.sqrt_pos.mpr U.qlo_pos) ha; linarith [hrad.1]
+      dsimp [c]; have := mul_pos (Real.sqrt_pos.mpr U.qlo_pos) ha; linarith only [this, hrad,
+          hrad.1]
   change f n z / z.1 = (positiveRadius c z.1)⁻¹ * f n z
   rw [positiveRadius_eq_self hc hcz]
   ring
@@ -2201,21 +2210,18 @@ theorem fderiv_eq_on_radialFiber {f g : PressureStream.Lift S → ℝ} {z : Pres
     (hf : DifferentiableAt ℝ f z) (hg : DifferentiableAt ℝ g z)
     (he : ∀ r Y, f (r, (z.2.1, Y)) = g (r, (z.2.1, Y))) (r : ℝ) (Y : PressureStream.Plane) :
     fderiv ℝ f z (r, ((0 : S), Y)) = fderiv ℝ g z (r, ((0 : S), Y)) := by
-  let L : (ℝ × PressureStream.Plane) →L[ℝ] PressureStream.Lift S :=
-    (ContinuousLinearMap.fst ℝ ℝ PressureStream.Plane).prod
-      ((0 : (ℝ × PressureStream.Plane) →L[ℝ] S).prod (ContinuousLinearMap.snd ℝ ℝ
-          PressureStream.Plane))
-  have hi : HasFDerivAt (fun q : ℝ × PressureStream.Plane => (q.1, (z.2.1, q.2))) L (z.1, z.2.2) :=
-    hasFDerivAt_fst.prodMk ((hasFDerivAt_const z.2.1 _).prodMk hasFDerivAt_snd)
-  have hff := hf.hasFDerivAt.comp (z.1, z.2.2) hi
-  have hgg := hg.hasFDerivAt.comp (z.1, z.2.2) hi
-  have heq : (f ∘ fun q : ℝ × PressureStream.Plane => (q.1, (z.2.1, q.2))) =
-      (g ∘ fun q : ℝ × PressureStream.Plane => (q.1, (z.2.1, q.2))) := by
-    funext q
-    exact he q.1 q.2
+  obtain ⟨z1, z2, z3⟩ := z
+  let φ : ℝ × PressureStream.Plane → PressureStream.Lift S := fun q => (q.1, (z2, q.2))
+  have hi := (hasFDerivAt_fst (𝕜 := ℝ) (p := (z1, z3))).prodMk
+    ((hasFDerivAt_const (𝕜 := ℝ) z2 (z1, z3)).prodMk (hasFDerivAt_snd (𝕜 := ℝ) (p := (z1, z3))))
+  have hff := HasFDerivAt.comp (f := φ) (z1, z3) hf.hasFDerivAt hi
+  have hgg := HasFDerivAt.comp (f := φ) (z1, z3) hg.hasFDerivAt hi
+  have heq : f ∘ φ = g ∘ φ := funext fun q => he q.1 q.2
   rw [heq] at hff
   have h := congrArg (fun A : (ℝ × PressureStream.Plane) →L[ℝ] ℝ => A (r, Y)) (hff.unique hgg)
-  simpa [L] using h
+  simpa only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.prod_apply,
+    ContinuousLinearMap.coe_fst', ContinuousLinearMap.coe_snd',
+    zero_apply] using h
 
 theorem graphDr_eq_on_radialFiber {f g : PressureStream.Lift S → ℝ} {z : PressureStream.Lift S}
     (hf : DifferentiableAt ℝ f z) (hg : DifferentiableAt ℝ g z)
@@ -2395,7 +2401,7 @@ theorem physicalTotal_anchor_eq {c a b d M : ℝ} (hc : 0 < c) (hca : c ≤ a)
   have ha := hc.trans_le hca
   simp only [PressureStream.physicalTotal, liftChart]
   rw [normalizeSource_anchor_eq hc hca hab hd hs,
-    powerChart_eq hc (by linarith) d, powerChart_eq ha (by linarith) d]
+    powerChart_eq hc (by linarith) d, powerChart_eq ha (by linarith only [hc, hca, hz]) d]
 
 theorem compactAlias_reference {c a b d M : ℝ} (hc : 0 < c) (ha : 0 < a)
     (hab : a < b) (hd : 0 < d) (ell : S → ℝ) (v : PressureStream.Plane)
@@ -2415,7 +2421,7 @@ theorem compactAlias_reference {c a b d M : ℝ} (hc : 0 < c) (ha : 0 < a)
       physicalTotal_fiberLocal d (ell z.2.1 * a) M v g f z.2.1 (fun _ _ => rfl) z.1 z.2.2] at h
     exact congrArg (fun t : ℝ => cutoffRadialDerivative d a b ell z * t) h.symm
   · have hsmall : z.1 / ell z.2.1 < a :=
-      (div_lt_iff₀ (hl _ hz)).mpr (by linarith [lt_of_not_ge hR])
+      (div_lt_iff₀ (hl _ hz)).mpr (by linarith only [hR, lt_of_not_ge hR])
     have he : cutoffRadialDerivative d a b ell z = 0 := by
       simp only [cutoffRadialDerivative, radialRatio, deriv_physicalCutoff_zero_left ha hab hd
           hsmall, mul_zero]
@@ -2440,9 +2446,9 @@ theorem cutoffRadialDerivative_interior_support {a b d : ℝ} (ha : 0 < a) (hab 
   have habU : a ^ d < b ^ d := Real.rpow_lt_rpow ha.le hab hd
   let cU := (2 * a ^ d + b ^ d) / 3
   let eU := (a ^ d + 2 * b ^ d) / 3
-  have hacU : a ^ d < cU := by dsimp [cU]; linarith
-  have hceU : cU < eU := by dsimp [cU, eU]; linarith
-  have hebU : eU < b ^ d := by dsimp [eU]; linarith
+  have hacU : a ^ d < cU := by dsimp [cU]; linarith only [habU]
+  have hceU : cU < eU := by dsimp [cU, eU]; linarith only [habU]
+  have hebU : eU < b ^ d := by dsimp [eU]; linarith only [habU]
   have hcU : 0 < cU := haU.trans hacU
   have heU : 0 < eU := hcU.trans hceU
   let c := cU ^ d⁻¹
@@ -2458,20 +2464,20 @@ theorem cutoffRadialDerivative_interior_support {a b d : ℝ} (ha : 0 < a) (hab 
   have hePow : e ^ d = eU := Real.rpow_inv_rpow heU.le hd.ne'
   have hzeroLeft (r : ℝ) (hr : r < c) : deriv (physicalCutoff d a b) r = 0 := by
     by_cases hra : a ≤ r
-    · rw [deriv_physicalCutoff ha (by linarith) d b]
+    · rw [deriv_physicalCutoff ha (by linarith only [ha, hra]) d b]
       have hχ : deriv (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) (powerChart d a r) = 0 :=
           by
         apply TemporalMeanUpdate.interiorCutoff_deriv_zero_left habU
-        rw [powerChart_eq ha (by linarith) d]
+        rw [powerChart_eq ha (by linarith only [ha, hra]) d]
         exact (Real.rpow_lt_rpow (ha.trans_le hra).le hr hd).trans_eq hcPow
       rw [hχ, mul_zero]
     · exact deriv_physicalCutoff_zero_left ha hab hd (lt_of_not_ge hra)
   have hzeroRight (r : ℝ) (hr : e < r) : deriv (physicalCutoff d a b) r = 0 := by
-    rw [deriv_physicalCutoff ha (by linarith) d b]
+    rw [deriv_physicalCutoff ha (by linarith only [ha, hac, hce, hr]) d b]
     have hχ : deriv (TransportPrimitive.interiorCutoff (a ^ d) (b ^ d)) (powerChart d a r) = 0 := by
       apply TemporalMeanUpdate.interiorCutoff_deriv_zero_right habU
       change eU < powerChart d a r
-      rw [powerChart_eq ha (by linarith) d, ← hePow]
+      rw [powerChart_eq ha (by linarith only [ha, hac, hce, hr]) d, ← hePow]
       exact Real.rpow_lt_rpow (ha.trans (hac.trans hce)).le hr hd
     rw [hχ, mul_zero]
   refine ⟨c, e, hac, hce, heb, ?_⟩
@@ -2488,8 +2494,8 @@ theorem cutoffRadialDerivative_interior_support {a b d : ℝ} (ha : 0 < a) (hab 
       apply hn
       dsimp only [cutoffRadialDerivative, radialRatio]
       rw [hzeroRight _ hlt, mul_zero]
-  exact ⟨by linarith [(le_div_iff₀ (hl _ hz)).mp hprofile.1],
-    by linarith [(div_le_iff₀ (hl _ hz)).mp hprofile.2]⟩
+  exact ⟨by linarith only [hl, hz, hprofile, (le_div_iff₀ (hl _ hz)).mp hprofile.1],
+    by linarith only [hl, hz, hprofile, (div_le_iff₀ (hl _ hz)).mp hprofile.2]⟩
 
 theorem compactAlias_interior_support {a b d : ℝ} (ha : 0 < a) (hab : a < b) (hd : 0 < d) :
     ∃ c e : ℝ, a < c ∧ c < e ∧ e < b ∧ ∀ (ell : S → ℝ) (U : Set S),
@@ -2817,7 +2823,9 @@ theorem localBandJets_compactAlias {ε L : ℕ → ℝ} {α : ℝ} {f : ℕ → 
       U.qlo_pos ha d b
     (V := V) (fun z hz => U.time_pos z.2.1 hz.1) (fun z hz => U.q_mem z.2.1 hz.1) (fun _ hz =>
         hz.2) m
-  refine ⟨(2 : ℝ) ^ m * B * K * C, by positivity, k, ?_⟩
+  have hP : 0 ≤ (2 : ℝ) ^ m * B * K * C :=
+    mul_nonneg (mul_nonneg (mul_nonneg (pow_nonneg zero_le_two m) hB) hK) hC0
+  refine ⟨(2 : ℝ) ^ m * B * K * C, hP, k, ?_⟩
   intro n z hz j hj
   have hA : 0 ≤ C * ε n ^ α * L n ^ k :=
     mul_nonneg (mul_nonneg hC0 (Real.rpow_pos_of_pos (hε n) α).le)
@@ -2838,7 +2846,7 @@ theorem localBandJets_compactAlias {ε L : ℕ → ℝ} {α : ℝ} {f : ℕ → 
   · rw [PhysicalMeanDomain.jet_zero_outside U.isOpen (compactAlias_q_contDiffOn U ha hab hd (M n)
       (v n) (hf n) (hs n))
       (hAfixed n) hz hr j, norm_zero]
-    exact mul_nonneg (mul_nonneg (by positivity) (Real.rpow_pos_of_pos (hε n) α).le)
+    exact mul_nonneg (mul_nonneg hP (Real.rpow_pos_of_pos (hε n) α).le)
       (pow_nonneg (zero_le_one.trans (hL n)) k)
 
 variable {cL cR : ℝ} (hcL : 0 < cL) (hcR : 0 < cR)

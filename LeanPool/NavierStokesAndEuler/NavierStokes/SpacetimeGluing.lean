@@ -124,7 +124,7 @@ theorem time_slice_iteratedDerivWithin {I : Set ℝ} {f : SpaceTime → V}
     rw [iteratedDerivWithin_succ, derivWithin_congr ih (ih ht)]
     have hsmooth := normalIter_contDiffOn hf (hI.prod uniqueDiffOn_univ) n
     have hdiff := hsmooth.differentiableOn (by simp) (t, x) ⟨ht, mem_univ x⟩
-    have hcurve := hdiff.hasFDerivWithinAt.comp t
+    have hcurve := hdiff.hasFDerivWithinAt.comp t (f := fun y : ℝ => (y, x)) (s := I)
       (hasFDerivAt_prodMk_left t x).hasFDerivWithinAt
       (fun y hy => show (y, x) ∈ I ×ˢ univ from ⟨hy, mem_univ x⟩)
     have hderiv : HasDerivWithinAt (fun y => normalIter (I ×ˢ univ) f n (y, x))
@@ -164,7 +164,8 @@ theorem boundary_fderiv_eq {s t : Set SpaceTime} {f g : SpaceTime → V} {T : �
       fderivWithin ℝ g t (T, x) timeVector := hnormal x
   have hv : v = v.1 • timeVector + (0, v.2) := by
     ext <;> simp [timeVector]
-  rw [hv, map_add, map_add, map_smul, map_smul, htime, hspatial]
+  rw [hv, ContinuousLinearMap.map_add, ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul,
+    ContinuousLinearMap.map_smul, htime, hspatial]
 
 /-- Matching normal trace functions implies matching normal traces after
 any directional derivative. The proof derives, rather than assumes, the

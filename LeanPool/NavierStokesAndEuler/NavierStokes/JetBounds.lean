@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Bounds for actual Fréchet jets
@@ -307,7 +308,7 @@ theorem FiniteJetBound.bilinear_perturbation {m : ℕ} (L : E →L[ℝ] F →L[�
   have heq : (fun x => L (f x + u x) (g x + v x) - L (f x) (g x)) =
       (fun x => (L (f x) (v x) + L (u x) (g x)) + L (u x) (v x)) := by
     funext x
-    simp only [map_add, add_apply]
+    simp only [ContinuousLinearMap.map_add, add_apply]
     abel
   rw [heq]
   apply hsum.mono

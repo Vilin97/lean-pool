@@ -28,14 +28,15 @@ local instance instMeanCoefficientFrame2 : NormedSpace ℝ Field := inferInstanc
 
 /-- Adjoint field as an element of `Field`. -/
 def adjointField (A : Field) : Field :=
-  (ContinuousLinearMap.adjoint.toContinuousLinearEquiv.toContinuousLinearMap
+  ((ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space)
+      (F := Space)).toContinuousLinearEquiv.toContinuousLinearMap
     : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space)).compLeftContinuousBounded Space A
 
 @[simp] theorem adjointField_apply (A : Field) (x : Space) :
-    adjointField A x = (A x).adjoint := rfl
+    adjointField A x = ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (A x) := rfl
 
-theorem multiplier_adjointField (A : Field) : multiplier (adjointField A) = (multiplier A).adjoint
-    :=
+theorem multiplier_adjointField (A : Field) : multiplier (adjointField A) =
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := L2) (F := L2) (multiplier A) :=
   multiplier_adjoint A (adjointField A) (fun _ => rfl)
 
 theorem operatorPath_comp (T : ℝ) (A B C : C(Icc (0 : ℝ) T, Field))

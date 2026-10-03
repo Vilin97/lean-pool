@@ -50,9 +50,10 @@ theorem map_comp (L : F →L[ℝ] G) (M : E →L[ℝ] F) :
   exact Lp.ext (map_ae period (ContinuousLinearMap.id ℝ E) u)
 
 theorem map_translation (L : E →L[ℝ] F) (a : LiftTangent) (u : CylinderL2 period E) :
-    map period L (translate period a u) = translate period a (map period L u) := by
+    map period L (translate (V := E) period a u) =
+      translate (V := F) period a (map period L u) := by
   apply Lp.ext
-  filter_upwards [map_ae period L (translate period a u),translate_ae period a u,
+  filter_upwards [map_ae period L (translate (V := E) period a u),translate_ae period a u,
     translate_ae period a (map period L u),
     (measurePreserving_translation period (coveringMap period a)).quasiMeasurePreserving.ae
       (map_ae period L u)] with x hl hu hr hm
@@ -66,7 +67,7 @@ def pathMap (L : E →L[ℝ] F) : C(K,CylinderL2 period E) →L[ℝ] C(K,Cylinde
 
 omit [CompactSpace K] in
 @[simp] theorem pathMap_apply (L : E →L[ℝ] F) (u : C(K, CylinderL2 period E)) (t : K) :
-    pathMap period L u t = map period L (u t) := rfl
+    pathMap (K := K) period L u t = map period L (u t) := rfl
 
 theorem pathMap_norm (L : E →L[ℝ] F) : ‖pathMap (K := K) period L‖ ≤ ‖L‖ := by
   apply opNorm_le_bound _ (norm_nonneg L)
@@ -79,18 +80,21 @@ theorem pathMap_norm (L : E →L[ℝ] F) : ‖pathMap (K := K) period L‖ ≤ �
 
 omit [CompactSpace K] in
 theorem pathMap_translation (L : E →L[ℝ] F) (a : LiftTangent) (u : C(K, CylinderL2 period E)) :
-    pathMap period L (pathTranslate period a u) = pathTranslate period a (pathMap period L u) := by
+    pathMap (K := K) period L (pathTranslate (K := K) (V := E) period a u) =
+      pathTranslate (K := K) (V := F) period a (pathMap (K := K) period L u) := by
   apply ContinuousMap.ext
   intro t
   exact map_translation period L a (u t)
 
 theorem pathMap_orbit_contDiff (L : E →L[ℝ] F) (u : C(K, CylinderL2 period E))
-    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a u)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate period a (pathMap period L u)) := by
-  have he : (fun a : LiftTangent => pathTranslate period a (pathMap period L u)) =
-      (fun a => pathMap period L (pathTranslate period a u)) :=
+    (hu : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := E) period a u)) :
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := F) period a (pathMap (K := K) period L u)) := by
+  have he : (fun a : LiftTangent =>
+        pathTranslate (K := K) (V := F) period a (pathMap (K := K) period L u)) =
+      (fun a => pathMap (K := K) period L (pathTranslate (K := K) (V := E) period a u)) :=
     funext (fun a => (pathMap_translation period L a u).symm)
   rw [he]
-  exact (pathMap period L).contDiff.comp hu
+  exact (pathMap (K := K) period L).contDiff.comp hu
 
 end EulerCylinderConstantMap

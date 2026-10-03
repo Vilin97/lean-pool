@@ -345,9 +345,11 @@ theorem physical_bounds (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support) (CM
     I.support I.support_compact F.Q res k (mul_inv_cancel₀ hk.pos.ne') I.geometry I.halfBall
     I.delta_pos I.delta_le_one (k^(-(1/4 : ℝ))) (k^(-(1/4 : ℝ))) CM CH I.low.K
     F.errors hCM hCH (S.evolution.force_quadratic_upper_of_lowBounds I.low) t x
-  refine ⟨h.1,?_⟩
-  erw [← (state I S k hk nextEll hnext hnext1 F hSym).evolution.pressure_hessian_eq_force]
-  exact h.2.1
+  rw [← (state I S k hk nextEll hnext hnext1 F hSym).evolution.pressure_hessian_eq_force t x]
+  dsimp only [GeometryForwardInput.meanData, GeometryForwardInput.data,
+    GeometryForwardInput.agreement, res] at h
+  dsimp only [state, SmoothState.forwardChild, SmoothState.packetChild, Evolution.child]
+  exact ⟨h.1,h.2.1⟩
 
 end EulerParentPacketFrames.GeometryForwardChoice
 
@@ -425,8 +427,10 @@ theorem physical_bounds (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support) (CM
         I.cutoff_support
     I.delta_pos I.delta_le_one (k^(-(1/4 : ℝ))) (k^(-(1/4 : ℝ))) CM CH I.low.K
     F.errors hCM hCH (S.evolution.force_quadratic_upper_of_lowBounds I.low) t x
-  refine ⟨h.1,?_⟩
-  erw [← (state I S k hk nextEll hnext hnext1 F hSym).evolution.pressure_hessian_eq_force]
-  exact h.2.1
+  rw [← (state I S k hk nextEll hnext hnext1 F hSym).evolution.pressure_hessian_eq_force t x]
+  dsimp only [EulerPacketInitial.Input.meanData, EulerPacketInitial.Input.data,
+    EulerPacketInitial.Input.history, EulerPacketInitial.Input.agreement, res] at h
+  dsimp only [state, SmoothState.joinedChild, SmoothState.packetChild, Evolution.child]
+  exact ⟨h.1,h.2.1⟩
 
 end EulerParentPacketFrames.GeometryJoinedChoice

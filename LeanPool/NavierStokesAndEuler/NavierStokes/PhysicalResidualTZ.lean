@@ -329,7 +329,7 @@ theorem fullResidual_swap (c : CorrectionState.Context Lift) (s : CorrectionStat
   rw [show (swapContext c).operators.epsilon = c.operators.epsilon from rfl,
     show (fun y : Cylinder => (swapContext c).operators.radius y.1) =
       (fun y : Cylinder => c.operators.radius (swapCylinder.toContinuousLinearEquiv y).1) from rfl]
-  have hcoe : (swapCylinder.toContinuousLinearEquiv : Cylinder → Cylinder) = swapCylinder := rfl
+  have hcoe : ⇑swapCylinder.toContinuousLinearEquiv = ⇑swapCylinder := rfl
   simp only [hcoe] at hlin hquad ⊢
   rw [hlin, hquad, virtualDivergence_swap]
   rfl
@@ -540,10 +540,10 @@ theorem context_fullResidual_physicalTZ {Q : ℝ} (hQ : 0 < Q) (h : ℝ) (k n : 
   have hRV : ∀ x ∈ V, x.1.1 ≠ 0 := fun x hx => hR (swapCylinder x) hx
   have hBV (j : Fin 3) : ContDiffOn ℝ ∞
       (fun x => PhysicalResidualBridge.baseComponents (swapContext c) n x j) V :=
-    (hB j).comp swapCylinder.contDiff.contDiffOn (fun _ hx => hx)
+    ((hB j).comp (swapCylinder.contDiff.contDiffOn (s := V)) (fun _ hx => hx) :)
   have haV (j : Fin 3) : ContDiffOn ℝ ∞
       (fun x => PhysicalResidualBridge.incrementComponents (swapState s) n x j) V :=
-    (ha j).comp swapCylinder.contDiff.contDiffOn (fun _ hx => hx)
+    ((ha j).comp (swapCylinder.contDiff.contDiffOn (s := V)) (fun _ hx => hx) :)
   have hpV : ContDiffOn ℝ ∞ ((swapState s).totalPressureIncrement n) V :=
     hp.comp swapCylinder.contDiff.contDiffOn (fun _ hx => hx)
   have hp₀V : ContDiffOn ℝ ∞ (fun x => p₀ (swapCylinder x)) V :=

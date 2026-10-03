@@ -17,6 +17,8 @@ import LeanPool.NavierStokesAndEuler.Euler.MeanCutoffCurlBound
 import LeanPool.NavierStokesAndEuler.Euler.RadialPotentialL2
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.MeasureTheory.Function.L2Space
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
+import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 # Divergence-free truncation by a radial vector potential
@@ -28,6 +30,10 @@ prescribed ball. This construction does not assume Sobolev regularity of `u`.
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 attribute [local instance] FiniteDimensional.hasContDiffBump
 
@@ -49,7 +55,7 @@ theorem negativeCrossPotential_smooth (u : Space → Space)
     ContDiff ℝ ∞ (negativeCrossPotential u i) := by
   have hc (j : Fin 3) : ContDiff ℝ ∞ (fun x : Space => x j) :=
     (EuclideanSpace.proj j : Space →L[ℝ] ℝ).contDiff
-  exact ((hc _).mul ((hc _).comp hu)).sub ((hc _).mul ((hc _).comp hu))
+  exact ((hc (i + 2)).mul ((hc (i + 1)).comp hu)).sub ((hc (i + 1)).mul ((hc (i + 2)).comp hu))
 
 theorem partialDerivative_negativeCrossPotential
     (u : Space → Space) (hu : Differentiable ℝ u) (i j : Fin 3) (x : Space) :
@@ -81,12 +87,15 @@ theorem curl_negativeCrossPotential
     calc
       (fderiv ℝ u x x) i =
           (fderiv ℝ u x (∑ j : Fin 3, x j • EuclideanSpace.single j 1)) i := by rw [hx]
-      _ = _ := by simp [map_sum, map_smul, smul_eq_mul]
+      _ = _ := by simp only [map_sum, map_smul, WithLp.ofLp_sum, WithLp.ofLp_smul, Finset.sum_apply,
+          Pi.smul_apply, smul_eq_mul]
   ext i
   fin_cases i <;>
-    simp [curl_apply, partialDerivative_negativeCrossPotential u hu,
-      divergence_eq_coordinate_sum, Fin.sum_univ_three, PiLp.sub_apply,
-      PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, hd] <;> ring
+    simp only [Fin.zero_eta, Fin.isValue, curl_apply, zero_add,
+        partialDerivative_negativeCrossPotential u hu, Fin.reduceAdd, PiLp.single_eq_same, one_mul,
+        ne_eq, zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne, zero_mul, Fin.reduceEq,
+        divergence_eq_coordinate_sum, Fin.sum_univ_three, PiLp.sub_apply, PiLp.add_apply,
+        PiLp.smul_apply, smul_eq_mul, hd, Fin.mk_one, one_ne_zero, Fin.reduceFinMk] <;> ring
 
 /-- The radial average whose negative cross product is a vector potential. -/
 def radialAverage (u : Space → Space) (x : Space) : Space :=
@@ -111,13 +120,17 @@ theorem radialIntegrand_parameterDerivative
   have hin : HasFDerivAt (fun y : Space => (y, t))
       (ContinuousLinearMap.inl ℝ Space ℝ) x :=
     (hasFDerivAt_id (𝕜 := ℝ) x).prodMk (hasFDerivAt_const (𝕜 := ℝ) t x)
-  have hpartial := ((hf.differentiable (by simp)) (x, t)).hasFDerivAt.comp x hin
-  have hscaled := (((hu.differentiable (by simp)) (t • x)).hasFDerivAt.comp x
+  have hpartial := ((hf.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (x, t)).hasFDerivAt.comp
+    (f := fun y : Space => (y, t)) x hin
+  have hscaled := (((hu.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (t • x)).hasFDerivAt.comp x
     ((hasFDerivAt_id (𝕜 := ℝ) x).const_smul t)).const_smul t
   have he : t • ((fderiv ℝ u (t • x)).comp (t • ContinuousLinearMap.id ℝ Space)) =
       t ^ 2 • fderiv ℝ u (t • x) := by
     ext y
-    simp [smul_smul, pow_two]
+    simp only [ContinuousLinearMap.comp_smulₛₗ, RingHom.id_apply, ContinuousLinearMap.comp_id,
+        smul_smul, smul_apply, PiLp.smul_apply, smul_eq_mul, pow_two]
   rw [he] at hscaled
   exact hpartial.unique hscaled
 
@@ -134,7 +147,7 @@ theorem fderiv_radialAverage (u : Space → Space) (hu : ContDiff ℝ ∞ u) (x 
 theorem radialDerivative_continuous (u : Space → Space) (hu : ContDiff ℝ ∞ u)
     (x : Space) : Continuous (fun t : ℝ => t ^ 2 • fderiv ℝ u (t • x)) :=
   (continuous_id.pow 2).smul
-    ((hu.fderiv_right (m := ∞) (by simp)).continuous.comp
+    ((hu.fderiv_right (m := ∞) (by simp only [ENat.coe_top_add_one, Std.le_refl])).continuous.comp
       (continuous_id.smul continuous_const))
 
 theorem divergence_radialAverage (u : Space → Space) (hu : ContDiff ℝ ∞ u)
@@ -161,12 +174,15 @@ theorem radialAverage_radial_identity
     (radialDerivative_continuous u hu x).clm_apply continuous_const
   have htime (t : ℝ) : HasDerivAt (fun r : ℝ => r ^ 2 • u (r • x))
       ((2 * t) • u (t • x) + t ^ 2 • fderiv ℝ u (t • x) x) t := by
-    have hspace := ((hu.differentiable (by simp)) (t • x)).hasFDerivAt.comp_hasDerivAt t
-      ((hasDerivAt_id t).smul_const x)
-    convert! ((hasDerivAt_id t).pow 2).smul hspace using 1
-    simp [Function.comp_apply, add_comm]
-  have hv2 : Continuous (fun t : ℝ => (2 * t) • u (t • x)) := by
-    fun_prop
+    have hspace := ((hu.differentiable
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (t • x)).hasFDerivAt.comp_hasDerivAt
+      (f := fun y => id y • x) t ((hasDerivAt_id t).smul_const x)
+    refine (((hasDerivAt_id t).pow 2).smul hspace).congr_deriv ?_
+    simp only [Pi.pow_apply, id_eq, one_smul, Nat.cast_ofNat, Nat.add_one_sub_one, pow_one, mul_one,
+        Function.comp_apply, add_comm]
+  have hv2 : Continuous (fun t : ℝ => (2 * t) • u (t • x)) :=
+    (continuous_const.mul continuous_id).smul
+      (hu.continuous.comp (continuous_id.smul continuous_const))
   have hd2 : Continuous (fun t : ℝ => t ^ 2 • fderiv ℝ u (t • x) x) := by
     simpa only [smul_apply] using hd
   have hcont : Continuous (fun t : ℝ =>
@@ -190,9 +206,10 @@ theorem radialAverage_radial_identity
     rw [← intervalIntegral.integral_smul]
     apply intervalIntegral.integral_congr
     intro t _
-    simp [smul_smul]
+    simp only [smul_smul]
   rw [hi] at ht
-  simpa using ht
+  simpa only [one_pow, one_smul, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_smul,
+      sub_zero] using ht
 
 /-- The concrete radial vector potential, in the development's curl convention. -/
 def radialPotential (u : Space → Space) : Fin 3 → Space → ℝ :=
@@ -207,7 +224,7 @@ theorem curl_radialPotential (u : Space → Space) (hu : ContDiff ℝ ∞ u)
     (hdiv : ∀ x, divergence u x = 0) (x : Space) :
     curl (radialPotential u) x = u x := by
   rw [radialPotential, curl_negativeCrossPotential _
-    ((radialAverage_smooth u hu).differentiable (by simp)),
+    ((radialAverage_smooth u hu).differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero)),
     divergence_radialAverage u hu hdiv, zero_smul, sub_zero]
   exact radialAverage_radial_identity u hu x
 
@@ -264,7 +281,7 @@ theorem partialDerivative_mul (f g : Space → ℝ)
     partialDerivative (fun y => f y * g y) j x =
       f x * partialDerivative g j x + partialDerivative f j x * g x := by
   rw [partialDerivative, fderiv_fun_mul (hf x) (hg x)]
-  simp [partialDerivative, mul_comm]
+  simp only [add_apply, smul_apply, smul_eq_mul, partialDerivative, mul_comm]
 
 theorem curl_mul_apply (χ : Space → ℝ) (ψ : Fin 3 → Space → ℝ)
     (hχ : Differentiable ℝ χ) (hψ : ∀ i, Differentiable ℝ (ψ i))
@@ -284,7 +301,7 @@ theorem norm_radialPotential_le (u : Space → Space) (i : Fin 3) (x : Space) :
       (norm_nonneg _) (norm_nonneg _)
   exact (norm_sub_le _ _).trans (by
     dsimp only [radialPotential, negativeCrossPotential]
-    nlinarith [hprod (i + 2) (i + 1), hprod (i + 1) (i + 2)])
+    nlinarith only [hprod, hprod (i + 2) (i + 1), hprod (i + 1) (i + 2)])
 
 /-- Cutting off the potential introduces only a zeroth-order error in the
 radial average, with no derivative of the original velocity in the bound. -/
@@ -294,13 +311,15 @@ theorem potentialTruncation_error_bound
     ‖potentialTruncation u χ x - χ x • u x‖ ≤
       12 * ‖fderiv ℝ χ x‖ * ‖x‖ * ‖radialAverage u x‖ := by
   have hc (i : Fin 3) : ‖partialDerivative χ i x‖ ≤ ‖fderiv ℝ χ x‖ := by
-    simpa [partialDerivative] using
+    simpa only [partialDerivative, Real.norm_eq_abs, PiLp.norm_single, norm_one, mul_one] using
       (fderiv ℝ χ x).le_opNorm (EuclideanSpace.single i 1)
   have he (i : Fin 3) : (potentialTruncation u χ x - χ x • u x) i =
       partialDerivative χ (i + 1) x * radialPotential u (i + 2) x -
       partialDerivative χ (i + 2) x * radialPotential u (i + 1) x := by
-    simp only [potentialTruncation, curl_mul_apply χ _ (hχ.differentiable (by simp))
-      (fun j => (radialPotential_smooth u hu j).differentiable (by simp)),
+    simp only [potentialTruncation, curl_mul_apply χ _ (hχ.differentiable
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      (fun j => (radialPotential_smooth u hu j).differentiable
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)),
       curl_radialPotential u hu hdiv, PiLp.sub_apply, PiLp.smul_apply, smul_eq_mul]
     ring
   have hp (i j : Fin 3) :
@@ -317,8 +336,9 @@ theorem potentialTruncation_error_bound
       intro i _
       rw [he]
       exact (norm_sub_le _ _).trans (by
-        nlinarith [hp (i + 1) (i + 2), hp (i + 2) (i + 1)])
-    _ = _ := by simp; ring
+        nlinarith only [hp, hp (i + 1) (i + 2), hp (i + 2) (i + 1)])
+    _ = _ := by simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+        Nat.cast_ofNat]; ring
 
 theorem potentialTruncation_norm_bound
     (u : Space → Space) (hu : ContDiff ℝ ∞ u) (hdiv : ∀ x, divergence u x = 0)
@@ -332,7 +352,7 @@ theorem potentialTruncation_norm_bound
     exact (mul_le_mul_of_nonneg_right (hχbound x) (norm_nonneg _)).trans_eq (one_mul _)
   have hsplit := norm_le_norm_sub_add (potentialTruncation u χ x) (χ x • u x)
   have hscale := mul_le_mul_of_nonneg_right (hderiv x) (norm_nonneg (radialAverage u x))
-  nlinarith
+  nlinarith only [herror, hmain, hsplit, hscale]
 
 /-- A cutoff controlled in the scale-invariant derivative norm gives a
 uniform finite-energy truncation. The numerical constant is inessential. -/
@@ -361,18 +381,19 @@ theorem potentialTruncation_energy_bound
       2 * ‖u x‖ ^ 2 + 288 * C ^ 2 * ‖radialAverage u x‖ ^ 2 := by
     have hh := pow_le_pow_left₀ (norm_nonneg _) (potentialTruncation_norm_bound
       u hu hdiv χ hχ C hχbound hderiv x) 2
-    nlinarith [sq_nonneg (‖u x‖ - 12 * C * ‖radialAverage u x‖)]
+    linear_combination hh + sq_nonneg (‖u x‖ - 12 * C * ‖radialAverage u x‖)
   refine ⟨hw, ?_⟩
   calc
     (∫ x : Space, ‖potentialTruncation u χ x‖ ^ 2) ≤
-        ∫ x : Space, 2 * ‖u x‖ ^ 2 + 288 * C ^ 2 * ‖radialAverage u x‖ ^ 2 :=
+        ∫ x : Space, 2 * ‖u x‖ ^ (2 : ℕ) + 288 * C ^ (2 : ℕ) * ‖radialAverage u x‖ ^ (2 : ℕ) :=
       integral_mono hwi ((hui.const_mul 2).add (hBi.const_mul (288 * C ^ 2))) hp
     _ = 2 * (∫ x : Space, ‖u x‖ ^ 2) +
         288 * C ^ 2 * (∫ x : Space, ‖radialAverage u x‖ ^ 2) := by
       rw [integral_add (hui.const_mul 2) (hBi.const_mul (288 * C ^ 2)),
         integral_const_mul, integral_const_mul]
     _ ≤ (2 + 1152 * C ^ 2) * (∫ x : Space, ‖u x‖ ^ 2) := by
-      nlinarith [mul_le_mul_of_nonneg_left hBE (by positivity : 0 ≤ 288 * C ^ 2)]
+      linear_combination mul_le_mul_of_nonneg_left hBE
+        (mul_nonneg (by norm_num : (0 : ℝ) ≤ 288) (sq_nonneg C))
 
 /-- A fixed bump is dilated, so its weighted derivative bound is independent
 of the truncation radius. -/
@@ -390,17 +411,19 @@ theorem scaledCutoff_derivative_position_bound
     (χ : Space → ℝ) (hχ : ContDiff ℝ ∞ χ) (C : ℝ)
     (hC : ∀ x, ‖fderiv ℝ χ x‖ * ‖x‖ ≤ C) (R : ℝ) (x : Space) :
     ‖fderiv ℝ (scaledCutoff χ R) x‖ * ‖x‖ ≤ C := by
-  have hd := ((hχ.differentiable (by simp)) (R⁻¹ • x)).hasFDerivAt.comp x
+  have hd := ((hχ.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (R⁻¹ • x)).hasFDerivAt.comp x
     ((hasFDerivAt_id x).const_smul R⁻¹)
   have he : (fderiv ℝ χ (R⁻¹ • x)).comp (R⁻¹ • ContinuousLinearMap.id ℝ Space) =
       R⁻¹ • fderiv ℝ χ (R⁻¹ • x) := by
     ext y
-    simp
+    simp only [ContinuousLinearMap.comp_smulₛₗ, map_inv₀, RingHom.id_apply,
+        ContinuousLinearMap.comp_id, smul_apply, smul_eq_mul]
   change HasFDerivAt (scaledCutoff χ R) _ x at hd
   rw [he] at hd
   rw [hd.fderiv, norm_smul]
   convert hC (R⁻¹ • x) using 1
-  simp [norm_smul]
+  simp only [norm_inv, Real.norm_eq_abs, norm_smul]
   ring
 
 theorem exists_derivative_position_bound (χ : Space → ℝ) (hχ : ContDiff ℝ ∞ χ)
@@ -413,7 +436,7 @@ theorem exists_derivative_position_bound (χ : Space → ℝ) (hχ : ContDiff �
   obtain ⟨C, hC⟩ := hcompact.exists_bound_of_continuous hcont
   have hb (x : Space) : ‖fderiv ℝ χ x‖ * ‖x‖ ≤ C := by
     simpa only [Real.norm_of_nonneg (mul_nonneg (norm_nonneg _) (norm_nonneg _))] using hC x
-  exact ⟨C, by simpa using hb 0, hb⟩
+  exact ⟨C, by simpa only [norm_zero, mul_zero] using hb 0, hb⟩
 
 /-- Unit truncation bump, given by `⟨1, 2, by norm_num, by norm_num⟩`. -/
 def unitTruncationBump : ContDiffBump (0 : Space) :=

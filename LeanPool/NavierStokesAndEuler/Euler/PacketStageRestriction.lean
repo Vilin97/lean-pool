@@ -62,16 +62,18 @@ def restrictTime : ParentFrame ((A.restrictTime S hS hST).transverseData m hm R 
   remainder_bound t ht := by
     let ts : Icc (0 : ℝ) S := ⟨t,hτ.trans ht.1,ht.2⟩
     let ta : Icc (0 : ℝ) A.T := ⟨t,hτ.trans ht.1,ht.2.trans hST⟩
-    have h := P.remainder_bound t ⟨ht.1,ht.2.trans hST⟩
-    rw [Data.clamp_coe (A.transverseData m hm R support hSupport) ta] at h
-    change ‖(A.restrictTime S hS hST).strain.field
-      (((A.restrictTime S hS hST).transverseData m hm R support hSupport).clamp t) 0 -
-      P.B t-primaryShear P.c P.m P.v t •
-        rankOne ℝ (EulerPacketNormalizedPrimary.unit (P.v t))
-          (EulerPacketNormalizedPrimary.unit (P.m t))‖ ≤ P.error
-    rw [Data.clamp_coe ((A.restrictTime S hS hST).transverseData m hm R support hSupport) ts,
-      A.restrictTime_strain S hS hST ts 0]
-    exact h
+    have hta : (A.transverseData m hm R support hSupport).clamp t = ta :=
+      Data.clamp_coe (A.transverseData m hm R support hSupport) ta
+    have hts : ((A.restrictTime S hS hST).transverseData m hm R support hSupport).clamp t = ts :=
+      Data.clamp_coe ((A.restrictTime S hS hST).transverseData m hm R support hSupport) ts
+    have he : ((A.restrictTime S hS hST).transverseData m hm R support hSupport).M.field
+          (((A.restrictTime S hS hST).transverseData m hm R support hSupport).clamp t) 0 =
+        (A.transverseData m hm R support hSupport).M.field
+          ((A.transverseData m hm R support hSupport).clamp t) 0 := by
+      rw [hts, hta]
+      exact A.restrictTime_strain S hS hST ts 0
+    rw [he]
+    exact P.remainder_bound t ⟨ht.1,ht.2.trans hST⟩
 
 @[simp] theorem restrictTime_a : (P.restrictTime S hS hST hτ).a=P.a := rfl
 @[simp] theorem restrictTime_sigma : (P.restrictTime S hS hST hτ).sigma=P.sigma := rfl
@@ -289,17 +291,15 @@ theorem restrictedFrame_horizon :
 theorem restricted_strain_bound (t : Icc (0 : ℝ) P.restrictedParent.T) (x : Space) :
     ‖P.restrictedParent.strain.field t x‖ ≤
       EulerPacketLowConstants.gradientConstant*previousShear S.J S.X n := by
-  rw [show P.restrictedParent.strain.field t x=P.parent.strain.field
-    (initialInclusion P.parent.T P.nextHorizon P.nextHorizon_le t) x from
-      P.parent.restrictTime_strain P.nextHorizon P.nextHorizon_pos P.nextHorizon_le t x]
+  unfold restrictedParent
+  rw [P.parent.restrictTime_strain P.nextHorizon P.nextHorizon_pos P.nextHorizon_le t x]
   exact P.strain_bound _ _
 
 theorem restricted_curvature_bound (t : Icc (0 : ℝ) P.restrictedParent.T) (x : Space) :
     ‖P.restrictedParent.curvature.field t x‖ ≤
       EulerPacketLowConstants.hessianConstant*previousShear S.J S.X n*olderShear S.J S.X n := by
-  rw [show P.restrictedParent.curvature.field t x=P.parent.curvature.field
-    (initialInclusion P.parent.T P.nextHorizon P.nextHorizon_le t) x from
-      P.parent.restrictTime_curvature P.nextHorizon P.nextHorizon_pos P.nextHorizon_le t x]
+  unfold restrictedParent
+  rw [P.parent.restrictTime_curvature P.nextHorizon P.nextHorizon_pos P.nextHorizon_le t x]
   exact P.curvature_bound _ _
 
 end EulerPacketInduction.Stage

@@ -169,14 +169,15 @@ theorem linear_bound_and_identity (p : PrimaryPiece X) {P : ℕ → X → ℝ}
   have hκ : ChartScales.kappa ≤ (1 / 2 : ℝ) := by norm_num [ChartScales.kappa]
   have hs : ∀ n x, x ∈ p.strip.domain →
       p.coefficients.principal p.strip p.directions n x = -(0 : ℕ → X → ComplexVector) n x := by
-    simpa using hsolve
+    simpa only [Pi.zero_apply, neg_zero] using hsolve
   obtain ⟨hgood, hexact⟩ := constructed_linear_wave_with_excluded hp hκ hcut hR hN hb hlo hhi hK hs
       hg
   refine ⟨hgood.mono_exponent (by norm_num [ChartScales.kappa]), ?_⟩
   intro n x hx i
   have hval := congrArg (fun z : ComplexVector => (z i).re) (hexact n x hx)
-  simpa [linearResidual, linearGoodField, excluded, linearGood, exactCoefficients,
-    vectorMode, mode, add_mul] using hval
+  simpa only [linearResidual, exactCoefficients, linearGoodField, vectorMode, mode, linearGood,
+      Complex.mul_re, excluded, Pi.zero_apply, zero_mul, Pi.add_apply, add_zero, add_mul,
+      Complex.add_re] using hval
 
 /-- These are the cumulative primary bounds, proved from the tangent
 coefficient and the actual curl remainder. -/
@@ -203,7 +204,8 @@ theorem cumulative_bounds (p : PrimaryPiece X) {P : ℕ → X → ℝ}
         (p.coefficients.withCutoff p.cutoff).amplitude n x) =
       (p.coefficients.withCutoff p.cutoff).curlCorrection p.strip p.directions := by
       funext n x
-      simp [exactCoefficients, WaveCoefficients.corrected, WaveCoefficients.addAmplitude]
+      simp only [exactCoefficients, WaveCoefficients.corrected, WaveCoefficients.addAmplitude,
+          add_sub_cancel_left]
     rw [hdiff]
     exact hc.mono_exponent (by norm_num [ChartScales.kappa])
   · convert! (hp.with_cutoff hcut).pressure using 1
@@ -245,7 +247,7 @@ theorem velocity_tsupport_subset_tangent (p : PrimaryPiece X) (n : ℕ) :
   intro x hx ha
   apply hx
   funext i
-  simp [velocity, vectorMode, mode, ha]
+  simp only [velocity, vectorMode, mode, ha, Pi.zero_apply, zero_mul, Complex.zero_re]
 
 theorem tangentVelocity_tsupport_subset (p : PrimaryPiece X) (n : ℕ) :
     tsupport (p.tangentVelocity n) ⊆ tsupport ((p.coefficients.withCutoff p.cutoff).amplitude n) :=
@@ -254,7 +256,7 @@ theorem tangentVelocity_tsupport_subset (p : PrimaryPiece X) (n : ℕ) :
   intro x hx ha
   apply hx
   funext i
-  simp [tangentVelocity, vectorMode, mode, ha]
+  simp only [tangentVelocity, vectorMode, mode, ha, Pi.zero_apply, zero_mul, Complex.zero_re]
 
 theorem exactAmplitude_tsupport_subset (p : PrimaryPiece X) (n : ℕ) :
     tsupport (p.exactCoefficients.amplitude n) ⊆ tsupport (p.cutoff n) := by
@@ -270,15 +272,16 @@ theorem velocity_tsupport_subset (p : PrimaryPiece X) (n : ℕ) :
   intro x hx ha
   apply hx
   funext i
-  simp [velocity, vectorMode, mode, ha]
+  simp only [velocity, vectorMode, mode, ha, Pi.zero_apply, zero_mul, Complex.zero_re]
 
 theorem pressure_tsupport_subset (p : PrimaryPiece X) (n : ℕ) :
     tsupport (p.pressure n) ⊆ tsupport (p.cutoff n) := by
   apply closure_mono
   intro x hx hcut
   apply hx
-  simp [pressure, exactCoefficients, WaveCoefficients.corrected,
-    WaveCoefficients.addAmplitude, WaveCoefficients.withCutoff, mode, hcut]
+  simp only [pressure, mode, exactCoefficients, WaveCoefficients.corrected,
+      WaveCoefficients.addAmplitude, WaveCoefficients.withCutoff, hcut, Complex.ofReal_zero,
+      zero_mul, Complex.zero_re]
 
 theorem velocity_eq_zero_off_cutoff (p : PrimaryPiece X) (n : ℕ) {x : X}
     (hx : x ∉ tsupport (p.cutoff n)) : p.velocity n x = 0 :=
@@ -304,7 +307,7 @@ theorem increment_twice_target {H : SmoothCovariance.Mat2} {T : SmoothCovariance
   apply (div_eq_iff (mul_ne_zero (by norm_num) (hc.amplitudes_pos j).ne')).mpr
   have hs : SmoothCovariance.amplitudes H T j ^ 2 = SmoothCovariance.weights H T j :=
     Real.sq_sqrt (hc.weights_pos j).le
-  nlinarith
+  nlinarith only [hs]
 
 /-- Coefficients, given by `SignedWaveUpdate.coefficients a s d H T (fun n x => (2 : ℝ) • T n x)
 mask v Ndot A j`. -/
@@ -429,7 +432,8 @@ private theorem class_pair {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
     {α : ℝ} {f : ℕ → X → E} {g : ℕ → X → F}
     (hf : MemClass s w α f) (hg : MemClass s w α g) :
     MemClass s w α (fun n x => (f n x, g n x)) := by
-  simpa using (hf.map (ContinuousLinearMap.inl ℝ E F)).add
+  simpa only [ContinuousLinearMap.inl_apply, ContinuousLinearMap.inr_apply, Prod.mk_add_mk,
+      add_zero, zero_add] using (hf.map (ContinuousLinearMap.inl ℝ E F)).add
     (hg.map (ContinuousLinearMap.inr ℝ E F))
 
 /-- The physical action has order zero because the fixed background is
@@ -461,8 +465,10 @@ theorem normal_pullback (χ : X → PhaseCalculus.Slot) (ε p pz x0 : ℝ)
       hχ
   ext i
   fin_cases i <;>
-    simp [HarmonicCalculus.phaseNormal, PhaseCalculus.phaseNormal,
-      HarmonicCalculus.along, hd, hr, hθ, hz]
+    simp only [HarmonicCalculus.phaseNormal, HarmonicCalculus.along, hd,
+        ContinuousLinearMap.comp_apply, hr, hθ, hz, map_smul, smul_eq_mul, Fin.zero_eta,
+        Fin.isValue, Matrix.cons_val_zero, PhaseCalculus.phaseNormal, Fin.mk_one,
+        Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val]
 
 theorem native_normal {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (P : PrimaryPulseBounds.PhaseConstruction U) (s : StripData X) (d : GraphDirections X)
@@ -475,16 +481,14 @@ theorem native_normal {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (PrimaryMaterialDefect.coefficients P b χ amplitude pressure frequency).normal s d n x =
       P.phase.normal n ((χ n x).1, (χ n x).2.2) := by
   have hF := ((P.baseF.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-      (by
-      simp)
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hG := ((P.baseG.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-      (by
-      simp)
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hphase : PrimaryMaterialDefect.pulledPhase P χ n =
       PhaseCalculus.phase (s.epsilon n) (P.phase.p n) (P.phase.pz n) (P.phase.x0 n)
         (P.phase.F n) (P.phase.G n) ∘ χ n := by
     funext y
-    simp [PrimaryMaterialDefect.pulledPhase, heps n]
+    simp only [PrimaryMaterialDefect.pulledPhase, heps n, Function.comp_apply]
   change HarmonicCalculus.phaseNormal (fun y => (χ n y).1.1) (d.radialField n)
     (fun _ => d.angular) (d.axialField s n) (PrimaryMaterialDefect.pulledPhase P χ n) x = _
   rw [hphase, normal_pullback (χ n) _ _ _ _ _ _ _ _ _ (hχ.differentiable n x hx)
@@ -602,15 +606,16 @@ theorem native_background_bounds {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Sl
     pressure := MemClass.zero hw }
   · intro n x hx
     exact native_slow_auxiliary hχ b n hx
-      (((hbs n).contDiffAt ((U.isOpen n).mem_nhds (hslowmap n hx))).differentiableAt (by simp))
+      (((hbs n).contDiffAt ((U.isOpen n).mem_nhds (hslowmap n hx))).differentiableAt (by simp only [
+          ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
   · intro n x hx
     exact native_slow_auxiliary hχ P.phase.F n hx
-      (((P.baseF.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hslowmap n hx))).differentiableAt (by
-          simp))
+      (((P.baseF.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hslowmap n hx))).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   · intro n x hx
     exact native_slow_auxiliary hχ P.phase.G n hx
-      (((P.baseG.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hslowmap n hx))).differentiableAt (by
-          simp))
+      (((P.baseG.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hslowmap n hx))).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   · intro i
     exact PrimaryPulseBounds.polynomial_memClass s
       (hnormal.clm (PiLp.proj 2 (fun _ : Fin 3 => ℝ) i))
@@ -647,7 +652,7 @@ theorem frame_tail_ne_zero {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
     (P : PrimaryPulseBounds.PhaseConstruction U) (n : ℕ)
     {z : PhaseCalculus.Slow × ℝ} (hz : z ∈ (U.slot P.V P.openV).carrier n) :
     MovingFrameODE.tail (P.phase.normal n z) ≠ 0 := by
-  have hB : 0 < P.B n := lt_of_lt_of_le (by linarith [P.b_pos]) (P.B_bound n).1
+  have hB : 0 < P.B n := lt_of_lt_of_le (by linarith only [P.b_pos]) (P.B_bound n).1
   exact (PhaseEstimates.normal_lower_bounds hB (P.K_unit n)
     (P.error_small n z hz) (P.normal_close n z hz)).2.2.1
 
@@ -697,11 +702,9 @@ theorem native_frame_action {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
         ((PrimaryMaterialDefect.coefficients P b χ 0 0 frequency).axialBase n)
         (d.radialField n) x v := by
   have hF := ((P.baseF.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-      (by
-      simp)
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hG := ((P.baseG.smooth n).contDiffAt ((U.isOpen n).mem_nhds (hmap n hx))).differentiableAt
-      (by
-      simp)
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hFr := native_slow_derivative hχ P.phase.F n hx hF
   have hGr := native_slow_derivative hχ P.phase.G n hx hG
   simp only [PrimaryPulseBounds.PhaseConstruction.frame, PhaseJetBounds.PhaseFamily.frameData,
@@ -878,10 +881,11 @@ theorem native_amplitude_eq_uncut {U : PhaseJetBounds.Domain ℕ PhaseCalculus.S
         (fun k => (F k).lam) (fun k => (F k).u) (fun k => (F k).L)
         (pulseCoordinates (F j) χ) T mask j n x := by
   by_cases hm : mask n x = 0
-  · simp [nativeCoefficients, coefficients, SignedWaveUpdate.coefficients,
+  · simp only [nativeCoefficients, coefficients, SignedWaveUpdate.coefficients,
       SignedWaveUpdate.homogeneousCoefficients, SignedWaveUpdate.signedVector,
-      SignedWaveUpdate.signedScalar, PrimaryPulseBounds.uncutPrimaryWave,
-      PrimaryPulseBounds.primaryCoefficient, PartitionedCovariance.amplitude, hm]
+      SignedWaveUpdate.signedScalar, map_smul, hm, mul_zero, zero_smul,
+      PrimaryPulseBounds.uncutPrimaryWave, PrimaryPulseBounds.primaryCoefficient,
+      PartitionedCovariance.amplitude]
   · exact amplitude_eq_primary _ _ _ _ _ _ _ _ _ j n x (hc hm)
 
 /-- The canonical coefficient and the covariance pulse contain the same
@@ -1110,7 +1114,8 @@ theorem excluded_mean_zero (p : PrimaryPiece (D × ℝ))
     p.coefficients.amplitude 0 n (y, 0) i / 2
   change ((Finsupp.single (1 : ℤ) a 0 x) +
     star (Finsupp.single (1 : ℤ) a (-0) x)).re = 0
-  simp
+  simp only [ne_eq, zero_ne_one, not_false_eq_true, Finsupp.single_eq_of_ne, Pi.zero_apply,
+      neg_zero, star_zero, add_zero, Complex.zero_re]
 
 end PrimaryPiece
 
@@ -1192,8 +1197,8 @@ theorem initialized_oscillation (p : ReconstructionData) (r : RankData S) (h : �
     (baseError : Oscillation (Lift S)) :
     (initialized p r h axial c labels pieces baseError).oscillation =
       ∑ l ∈ labels, (pieces l).velocity := by
-  simp [initialized, retainPressureAlias, afterRank, afterTemporal, primaryStage, seed,
-    rankStage, temporalStage, reconstructPressure, State.addIncrement]
+  simp only [initialized, retainPressureAlias, afterRank, rankStage, reconstructPressure,
+      State.addIncrement, afterTemporal, temporalStage, primaryStage, seed, add_zero]
 
 omit [FiniteDimensional ℝ S] in
 theorem initialized_errors (p : ReconstructionData) (r : RankData S) (h : ℝ)
@@ -1221,9 +1226,9 @@ theorem initialized_error_components (p : ReconstructionData) (r : RankData S) (
     (initialized p r h axial c labels pieces baseError).errors.aliasError =
       temporalAlias p h c (primaryStage p c labels pieces baseError) +
         pressureAlias p c (afterRank p r h axial c labels pieces baseError) := by
-  simp [initialized, retainPressureAlias, afterRank, afterTemporal, primaryStage, seed,
-    rankStage, temporalStage, reconstructPressure, State.addIncrement, ExcludedErrors.add,
-    ExcludedErrors.zero]
+  simp only [initialized, retainPressureAlias, afterRank, rankStage, reconstructPressure,
+      State.addIncrement, afterTemporal, temporalStage, primaryStage, seed, add_zero,
+      ExcludedErrors.add, zero_add, ExcludedErrors.zero, and_self]
 
 omit [FiniteDimensional ℝ S] in
 theorem initialized_reconstructed (p : ReconstructionData) (r : RankData S) (h : ℝ)
@@ -1256,8 +1261,9 @@ theorem initialized_zeroMasses (p : ReconstructionData) (r : RankData S) (h : �
     ZeroMasses (initialized p r h axial c labels pieces baseError) := by
   have hzero : ZeroMasses (primaryStage p c labels pieces baseError) := by
     constructor <;> funext n x <;>
-      simp [primaryStage, reconstructPressure, seed, radialMoment, PressureStream.pressureMass,
-        PressureStream.torusAverage, PressureStream.torusInner]
+      simp only [radialMoment, PressureStream.pressureMass, PressureStream.torusAverage,
+          PressureStream.torusInner, primaryStage, reconstructPressure, seed, Pi.zero_apply,
+          mul_zero, intervalIntegral.integral_zero, integral_zero, pow_one]
   obtain ⟨hθm, hzm⟩ := CorrectionStep.temporalStage_preserve_masses p h axial c
     (primaryStage p c labels pieces baseError) ha hd (fun _ => continuous_const)
     (fun _ => continuous_const) hθ hz hpθ hpz hsz
@@ -1340,8 +1346,8 @@ theorem initialized_oscillation (g : GaugeData S) (r : RankData S) (h : ℝ) (in
     (baseError : Oscillation (PressureStream.Lift S)) :
     (initialized g r h index axial c labels pieces baseError).oscillation =
       ∑ l ∈ labels, (pieces l).velocity := by
-  simp [initialized, retainPressureAlias, afterRank, afterTemporal, primaryStage, seed,
-    rankStageState, temporalStageState, reconstructState, State.addIncrement]
+  simp only [initialized, retainPressureAlias, afterRank, rankStageState, reconstructState,
+      State.addIncrement, afterTemporal, temporalStageState, primaryStage, seed, add_zero]
 
 theorem initialized_error_components (g : GaugeData S) (r : RankData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : Context (PressureStream.Lift S))
@@ -1353,9 +1359,9 @@ theorem initialized_error_components (g : GaugeData S) (r : RankData S) (h : ℝ
     (initialized g r h index axial c labels pieces baseError).errors.aliasError =
       temporalAliasState g h index c (primaryStage g c labels pieces baseError) +
         pressureAliasState g c (afterRank g r h index axial c labels pieces baseError) := by
-  simp [initialized, retainPressureAlias, afterRank, afterTemporal, primaryStage, seed,
-    rankStageState, temporalStageState, reconstructState, State.addIncrement,
-    ExcludedErrors.add, ExcludedErrors.zero]
+  simp only [initialized, retainPressureAlias, afterRank, rankStageState, reconstructState,
+      State.addIncrement, afterTemporal, temporalStageState, primaryStage, seed, add_zero,
+      ExcludedErrors.add, zero_add, ExcludedErrors.zero, and_self]
 
 theorem initialized_errors (g : GaugeData S) (r : RankData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : Context (PressureStream.Lift S))
@@ -1421,8 +1427,8 @@ theorem initializedBands_oscillation (g : GaugeData S) (r : RankData S) (h : ℝ
     (baseError : Oscillation (PressureStream.Lift S)) :
     (initializedBands g r h index axial c labels pieces baseError).oscillation =
       LabelSumBounds.fieldSum labels (fun l => (pieces l).velocity) := by
-  simp [initializedBands, retainPressureAlias, rankBands, temporalBands, primaryBands, bandSeed,
-    rankStageState, temporalStageState, reconstructState, State.addIncrement]
+  simp only [initializedBands, retainPressureAlias, rankBands, rankStageState, reconstructState,
+      State.addIncrement, temporalBands, temporalStageState, primaryBands, bandSeed, add_zero]
 
 theorem initializedBands_error_components (g : GaugeData S) (r : RankData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : Context (PressureStream.Lift S))
@@ -1434,9 +1440,9 @@ theorem initializedBands_error_components (g : GaugeData S) (r : RankData S) (h 
     (initializedBands g r h index axial c labels pieces baseError).errors.aliasError =
       temporalAliasState g h index c (primaryBands g c labels pieces baseError) +
         pressureAliasState g c (rankBands g r h index axial c labels pieces baseError) := by
-  simp [initializedBands, retainPressureAlias, rankBands, temporalBands, primaryBands, bandSeed,
-    rankStageState, temporalStageState, reconstructState, State.addIncrement,
-    ExcludedErrors.add, ExcludedErrors.zero]
+  simp only [initializedBands, retainPressureAlias, rankBands, rankStageState, reconstructState,
+      State.addIncrement, temporalBands, temporalStageState, primaryBands, bandSeed, add_zero,
+      ExcludedErrors.add, zero_add, ExcludedErrors.zero, and_self]
 
 theorem initializedBands_errors (g : GaugeData S) (r : RankData S) (h : ℝ) (index : ℕ → ℕ)
     (axial : S × PressureStream.Plane) (c : Context (PressureStream.Lift S))
@@ -1614,13 +1620,17 @@ theorem initializedBands_meanResidualBounds
   · apply MeanIncrementBounds.class_congr hθ
     intro n x hx
     rw [he]
-    simp [State.reducedMeanResidual, temporalAliasState, pressureAliasState,
-      initializedBands, retainPressureAlias]
+    simp only [initializedBands, retainPressureAlias, temporalAliasState, pressureAliasState,
+        Matrix.add_cons, Matrix.head_cons, zero_add, Matrix.tail_cons, add_zero,
+        Matrix.empty_add_empty, Fin.isValue, Pi.sub_apply, State.reducedMeanResidual,
+        Matrix.cons_val_one, Matrix.cons_val_zero, sub_zero]
     rfl
   · apply MeanIncrementBounds.class_congr hz'
     intro n x hx
     rw [he]
-    simp [State.reducedMeanResidual, pressureAliasState, initializedBands, retainPressureAlias]
+    simp only [initializedBands, retainPressureAlias, pressureAliasState, Matrix.add_cons, add_zero,
+        Matrix.empty_add_empty, Fin.isValue, Pi.sub_apply, State.reducedMeanResidual,
+        Matrix.cons_val]
     rfl
 
 end GaugeInitialization
@@ -1643,7 +1653,8 @@ noncomputable def insert : D →L[ℝ] D × ℝ :=
 theorem norm_insert_le : ‖insert (D := D)‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ (by norm_num)
   intro x
-  simp [Prod.norm_def]
+  simp only [insert_apply, Prod.norm_def, norm_zero, norm_nonneg, sup_of_le_left, one_mul,
+      Std.le_refl]
 
 /-- The actual coefficient domain on the angular slice. -/
 noncomputable def strip (s : StripData (D × ℝ)) : StripData D where
@@ -1719,8 +1730,8 @@ theorem conjugatePair_class {s : StripData D} {P : ℕ → D → ℝ} {α : ℝ}
       (AddMonoidAlgebra.single j (fun x => a n x / 2) : Coefficients D) k x) := by
     change WaveClass s P α (fun n x => Finsupp.single j (fun x => a n x / 2) k x)
     by_cases hk : j = k
-    · simpa [Finsupp.single_apply, hk] using hhalf
-    · simpa [Finsupp.single_apply, hk] using
+    · simpa only [hk, Finsupp.single_eq_same] using hhalf
+    · simpa only [ne_eq, hk, not_false_eq_true, Finsupp.single_eq_of_ne', Pi.zero_apply] using
         (MemClass.zero ha.weight_nonneg : WaveClass s P α (fun _ _ => (0 : ℂ)))
   apply WaveInteractionBounds.class_congr ((hs m).add (WaveInteractionBounds.class_conj (hs (-m))))
   intro n x _
@@ -1833,7 +1844,8 @@ theorem differenceBlock_represents (p : PrimaryPiece (D × ℝ))
   funext n x i
   rw [show (p.differenceBlock Φ kp).oscillation n x i = _ from
     PrimaryHarmonics.block_velocity_represents p.differenceCoefficients Φ kp hd hphase n x i]
-  simp [differenceCoefficients, velocity, tangentVelocity, vectorMode, mode, sub_mul]
+  simp only [vectorMode, mode, differenceCoefficients, Pi.sub_apply, sub_mul, Complex.sub_re,
+      Complex.mul_re, velocity, tangentVelocity]
 
 /-- The cumulative bounds belong to the actual finite harmonic blocks
 representing the cutoff curl and its difference from the primary tangent. -/
@@ -1871,41 +1883,46 @@ variable {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
 
 private theorem dr_zero (o : Operators D) : o.dr (0 : ScalarField D) = 0 := by
   funext n x
-  simp [Operators.dr, graphDerivative]
+  simp only [Operators.dr, graphDerivative, Pi.zero_apply, fderiv_zero, zero_apply, smul_eq_mul,
+      mul_zero, add_zero]
 
 private theorem dz_zero (o : Operators D) : o.dz (0 : ScalarField D) = 0 := by
   funext n x
-  simp [Operators.dz]
+  simp only [Operators.dz, Pi.zero_apply, fderiv_zero, zero_apply, mul_zero]
 
 private theorem time_zero (o : Operators D) : o.time (0 : ScalarField D) = 0 := by
   funext n x
-  simp [Operators.time, Operators.slowTime, Operators.fastTime]
+  simp only [Operators.time, Pi.add_apply, Operators.slowTime, Pi.zero_apply, fderiv_zero,
+      zero_apply, mul_zero, neg_zero, Operators.fastTime, add_zero]
 
 private theorem viscosity_zero (o : Operators D) (k : ℝ) :
     o.viscosity k (0 : ScalarField D) = 0 := by
   funext n x
-  simp [Operators.viscosity, dr_zero, dz_zero]
+  simp only [Operators.viscosity, dr_zero, Pi.zero_apply, mul_zero, add_zero, dz_zero, sub_self]
 
 theorem zeroMean_gr (c : Context D) (u : State D) (hm : u.mean = ⟨0, 0, 0⟩) :
     u.gr c = -(c.operators.radialDiv 1 (u.covariance 0 0) +
       c.operators.dz (u.covariance 2 0) - c.operators.invRadius * u.covariance 1 1) := by
   funext n x
-  simp [State.gr, MeanIncrementBounds.gr, hm, radialRadial, axialRadial, radialAngular,
-    time_zero, viscosity_zero]
+  simp only [State.gr, gr, hm, time_zero, radialRadial, mul_zero, smul_zero, add_zero, Fin.isValue,
+      zero_add, axialRadial, zero_mul, radialAngular, viscosity_zero, sub_zero, Pi.neg_apply,
+      Pi.sub_apply, Pi.add_apply, Pi.mul_apply, neg_sub]
 
 theorem zeroMean_theta (c : Context D) (u : State D) (hm : u.mean = ⟨0, 0, 0⟩) :
     u.thetaResidual c = c.operators.radialDiv 2 (u.covariance 0 1) +
       c.operators.dz (u.covariance 2 1) - c.operators.radialDiv 2 c.virtualTheta := by
   funext n x
-  simp [State.thetaResidual, MeanIncrementBounds.thetaResidual, hm, thetaRadial, thetaAxial,
-    time_zero, viscosity_zero]
+  simp only [State.thetaResidual, thetaResidual, hm, time_zero, thetaRadial, mul_zero, zero_mul,
+      add_zero, Fin.isValue, zero_add, thetaAxial, viscosity_zero, sub_zero, Pi.sub_apply,
+      Pi.add_apply]
 
 theorem zeroMean_axial (c : Context D) (u : State D) (hm : u.mean = ⟨0, 0, 0⟩) :
     u.axialResidual c = c.operators.radialDiv 1 (u.covariance 0 2) +
       c.operators.dz (u.covariance 2 2 + u.pressure) - c.operators.radialDiv 1 c.virtualAxial := by
   funext n x
-  simp [State.axialResidual, MeanIncrementBounds.axialResidual, hm, axialRadial, axialAxial,
-    time_zero, viscosity_zero]
+  simp only [State.axialResidual, axialResidual, hm, time_zero, axialRadial, mul_zero, zero_mul,
+      add_zero, Fin.isValue, zero_add, axialAxial, smul_zero, viscosity_zero, sub_zero,
+      Pi.sub_apply, Pi.add_apply]
 
 theorem zeroMean_gr_mem {s : StripData D} {κ : ℝ} (c : Context D) (u : State D)
     (ho : OperatorBounds s c.operators κ) (hm : u.mean = ⟨0, 0, 0⟩)
@@ -1913,8 +1930,8 @@ theorem zeroMean_gr_mem {s : StripData D} {κ : ℝ} (c : Context D) (u : State 
     MeanClass s (1 - κ) (u.gr c) := by
   rw [zeroMean_gr c u hm]
   exact Class.neg (Class.sub ((ho.radialDiv (hW 0 0) 1).add
-    ((ho.dz (hW 2 0)).mono_exponent (by linarith [ho.kappa_nonneg])))
-    ((ho.inv_mul (hW 1 1)).mono_exponent (by linarith [ho.kappa_nonneg])))
+    ((ho.dz (hW 2 0)).mono_exponent (by linarith only [ho, ho.kappa_nonneg])))
+    ((ho.inv_mul (hW 1 1)).mono_exponent (by linarith only [ho, ho.kappa_nonneg])))
 
 theorem zeroMean_theta_mem {s : StripData D} {κ : ℝ} (c : Context D) (u : State D)
     (ho : OperatorBounds s c.operators κ) (hm : u.mean = ⟨0, 0, 0⟩)
@@ -1922,7 +1939,7 @@ theorem zeroMean_theta_mem {s : StripData D} {κ : ℝ} (c : Context D) (u : Sta
     (hT : MeanClass s 1 c.virtualTheta) : MeanClass s (1 - κ) (u.thetaResidual c) := by
   rw [zeroMean_theta c u hm]
   exact Class.sub ((ho.radialDiv (hW 0 1) 2).add
-    ((ho.dz (hW 2 1)).mono_exponent (by linarith [ho.kappa_nonneg])))
+    ((ho.dz (hW 2 1)).mono_exponent (by linarith only [ho, ho.kappa_nonneg])))
     (ho.radialDiv hT 2)
 
 theorem zeroMean_axial_mem {s : StripData D} {κ : ℝ} (c : Context D) (u : State D)
@@ -1933,7 +1950,7 @@ theorem zeroMean_axial_mem {s : StripData D} {κ : ℝ} (c : Context D) (u : Sta
   rw [zeroMean_axial c u hm]
   have hflux := ((hW 2 2).mono_exponent (show 1 - κ ≤ 1 by linarith [ho.kappa_nonneg])).add hp
   exact Class.sub ((ho.radialDiv (hW 0 2) 1).add
-    ((ho.dz hflux).mono_exponent (by linarith))) (ho.radialDiv hT 1)
+    ((ho.dz hflux).mono_exponent (by linarith only))) (ho.radialDiv hT 1)
 
 end ZeroMean
 
@@ -1958,13 +1975,14 @@ omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem zeroMean_thetaDefect (c : Context (Lift S)) (u : State (Lift S))
     (hm : u.mean = ⟨0, 0, 0⟩) :
     thetaDefect c u = radialMoment 2 (u.covariance 2 1) := by
-  simp [thetaDefect, hm, thetaAxial]
+  simp only [thetaDefect, thetaAxial, hm, mul_zero, add_zero, Fin.isValue, zero_add]
 
 theorem zeroMean_axialDefect (c : Context (Lift S)) (u : State (Lift S))
     (hm : u.mean = ⟨0, 0, 0⟩) :
     axialDefect c u = radialMoment 1 (u.covariance 2 2) -
       (1 / 2 : ℝ) • radialMoment 2 (u.gr c) := by
-  simp [axialDefect, hm, axialAxial]
+  simp only [axialDefect, axialAxial, hm, mul_zero, smul_zero, add_zero, Fin.isValue, zero_add,
+      one_div]
 
 /-- Before the temporal update, the pressure is the actual compact
 primitive of the radial equation. Its class is derived from the covariance. -/
@@ -2068,8 +2086,8 @@ theorem meanBar_mem {a b cL cR : ℝ} (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 < cR)
   have hc := TemporalMeanUpdate.meanClass_centered ha hcL hcR ε L hε hεone hL hf hfc hp
   apply MeanIncrementBounds.class_congr (Class.sub hf hc)
   intro n x _
-  simp [StateMomentBalances.meanBar, MeanMomentBounds.liftedTorusAverage,
-      TemporalMeanUpdate.centered]
+  simp only [StateMomentBalances.meanBar, MeanMomentBounds.liftedTorusAverage, Pi.sub_apply,
+      TemporalMeanUpdate.centered, sub_sub_cancel]
 
 /-- Exact leading covariance cancellation transfers the curl-product and
 higher-virtual-flux orders to the actual averaged radial flux. -/
@@ -2101,7 +2119,7 @@ theorem matched_flux_mem {a b cL cR : ℝ} (ha : 0 < a) (hcL : 0 < cL) (hcR : 0 
   have ht := congrFun (congrFun (meanBar_sub T T0 hT hT0) n) x
   have hm := hmatch n hx
   simp only [Pi.sub_apply] at *
-  linarith
+  linarith only [hr, ht, hm]
 
 /-- The initial bar exponent `1.49` follows from the actual averaged
 flux balance, a curl covariance error, and the axial derivative gain. -/
@@ -2163,7 +2181,9 @@ theorem zeroMean_gr_supportedGauge {a b : ℝ} {V : Set S} (hV : IsOpen V)
         A (fun _ : Fin 1 => v)) he
   apply hn
   rw [zeroMean_gr c u hm]
-  simp [Operators.radialDiv, Operators.dr, graphDerivative, Operators.dz, hz, hD]
+  simp only [Operators.radialDiv, Operators.dr, Fin.isValue, one_smul, Pi.neg_apply, Pi.sub_apply,
+      Pi.add_apply, Pi.mul_apply, graphDerivative, hD, smul_eq_mul, mul_zero, add_zero, hz,
+      Operators.dz, sub_self, neg_zero]
 
 /-- Smoothness on the full valid slow domain follows from a containing
 annulus and the actual covariance support; no smooth extension of a
@@ -2453,9 +2473,9 @@ theorem meanBar_fluxBalance_on (hV : IsOpen V) (o : Operators (PressureStream.Li
     meanBar_radialDiv_on hV o hradius hprofile T hT hpT c n hx] at hbars
   rw [hbars]
   have hDR := ((liftedTorusAverage_contDiffOn hV (hR n)).contDiffAt
-    ((slowDomain_open hV).mem_nhds hx)).differentiableAt (by simp)
+    ((slowDomain_open hV).mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hDT := ((liftedTorusAverage_contDiffOn hV (hT n)).contDiffAt
-    ((slowDomain_open hV).mem_nhds hx)).differentiableAt (by simp)
+    ((slowDomain_open hV).mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hd := fderiv_fun_sub hDR hDT
   change fderiv ℝ (meanBar R n - meanBar T n) x = _ at hd
   simp only [Operators.radialDiv, Operators.dr, graphDerivative,
@@ -2506,7 +2526,7 @@ theorem matched_flux_mem (R R₀ T T₀ : ScalarField Point)
   change meanBar (T - T₀) n x = _ at ht
   change (meanBar R - meanBar T) n x = (meanBar (R - R₀) - meanBar (T - T₀)) n x
   simp only [Pi.sub_apply] at *
-  linarith
+  linarith only [hm, hr, ht]
 
 theorem fluxBalance_mem (o : Operators Point)
     (ho : OperatorBounds (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL)
@@ -2838,8 +2858,9 @@ private theorem primary_block_uniform_bounds {s : StripData D} {P : ι → ℕ �
       (fun l n x => (pieces l).differenceCoefficients.amplitude n (x, 0)) := by
     apply hc.congr
     intro l n x hx
-    simp [PrimaryPiece.differenceCoefficients, PrimaryPiece.exactCoefficients,
-      LinearWaveBounds.WaveCoefficients.corrected, LinearWaveBounds.WaveCoefficients.addAmplitude]
+    simp only [PrimaryPiece.differenceCoefficients, PrimaryPiece.exactCoefficients,
+        LinearWaveBounds.WaveCoefficients.corrected, LinearWaveBounds.WaveCoefficients.addAmplitude,
+        add_sub_cancel_left]
   have hA := block_uniform (fun l => (pieces l).exactCoefficients) Φ kp het
   have hT := block_uniform (fun l => (pieces l).coefficients.withCutoff (pieces l).cutoff) Φ kp ht
   have hC := block_uniform (fun l => (pieces l).differenceCoefficients) Φ kp hct
@@ -3205,14 +3226,16 @@ theorem zeroMean_raw_supported
       c.operators.radialDiv k f n x = 0 := by
     have hv := InitialRegularity.value_zero_off_gauge (hs n) hx h
     have hd := InitialRegularity.deriv_zero_off_gauge U.isOpen hL (hs n) hx h
-    simp [Operators.radialDiv, Operators.dr, graphDerivative, hv, hd]
+    simp only [Operators.radialDiv, Operators.dr, Pi.add_apply, Pi.smul_apply, Pi.mul_apply,
+        graphDerivative, hd, smul_eq_mul, mul_zero, add_zero, hv]
   have hz (f : ScalarField Point)
       (hs : ∀ n, SupportedGauge g.radial.inner g.radial.outer (qLength coord) U.carrier (f n))
       (n : ℕ) (x : Point) (hx : x.2.1 ∈ U.carrier)
       (h : x.1 ∉ Icc (qLength coord x.2.1 * g.radial.inner) (qLength coord x.2.1 * g.radial.outer))
           :
       c.operators.dz f n x = 0 := by
-    simp [Operators.dz, InitialRegularity.deriv_zero_off_gauge U.isOpen hL (hs n) hx h]
+    simp only [Operators.dz, InitialRegularity.deriv_zero_off_gauge U.isOpen hL (hs n) hx h,
+        mul_zero]
   constructor
   · intro n x hx hn
     by_contra h
@@ -3231,8 +3254,9 @@ theorem zeroMean_raw_supported
         (u.covariance 2 2 n + (reconstructState g c u).pressure n) := by
       intro n y hy hne
       by_contra hr'
-      exact hne (by simp [InitialRegularity.value_zero_off_gauge (hWs 2 2 n) hy hr',
-        InitialRegularity.value_zero_off_gauge (hps n) hy hr'])
+      exact hne (by simp only [Fin.isValue, Pi.add_apply,
+          InitialRegularity.value_zero_off_gauge (hWs 2 2 n) hy hr',
+          InitialRegularity.value_zero_off_gauge (hps n) hy hr', add_zero])
     simp only [Pi.sub_apply, Pi.add_apply]
     change c.operators.radialDiv 1 (u.covariance 0 2) n x +
       c.operators.dz (u.covariance 2 2 + (reconstructState g c u).pressure) n x -
@@ -3377,13 +3401,13 @@ theorem state_debt_mem (c : Context Point) (u : State Point) {H : ℝ} (hH : 0 �
     have h1 := (Class.coefficient_mul hb.axial hm.angular).mono_exponent (by linarith : H ≤ 0 + H)
     have h2 := (Class.coefficient_mul hb.angular hm.axial).mono_exponent (by linarith : H ≤ 0 + H)
     have h3 := (Class.product hm.axial hm.angular ho.weight_le_one).mono_exponent (by
-        linarith : H ≤ H + H)
+        linarith only [hH] : H ≤ H + H)
     exact ((h1.add h2).add h3).add (hW 2 1)
   have hz : MeanClass (movingStripData U a b cL cR ha hcL hcR ε L hε hεone hL) H
       (axialAxial c.base u.mean + u.covariance 2 2) := by
     have h1 := (Class.coefficient_mul hb.axial hm.axial).mono_exponent (by linarith : H ≤ 0 + H)
     have h2 := (Class.product hm.axial hm.axial ho.weight_le_one).mono_exponent (by
-        linarith : H ≤ H + H)
+        linarith only [hH] : H ≤ H + H)
     exact ((Class.smul h1 2).add h2).add (hW 2 2)
   obtain ⟨hgc, hgs⟩ := CorrectionStep.state_gr_moving_regular U ha hab c u hop hbc hmc hms hWc hWs
   obtain ⟨a₀, b₀, L₀, ha₀, _, _, _, hleft, hright, _⟩ := qLength_reference_bounds U ha hab
@@ -3508,7 +3532,7 @@ theorem temporal_rank_increment_bounds
   have hgv := temporal_gr_mem g h index axial c u ho hb hm0 hi hH
     (by norm_num [ChartScales.kappa]) (fun i j => (hW i j).smooth) hgr
   have hdebt := state_debt_mem U ha g.radial.inner_lt_outer hcL hcR ε L hε hεone hL
-    c v (by linarith : 0 ≤ H) ho hb (by simpa only [hmean] using hi) hgv hop hbc
+    c v (by linarith only [hH] : 0 ≤ H) ho hb (by simpa only [hmean] using hi) hgv hop hbc
     (by simpa only [hmean] using hic) (by simpa only [hmean] using his)
     (by simpa only [hcov] using hW) (by simpa only [hcov] using hWc)
     (by simpa only [hcov] using hWs)
@@ -3534,8 +3558,8 @@ variable {coord cL cR : ℝ} (U : SlowRegion coord) (g : GaugeData PressureStrea
     (ha : 0 < g.radial.inner) (hcL : 0 < cL) (hcR : 0 < cR)
     (ε L : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hL : ∀ n, 1 ≤ L n)
 
-local notation "st" => movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-    hεone hL
+local notation "st" => (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
+    hεone hL)
 
 /-- Data of the base, actual primary covariance, and virtual stress. No
 bound on the pressure, residual, temporal increment, or rank output is a field. -/
@@ -3682,9 +3706,10 @@ variable {coord cL cR : ℝ} (U : SlowRegion coord) (g : GaugeData PressureStrea
     (ha : 0 < g.radial.inner) (hcL : 0 < cL) (hcR : 0 < cR)
     (ε L : ℕ → ℝ) (hε : ∀ n, 0 < ε n) (hεone : ∀ n, ε n ≤ 1) (hL : ∀ n, 1 ≤ L n)
 
-local notation "st" => movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-    hεone hL
-local notation "slowSt" => PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL
+local notation "st" => (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
+    hεone hL)
+local notation "slowSt" => (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone
+    hL)
 
 /-- The estimates refer to the actual rank inverse and recomputed pressure.
 The defect estimate is obtained after the five-row cancellation. -/
@@ -3820,8 +3845,9 @@ theorem temporal_zeroMasses :
   intro n x hx
   change radialMoment 2 p.mean.angular n x = 0 ∧ radialMoment 1 p.mean.axial n x = 0
   rw [hpm]
-  simp [radialMoment, PressureStream.pressureMass, PressureStream.torusAverage,
-      PressureStream.torusInner]
+  simp only [radialMoment, PressureStream.pressureMass, PressureStream.torusAverage,
+      PressureStream.torusInner, Pi.zero_apply, mul_zero, intervalIntegral.integral_zero,
+      integral_zero, pow_one, and_self]
 
 theorem rank_zeroMasses (r : RankData PressureStream.Plane)
     (hg : LocalRankDefect.RankGeometry g r U.carrier c
@@ -3876,9 +3902,10 @@ variable {coord cL cR : ℝ} (U : SlowRegion coord) (g : GaugeData PressureStrea
     (baseError : Oscillation Point) (c : Context Point)
     (d : PrimaryMeanData U g ha hcL hcR ε L hε hεone hL c (bandSeed labels pieces baseError))
 
-local notation "st" => movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
-    hεone hL
-local notation "slowSt" => PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone hL
+local notation "st" => (movingStripData U g.radial.inner g.radial.outer cL cR ha hcL hcR ε L hε
+    hεone hL)
+local notation "slowSt" => (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen ε L hε hεone
+    hL)
 
 include d in
 /-- The actual pressure, temporal, rank, and alias-retention stages meet
@@ -3982,7 +4009,7 @@ theorem native_le_index_add (h : ℝ) (hh : 0 ≤ h) (n : ℕ) :
     exact hg.trans (Nat.add_le_add_left (Nat.le_add_right _ _) _)
   · have hn0 : n = 0 := by omega
     subst n
-    dsimp [gap]
+    dsimp only [gap]
     omega
 
 theorem gap_le (h : ℝ) (hh : 0 ≤ h) (n : ℕ) :
@@ -4000,10 +4027,10 @@ theorem active_level_mem {D q : ℝ} {n : ℕ} {L : SlotColoring.Label}
   have hm := PhysicalWaveSum.logCoordinate_in_band hq
     (PhysicalWaveSum.labelRegion_band hs).1 (PhysicalWaveSum.labelRegion_band hs).2
   have hnm : n ≤ L.1 + 2 := by
-    have he : (n : ℝ) ≤ (L.1 : ℝ) + 2 := by linarith [hn.1, hm.2]
+    have he : (n : ℝ) ≤ (L.1 : ℝ) + 2 := by linarith only [hn, hm, hn.1, hm.2]
     exact_mod_cast he
   have hmn : L.1 ≤ n + 2 := by
-    have he : (L.1 : ℝ) ≤ (n : ℝ) + 2 := by linarith [hm.1, hn.2]
+    have he : (L.1 : ℝ) ≤ (n : ℝ) + 2 := by linarith only [hm, hn, hm.1, hn.2]
     exact_mod_cast he
   unfold levels
   apply Finset.mem_insert_of_mem
@@ -4045,7 +4072,7 @@ theorem grid_mem_of_box {D M : ℝ} {m : ℕ} (hm : 1 ≤ m) {k : SlotColoring.G
   have hk : |(k j : ℝ)| ≤ M / SlotColoring.width D j m + 2 := by
     calc
       _ ≤ (M + 2 * SlotColoring.width D j m) / SlotColoring.width D j m :=
-        (le_div_iff₀ hw).mpr (by nlinarith [ha])
+        (le_div_iff₀ hw).mpr (by nlinarith only [ha])
       _ = M / SlotColoring.width D j m + 2 := by field_simp
   have hc : |(k j : ℝ)| ≤ (gridRadius D M m j : ℝ) := hk.trans (Int.le_ceil _)
   have hlo : -gridRadius D M m j ≤ k j := by exact_mod_cast (abs_le.mp hc).1
@@ -4094,7 +4121,7 @@ noncomputable def temporalVector : TorusInverse.Plane := TorusInverse.vector .te
 
 theorem vectors_det : radialVector.1 * temporalVector.2 - radialVector.2 * temporalVector.1 ≠ 0 :=
     by
-  dsimp [radialVector, temporalVector, TorusInverse.vector]
+  dsimp only [radialVector, TorusInverse.vector, temporalVector, ne_eq]
   nlinarith [sq_nonneg (Real.sqrt 2 - 1)]
 
 /-- Slots, given by `PartitionedCovariance.constructedSlotSystem (CoordinateAlgebra.D h) h
@@ -4405,7 +4432,8 @@ theorem coordinates_eq (j : Fin 2) (L : Label B N0) (k : TorusInverse.Frequency)
       (ChartScales.timeCoefficient_pos h _).ne') (z.1, (z.2 + slots.radius) / _))
   rw [TorusAverages.transverseChart_apply]
   rw [mul_div_cancel₀ _ (ChartScales.timeCoefficient_pos h _).ne']
-  have he : (z.1, z.2 + slots.radius) = z + (0, slots.radius) := by ext <;> simp
+  have he : (z.1, z.2 + slots.radius) = z + (0, slots.radius) := by ext <;> simp only [Prod.fst_add,
+      add_zero, Prod.snd_add]
   rw [he, map_add, hz, TorusAverages.slotChart_apply]
   simp only [zero_smul, zero_add]
   dsimp only [geometry]
@@ -4511,7 +4539,8 @@ theorem commonAmplitude_eq_source (j : Fin 2) (L : Label B N0) (p : PhaseCalculu
         PartitionedCovariance.slotCenter h (PartitionedCovariance.signedLabel
             (PrimaryGeometryAssembly.label nominal L) j) := by
     have hneg : TorusAverages.latticePoint (-k) = -TorusAverages.latticePoint k := by
-      ext <;> simp [TorusAverages.latticePoint]
+      ext <;> simp only [TorusAverages.latticePoint, Prod.fst_neg, Int.cast_neg, Prod.snd_neg,
+          Prod.neg_mk]
     rw [CommonCoverSolve.coverPower_apply, hneg]
     dsimp only [ChartScales.nativeIndex, BaseChartJets.cellBand, PrimaryGeometryAssembly.label]
     abel
@@ -4599,8 +4628,8 @@ theorem spatialMask_reference (L : Label B N0) {p : PhaseCalculus.Slow}
     p ∈ PositiveRepresentatives.positivePart (PrimaryGeometryAssembly.referenceSet nominal) := by
   refine ⟨subset_closure ?_, hT⟩
   have hs := SimilarityCoordinates.coordinateQ_spec (show 0 < 2 * h by
-      linarith [outgoing.data.h_pos])
-    (show 2 * h < 1 by linarith [outgoing.data.h_lt_half]) (p := (p.2.2, p.2.1)) hT
+      linarith only [outgoing.data.h_pos])
+    (show 2 * h < 1 by linarith only [outgoing.data.h_lt_half]) (p := (p.2.2, p.2.1)) hT
   refine ⟨hR, hT.le, SimilarityCoordinates.coordinateQ (2 * h) (p.2.2, p.2.1),
     ⟨(spatialMask_q_range L p hm).1.le, (spatialMask_q_range L p hm).2.le⟩, hs.2, ?_⟩
   simpa only [BaseChartJets.normalizedCoordinates_eq, SimilarityHomogeneity.chartX,
@@ -4659,14 +4688,14 @@ theorem active_left_before_rank : PrimaryTargetBounds.leftRadius nominal < rankI
 theorem rank_before_active_right : rankOuter < PrimaryTargetBounds.rightRadius nominal := by
   have hc : ReservedPatches.rightClock outgoing .mean < OutgoingTail.tailEnd outgoing.data := by
     have hp : outgoing.data.core.pulseStart < outgoing.data.core.endpoint := by
-      dsimp [OutgoingSchedule.Parameters.endpoint]
+      dsimp only [OutgoingSchedule.Parameters.endpoint]
       linarith [outgoing.data.core.pulseLength_pos]
     have h1 := OutgoingTail.flattenEnd_gt_core outgoing.data
     have h2 := OutgoingTail.releaseStart_gt_flattenEnd outgoing.data
     have h3 := OutgoingTail.tailStart_gt_release outgoing.data
     have h4 := (ReservedPatches.clock_inside_wait outgoing .mean).2
-    dsimp [OutgoingTail.tailEnd]
-    linarith
+    dsimp only [OutgoingTail.tailEnd]
+    linarith only [hp, h1, h2, h3, h4]
   have hX : ReservedPatches.right outgoing nominal.controls.radius .mean <
       NominalConeAssembly.activeRight nominal :=
     mul_lt_mul_of_pos_left (Real.exp_lt_exp.mpr hc) nominal.controls.radius_pos
@@ -5002,8 +5031,8 @@ theorem tangentMode_pair_covariance (L : Label B N0) (p : PhaseCalculus.Slow)
   have hq : 0 < similarityScale L p := by
     apply mul_pos (ChartScales.Q_pos _)
     exact (SimilarityCoordinates.coordinateQ_spec
-      (show 0 < 2*h by linarith [outgoing.data.h_pos])
-      (show 2*h < 1 by linarith [outgoing.data.h_lt_half]) (p := (p.2.2,p.2.1)) hK.2).1
+      (show 0 < 2*h by linarith only [outgoing.data.h_pos])
+      (show 2*h < 1 by linarith only [outgoing.data.h_lt_half]) (p := (p.2.2,p.2.1)) hK.2).1
   have hv := slots.finite_wave_covariance (Finset.univ : Finset (Fin 2))
     (signedLabel (PrimaryGeometryAssembly.label nominal L))
     (signedLabel_injective _).injOn (fun _ _ => L.val.property.1)
@@ -5093,7 +5122,8 @@ theorem fromAbsolute_toAbsolute (n : ℕ) (x : LocalSignedRequest.Point) :
   have hq := (ChartScales.Q_pos n).ne'
   have hs := (Real.sqrt_pos.mpr (ChartScales.Q_pos n)).ne'
   have hd := (Real.rpow_pos_of_pos (ChartScales.Q_pos n) (CoordinateAlgebra.D h)).ne'
-  simp [toAbsolute, fromAbsolute, hq, hs, hd]
+  simp only [fromAbsolute, toAbsolute, ne_eq, hs, not_false_eq_true, mul_div_cancel_left₀, hq, hd,
+      Prod.mk.eta, ContinuousLinearEquiv.apply_symm_apply]
 
 theorem toAbsolute_smooth (n : ℕ) : ContDiff ℝ ∞ (toAbsolute n) :=
   ((contDiff_const.mul contDiff_fst).prodMk
@@ -5205,7 +5235,7 @@ theorem rawVelocity_transverse (j : Fin 2) (L : Label B N0) (x : ActualSignedGeo
   have hc : PartitionedCovariance.cutoff slots.radius x.2.1 ≠ 0 := by
     intro hz
     apply hx
-    simp [rawVelocity, PartitionedCovariance.amplitude, hz]
+    simp only [rawVelocity, PartitionedCovariance.amplitude, hz, mul_zero, zero_smul]
   rw [← PartitionedCovariance.cutoff_support slots.radius_pos]
   exact hc
 
@@ -5214,13 +5244,14 @@ theorem outerRawVelocity_core (j : Fin 2) (L : Label B N0) (x : ActualSignedGeom
   have hu : rawVelocity j L x ≠ 0 := by
     intro hz
     apply hx
-    simp [outerRawVelocity, hz]
+    simp only [outerRawVelocity, hz, smul_zero]
   have ho : PrimaryCopyBounds.outerCutoff (pulseCoordinates L x).2 ≠ 0 := by
     intro hz
     apply hx
-    simp [outerRawVelocity, hz]
+    simp only [outerRawVelocity, hz, zero_smul]
   have hs := PrimaryCopyBounds.outerCutoff_support (subset_tsupport _ ho)
-  have hτ : (pulseCoordinates L x).2 ∈ Ioo (0 : ℝ) 1 := ⟨by linarith [hs.1], by linarith [hs.2]⟩
+  have hτ : (pulseCoordinates L x).2 ∈ Ioo (0 : ℝ) 1 := ⟨by linarith [hs.1], by linarith only [hs,
+      hs.2]⟩
   have ht := rawVelocity_transverse j L x hu
   have hL := (phases B N0 0).L_pos L
   refine ⟨⟨ht.1.le, ht.2.le⟩, ?_⟩
@@ -5253,7 +5284,7 @@ theorem periodicGaussian_outerRaw (j : Fin 2) (L : Label B N0) (p : PhaseCalculu
       cutVelocity j L (p, (geometry j L).coordinates k Y) := by
   rw [cutVelocity_eq_outer]
   by_cases hz : outerRawVelocity j L (p, (geometry j L).coordinates k Y) = 0
-  · simp [hz]
+  · simp only [hz, smul_zero]
   · rw [periodicGaussian_eq_on_core j L p Y k
       (outerRawVelocity_core (B := B) (N0 := N0) j L (p, (geometry j L).coordinates k Y) hz)]
 
@@ -5292,17 +5323,19 @@ theorem rawPressure_zero_of_velocity_zero (j : Fin 2) (L : Label B N0)
   unfold rawPressure ParticularWaveBounds.projectedPressure
   dsimp only
   rw [hz, map_zero]
-  simp [TangentProjection.pressureCoefficient]
+  simp only [TangentProjection.pressureCoefficient, inner_zero_right, sub_self, add_zero,
+      inner_self_eq_norm_sq_to_K, RCLike.ofReal_real_eq_id, id_eq, zero_div, Complex.ofReal_zero,
+      mul_zero, Complex.ofReal_natCast]
 
 theorem outerRawPressure_core (j : Fin 2) (L : Label B N0) (x : ActualSignedGeometry.Native)
     (hx : outerRawPressure j L x ≠ 0) : x.2 ∈ (clockWindow L).core := by
   have hu : rawVelocity j L x ≠ 0 := by
     intro hz
     have hp := rawPressure_zero_of_velocity_zero j L x hz
-    exact hx (by simp [outerRawPressure, hp])
+    exact hx (by simp only [outerRawPressure, hp, smul_zero])
   have ho : PrimaryCopyBounds.outerCutoff (pulseCoordinates L x).2 ≠ 0 := by
     intro hz
-    exact hx (by simp [outerRawPressure, hz])
+    exact hx (by simp only [outerRawPressure, hz, zero_smul])
   exact outerRawVelocity_core j L x (smul_ne_zero ho hu)
 
 theorem cutPressure_eq_outer (j : Fin 2) (L : Label B N0) (x : ActualSignedGeometry.Native) :
@@ -5316,7 +5349,7 @@ theorem periodicGaussian_outerPressure (j : Fin 2) (L : Label B N0) (p : PhaseCa
       cutPressure j L (p, (geometry j L).coordinates k Y) := by
   rw [cutPressure_eq_outer]
   by_cases hz : outerRawPressure j L (p, (geometry j L).coordinates k Y) = 0
-  · simp [hz]
+  · simp only [hz, smul_zero]
   · rw [periodicGaussian_eq_on_core j L p Y k
       (outerRawPressure_core (B := B) (N0 := N0) j L (p, (geometry j L).coordinates k Y) hz)]
 
@@ -5448,14 +5481,16 @@ theorem attachedRawVelocity_core (j : Fin 2) (L : Label B N0) (x : ActualSignedG
   apply outerRawVelocity_core j L x
   intro hz
   apply hx
-  simp [attachedRawVelocity, WaveEdgeExtension.nativeExtension, WaveEdgeExtension.extension, hz]
+  simp only [attachedRawVelocity, WaveEdgeExtension.nativeExtension, WaveEdgeExtension.extension,
+      hz, ite_self]
 
 theorem attachedRawPressure_core (j : Fin 2) (L : Label B N0) (x : ActualSignedGeometry.Native)
     (hx : attachedRawPressure j L x ≠ 0) : x.2 ∈ (clockWindow L).core := by
   apply outerRawPressure_core j L x
   intro hz
   apply hx
-  simp [attachedRawPressure, WaveEdgeExtension.nativeExtension, WaveEdgeExtension.extension, hz]
+  simp only [attachedRawPressure, WaveEdgeExtension.nativeExtension, WaveEdgeExtension.extension,
+      hz, ite_self]
 
 /-- Copy cells, constructed using `PeriodizedWaveBounds.nativeCells`. -/
 noncomputable def copyCells (j : Fin 2) (L : Label B N0) :
@@ -5554,7 +5589,8 @@ theorem mem_activeLabels (U : LocalSignedRequest.SlowRegion (2 * h)) (n : ℕ)
       CommonWindow.labels (CoordinateAlgebra.D h) (BaseContextAssembly.geometryBound nominal U) n
           := by
   classical
-  simp [activeLabels]
+  simp only [activeLabels, Finset.product_eq_sprod, Finset.mem_product, Finset.mem_preimage,
+      Finset.mem_univ, and_true]
 
 theorem physicalPosition_bound (U : LocalSignedRequest.SlowRegion (2 * h)) (n : ℕ)
     {x : LocalSignedRequest.Point} (hx : x ∈ (BaseContextAssembly.nativeStrip nominal U).domain) :
@@ -5573,7 +5609,7 @@ theorem physicalPosition_bound (U : LocalSignedRequest.SlowRegion (2 * h)) (n : 
     simpa only [Real.sqrt_one] using Real.sqrt_le_sqrt (ChartScales.Q_le_one n)
   have hD : 0 ≤ CoordinateAlgebra.D h := by
     unfold CoordinateAlgebra.D
-    linarith [outgoing.data.h_lt_half]
+    linarith only [outgoing.data.h_lt_half]
   have hd := Real.rpow_le_one (ChartScales.Q_pos n).le (ChartScales.Q_le_one n) hD
   intro j
   fin_cases j
@@ -5639,7 +5675,8 @@ theorem nativeSlow_toAbsolute (L : Label B N0) (x : LocalSignedRequest.Point) :
   have hs := (Real.sqrt_pos.mpr (ChartScales.Q_pos (BaseChartJets.cellBand L))).ne'
   have hd := (Real.rpow_pos_of_pos (ChartScales.Q_pos (BaseChartJets.cellBand L))
       (CoordinateAlgebra.D h)).ne'
-  simp [nativeSlow, toAbsolute, BaseContextAssembly.slowCoordinates_apply, hq, hs, hd]
+  simp only [nativeSlow, toAbsolute, ne_eq, hs, not_false_eq_true, mul_div_cancel_left₀, hd, hq,
+      BaseContextAssembly.slowCoordinates_apply]
 
 /-- Absolute amplitude, given by `ChartScales.Q (BaseChartJets.cellBand L) ^
 (-CoordinateAlgebra.A h) • uncutAmplitude j L (nativeSlow L x) x.2`. -/
@@ -5748,7 +5785,7 @@ theorem chartCoefficients_carrier (j : Fin 2) (L : Label B N0) (n : ℕ) (x : Fu
     _ = ((chartCoefficients j L).frequency n : ℂ) * ((chartCoefficients j L).phase n x : ℂ) *
         Complex.I := by
         ring
-    _ = _ := by rw [he]; simp; ring
+    _ = _ := by rw [he]; simp only [Complex.ofReal_one, one_mul]; ring
 
 /-- Absolute tangent, defined pointwise by `(HarmonicCalculus.vectorMode 1 (absolutePhase j L)
 (fun z => periodicGaussian j L z.1.2 • absoluteAmplitude j L z.1) x i).re`. -/
@@ -5801,7 +5838,9 @@ theorem absoluteTangent_eq (j : Fin 2) (L : Label B N0) (x : AbsolutePoint × �
   simp only [Pi.smul_apply, Complex.real_smul] at hc
   unfold absolutePhase
   rw [mul_left_comm, hc]
-  simp [Complex.mul_re, HarmonicCalculus.carrier]
+  simp only [HarmonicCalculus.carrier, Complex.ofReal_add, Complex.ofReal_mul,
+      Complex.ofReal_intCast, Complex.ofReal_natCast, Complex.mul_re, Complex.ofReal_re,
+      Complex.ofReal_im, zero_mul, sub_zero, Complex.mul_im, add_zero]
   ring
 
 

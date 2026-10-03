@@ -51,7 +51,7 @@ theorem radial_slice_hasDerivAt {K : Point → ℝ} {p : Point}
     (hK : DifferentiableAt ℝ K p) :
     HasDerivAt (fun s => K (p.1, (s, p.2.2))) (AxisymmetricFields.partialS K p) p.2.1 := by
   simpa only [AxisymmetricFields.partialS, Prod.eta, Function.comp_def, one_smul, id_eq] using
-    hK.hasFDerivAt.comp_hasDerivAt p.2.1
+    hK.hasFDerivAt.comp_hasDerivAt (F := Point) (f := fun s => (p.1, (id s, p.2.2))) p.2.1
       ((hasDerivAt_const p.2.1 p.1).prodMk
         ((hasDerivAt_id p.2.1).prodMk (hasDerivAt_const p.2.1 p.2.2)))
 
@@ -173,9 +173,10 @@ theorem extendedHeatCoefficient_smoothAt (C : ℝ) {h : ℝ} (hh : 0 < h)
     {p : Point} (hs : 0 < p.2.1) : ContDiffAt ℝ ∞ (extendedHeatCoefficient C h) p := by
   have he : ContDiffAt ℝ ∞ (HeatProfileExtension.extension (1 + h))
       (2 * (1 - p.1) / p.2.1) :=
-    (HeatProfileExtension.extension_contDiff (show 1 < 1 + h by linarith)).contDiffAt
+    (HeatProfileExtension.extension_contDiff (show 1 < 1 + h by linarith only [hh])).contDiffAt
   have hg : ContDiffAt ℝ ∞ (fun q : Point => 2 * (1 - q.1) / q.2.1) p :=
-    (contDiffAt_const.mul (contDiffAt_const.sub contDiffAt_fst)).div contDiffAt_snd.fst hs.ne'
+    (contDiffAt_const.mul (contDiffAt_const.sub
+      (contDiffAt_fst (𝕜 := ℝ) (E := ℝ) (F := ℝ × ℝ)))).div contDiffAt_snd.fst hs.ne'
   exact (contDiffAt_const.mul
     ((contDiffAt_snd.fst.rpow_const_of_ne hs.ne').mul (he.comp p hg))).div
       ((contDiffAt_const.mul contDiffAt_snd.fst).sqrt (by positivity))
@@ -194,7 +195,7 @@ noncomputable def shiftedRadialDomain : ProfileHistories.RadialDomain where
     · exact lt_of_lt_of_le (by norm_num) (mul_nonneg hv.1 hpos)
     · have hneg : p.1 ≤ 0 := le_of_not_ge hpos
       have hle : p.1 ≤ v * p.1 := by
-          nlinarith [mul_nonneg (sub_nonneg.mpr hv.2) (neg_nonneg.mpr hneg)]
+          nlinarith only [hv, hneg, mul_nonneg (sub_nonneg.mpr hv.2) (neg_nonneg.mpr hneg)]
       exact hp.trans_le hle
 
 /-- Shifted heat, given by `extendedHeatCoefficient C h (p.2, (p.1 + 1, 0))`. -/
@@ -204,7 +205,7 @@ noncomputable def shiftedHeat (C h : ℝ) (p : ℝ × ℝ) : ℝ :=
 theorem shiftedHeat_smooth (C : ℝ) {h : ℝ} (hh : 0 < h) :
     ContDiffOn ℝ ∞ (shiftedHeat C h) shiftedRadialDomain.carrier := by
   intro p hp
-  have hs : 0 < p.1 + 1 := by change -1 < p.1 at hp; linarith
+  have hs : 0 < p.1 + 1 := by change -1 < p.1 at hp; linarith only [hp]
   exact ((extendedHeatCoefficient_smoothAt C hh (p := (p.2, (p.1 + 1, 0))) hs).comp p
     (contDiffAt_snd.prodMk ((contDiffAt_fst.add contDiffAt_const).prodMk
         contDiffAt_const))).contDiffWithinAt
@@ -230,7 +231,7 @@ theorem heatPrimitive_smoothAt (C : ℝ) {h : ℝ} (hh : 0 < h)
     {p : Point} (hs : 0 < p.2.1) : ContDiffAt ℝ ∞ (heatPrimitive C h) p := by
   have hp : (p.2.1 - 1, p.1) ∈ shiftedRadialDomain.carrier := by
     change -1 < p.2.1 - 1
-    linarith
+    linarith only [hs]
   exact (((ProfileHistories.primitive_smooth shiftedRadialDomain (shiftedHeat_smooth C
       hh)).contDiffAt
     (shiftedRadialDomain.isOpen.mem_nhds hp)).comp p
@@ -242,10 +243,11 @@ theorem heatPrimitive_hasDerivAt (C : ℝ) {h : ℝ} (hh : 0 < h)
       (-extendedHeatCoefficient C h (t, (s, z))) s := by
   have hp : (s - 1, t) ∈ shiftedRadialDomain.carrier := by
     change -1 < s - 1
-    linarith
+    linarith only [hs]
   have hd := ProfileHistories.primitive_hasDerivAt shiftedRadialDomain (shiftedHeat_smooth C hh) hp
   simpa only [heatPrimitive, shiftedHeat, extendedHeatCoefficient, Function.comp_def,
-    sub_add_cancel, mul_one, id_eq] using (hd.comp s ((hasDerivAt_id s).sub_const 1)).fun_neg
+    sub_add_cancel, mul_one, id_eq] using
+      (hd.comp (h := fun x => id x - 1) s ((hasDerivAt_id s).sub_const 1)).fun_neg
 
 /-- Heat potential, defined pointwise by `heatPrimitive C h (AxisymmetricFields.profilePoint w.1
 w.2) • coordinateVector 2`. -/
@@ -289,7 +291,7 @@ theorem gaugedSwirl_eq_heatPrimitive {a : ℕ → ℕ} (ha : StrictMono a) {h C 
   simp only [intervalIntegral.integral_zero, f, heatPrimitive_anchor, sub_zero] at hi
   change SlowBorelBase.swirlPotential a h C d p -
     SlowBorelBase.swirlPotential a h C d (p.1, (1, p.2.2)) = heatPrimitive E h p
-  linarith
+  linarith only [hi]
 
 theorem potential_eq_heatPotential {a : ℕ → ℕ} (ha : StrictMono a) {h C R E : ℝ}
     (hh : 0 < h) (hh1 : h < 1 / 2) (hR : 0 ≤ R) {d : SlowBorelBase.Coefficients}
@@ -335,7 +337,7 @@ theorem exists_terminal_segment_neighborhood {h R : ℝ}
       (isOpen_lt (continuous_const.sub continuous_fst) hfcont)
   have hxU : (1, x) ∈ U := by
     constructor
-    · linarith
+    · linarith only [hs]
     · simpa [SimilarityCoordinates.forwardScalar, hx] using hb
   refine ⟨U, hU, hxU, ?_, ?_⟩
   · intro w hw
@@ -343,7 +345,7 @@ theorem exists_terminal_segment_neighborhood {h R : ℝ}
   · intro w hw ht r hr
     have hq : 0 < SimilarityProfile.q h (w.1, (r, w.2 2)) := SimilarityProfile.q_pos hh hh1 ht
     have hqb : SimilarityProfile.q h (w.1, (r, w.2 2)) < b :=
-      ModulatedExterior.coordinateQ_lt_of_forward_lt (by linarith) (by linarith)
+      ModulatedExterior.coordinateQ_lt_of_forward_lt (by linarith) (by linarith only [hh1])
         hb (sub_pos.mpr ht) hw.2
     have hbeq : b * (R + 1) = c := div_mul_cancel₀ _ (by positivity)
     have hc1 : c ≤ 1 := min_le_left _ _
@@ -355,7 +357,7 @@ theorem exists_terminal_segment_neighborhood {h R : ℝ}
     calc
       R * SimilarityProfile.q h (w.1, (r, w.2 2)) ≤ R * b :=
         mul_le_mul_of_nonneg_left hqb.le hR
-      _ < c := by nlinarith
+      _ < c := by nlinarith only [hq, hqb, hbeq]
       _ ≤ r := hcr
 
 /-- An explicit smooth ambient extension of the gauge-corrected potential

@@ -16,6 +16,10 @@ import Mathlib.Algebra.Order.Star.Real
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 open Set
@@ -52,19 +56,19 @@ theorem equation30_primary_logderivative_bound
   have hεne : ε ≠ 0 := ne_of_gt hε
   have hVp := equation30_global_positive hε hεsmall hV hflux hV0 hV₁0 t htpos.le
   by_cases hpre : t ≤ 1 / ε
-  · have hT : 0 ≤ 1 / ε := by positivity
-    have hscale : ε ^ 2 * (1 / ε) ^ 2 ≤ 1 := by field_simp; norm_num
-    have hp := equation30_positive (sq_nonneg ε) (by nlinarith : ε ^ 2 ≤ 1 / 2)
+  · have hT : 0 ≤ 1 / ε := (one_div_pos.mpr hε).le
+    have hscale : ε ^ 2 * (1 / ε) ^ 2 ≤ 1 := by
+      rw [← mul_pow, mul_one_div_cancel hεne, one_pow]
+    have hε2 : ε ^ 2 ≤ 1 / 2 := (pow_le_pow_left₀ hε.le hεsmall 2).trans (by norm_num)
+    have hp := equation30_positive (sq_nonneg ε) hε2
       hT hscale (fun s hs => hV s hs.1) (fun s hs => hflux s hs.1) hV0 hV₁0 t ⟨htpos.le, hpre⟩
-    have hu := equation30_log_derivative_upper (sq_nonneg ε) (by nlinarith : ε ^ 2 ≤ 1 / 2)
+    have hu := equation30_log_derivative_upper (sq_nonneg ε) hε2
       hT hscale (fun s hs => hV s hs.1) (fun s hs => hflux s hs.1) hV0 hV₁0 t ⟨htpos, hpre⟩
     have hnonneg : 0 ≤ V₁ t / V t := div_nonneg hp.2 hVp.le
     rw [abs_of_nonneg hnonneg]
     have hinv : 1 / t ≤ 1 := (div_le_one htpos).mpr ht
-    linarith
-  · have hεt : 1 ≤ ε * t := by
-      have hh := (div_le_iff₀ hε).mp (le_of_not_ge hpre)
-      nlinarith only [hh]
+    linarith only [hu, hinv]
+  · have hεt : 1 ≤ ε * t := (div_le_iff₀ hε).mp (le_of_not_ge hpre) |>.trans_eq (mul_comm _ _)
     let y := 1 / (ε * t)
     have hy : 0 < y := by dsimp [y]; positivity
     have hy1 : y ≤ 1 := by dsimp [y]; exact (div_le_one (by positivity)).mpr hεt
@@ -76,14 +80,15 @@ theorem equation30_primary_logderivative_bound
     let z := -ε * invertedScalarDeriv ε V V₁ y / invertedScalar ε V y
     have hz0 : 0 ≤ z := hz.1
     have hz4 : z ≤ 4 := hz.2
-    have hy2 : y ^ 2 ≤ 1 := by nlinarith only [hy.le, hy1]
+    have hy2 : y ^ 2 ≤ 1 := pow_le_one₀ hy.le hy1
     have hmul := mul_le_mul_of_nonneg_left hz4 (sq_nonneg y)
     have hepsy : 0 ≤ ε * y := mul_nonneg hε.le hy.le
-    have hepsyUpper : ε * y ≤ 1 := by nlinarith only [hε, hεsmall, hy.le, hy1]
+    have hepsyUpper : ε * y ≤ 1 :=
+      (mul_le_mul (hεsmall.trans (by norm_num)) hy1 hy.le zero_le_one).trans_eq (one_mul 1)
     have hzmul : 0 ≤ y ^ 2 * z := mul_nonneg (sq_nonneg y) hz0
     apply abs_le.mpr
     dsimp [z] at hmul hzmul
-    constructor <;> nlinarith only [hid, hmul, hepsy, hepsyUpper, hzmul, hy2]
+    constructor <;> linarith only [hid, hmul, hepsy, hepsyUpper, hzmul, hy2]
 
 /-- The ideal pressure numerator has the sign required for the next-frame
 construction, throughout the forward evolution. -/
@@ -101,24 +106,26 @@ theorem equation30_ideal_numerator_positive
   have hVp := equation30_global_positive hε hεsmall hV hflux hV0 hV₁0 t ht
   have hεne : ε ≠ 0 := ne_of_gt hε
   by_cases hpre : t ≤ 1 / ε
-  · have hT : 0 ≤ 1 / ε := by positivity
-    have hscale : ε ^ 2 * (1 / ε) ^ 2 ≤ 1 := by field_simp; norm_num
-    have hp := equation30_positive (sq_nonneg ε) (by nlinarith : ε ^ 2 ≤ 1 / 2)
+  · have hT : 0 ≤ 1 / ε := (one_div_pos.mpr hε).le
+    have hscale : ε ^ 2 * (1 / ε) ^ 2 ≤ 1 := by
+      rw [← mul_pow, mul_one_div_cancel hεne, one_pow]
+    have hp := equation30_positive (sq_nonneg ε)
+      ((pow_le_pow_left₀ hε.le hεsmall 2).trans (by norm_num))
       hT hscale (fun s hs => hV s hs.1) (fun s hs => hflux s hs.1) hV0 hV₁0 t ⟨ht, hpre⟩
     have h₁ := mul_nonneg (mul_nonneg (sq_nonneg ε) (sq_nonneg t)) hVp.le
     have h₂ := mul_nonneg (mul_nonneg (by positivity : 0 ≤ 2 * ε ^ 2) ht) hp.2
-    nlinarith only [h₁, h₂]
+    linarith only [h₁, h₂]
   · have hpost : 1 / ε ≤ t := le_of_not_ge hpre
     have hposit := equation30_post_inversion_positive_derivative hε hεsmall hV hflux hV0 hV₁0 t
         hpost
     have hεt : 1 ≤ ε * t := by
       have hh := (div_le_iff₀ hε).mp hpost
-      nlinarith only [hh]
-    have hεt2 : 1 ≤ ε ^ 2 * t ^ 2 := by nlinarith only [hεt]
-    have hε2 : 2 * ε ^ 2 ≤ 1 := by nlinarith only [hε, hεsmall]
-    have h₁ := mul_nonneg (show 0 ≤ ε ^ 2 * t ^ 2 - 2 * ε ^ 2 by linarith) hVp.le
+      linarith only [hh]
+    have hεt2 : 1 ≤ ε ^ 2 * t ^ 2 := (one_le_pow₀ hεt).trans_eq (mul_pow ε t 2)
+    have hε2 : 2 * ε ^ 2 ≤ 1 := by linarith only [pow_le_pow_left₀ hε.le hεsmall 2]
+    have h₁ := mul_nonneg (show 0 ≤ ε ^ 2 * t ^ 2 - 2 * ε ^ 2 by linarith only [hεt2, hε2]) hVp.le
     have h₂ := mul_nonneg (by positivity : 0 ≤ 2 * ε ^ 2) hposit.le
-    nlinarith only [h₁, h₂]
+    linarith only [h₁, h₂]
 
 /-- Relative control of both components gives positivity and control of
 the logarithmic ratio without dividing by an uncontrolled quantity. -/
@@ -126,12 +133,12 @@ theorem relative_state_error_consequences
     {U V Z Z₁ η : ℝ} (hZ : 0 < Z) (hη : 0 ≤ η) (hηsmall : η ≤ 1 / 2)
     (herror : |V - Z| + |U + Z₁| ≤ η * Z) (hslope : |Z₁ / Z| ≤ 4) :
     0 < V ∧ |V / Z - 1| ≤ η ∧ |U / V + Z₁ / Z| ≤ 10 * η := by
-  have hVerror : |V - Z| ≤ η * Z := by linarith [abs_nonneg (U + Z₁)]
-  have hUerror : |U + Z₁| ≤ η * Z := by linarith [abs_nonneg (V - Z)]
+  have hVerror : |V - Z| ≤ η * Z := by linarith only [herror, abs_nonneg (U + Z₁)]
+  have hUerror : |U + Z₁| ≤ η * Z := by linarith only [herror, abs_nonneg (V - Z)]
   have hVlower : Z / 2 ≤ V := by
     have hh := (abs_le.mp hVerror).1
     have hm := mul_le_mul_of_nonneg_right hηsmall hZ.le
-    nlinarith only [hh, hm]
+    linarith only [hh, hm]
   have hVp : 0 < V := by linarith only [hZ, hVlower]
   have hZne : Z ≠ 0 := ne_of_gt hZ
   have hVne : V ≠ 0 := ne_of_gt hVp
@@ -149,11 +156,11 @@ theorem relative_state_error_consequences
       rw [abs_mul, abs_mul, abs_of_pos hZ] at ht
       have hid : (U + Z₁) * Z + Z₁ * (V - Z) = U * Z + Z₁ * V := by ring
       rw [hid] at ht
-      nlinarith only [ht, h₁, h₂]
+      linarith only [ht, h₁, h₂]
     have hid : U / V + Z₁ / Z = (U * Z + Z₁ * V) / (V * Z) := by field_simp
     rw [hid, abs_div, abs_of_pos (mul_pos hVp hZ), div_le_iff₀ (mul_pos hVp hZ)]
     have hm := mul_le_mul_of_nonneg_right hVlower (by positivity : 0 ≤ 10 * η * Z)
-    nlinarith only [hnum, hm]
+    linarith only [hnum, hm]
 
 /-- Stability relative to the growing primary solution, with constants
 independent of its nonnegative initial slope. -/
@@ -174,12 +181,13 @@ theorem equation30_relative_state_consequences
     0 < V ∧ |V / Z t - 1| ≤ 2 * exp 6 * δ ∧
       |U / V + Z₁ t / Z t| ≤ 20 * exp 6 * δ := by
   have hZ₁0pos : 0 ≤ Z₁ 0 := by rw [hZ₁0]; exact hlam
-  have hZpos := equation30_global_positive hε hεsmall hZ hfluxZ hZ0 hZ₁0pos t (by linarith)
+  have hZpos := equation30_global_positive hε hεsmall hZ hfluxZ hZ0 hZ₁0pos t (by linarith only [hε,
+      hεsmall, ht])
   have hlower := equation30_slope_uniform_lower hε hεsmall hlam hF hZ hfluxF hfluxZ
     hF0 hF₁0 hZ0 hZ₁0 t ht
   have hslope := equation30_primary_logderivative_bound hε hεsmall hZ hfluxZ hZ0 hZ₁0pos t ht
   have hη : 0 ≤ 2 * exp 6 * δ := by positivity
-  have hηsmall : 2 * exp 6 * δ ≤ 1 / 2 := by nlinarith only [hsmall]
+  have hηsmall : 2 * exp 6 * δ ≤ 1 / 2 := by linarith only [hsmall]
   have hrelative : |V - Z t| + |U + Z₁ t| ≤ (2 * exp 6 * δ) * Z t := by
     calc
       |V - Z t| + |U + Z₁ t| ≤ δ * (1 + lam) * F t := herror
@@ -187,7 +195,7 @@ theorem equation30_relative_state_consequences
       _ ≤ (2 * exp 6 * δ) * Z t := mul_le_mul_of_nonneg_left hlower hη
   obtain ⟨hv, hratio, hs⟩ := relative_state_error_consequences hZpos hη hηsmall hrelative hslope
   refine ⟨hv, hratio, ?_⟩
-  nlinarith only [hs]
+  linarith only [hs]
 
 /-- Division of the pressure-numerator error is safe once positivity and
 the logarithmic-ratio bounds have been derived. -/
@@ -203,7 +211,7 @@ theorem pressure_ratio_error
     have hh := abs_add_le (U / V - r₀) r₀
     have hid : U / V - r₀ + r₀ = U / V := by ring
     rw [hid] at hh
-    nlinarith only [hh, hr, hr₀, hηsmall]
+    linarith only [hh, hr, hr₀, hηsmall]
   have hUabs : |U| ≤ 9 * V := by
     rw [abs_div, abs_of_pos hV, div_le_iff₀ hV] at hrabs
     exact hrabs
@@ -211,11 +219,11 @@ theorem pressure_ratio_error
     rw [abs_div, abs_of_pos hV, div_le_iff₀ hV]
     rw [abs_of_pos hV] at hJ
     have hm := mul_le_mul_of_nonneg_left hUabs hj
-    nlinarith only [hJ, hm]
+    linarith only [hJ, hm]
   have hQerr : |Q₀ * (U / V - r₀)| ≤ 20 * Θ ^ 2 * η := by
     rw [abs_mul]
     have hh := mul_le_mul hQ₀ hr (abs_nonneg _) (by positivity : 0 ≤ 2 * Θ ^ 2)
-    nlinarith only [hh]
+    linarith only [hh]
   have hid : J / V - (P₀ + β + Q₀ * r₀) =
       (J - ((P₀ + β) * V + Q₀ * U)) / V + Q₀ * (U / V - r₀) := by field_simp; ring
   rw [hid]
@@ -237,17 +245,17 @@ theorem equation30_pressure_sign_stable
     (hJ : |J - ((ε ^ 2 * t ^ 2 + ε ^ 2) * V + (-2 * ε ^ 2 * t) * U)| ≤
       j * (|U| + |V|)) :
     0 < V ∧ ε ^ 2 / 2 ≤ J / V ∧ 0 < J := by
-  have ht0 : 0 ≤ t := by linarith
+  have ht0 : 0 ≤ t := zero_le_one.trans ht
   have hZpos := equation30_global_positive hε hεsmall hZ hfluxZ hZ0 hZ₁0 t ht0
   have hslope := equation30_primary_logderivative_bound hε hεsmall hZ hfluxZ hZ0 hZ₁0 t ht
   obtain ⟨hVp, _, hr⟩ := relative_state_error_consequences hZpos hη hηsmall herror hslope
   have hQ₀ : |-2 * ε ^ 2 * t| ≤ 2 * Θ ^ 2 := by
     rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg ε), abs_of_nonneg ht0]
     norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0 : ℝ) ≤ 2)]
-    have he2 : ε ^ 2 ≤ 1 := by nlinarith only [hε, hεsmall]
-    have htTheta2 : t ≤ Θ ^ 2 := by nlinarith only [htΘ, hΘ]
+    have he2 : ε ^ 2 ≤ 1 := pow_le_one₀ hε.le (hεsmall.trans (by norm_num))
+    have htTheta2 : t ≤ Θ ^ 2 := htΘ.trans (le_self_pow₀ hΘ two_ne_zero)
     have hm := mul_le_mul_of_nonneg_right he2 ht0
-    nlinarith only [hm, htTheta2]
+    linarith only [hm, htTheta2]
   have hr₀ : |-Z₁ t / Z t| ≤ 4 := by simpa only [neg_div, abs_neg] using hslope
   have hr' : |U / V - (-Z₁ t / Z t)| ≤ 10 * η := by simpa only [neg_div, sub_neg_eq_add] using hr
   have hpressure := pressure_ratio_error hΘ hη hηsmall hj hVp hQ₀ hr₀ hr' hJ
@@ -257,13 +265,13 @@ theorem equation30_pressure_sign_stable
     have hZne : Z t ≠ 0 := ne_of_gt hZpos
     have hid : (ε ^ 2 * t ^ 2 + ε ^ 2 + (-2 * ε ^ 2 * t) * (-Z₁ t / Z t)) * Z t =
         (ε ^ 2 * t ^ 2 + ε ^ 2) * Z t + 2 * ε ^ 2 * t * Z₁ t := by field_simp
-    nlinarith only [hideal, hid]
+    linarith only [hideal, hid]
   have hJlower : ε ^ 2 / 2 ≤ J / V := by
     have hh := (abs_le.mp hpressure).1
-    nlinarith only [hh, hidealRatio, hsmall]
+    linarith only [hh, hidealRatio, hsmall]
   have hJpositive : 0 < J := by
-    have hratioPos : 0 < J / V := lt_of_lt_of_le (by positivity : 0 < ε ^ 2 / 2) hJlower
-    exact (div_pos_iff.mp hratioPos).resolve_right (by intro hh; linarith [hh.2]) |>.1
+    have hratioPos : 0 < J / V := lt_of_lt_of_le (half_pos (pow_pos hε 2)) hJlower
+    exact (div_pos_iff.mp hratioPos).resolve_right (fun hh => lt_asymm hVp hh.2) |>.1
   exact ⟨hVp, hJlower, hJpositive⟩
 
 /-- The third normalized velocity ratio follows from orthogonality and
@@ -283,19 +291,19 @@ theorem third_ratio_error
     have hh := abs_add_le (r - r₀) r₀
     have hid : r - r₀ + r₀ = r := by ring
     rw [hid] at hh
-    nlinarith only [hh, hr, hr₀, hηsmall]
+    linarith only [hh, hr, hr₀, hηsmall]
   have hw₀ : |-(P₀ * r₀ + Q₀)| ≤ 6 * Θ ^ 2 := by
     rw [abs_neg]
     have hh := abs_add_le (P₀ * r₀) Q₀
     rw [abs_mul] at hh
     have hm := mul_le_mul hP₀ hr₀ (abs_nonneg _) (sq_nonneg Θ)
-    nlinarith only [hh, hm, hQ₀]
+    linarith only [hh, hm, hQ₀]
   obtain ⟨hn, _, _, _, hw, _, _⟩ :=
     ray_geometric_bounds (ε := 0) (U := r) (V := 1) hΘ hρ hρsmall hP₀ hQ₀ hP hQ hN
   have hwabs : |velocityThird P Q N r 1| ≤ 60 * Θ ^ 2 := by
     norm_num only [abs_one] at hw
     have hm := mul_le_mul_of_nonneg_left hrabs (by positivity : 0 ≤ 6 * Θ ^ 2)
-    nlinarith only [hw, hm]
+    linarith only [hw, hm]
   have hNpos : 0 < N := by linarith only [hn]
   have hNne : N ≠ 0 := ne_of_gt hNpos
   let w₀ := -(P₀ * r₀ + Q₀)
@@ -303,13 +311,13 @@ theorem third_ratio_error
   have hNw : |(N - 1) * w₀| ≤ 6 * ρ * Θ ^ 2 := by
     rw [abs_mul]
     have hh := mul_le_mul hN hw₀ (abs_nonneg _) hρ
-    nlinarith only [hh]
+    linarith only [hh]
   have hsum : |(P * r - P₀ * r₀) + (Q - Q₀) + (N - 1) * w₀| ≤
       (16 * ρ + 10 * η) * Θ ^ 2 := by
     have h₁ := abs_add_le (P * r - P₀ * r₀) (Q - Q₀)
     have h₂ := abs_add_le ((P * r - P₀ * r₀) + (Q - Q₀)) ((N - 1) * w₀)
     have hm := mul_le_mul_of_nonneg_left hΘ2 (by positivity : 0 ≤ 10 * ρ)
-    nlinarith only [h₁, h₂, hPr, hQ, hNw, hm]
+    linarith only [h₁, h₂, hPr, hQ, hNw, hm]
   refine ⟨hrabs, hw₀, hwabs, ?_⟩
   have hid : velocityThird P Q N r 1 - w₀ =
       -((P * r - P₀ * r₀) + (Q - Q₀) + (N - 1) * w₀) / N := by
@@ -320,7 +328,7 @@ theorem third_ratio_error
   rw [hid, abs_div, abs_neg, abs_of_pos hNpos, div_le_iff₀ hNpos]
   have hm := mul_le_mul_of_nonneg_left hn
     (by positivity : 0 ≤ (32 * ρ + 20 * η) * Θ ^ 2)
-  nlinarith only [hsum, hm]
+  linarith only [hsum, hm]
 
 /-- A normalized parent-gradient row applied to the velocity ratios. -/
 def rowAction (A : Fin 3 → Fin 3 → ℝ) (i : Fin 3) (r w : ℝ) : ℝ :=
@@ -399,12 +407,12 @@ theorem frame_cross_numerator_error
     rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg ε)]
     have hh := mul_le_mul hQ hwabs (abs_nonneg _) (by positivity : 0 ≤ 3 * Θ ^ 2)
     have hm := mul_le_mul_of_nonneg_left hh (sq_nonneg ε)
-    nlinarith only [hm]
+    linarith only [hm]
   have hQr : |ε ^ 2 * Q * r| ≤ 27 * ε ^ 2 * Θ ^ 2 := by
     rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg ε)]
     have hh := mul_le_mul hQ hrabs (abs_nonneg _) (by positivity : 0 ≤ 3 * Θ ^ 2)
     have hm := mul_le_mul_of_nonneg_left hh (sq_nonneg ε)
-    nlinarith only [hm]
+    linarith only [hm]
   have hc₀ : |c₀ - (-1)| ≤ ρ + 180 * ε ^ 2 * Θ ^ 4 := by
     have hh := abs_add_le (-(N - 1)) (ε ^ 2 * Q * w)
     rw [abs_neg] at hh
@@ -428,7 +436,7 @@ theorem frame_cross_numerator_error
     have hm₂ := mul_le_mul_of_nonneg_left h24 (by positivity : 0 ≤ 60 * ρ)
     have hm₃ := mul_le_mul_of_nonneg_left hΘ4 (by positivity : 0 ≤ 10 * η)
     norm_num only [one_mul] at hNr
-    nlinarith only [hh, hNr, hPw, hm₁, hm₂, hm₃]
+    linarith only [hh, hNr, hPw, hm₁, hm₂, hm₃]
   have hc₁₀ : |c₁₀| ≤ 10 * Θ ^ 4 := by
     have hh := abs_add_le r₀ (-(P₀ * w₀))
     rw [abs_neg, abs_mul] at hh
@@ -436,7 +444,7 @@ theorem frame_cross_numerator_error
     change |r₀ - P₀ * w₀| ≤ _
     have hid : r₀ + -(P₀ * w₀) = r₀ - P₀ * w₀ := by ring
     rw [hid] at hh
-    nlinarith only [hh, hr₀, hm, hΘ4]
+    linarith only [hh, hr₀, hm, hΘ4]
   have hS₀ := abs_product_difference hc₀ hTp (by norm_num : |(-1 : ℝ)| ≤ 1) hTpabs
   have hS₁ := abs_product_difference hc₁ hTq hc₁₀ hTqabs
   have hS₂ := abs_product_difference hc₂ hTn hP₀ hTnabs
@@ -454,7 +462,7 @@ theorem frame_cross_numerator_error
   have hmε := mul_le_mul_of_nonneg_left h24 (by positivity : 0 ≤ 54 * ε ^ 2)
   have hpρ : 0 ≤ 86 * ρ * Θ ^ 4 := by positivity
   have hpε : 0 ≤ 86 * ε ^ 2 * Θ ^ 4 := by positivity
-  nlinarith only [hsum, hsum', hS₀, hS₁, hS₂, hmρ, hmσ, hmσ2, hmε, hpρ, hpε]
+  linarith only [hsum, hsum', hS₀, hS₁, hS₂, hmρ, hmσ, hmσ2, hmε, hpρ, hpε]
 
 /-- The cross numerator bound with every velocity-ratio and parent-action
 estimate derived from ray, state, and matrix coefficient errors. -/

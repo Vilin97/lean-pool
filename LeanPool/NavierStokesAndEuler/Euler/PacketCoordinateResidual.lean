@@ -78,7 +78,7 @@ theorem reconstruct (k : ℝ) (hk : k ≠ 0) (W : VectorField) (z : Domain) :
 theorem normal_coordinate (k : ℝ) (W : VectorField) (z : Domain) :
     ⟪D.m₀,coordinate D k W z⟫_ℝ = k*⟪D.normalField z,W z⟫_ℝ := by
   change ⟪D.m₀,k • rawInverse D z (W z)⟫_ℝ =
-    k*⟪(rawInverse D z).adjoint D.m₀,W z⟫_ℝ
+    k*⟪adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawInverse D z) D.m₀,W z⟫_ℝ
   rw [inner_smul_right,adjoint_inner_left]
 
 theorem coordinate_hasDerivWithinAt (k : ℝ) (W Wt : VectorField)
@@ -103,15 +103,15 @@ theorem coordinate_derivWithin (k : ℝ) (W Wt : VectorField)
 section Fields
 
 variable {P : ℝ} [Fact (0 < P)] {W Wt : VectorField}
-  (G : Field P D.T W) (Gt : Field P D.T Wt)
+  (G : EulerPacketCylinderField.Field P D.T W) (Gt : EulerPacketCylinderField.Field P D.T Wt)
 
 /-- Coordinate field, given by `((inverseCoefficient D).multiply G).smul k`. -/
-def coordinateField (k : ℝ) : Field P D.T (coordinate D k W) :=
+def coordinateField (k : ℝ) : EulerPacketCylinderField.Field P D.T (coordinate D k W) :=
   ((inverseCoefficient D).multiply G).smul k
 
 /-- Coordinate time field, given by `(((inverseTimeCoefficient D).multiply G).add
 ((inverseCoefficient D).multiply Gt)).smul k`. -/
-def coordinateTimeField (k : ℝ) : Field P D.T (coordinateTime D k W Wt) :=
+def coordinateTimeField (k : ℝ) : EulerPacketCylinderField.Field P D.T (coordinateTime D k W Wt) :=
   (((inverseTimeCoefficient D).multiply G).add ((inverseCoefficient D).multiply Gt)).smul k
 
 theorem coordinateField_time (k : ℝ) (hW : TimeDerivative D.T_pos.le G Gt) :
@@ -136,21 +136,16 @@ theorem normalized_spatial_derivative (k : ℝ) (hk : k ≠ 0)
         fderiv ℝ (fun y => coordinate D k W (t,y)) (x,θ) v := by
   have hfst : HasFDerivAt (fun y : SpatialDomain => y.1) (fst ℝ Space ℝ) (x,θ) :=
     hasFDerivAt_fst
-  have hF := ((D.F.smooth t).differentiable (by simp) x).hasFDerivAt.comp (x,θ) hfst
+  have hF : HasFDerivAt (fun y : SpatialDomain => D.F.field t y.1)
+      ((fderiv ℝ (D.F.field t : Space → Space →L[ℝ] Space) x).comp (fst ℝ Space ℝ)) (x,θ) :=
+    ((D.F.smooth t).differentiable (by simp) x).hasFDerivAt.comp (x,θ) hfst
   have hZ := ((coordinate_smooth D G k t).differentiable (by simp) (x,θ)).hasFDerivAt
   have h := (hF.clm_apply hZ).const_smul k⁻¹
   have he : (fun y : SpatialDomain => W (t,y)) =
-      fun y => k⁻¹ • D.F.field t y.1 (coordinate D k W (t,y)) := by
+      k⁻¹ • fun y => D.F.field t y.1 (coordinate D k W (t,y)) := by
     funext y
-    simpa only [rawFrame,Data.clamp_coe] using reconstruct D k hk W (t,y)
-  have hh : fderiv ℝ (fun y : SpatialDomain =>
-      k⁻¹ • D.F.field t y.1 (coordinate D k W (t,y))) (x,θ) =
-      k⁻¹ • ((D.F.field t x).comp
-        (fderiv ℝ (fun y => coordinate D k W (t,y)) (x,θ)) +
-        ((fderiv ℝ (D.F.field t : Space → Space →L[ℝ] Space) x).comp
-          (fst ℝ Space ℝ)).flip (coordinate D k W (t,(x,θ)))) := by
-    convert! h.fderiv using 1
-  rw [he,hh]
+    simpa only [rawFrame,Data.clamp_coe,Pi.smul_apply] using reconstruct D k hk W (t,y)
+  rw [he,h.fderiv]
   simp only [smul_apply,add_apply,
     ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.flip_apply,rawInverse,Data.clamp_coe,map_smul,map_add,
@@ -236,9 +231,10 @@ theorem normalized_pressure (k : ℝ) (p : ScalarField) (z : Domain) :
         k • fastPressure (D.normalField z) (pressureJet p z)) =
       rawMetric D z (coordinatePressure D k p z) := by
   change k • rawInverse D z
-      ((rawInverse D z).adjoint (pressureGradient p z) +
-        k • ((pressureJet p z).2 angleDirection • (rawInverse D z).adjoint D.m₀)) =
-    rawInverse D z ((rawInverse D z).adjoint
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawInverse D z) (pressureGradient p z) +
+        k • ((pressureJet p z).2 angleDirection •
+          adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawInverse D z) D.m₀)) =
+    rawInverse D z (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawInverse D z)
       (k • pressureGradient p z + k^2 • ((pressureJet p z).2 angleDirection • D.m₀)))
   simp only [map_add,map_smul,smul_add,smul_smul,pow_two]
   module
@@ -260,7 +256,7 @@ theorem coordinatePressure_eq_lifted (k : ℝ) (hk : k ≠ 0) (p : ScalarField)
 section Fields
 
 variable {P : ℝ} [Fact (0 < P)] {W Wt : VectorField}
-  (G : Field P D.T W) (Gt : Field P D.T Wt)
+  (G : EulerPacketCylinderField.Field P D.T W) (Gt : EulerPacketCylinderField.Field P D.T Wt)
 
 theorem normalized_linear (k : ℝ) (hW : TimeDerivative D.T_pos.le G Gt)
     (t : Icc (0 : ℝ) D.T) (x : Space) (θ : ℝ) :

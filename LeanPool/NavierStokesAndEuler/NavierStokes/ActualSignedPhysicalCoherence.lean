@@ -53,10 +53,10 @@ theorem annulus_of_ratio (n : ℕ) {w : SpaceTime} (hw : w ∈ preterminal)
   have hQ := ChartScales.Q_pos n
   have hlo : physicalQ h w / 2 ≤ ChartScales.Q n := by
     have he := (div_lt_iff₀ hQ).mp hq.2
-    linarith
+    linarith only [he]
   have hhi : ChartScales.Q n ≤ 2 * physicalQ h w := by
     have he := (lt_div_iff₀ hQ).mp hq.1
-    linarith
+    linarith only [he]
   have hell := graph_length_pos outgoing.data.h_pos outgoing.data.h_lt_half n 0 hw
   have hlen := graph_length_bounds outgoing.data.h_pos outgoing.data.h_lt_half n 0 hw hlo hhi
   have hr := ActualPolarCoverage.graph_profileRadius_mem nominal n 0 hw hactive
@@ -65,9 +65,9 @@ theorem annulus_of_ratio (n : ℕ) {w : SpaceTime} (hw : w ∈ preterminal)
   have ha := PrimaryTargetBounds.leftRadius_pos nominal
   have hb := PrimaryTargetBounds.rightRadius_pos nominal
   have hRlo : PrimaryTargetBounds.leftRadius nominal / 2 ≤ (graph h n 0 w).1 := by
-    nlinarith [hlen.1]
+    nlinarith only [hloR, hlen, ha, hlen.1]
   have hRhi : (graph h n 0 w).1 ≤ 2 * PrimaryTargetBounds.rightRadius nominal := by
-    nlinarith [hlen.2]
+    nlinarith only [hhiR, hlen, hb, hlen.2]
   rw [graph_radius] at hRlo hRhi
   refine ⟨?_, ?_⟩
   · simpa only [ActualPolarCoverage.outer, Metric.mem_closedBall, dist_zero_right] using
@@ -470,8 +470,8 @@ theorem cylindrical_zero_of_raw (l : Label B N0) (u : CorrectionState.State Poin
   constructor
   · have hp : ActualSignedPotentialCoherence.potentialCoefficient l u n
         (ActualSignedPotentialCoherence.nativePoint n z) = 0 := by
-      simp [ActualSignedPotentialCoherence.potentialCoefficient, hc.1,
-        CurlClassBounds.normalCoefficient, CurlClassBounds.normalCross]
+      simp only [ActualSignedPotentialCoherence.potentialCoefficient,
+          CurlClassBounds.normalCoefficient, CurlClassBounds.normalCross, hc.1, map_zero, smul_zero]
     have hv : ActualSignedPotentialCoherence.potential l u n
         (ActualSignedPotentialCoherence.nativePoint n z) = 0 := by
       rw [ActualSignedPotentialCoherence.potential_eq_mode]
@@ -479,9 +479,9 @@ theorem cylindrical_zero_of_raw (l : Label B N0) (u : CorrectionState.State Poin
       simp only [HarmonicCalculus.vectorMode, HarmonicCalculus.mode, hp, Pi.zero_apply, zero_mul]
     rw [ActualSignedPotentialCoherence.cylindricalPotential,
       ActualSignedPotentialCoherence.rescaledPotential, hv, smul_zero]
-  · simp [ActualSignedPotentialCoherence.cylindricalPressureMode,
+  · simp only [ActualSignedPotentialCoherence.cylindricalPressureMode,
       ActualSignedPotentialCoherence.rescaledPressureMode,
-      ActualSignedPotentialCoherence.pressureMode, HarmonicCalculus.mode, hc.2]
+      ActualSignedPotentialCoherence.pressureMode, HarmonicCalculus.mode, hc.2, zero_mul, smul_zero]
 
 theorem current_raw_zero_of_nativeQ (l : Label B N0) (u : CorrectionState.State Point)
     (n : ℕ) (k : Frequency) (z : SpaceTime) (hr : 0 < z.2 0)
@@ -585,8 +585,12 @@ theorem sum_realCoordinate (v : ComplexVector) :
       PhysicalCurlCovariance.realVector v := by
   ext i
   fin_cases i <;>
-    simp [Fin.sum_univ_succ, PhysicalWaveSum.realCoordinate_apply,
-      coordinateVector, PhysicalCurlCovariance.realVector_apply]
+    simp only [PhysicalWaveSum.realCoordinate_apply, coordinateVector, Fin.sum_univ_succ,
+        Fin.isValue, Fin.succ_zero_eq_one, Finset.univ_unique, Fin.default_eq_zero,
+        Finset.sum_singleton, Fin.succ_one_eq_two, Fin.zero_eta, PiLp.add_apply, PiLp.smul_apply,
+        PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true,
+        PiLp.single_eq_of_ne, mul_zero, Fin.reduceEq, add_zero,
+        PhysicalCurlCovariance.realVector_apply, Fin.mk_one, one_ne_zero, zero_add, Fin.reduceFinMk]
 
 /-- An unrestricted scalar-label sum becomes the finite real-part sum once
 the labels outside the specified finite set vanish. -/
@@ -709,7 +713,10 @@ theorem potential_amplitude_zero_unless (i : Fin 3) (I : WaveIndex 1)
   · rw [f.copyAt_active _ (⟨I.1.val, I.1.property, hI⟩ : ActualSignedPhysicalData.NativeLabel
       f.active)]
     have hj : I.2.val ≠ 1 := hbad.resolve_left (not_not.mpr hI)
-    simp [ActualSignedPhysicalData.potentialFamily, hj]
+    simp only [ActualSignedPhysicalData.potentialFamily,
+        DependentSignedPhysicalFamily.Family.singleton_active, Subtype.coe_eta, mem_singleton_iff,
+        Int.cast_ofNat_Int, Int.reduceNeg, PhysicalGraphBounds.liftXY_apply, ↓reduceDIte, hj,
+        ↓reduceIte]
   · rw [f.copyAt_inactive _ hI]
     rfl
 
@@ -723,7 +730,9 @@ theorem pressure_amplitude_zero_unless (I : WaveIndex 1)
   · rw [f.copyAt_active _ (⟨I.1.val, I.1.property, hI⟩ : ActualSignedPhysicalData.NativeLabel
       f.active)]
     have hj : I.2.val ≠ 1 := hbad.resolve_left (not_not.mpr hI)
-    simp [ActualSignedPhysicalData.pressureFamily, hj]
+    simp only [ActualSignedPhysicalData.pressureFamily,
+        DependentSignedPhysicalFamily.Family.singleton_active, Subtype.coe_eta, mem_singleton_iff,
+        Int.cast_ofNat_Int, Int.reduceNeg, ↓reduceDIte, hj, ↓reduceIte]
   · rw [f.copyAt_inactive _ hI]
     rfl
 
@@ -1326,7 +1335,8 @@ theorem canonical_current_values (l : Label B N0) (n : ℕ) {qbig a : ℝ}
     obtain ⟨hv, hpr, hcv, hcp⟩ := canonical_current_zero
       (measuredStates (N0 := N0) ActualInitialization.patch u H hp) l u n w z hr hback hw.1.1 hbad
     dsimp only [z] at hcv hcp
-    have hzero : PhysicalCurlCovariance.realVector (0 : ComplexVector) = 0 := by ext r; simp
+    have hzero : PhysicalCurlCovariance.realVector (0 : ComplexVector) = 0 := by ext r; simp only [
+        PhysicalCurlCovariance.realVector_apply, Pi.zero_apply, Complex.zero_re, PiLp.zero_apply]
     refine ⟨?_, ?_, fun _ => ⟨hv, hpr⟩⟩
     · simp only [hv, CurrentSignedCurl.currentPotential, PhysicalCurlCovariance.cartesianPotential,
         hcv, hzero, map_zero]

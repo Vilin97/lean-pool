@@ -13,6 +13,7 @@ public import Mathlib.Analysis.Analytic.Basic
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.Complex.CauchyIntegral
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Symmetric extension and parity for the actual Volterra solution
@@ -119,7 +120,7 @@ theorem lowZero_radialInverse {F : Field} (hF : LowZero F) :
     rw [hF (t * r) z i hi, smul_zero]
   change r • (∫ t : ℝ in (0)..(1), (t ^ exponent i) • F (t * r) z i) = 0
   rw [heq]
-  simp
+  simp only [intervalIntegral.integral_zero, smul_zero]
 
 theorem matrixAction_lowZero_eq_zero {A : Coeff} (hA : DerivativeShape A)
     {F : Field} (hF : LowZero F) : matrixAction A F = 0 := by
@@ -134,18 +135,20 @@ theorem matrixAction_lowZero_eq_zero {A : Coeff} (hA : DerivativeShape A)
 
 @[simp] theorem radialInverse_zero : radialInverse 0 = 0 := by
   funext r z i
-  simp [radialInverse]
+  simp only [radialInverse, Pi.zero_apply, smul_zero, intervalIntegral.integral_zero]
 
 @[simp] theorem parameterDeriv_zero : parameterDeriv 0 = 0 := by
   funext r z i
-  simp [parameterDeriv]
+  simp only [parameterDeriv, Pi.zero_apply, deriv_const']
 
 @[simp] theorem matrixAction_zero (A : Coeff) : matrixAction A 0 = 0 := by
   funext r z i
-  simp [matrixAction, Matrix.mulVec, dotProduct]
+  simp only [matrixAction, Matrix.mulVec, dotProduct, Pi.zero_apply, mul_zero,
+      Finset.sum_const_zero]
 
 @[simp] theorem letter_zero (A₀ A₁ : Coeff) (b : Bool) : letter A₀ A₁ b 0 = 0 := by
-  cases b <;> simp [letter]
+  cases b <;> simp only [letter, Bool.false_eq_true, ↓reduceIte, matrixAction_zero,
+      radialInverse_zero, parameterDeriv_zero]
 
 theorem derivativeLetter_lowZero (A₀ : Coeff) {A₁ : Coeff}
     (hA : DerivativeShape A₁) (F : Field) : LowZero (letter A₀ A₁ true F) := by
@@ -182,12 +185,13 @@ def GoodWord : List Bool → Prop
 theorem goodWord_losses (w : List Bool) (hw : GoodWord w) :
     2 * losses w ≤ w.length + 1 := by
   match w with
-  | [] => simp [losses]
+  | [] => simp only [losses, mul_zero, List.length_nil, zero_add, zero_le]
   | false :: w =>
       have ih := goodWord_losses w hw
       simp only [losses, List.length_cons]
       omega
-  | [true] => simp [losses]
+  | [true] => simp only [losses, zero_add, mul_one, List.length_cons, List.length_nil,
+      Nat.reduceAdd, Std.le_refl]
   | true :: false :: w =>
       have ih := goodWord_losses w hw
       simp only [losses, List.length_cons]
@@ -269,14 +273,14 @@ theorem RadialBound.radialInverse {F : Field} {T ρ B : ℝ} {c : ℂ} {k : ℕ}
       ‖(t ^ exponent i) • F (t * r) z i‖ ≤ C * t ^ k := by
     intro t ht
     have htr : t * r ∈ Icc 0 T := ⟨mul_nonneg ht.1 hr.1,
-      (mul_le_mul_of_nonneg_right ht.2 hr.1).trans (by simpa using hr.2)⟩
+      (mul_le_mul_of_nonneg_right ht.2 hr.1).trans (by simpa only [one_mul] using hr.2)⟩
     rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg ht.1 _)]
     calc
       t ^ exponent i * ‖F (t * r) z i‖ ≤ 1 * ‖F (t * r) z i‖ :=
         mul_le_mul_of_nonneg_right (pow_le_one₀ ht.1 ht.2) (norm_nonneg _)
       _ ≤ B * (t * r) ^ k / (k.factorial : ℝ) := by
-        simpa using hF (t * r) htr z hz i
-      _ = C * t ^ k := by dsimp [C]; rw [mul_pow]; ring
+        simpa only [one_mul] using hF (t * r) htr z hz i
+      _ = C * t ^ k := by dsimp only [C]; rw [mul_pow]; ring
   have hbe : ∀ᵐ t ∂volume.restrict (Ι (0 : ℝ) 1),
       ‖(t ^ exponent i) • F (t * r) z i‖ ≤ C * t ^ k := by
     filter_upwards [ae_restrict_mem measurableSet_uIoc] with t ht
@@ -286,14 +290,15 @@ theorem RadialBound.radialInverse {F : Field} {T ρ B : ℝ} {c : ℂ} {k : ℕ}
     ((continuous_const.fun_mul (continuous_id.fun_pow k)).intervalIntegrable (0 : ℝ) 1)
   have heq : (∫ t : ℝ in (0)..(1), C * t ^ k) = C / ((k : ℝ) + 1) := by
     rw [intervalIntegral.integral_const_mul, integral_pow]
-    simp [div_eq_mul_inv]
+    simp only [one_pow, ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false, not_false_eq_true,
+        zero_pow, sub_zero, div_eq_mul_inv, one_mul]
   rw [heq, abs_of_nonneg (div_nonneg hC (by positivity))] at hi
   change ‖r • (∫ t : ℝ in (0)..(1), (t ^ exponent i) • F (t * r) z i)‖ ≤ _
   rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg hr.1]
   calc
     _ ≤ r * (C / ((k : ℝ) + 1)) := mul_le_mul_of_nonneg_left hi hr.1
     _ = B * r ^ (k + 1) / ((k + 1).factorial : ℝ) := by
-      dsimp [C]
+      dsimp only [C]
       rw [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one, pow_succ]
       simp only [div_eq_mul_inv, mul_inv_rev]
       ring
@@ -327,7 +332,9 @@ theorem norm_deriv_le {f : ℂ → ℂ} {c : ℂ} {δ C : ℝ}
         at h
     exact h
   rw [heq]
-  simpa [div_eq_mul_inv, mul_comm] using hc
+  simpa only [FormalMultilinearSeries.apply_eq_prod_smul_coeff, Finset.univ_unique,
+      Fin.default_eq_zero, Fin.isValue, Finset.prod_const_one, smul_eq_mul, one_mul, div_eq_mul_inv,
+      ge_iff_le, mul_comm] using hc
 
 theorem nested_closedBall {c z : ℂ} {ρ δ : ℝ} (hz : z ∈ closedBall c ρ) :
     closedBall z δ ⊆ closedBall c (ρ + δ) := by
@@ -371,12 +378,13 @@ theorem word_radialBound {A₀ A₁ : Coeff} {F : Field} {T σ B M δ : ℝ} {c 
       (B * M ^ w.length * (δ⁻¹) ^ losses w) w.length := by
   induction w generalizing ρ with
   | nil =>
-      simpa [word, losses] using hF.mono_radius (by simpa [losses] using hgap)
+      simpa [word, losses] using hF.mono_radius (by simpa only [losses, CharP.cast_eq_zero,
+          zero_mul, add_zero] using hgap)
   | cons b w ih =>
       have hcost : 0 ≤ B * M ^ w.length * (δ⁻¹) ^ losses w := by positivity
       cases b with
       | false =>
-          have hg : ρ + (losses w : ℝ) * δ ≤ σ := by simpa [losses] using hgap
+          have hg : ρ + (losses w : ℝ) * δ ≤ σ := by simpa only [losses] using hgap
           have hr : ρ ≤ σ := le_trans (le_add_of_nonneg_right
             (mul_nonneg (Nat.cast_nonneg _) hδ.le)) hg
           have h := (((ih hg).matrixAction hcost (hA₀.mono_radius hr)).radialInverse
@@ -433,21 +441,21 @@ theorem norm_word_le {A₀ A₁ : Coeff} {F : Field} {T ρ σ B M : ℝ} {c : �
     let q : ℝ := (max 1 p : ℕ)
     let δ : ℝ := (σ - ρ) / q
     have hq : 1 ≤ q := by
-      dsimp [q]
+      dsimp only [q]
       exact_mod_cast (le_max_left 1 p)
     have hq0 : 0 < q := lt_of_lt_of_le zero_lt_one hq
     have hd : 0 < δ := div_pos (sub_pos.mpr hgap) hq0
     have hp : (losses w : ℝ) ≤ q := by
-      dsimp [q]
+      dsimp only [q]
       exact_mod_cast (losses_le_half w hw).trans (le_max_right 1 p)
     have hbudget : ρ + (losses w : ℝ) * δ ≤ σ := by
       have hmul := mul_le_mul_of_nonneg_right hp hd.le
-      have hcancel : q * δ = σ - ρ := by dsimp [δ]; field_simp
+      have hcancel : q * δ = σ - ρ := mul_div_cancel₀ (σ - ρ) hq0.ne'
       rw [hcancel] at hmul
       linarith
     have hwbound := word_radialBound hB hM hd hA₀ hA₁ hF ha w hbudget r hr z hz i
     have hδinv : δ⁻¹ ≤ max 1 (σ - ρ)⁻¹ * q := by
-      dsimp [δ]
+      dsimp only [δ]
       rw [inv_div]
       calc
         q / (σ - ρ) = (σ - ρ)⁻¹ * q := by ring
@@ -462,10 +470,15 @@ theorem norm_word_le {A₀ A₁ : Coeff} {F : Field} {T ρ σ B M : ℝ} {c : �
       _ ≤ B * M ^ w.length * (δ⁻¹) ^ losses w * r ^ w.length /
           (w.length.factorial : ℝ) := hwbound
       _ ≤ B * M ^ w.length * (max 1 (σ - ρ)⁻¹ * q) ^ p * T ^ w.length /
-          (w.length.factorial : ℝ) := by gcongr
-      _ = _ := by dsimp [wordMajorant, p, q]; rw [mul_pow]; ring
+          (w.length.factorial : ℝ) := by
+        have hBM : 0 ≤ B * M ^ w.length := mul_nonneg hB (pow_nonneg hM _)
+        exact div_le_div_of_nonneg_right
+          (mul_le_mul (mul_le_mul_of_nonneg_left hpow hBM) (pow_le_pow_left₀ hr0 hrT _)
+            (pow_nonneg hr0 _) (mul_nonneg hBM (pow_nonneg (zero_le_one.trans hbase) _)))
+          (Nat.cast_nonneg _)
+      _ = _ := by dsimp only [wordMajorant, q, p]; rw [mul_pow]; ring
   · rw [word_eq_zero_of_not_good A₀ hshape w hw F]
-    simpa using mul_nonneg hB
+    simpa only [Pi.zero_apply, norm_zero, ge_iff_le] using mul_nonneg hB
       (wordMajorant_nonneg (mul_nonneg hM hT) (le_trans zero_le_one (le_max_left _ _)) w.length)
 
 /-- The factorial cancels all powers introduced by at most half as many
@@ -584,7 +597,9 @@ theorem norm_wordLayer_le {A₀ A₁ : Coeff} {F : Field} {T ρ σ B M : ℝ} {c
       apply Finset.sum_le_sum
       intro v hv
       simpa using norm_word_le hB hM hT hgap hshape hA₀ hA₁ hF ha (List.ofFn v) hr hz i
-    _ = _ := by simp [mul_assoc, mul_comm, mul_left_comm]
+    _ = _ := by simp only [mul_comm, Finset.sum_const, Finset.card_univ, Fintype.card_pi,
+        Fintype.card_bool, Finset.prod_const, Fintype.card_fin, nsmul_eq_mul, Nat.cast_pow,
+        Nat.cast_ofNat, mul_left_comm, mul_assoc]
 
 /-- Absolute convergence of the actual Volterra-word expansion at every
 point of a smaller closed parameter disk, uniformly bounded by one summable
@@ -670,7 +685,7 @@ theorem regularPrimitive_continuous (c : ℕ) {f : ℝ → E} (hf : Continuous f
   continuous_id.smul (weightedMean_continuous c hf)
 
 @[simp] theorem regularPrimitive_zero (c : ℕ) (f : ℝ → E) :
-    regularPrimitive c f 0 = 0 := by simp [regularPrimitive]
+    regularPrimitive c f 0 = 0 := by simp only [regularPrimitive, zero_smul]
 
 theorem weightedMean_zero [CompleteSpace E] (c : ℕ) (f : ℝ → E) :
     weightedMean c f 0 = (1 / ((c : ℝ) + 1)) • f 0 := by
@@ -743,7 +758,8 @@ theorem regularPrimitive_hasDerivAt_ne_zero [CompleteSpace E] (c : ℕ)
     exact regularPrimitive_eq_div c f hx
   have hfactor : (-(c : ℝ) * ξ ^ (c - 1) / (ξ ^ c) ^ 2) * (ξ ^ c * ξ) = -(c : ℝ) := by
     cases c with
-    | zero => simp
+    | zero => simp only [CharP.cast_eq_zero, neg_zero, zero_tsub, pow_zero, mul_one, one_pow,
+        div_one, one_mul, zero_mul]
     | succ n =>
         simp only [Nat.add_sub_cancel, pow_succ]
         field_simp
@@ -895,14 +911,15 @@ def coefficientAction {R : ℝ} : CoefficientPath R →L[ℂ] Path R →L[ℂ] P
       simpa only [one_mul] using norm_coefficientActionValue_le A f)
 
 theorem coefficientAction_apply {R : ℝ} (A : CoefficientPath R) (f : Path R)
-    (ξ : Icc (0 : ℝ) R) : coefficientAction A f ξ = A ξ (f ξ) := rfl
+    (ξ : Icc (0 : ℝ) R) : coefficientAction (R := R) A f ξ = A ξ (f ξ) := rfl
 
 /-- Path letter, defined pointwise by `pathInverse hR c (if b then coefficientAction (A₁ z)
 (deriv F z) else coefficientAction (A₀ z) (F z))`. -/
 def pathLetter {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (A₀ A₁ : ℂ → CoefficientPath R) (b : Bool) (F : ℂ → Path R) : ℂ → Path R :=
   fun z => pathInverse hR c
-    (if b then coefficientAction (A₁ z) (deriv F z) else coefficientAction (A₀ z) (F z))
+    (if b then coefficientAction (R := R) (A₁ z) (deriv F z)
+      else coefficientAction (R := R) (A₀ z) (F z))
 
 /-- Path word as an element of `w, F => pathLetter hR c A₀ A₁ b (pathWord hR c A₀ A₁ w F)`. -/
 def pathWord {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
@@ -915,8 +932,7 @@ theorem pathLetter_holomorphic {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (hU : IsOpen U) (hA₀ : DifferentiableOn ℂ A₀ U) (hA₁ : DifferentiableOn ℂ A₁ U)
     (hF : DifferentiableOn ℂ F U) (b : Bool) :
     DifferentiableOn ℂ (pathLetter hR c A₀ A₁ b F) U := by
-  have hAction : Differentiable ℂ (coefficientAction (R := R)) :=
-    ContinuousLinearMap.differentiable (𝕜 := ℂ)
+  have hAction := ContinuousLinearMap.differentiable (𝕜 := ℂ)
       (E := CoefficientPath R) (F := Path R →L[ℂ] Path R) coefficientAction
   cases b
   · exact (pathInverse hR c).differentiable.comp_differentiableOn
@@ -955,7 +971,8 @@ def rawField {R : ℝ} (hR : 0 ≤ R) (F : ℂ → Path R) : VolterraAnalyticBou
 r)).toLinearMap`. -/
 def rawCoefficient {R : ℝ} (hR : 0 ≤ R) (A : ℂ → CoefficientPath R) :
     VolterraAnalyticBounds.Coeff :=
-  fun r z => LinearMap.toMatrix' (A z (projIcc 0 R hR r)).toLinearMap
+  fun r z => LinearMap.toMatrix' (R := ℂ) (m := Fin 6) (n := Fin 6)
+    (A z (projIcc 0 R hR r)).toLinearMap
 
 theorem rawCoefficient_mulVec {R : ℝ} (hR : 0 ≤ R) (A : ℂ → CoefficientPath R)
     (r : ℝ) (z : ℂ) (v : Vec) :
@@ -1074,7 +1091,8 @@ theorem binaryWords_length (k : ℕ) : (binaryWords k).length = 2 ^ k := by
 theorem length_of_mem_binaryWords {k : ℕ} {w : List Bool} (hw : w ∈ binaryWords k) :
     w.length = k := by
   induction k generalizing w with
-  | zero => simpa [binaryWords] using hw
+  | zero => simpa only [List.length_eq_zero_iff, binaryWords, List.mem_cons, List.not_mem_nil,
+      or_false] using hw
   | succ k ih =>
       simp only [binaryWords, List.mem_append, List.mem_map] at hw
       rcases hw with ⟨v, hv, rfl⟩ | ⟨v, hv, rfl⟩ <;>
@@ -1091,7 +1109,8 @@ theorem norm_list_sum_le {E : Type*} [SeminormedAddCommGroup E]
     (l : List E) (M : ℝ) (h : ∀ x ∈ l, ‖x‖ ≤ M) :
     ‖l.sum‖ ≤ (l.length : ℝ) * M := by
   induction l with
-  | nil => simp
+  | nil => simp only [List.sum_nil, norm_zero, List.length_nil, CharP.cast_eq_zero, zero_mul,
+      Std.le_refl]
   | cons x l ih =>
       simp only [List.sum_cons, List.length_cons, Nat.cast_add, Nat.cast_one]
       calc
@@ -1126,7 +1145,8 @@ theorem layer_holomorphic {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
 
 @[simp] theorem layer_zero {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (A₀ A₁ : ℂ → CoefficientPath R) (F : ℂ → Path R) :
-    layer hR c A₀ A₁ F 0 = F := by simp [layer, binaryWords, pathWord]
+    layer hR c A₀ A₁ F 0 = F := by simp only [layer, binaryWords, List.map_cons, pathWord,
+        List.map_nil, List.sum_cons, List.sum_nil, add_zero]
 
 theorem pathLetter_add {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     (A₀ A₁ : ℂ → CoefficientPath R) (b : Bool) {F G : ℂ → Path R} {z : ℂ}
@@ -1135,7 +1155,7 @@ theorem pathLetter_add {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
       pathLetter hR c A₀ A₁ b F z + pathLetter hR c A₀ A₁ b G z := by
   cases b <;> simp only [pathLetter, Bool.false_eq_true, ite_false, ite_true, Pi.add_apply]
   · simp only [map_add]
-  · change pathInverse hR c (coefficientAction (A₁ z) (deriv (fun w => F w + G w) z)) = _
+  · change pathInverse hR c (coefficientAction (R := R) (A₁ z) (deriv (fun w => F w + G w) z)) = _
     rw [deriv_fun_add hF hG]
     simp only [map_add]
 
@@ -1145,7 +1165,8 @@ theorem pathLetter_list_sum {R : ℝ} (hR : 0 ≤ R) (c : Fin 6 → ℕ)
     {z : ℂ} (hz : z ∈ U) :
     (l.map (pathLetter hR c A₀ A₁ b)).sum z = pathLetter hR c A₀ A₁ b l.sum z := by
   induction l with
-  | nil => cases b <;> simp [pathLetter]
+  | nil => cases b <;> simp only [List.map_nil, List.sum_nil, Pi.zero_apply, pathLetter,
+      Bool.false_eq_true, ↓reduceIte, map_zero, deriv_zero]
   | cons F l ih =>
       rw [List.map_cons, List.sum_cons, Pi.add_apply, List.sum_cons,
         pathLetter_add hR c A₀ A₁ b
@@ -1195,7 +1216,8 @@ theorem rawCoefficient_bound {R : ℝ} (hR : 0 ≤ R) (A : ℂ → CoefficientPa
         _ = ‖A z (projIcc 0 R hR r)‖ := by rw [Pi.norm_single, norm_one, mul_one]
         _ ≤ ‖A z‖ := (A z).norm_coe_le_norm _
         _ ≤ M := hA z hz
-    _ = 6 * M := by simp
+    _ = 6 * M := by simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+        Nat.cast_ofNat]
 
 theorem pathWord_bound {R : ℝ} (hR : 0 ≤ R)
     {A₀ A₁ : ℂ → CoefficientPath R} {F : ℂ → Path R} {U : Set ℂ}
@@ -1316,13 +1338,15 @@ theorem solutionSeries_deriv_hasSum {z : ℂ} (hz : z ∈ Metric.ball center ρ)
 particular, convergence is not merely convergence of unrelated scalar bounds. -/
 theorem solutionSeries_equation {z : ℂ} (hz : z ∈ Metric.ball center ρ) :
     solutionSeries hR A₀ A₁ F z = F z + pathInverse hR VolterraAnalyticBounds.exponent
-      (coefficientAction (A₀ z) (solutionSeries hR A₀ A₁ F z) +
-        coefficientAction (A₁ z) (deriv (solutionSeries hR A₀ A₁ F) z)) := by
+      (coefficientAction (R := R) (A₀ z) (solutionSeries hR A₀ A₁ F z) +
+        coefficientAction (R := R) (A₁ z) (deriv (solutionSeries hR A₀ A₁ F) z)) := by
   have hs := solutionSeries_hasSum hR hU hA₀ hA₁ hF hDisk hgap hB hM hshape hbA₀ hbA₁ hbF
     (Metric.ball_subset_closedBall hz)
   have hd := solutionSeries_deriv_hasSum hR hU hA₀ hA₁ hF hDisk hgap hB hM hshape hbA₀ hbA₁ hbF hz
-  let L₀ := (pathInverse hR VolterraAnalyticBounds.exponent).comp (coefficientAction (A₀ z))
-  let L₁ := (pathInverse hR VolterraAnalyticBounds.exponent).comp (coefficientAction (A₁ z))
+  let L₀ := (pathInverse hR VolterraAnalyticBounds.exponent).comp
+    (coefficientAction (R := R) (A₀ z))
+  let L₁ := (pathInverse hR VolterraAnalyticBounds.exponent).comp
+    (coefficientAction (R := R) (A₁ z))
   have hsum := (hs.mapL L₀).add (hd.mapL L₁)
   have hshift : HasSum (fun k => layer hR VolterraAnalyticBounds.exponent A₀ A₁ F (k + 1) z)
       (L₀ (solutionSeries hR A₀ A₁ F z) + L₁ (deriv (solutionSeries hR A₀ A₁ F) z)) := by
@@ -1334,7 +1358,10 @@ theorem solutionSeries_equation {z : ℂ} (hz : z ∈ Metric.ball center ρ) :
     _ = layer hR VolterraAnalyticBounds.exponent A₀ A₁ F 0 z +
         ∑' k, layer hR VolterraAnalyticBounds.exponent A₀ A₁ F (k + 1) z :=
       hs.summable.tsum_eq_zero_add
-    _ = _ := by rw [layer_zero, hshift.tsum_eq, map_add]; rfl
+    _ = _ := (congrArg₂ (· + ·) (congrFun (layer_zero hR _ A₀ A₁ F) z) hshift.tsum_eq).trans
+      (congrArg (F z + ·) ((pathInverse hR VolterraAnalyticBounds.exponent).map_add
+        (coefficientAction (R := R) (A₀ z) (solutionSeries hR A₀ A₁ F z))
+        (coefficientAction (R := R) (A₁ z) (deriv (solutionSeries hR A₀ A₁ F) z))).symm)
 
 end Summation
 
@@ -1354,13 +1381,13 @@ theorem integralSolution_spec {R : ℝ} (hR : 0 ≤ R)
     DifferentiableOn ℂ (integralSolution hR A₀ A₁ f) (Metric.ball center ρ) ∧
       ∀ z ∈ Metric.ball center ρ,
         integralSolution hR A₀ A₁ f z = pathInverse hR VolterraAnalyticBounds.exponent
-          (f z + (coefficientAction (A₀ z) (integralSolution hR A₀ A₁ f z) +
-            coefficientAction (A₁ z) (deriv (integralSolution hR A₀ A₁ f) z))) := by
-  obtain ⟨K₀, hK₀⟩ := (isCompact_closedBall center σ).exists_bound_of_continuousOn
+          (f z + (coefficientAction (R := R) (A₀ z) (integralSolution hR A₀ A₁ f z) +
+            coefficientAction (R := R) (A₁ z) (deriv (integralSolution hR A₀ A₁ f) z))) := by
+  choose K₀ hK₀ using (isCompact_closedBall center σ).exists_bound_of_continuousOn
     (f := A₀) (hA₀.continuousOn.mono hDisk)
-  obtain ⟨K₁, hK₁⟩ := (isCompact_closedBall center σ).exists_bound_of_continuousOn
+  choose K₁ hK₁ using (isCompact_closedBall center σ).exists_bound_of_continuousOn
     (f := A₁) (hA₁.continuousOn.mono hDisk)
-  obtain ⟨B₀, hB₀⟩ := (isCompact_closedBall center σ).exists_bound_of_continuousOn
+  choose B₀ hB₀ using (isCompact_closedBall center σ).exists_bound_of_continuousOn
     (hf.continuousOn.mono hDisk)
   let K := max 0 (max K₀ K₁)
   have hK : 0 ≤ K := le_max_left _ _
@@ -1388,7 +1415,7 @@ theorem integralSolution_spec {R : ℝ} (hR : 0 ≤ R)
 /-- Rhs path, given by `f z + (coefficientAction (A₀ z) (W z) + coefficientAction (A₁ z) (deriv
 W z))`. -/
 def rhsPath {R : ℝ} (A₀ A₁ : ℂ → CoefficientPath R) (f W : ℂ → Path R) (z : ℂ) : Path R :=
-  f z + (coefficientAction (A₀ z) (W z) + coefficientAction (A₁ z) (deriv W z))
+  f z + (coefficientAction (R := R) (A₀ z) (W z) + coefficientAction (R := R) (A₁ z) (deriv W z))
 
 /-- An actual radial function extending the solved path. Its definition
 uses the regular integral even at the axis and beyond the path interval. -/
@@ -1562,7 +1589,7 @@ theorem homogeneous_layer_eq {R : ℝ} (hR : 0 ≤ R)
     (hU : IsOpen U) (hA₀ : DifferentiableOn ℂ A₀ U) (hA₁ : DifferentiableOn ℂ A₁ U)
     (hV : DifferentiableOn ℂ V U)
     (heq : ∀ z ∈ U, V z = pathInverse hR VolterraAnalyticBounds.exponent
-      (coefficientAction (A₀ z) (V z) + coefficientAction (A₁ z) (deriv V z)))
+      (coefficientAction (R := R) (A₀ z) (V z) + coefficientAction (R := R) (A₁ z) (deriv V z)))
     (k : ℕ) {z : ℂ} (hz : z ∈ U) :
     layer hR VolterraAnalyticBounds.exponent A₀ A₁ V k z = V z := by
   induction k generalizing z with
@@ -1587,7 +1614,7 @@ theorem homogeneous_zero_on_closedDisk {R : ℝ} (hR : 0 ≤ R)
     (hbA₁ : VolterraAnalyticBounds.MatrixBound (rawCoefficient hR A₁) R center σ M)
     (hbV : ∀ z ∈ Metric.closedBall center σ, ‖V z‖ ≤ B)
     (heq : ∀ z ∈ U, V z = pathInverse hR VolterraAnalyticBounds.exponent
-      (coefficientAction (A₀ z) (V z) + coefficientAction (A₁ z) (deriv V z)))
+      (coefficientAction (R := R) (A₀ z) (V z) + coefficientAction (R := R) (A₁ z) (deriv V z)))
     {z : ℂ} (hz : z ∈ Metric.closedBall center ρ) : V z = 0 := by
   have hzU := hDisk (Metric.closedBall_subset_closedBall hgap.le hz)
   have hs := VolterraAnalyticBounds.summable_wordLayers (B := B) (mul_nonneg hM hR)
@@ -1605,7 +1632,7 @@ theorem homogeneous_solution_zero {R : ℝ} (hR : 0 ≤ R)
     (hV : DifferentiableOn ℂ V U)
     (hshape : VolterraAnalyticBounds.DerivativeShape (rawCoefficient hR A₁))
     (heq : ∀ z ∈ U, V z = pathInverse hR VolterraAnalyticBounds.exponent
-      (coefficientAction (A₀ z) (V z) + coefficientAction (A₁ z) (deriv V z))) :
+      (coefficientAction (R := R) (A₀ z) (V z) + coefficientAction (R := R) (A₁ z) (deriv V z))) :
     ∀ z ∈ U, V z = 0 := by
   intro z hz
   obtain ⟨δ, hδ, hδU⟩ := Metric.mem_nhds_iff.mp (hU.mem_nhds hz)
@@ -1646,15 +1673,12 @@ theorem integral_solution_unique {R : ℝ} (hR : 0 ≤ R)
     exact deriv_fun_sub (hW₀.differentiableAt (hU.mem_nhds hz))
       (hW₁.differentiableAt (hU.mem_nhds hz))
   have heq : ∀ z ∈ U, (W₀ - W₁) z = pathInverse hR VolterraAnalyticBounds.exponent
-      (coefficientAction (A₀ z) ((W₀ - W₁) z) +
-        coefficientAction (A₁ z) (deriv (W₀ - W₁) z)) := by
+      (coefficientAction (R := R) (A₀ z) ((W₀ - W₁) z) +
+        coefficientAction (R := R) (A₁ z) (deriv (W₀ - W₁) z)) := by
     intro z hz
     have hs := congrArg₂ (fun u v : Path R => u - v) (heq₀ z hz) (heq₁ z hz)
-    rw [← map_sub] at hs
-    refine hs.trans ?_
-    congr 1
-    rw [hd z hz]
-    simp only [rhsPath, map_sub, Pi.sub_apply]
+    refine (hs.trans (ContinuousLinearMap.map_sub _ _ _).symm).trans (congrArg _ ?_)
+    simp only [hd z hz, rhsPath, ContinuousLinearMap.map_sub, Pi.sub_apply]
     abel
   intro z hz
   have hzero := homogeneous_solution_zero hR hU hA₀ hA₁ (hW₀.sub hW₁) hshape heq z hz
@@ -1745,7 +1769,7 @@ noncomputable def parityVec : Vec →L[ℂ] Vec :=
     parityVec v i = paritySign i * v i := rfl
 
 @[simp] theorem paritySign_mul_self (i : Fin 6) : paritySign i * paritySign i = 1 := by
-  by_cases hi : i.val < 4 <;> simp [paritySign, hi]
+  by_cases hi : i.val < 4 <;> simp only [paritySign, hi, ↓reduceIte, mul_one, mul_neg, neg_neg]
 
 @[simp] theorem parityVec_involutive (v : Vec) : parityVec (parityVec v) = v := by
   funext i
@@ -1781,16 +1805,16 @@ noncomputable def reflectedForcing (f : Field) : Field := fun r z => -f (-r) z
 
 @[simp] theorem reflectField_twice (W : Field) : reflectField (reflectField W) = W := by
   funext r z
-  simp [reflectField]
+  simp only [reflectField, neg_neg]
 
 @[simp] theorem reflectCoeff_twice (A : Coeff) : reflectCoeff (reflectCoeff A) = A := by
   funext r z
-  simp [reflectCoeff]
+  simp only [reflectCoeff, neg_neg]
 
 @[simp] theorem reflectedForcing_twice (f : Field) :
     reflectedForcing (reflectedForcing f) = f := by
   funext r z
-  simp [reflectedForcing]
+  simp only [reflectedForcing, neg_neg]
 
 @[simp] theorem parameterDeriv_reflect (W : Field) :
     parameterDeriv (reflectField W) = reflectField (parameterDeriv W) := rfl
@@ -1799,8 +1823,9 @@ theorem equationRHS_reflect (A₀ A₁ : Coeff) (f W : Field) :
     equationRHS (reflectCoeff A₀) (reflectCoeff A₁) (reflectedForcing f) (reflectField W) =
       reflectedForcing (equationRHS A₀ A₁ f W) := by
   funext r z i
-  simp [equationRHS, reflectCoeff, reflectedForcing, reflectField, matrixAction,
-    parameterDeriv, Matrix.mulVec, dotProduct, Finset.sum_neg_distrib]
+  simp only [equationRHS, reflectedForcing, matrixAction, reflectCoeff, reflectField,
+      parameterDeriv_reflect, Pi.add_apply, Pi.neg_apply, Matrix.mulVec, dotProduct,
+      Matrix.neg_apply, neg_mul, Finset.sum_neg_distrib, parameterDeriv, neg_add_rev]
   ring
 
 /-- The sign from radial reflection is exactly the sign in the reflected
@@ -1808,8 +1833,8 @@ forcing. This is an identity of actual Bochner integrals. -/
 theorem radialInverse_reflect (F : Field) :
     radialInverse (reflectedForcing F) = reflectField (radialInverse F) := by
   funext r z i
-  simp [radialInverse, reflectedForcing, reflectField, smul_neg,
-    intervalIntegral.integral_neg, mul_neg, neg_smul]
+  simp only [radialInverse, reflectedForcing, Pi.neg_apply, smul_neg, Complex.real_smul,
+      Complex.ofReal_pow, intervalIntegral.integral_neg, reflectField, mul_neg, neg_smul]
 
 theorem radialInverse_equationRHS_reflect (A₀ A₁ : Coeff) (f W : Field) :
     radialInverse (equationRHS (reflectCoeff A₀) (reflectCoeff A₁)
@@ -1835,21 +1860,21 @@ theorem negativeHalf_equation {R : ℝ} {U : Set ℂ} {A₀ A₁ : Coeff} {f W :
     IntegralEquationOn (Icc (-R) 0) U A₀ A₁ f (reflectField W) := by
   intro r hr z hz
   have hh := h.reflect r ⟨neg_nonneg.mpr hr.2, by linarith [hr.1]⟩ z hz
-  simpa using hh
+  simpa only [reflectCoeff_twice, reflectedForcing_twice] using hh
 
 /-- Glue, defined pointwise by `if 0 ≤ r then Wp r z else Wm (-r) z`. -/
 noncomputable def glue (Wp Wm : Field) : Field :=
   fun r z => if 0 ≤ r then Wp r z else Wm (-r) z
 
 theorem glue_nonneg (Wp Wm : Field) {r : ℝ} (hr : 0 ≤ r) (z : ℂ) :
-    glue Wp Wm r z = Wp r z := by simp [glue, hr]
+    glue Wp Wm r z = Wp r z := by simp only [glue, hr, ↓reduceIte]
 
 theorem glue_nonpos {Wp Wm : Field} (h0 : ∀ z, Wp 0 z = Wm 0 z)
     {r : ℝ} (hr : r ≤ 0) (z : ℂ) : glue Wp Wm r z = Wm (-r) z := by
   by_cases hr0 : r = 0
   · subst r
-    simpa [glue] using h0 z
-  · simp [glue, show ¬ 0 ≤ r by exact not_le.mpr (lt_of_le_of_ne hr hr0)]
+    simpa only [glue, Std.le_refl, ↓reduceIte, neg_zero] using h0 z
+  · simp only [glue, show ¬0 ≤ r by exact not_le.mpr (lt_of_le_of_ne hr hr0), ↓reduceIte]
 
 theorem equationRHS_congr_at {A₀ A₁ : Coeff} {f W V : Field} {r : ℝ}
     (h : ∀ z, W r z = V r z) (z : ℂ) :
@@ -1902,9 +1927,9 @@ theorem glue_parameter_holomorphic {R : ℝ} {U : Set ℂ} {Wp Wm : Field}
     {r : ℝ} (hr : r ∈ Icc (-R) R) (i : Fin 6) :
     DifferentiableOn ℂ (fun z => glue Wp Wm r z i) U := by
   by_cases hs : 0 ≤ r
-  · simpa [glue, hs] using hp r ⟨hs, hr.2⟩ i
+  · simpa only [glue, hs, ↓reduceIte] using hp r ⟨hs, hr.2⟩ i
   · have hn : -r ∈ Icc 0 R := ⟨neg_nonneg.mpr (le_of_not_ge hs), by linarith [hr.1]⟩
-    simpa [glue, hs] using hm (-r) hn i
+    simpa only [glue, hs, ↓reduceIte] using hm (-r) hn i
 
 theorem glue_jointly_continuous {R : ℝ} {U : Set ℂ} {Wp Wm : Field}
     (h0 : ∀ z ∈ U, Wp 0 z = Wm 0 z)
@@ -1982,25 +2007,29 @@ noncomputable def sideRestriction {R : ℝ} {E : Type*}
 noncomputable def signedRestriction {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R) (b : Bool) :
     SymmetricPath R E →L[ℂ] C(Icc (0 : ℝ) R, E) :=
-  (if b then (-1 : ℂ) else 1) • sideRestriction hR b
+  (if b then (-1 : ℂ) else 1) • sideRestriction (E := E) hR b
 
 /-- Side data, defined pointwise by `signedRestriction hR b (F z)`. -/
 noncomputable def sideData {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R) (b : Bool)
     (F : ℂ → SymmetricPath R E) : ℂ → C(Icc (0 : ℝ) R, E) :=
-  fun z => signedRestriction hR b (F z)
+  fun z => signedRestriction (E := E) hR b (F z)
 
 @[simp] theorem sideData_false {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R)
     (F : ℂ → SymmetricPath R E) (z : ℂ) (x : Icc (0 : ℝ) R) :
     sideData hR false F z x = F z (positiveEmbedding hR x) := by
-  simp [sideData, signedRestriction, sideRestriction, sideEmbedding]
+  simp only [sideData, signedRestriction, Bool.false_eq_true, ↓reduceIte, sideRestriction,
+      sideEmbedding, one_smul, LinearMap.mkContinuous_apply, LinearMap.coe_mk, AddHom.coe_mk,
+      ContinuousMap.comp_apply]
 
 @[simp] theorem sideData_true {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R)
     (F : ℂ → SymmetricPath R E) (z : ℂ) (x : Icc (0 : ℝ) R) :
     sideData hR true F z x = -F z (negativeEmbedding hR x) := by
-  simp [sideData, signedRestriction, sideRestriction, sideEmbedding]
+  simp only [sideData, signedRestriction, ↓reduceIte, sideRestriction, sideEmbedding, neg_smul,
+      one_smul, neg_apply, LinearMap.mkContinuous_apply, LinearMap.coe_mk, AddHom.coe_mk,
+      ContinuousMap.neg_apply, ContinuousMap.comp_apply]
 
 theorem sideData_holomorphic {R : ℝ} {E : Type*}
     [NormedAddCommGroup E] [NormedSpace ℂ E] (hR : 0 ≤ R) (b : Bool)
@@ -2017,7 +2046,8 @@ noncomputable def symmetricRawField {R : ℝ} (hR : 0 ≤ R)
 (by linarith) r)).toLinearMap`. -/
 noncomputable def symmetricRawCoefficient {R : ℝ} (hR : 0 ≤ R)
     (A : ℂ → SymmetricCoefficientPath R) : Coeff :=
-  fun r z => LinearMap.toMatrix' (A z (projIcc (-R) R (by linarith) r)).toLinearMap
+  fun r z => LinearMap.toMatrix' (R := ℂ) (m := Fin 6) (n := Fin 6)
+    (A z (projIcc (-R) R (by linarith) r)).toLinearMap
 
 theorem sideRawField_pos {R : ℝ} (hR : 0 ≤ R)
     (F : ℂ → SymmetricPath R Vec) {r : ℝ} (hr : r ∈ Icc 0 R) (z : ℂ) :
@@ -2278,16 +2308,11 @@ theorem rhsPath_parity {R : ℝ} (hR : 0 ≤ R)
     parityPath R (NilpotentVolterra.rhsPath (sideData hR false A₀)
       (sideData hR false A₁) (sideData hR false f) W z) := by
   unfold NilpotentVolterra.rhsPath
-  rw [parityPath_deriv hW]
   ext r i
-  change (sideData hR true f z r + ((sideData hR true A₀ z r) (parityVec (W z r)) +
-    (sideData hR true A₁ z r) (parityVec (deriv W z r)))) i =
-    (parityVec (sideData hR false f z r +
-      ((sideData hR false A₀ z r) (W z r) +
-        (sideData hR false A₁ z r) (deriv W z r)))) i
-  rw [sideData_forcing_parity hR hf hz r,
-    sideData_coefficient_parity hR hA₀ hz r,
-    sideData_coefficient_parity hR hA₁ hz r, map_add, map_add]
+  simp only [parityPath_deriv hW, ContinuousMap.add_apply,
+    NilpotentVolterra.coefficientAction_apply, parityPath_apply,
+    sideData_forcing_parity hR hf hz r, sideData_coefficient_parity hR hA₀ hz r,
+    sideData_coefficient_parity hR hA₁ hz r, map_add]
 
 /-- Parity transforms a solution of the positive equation into a solution
 of the reflected positive equation. -/
@@ -2324,17 +2349,17 @@ theorem side_curves_parity {R : ℝ} (hR : 0 ≤ R)
         (sideData hR true A₁) (sideData hR true f))
       (fun z => parityPath R (NilpotentVolterra.integralSolution hR
         (sideData hR false A₀) (sideData hR false A₁) (sideData hR false f) z)) U := by
-  obtain ⟨hp, hpEq⟩ := NilpotentVolterra.integralSolution_spec_open hR hU
+  have hP := NilpotentVolterra.integralSolution_spec_open hR hU
     (sideData_holomorphic hR false hA₀) (sideData_holomorphic hR false hA₁)
     (sideData_holomorphic hR false hf) (side_shape hR hshape false)
-  obtain ⟨hm, hmEq⟩ := NilpotentVolterra.integralSolution_spec_open hR hU
-    (sideData_holomorphic hR true hA₀) (sideData_holomorphic hR true hA₁)
+  have htA₀ := sideData_holomorphic hR true hA₀
+  have htA₁ := sideData_holomorphic hR true hA₁
+  have hM := NilpotentVolterra.integralSolution_spec_open hR hU htA₀ htA₁
     (sideData_holomorphic hR true hf) (side_shape hR hshape true)
-  exact NilpotentVolterra.integral_solution_unique hR hU
-    (sideData_holomorphic hR true hA₀) (sideData_holomorphic hR true hA₁)
-    hm ((parityPath R).differentiable.comp_differentiableOn hp)
-    (side_shape hR hshape true) hmEq
-    (parity_transforms_equation hR hU hp hpA₀ hpA₁ hpf hpEq)
+  exact NilpotentVolterra.integral_solution_unique hR hU htA₀ htA₁
+    hM.1 ((parityPath R).differentiable.comp_differentiableOn hP.1)
+    (side_shape hR hshape true) hM.2
+    (parity_transforms_equation hR hU hP.1 hpA₀ hpA₁ hpf hP.2)
 
 theorem sideSolution_parity {R : ℝ} (hR : 0 ≤ R)
     {A₀ A₁ : ℂ → SymmetricCoefficientPath R} {f : ℂ → SymmetricPath R Vec}
@@ -2419,7 +2444,7 @@ theorem last_components_odd {W : Field} {R : ℝ} {U : Set ℂ}
     (i : Fin 6) (hi : 4 ≤ i.val) {z : ℂ} (hz : z ∈ U) :
     ∀ r ∈ Ioo (-R) R, W (-r) z i = -W r z i := by
   intro r hr
-  simpa [parityVec_apply, paritySign, not_lt.mpr hi] using
+  simpa only [parityVec_apply, paritySign, not_lt.mpr hi, ↓reduceIte, neg_mul, one_mul] using
     congrFun (hW r ⟨hr.1.le, hr.2.le⟩ z hz) i
 
 /-- Two derivatives with the same value and axis trace glue to an ordinary
@@ -2432,7 +2457,7 @@ theorem hasDerivAt_glue_zero {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
   have hh := hf.tendsto_slope_zero.if' (p := fun r : ℝ => 0 ≤ r) hg.tendsto_slope_zero
   convert! hh using 1
   funext r
-  by_cases hr : 0 ≤ r <;> simp [hr, h0]
+  by_cases hr : 0 ≤ r <;> simp only [zero_add, hr, ↓reduceIte, Std.le_refl, h0]
 
 /-- The derivatives from both sides match at the axis. The value is
 determined by the forcing, with the exact singular-diagonal factor. -/
@@ -2459,7 +2484,7 @@ theorem symmetricSolution_hasDerivAt_zero {R : ℝ} (hR : 0 ≤ R)
   have hdneg : HasDerivAt (fun r => sideSolution hR true A₀ A₁ f (-r) z i)
       ((1 / ((exponent i : ℝ) + 1)) • symmetricRawField hR f 0 z i) 0 := by
     simpa only [Function.comp_def, neg_one_smul, neg_neg] using
-      hdm.scomp_of_eq 0 (hasDerivAt_neg (0 : ℝ)) (by simp)
+      hdm.scomp_of_eq 0 (hasDerivAt_neg (0 : ℝ)) (by simp only [neg_zero])
   have hzero : sideSolution hR false A₀ A₁ f 0 z i =
       sideSolution hR true A₀ A₁ f (-0) z i := by
     simpa only [neg_zero] using congrFun ((hp.axis_zero z hz).trans (hm.axis_zero z hz).symm) i

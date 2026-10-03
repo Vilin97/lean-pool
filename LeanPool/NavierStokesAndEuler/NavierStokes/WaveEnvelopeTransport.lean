@@ -47,7 +47,8 @@ theorem native_coordinate_lattice (g : Geometry) (k : Frequency) (Y : Plane) :
     g.center + g.basis (g.coordinates k Y) =
       TorusAverages.latticePoint (-k) + coverPower g.gap Y := by
   have hneg : TorusAverages.latticePoint (-k) = -TorusAverages.latticePoint k := by
-    ext <;> simp [TorusAverages.latticePoint]
+    ext <;> simp only [TorusAverages.latticePoint, Prod.fst_neg, Int.cast_neg, Prod.snd_neg,
+        Prod.neg_mk]
   rw [Geometry.coordinates, ContinuousLinearEquiv.apply_symm_apply, hneg]
   abel
 
@@ -187,12 +188,12 @@ theorem separated_bandGeometry (B : Plane ≃L[ℝ] Plane) (h : ℝ) (n gap : �
     · exact (abs_le.mpr hz.1).trans_lt hr
     · apply (abs_le.mpr ?_).trans_lt hr0
       dsimp only
-      constructor <;> linarith [htime.1, htime.2]
+      constructor <;> linarith only [htime, htime.1, htime.2]
   · change (center + B (0, r0)) + B (z.1, ChartScales.timeCoefficient h n * z.2 - r0) =
       center + scaledBasis B _ _ z
     rw [scaledBasis_apply, add_assoc, ← map_add]
     congr 2
-    ext <;> simp
+    ext <;> simp only [Prod.mk_add_mk, zero_add, add_sub_cancel]
 
 theorem exists_separated_native_rectangle (B : Plane ≃L[ℝ] Plane) :
     ∃ r : ℝ, 0 < r ∧ ∀ h : ℝ, ∀ n gap : ℕ, ∀ center : Plane,
@@ -200,13 +201,13 @@ theorem exists_separated_native_rectangle (B : Plane ≃L[ℝ] Plane) :
   let M := ‖(B : Plane →L[ℝ] Plane)‖
   let r := 1 / (8 * (M + 1))
   have hM : 0 ≤ M := norm_nonneg _
-  have hr : 0 < r := by dsimp [r]; positivity
+  have hr : 0 < r := by dsimp only [r]; positivity
   refine ⟨r, hr, fun h n gap center => separated_bandGeometry B h n gap center
-    (R := 2 * r) (by linarith) (by linarith) ?_⟩
+    (R := 2 * r) (by linarith only [hr]) (by linarith only [hr]) ?_⟩
   change M * (2 * (1 / (8 * (M + 1)))) < 1 / 2
   apply (mul_lt_mul_iff_of_pos_right (show 0 < 8 * (M + 1) by positivity)).1
   field_simp
-  linarith
+  linarith only [hM]
 
 section GroupedSources
 
@@ -232,18 +233,20 @@ theorem copyCell_locallyFinite (g : Geometry) (r L : ℝ) :
   let κ : Plane → ℝ := (rectangle r L).indicator (fun _ => 1)
   have hκ : HasCompactSupport κ :=
     HasCompactSupport.intro' (K := rectangle r L) (isCompact_Icc.prod isCompact_Icc)
-      (isClosed_Icc.prod isClosed_Icc) (fun z hz => by simp [κ, hz])
+      (isClosed_Icc.prod isClosed_Icc) (fun z hz => by simp only [hz, not_false_eq_true,
+          indicator_of_notMem, κ])
   intro z
   obtain ⟨s, hs⟩ := g.finite_copy_cutoffs hκ (‖z.2‖ + 1)
   refine ⟨{y : P × Plane | ‖y.2‖ < ‖z.2‖ + 1},
-    (isOpen_lt continuous_snd.norm continuous_const).mem_nhds (by simp), ?_⟩
+    (isOpen_lt continuous_snd.norm continuous_const).mem_nhds (by simp only [mem_ofPred_eq,
+        lt_add_iff_pos_right, zero_lt_one]), ?_⟩
   apply s.finite_toSet.subset
   intro k hk
   obtain ⟨y, hy, hnorm⟩ := hk
   by_contra hnot
   have hh := hs y.2 hnorm.le k hnot
   change g.coordinates k y.2 ∈ rectangle r L at hy
-  simp [κ, hy] at hh
+  simp only [hy, indicator_of_mem, one_ne_zero, κ] at hh
 
 /-- Coefficients may differ in every native copy. This is an actual sum
 of common-cover fields, with no substitution of a native-periodic source. -/
@@ -351,7 +354,8 @@ theorem grouped_waveClass (s : StripData P) (g : ℕ → Geometry) (r L : ℕ �
     · obtain ⟨k, hk⟩ := hk
       exact ((hFs n k).contDiffAt ((sourceStrip s).isOpen_domain.mem_nhds hz)).congr_of_eventuallyEq
         (grouped_eventually_eq_copy (hsep n) (F n) (hFsupport n) hk) |>.contDiffWithinAt
-    · have hn : ∀ k, z ∉ copyCell (g n) (r n) (L n) k := by simpa using hk
+    · have hn : ∀ k, z ∉ copyCell (g n) (r n) (L n) k := by simpa only [Prod.forall, Prod.exists,
+        not_exists] using hk
       exact (contDiffAt_const.congr_of_eventuallyEq
         (grouped_eventually_zero (F n) (hFsupport n) hn)).contDiffWithinAt
   · intro N
@@ -366,8 +370,9 @@ theorem grouped_waveClass (s : StripData P) (g : ℕ → Geometry) (r L : ℕ �
         C * s.epsilon n ^ α * s.growth n z.1 ^ d *
           (Real.sqrt (s.zeta z.1) * copyEnvelope (g n) (r n) (L n) (W n) z.2)
       rw [copyEnvelope_eq_copy (hsep n) (W n) hk]
-      nlinarith
-    · have hn : ∀ k, z ∉ copyCell (g n) (r n) (L n) k := by simpa using hk
+      nlinarith only [hh]
+    · have hn : ∀ k, z ∉ copyCell (g n) (r n) (L n) k := by simpa only [Prod.forall, Prod.exists,
+        not_exists] using hk
       rw [jet_congr (grouped_eventually_zero (F n) (hFsupport n) hn) j,
         iteratedFDeriv_fun_zero, Pi.zero_apply, norm_zero]
       exact majorant_nonneg _ _ _ hC _ _ _
@@ -440,7 +445,9 @@ theorem waveClass_sourceArgument_bound
         ‖sourceLinear P g‖ ^ j := hjet
     _ ≤ (A * s.epsilon n ^ α * s.growth n z.1 ^ p * (Real.sqrt (s.zeta z.1) * W n v)) *
         (K ^ N * s.growth n z.1 ^ N) :=
-      mul_le_mul hsrc hpow (pow_nonneg (norm_nonneg _) _) (by positivity)
+      mul_le_mul hsrc hpow (pow_nonneg (norm_nonneg _) _)
+        (mul_nonneg (mul_nonneg (mul_nonneg hA (Real.rpow_nonneg he.le α)) (pow_nonneg hGn p))
+          (mul_nonneg (Real.sqrt_nonneg _) hw))
     _ = _ := by rw [pow_add]; ring
 
 end SourceJetTransport
@@ -510,7 +517,10 @@ theorem waveClass_forcingAlong_bound
   obtain ⟨A, hA, q, hnative⟩ := hBj N
   let K := bandArgumentCost B gapBound
   have hK : 1 ≤ K := bandArgumentCost_one_le B gapBound
-  refine ⟨(2 : ℝ) ^ N * A * K ^ N * C, by positivity, q + N + p, ?_⟩
+  have hK0 : 0 ≤ K := zero_le_one.trans hK
+  refine ⟨(2 : ℝ) ^ N * A * K ^ N * C,
+    mul_nonneg (mul_nonneg (mul_nonneg (pow_nonneg zero_le_two N) hA) (pow_nonneg hK0 N)) hC,
+    q + N + p, ?_⟩
   intro n k z hz hξ v hv j hj
   let g := bandGeometry B h (band n) (gap n) (center n)
   let U := (s.domain ×ˢ (univ : Set Plane)) ×ˢ I n
@@ -551,11 +561,12 @@ theorem waveClass_forcingAlong_bound
           ‖nativeLinear P g‖ ^ i := hb
       _ ≤ (A * s.growth n z.1 ^ q) * (K ^ N * s.growth n z.1 ^ N) :=
         mul_le_mul (hnative n z.1 hz _ hξ v hv i hi) hpow
-          (pow_nonneg (norm_nonneg _) _) (by positivity)
+          (pow_nonneg (norm_nonneg _) _) (mul_nonneg hA (pow_nonneg hGn q))
       _ = _ := by rw [pow_add]; ring
-  have hb := clm_apply_jet_bound_on hU hBs hfs hx N (by positivity)
-    (show 0 ≤ C * s.growth n z.1 ^ p * (s.epsilon n ^ α * Real.sqrt (s.zeta z.1)) * W n v by
-        positivity)
+  have hb := clm_apply_jet_bound_on hU hBs hfs hx N
+    (mul_nonneg (mul_nonneg hA (pow_nonneg hK0 N)) (pow_nonneg hGn _))
+    (mul_nonneg (mul_nonneg (mul_nonneg hC (pow_nonneg hGn p))
+      (mul_nonneg (Real.rpow_nonneg he.le α) (Real.sqrt_nonneg _))) hw)
     hBbound (fun i hi => hsource n k z hz hξ v hv i hi) j hj
   change ‖iteratedFDeriv ℝ j ((d n).forcingAlong g k) (z, v)‖ ≤ _ at hb
   apply hb.trans_eq

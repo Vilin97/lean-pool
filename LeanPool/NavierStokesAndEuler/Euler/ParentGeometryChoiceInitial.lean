@@ -42,7 +42,7 @@ variable (I : EulerPacketInitial.Input U) (S : SmoothState I.parent)
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
   (F : GeometryJoinedChoice I S k hk nextEll hnext hnext1)
 
-local notation "res" => residual I S k hk nextEll hnext hnext1 F
+local notation "res" => (residual I S k hk nextEll hnext hnext1 F)
 
 theorem normalized_initial :
     I.parent.normalizedPacketVelocity I.normal I.normal_unit I.coordinates I.support
@@ -60,17 +60,24 @@ theorem normalized_initial :
     funext S.evolution.inverse.normalized_initial]
 
 variable (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
-local notation "T" => state I S k hk nextEll hnext hnext1 F hSym
+local notation "T" => (state I S k hk nextEll hnext hnext1 F hSym)
 
 theorem initial_increment : S.velocityIncrement T 0 = I.exactInitial k hk.four F.hn F.Q := by
   funext x
+  have hv : (T).evolution.velocity = I.parent.exactPacketVelocity I.normal I.normal_unit
+      I.coordinates I.support I.support_compact F.Q res k S.evolution.inverse.field
+      S.evolution.velocity := by
+    dsimp only [state, residual, SmoothState.joinedChild, SmoothState.packetChild, Evolution.child,
+      EulerPacketInitial.Input.meanData, EulerPacketInitial.Input.data,
+      EulerPacketInitial.Input.history, EulerPacketInitial.Input.agreement]
   have he : (T).evolution.velocity (0,x) =
       addVelocity I.parent.ell (fun y => S.evolution.velocity (0,y))
         (I.parent.normalizedPacketVelocity I.normal I.normal_unit I.coordinates
           I.support I.support_compact F.Q res k S.evolution.inverse I.parent.zeroTime) x :=
-    I.parent.exactPacketVelocity_eq_addVelocity I.normal I.normal_unit I.coordinates
-      I.support I.support_compact F.Q res k S.evolution.inverse S.evolution.velocity
-          I.parent.zeroTime x
+    (congrFun hv (0,x)).trans
+      (I.parent.exactPacketVelocity_eq_addVelocity I.normal I.normal_unit I.coordinates
+        I.support I.support_compact F.Q res k S.evolution.inverse S.evolution.velocity
+        I.parent.zeroTime x)
   change (T).evolution.velocity (0,x)-S.evolution.velocity (0,x)=_
   rw [he]
   simp only [addVelocity,add_sub_cancel_left,
@@ -130,7 +137,7 @@ variable (I : GeometryForwardInput U) (S : SmoothState I.parent)
   (nextEll : ℝ) (hnext : 0 < nextEll) (hnext1 : nextEll ≤ 1)
   (F : GeometryForwardChoice I S k hk nextEll hnext hnext1)
 
-local notation "res" => residual I S k hk nextEll hnext hnext1 F
+local notation "res" => (residual I S k hk nextEll hnext hnext1 F)
 
 theorem normalized_initial :
     I.parent.normalizedPacketVelocity I.normal I.normal_unit I.coordinates I.support
@@ -147,17 +154,23 @@ theorem normalized_initial :
     funext S.evolution.inverse.normalized_initial]
 
 variable (hSym : ∀ x, -x ∈ I.support ↔ x ∈ I.support)
-local notation "T" => state I S k hk nextEll hnext hnext1 F hSym
+local notation "T" => (state I S k hk nextEll hnext hnext1 F hSym)
 
 theorem initial_increment : S.velocityIncrement T 0 = I.exactInitial k hk.four F.hn F.Q := by
   funext x
+  have hv : (T).evolution.velocity = I.parent.exactPacketVelocity I.normal I.normal_unit
+      I.coordinates I.support I.support_compact F.Q res k S.evolution.inverse.field
+      S.evolution.velocity := by
+    dsimp only [state, residual, SmoothState.forwardChild, SmoothState.packetChild, Evolution.child,
+      GeometryForwardInput.meanData, GeometryForwardInput.data, GeometryForwardInput.agreement]
   have he : (T).evolution.velocity (0,x) =
       addVelocity I.parent.ell (fun y => S.evolution.velocity (0,y))
         (I.parent.normalizedPacketVelocity I.normal I.normal_unit I.coordinates
           I.support I.support_compact F.Q res k S.evolution.inverse I.parent.zeroTime) x :=
-    I.parent.exactPacketVelocity_eq_addVelocity I.normal I.normal_unit I.coordinates
-      I.support I.support_compact F.Q res k S.evolution.inverse S.evolution.velocity
-          I.parent.zeroTime x
+    (congrFun hv (0,x)).trans
+      (I.parent.exactPacketVelocity_eq_addVelocity I.normal I.normal_unit I.coordinates
+        I.support I.support_compact F.Q res k S.evolution.inverse S.evolution.velocity
+        I.parent.zeroTime x)
   change (T).evolution.velocity (0,x)-S.evolution.velocity (0,x)=_
   rw [he]
   simp only [addVelocity,add_sub_cancel_left,

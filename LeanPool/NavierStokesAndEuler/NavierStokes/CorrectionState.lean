@@ -77,7 +77,7 @@ noncomputable def add (e f : ExcludedErrors D) : ExcludedErrors D :=
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 @[simp] theorem total_zero : (zero : ExcludedErrors D).total = 0 := by
-  simp [total, zero]
+  simp only [total, zero, add_zero]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem total_add (e f : ExcludedErrors D) : (e.add f).total = e.total + f.total := by
@@ -117,7 +117,7 @@ theorem angularAverage_axisymmetric (f : ScalarField D) :
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 @[simp] theorem angularAverage_zero : angularAverage (0 : OscillatoryScalar D) = 0 := by
   funext n x
-  simp [angularAverage]
+  simp only [angularAverage, Pi.zero_apply, intervalIntegral.integral_zero, zero_div]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem bilinearCovariance_comm (u v : Oscillation D) (i j : Fin 3) :
@@ -182,7 +182,7 @@ noncomputable def meanGoodResidual (s : State D) (c : Context D) : MeanVector D 
 
 theorem meanResidual_eq_good_add_excluded (s : State D) (c : Context D) :
     s.meanResidual c = s.meanGoodResidual c + s.meanExcluded := by
-  simp [meanGoodResidual]
+  simp only [meanGoodResidual, sub_add_cancel]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 theorem covariance_symm (s : State D) (i j : Fin 3) :
@@ -205,7 +205,10 @@ theorem totalVelocity_addIncrement (s : State D) (c : Context D) (m : Triple D)
       fun n x => s.totalVelocity c n x +
         ![m.radial n x.1, m.angular n x.1, m.axial n x.1] + u n x := by
   funext n x i
-  fin_cases i <;> simp [totalVelocity, addIncrement, updated] <;> ring
+  fin_cases i <;> simp only [totalVelocity, addIncrement, updated, Pi.add_apply, Fin.isValue,
+      Fin.zero_eta, Matrix.cons_val_zero, Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.add_cons,
+      Matrix.head_cons, Matrix.tail_cons, Matrix.empty_add_empty, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val] <;> ring
 
 end State
 
@@ -380,17 +383,18 @@ theorem graphOperators_dr (r : ReconstructionData) (epsilon fast : ℕ → ℝ)
         ((0 : ℝ), ((0 : S), r.radialDirection)) =
       PressureStream.radialVector (PressureStream.physicalSpeed r.exponent (r.frequency n))
         ((0 : S), r.radialDirection) x := by
-    simp [PressureStream.radialVector, PressureStream.physicalSpeed, mul_comm]
+    simp only [mul_comm, Prod.smul_mk, smul_eq_mul, zero_mul, smul_zero, Prod.mk_add_mk, add_zero,
+        zero_add, PressureStream.radialVector, PressureStream.physicalSpeed]
   rw [PressureStream.graphDr, ← he, map_add, map_smul]
-  simp [graphOperators, MeanIncrementBounds.Operators.dr, WeightedClasses.graphDerivative,
-    smul_eq_mul, mul_assoc]
+  simp only [Operators.dr, graphDerivative, graphOperators, smul_eq_mul, mul_assoc]
 
 theorem graphOperators_dz (r : ReconstructionData) (epsilon fast : ℕ → ℝ)
     (axial slowTime : S × PressureStream.Plane) (temporal : PressureStream.Plane)
     (f : ScalarField (Lift S)) (n : ℕ) (x : Lift S) :
     (graphOperators r epsilon fast axial slowTime temporal).dz f n x =
       PressureStream.graphDz (epsilon n • axial) (f n) x := by
-  have he : ((0 : ℝ), epsilon n • axial) = epsilon n • ((0 : ℝ), axial) := by simp
+  have he : ((0 : ℝ), epsilon n • axial) = epsilon n • ((0 : ℝ), axial) := by simp only [
+      Prod.smul_mk, smul_eq_mul, mul_zero]
   change epsilon n * fderiv ℝ (f n) x (0, axial) =
     fderiv ℝ (f n) x (0, epsilon n • axial)
   rw [he, map_smul]
@@ -420,7 +424,8 @@ theorem reconstructed_radial_residual (r : ReconstructionData)
       (PressureStream.meanPressure _ _ _ _ _ _ (u.gr c n)) x - u.gr c n x = _
   rw [PressureStream.meanPressure_radial_residual_global ha r.inner_lt_outer hd
     r.radialDirection (hsmooth n) (hsupport n)]
-  simp [pressureDefect, radialMoment, pressureAlias, sub_eq_add_neg]
+  simp only [neg_mul, sub_eq_add_neg, pressureDefect, radialMoment, pow_zero, one_mul,
+      pressureAlias, Fin.isValue, Matrix.cons_val_zero]
 
 end Fields
 

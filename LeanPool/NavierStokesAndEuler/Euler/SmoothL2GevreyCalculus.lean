@@ -78,12 +78,13 @@ theorem positive_id_add_bound (f : E → E) (hf : ContDiff ℝ ∞ f) (B R : ℝ
     iteratedFDeriv_add_apply contDiffAt_id (hf.contDiffAt.of_le (by simp))]
   have hi : ‖iteratedFDeriv ℝ n (id : E → E) x‖ ≤ 1 := by
     have h := EulerGevreyGeneratingDerivatives.norm_iteratedFDeriv_id_le n hn x
-    split_ifs at h <;> linarith
+    split_ifs at h <;> linarith only [h]
   have hfact : (1 : ℝ) ≤ n.factorial := by exact_mod_cast Nat.succ_le_of_lt (Nat.factorial_pos n)
   have hweight : (1 : ℝ) ≤ (1+R)^n*(n.factorial : ℝ)^2 := by
-    exact one_le_mul_of_one_le_of_one_le (one_le_pow₀ (by linarith)) (by nlinarith)
+    exact one_le_mul_of_one_le_of_one_le (one_le_pow₀ (le_add_of_nonneg_right hR))
+      (one_le_pow₀ hfact)
   have hdisp : ‖iteratedFDeriv ℝ n f x‖ ≤ B*(1+R)^n*(n.factorial : ℝ)^2 :=
-    (hb.mono hB hR le_rfl (by linarith)) n x
+    (hb.mono hB hR le_rfl (by linarith only)) n x
   exact (norm_add_le _ _).trans ((add_le_add (hi.trans hweight) hdisp).trans_eq (by ring))
 
 end EulerGevrey
@@ -106,6 +107,8 @@ theorem compose_memLp_and_bound (n : ℕ) :
     MemLp (iteratedFDeriv ℝ n (A.field ∘ f)) 2 volume ∧
       (eLpNorm (iteratedFDeriv ℝ n (A.field ∘ f)) 2 volume).toReal ≤
         C*(R*(B*S+2))^n*(n.factorial : ℝ)^2 :=
+  haveI : SecondCountableTopologyEither Space (Space [×n]→L[ℝ] V) :=
+    secondCountableTopologyEither_of_left _ _
   EulerGevreyCompositionLp.composition_memLp_and_bound volume f A.field hf A.smooth hmp n
     (((A.smooth.comp hf).continuous_iteratedFDeriv (m := n) (by simp)).aestronglyMeasurable)
     C B R S hC hB hR hS (fun j _ => A.integrable j)
@@ -130,12 +133,16 @@ def productField (g : Space → V →L[ℝ] W) (hg : ContDiff ℝ ∞ g) (A : Sm
     (hgb : HasSupBound g B R) (hab : A.HasJetBound C R) : SmoothL2Field W where
   field x := g x (A.field x)
   smooth := hg.clm_apply A.smooth
-  integrable n := (EulerGevreyProductLp.clm_apply_memLp_and_bound volume id g A.field hg A.smooth n
-    (((hg.clm_apply A.smooth).continuous_iteratedFDeriv (m := n) (by simp)).aestronglyMeasurable)
-    R B C hR hB hC 0 0
-    (fun j _ x => by simpa only [id_eq,majorant,Nat.add_zero,mul_assoc] using hgb j x)
-    (fun j _ => A.integrable j)
-    (fun j _ => by simpa only [id_eq,← norm_jetLp,majorant,Nat.add_zero,mul_assoc] using hab j)).1
+  integrable n :=
+    haveI : SecondCountableTopologyEither Space (Space [×n]→L[ℝ] W) :=
+      secondCountableTopologyEither_of_left _ _
+    (EulerGevreyProductLp.clm_apply_memLp_and_bound volume id g A.field hg A.smooth n
+      (((hg.clm_apply A.smooth).continuous_iteratedFDeriv (m := n) (by simp)).aestronglyMeasurable)
+      R B C hR hB hC 0 0
+      (fun j _ x => by simpa only [id_eq,majorant,Nat.add_zero,mul_assoc] using hgb j x)
+      (fun j _ => A.integrable j)
+      (fun j _ => by
+        simpa only [id_eq,← norm_jetLp,majorant,Nat.add_zero,mul_assoc] using hab j)).1
 
 omit f hf hmp B R hB hR hfb A C S hC hS ha in
 theorem productField_bound (g : Space → V →L[ℝ] W) (hg : ContDiff ℝ ∞ g) (A : SmoothL2Field V)
@@ -143,6 +150,8 @@ theorem productField_bound (g : Space → V →L[ℝ] W) (hg : ContDiff ℝ ∞ 
     (hgb : HasSupBound g B R) (hab : A.HasJetBound C R) :
     (productField g hg A B C R hB hC hR hgb hab).HasJetBound (3*B*C) R := by
   intro n
+  have : SecondCountableTopologyEither Space (Space [×n]→L[ℝ] W) :=
+    secondCountableTopologyEither_of_left _ _
   have h := (EulerGevreyProductLp.clm_apply_memLp_and_bound volume id g A.field hg A.smooth n
     (((hg.clm_apply A.smooth).continuous_iteratedFDeriv (m := n) (by simp)).aestronglyMeasurable)
     R B C hR hB hC 0 0

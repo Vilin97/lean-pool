@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Topology.Algebra.Module.ModuleTopology
 import LeanPool.NavierStokesAndEuler.Euler.ClosedIntervalDerivativeExtension
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketCoefficientControl
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Normalized coefficient motion from genuine one-sided time derivatives. -/
 
@@ -45,7 +46,7 @@ theorem normalized_motion_errors_within
       (∀ i j, |E t i j / a| ≤ e) ∧
       |ε ^ 2 * h t / a - 1| ≤ e ∧
       |B t 0 1 / a - 1| ≤ e ∧ |B t 2 1 / a - β| ≤ e := by
-  have hΘ0 : 0 < Θ := by linarith
+  have hΘ0 : 0 < Θ := by linarith only [hΘ]
   have h0 : (0:ℝ) ∈ Icc 0 Θ := ⟨le_rfl, hΘ0.le⟩
   obtain ⟨b', hbeq, hbd⟩ := exists_extension hΘ0 hb
   obtain ⟨k', hkeq, hkd⟩ := exists_extension hΘ0 hk
@@ -54,7 +55,7 @@ theorem normalized_motion_errors_within
     if i = 0 ∧ j = 1 then b' t else if i = 2 ∧ j = 1 then k' t else B t i j
   have hBeq : ∀ t ∈ Icc 0 Θ, ∀ i j, B' t i j = B t i j := by
     intro t ht i j
-    dsimp [B']
+    dsimp only [Fin.isValue, B']
     split_ifs with hb hk
     · rcases hb with ⟨rfl, rfl⟩
       exact hbeq ht

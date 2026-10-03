@@ -10,6 +10,7 @@ public import LeanPool.NavierStokesAndEuler.ForMathlib.StronglyMeasurable
 
 public import LeanPool.NavierStokesAndEuler.Euler.LpSupportedSubspace
 public import LeanPool.NavierStokesAndEuler.Euler.Foundations.LiftedPressure
+public import LeanPool.NavierStokesAndEuler.ForMathlib.BoundedContinuousFunctionShortcuts
 
 /-!
 # Actual coefficient multiplication on supported spatial L²

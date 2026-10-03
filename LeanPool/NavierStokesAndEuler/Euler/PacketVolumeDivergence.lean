@@ -70,7 +70,7 @@ theorem determinant_derivative_trace_zero (F : Space → Space →L[ℝ] Space)
   have hline : HasDerivAt (fun s : ℝ => F (x+s•v)) (fderiv ℝ F x v) 0 := by
     have hF' : HasFDerivAt F (fderiv ℝ F x) (x+(0 : ℝ)•v) := by
       simpa only [zero_smul,add_zero] using hF.hasFDerivAt
-    have h := hF'.comp_hasDerivAt (0 : ℝ)
+    have h := hF'.comp_hasDerivAt (f := (fun _ : ℝ => x) + fun y : ℝ => id y • v) (0 : ℝ)
       ((hasDerivAt_const (0 : ℝ) x).add ((hasDerivAt_id (0 : ℝ)).smul_const v))
     simpa only [Function.comp_def,Pi.add_apply,Pi.smul_apply,id_eq,
       zero_smul,add_zero,one_smul,zero_add] using h
@@ -84,9 +84,9 @@ theorem determinant_derivative_trace_zero (F : Space → Space →L[ℝ] Space)
   have hentry (i j : Fin 3) :
       HasDerivAt (fun s => L s i j) ((M*L 0) i j) 0 := by
     rw [hmat]
-    exact (EuclideanSpace.proj i).hasFDerivAt.comp_hasDerivAt 0
-      ((ContinuousLinearMap.apply ℝ Space (EuclideanSpace.single j 1)).hasFDerivAt.comp_hasDerivAt
-          0 hline)
+    exact (EuclideanSpace.proj (𝕜 := ℝ) i).hasFDerivAt.comp_hasDerivAt 0
+      ((ContinuousLinearMap.apply (E := Space) ℝ Space
+        (EuclideanSpace.single j 1)).hasFDerivAt.comp_hasDerivAt 0 hline)
   have hd := EulerDeformationVolume.determinant_hasDerivAt L (fun _ => M) 0 hentry
   have hlim : Tendsto (fun s : ℝ => x+s•v) (𝓝 0) (𝓝 x) := by
     have hc : Continuous (fun s : ℝ => x+s•v) :=

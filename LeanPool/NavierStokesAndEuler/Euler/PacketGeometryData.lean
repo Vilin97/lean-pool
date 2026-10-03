@@ -81,7 +81,8 @@ theorem primaryAmplitude_profile_bound (r w : ℝ → Space)
     rw [hid] at hb
     nlinarith only [hb]
   intro τ hτ
-  have hroot : 1 ≤ sqrt (1+(σ^2*τ^2)^2) := one_le_sqrt.mpr (by nlinarith [sq_nonneg (σ^2*τ^2)])
+  have hroot : 1 ≤ sqrt (1+(σ^2*τ^2)^2) :=
+    one_le_sqrt.mpr (le_add_of_nonneg_right (sq_nonneg _))
   have hz : Z τ ≤ idealPrimarySize σ Z τ := by
     have hb := mul_le_mul_of_nonneg_right hroot (hZpos τ hτ.1).le
     simpa only [one_mul, idealPrimarySize] using hb
@@ -181,10 +182,12 @@ structure PhysicalGeometryData (α : Type*) where
   time_maps : MapsTo (physicalTime t₀ a ε) (Icc 0 Θ) S
   M_continuous : ∀ ξ, ContinuousOn (M ξ) S
   B_derivative : ∀ t ∈ S, HasDerivWithinAt B (B₁ t) S t
-  old_ray_equation : ∀ t ∈ S, HasDerivWithinAt m (-(B t).adjoint (m t)) S t
+  old_ray_equation : ∀ t ∈ S, HasDerivWithinAt m
+    (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (B t) (m t)) S t
   old_velocity_equation : ∀ t ∈ S, HasDerivWithinAt v
     (-(B t) (v t)+(2*⟪m t,(B t) (v t)⟫_ℝ/‖m t‖^2) • m t) S t
-  ray_equation : ∀ ξ t, t ∈ S → HasDerivWithinAt (r ξ) (-(M ξ t).adjoint (r ξ t)) S t
+  ray_equation : ∀ ξ t, t ∈ S → HasDerivWithinAt (r ξ)
+    (-ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (M ξ t) (r ξ t)) S t
   velocity_equation : ∀ ξ t, t ∈ S → HasDerivWithinAt (w ξ)
     (-(M ξ t) (w ξ t)+(2*⟪r ξ t,(M ξ t) (w ξ t)⟫_ℝ/‖r ξ t‖^2) • r ξ t) S t
   old_ray_nonzero : ∀ t ∈ S, m t ≠ 0
@@ -195,7 +198,7 @@ structure PhysicalGeometryData (α : Type*) where
   B_derivative_bound : ∀ t ∈ S, ‖B₁ t‖ ≤ G^2
   E_bound : ∀ ξ t, t ∈ S → ‖E ξ t‖ ≤ d
   parent_decomposition : ∀ ξ t, t ∈ S → M ξ t = B t +
-    primaryShear c m v t • rankOne ℝ (unit (v t)) (unit (m t))+E ξ t
+    primaryShear c m v t • rankOne ℝ (E := Space) (F := Space) (unit (v t)) (unit (m t))+E ξ t
   initial_coupling : rescaledFrame B m v t₀ a ε 0 0 1 = a
   initial_tilt : rescaledFrame B m v t₀ a ε 0 2 1 = a*σ^2
   initial_shear : rescaledShear c m v t₀ a ε 0 = a/ε^2

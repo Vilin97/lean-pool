@@ -52,7 +52,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 /-- A frame spanning the tangent hyperplane detects exactly the normal residual. -/
 theorem eq_normal_of_adjoint_zero (Q : U →L[ℝ] E) (m r : E) (hm : m ≠ 0)
     (hRange : ∀ η, ⟪m, η⟫_ℝ = 0 → ∃ x : U, Q x = η)
-    (hr : Q.adjoint r = 0) : r = normalCoefficient m r • m := by
+    (hr : adjoint (𝕜 := ℝ) (E := U) (F := E) Q r = 0) : r = normalCoefficient m r • m := by
   apply eq_normal_of_tangent_orthogonal m r hm
   intro η hη
   obtain ⟨x, rfl⟩ := hRange η hη
@@ -65,15 +65,16 @@ theorem physical_velocity_balance (Q Q₁ : U →L[ℝ] E) (M : E →L[ℝ] E)
     (hTangent : ∀ x, ⟪m, Q x⟫_ℝ = 0)
     (hRange : ∀ η, ⟪m, η⟫_ℝ = 0 → ∃ x : U, Q x = η)
     (hflow : Q₁ = M.comp Q) (v a : U) (f : E)
-    (heq : gram Q a = Q.adjoint (f - (2 : ℝ) • Q₁ v)) :
+    (heq : gram Q a = adjoint (𝕜 := ℝ) (E := U) (F := E) Q (f - (2 : ℝ) • Q₁ v)) :
     (Q₁ v + Q a) + M (Q v) +
       ((⟪m, f⟫_ℝ - 2 * ⟪m, M (Q v)⟫_ℝ) / ‖m‖^2) • m = f := by
   let r := f - (Q₁ v + Q a) - M (Q v)
-  have hQr : Q.adjoint r = 0 := by
+  have hQr : adjoint (𝕜 := ℝ) (E := U) (F := E) Q r = 0 := by
     dsimp only [r]
-    rw [hflow] at heq ⊢
-    simp only [gram, comp_apply, map_sub, map_add, map_smul] at heq ⊢
-    linear_combination (norm := module) -heq
+    simp only [hflow, gram, comp_apply, ContinuousLinearMap.map_sub, ContinuousLinearMap.map_add,
+      ContinuousLinearMap.map_smul] at heq ⊢
+    rw [heq, two_smul]
+    abel
   have hr := eq_normal_of_adjoint_zero Q m r hm hRange hQr
   have hco : normalCoefficient m r = (⟪m, f⟫_ℝ - 2 * ⟪m, M (Q v)⟫_ℝ) / ‖m‖^2 := by
     simp only [normalCoefficient, r, inner_sub_right, inner_add_right, hTangent,
@@ -84,6 +85,6 @@ theorem physical_velocity_balance (Q Q₁ : U →L[ℝ] E) (M : E →L[ℝ] E)
     (Q₁ v + Q a) + M (Q v) +
         ((⟪m, f⟫_ℝ - 2 * ⟪m, M (Q v)⟫_ℝ) / ‖m‖^2) • m =
         (Q₁ v + Q a) + M (Q v) + r := by rw [hr]
-    _ = f := by dsimp only [r]; abel
+    _ = f := by dsimp only [r]; rw [sub_sub, add_sub_cancel]
 
 end EulerTransverseNormalResidual

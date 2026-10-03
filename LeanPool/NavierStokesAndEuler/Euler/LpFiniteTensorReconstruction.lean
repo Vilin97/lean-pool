@@ -52,7 +52,7 @@ theorem tupleLp_ae (u : ι → Lp V 2 μ) :
   rw [he, hsum]
   simp only [hx]
   ext j
-  simp [L]
+  simp only [single_apply, Finset.sum_apply, Finset.sum_pi_single, Finset.mem_univ, ↓reduceIte, L]
 
 end Tuple
 
@@ -67,7 +67,7 @@ def tensorCoordinates (n : ℕ) :
     (ContinuousLinearMap.id ℝ (Space [×n]→L[ℝ] V)).flipMultilinear (fun i => direction (w i)))
 
 @[simp] theorem tensorCoordinates_apply (n : ℕ) (A : Space [×n]→L[ℝ] V)
-    (w : Fin n → Fin 3) : tensorCoordinates n A w = A (fun i => direction (w i)) := rfl
+    (w : Fin n → Fin 3) : tensorCoordinates (V := V) n A w = A (fun i => direction (w i)) := rfl
 
 theorem tensorCoordinates_injective (n : ℕ) :
     Function.Injective (tensorCoordinates (V := V) n) := by
@@ -88,8 +88,9 @@ def tensorReassembly (n : ℕ) :
   ((tensorCoordinates (V := V) n).toLinearMap.leftInverse).toContinuousLinearMap
 
 @[simp] theorem tensorReassembly_coordinates (n : ℕ) (A : Space [×n]→L[ℝ] V) :
-    tensorReassembly n (tensorCoordinates n A) = A :=
-  LinearMap.leftInverse_apply_of_inj (LinearMap.ker_eq_bot.mpr (tensorCoordinates_injective n)) A
+    tensorReassembly (V := V) n (tensorCoordinates (V := V) n A) = A :=
+  LinearMap.leftInverse_apply_of_inj
+    (LinearMap.ker_eq_bot.mpr (tensorCoordinates_injective (V := V) n)) A
 
 /-- Reconstruction is a genuine bounded map on the finite tuple of L² classes. -/
 def tensorLpReassembly (μ : Measure X) (n : ℕ) :
@@ -98,24 +99,24 @@ def tensorLpReassembly (μ : Measure X) (n : ℕ) :
 
 theorem tensorLpReassembly_ae (μ : Measure X) (n : ℕ)
     (u : (Fin n → Fin 3) → Lp V 2 μ) :
-    (tensorLpReassembly μ n u : X → (Space [×n]→L[ℝ] V)) =ᵐ[μ]
-      fun x => tensorReassembly n (fun w => u w x) := by
+    (tensorLpReassembly (V := V) μ n u : X → (Space [×n]→L[ℝ] V)) =ᵐ[μ]
+      fun x => tensorReassembly (V := V) n (fun w => u w x) := by
   filter_upwards [(tensorReassembly (V := V) n).coeFn_compLpL (tupleLp (V := V) (ι := Fin n → Fin
       3) μ u),
     tupleLp_ae μ u]
     with x h₁ h₂
-  exact h₁.trans (congrArg (tensorReassembly n) h₂)
+  exact h₁.trans (congrArg (tensorReassembly (V := V) n) h₂)
 
 /-- If the coordinate L² classes represent a literal tensor field, their
 reconstruction represents that field, with no integrability assumption on it. -/
 theorem tensorLpReassembly_eq_ae (μ : Measure X) (n : ℕ)
     (u : (Fin n → Fin 3) → Lp V 2 μ) (f : X → (Space [×n]→L[ℝ] V))
     (h : ∀ w, (u w : X → V) =ᵐ[μ] fun x => f x (fun i => direction (w i))) :
-    (tensorLpReassembly μ n u : X → (Space [×n]→L[ℝ] V)) =ᵐ[μ] f := by
+    (tensorLpReassembly (V := V) μ n u : X → (Space [×n]→L[ℝ] V)) =ᵐ[μ] f := by
   have ha : ∀ᵐ x ∂μ, ∀ w, u w x = f x (fun i => direction (w i)) := ae_all_iff.mpr h
   filter_upwards [tensorLpReassembly_ae μ n u, ha] with x hx hw
   rw [hx]
-  have he : (fun w => u w x) = tensorCoordinates n (f x) := funext hw
+  have he : (fun w => u w x) = tensorCoordinates (V := V) n (f x) := funext hw
   rw [he, tensorReassembly_coordinates]
 
 end EulerLpFiniteTensor

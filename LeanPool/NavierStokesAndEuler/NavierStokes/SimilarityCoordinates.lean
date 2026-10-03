@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.Calculus.InverseFunctionTheorem.ContDiff
 import Mathlib.Analysis.SpecialFunctions.Pow.Deriv
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Analytic existence of the similarity coordinates
@@ -50,7 +51,7 @@ theorem exists_positive_solution {a τ : ℝ} (ha : 0 < a) (ha1 : a < 1)
   have hp : 0 < p := div_pos ha hd
   let w₁ : ℝ := z ^ 2 + τ + 1
   let g : ℝ → ℝ := fun w => w ^ p * (w - z ^ 2)
-  have hw₁ : 1 ≤ w₁ := by dsimp [w₁]; nlinarith [sq_nonneg z]
+  have hw₁ : 1 ≤ w₁ := by dsimp [w₁]; nlinarith only [hτ, sq_nonneg z]
   have hg : Continuous g :=
     (Real.continuous_rpow_const hp.le).mul (continuous_id.sub continuous_const)
   have hg₀ : g (z ^ 2) = 0 := by simp [g]
@@ -59,8 +60,8 @@ theorem exists_positive_solution {a τ : ℝ} (ha : 0 < a) (ha1 : a < 1)
       simpa only [Real.one_rpow] using
         (Real.rpow_le_rpow (by norm_num : (0 : ℝ) ≤ 1) hw₁ hp.le)
     dsimp [g, w₁] at *
-    nlinarith
-  have hab : z ^ 2 ≤ w₁ := by dsimp [w₁]; linarith
+    nlinarith only [hw, ha, ha1, hτ]
+  have hab : z ^ 2 ≤ w₁ := by dsimp [w₁]; linarith only [ha, ha1, hτ]
   obtain ⟨w, hw, hgw⟩ := intermediate_value_Icc hab hg.continuousOn
     (show τ ∈ Icc (g (z ^ 2)) (g w₁) by rw [hg₀]; exact ⟨hτ.le, hg₁⟩)
   have hw₀ : 0 ≤ w := (sq_nonneg z).trans hw.1
@@ -68,7 +69,7 @@ theorem exists_positive_solution {a τ : ℝ} (ha : 0 < a) (ha1 : a < 1)
     by_contra! hn
     have hwzero : w = 0 := le_antisymm hn hw₀
     have : g w = 0 := by simp [g, hwzero, Real.zero_rpow hp.ne']
-    linarith
+    linarith only [hτ, hgw, this]
   let q : ℝ := w ^ (1 - a)⁻¹
   have hq : 0 < q := Real.rpow_pos_of_pos hwpos _
   have hqa : q ^ a = w ^ p := by
@@ -156,9 +157,9 @@ theorem scalarSlope_pos {a z q : ℝ} (ha : 0 < a) (ha1 : a < 1)
   have hsmall : z ^ 2 * q ^ a / q < 1 := by
     apply (div_lt_one hq).mpr
     dsimp [forwardScalar] at hf
-    linarith
+    linarith only [hf]
   have hprod := mul_nonneg ha.le (sub_nonneg.mpr hsmall.le)
-  have hpos : 0 < 1 - a * (z ^ 2 * q ^ a / q) := by nlinarith
+  have hpos : 0 < 1 - a * (z ^ 2 * q ^ a / q) := by nlinarith only [ha1, hprod]
   unfold scalarSlope
   rw [Real.rpow_sub_one hq.ne']
   convert! hpos using 1
@@ -325,7 +326,7 @@ theorem coordinateQ_hasDerivAt_tau {a τ z : ℝ}
     HasDerivAt (fun t => coordinateQ a (t, z))
       (1 / scalarSlope a z (coordinateQ a (τ, z))) τ := by
   have hd := ((coordinateQ_smooth ha ha1 (p := (τ, z)) hτ).differentiableAt (by simp)).hasFDerivAt
-  have hc := hd.comp_hasDerivAt τ ((hasDerivAt_id τ).prodMk (hasDerivAt_const τ z))
+  have hc := hd.comp_hasDerivAt (F := ℝ × ℝ) τ ((hasDerivAt_id τ).prodMk (hasDerivAt_const τ z))
   rw [coordinateQ_fderiv_apply ha ha1 hτ] at hc
   simpa only [Function.comp_def, id_eq, Prod.fst, Prod.snd, mul_zero, add_zero] using hc
 
@@ -335,7 +336,7 @@ theorem coordinateQ_hasDerivAt_z {a τ z : ℝ}
       (2 * z * coordinateQ a (τ, z) ^ a /
         scalarSlope a z (coordinateQ a (τ, z))) z := by
   have hd := ((coordinateQ_smooth ha ha1 (p := (τ, z)) hτ).differentiableAt (by simp)).hasFDerivAt
-  have hc := hd.comp_hasDerivAt z ((hasDerivAt_const z τ).prodMk (hasDerivAt_id z))
+  have hc := hd.comp_hasDerivAt (F := ℝ × ℝ) z ((hasDerivAt_const z τ).prodMk (hasDerivAt_id z))
   rw [coordinateQ_fderiv_apply ha ha1 hτ] at hc
   simpa only [Function.comp_def, id_eq, Prod.fst, Prod.snd, mul_one, zero_add] using hc
 
@@ -376,13 +377,13 @@ theorem coordinateEta_sq_lt_one {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
   rw [coordinateEta_sq ha ha1 hp]
   apply (div_lt_one hq.1).mpr
   dsimp [forwardScalar] at hq
-  linarith [hq.2]
+  linarith only [hp, hq, hq.2]
 
 theorem coordinateEta_abs_lt_one {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {p : ℝ × ℝ} (hp : 0 < p.1) : |coordinateEta a p| < 1 := by
   have hs := coordinateEta_sq_lt_one ha ha1 hp
   apply abs_lt.mpr
-  constructor <;> nlinarith
+  constructor <;> nlinarith only [hs]
 
 /-- The branch lies strictly beyond the manuscript's threshold
 `|z|^(1/D)`, where `D=(1-a)/2`. -/
@@ -390,7 +391,7 @@ theorem coordinateQ_above_threshold {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {p : ℝ × ℝ} (hp : 0 < p.1) :
     |p.2| ^ (((1 - a) / 2)⁻¹) < coordinateQ a p := by
   have hq := (coordinateQ_spec ha ha1 hp).1
-  have hd : 0 < (1 - a) / 2 := by linarith
+  have hd : 0 < (1 - a) / 2 := by linarith only [ha1]
   have hpow : 0 < coordinateQ a p ^ ((1 - a) / 2) := Real.rpow_pos_of_pos hq _
   have hη := coordinateEta_abs_lt_one ha ha1 hp
   unfold coordinateEta at hη
@@ -568,6 +569,6 @@ theorem physical_coordinates_smooth {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
 theorem manuscript_coordinate_existsUnique {h τ : ℝ} (hh : 0 < h)
     (hh1 : h < 1 / 2) (hτ : 0 < τ) (z : ℝ) :
     ∃! q : ℝ, 0 < q ∧ q - z ^ 2 * q ^ (2 * h) = τ := by
-  exact existsUnique_positive_solution (by linarith) (by linarith) hτ z
+  exact existsUnique_positive_solution (by linarith only [hh]) (by linarith only [hh1]) hτ z
 
 end NavierStokes.SimilarityCoordinates

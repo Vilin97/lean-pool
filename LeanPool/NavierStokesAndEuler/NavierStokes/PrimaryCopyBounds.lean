@@ -100,8 +100,8 @@ theorem map (hf : NativeJets V w f) (L : E →L[ℝ] F) :
   calc
     _ ≤ ‖L‖ * ‖iteratedFDeriv ℝ j (f i) x‖ := L.norm_compContinuousMultilinearMap_le _
     _ ≤ (‖L‖ + 1) * (C * V.growth i x ^ p * w i x) :=
-      mul_le_mul (by linarith) (hb i x hx j hj) (norm_nonneg _)
-        (by linarith [norm_nonneg L])
+      mul_le_mul (by linarith only) (hb i x hx j hj) (norm_nonneg _)
+        (by linarith only [norm_nonneg L])
     _ = _ := by ring
 
 theorem add (hf : NativeJets V w f) (hg : NativeJets V w g) :
@@ -110,7 +110,7 @@ theorem add (hf : NativeJets V w f) (hg : NativeJets V w g) :
   intro m
   obtain ⟨A, hA, p, ha⟩ := hf.bound m
   obtain ⟨B, hB, q, hb⟩ := hg.bound m
-  refine ⟨A + B, by linarith, p + q, ?_⟩
+  refine ⟨A + B, by linarith only [hA, hB], p + q, ?_⟩
   intro i x hx j hj
   have hG := V.one_le_growth i hx
   have hw := hf.nonneg i x hx
@@ -147,22 +147,22 @@ theorem bilinear {f : ι → D → E} {g : ι → D → F}
   refine ⟨(‖L‖ + 1) * 2 ^ m * A * B, ?_, p + q, ?_⟩
   · exact one_le_mul_of_one_le_of_one_le
       (one_le_mul_of_one_le_of_one_le
-        (one_le_mul_of_one_le_of_one_le (by
-            linarith [norm_nonneg L]) (one_le_pow₀ (by norm_num))) hA) hB
+        (one_le_mul_of_one_le_of_one_le (le_add_of_nonneg_left (norm_nonneg L))
+          (one_le_pow₀ (by norm_num))) hA) hB
   intro i x hx j hj
   have hG : 0 ≤ V.growth i x := zero_le_one.trans (V.one_le_growth i hx)
   have hw := hf.nonneg i x hx
   have hv := hg.nonneg i x hx
+  have hX : 0 ≤ A * V.growth i x ^ p * w i x :=
+    mul_nonneg (mul_nonneg (zero_le_one.trans hA) (pow_nonneg hG p)) hw
+  have hY : 0 ≤ B * V.growth i x ^ q * v i x :=
+    mul_nonneg (mul_nonneg (zero_le_one.trans hB) (pow_nonneg hG q)) hv
   have h := LabelSumBounds.bilinear_jet_bound L (V.isOpen i) (hf.smooth i) (hg.smooth i) hx hj
-    (by positivity : 0 ≤ A * V.growth i x ^ p * w i x)
-    (by positivity : 0 ≤ B * V.growth i x ^ q * v i x)
-    (ha i x hx) (hb i x hx)
-  calc
-    _ ≤ ‖L‖ * 2 ^ m * (A * V.growth i x ^ p * w i x) *
-        (B * V.growth i x ^ q * v i x) := h
-    _ ≤ (‖L‖ + 1) * 2 ^ m * (A * V.growth i x ^ p * w i x) *
-        (B * V.growth i x ^ q * v i x) := by gcongr; linarith
-    _ = _ := by rw [pow_add]; ring
+    hX hY (ha i x hx) (hb i x hx)
+  refine h.trans ((mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right
+    (mul_le_mul_of_nonneg_right (le_add_of_nonneg_right zero_le_one) (pow_nonneg zero_le_two m))
+    hX) hY).trans_eq ?_)
+  rw [pow_add]; ring
 
 theorem mul {f g : ι → D → ℝ} (hf : NativeJets V w f) (hg : NativeJets V v g) :
     NativeJets V (fun i x => w i x * v i x) (fun i x => f i x * g i x) :=
@@ -210,11 +210,11 @@ theorem sqrt {g : ι → D → ℝ} (hg : NativeJets V w g)
   intro m
   obtain ⟨C, hC, p, hb⟩ := hg.bound m
   let K := C + c⁻¹ + 1
-  have hK : 1 ≤ K := by dsimp [K]; have := inv_pos.mpr hc; linarith
-  have hCK : C ≤ K := by dsimp [K]; have := inv_pos.mpr hc; linarith
-  have hiK : c⁻¹ ≤ K := by dsimp [K]; linarith
+  have hK : 1 ≤ K := by dsimp [K]; have := inv_pos.mpr hc; linarith only [hC, this]
+  have hCK : C ≤ K := by dsimp [K]; have := inv_pos.mpr hc; linarith only [this]
+  have hiK : c⁻¹ ≤ K := by dsimp [K]; linarith only [hC]
   let A := WeightedQuotients.orderBound (1 / 2) m + 1
-  have hA : 1 ≤ A := by dsimp [A]; linarith [WeightedQuotients.orderBound_nonneg (1 / 2) m]
+  have hA : 1 ≤ A := by dsimp [A]; linarith only [WeightedQuotients.orderBound_nonneg (1 / 2) m]
   refine ⟨A * K ^ (2 * m + 1), one_le_mul_of_one_le_of_one_le hA (one_le_pow₀ hK),
     p * (2 * m + 1), ?_⟩
   intro i x hx j hj
@@ -241,7 +241,7 @@ theorem sqrt {g : ι → D → ℝ} (hg : NativeJets V w g)
   have h := WeightedQuotients.sqrt_jet_bound (V.isOpen i) (hg.smooth i)
     (hpos i) hx (hw i x hx) hB j hlo hjets
   have hjA : (j.factorial : ℝ) * WeightedQuotients.coeffBound (1 / 2) j ≤ A :=
-    (WeightedQuotients.orderBound_le (1 / 2) hj).trans (by dsimp [A]; linarith)
+    (WeightedQuotients.orderBound_le (1 / 2) hj).trans (by dsimp [A]; linarith only)
   calc
     _ ≤ Real.sqrt (w i x) * ((j.factorial : ℝ) * WeightedQuotients.coeffBound (1 / 2) j) * B ^ (2 *
         j + 1) := h
@@ -249,8 +249,8 @@ theorem sqrt {g : ι → D → ℝ} (hg : NativeJets V w g)
       apply mul_le_mul
       · exact mul_le_mul_of_nonneg_left hjA (Real.sqrt_nonneg _)
       · exact pow_le_pow_right₀ hB (by omega)
-      · positivity
-      · positivity
+      · exact pow_nonneg hBpos.le _
+      · exact mul_nonneg (Real.sqrt_nonneg _) (zero_le_one.trans hA)
     _ = _ := by dsimp [B]; rw [mul_pow, ← pow_mul]; ring
 
 end NativeJets
@@ -284,7 +284,7 @@ theorem covariance_weights_jets
     have h2 := mul_le_mul (hentry i x hx 0 1) (hentry i x hx 1 0)
       (abs_nonneg _) (zero_le_one.trans hM)
     simp only [abs_mul] at h1 h2 ⊢
-    nlinarith
+    nlinarith only [h1, h2]
   have hi := hD.inv hb hdet hDupper
   have hscale := (hr.pow 2).mul hi
   have hP (k l j : Fin 2) : NativeJets V w (fun i x => T i x j * H i x k l) := by
@@ -304,7 +304,7 @@ theorem covariance_weights_jets
   intro he
   have h := hdet i x hx
   rw [normalizedMatrix_det, he, mul_zero, abs_zero] at h
-  linarith
+  linarith only [hb, h]
 
 theorem covariance_amplitudes_jets
     (hr : PolynomialJets V.toDomain (fun i _ => r i)) (hrne : ∀ i, r i ≠ 0)
@@ -339,14 +339,11 @@ theorem pressureCoefficient_jets
       (N i x) (Ndot i x) (u i x) (A i x (u i x)) 0) := by
   have hNsq := hN.inner hN
   have hInv := hNsq.inv (b := b ^ 2) (M := M ^ 2) (sq_pos_of_pos hb)
-    (by
-      intro i x hx
-      rw [real_inner_self_eq_norm_sq, abs_of_nonneg (sq_nonneg _)]
-      exact pow_le_pow_left₀ hb.le (hlo i x hx) 2)
-    (by
-      intro i x hx
-      rw [real_inner_self_eq_norm_sq, abs_of_nonneg (sq_nonneg _)]
-      exact pow_le_pow_left₀ (norm_nonneg _) (hhi i x hx) 2)
+    (fun i x hx => ((pow_le_pow_left₀ hb.le (hlo i x hx) 2).trans_eq
+      (real_inner_self_eq_norm_sq (N i x)).symm).trans (le_abs_self _))
+    (fun i x hx => ((abs_of_nonneg real_inner_self_nonneg).trans
+      (real_inner_self_eq_norm_sq (N i x))).trans_le
+        (pow_le_pow_left₀ (norm_nonneg _) (hhi i x hx) 2))
   have hAu : NativeJets V w (fun i x => A i x (u i x)) := by
     have he := (NativeJets.of_polynomial hA).bilinear hu
       (ContinuousLinearMap.apply ℝ ProblemStatement.Space).flip
@@ -358,8 +355,10 @@ theorem pressureCoefficient_jets
     have he := h1.sub h2
     simp only [one_mul] at he
     exact he
-  simpa only [TangentProjection.pressureCoefficient, inner_zero_right, add_zero,
-    real_inner_self_eq_norm_sq, div_eq_mul_inv, mul_comm] using hnum.polynomial_mul hInv
+  refine (hnum.polynomial_mul hInv).congr ?_
+  intro i x _
+  simp only [TangentProjection.pressureCoefficient, inner_zero_right, add_zero, div_eq_mul_inv]
+  exact mul_comm _ _
 
 end Pressure
 
@@ -446,7 +445,7 @@ theorem sqrt_scale_jets (V : JetDomain ι D) :
   have h := V.one_le_scale i
   have hn := Real.sqrt_nonneg (V.scale i)
   have hs := Real.sq_sqrt (zero_le_one.trans h)
-  nlinarith
+  nlinarith only [hs, h, hn]
 
 /-- The native primary is the actual homogeneous Volterra pulse, scaled
 by the actual Cramer square root and physical square-root epsilon factor. -/
@@ -704,13 +703,13 @@ theorem outerCutoff_support : tsupport outerCutoff ⊆ Icc (1 / 12 : ℝ) (11 / 
   intro t ht
   have h : |t - 1 / 2| ≤ 5 / 12 := by simpa only [Metric.mem_closedBall, Real.dist_eq] using ht
   rw [abs_le] at h
-  constructor <;> linarith [h.1, h.2]
+  constructor <;> linarith only [h.1, h.2]
 
 theorem outerCutoff_one {t : ℝ} (ht : |t - 1 / 2| ≤ 1 / 3) : outerCutoff t = 1 := by
   apply outerBump.one_of_mem_closedBall
   change dist t (1 / 2) ≤ 3 / 8
   rw [Real.dist_eq]
-  linarith
+  linarith only [ht]
 
 theorem profile_mul_outerCutoff (t : ℝ) :
     GaussianTailFlat.profile t * outerCutoff t = GaussianTailFlat.profile t := by
@@ -741,9 +740,9 @@ theorem affine_profile_jets (U : Domain ι D) (f : ℝ → ℝ) (hf : ContDiff �
     _ ≤ ‖iteratedFDeriv ℝ j f (L i x + c i)‖ * ‖L i‖ ^ j :=
       norm_jet_comp_affine isOpen_univ hf.contDiffOn (L i) (c i) (mem_univ _) j
     _ ≤ (C + 1) * (K * U.scale i ^ q) ^ m :=
-      mul_le_mul ((hb j hj _).trans (by linarith))
+      mul_le_mul ((hb j hj _).trans (by linarith only))
         ((pow_le_pow_left₀ (norm_nonneg _) (hL i) j).trans (pow_le_pow_right₀ hSK hj))
-        (by positivity) (by linarith)
+        (by positivity) (by linarith only [hC])
     _ = _ := by rw [mul_pow, ← pow_mul]; ring
 
 theorem outerCutoff_affine_jets (U : Domain ι D) (L : ι → D →L[ℝ] ℝ)
@@ -776,7 +775,7 @@ theorem outerCutoff_affine_support (L : D →L[ℝ] ℝ) (c : ℝ) :
     exact outerCutoff_support (subset_tsupport outerCutoff hx)
   intro x hx
   have h := hs hx
-  constructor <;> linarith [h.1, h.2]
+  constructor <;> linarith only [h.1, h.2]
 
 /-- The actual outer cutoff permits a larger native domain while retaining
 the uncut fundamental's Gaussian envelope and flat weight. -/
@@ -854,15 +853,19 @@ theorem NativeJets.copy_localJets (hf : NativeJets V w f)
       _ ≤ ‖iteratedFDeriv ℝ j (f (index l n)) (L l n i x + c l n i)‖ * ‖L l n i‖ ^ j := hu
       _ ≤ (C * V.growth (index l n) (L l n i x + c l n i) ^ p *
           w (index l n) (L l n i x + c l n i)) * (B ^ m * s.growth n x ^ (b * m)) :=
-        mul_le_mul (hb _ _ ht j hj) hL (by positivity)
+        mul_le_mul (hb _ _ ht j hj) hL (pow_nonneg (norm_nonneg _) _)
           (mul_nonneg (mul_nonneg (zero_le_one.trans hC) (pow_nonneg (zero_le_one.trans hGN) _))
             (hf.nonneg _ _ ht))
       _ ≤ (C * (A * s.growth n x ^ a) ^ p * (s.epsilon n ^ α * W l n x)) *
           (B ^ m * s.growth n x ^ (b * m)) := by
-        gcongr
-        · exact hf.nonneg _ _ ht
-        · exact hgrowth l n i x hx hk
-        · exact hweight l n i x hx hk
+        have hC0 : 0 ≤ C := zero_le_one.trans hC
+        have hG0 : 0 ≤ s.growth n x := zero_le_one.trans hG
+        have hAg : 0 ≤ A * s.growth n x ^ a :=
+          mul_nonneg (zero_le_one.trans hA) (pow_nonneg hG0 a)
+        exact mul_le_mul_of_nonneg_right (mul_le_mul (mul_le_mul_of_nonneg_left
+          (pow_le_pow_left₀ (zero_le_one.trans hGN) (hgrowth l n i x hx hk) p) hC0)
+          (hweight l n i x hx hk) (hf.nonneg _ _ ht) (mul_nonneg hC0 (pow_nonneg hAg p)))
+          (mul_nonneg (pow_nonneg (zero_le_one.trans hB) m) (pow_nonneg hG0 _))
       _ = majorant s (W l) α (C * A ^ p * B ^ m) (a * p + b * m) n x := by
         rw [majorant, mul_pow, ← pow_mul, pow_add]
         ring
@@ -945,29 +948,29 @@ theorem of_order (hw : ∀ i x, x ∈ V.carrier i → 0 ≤ w i x)
   induction m with
   | zero =>
     obtain ⟨C, hC, p, hp⟩ := hb 0
-    refine ⟨C + 1, by linarith, p, ?_⟩
+    refine ⟨C + 1, by linarith only [hC], p, ?_⟩
     intro i x hx j hj
     have hj0 : j = 0 := Nat.eq_zero_of_le_zero hj
     subst j
     exact (hp i x hx).trans (by
       apply mul_le_mul_of_nonneg_right _ (hw i x hx)
-      exact mul_le_mul_of_nonneg_right (by linarith)
+      exact mul_le_mul_of_nonneg_right (by linarith only)
         (pow_nonneg (zero_le_one.trans (V.one_le_growth i hx)) p))
   | succ m ih =>
     obtain ⟨A, hA, p, ha⟩ := ih
     obtain ⟨B, hB, q, hq⟩ := hb (m + 1)
-    refine ⟨A + B, by linarith, p + q, ?_⟩
+    refine ⟨A + B, by linarith only [hA, hB], p + q, ?_⟩
     intro i x hx j hj
     have hG := V.one_le_growth i hx
     rcases Nat.lt_or_eq_of_le hj with hj | rfl
     · exact (ha i x hx j (Nat.le_of_lt_succ hj)).trans (by
         apply mul_le_mul_of_nonneg_right _ (hw i x hx)
-        exact mul_le_mul (by linarith) (pow_le_pow_right₀ hG (Nat.le_add_right p q))
-          (pow_nonneg (zero_le_one.trans hG) p) (by linarith))
+        exact mul_le_mul (by linarith only [hB]) (pow_le_pow_right₀ hG (Nat.le_add_right p q))
+          (pow_nonneg (zero_le_one.trans hG) p) (by linarith only [hA, hB]))
     · exact (hq i x hx).trans (by
         apply mul_le_mul_of_nonneg_right _ (hw i x hx)
-        exact mul_le_mul (by linarith) (pow_le_pow_right₀ hG (Nat.le_add_left q p))
-          (pow_nonneg (zero_le_one.trans hG) q) (by linarith))
+        exact mul_le_mul (by linarith only [hA]) (pow_le_pow_right₀ hG (Nat.le_add_left q p))
+          (pow_nonneg (zero_le_one.trans hG) q) (by linarith only [hA, hB]))
 
 /-- Genuine chain-rule estimates with point-dependent edge growth. -/
 theorem comp {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X]
@@ -1416,17 +1419,17 @@ theorem NativeJets.both_signs {V : JetDomain ι D}
   intro m
   obtain ⟨A, hA, p, ha⟩ := (hf 0).bound m
   obtain ⟨B, hB, q, hb⟩ := (hf 1).bound m
-  refine ⟨A + B, by linarith, p + q, ?_⟩
+  refine ⟨A + B, by linarith only [hA, hB], p + q, ?_⟩
   intro i x hx k hk
   have hG := V.one_le_growth i.2 hx
   rcases i with ⟨j, i⟩
   fin_cases j
   · exact (ha i x hx k hk).trans (mul_le_mul_of_nonneg_right
-      (mul_le_mul (by linarith) (pow_le_pow_right₀ hG (Nat.le_add_right p q))
-        (pow_nonneg (zero_le_one.trans hG) p) (by linarith)) ((hf 0).nonneg i x hx))
+      (mul_le_mul (by linarith only [hB]) (pow_le_pow_right₀ hG (Nat.le_add_right p q))
+        (pow_nonneg (zero_le_one.trans hG) p) (by linarith only [hA, hB])) ((hf 0).nonneg i x hx))
   · exact (hb i x hx k hk).trans (mul_le_mul_of_nonneg_right
-      (mul_le_mul (by linarith) (pow_le_pow_right₀ hG (Nat.le_add_left q p))
-        (pow_nonneg (zero_le_one.trans hG) q) (by linarith)) ((hf 1).nonneg i x hx))
+      (mul_le_mul (by linarith only [hA]) (pow_le_pow_right₀ hG (Nat.le_add_left q p))
+        (pow_nonneg (zero_le_one.trans hG) q) (by linarith only [hA, hB])) ((hf 1).nonneg i x hx))
 
 /-! ### The actual common-cover copy map -/
 
@@ -1458,7 +1461,7 @@ theorem norm_nativePointLinear_le (g : Geometry) :
   have hc : ‖g.coordinateLinear‖ ≤ CommonCoverClass.argumentCost g := by
     unfold CommonCoverClass.argumentCost
     have h : 0 ≤ ‖g.pointLinear‖ * (1 + ‖g.coordinateLinear‖) := by positivity
-    linarith
+    linarith only [h]
   apply ContinuousLinearMap.opNorm_le_bound _ (zero_le_one.trans hcost)
   intro x
   change ‖(x.1, g.coordinateLinear x.2)‖ ≤ _

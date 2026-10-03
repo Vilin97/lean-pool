@@ -88,18 +88,11 @@ theorem tensor_norm_sq_le_coordinate_energy (n : ℕ)
     ‖A‖ ^ 2 ≤ ‖tensorReassembly (V := Space) n‖ ^ 2 *
       ∑ w : Fin n → Fin 3, ∑ j : Fin 3,
         (A (fun i => direction (w i)) j) ^ 2 := by
-  have hnorm : ‖A‖ ≤ ‖tensorReassembly (V := Space) n‖ *
-      ‖tensorCoordinates n A‖ := by
-    simpa only [tensorReassembly_coordinates] using
-      (tensorReassembly (V := Space) n).le_opNorm (tensorCoordinates n A)
-  have hsq : ‖A‖ ^ 2 ≤ ‖tensorReassembly (V := Space) n‖ ^ 2 *
-      ‖tensorCoordinates n A‖ ^ 2 := by
-    simpa only [mul_pow] using
-      (sq_le_sq₀ (norm_nonneg A)
-        (mul_nonneg (norm_nonneg (tensorReassembly (V := Space) n))
-          (norm_nonneg (tensorCoordinates n A)))).mpr hnorm
-  exact hsq.trans (mul_le_mul_of_nonneg_left
-    (tuple_norm_sq_le_coordinate_energy (tensorCoordinates n A)) (sq_nonneg _))
+  have hnorm := (tensorReassembly (V := Space) n).le_opNorm (tensorCoordinates (V := Space) n A)
+  rw [tensorReassembly_coordinates] at hnorm
+  exact ((pow_le_pow_left₀ (norm_nonneg A) hnorm 2).trans_eq (mul_pow _ _ 2)).trans
+    (mul_le_mul_of_nonneg_left
+      (tuple_norm_sq_le_coordinate_energy (tensorCoordinates (V := Space) n A)) (sq_nonneg _))
 
 end EulerComparatorRecovery
 
@@ -125,10 +118,13 @@ theorem iteratedFDeriv_coordinate_word (n : ℕ) (w : Fin n → Fin 3)
     iteratedFDeriv ℝ n h x (fun i => direction (w i)) =
       wordDerivative (List.ofFn w) h x := by
   induction n generalizing x with
-  | zero => simp [wordDerivative]
+  | zero => simp only [iteratedFDeriv_zero_apply, List.ofFn_zero, wordDerivative]
   | succ n ih =>
     have hd : DifferentiableAt ℝ (iteratedFDeriv ℝ n h) x :=
-      ((hh.iteratedFDeriv_right (m := ∞) (by simp)).differentiable (by simp)).differentiableAt
+      ((hh.iteratedFDeriv_right (m := ∞) (i := n) (by simp only [WithTop.le_coe_top, ne_eq,
+          WithTop.add_eq_top, WithTop.coe_ne_top, WithTop.natCast_ne_top, or_self,
+          not_false_eq_true])).differentiable
+        (by simp)).differentiableAt
     rw [hd.iteratedFDeriv_succ_apply_left']
     have he : (fun y => iteratedFDeriv ℝ n h y
         (Fin.tail (fun i => direction (w i)))) = wordDerivative (List.ofFn (Fin.tail w)) h := by
@@ -142,7 +138,8 @@ theorem iteratedFDeriv_component (n : ℕ) (u : Space → Space)
     (hu : ContDiff ℝ ∞ u) (x : Space) (m : Fin n → Space) (j : Fin 3) :
     iteratedFDeriv ℝ n (fun y => u y j) x m = (iteratedFDeriv ℝ n u x m) j := by
   have he := (EuclideanSpace.proj j : Space →L[ℝ] ℝ).iteratedFDeriv_comp_left
-    (hu.contDiffAt (x := x)) (i := n) (by simp)
+    (hu.contDiffAt (x := x)) (i := n) (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true])
   exact congrArg (fun A : Space [×n]→L[ℝ] ℝ => A m) he
 
 /-- Every coordinate evaluation of the Fréchet tensor is in L². -/
@@ -167,7 +164,8 @@ theorem iteratedFDeriv_memLp_of_curl_compact (u : Space → Space)
     (hu : ContDiff ℝ ∞ u) (hL2 : MemLp u 2 volume)
     (hdiv : ∀ x, divergence u x = 0) (hc : HasCompactSupport (vectorCurl u))
     (n : ℕ) : MemLp (iteratedFDeriv ℝ n u) 2 volume := by
-  have ht : MemLp (fun x => tensorCoordinates n (iteratedFDeriv ℝ n u x)) 2 volume := by
+  have ht : MemLp (fun x => tensorCoordinates (V := Space) n (iteratedFDeriv ℝ n u x)) 2
+      volume := by
     apply MemLp.of_eval
     intro w
     exact iteratedFDeriv_coordinate_memLp u hu hL2 hdiv hc n w
@@ -198,19 +196,13 @@ theorem tensor_integral_norm_sq_le_coordinate_energy (n : ℕ)
   have hsum (w : Fin n → Fin 3) : Integrable
       (fun x => ∑ j : Fin 3, (F x (fun i => direction (w i)) j) ^ 2) :=
     integrable_finsetSum Finset.univ (fun j _ => hcoord w j)
-  calc
-    (∫ x, ‖F x‖ ^ 2) ≤ ∫ x, ‖tensorReassembly (V := Space) n‖ ^ 2 *
-        ∑ w : Fin n → Fin 3, ∑ j : Fin 3,
-          (F x (fun i => direction (w i)) j) ^ 2 :=
-      integral_mono ((memLp_two_iff_integrable_sq_norm hF.aestronglyMeasurable).mp hF)
-        ((integrable_finsetSum Finset.univ (fun w _ => hsum w)).const_mul _)
-        (fun x => tensor_norm_sq_le_coordinate_energy n (F x))
-    _ = _ := by
-      rw [integral_const_mul, integral_finsetSum Finset.univ (fun w _ => hsum w)]
-      congr 1
-      apply Finset.sum_congr rfl
-      intro w _
-      exact integral_finsetSum Finset.univ (fun j _ => hcoord w j)
+  have hmono := integral_mono ((memLp_two_iff_integrable_sq_norm hF.aestronglyMeasurable).mp hF)
+    ((integrable_finsetSum Finset.univ (fun w _ => hsum w)).const_mul _)
+    (fun x => tensor_norm_sq_le_coordinate_energy n (F x))
+  refine hmono.trans_eq ?_
+  rw [integral_const_mul, integral_finsetSum Finset.univ (fun w _ => hsum w)]
+  exact congrArg (_ * ·) (Finset.sum_congr rfl fun w _ =>
+    integral_finsetSum Finset.univ (fun j _ => hcoord w j))
 
 /-- The L² class of a smooth field's tensor has exactly its ordinary integral
 energy, so quantitative recovery applies to the development's norm. -/
@@ -343,7 +335,8 @@ theorem uniform_energy_of_compact_support
     funext x
     by_cases hx : x ∈ K
     · simp only [indicator_of_mem hx]
-    · simp [indicator_of_notMem hx, hsupport t ht x hx]
+    · simp only [hsupport t ht x hx, norm_zero, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true,
+        zero_pow, indicator_of_notMem hx]
   rw [hind, integral_indicator hK.measurableSet]
   apply (le_abs_self _).trans
   rw [← Real.norm_eq_abs]

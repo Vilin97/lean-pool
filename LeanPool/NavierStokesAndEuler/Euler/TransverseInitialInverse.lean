@@ -93,7 +93,7 @@ theorem initialCoordinateOperator_norm_le :
   change ‖initialCoordinateOperator T hT Q Q₁ c hc hQ‖ ≤ _ at hb
   apply hb.trans (hpath.trans _)
   unfold transportCost
-  linarith
+  linarith only
 
 include hd hc hQ in
 theorem norm_le_initialProductDerivative (u : TimeLp T U) :

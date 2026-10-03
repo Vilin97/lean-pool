@@ -27,25 +27,27 @@ open Set InnerProductSpace ContinuousLinearMap EulerSmoothLimit EulerPacketNorma
 
 /-- Activation direction, given by `unit (F.toContinuousLinearMap.adjoint n)`. -/
 def activationDirection (F : Space ≃L[ℝ] Space) (n : Space) : Space :=
-  unit (F.toContinuousLinearMap.adjoint n)
+  unit (adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n)
 
 /-- Activation ray scale, given by `‖F.toContinuousLinearMap.adjoint n‖⁻¹`. -/
 def activationRayScale (F : Space ≃L[ℝ] Space) (n : Space) : ℝ :=
-  ‖F.toContinuousLinearMap.adjoint n‖⁻¹
+  ‖adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n‖⁻¹
 
 theorem inverse_adjoint_forward_adjoint (F : Space ≃L[ℝ] Space) (n : Space) :
-    F.symm.toContinuousLinearMap.adjoint (F.toContinuousLinearMap.adjoint n)=n := by
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.symm.toContinuousLinearMap
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n)=n := by
   have hi : F.toContinuousLinearMap.comp F.symm.toContinuousLinearMap=ContinuousLinearMap.id ℝ
       Space := by
     apply ContinuousLinearMap.ext
     intro v
     exact F.apply_symm_apply v
-  change (F.symm.toContinuousLinearMap.adjoint.comp F.toContinuousLinearMap.adjoint) n=n
+  change ((adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.symm.toContinuousLinearMap).comp
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap)) n=n
   rw [← adjoint_comp,hi,adjoint_id]
   rfl
 
 theorem forward_adjoint_ne_zero (F : Space ≃L[ℝ] Space) {n : Space} (hn : n ≠ 0) :
-    F.toContinuousLinearMap.adjoint n ≠ 0 := by
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.toContinuousLinearMap n ≠ 0 := by
   intro hz
   have h := inverse_adjoint_forward_adjoint F n
   rw [hz,map_zero] at h
@@ -58,7 +60,8 @@ theorem activationRayScale_pos (F : Space ≃L[ℝ] Space) {n : Space} (hn : n �
     0 < activationRayScale F n := inv_pos.mpr (norm_pos_iff.mpr (forward_adjoint_ne_zero F hn))
 
 theorem activationDirection_transport (F : Space ≃L[ℝ] Space) (n : Space) :
-    F.symm.toContinuousLinearMap.adjoint (activationDirection F n)=activationRayScale F n • n := by
+    adjoint (𝕜 := ℝ) (E := Space) (F := Space) F.symm.toContinuousLinearMap
+      (activationDirection F n)=activationRayScale F n • n := by
   simp only [activationDirection,activationRayScale,unit,map_smul,inverse_adjoint_forward_adjoint]
 
 variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
@@ -67,7 +70,7 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 theorem actual_normal_of_activation_choice (t : Icc (0 : ℝ) D.T) (x n : Space)
     (hchoice : D.m₀ = activationDirection (D.deformationEquiv t x) n) :
     D.normal.field t x=activationRayScale (D.deformationEquiv t x) n • n := by
-  change (D.FInv.field t x).adjoint D.m₀=_
+  change adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field t x) D.m₀=_
   rw [hchoice]
   exact activationDirection_transport (D.deformationEquiv t x) n
 

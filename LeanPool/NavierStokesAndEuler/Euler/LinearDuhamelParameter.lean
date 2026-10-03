@@ -50,15 +50,15 @@ theorem volterraInverse_eq_mapInverse : U.volterraInverse = (volterraOperator T 
 /-- The actual forced solution is obtained by this genuine Volterra inverse. -/
 theorem solution_eq_volterraInverse (f : C(Icc (0 : ℝ) T, E)) (a₀ : E) :
     U.solution f a₀ = U.volterraInverse
-      ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) a₀ + integral T hT f) := by
+      ((ContinuousLinearMap.const (M := E) ℝ (Icc (0 : ℝ) T)) a₀ + integral (E := E) T hT f) := by
   have he : volterraOperator T hT B (U.solution f a₀) =
-      (ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) a₀ + integral T hT f := by
-    change U.solution f a₀ - integral T hT (multiplier B (U.solution f a₀)) = _
+      (ContinuousLinearMap.const (M := E) ℝ (Icc (0 : ℝ) T)) a₀ + integral (E := E) T hT f := by
+    change U.solution f a₀ - integral (E := E) T hT (multiplier B (U.solution f a₀)) = _
     calc
-      _ = ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) a₀ +
-          integral T hT (multiplier B (U.solution f a₀) + f)) -
-          integral T hT (multiplier B (U.solution f a₀)) :=
-        congrArg (fun v => v - integral T hT (multiplier B (U.solution f a₀)))
+      _ = ((ContinuousLinearMap.const (M := E) ℝ (Icc (0 : ℝ) T)) a₀ +
+          integral (E := E) T hT (multiplier B (U.solution f a₀) + f)) -
+          integral (E := E) T hT (multiplier B (U.solution f a₀)) :=
+        congrArg (fun v => v - integral (E := E) T hT (multiplier B (U.solution f a₀)))
           (U.solution_integral f a₀)
       _ = _ := by rw [map_add]; abel
   calc
@@ -89,7 +89,8 @@ theorem volterraInverse_contDiff (U : ∀ x, Evolution T hT (B x)) {n : ℕ∞ω
     change ContDiffAt ℝ n ContinuousLinearMap.inverse
       ((U x).volterraEquiv : C(Icc (0 : ℝ) T,E) →L[ℝ] C(Icc (0 : ℝ) T,E))
     exact contDiffAt_map_inverse (U x).volterraEquiv
-  exact hi.comp x (volterraOperator_contDiff T hT B hB).contDiffAt
+  exact hi.comp (f := fun x => volterraOperator T hT (B x)) x
+    (volterraOperator_contDiff T hT B hB).contDiffAt
 
 /-- The integral construction is genuinely smooth in parameters whenever the
 coefficient, initial data and forcing are smooth in their actual Banach norms. -/
@@ -98,12 +99,13 @@ theorem solution_contDiff (U : ∀ x, Evolution T hT (B x))
     (hB : ContDiff ℝ n B) (hf : ContDiff ℝ n f) (ha₀ : ContDiff ℝ n a₀) :
     ContDiff ℝ n (fun x => (U x).solution (f x) (a₀ x)) := by
   have he : (fun x => (U x).solution (f x) (a₀ x)) = fun x => (U x).volterraInverse
-      ((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)) (a₀ x) + integral T hT (f x)) := by
+      ((ContinuousLinearMap.const (M := E) ℝ (Icc (0 : ℝ) T)) (a₀ x) +
+        integral (E := E) T hT (f x)) := by
     funext x
     exact (U x).solution_eq_volterraInverse (f x) (a₀ x)
   rw [he]
   exact (volterraInverse_contDiff T hT B U hB).clm_apply
-    (((ContinuousLinearMap.const ℝ (Icc (0 : ℝ) T)).contDiff.comp ha₀).add
-      ((integral T hT).contDiff.comp hf))
+    (((ContinuousLinearMap.const (M := E) ℝ (Icc (0 : ℝ) T)).contDiff.comp ha₀).add
+      ((integral (E := E) T hT).contDiff.comp hf))
 
 end EulerLinearDuhamel

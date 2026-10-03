@@ -116,42 +116,36 @@ theorem corrector_coefficient_bounds (R C Ri : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C
         correctorCoefficientAmplitude C Ri*majorant (correctorCoefficientRadius R Ri) 0 n := by
   let Rc := correctorCoefficientRadius R Ri
   let Cc := correctorCoefficientAmplitude C Ri
-  have hRc : 0 ≤ Rc := by dsimp [Rc,correctorCoefficientRadius]; positivity
-  have hRR : R ≤ Rc := by dsimp [Rc,correctorCoefficientRadius]; linarith
-  have hIR : 4*Ri ≤ Rc := by dsimp [Rc,correctorCoefficientRadius]; linarith
-  have hN : 0 ≤ 3*Ri*C := by positivity
-  have hD : 0 ≤ 3*C^2 := by positivity
-  have hDt : 0 ≤ 27*(3*Ri*C)^2*(3*C^2) := by positivity
-  have hCc : 0 ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; positivity
-  have hC0 : C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith
-  have hC1 : 3*C^2 ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith
-  have hCN : 3*Ri*C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith
+  have hRc : 0 ≤ Rc := add_nonneg (add_nonneg hR (mul_nonneg zero_le_four hRi)) zero_le_one
+  have hRR : R ≤ Rc := by dsimp [Rc,correctorCoefficientRadius]; linarith only [hRi]
+  have hIR : 4*Ri ≤ Rc := by dsimp [Rc,correctorCoefficientRadius]; linarith only [hR]
+  have hN : 0 ≤ 3*Ri*C := mul_nonneg (mul_nonneg zero_le_three hRi) hC
+  have hD : 0 ≤ 3*C^2 := mul_nonneg zero_le_three (sq_nonneg C)
+  have hDt : 0 ≤ 27*(3*Ri*C)^2*(3*C^2) := mul_nonneg (mul_nonneg (by norm_num) (sq_nonneg _)) hD
+  have hCc : 0 ≤ Cc :=
+    add_nonneg (add_nonneg (add_nonneg (add_nonneg zero_le_one hC) hD) hN) hDt
+  have hC0 : C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith only [hD, hN, hDt]
+  have hC1 : 3*C^2 ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith only [hC, hN, hDt]
+  have hCN : 3*Ri*C ≤ Cc := by dsimp [Cc,correctorCoefficientAmplitude]; linarith only [hC, hD, hDt]
   have hCT : 27*(3*Ri*C)^2*(3*C^2) ≤ Cc := by
     dsimp [Cc,correctorCoefficientAmplitude]
-    linarith
-  have hIb (n : ℕ) (a : Space) :
-      ‖iteratedFDeriv ℝ n (translateCoefficientPath D.FInv.field) a‖ ≤ C*majorant Rc 0 n :=
+    linarith only [hC, hD, hN]
+  have hIb (n : ℕ) (a : Space) :=
     (D.FInv.norm_iteratedFDeriv_translation_le n (C*majorant R 0 n)
       (mul_nonneg hC (majorant_nonneg R hR 0 n)) (hI n) a).trans
         (mul_le_mul_of_nonneg_left (majorant_radius_mono R Rc hR hRR 0 n) hC)
-  have hMb (n : ℕ) (a : Space) :
-      ‖iteratedFDeriv ℝ n (translateCoefficientPath D.M.field) a‖ ≤ C*majorant Rc 0 n :=
+  have hMb (n : ℕ) (a : Space) :=
     (D.M.norm_iteratedFDeriv_translation_le n (C*majorant R 0 n)
       (mul_nonneg hC (majorant_nonneg R hR 0 n)) (hM n) a).trans
         (mul_le_mul_of_nonneg_left (majorant_radius_mono R Rc hR hRR 0 n) hC)
   have hnormal (n : ℕ) (t : Icc (0 : ℝ) D.T) (x : Space) :
       ‖iteratedFDeriv ℝ n (D.normal.field t : Space → Space) x‖ ≤ C*majorant R 0 n :=
     normalCoefficient_derivative_bound D.m₀ D.FInv D.m₀_unit n (C*majorant R 0 n) (hI n) t x
-  have hNb (n : ℕ) (a : Space) :
-      ‖iteratedFDeriv ℝ n (translateCoefficientPath
-        (normalFunctional D.normal D.normalLower D.normalLower_pos D.normal_lower)) a‖ ≤
-          (3*Ri*C)*majorant Rc 0 n :=
+  have hNb (n : ℕ) (a : Space) :=
     (normalFunctional_translation_bound D.normal D.normalLower D.normalLower_pos D.normal_lower
       R C Ri hR hC hInv hnormal n a).trans
         (mul_le_mul_of_nonneg_left (majorant_radius_mono (4*Ri) Rc (by positivity) hIR 0 n) hN)
-  have hKb (n : ℕ) (a : Space) :
-      ‖iteratedFDeriv ℝ n (translateCoefficientPath D.potentialCoefficientPath) a‖ ≤
-        (3*Ri*C)*majorant Rc 0 n :=
+  have hKb (n : ℕ) (a : Space) :=
     (potentialCoefficient_translation_bound D.normal D.normalLower D.normalLower_pos D.normal_lower
       R C Ri hR hC hInv hnormal n a).trans
         (mul_le_mul_of_nonneg_left (majorant_radius_mono (4*Ri) Rc (by positivity) hIR 0 n) hN)
@@ -163,9 +157,7 @@ theorem corrector_coefficient_bounds (R C Ri : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C
       ‖iteratedFDeriv ℝ n (translateCoefficientPath D.normalDerivative) a‖ ≤ (3*C^2)*majorant Rc 0
           n := by
     simpa only [pow_two, mul_assoc] using D.normalDerivative_bound Rc C C hRc hC hC hIb hMb n a
-  have hKt (n : ℕ) (a : Space) :
-      ‖iteratedFDeriv ℝ n (translateCoefficientPath D.potentialDerivative) a‖ ≤
-        (27*(3*Ri*C)^2*(3*C^2))*majorant Rc 0 n :=
+  have hKt (n : ℕ) (a : Space) :=
     potentialTimePath_bound D.normal D.normalDerivative D.normalLower D.normalLower_pos
         D.normal_lower
       D.normalDerivative_orbit Rc (3*Ri*C) (3*C^2) hRc hN hD hNb hmt n a

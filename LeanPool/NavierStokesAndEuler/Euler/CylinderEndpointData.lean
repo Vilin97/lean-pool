@@ -91,11 +91,10 @@ theorem endpointDisplacement_terminal (Y : CylinderL2 P U) :
   change initialPrimitive T D.time_pos.le
     (constantFieldOperator T D.time_pos.le (T⁻¹ • Y) -
       (D.endpointCorrection P Y : TimeLp T (CylinderL2 P U))) _ = Y
-  rw [map_sub,ContinuousMap.sub_apply,initialPrimitive_constantFieldOperator,
-    initialPrimitive_eq_terminal_sub,terminalPrimitive_terminal]
-  change T • (T⁻¹ • Y)-(0-initialTrace T D.time_pos.le
-    (D.endpointCorrection P Y : TimeLp T (CylinderL2 P U))) = Y
-  rw [hr,sub_self,sub_zero,smul_smul,mul_inv_cancel₀ D.time_pos.ne',one_smul]
+  simp only [ContinuousLinearMap.map_sub,ContinuousMap.sub_apply,
+    initialPrimitive_constantFieldOperator]
+  simp only [initialPrimitive_eq_terminal_sub,terminalPrimitive_terminal,hr,sub_self,sub_zero,
+    smul_smul,mul_inv_cancel₀ D.time_pos.ne',one_smul]
 
 theorem endpointCoordinate_eq (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
     D.endpointCoordinate P Y t =
@@ -104,12 +103,14 @@ theorem endpointCoordinate_eq (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
         (fixedEndpointDerivative T D.time_pos.le (D.frame P) (D.frameDerivative P) (D.hessian P)
           D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
           D.potential D.potential_nonneg (D.hessian_upper P) D.small
-          (affineTrial T D.time_pos.le (D.frame P) (D.frameDerivative P)) Y) t :=
-  EulerFixedEndpointStrong.continuousCoordinateVelocity_eq T D.time_pos.le
-    (D.frame P) (D.frameDerivative P) (D.hessian P)
-    D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
-    D.potential D.potential_nonneg (D.hessian_upper P) D.small
-    (D.frameSecond P) D.time_pos (D.frame_second_derivative P) (D.frame_equation P) Y t
+          (affineTrial T D.time_pos.le (D.frame P) (D.frameDerivative P)) Y) t := by
+  unfold endpointCoordinate
+  with_reducible
+    exact EulerFixedEndpointStrong.continuousCoordinateVelocity_eq T D.time_pos.le
+      (D.frame P) (D.frameDerivative P) (D.hessian P)
+      D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
+      D.potential D.potential_nonneg (D.hessian_upper P) D.small
+      (D.frameSecond P) D.time_pos (D.frame_second_derivative P) (D.frame_equation P) Y t
 
 /-- This reconstruction has the original L² coordinate derivative as its
 almost-everywhere representative. -/
@@ -120,12 +121,10 @@ theorem endpointCoordinate_ae (Y : CylinderL2 P U) :
     (D.frame P) (D.frameDerivative P) (D.hessian P)
     D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
     D.potential D.potential_nonneg (D.hessian_upper P) D.small D.time_pos Y
+  unfold endpointSlope
   filter_upwards [ha,ae_restrict_mem measurableSet_Icc] with t ht hmem
-  change D.endpointSlope P Y t = _ at ht
-  rw [ht]
-  change _ = D.endpointCoordinate P Y (projIcc 0 T D.time_pos.le t)
-  rw [projIcc_of_mem D.time_pos.le hmem]
-  exact (D.endpointCoordinate_eq P Y ⟨t,hmem⟩).symm
+  exact (ht.trans ((D.endpointCoordinate_eq P Y ⟨t,hmem⟩).symm.trans
+    (congrArg (D.endpointCoordinate P Y) (projIcc_of_mem D.time_pos.le hmem).symm)) :)
 
 theorem endpointDisplacement_hasDerivWithinAt (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T D.time_pos.le (D.endpointDisplacement P Y))
@@ -140,16 +139,24 @@ theorem endpointDisplacement_hasDerivWithinAt (Y : CylinderL2 P U) (t : Icc (0 :
   change initialRealPrimitive T (D.endpointSlope P Y) (projIcc 0 T D.time_pos.le s) = _
   rw [projIcc_of_mem D.time_pos.le hs]
 
+theorem endpointAcceleration_apply (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
+    D.endpointAcceleration P Y t =
+      generator T (D.frame P) (D.frameDerivative P) D.lower D.lower_pos (D.frame_lower P) t
+        (D.endpointCoordinate P Y t) := rfl
+
 /-- Equation (10) holds throughout the closed time interval for the actual
 affine-terminal solution. -/
 theorem endpointCoordinate_hasDerivWithinAt (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T D.time_pos.le (D.endpointCoordinate P Y))
-      (D.endpointAcceleration P Y t) (Icc (0 : ℝ) T) t :=
-  EulerFixedEndpointStrong.continuousCoordinateVelocity_hasDerivWithinAt_generator
-    T D.time_pos.le (D.frame P) (D.frameDerivative P) (D.hessian P)
-    D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
-    D.potential D.potential_nonneg (D.hessian_upper P) D.small
-    (D.frameSecond P) D.time_pos (D.frame_second_derivative P) (D.frame_equation P) Y t
+      (D.endpointAcceleration P Y t) (Icc (0 : ℝ) T) t := by
+  rw [endpointAcceleration_apply]
+  unfold endpointCoordinate
+  with_reducible
+    exact EulerFixedEndpointStrong.continuousCoordinateVelocity_hasDerivWithinAt_generator
+      T D.time_pos.le (D.frame P) (D.frameDerivative P) (D.hessian P)
+      D.lower D.lower_pos (D.frame_lower P) (D.frame_derivative P)
+      D.potential D.potential_nonneg (D.hessian_upper P) D.small
+      (D.frameSecond P) D.time_pos (D.frame_second_derivative P) (D.frame_equation P) Y t
 
 theorem endpointVelocity_hasDerivWithinAt (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T D.time_pos.le (D.endpointVelocity P Y))
@@ -166,10 +173,11 @@ theorem endpointVelocity_hasDerivWithinAt (Y : CylinderL2 P U) (t : Icc (0 : ℝ
 or strong derivative among the data. -/
 theorem endpoint_projected_equation (Y : CylinderL2 P U) (t : Icc (0 : ℝ) T) :
     gram (D.frame P t) (D.endpointAcceleration P Y t) =
-      (D.frame P t).adjoint (-(2 : ℝ) • D.frameDerivative P t (D.endpointCoordinate P Y t)) := by
+      adjoint (𝕜 := ℝ) (E := CylinderL2 P U) (F := CylinderL2 P E) (D.frame P t)
+        (-(2 : ℝ) • D.frameDerivative P t (D.endpointCoordinate P Y t)) := by
   change gram (D.frame P t) ((-2 : ℝ) • gramInverse (D.frame P t) D.lower D.lower_pos
-    (D.frame_lower P t) ((D.frame P t).adjoint
+    (D.frame_lower P t) (adjoint (𝕜 := ℝ) (E := CylinderL2 P U) (F := CylinderL2 P E) (D.frame P t)
       (D.frameDerivative P t (D.endpointCoordinate P Y t)))) = _
-  rw [map_smul,gram_inverse_apply,map_smul]
+  simp only [ContinuousLinearMap.map_smul,gram_inverse_apply]
 
 end EulerCylinderDirichlet.Coefficients

@@ -51,7 +51,7 @@ theorem profileEnvelope_bounds (X : ℝ) (hX : 1 ≤ X) :
   have he := (Real.exp_pos (6 : ℝ)).le
   have hp : 0 ≤ 8*Real.exp 6*X*(1+sourceEnvelope X) := by positivity
   unfold profileEnvelope
-  exact ⟨by linarith,by linarith,by linarith⟩
+  exact ⟨by linarith only [hS, hp],by linarith only [hp],by linarith only [hS]⟩
 
 theorem profile_amplitude_le (X δ h C : ℝ) (hX : 1 ≤ X)
     (_hδ : 0 ≤ δ) (hδ1 : δ ≤ 1) (hh : 0 ≤ h) (hhX : h ≤ X)

@@ -126,7 +126,9 @@ def initial (τ : ℝ) (hτ : 0 < τ) (hτT : τ ≤ D.T) : HistoryData (D.initi
   jacobi t ht x :=
     initialPath_hasDerivWithinAt D.T τ D.T_pos.le hτ.le hτT
       (pathEvaluation x D.F₁.field)
-      (pathEvaluation x (-pathCompositionMap B.H.field D.F.field))
+      (pathEvaluation x
+        (-pathCompositionMap (α := Space) (K := Icc (0 : ℝ) D.T) (U := Space) (E := Space)
+          (F := Space) B.H.field D.F.field))
       (fun s hs => B.jacobi s hs x) t ht
   potential := B.potential
   potential_nonneg := B.potential_nonneg

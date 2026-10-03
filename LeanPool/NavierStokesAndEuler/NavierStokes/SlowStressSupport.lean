@@ -126,10 +126,13 @@ theorem rowDensity_increment {n : ℕ} (hn : 0 < n) (u e : History) (omega du de
   ext i
   fin_cases i <;>
     simp only [rowDensity, pressureGradient, cauchy_increment hn, Pi.add_apply] <;>
-    simp [linearDensity, increment, Function.update_self, div_eq_mul_inv]
+    simp only [increment, update_self, div_eq_mul_inv, Fin.zero_eta, Fin.isValue,
+        Matrix.cons_val_zero, linearDensity, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val]
   all_goals try ring1
   by_cases hR : R = 0
-  · simp [hR]
+  · simp only [hR, zero_mul, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, inv_zero,
+      mul_zero, sub_self, add_zero]
   · field_simp
     ring
 
@@ -171,7 +174,8 @@ theorem linearDensity_on_patch (lam A a b : ℝ) (ha : 0 < a)
     have he' : de R = 0 := by
       by_contra h
       exact hR (hde h)
-    simp [linearDensity, weightedDensity, hd, he']
+    simp only [linearDensity, hd, mul_zero, he', zero_div, zero_mul, add_zero, sub_self,
+        weightedDensity, neg_mul]
 
 /-- Axial target moments: physical mass and angular transport. -/
 noncomputable def axialDebt (A : ℝ) (d : Debt) : Fin 2 → ℝ := ![d 0, d 3 / A]
@@ -241,12 +245,16 @@ theorem weighted_moments_exact (lam A a b : ℝ) (d : Debt) (hlam : 0 < lam)
     have he : repairE lam A a b d R = 0 := by
       by_contra h
       exact (not_lt_of_ge hR) (ha.trans (hde h).1)
-    fin_cases i <;> simp [weightedDensity, hu, he])]
+    fin_cases i <;> simp only [weightedDensity, hu, mul_zero, he, neg_mul, Fin.zero_eta,
+        Fin.isValue, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+        Matrix.cons_val])]
   have hu := repairU_moment lam A a b d hlam ha hab
   have he := repairE_moment lam A a b d hlam ha hab
   fin_cases i
-  · simpa [weightedDensity, FiveRowRank.axialPowers, axialDebt] using hu 0
-  · simpa [weightedDensity, FiveRowRank.angularPowers, angularDebt] using he 0
+  · simpa only [weightedDensity, neg_mul, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      FiveRowRank.axialPowers, Real.rpow_one, axialDebt] using hu 0
+  · simpa only [weightedDensity, neg_mul, Fin.mk_one, Fin.isValue, Matrix.cons_val_one,
+      Matrix.cons_val_zero, FiveRowRank.angularPowers, Real.rpow_ofNat, angularDebt] using he 0
   · change (∫ R, (2 * A) * (R ^ (-2 - 2 * lam) * repairE lam A a b d R)) = d 2
     rw [integral_const_mul]
     have hm := he 1
@@ -283,8 +291,10 @@ theorem weightedDensity_integrable (lam A a b : ℝ) (d : Debt) (ha : 0 < a) (ha
     Integrable (fun R => weightedDensity lam A (repairU lam A a b d) (repairE lam A a b d) R i) :=
         by
   fin_cases i
-  · simpa [weightedDensity] using repairU_power_integrable lam A a b 1 d ha hab
-  · simpa [weightedDensity] using repairE_power_integrable lam A a b 2 d ha hab
+  · simpa only [weightedDensity, neg_mul, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      Real.rpow_one] using repairU_power_integrable lam A a b 1 d ha hab
+  · simpa only [weightedDensity, neg_mul, Fin.mk_one, Fin.isValue, Matrix.cons_val_one,
+      Matrix.cons_val_zero, Real.rpow_ofNat] using repairE_power_integrable lam A a b 2 d ha hab
   · exact (repairE_power_integrable lam A a b (-2 - 2 * lam) d ha hab).const_mul (2 * A)
   · exact (repairU_power_integrable lam A a b (1 - 2 * lam) d ha hab).const_mul A
   · exact (repairE_power_integrable lam A a b (-2 * lam) d ha hab).const_mul (-A)
@@ -374,8 +384,10 @@ theorem rowDensity_repair_eq_outside (lam A a b : ℝ) (d : Debt) {n : ℕ} (hn 
       (increment e n (repairE lam A a b d)) omega R = rowDensity n u e omega R := by
   rw [rowDensity_increment hn]
   ext i
-  fin_cases i <;> simp [linearDensity, repairU_zero_outside lam A a b d hab hR,
-    repairE_zero_outside lam A a b d hab hR]
+  fin_cases i <;> simp only [linearDensity, repairU_zero_outside lam A a b d hab hR, mul_zero,
+      repairE_zero_outside lam A a b d hab hR, zero_div, zero_mul, add_zero, sub_self, Fin.zero_eta,
+      Fin.isValue, Pi.add_apply, Matrix.cons_val_zero, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 theorem rowDensity_repair_exterior (lam A a b : ℝ) (d : Debt) {n : ℕ} (hn : 0 < n)
     (u e : History) (omega : Profile) (hab : a < b) {B R : ℝ}
@@ -390,8 +402,8 @@ theorem increment_eq_of_zero (u : History) (n j : ℕ) (du : Profile) (R : ℝ)
     (hd : du R = 0) : increment u n du j R = u j R := by
   by_cases hj : j = n
   · subst j
-    simp [increment, hd]
-  · simp [increment, hj]
+    simp only [increment, update_self, hd, add_zero]
+  · simp only [increment, ne_eq, hj, not_false_eq_true, update_of_ne]
 
 theorem pressureGradient_increment_of_zero {n : ℕ} (hn : 0 < n) (e : History)
     (omega de : Profile) (R : ℝ) (hd : de R = 0) :
@@ -482,8 +494,8 @@ theorem slice_jointIncrement (u : JointHistory) (n : ℕ) (du : JointProfile) (e
   funext j R
   by_cases hj : j = n
   · subst j
-    simp [slice, jointIncrement, increment]
-  · simp [slice, jointIncrement, increment, hj]
+    simp only [slice, jointIncrement, update_self, increment]
+  · simp only [slice, jointIncrement, ne_eq, hj, not_false_eq_true, update_of_ne, increment]
 
 theorem jointIncrement_lower (u : JointHistory) {n j : ℕ} (du : JointProfile) (hj : j < n) :
     jointIncrement u n du j = u j := Function.update_of_ne (Nat.ne_of_lt hj) _ _
@@ -623,7 +635,7 @@ theorem fluxHistory_hasDerivAt (h lam : ℝ) {u : JointProfile} (hu : ContDiff �
   rw [weightedAxial_parameterPartial hu w] at he
   convert! he using 1
   · funext R
-    simp [fluxHistory, massHistory, parameterMassHistory, id_eq]
+    simp only [fluxHistory, massHistory, parameterMassHistory, id_eq, Pi.sub_apply]
     ring
   · simp only [weightedAxial, radialZ, PositiveAxisSystem.a, PositiveAxisSystem.dScale,
       id_eq, div_eq_mul_inv]
@@ -651,7 +663,7 @@ theorem fluxHistory_exterior (h lam : ℝ) {u : JointProfile} (hu : ContDiff ℝ
     change HasDerivAt (fun z => massHistory u (R, z)) _ eta at hd
     rw [he] at hd
     exact hd.unique (hasDerivAt_const eta 0)
-  simp [fluxHistory, hs eta R hR, hmass eta, hp]
+  simp only [fluxHistory, hs eta R hR, mul_zero, hmass eta, sub_self, hp, zero_div]
 
 /-- The first row of the actual five-moment system gives the required mass
 condition for the recomputed divergence flux. -/
@@ -681,12 +693,13 @@ theorem pressure_weighted_identity {q : JointProfile} (hq : ContDiff ℝ ∞ q) 
   have hpow : ∀ R : ℝ, HasDerivAt (fun t => t ^ 2 / 2) R R := by
     intro R
     convert! ((hasDerivAt_id R).pow 2).div_const 2 using 1
-    simp
+    simp only [Nat.cast_ofNat, id_eq, Nat.add_one_sub_one, pow_one, mul_one, ne_eq,
+        OfNat.ofNat_ne_zero, not_false_eq_true, mul_div_cancel_left₀]
   have hi := intervalIntegral.integral_mul_deriv_eq_deriv_mul_of_hasDerivAt
     (a := (0 : ℝ)) (b := B)
-    (u := fun R : ℝ => R ^ 2 / 2) (u' := fun R => R)
+    (u := fun R : ℝ => R ^ (2 : ℕ) / 2) (u' := fun R => R)
     (v := fun R => ProfileHistories.primitive q (R, eta)) (v' := fun R => q (R, eta))
-    ((continuous_id.pow 2).div_const 2).continuousOn hPc.continuousOn
+    (((continuous_id (X := ℝ)).pow 2).div_const 2).continuousOn hPc.continuousOn
     (fun R _ => hpow R) (fun R _ => primitive_hasDerivAt hq (R, eta))
     (continuous_id.intervalIntegrable 0 B) (hqc.intervalIntegrable 0 B)
   have he : (fun R => R ^ 2 / 2 * q (R, eta)) =
@@ -788,7 +801,7 @@ theorem fluxHistory_hasDerivAt_on (h lam : ℝ) {S : Set ℝ} (hS : IsOpen S)
   rw [weightedAxial_parameterPartial_on hS hu hw] at he
   convert! he using 1
   · funext R
-    simp [fluxHistory, massHistory, parameterMassHistory, id_eq]
+    simp only [fluxHistory, massHistory, parameterMassHistory, id_eq, Pi.sub_apply]
     ring
   · simp only [weightedAxial, radialZ, PositiveAxisSystem.a, PositiveAxisSystem.dScale,
       id_eq, div_eq_mul_inv]
@@ -814,7 +827,7 @@ theorem fluxHistory_exterior_on (h lam : ℝ) {S : Set ℝ} (hS : IsOpen S)
     have he : (fun z => massHistory u (R, z)) =ᶠ[nhds eta] fun _ => (0 : ℝ) := by
       filter_upwards [hS.mem_nhds heta] with z hz using hmass z hz
     exact hd.unique ((hasDerivAt_const eta 0).congr_of_eventuallyEq he)
-  simp [fluxHistory, hs eta heta R hR, hmass eta heta, hp]
+  simp only [fluxHistory, hs eta heta R hR, mul_zero, hmass eta heta, sub_self, hp, zero_div]
 
 /-- Smoothness of the actual total moment follows from common compact radial
 support and the proved smooth history theorem. -/
@@ -886,8 +899,10 @@ theorem jointRowDensity_exterior {n : ℕ} (hn : 0 < n) (u e : JointHistory) (om
   have h2 := cauchy_eq_zero_of_left n (slice u w.2) (slice u w.2) w.1 hu
   have h3 := cauchy_self_eq_zero_of_positive hn (slice e w.2) w.1 he
   ext i
-  fin_cases i <;> simp [jointRowDensity, rowDensity, pressureGradient, h1, h2, h3,
-    slice, hu n le_rfl, he n hn le_rfl, hw]
+  fin_cases i <;> simp only [jointRowDensity, rowDensity, slice, Prod.mk.eta, hu n le_rfl, mul_zero,
+      he n hn le_rfl, pressureGradient, h3, hw, sub_self, zero_div, h1, h2, Fin.zero_eta,
+      Fin.isValue, Matrix.cons_val_zero, Pi.zero_apply, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 /-- This statement derives smoothness of the five genuine integral debts;
 the density hypotheses can be checked componentwise from the known fields. -/
@@ -965,8 +980,8 @@ theorem jointRowDensity_integrableOn {S : Set ℝ} {n : ℕ}
     IntegrableOn (fun R => rowDensity n (slice u eta) (slice e eta)
       (fun r => omega (r, eta)) R i) (Ioi 0) := by
   apply positive_integrableOn_of_compact (B := B)
-  · exact (hd i).comp (continuous_id.prodMk continuous_const).continuousOn
-      (fun R hR => ⟨mem_univ _, heta⟩)
+  · exact (hd i).comp (f := fun R => (R, eta))
+      (continuous_id.prodMk continuous_const).continuousOn (fun R hR => ⟨mem_univ _, heta⟩)
   · intro R hR
     exact congrFun (hs eta heta R hR) i
 
@@ -1130,7 +1145,7 @@ theorem exterior_partial {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth 
       exact hs w.2 hw.2 w.1 hw.1.le
     change fderiv ℝ f (r, eta) v = 0
     rw [he.fderiv_eq (𝕜 := ℝ)]
-    simp
+    simp only [fderiv_fun_const, Pi.zero_apply, zero_apply]
   have hc := hz.closure (slice_smooth hg heta).continuous continuous_const
   rw [closure_Ioi] at hc
   exact hc hR
@@ -1228,8 +1243,8 @@ theorem smooth_axialOp {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S 
 theorem exterior_axialOp {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S f)
     {B : ℝ} (hs : exterior B S f) (h b : ℝ) : exterior B S (axialOp h b f) := by
   intro eta heta R hR
-  simp [axialOp, hs eta heta R hR, exterior_dr hS hf hs eta heta R hR,
-    exterior_de hS hf hs eta heta R hR]
+  simp only [axialOp, hs eta heta R hR, mul_zero, exterior_de hS hf hs eta heta R hR, add_zero,
+      exterior_dr hS hf hs eta heta R hR, sub_self, zero_div]
 
 theorem axialOp_mul {S : Set ℝ} (hS : IsOpen S) {f g : Field}
     (hf : Smooth S f) (hg : Smooth S g) (h b c : ℝ)
@@ -1447,7 +1462,7 @@ theorem dr_angularViscousFlux {S : Set ℝ} (hS : IsOpen S) {e : Field} (he : Sm
     dr (angularViscousFlux e) w = w.1 ^ 2 * dr (dr e) w + w.1 * dr e w - e w := by
   have hfun : angularViscousFlux e = fun p => weighted 2 (dr e) p - weighted 1 e p := by
     funext p
-    simp [angularViscousFlux, weighted]
+    simp only [angularViscousFlux, weighted, pow_one]
   rw [hfun]
   rw [dr_sub hS (smooth_weighted (smooth_dr hS he) 2) (smooth_weighted he 1) hw,
     dr_weighted hS (smooth_dr hS he) 2 hw, dr_weighted hS he 1 hw]
@@ -1459,7 +1474,7 @@ theorem dr_axialViscousFlux {S : Set ℝ} (hS : IsOpen S) {u : Field} (hu : Smoo
     dr (axialViscousFlux u) w = w.1 * dr (dr u) w + dr u w := by
   have hfun : axialViscousFlux u = weighted 1 (dr u) := by
     funext p
-    simp [axialViscousFlux, weighted]
+    simp only [axialViscousFlux, weighted, pow_one]
   rw [hfun]
   rw [dr_weighted hS (smooth_dr hS hu) 1 hw]
   norm_num
@@ -1566,7 +1581,8 @@ theorem smooth_axialViscousFlux {S : Set ℝ} (hS : IsOpen S) {u : Field} (hu : 
     Smooth S (axialViscousFlux u) := contDiffOn_fst.mul (smooth_dr hS hu)
 
 theorem moment_weighted_zero (B : ℝ) (m : ℕ) (f : Field) (eta : ℝ) :
-    moment B 0 (weighted m f) eta = moment B m f eta := by simp [moment, weighted]
+    moment B 0 (weighted m f) eta = moment B m f eta := by simp only [moment, pow_zero, weighted,
+        one_mul]
 
 theorem moment_dr_boundary {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S f)
     (B : ℝ) {eta : ℝ} (heta : eta ∈ S) :
@@ -1627,8 +1643,9 @@ theorem angular_integral_balance {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
     moment_timeOp_zero hS (he n le_rfl) h _ B 2 (fun z hz => hev z hz B le_rfl) hem heta,
     moment_axialOp_zero hS (smooth_conv hu he) h _ B 2
       (fun z hz => hug z hz B le_rfl) hum heta]
-  simp [weighted, angularViscousFlux, exterior_conv_left hvv eta heta B le_rfl,
-    hev eta heta B le_rfl, exterior_dr hS (he n le_rfl) hev eta heta B le_rfl]
+  simp only [weighted, pow_one, exterior_conv_left hvv eta heta B le_rfl, mul_zero, zero_mul,
+      sub_self, add_zero, angularViscousFlux, exterior_dr hS (he n le_rfl) hev eta heta B le_rfl,
+      hev eta heta B le_rfl, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, zero_sub]
 
 theorem axial_integral_balance {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
     {v u : History} {p : Field} (hv : ∀ j, j ≤ n → Smooth S (v j))
@@ -1655,14 +1672,15 @@ theorem axial_integral_balance {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
       dr (axialViscousFlux (u n)) w -
       weighted 1 (axialOp2 h (orderExponent h (n - 1)) (u (n - 1))) w := by
     funext w
-    simp [axialDensity, weighted]
+    simp only [axialDensity, weighted, pow_one]
   rw [hd, moment_five ht (smooth_dr hS hr) hz (smooth_dr hS hk) hl B 0 heta,
     moment_weighted_zero, moment_weighted_zero, moment_weighted_zero,
     moment_dr_boundary hS hr B heta, moment_dr_boundary hS hk B heta,
     moment_timeOp_zero hS (hu n le_rfl) h _ B 1 (fun z hz => huv z hz B le_rfl) hum heta,
     moment_axialOp_zero hS ((smooth_conv hu hu).add hp) h _ B 1 hfluxB hflux heta]
-  simp [axialViscousFlux, exterior_conv_left hvv eta heta B le_rfl,
-    haxis eta heta, exterior_dr hS (hu n le_rfl) huv eta heta B le_rfl]
+  simp only [exterior_conv_left hvv eta heta B le_rfl, haxis eta heta, sub_self, add_zero,
+      axialViscousFlux, exterior_dr hS (hu n le_rfl) huv eta heta B le_rfl, mul_zero, zero_mul,
+      zero_sub]
 
 /-- Pressure integration by parts turns the fifth repaired row into the
 zero total axial momentum flux. The pressure derivative is an actual one. -/
@@ -1717,7 +1735,7 @@ theorem repaired_moment_data {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
   refine ⟨?_, ?_, ?_, ?_⟩
   · have hh := actual_row_integral_zero hB hs hm heta 0
     change (∫ R in (0 : ℝ)..B, R * u n (R, eta)) = 0 at hh
-    simpa [moment] using hh
+    simpa only [moment, pow_one] using hh
   · exact actual_row_integral_zero hB hs hm heta 1
   · exact actual_row_integral_zero hB hs hm heta 3
   · apply axial_flux_moment_from_fifth hS hu hP B hPB _ heta
@@ -1793,8 +1811,8 @@ theorem stress_inner (m : ℕ) {F : Field} {S : Set ℝ} {a : ℝ}
         rw [uIcc_of_le hp.le] at hr
         exact hinner eta heta r ⟨hr.1, hr.2.trans hR⟩
       rw [intervalIntegral.integral_congr heq, intervalIntegral.integral_zero]
-    simp [hi]
-  · simp [stress, hp]
+    simp only [hi, neg_zero, zero_div]
+  · simp only [stress, hp, ↓reduceIte]
 
 theorem stress_exterior (m : ℕ) {F : Field} {S : Set ℝ} {B : ℝ} (hB : 0 ≤ B)
     (hs : exterior B S F) (hm : ∀ eta ∈ S, moment B 0 F eta = 0)
@@ -1806,8 +1824,8 @@ theorem stress_exterior (m : ℕ) {F : Field} {S : Set ℝ} {B : ℝ} (hB : 0 �
       rw [← PositiveOrderMoments.positiveIntegral_eq_primitive hB hR (hs eta heta)]
       have hh := moment_eq_positive hB hs heta 0
       simpa only [pow_zero, one_mul, hm eta heta] using hh.symm
-    simp [hi]
-  · simp [stress, hp]
+    simp only [hi, neg_zero, zero_div]
+  · simp only [stress, hp, ↓reduceIte]
 
 theorem stress_smooth {S : Set ℝ} (hS : IsOpen S) {F : Field} (hF : Smooth S F)
     (m : ℕ) {a : ℝ} (ha : 0 < a)
@@ -1890,7 +1908,7 @@ theorem interior_quotient_smooth {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf :
   · have ho : w.1 ∉ Icc a b := fun hm => hR (hab hm)
     apply (contDiffAt_const (c := (0 : ℝ))).congr_of_eventuallyEq
     filter_upwards [support_eventually_zero hS hs hw.2 ho] with p hp
-    simp [hp]
+    simp only [hp, zero_div]
 
 /-- Every actual derivative tensor has a weighted bound because its support
 lies in one fixed compact subinterval of the positive-weight region. No
@@ -1905,7 +1923,7 @@ theorem interior_weighted_jets {S K : Set ℝ} (hS : IsOpen S) (hK : IsCompact K
   have hcj : ContinuousOn (iteratedFDeriv ℝ k f) (Icc a b ×ˢ K) := by
     intro w hw
     have hh := hf.contDiffAt ((isOpen_univ.prod hS).mem_nhds ⟨mem_univ _, hKS hw.2⟩)
-    exact (hh.iteratedFDeriv_right (m := 0) (by
+    exact (hh.iteratedFDeriv_right (m := 0) (i := k) (by
       simp only [zero_add]
       exact_mod_cast (le_top : (k : ℕ∞) ≤ ⊤))).continuousAt.continuousWithinAt
   have hcz : ContinuousOn (fun w : ℝ × ℝ => zeta w.1) (Icc a b ×ˢ K) :=
@@ -1973,13 +1991,13 @@ theorem smooth_axialDensity {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
 theorem exterior_weighted {S : Set ℝ} {B : ℝ} {f : Field} (hf : exterior B S f) (m : ℕ) :
     exterior B S (weighted m f) := by
   intro eta heta R hR
-  simp [weighted, hf eta heta R hR]
+  simp only [weighted, hf eta heta R hR, mul_zero]
 
 theorem exterior_timeOp {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S f)
     {B : ℝ} (hs : exterior B S f) (h b : ℝ) : exterior B S (timeOp h b f) := by
   intro eta heta R hR
-  simp [timeOp, hs eta heta R hR, exterior_dr hS hf hs eta heta R hR,
-    exterior_de hS hf hs eta heta R hR]
+  simp only [timeOp, hs eta heta R hR, mul_zero, exterior_de hS hf hs eta heta R hR, add_zero,
+      exterior_dr hS hf hs eta heta R hR, zero_div]
 
 theorem exterior_axialOp2 {S : Set ℝ} (hS : IsOpen S) {f : Field} (hf : Smooth S f)
     {B : ℝ} (hs : exterior B S f) (h b : ℝ)
@@ -1999,11 +2017,13 @@ theorem exterior_angularDensity {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
       n)
   have hvf : exterior B S (angularViscousFlux (e n)) := by
     intro eta heta R hR
-    simp [angularViscousFlux, hE eta heta R hR, exterior_dr hS (he n le_rfl) hE eta heta R hR]
+    simp only [angularViscousFlux, exterior_dr hS (he n le_rfl) hE eta heta R hR, mul_zero,
+        hE eta heta R hR, sub_self]
   have hk := exterior_dr hS (smooth_angularViscousFlux hS (he n le_rfl)) hvf
   intro eta heta R hR
-  simp [angularDensity, exterior_timeOp hS (he n le_rfl) hE h (orderExponent h n) eta heta R hR,
-    hr eta heta R hR, hz eta heta R hR, hk eta heta R hR, hprev eta heta R hR]
+  simp only [angularDensity,
+      exterior_timeOp hS (he n le_rfl) hE h (orderExponent h n) eta heta R hR, mul_zero,
+      hr eta heta R hR, add_zero, hz eta heta R hR, hk eta heta R hR, sub_self, hprev eta heta R hR]
 
 theorem exterior_axialDensity {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
     {v u : History} {p : Field} (hv : ∀ j, j ≤ n → Smooth S (v j))
@@ -2020,12 +2040,12 @@ theorem exterior_axialDensity {S : Set ℝ} (hS : IsOpen S) {n : ℕ}
   have hz := exterior_axialOp hS ((smooth_conv hu hu).add hp) hcp h (pressureExponent h n)
   have hvf : exterior B S (axialViscousFlux (u n)) := by
     intro eta heta R hR
-    simp [axialViscousFlux, exterior_dr hS (hu n le_rfl) (hU n le_rfl) eta heta R hR]
+    simp only [axialViscousFlux, exterior_dr hS (hu n le_rfl) (hU n le_rfl) eta heta R hR, mul_zero]
   have hk := exterior_dr hS (smooth_axialViscousFlux hS (hu n le_rfl)) hvf
   intro eta heta R hR
-  simp [axialDensity, exterior_timeOp hS (hu n le_rfl) (hU n le_rfl) h (orderExponent h n) eta heta
-      R hR,
-    hr eta heta R hR, hz eta heta R hR, hk eta heta R hR, hprev eta heta R hR]
+  simp only [axialDensity,
+      exterior_timeOp hS (hu n le_rfl) (hU n le_rfl) h (orderExponent h n) eta heta R hR, mul_zero,
+      hr eta heta R hR, add_zero, hz eta heta R hR, hk eta heta R hR, sub_self, hprev eta heta R hR]
 
 /-- Angular stress, given by `stress 2 (angularDensity h n v u e)`. -/
 noncomputable def angularStress (h : ℝ) (n : ℕ) (v u e : History) : Field :=

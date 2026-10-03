@@ -85,7 +85,8 @@ theorem hasFDerivAt_radialEnergy (x : Space) : HasFDerivAt radialEnergy (radialL
     simp only [radialEnergy, projection_apply]
     ring
   · ext v
-    simp [radialLinear]
+    simp only [radialLinear, Fin.isValue, add_apply, smul_apply, projection_apply, smul_eq_mul,
+        one_div, smul_add]
     ring
 
 /-- Profile jacobian, given by `(0 : Space →L[ℝ] ℝ).prod ((radialLinear x).prod (projection
@@ -100,7 +101,8 @@ theorem hasFDerivAt_profilePoint (t : ℝ) (x : Space) :
 
 @[simp] theorem profileJacobian_apply (x v : Space) :
     profileJacobian x v = (0, (x 0 * v 0 + x 1 * v 1, v 2)) := by
-  simp [profileJacobian, radialLinear]
+  simp only [profileJacobian, radialLinear, Fin.isValue, ContinuousLinearMap.prod_apply, zero_apply,
+      add_apply, smul_apply, projection_apply, smul_eq_mul]
 
 /-- Profile derivative, given by `(fderiv ℝ F (profilePoint t x)).comp (profileJacobian x)`. -/
 def profileDerivative (F : Profile) (t : ℝ) (x : Space) : Space →L[ℝ] ℝ :=
@@ -120,7 +122,8 @@ theorem profileDerivative_apply (F : Profile) (t : ℝ) (x v : Space) :
   have hsplit : (0, (x 0 * v 0 + x 1 * v 1, v 2)) =
       (x 0 * v 0 + x 1 * v 1) • ((0, (1, 0)) : ProfilePoint) +
         v 2 • ((0, (0, 1)) : ProfilePoint) := by
-    ext <;> simp
+    ext <;> simp only [Fin.isValue, Prod.smul_mk, smul_eq_mul, mul_zero, mul_one, Prod.mk_add_mk,
+        add_zero, zero_add]
   rw [hsplit, map_add, map_smul, map_smul]
   rfl
 
@@ -238,7 +241,7 @@ theorem contDiff_velocity {H K : Profile} {m n : WithTop ℕ∞}
 
 theorem smooth_velocity {H K : Profile}
     (hH : ContDiff ℝ ∞ H) (hK : ContDiff ℝ ∞ K) : ContDiff ℝ ∞ (velocity H K) :=
-  contDiff_velocity hH hK (by simp)
+  contDiff_velocity hH hK (by simp only [ENat.coe_top_add_one, Std.le_refl])
 
 theorem contDiffOn_velocity {H K : Profile} {times : Set ℝ} {m n : WithTop ℕ∞}
     (hH : ContDiffOn ℝ n H (times ×ˢ (univ : Set (ℝ × ℝ))))
@@ -268,13 +271,19 @@ theorem velocity_on_axis (H K : Profile) (t : ℝ) (x : Space)
   fin_cases i
   · change velocity H K (t, x) 0 = (H (t, (0, x 2)) • coordinateVector 2) 0
     rw [velocity_zero H K t x hH hK]
-    simp [hx0, hx1, coordinateVector]
+    simp only [Fin.isValue, hx0, neg_zero, zero_mul, zero_div, hx1, add_zero, coordinateVector,
+        PiLp.smul_apply, ne_eq, Fin.reduceEq, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul,
+        mul_zero]
   · change velocity H K (t, x) 1 = (H (t, (0, x 2)) • coordinateVector 2) 1
     rw [velocity_one H K t x hH hK]
-    simp [hx0, hx1, coordinateVector]
+    simp only [Fin.isValue, hx1, neg_zero, zero_mul, zero_div, hx0, sub_self, coordinateVector,
+        PiLp.smul_apply, ne_eq, Fin.reduceEq, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul,
+        mul_zero]
   · change velocity H K (t, x) 2 = (H (t, (0, x 2)) • coordinateVector 2) 2
     rw [velocity_two H K t x hH hK]
-    simp [profilePoint, radialEnergy, hx0, hx1, coordinateVector]
+    simp only [Fin.isValue, profilePoint, radialEnergy, hx0, ne_eq, OfNat.ofNat_ne_zero,
+        not_false_eq_true, zero_pow, hx1, add_zero, zero_div, zero_mul, coordinateVector,
+        PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one]
 
 /-- The potential's closed spatial support is controlled by the two profile
 supports, pulled back under the smooth `(t,s,z)` coordinate map. -/
@@ -288,7 +297,8 @@ theorem tsupport_potential_slice_subset (H K : Profile) (t : ℝ) :
     have hnK : profilePoint t x ∉ tsupport K := fun h => hn (Or.inr h)
     have hHzero := image_eq_zero_of_notMem_tsupport hnH
     have hKzero := image_eq_zero_of_notMem_tsupport hnK
-    exact hx (by simp [potential, hHzero, hKzero])
+    exact hx (by simp only [potential, Fin.isValue, one_div, hHzero, mul_zero, zero_smul, add_zero,
+        hKzero])
   · exact ((isClosed_tsupport H).union (isClosed_tsupport K)).preimage
       (contDiff_profilePoint_slice t (n := 0)).continuous
 
@@ -322,7 +332,7 @@ theorem isCompact_cylinder (R Z : ℝ) :
   have hs : (∑ i : Fin 3, (x i) ^ 2) ≤ 2 * R + Z ^ 2 := by
     rw [Fin.sum_univ_three]
     have hr := hx.1
-    dsimp [radialEnergy] at hr
+    dsimp only [radialEnergy, Fin.isValue] at hr
     linarith
   rw [Metric.mem_closedBall, dist_zero_right, EuclideanSpace.norm_eq]
   apply Real.sqrt_le_sqrt

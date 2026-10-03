@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! The existence of smooth bumps, separated from their construction. -/
 

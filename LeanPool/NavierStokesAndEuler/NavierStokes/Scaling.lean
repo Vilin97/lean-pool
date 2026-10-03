@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Exact core and carrier scaling
@@ -115,7 +116,7 @@ theorem carrier_frequency_pos {ε : ℝ} (hε : 0 < ε) :
     0 < (carrierFrequency ε : ℝ) := by
   have h := (carrier_frequency_sqrt_bounds hε).1
   have hs : 0 < Real.sqrt ε := Real.sqrt_pos.mpr hε
-  nlinarith
+  nlinarith only [h, hs]
 
 /-- The lower and upper viscosity bounds include the integer ceiling error. -/
 theorem carrier_viscosity_bounds {ε : ℝ} (hε : 0 < ε) :
@@ -137,7 +138,7 @@ theorem one_add_sqrt_sq_le_four {ε : ℝ} (hε₁ : ε ≤ 1) :
     (1 + Real.sqrt ε) ^ 2 ≤ 4 := by
   have hs : Real.sqrt ε ≤ 1 := Real.sqrt_le_one.mpr hε₁
   have hs₀ := Real.sqrt_nonneg ε
-  nlinarith
+  nlinarith only [hs, hs₀]
 
 /-- The manuscript's complete inequality, for `0 < ε ≤ 1`. -/
 theorem order_one_viscosity {ε : ℝ} (hε : 0 < ε) (hε₁ : ε ≤ 1) :
@@ -155,9 +156,9 @@ theorem reciprocal_frequency_bounds {ε : ℝ} (hε : 0 < ε) (hε₁ : ε ≤ 1
   have hs : Real.sqrt ε ≤ 1 := Real.sqrt_le_one.mpr hε₁
   constructor
   · apply (le_div_iff₀ hk).mpr
-    nlinarith
+    nlinarith only [hu, hs]
   · apply (div_le_iff₀ hk).mpr
-    nlinarith
+    nlinarith only [hl]
 
 /-- The physical wavelength with the actual integer carrier frequency. -/
 def waveLength (Q h : ℝ) : ℝ :=
@@ -178,10 +179,10 @@ theorem wave_length_bounds {Q h : ℝ} (hQ : 0 < Q) (hε : Q ^ h ≤ 1) :
         ring
       _ ≤ radialLength Q * (1 / (carrierFrequency (Q ^ h) : ℝ)) :=
         mul_le_mul_of_nonneg_left hl hr
-      _ = waveLength Q h := by simp [waveLength, div_eq_mul_inv]
+      _ = waveLength Q h := by simp only [div_eq_mul_inv, one_mul, waveLength]
   · calc
       waveLength Q h = radialLength Q * (1 / (carrierFrequency (Q ^ h) : ℝ)) := by
-        simp [waveLength, div_eq_mul_inv]
+        simp only [waveLength, div_eq_mul_inv, one_mul]
       _ ≤ radialLength Q * Real.sqrt (Q ^ h) := mul_le_mul_of_nonneg_left hu hr
       _ = Q ^ (1 / 2 + h / 2) := wave_length_power hQ h
 
@@ -221,18 +222,18 @@ theorem wave_reynolds_bounds {Q h envelope : ℝ} (hQ : 0 < Q)
   obtain ⟨hl, hu⟩ := carrier_frequency_sqrt_bounds hp
   have hs : Real.sqrt (Q ^ h) ≤ 1 := Real.sqrt_le_one.mpr hε
   have hd : 0 < (carrierFrequency (Q ^ h) : ℝ) * Real.sqrt (Q ^ h) := by
-    linarith
+    linarith only [hl]
   have hd₂ : (carrierFrequency (Q ^ h) : ℝ) * Real.sqrt (Q ^ h) ≤ 2 := by
-    linarith
+    linarith only [hu, hs]
   constructor
   · apply (le_div_iff₀ hd).mpr
-    nlinarith [mul_nonneg he (sub_nonneg.mpr hd₂)]
+    nlinarith only [he, hd₂, mul_nonneg he (sub_nonneg.mpr hd₂)]
   · apply (div_le_iff₀ hd).mpr
-    nlinarith [mul_nonneg he (sub_nonneg.mpr hl)]
+    nlinarith only [he, hl, mul_nonneg he (sub_nonneg.mpr hl)]
 
 /-- The scaling computation does not imply a lower bound at envelope zeros. -/
 theorem wave_reynolds_zero_envelope (Q h : ℝ) :
     reynolds (waveVelocity Q h 0) (waveLength Q h) = 0 := by
-  simp [reynolds, waveVelocity]
+  simp only [reynolds, waveVelocity, mul_zero, zero_mul]
 
 end NavierStokes.Scaling

@@ -53,8 +53,8 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 /-- Raw inverse metric time, given by `(rawFrameTime D z).adjoint.comp (rawFrame D z) +
 (rawFrame D z).adjoint.comp (rawFrameTime D z)`. -/
 def rawInverseMetricTime (z : Domain) : Space →L[ℝ] Space :=
-  (rawFrameTime D z).adjoint.comp (rawFrame D z) +
-    (rawFrame D z).adjoint.comp (rawFrameTime D z)
+  (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawFrameTime D z)).comp (rawFrame D z) +
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (rawFrame D z)).comp (rawFrameTime D z)
 
 /-- Inverse metric time coefficient, given by `((frameTimeCoefficient D).adjoint.comp
 (frameCoefficient D)).add ((frameCoefficient D).adjoint.comp (frameTimeCoefficient D))`. -/
@@ -64,8 +64,8 @@ def inverseMetricTimeCoefficient : MatrixCoefficient D.T (rawInverseMetricTime D
 
 @[simp] theorem inverseMetricTimeCoefficient_apply (t : Icc (0 : ℝ) D.T) (x : Space) :
     (inverseMetricTimeCoefficient D).path t x =
-      (D.F₁.field t x).adjoint.comp (D.F.field t x) +
-        (D.F.field t x).adjoint.comp (D.F₁.field t x) := rfl
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F₁.field t x)).comp (D.F.field t x) +
+        (adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field t x)).comp (D.F₁.field t x) := rfl
 
 theorem inverseMetric_field_hasDerivWithinAt (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T)
     (x : Space) :
@@ -76,30 +76,20 @@ theorem inverseMetric_field_hasDerivWithinAt (t : ℝ) (ht : t ∈ Icc (0 : ℝ)
     (fun s => extendPath D.T D.T_pos.le D.F.field s x)
     (extendPath D.T D.T_pos.le D.F₁.field t x)
     (Icc (0 : ℝ) D.T) t (D.frame_time t ht x)
-  have hvalue : (fun s => extendPath D.T D.T_pos.le (inverseMetricCoefficient D).path s x) =
-      fun s => (extendPath D.T D.T_pos.le D.F.field s x).adjoint.comp
-        (extendPath D.T D.T_pos.le D.F.field s x) := by
-    funext s
-    exact inverseMetricCoefficient_apply D (projIcc 0 D.T D.T_pos.le s) x
-  have hderivative : extendPath D.T D.T_pos.le (inverseMetricTimeCoefficient D).path t x =
-      (extendPath D.T D.T_pos.le D.F₁.field t x).adjoint.comp
-          (extendPath D.T D.T_pos.le D.F.field t x) +
-        (extendPath D.T D.T_pos.le D.F.field t x).adjoint.comp
-          (extendPath D.T D.T_pos.le D.F₁.field t x) :=
-    inverseMetricTimeCoefficient_apply D (projIcc 0 D.T D.T_pos.le t) x
-  rw [hvalue,hderivative]
-  exact h
+  apply h
 
 variable (P : ℝ) [Fact (0 < P)]
 
 /-- Inverse metric derivative path, given by `fullPathMap P (inverseMetricTimeCoefficient
 D).path`. -/
 def inverseMetricDerivativePath : C(Icc (0 : ℝ) D.T,LiftL2 P →L[ℝ] LiftL2 P) :=
-  fullPathMap P (inverseMetricTimeCoefficient D).path
+  fullPathMap (K := Icc (0 : ℝ) D.T) (E := Vector3) (F := Vector3) P
+    (inverseMetricTimeCoefficient D).path
 
 theorem inverseMetric_operator_hasDerivWithinAt (t : Icc (0 : ℝ) D.T) :
     HasDerivWithinAt (extendPath D.T D.T_pos.le
-      (fullPathMap P (inverseMetricCoefficient D).path))
+      (fullPathMap (K := Icc (0 : ℝ) D.T) (E := Space) (F := Space) P
+        (inverseMetricCoefficient D).path))
       (inverseMetricDerivativePath D P t) (Icc (0 : ℝ) D.T) t :=
   fullPath_hasDerivWithinAt P D.T D.T_pos.le (inverseMetricCoefficient D).path
     (inverseMetricTimeCoefficient D).path (inverseMetric_field_hasDerivWithinAt D) t
@@ -153,7 +143,9 @@ variable {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U]
 
 theorem inverseMetric_operatorPath_eq :
     metricOperatorPath P D.T (inverseMetricTower D P).coefficient
-      (inverseMetricTower_continuous D P) = fullPathMap P (inverseMetricCoefficient D).path := by
+      (inverseMetricTower_continuous D P) =
+      fullPathMap (K := Icc (0 : ℝ) D.T) (E := Space) (F := Space) P
+        (inverseMetricCoefficient D).path := by
   apply ContinuousMap.ext
   intro t
   exact MatrixCoefficient.toCoefficientTower_operator P (inverseMetricCoefficient D) t
@@ -179,6 +171,11 @@ def inverseMetricFirstBound : ℝ :=
 /-- Inverse metric time bound, given by `‖(inverseMetricTimeCoefficient D).path‖`. -/
 def inverseMetricTimeBound : ℝ := ‖(inverseMetricTimeCoefficient D).path‖
 
+theorem adjoint_comp_norm_le (A B : Space →L[ℝ] Space) :
+    ‖(ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) A).comp B‖ ≤ ‖A‖ * ‖B‖ :=
+  (ContinuousLinearMap.opNorm_comp_le _ _).trans_eq
+    (congrArg (· * ‖B‖) (ContinuousLinearMap.adjoint.norm_map A))
+
 theorem inverseMetricBound_le : inverseMetricBound D ≤ ‖D.F.field‖^2 := by
   apply (ContinuousMap.norm_le _ (sq_nonneg ‖D.F.field‖)).2
   intro t
@@ -188,10 +185,7 @@ theorem inverseMetricBound_le : inverseMetricBound D ≤ ‖D.F.field‖^2 := by
   have hF : ‖D.F.field t x‖ ≤ ‖D.F.field‖ :=
     ((D.F.field t).norm_coe_le_norm x).trans (D.F.field.norm_coe_le_norm t)
   calc
-    _ ≤ ‖(D.F.field t x).adjoint‖*‖D.F.field t x‖ :=
-      ContinuousLinearMap.opNorm_comp_le _ _
-    _ = ‖D.F.field t x‖*‖D.F.field t x‖ := by
-      rw [ContinuousLinearMap.adjoint.norm_map]
+    _ ≤ ‖D.F.field t x‖*‖D.F.field t x‖ := adjoint_comp_norm_le _ _
     _ ≤ ‖D.F.field‖*‖D.F.field‖ := mul_le_mul hF hF (norm_nonneg _) (norm_nonneg _)
     _ = _ := (pow_two _).symm
 
@@ -207,13 +201,8 @@ theorem inverseMetricTimeBound_le :
   have hF₁ : ‖D.F₁.field t x‖ ≤ ‖D.F₁.field‖ :=
     ((D.F₁.field t).norm_coe_le_norm x).trans (D.F₁.field.norm_coe_le_norm t)
   calc
-    _ ≤ ‖(D.F₁.field t x).adjoint.comp (D.F.field t x)‖ +
-        ‖(D.F.field t x).adjoint.comp (D.F₁.field t x)‖ := norm_add_le _ _
-    _ ≤ ‖(D.F₁.field t x).adjoint‖*‖D.F.field t x‖ +
-        ‖(D.F.field t x).adjoint‖*‖D.F₁.field t x‖ :=
-      add_le_add (ContinuousLinearMap.opNorm_comp_le _ _) (ContinuousLinearMap.opNorm_comp_le _ _)
-    _ = ‖D.F₁.field t x‖*‖D.F.field t x‖ + ‖D.F.field t x‖*‖D.F₁.field t x‖ := by
-      rw [ContinuousLinearMap.adjoint.norm_map,ContinuousLinearMap.adjoint.norm_map]
+    _ ≤ ‖D.F₁.field t x‖*‖D.F.field t x‖ + ‖D.F.field t x‖*‖D.F₁.field t x‖ :=
+      (norm_add_le _ _).trans (add_le_add (adjoint_comp_norm_le _ _) (adjoint_comp_norm_le _ _))
     _ ≤ ‖D.F₁.field‖*‖D.F.field‖ + ‖D.F.field‖*‖D.F₁.field‖ :=
       add_le_add (mul_le_mul hF₁ hF (norm_nonneg _) (norm_nonneg _))
         (mul_le_mul hF hF₁ (norm_nonneg _) (norm_nonneg _))

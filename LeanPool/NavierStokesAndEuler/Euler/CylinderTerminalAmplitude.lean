@@ -35,13 +35,14 @@ variable (P : ℝ) [Fact (0 < P)]
 
 /-- Embedding terminal data as a constant time path has block norm at most one. -/
 theorem constantPath_block_le (directions : ι → LiftTangent) (q : ℕ)
-    (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y))
+    (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Y))
     (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b : LiftTangent => pathTranslate P b (ContinuousMap.const K Y)) n a ≤
-      block directions q (fun b : LiftTangent => translate P b Y) n a := by
+    block directions q (fun b : LiftTangent =>
+        pathTranslate (K := K) (V := U) P b (ContinuousMap.const K Y)) n a ≤
+      block directions q (fun b : LiftTangent => translate (V := U) P b Y) n a := by
   have hb := block_comp_clm_le directions q
     (ContinuousLinearMap.const ℝ K : CylinderL2 P U →L[ℝ] C(K,CylinderL2 P U))
-    (fun b : LiftTangent => translate P b Y) hY n a
+    (fun b : LiftTangent => translate (V := U) P b Y) hY n a
   have hn : ‖(ContinuousLinearMap.const ℝ K : CylinderL2 P U →L[ℝ] C(K,CylinderL2 P U))‖ ≤ 1 := by
     apply opNorm_le_bound _ zero_le_one
     intro u
@@ -52,37 +53,43 @@ theorem constantPath_block_le (directions : ι → LiftTangent) (q : ℕ)
 
 theorem terminal_amplitude_bound (directions : ι → LiftTangent) (q : ℕ)
     (S : CylinderL2 P U →L[ℝ] C(K, CylinderL2 P V))
-    (hs : ∀ Y : CylinderL2 P U, ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y) →
-      ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (S Y)))
+    (hs : ∀ Y : CylinderL2 P U, ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Y) →
+      ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := V) P a (S Y)))
     (R C : ℝ) (d e : ℕ)
-    (hunit : ∀ Y : CylinderL2 P U, ∀ _hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y),
-      (∀ n, block directions q (fun a : LiftTangent => translate P a Y) n 0 ≤ majorant R d n) →
-      ∀ n, block directions q (fun a : LiftTangent => pathTranslate P a (S Y)) n 0 ≤ C*majorant R e
-          n)
-    (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Y))
+    (hunit : ∀ Y : CylinderL2 P U,
+      ∀ _hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Y),
+      (∀ n, block directions q (fun a : LiftTangent => translate (V := U) P a Y) n 0 ≤
+        majorant R d n) →
+      ∀ n, block directions q
+        (fun a : LiftTangent => pathTranslate (K := K) (V := V) P a (S Y)) n 0 ≤
+          C*majorant R e n)
+    (Y : CylinderL2 P U) (hY : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Y))
     (A : ℝ) (hA : 0 ≤ A)
-    (hb : ∀ n, block directions q (fun a : LiftTangent => translate P a Y) n 0 ≤ A*majorant R d n)
+    (hb : ∀ n, block directions q (fun a : LiftTangent => translate (V := U) P a Y) n 0 ≤
+      A*majorant R d n)
     (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate P a (S Y)) n 0 ≤ (C*A)*majorant R e n
-        := by
+    block directions q (fun a : LiftTangent => pathTranslate (K := K) (V := V) P a (S Y)) n 0 ≤
+      (C*A)*majorant R e n := by
   by_cases hAz : A = 0
   · have hy : Y = 0 := by
       have hh := value_zero_of_block_zero_bound directions q
-        (fun a : LiftTangent => translate P a Y) 0 (by simpa only [hAz,zero_mul] using hb 0)
+        (fun a : LiftTangent => translate (V := U) P a Y) 0
+        (by simpa only [hAz,zero_mul] using hb 0)
       simpa only [translate_zero] using hh
     simp only [hy,map_zero,block_zero_function,hAz,mul_zero,zero_mul,le_refl]
   · have hAp : 0 < A := lt_of_le_of_ne hA (Ne.symm hAz)
     let Z : CylinderL2 P U := A⁻¹ • Y
-    have hZ : ContDiff ℝ ∞ (fun a : LiftTangent => translate P a Z) := by
+    have hZ : ContDiff ℝ ∞ (fun a : LiftTangent => translate (V := U) P a Z) := by
       simpa only [Z,map_smul] using hY.const_smul A⁻¹
-    have hbZ (k : ℕ) : block directions q (fun a : LiftTangent => translate P a Z) k 0 ≤
+    have hbZ (k : ℕ) : block directions q (fun a : LiftTangent => translate (V := U) P a Z) k 0 ≤
         majorant R d k := by
-      have hz := block_normalize_bound directions q (fun a : LiftTangent => translate P a Y)
+      have hz := block_normalize_bound directions q
+        (fun a : LiftTangent => translate (V := U) P a Y)
         hY A hAp R 1 d k 0 (by simpa only [one_mul] using hb k)
       simpa only [Z,map_smul,one_mul] using hz
     have hr := block_restore_bound directions q
-      (fun a : LiftTangent => pathTranslate P a (S Z))
-      (fun a : LiftTangent => pathTranslate P a (S Y)) (hs Z hZ) A hA (by
+      (fun a : LiftTangent => pathTranslate (K := K) (V := V) P a (S Z))
+      (fun a : LiftTangent => pathTranslate (K := K) (V := V) P a (S Y)) (hs Z hZ) A hA (by
         intro a
         simp only [Z,map_smul,smul_smul,mul_inv_cancel₀ hAz,one_smul]) R C e n 0
       (hunit Z hZ hbZ n)

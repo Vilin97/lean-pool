@@ -12,6 +12,7 @@ import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanSpaceShortcuts
 
 /-!
 # Energy estimates for the viscous two-mode equation
@@ -90,7 +91,7 @@ theorem weighted_norm_le_initial_add_integral
   have hInv (t : ℝ) : HasDerivAt (fun s => (W s)⁻¹)
       (-growth t * (W t)⁻¹) t := by
     convert! (hW t).inv (ne_of_gt (hWpos t)) using 1
-    field_simp [ne_of_gt (hWpos t)]
+    rw [pow_two, neg_div, mul_div_mul_right _ _ (hWpos t).ne', div_eq_mul_inv, neg_mul]
   have hcInv : Continuous (fun t => (W t)⁻¹) :=
     continuous_iff_continuousAt.mpr fun t => (hInv t).continuousAt
   let v : ℝ → H := fun t => (W t)⁻¹ • u t
@@ -102,9 +103,9 @@ theorem weighted_norm_le_initial_add_integral
       HasDerivWithinAt v (B t (v t) + F t) (Ici t) t := by
     convert! (hInv t).hasDerivWithinAt.smul (hode t ht) using 1
     dsimp [v, F, B]
-    simp only [sub_apply, smul_apply,
-      ContinuousLinearMap.id_apply, map_smul, smul_add]
-    module
+    simp only [sub_apply, smul_apply, ContinuousLinearMap.id_apply,
+      ContinuousLinearMap.map_smul, smul_add, smul_smul, neg_mul, neg_smul]
+    abel
   have hB (t : ℝ) (ht : t ∈ Ico a b) (x : H) : ⟪x, B t x⟫_ℝ ≤ 0 := by
     dsimp [B]
     simp only [sub_apply, smul_apply,

@@ -58,7 +58,7 @@ theorem rawGradient_cover (κ : ℝ) (m : Space) (p : ScalarField)
   ring
 
 variable (p : ScalarField) (q : C(Icc (0 : ℝ) T, CylinderL2 P ℝ))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := ℝ) P a q))
   (he : ∀ (t : Icc (0 : ℝ) T) x θ, p (t, (x, θ)) = scalarPointField P q hq t (x, (θ : AddCircle P)))
 
 /-- Angular gradient field as an element of `Field P T (fun z => (pressureJet p z).2
@@ -119,7 +119,7 @@ variable {P : ℝ} [Fact (0 < P)]
   {U : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] (D : Data U)
   (k : ℝ) (hk : k ≠ 0) (p : ScalarField)
   (q : C(Icc (0 : ℝ) D.T, CylinderL2 P ℝ))
-  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a q))
+  (hq : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) D.T) (V := ℝ) P a q))
   (he : ∀ (t : Icc (0 : ℝ) D.T) x θ, p (t, (x, θ)) = scalarPointField P q hq t (x, (θ : AddCircle
       P)))
 

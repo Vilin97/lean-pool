@@ -57,7 +57,7 @@ theorem scalar_pointwise_le_H2 (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
   have hsF : ContDiff ℝ ∞ (Complex.ofRealCLM ∘ f) := Complex.ofRealCLM.contDiff.comp hf
   let F : 𝓢(Space, ℂ) := hcF.toSchwartzMap hsF
   have hF (y : Space) : F y = (f y : ℂ) := rfl
-  have hnorm : ‖F.toLp 2‖ = lpNorm f 2 volume := by
+  have hnorm : ‖F.toLp 2 volume‖ = lpNorm f 2 volume := by
     rw [SchwartzMap.norm_toLp]
     change (eLpNorm (fun y => (f y : ℂ)) 2 volume).toReal = _
     exact complex_eLpNorm_toReal f hf.continuous.aestronglyMeasurable
@@ -71,7 +71,7 @@ theorem scalar_pointwise_le_H2 (f : Space → ℝ) (hf : ContDiff ℝ ∞ f)
     rw [partialDerivative_twice f hf i y]
     rfl
   have hnormDer (i : Fin 3) :
-      ‖(pureDerivative 3 2 (EuclideanSpace.single i 1) F).toLp 2‖ =
+      ‖(pureDerivative 3 2 (EuclideanSpace.single i 1) F).toLp 2 volume‖ =
         lpNorm (partialDerivative (partialDerivative f i) i) 2 volume := by
     rw [SchwartzMap.norm_toLp]
     have heq : (pureDerivative 3 2 (EuclideanSpace.single i 1) F : Space → ℂ) =

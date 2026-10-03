@@ -51,11 +51,13 @@ theorem euclideanCover_continuous : Continuous (euclideanCover period) := by
 omit [Fact (0 < period)] in
 theorem euclideanCover_add (x y : Domain 4) :
     euclideanCover period (x + y) = euclideanCover period x + euclideanCover period y := by
-  simp [euclideanCover, coveringMap, map_add]
+  simp only [euclideanCover, Function.comp_apply, coveringMap, map_add, coordinateEquiv_apply,
+      Fin.isValue, Prod.mk_add_mk, QuotientAddGroup.mk_add]
 
 omit [Fact (0 < period)] in
 theorem euclideanCover_zero : euclideanCover period 0 = 0 := by
-  ext i <;> simp [euclideanCover, coveringMap]
+  ext i <;> simp only [euclideanCover, Function.comp_apply, coveringMap, coordinateEquiv_apply,
+      Fin.isValue, PiLp.zero_apply, QuotientAddGroup.mk_zero, Prod.fst_zero, Prod.snd_zero]
 
 /-- The actual L² translation orbit in Euclidean covering coordinates. -/
 def orbit (f : LiftL2 period) (x : Domain 4) : LiftL2 period :=
@@ -66,7 +68,7 @@ theorem orbit_continuous (f : LiftL2 period) : Continuous (orbit period f) :=
 
 @[simp]
 theorem orbit_zero (f : LiftL2 period) : orbit period f 0 = f := by
-  simp [orbit, euclideanCover_zero, translation_zero]
+  simp only [orbit, euclideanCover_zero, translation_zero]
 
 theorem orbit_norm (f : LiftL2 period) (x : Domain 4) : ‖orbit period f x‖ = ‖f‖ :=
   translation_norm period _ f
@@ -159,7 +161,7 @@ def mollifierLinearMap (n : ℕ) : LiftL2 period →ₗ[ℝ] LiftL2 period where
 def mollifierOperator (n : ℕ) : LiftL2 period →L[ℝ] LiftL2 period :=
   (mollifierLinearMap period n).mkContinuous 1 (fun f => by
     change ‖mollify period n f‖ ≤ 1 * ‖f‖
-    simpa using mollify_norm_le period n f)
+    simpa only [one_mul] using mollify_norm_le period n f)
 
 theorem mollifierOperator_apply (n : ℕ) (f : LiftL2 period) :
     mollifierOperator period n f = mollify period n f := rfl
@@ -167,7 +169,7 @@ theorem mollifierOperator_apply (n : ℕ) (f : LiftL2 period) :
 theorem mollifierOperator_norm_le (n : ℕ) : ‖mollifierOperator period n‖ ≤ 1 :=
   ContinuousLinearMap.opNorm_le_bound _ zero_le_one (fun f => by
     change ‖mollify period n f‖ ≤ 1 * ‖f‖
-    simpa using mollify_norm_le period n f)
+    simpa only [one_mul] using mollify_norm_le period n f)
 
 /-- The averaging operator commutes with every actual spatial or angular translation. -/
 theorem mollify_translation (n : ℕ) (a : LiftDomain period) (f : LiftL2 period) :
@@ -209,14 +211,15 @@ theorem sub_word {directions : Fin 4 → LiftTangent} {s k : ℕ} {f g : LiftL2 
     (J : SpatialJet period directions s f) (K : SpatialJet period directions s g)
     (w : Fin k → Fin 4) : (J.sub K).word w = J.word w - K.word w := by
   induction s generalizing f g k with
-  | zero => cases J; cases K; cases k <;> simp [SpatialJet.sub, SpatialJet.word]
+  | zero => cases J; cases K; cases k <;> simp only [SpatialJet.sub, SpatialJet.word_zero,
+      SpatialJet.word, sub_self]
   | succ s ih =>
     cases J with
     | succ df lower hd =>
       cases K with
       | succ dg lowerG hG =>
         cases k with
-        | zero => simp
+        | zero => simp only [SpatialJet.word_zero]
         | succ k =>
           simp only [SpatialJet.sub, SpatialJet.word_succ]
           exact ih (lower _) (lowerG _) _

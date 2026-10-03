@@ -156,13 +156,15 @@ noncomputable def normalMotion (z : Q × ℝ) : Space :=
 @[simp] theorem forcing_zero (z : Q × ℝ) : d.forcing (fun _ => 0) z = 0 := by
   ext i
   have hz : MovingFrameODE.tail (0 : Space) = 0 := by ext i; fin_cases i <;> rfl
-  fin_cases i <;> simp [forcing, forceX, forceY, hz]
+  fin_cases i <;> simp only [forcing, forceX, Fin.isValue, PiLp.zero_apply, hz, inner_zero_right,
+      mul_zero, sub_self, neg_zero, zero_div, forceY, add_zero, Fin.zero_eta, Matrix.cons_val_zero,
+      Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_fin_one]
 
 @[simp] theorem forcing_zero_function : d.forcing (fun _ => 0) = (fun _ => 0) :=
   funext d.forcing_zero
 
 @[simp] theorem damping_one (z : Q × ℝ) : d.damping 1 z = d.viscosity z := by
-  simp [damping]
+  simp only [damping, Int.cast_one, one_pow, one_mul]
 
 theorem ambient_tangent (z : Q × ℝ) (w : State) :
     ⟪d.normal z, d.ambient z w⟫_ℝ = 0 :=
@@ -360,7 +362,11 @@ private theorem modalOperator_expansion (lam damping e11 e12 e21 e22 : ℝ) :
       e21 • GrowingMode.modalOperator 0 0 0 0 1 0 +
       (-lam - damping + e22) • GrowingMode.modalOperator 0 0 0 0 0 1 := by
   ext z i
-  fin_cases i <;> simp [GrowingMode.modalOperator]
+  fin_cases i <;> simp only [GrowingMode.modalOperator, Fin.isValue,
+      LinearMap.coe_toContinuousLinearMap', LinearMap.coe_mk, AddHom.coe_mk, Fin.zero_eta,
+      Matrix.cons_val_zero, sub_self, zero_add, one_mul, zero_mul, add_zero, neg_zero, add_apply,
+      smul_apply, PiLp.add_apply, PiLp.smul_apply, smul_eq_mul, mul_zero, Fin.mk_one,
+      Matrix.cons_val_one, Matrix.cons_val_fin_one]
 
 theorem FrameData.SmoothOn.coefficient {d : FrameData Q} {Ω : Set (Q × ℝ)}
     (h : d.SmoothOn Ω) (j : ℤ) : ContDiffOn ℝ ∞ (d.coefficient j) Ω := by
@@ -446,7 +452,7 @@ theorem FrameData.energy_bound {Q : Type} (d : FrameData Q) (z : Q × ℝ)
   apply mul_le_mul_of_nonneg_right _ (sq_nonneg _)
   change _ - (j : ℝ) ^ 2 * d.viscosity z + _ ≤ _
   rw [show (D + 4 * C) / S = D / S + 4 * (C / S) by ring]
-  linarith
+  linarith only [hd]
 
 section Primary
 
@@ -537,11 +543,11 @@ theorem primary_bounds (hab : a ≤ b) (d : FrameData Q) (P : Q × ℝ → ℝ)
     (h := d.eigenvector (p, v)) hzpos hr.le hrhalf hzcone
   refine ⟨?_, ?_, ?_, hxratio⟩
   · change 0 < primary hab d P p v 0 + primary hab d P p v 1
-    linarith
+    linarith only [hxlo, hzpos]
   · change _ ≤ primary hab d P p v 0 + primary hab d P p v 1
-    nlinarith
+    linarith only [hxlo, hzlo]
   · change primary hab d P p v 0 + primary hab d P p v 1 ≤ _
-    nlinarith
+    linarith only [hxhi, hzhi]
 
 end Primary
 
@@ -826,7 +832,7 @@ theorem referenceEigenvalue_lower {lam u ell v : ℝ} (hlam : 0 < lam) (hu : 0 �
   have hs0 := PulseGrowth.slotMagnitude_nonneg hu hell hv.1
   apply div_le_div_of_nonneg_left hlam.le (PulseGrowth.radius_pos _)
   apply Real.sqrt_le_sqrt
-  nlinarith [hs.2]
+  nlinarith only [hu, hs, hs0, hs.2]
 
 /-- Reference envelope, given by `GaussianEnvelope.envelope (GaussianEnvelope.referenceRate (lam
 z.1) (u z.1) ell) (ell / 2) z.2`. -/
@@ -952,7 +958,7 @@ theorem primarySeed_reference_contDiffOn {ell : ℝ} (hell : 0 ≤ ell)
     (U : Set Q) (V : Set ℝ) (hU : IsOpen U) (hV : IsOpen V) (hI : Icc 0 ell ⊆ V)
     (lam u : Q → ℝ) (hlam : ContDiffOn ℝ ∞ lam U) (hu : ContDiffOn ℝ ∞ u U) :
     ContDiffOn ℝ ∞ (primarySeed 0 (referenceEnvelope lam u ell)) U := by
-  have hm : ell / 2 ∈ Icc 0 ell := by constructor <;> linarith
+  have hm : ell / 2 ∈ Icc 0 ell := by constructor <;> linarith only [hell]
   have hE := initialEnvelope_contDiffOn hell U V hU hV hI
     (fun z : Q × ℝ => GaussianEnvelope.referenceRate (lam z.1) (u z.1) ell z.2)
     (referenceRate_contDiffOn V lam u ell hlam hu) ⟨ell / 2, hm⟩
@@ -1053,7 +1059,7 @@ theorem viscosity_error_of_normal_comparison {n n₀ : Space} {κ η M : ℝ}
     |κ * ‖n‖ ^ 2 - κ * ‖n₀‖ ^ 2| ≤ κ * η * (2 * M + η) := by
   have hη : 0 ≤ η := (norm_nonneg _).trans hclose
   have hd : |‖n‖ - ‖n₀‖| ≤ η := (abs_norm_sub_norm_le n n₀).trans hclose
-  have hs : ‖n‖ + ‖n₀‖ ≤ 2 * M + η := by linarith [(abs_le.mp hd).2]
+  have hs : ‖n‖ + ‖n₀‖ ≤ 2 * M + η := by linarith only [hn₀, hd, (abs_le.mp hd).2]
   have he : κ * ‖n‖ ^ 2 - κ * ‖n₀‖ ^ 2 = κ * ((‖n‖ - ‖n₀‖) * (‖n‖ + ‖n₀‖)) := by ring
   rw [he, abs_mul, abs_of_nonneg hκ, abs_mul,
     abs_of_nonneg (add_nonneg (norm_nonneg n) (norm_nonneg n₀))]
@@ -1077,7 +1083,7 @@ theorem FrameData.forcing_norm_le {Q : Type} (d : FrameData Q) (f : Q × ℝ →
     exact PhaseEstimates.tail_norm_le _
   have hx : |d.forceX f z| ≤ (1 + R) * ‖f z‖ := by
     unfold FrameData.forceX
-    apply (MovingFrameODE.abs_div_le_of_one_le _ _ (by nlinarith [sq_nonneg (d.rho z)])).trans
+    apply (MovingFrameODE.abs_div_le_of_one_le _ _ (by nlinarith only [sq_nonneg (d.rho z)])).trans
     rw [abs_neg]
     calc
       |f z 0 - d.rho z * ⟪d.frame z 0, MovingFrameODE.tail (f z)⟫_ℝ| ≤
@@ -1097,14 +1103,14 @@ theorem FrameData.forcing_norm_le {Q : Type} (d : FrameData Q) (f : Q × ℝ →
     |(d.forceX f z - d.forceY f z / d.eigenvector z) / 2| ≤ _
   rw [abs_div, abs_div]
   rw [abs_of_pos (by norm_num : (0 : ℝ) < 2)]
-  nlinarith [abs_add_le (d.forceX f z) (d.forceY f z / d.eigenvector z),
-    abs_sub (d.forceX f z) (d.forceY f z / d.eigenvector z)]
+  nlinarith only [hx, hdiv, abs_add_le (d.forceX f z) (d.forceY f z / d.eigenvector z),
+      abs_sub (d.forceX f z) (d.forceY f z / d.eigenvector z)]
 
 private theorem norm_pack_le (x : ℝ) (v : State) : ‖MovingFrameODE.pack x v‖ ≤ |x| + ‖v‖ := by
   have hs := MovingFrameODE.inner_pack x x v v
   simp only [real_inner_self_eq_norm_sq] at hs
-  nlinarith [norm_nonneg (MovingFrameODE.pack x v), norm_nonneg v, abs_nonneg x,
-    sq_abs x, mul_nonneg (abs_nonneg x) (norm_nonneg v)]
+  nlinarith only [hs, norm_nonneg (MovingFrameODE.pack x v), norm_nonneg v, abs_nonneg x, sq_abs x,
+      mul_nonneg (abs_nonneg x) (norm_nonneg v)]
 
 theorem FrameData.ambient_norm_le {Q : Type} (d : FrameData Q) (z : Q × ℝ) (w : State)
     {R H : ℝ} (hrho : |d.rho z| ≤ R) (hh : |d.eigenvector z| ≤ H) :
@@ -1113,8 +1119,8 @@ theorem FrameData.ambient_norm_le {Q : Type} (d : FrameData Q) (z : Q × ℝ) (w
   have hH : 0 ≤ H := (abs_nonneg _).trans hh
   have hw (i : Fin 2) : |w i| ≤ ‖w‖ := by
     simpa only [Real.norm_eq_abs] using PiLp.norm_apply_le w i
-  have hx : |w 0 + w 1| ≤ 2 * ‖w‖ := (abs_add_le _ _).trans (by linarith [hw 0, hw 1])
-  have hdiff : |w 0 - w 1| ≤ 2 * ‖w‖ := (abs_sub _ _).trans (by linarith [hw 0, hw 1])
+  have hx : |w 0 + w 1| ≤ 2 * ‖w‖ := (abs_add_le _ _).trans (by linarith only [hw, hw 0, hw 1])
+  have hdiff : |w 0 - w 1| ≤ 2 * ‖w‖ := (abs_sub _ _).trans (by linarith only [hw, hw 0, hw 1])
   have htail : ‖(-d.rho z * (w 0 + w 1)) • d.frame z 0 +
       (d.eigenvector z * (w 0 - w 1)) • d.frame z 1‖ ≤
       |d.rho z| * |w 0 + w 1| + |d.eigenvector z| * |w 0 - w 1| := by
@@ -1126,7 +1132,7 @@ theorem FrameData.ambient_norm_le {Q : Type} (d : FrameData Q) (z : Q × ℝ) (w
   apply (norm_pack_le _ _).trans
   have hrx := mul_le_mul hrho hx (abs_nonneg _) hR
   have hhy := mul_le_mul hh hdiff (abs_nonneg _) hH
-  nlinarith
+  nlinarith only [hx, htail, hrx, hhy]
 
 /-- The inverse coordinate transformation is uniformly bounded too, so the
 modal forward estimate is a genuine ambient tangent propagator estimate. -/
@@ -1166,7 +1172,7 @@ theorem FrameData.norm_le_ambient {Q : Type} (d : FrameData Q) (z : Q × ℝ) (w
     rw [he, abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 2)] at hi
     exact hi
   have hn := MovingFrameODE.plane_norm_le_coordinate_sum w
-  nlinarith
+  nlinarith only [hx, hdiff, hp, hq, hn]
 
 section AmbientForward
 
@@ -1232,7 +1238,7 @@ noncomputable def localFrame (n : Space) : Frame := by
 
 theorem localFrame_eq {n : Space} (hn : MovingFrameODE.tail n ≠ 0) :
     localFrame n = MovingFrameODE.normalFrame n hn := by
-  simp [localFrame, hn]
+  simp only [localFrame, ne_eq, hn, not_false_eq_true, ↓reduceDIte]
 
 /-- The actual phase-derived coefficients require nonvanishing only on the
 chart where they are used. -/

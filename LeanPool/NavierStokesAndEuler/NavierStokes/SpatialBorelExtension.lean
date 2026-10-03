@@ -172,24 +172,17 @@ theorem localizedTerm_deriv_bound {a : X → V} (ha : ContDiff ℝ ∞ a)
   rw [localizedTerm_eq_scaled (ne_of_gt hbpos),
     iteratedFDeriv_const_smul_apply hc.contDiffAt]
   rw [norm_smul ((b ^ j)⁻¹ : ℝ) (iteratedFDeriv ℝ k (template m j a ∘ timeScale b) z),
-    Real.norm_of_nonneg (by positivity : 0 ≤ (b ^ j)⁻¹),
+    Real.norm_of_nonneg (inv_nonneg.mpr (pow_nonneg hbpos.le j)),
     (timeScale b).iteratedFDeriv_comp_right ht z (nat_le_infty k)]
-  have hcomp :
-      ‖(iteratedFDeriv ℝ k (template m j a) (timeScale b z)).compContinuousLinearMap
-        (fun _ => timeScale b)‖ ≤ templateBound ha m j k * b ^ k := by
-    calc
-      _ ≤ ‖iteratedFDeriv ℝ k (template m j a) (timeScale b z)‖ *
-          ∏ _ : Fin k, ‖timeScale (X := X) b‖ :=
-        ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _
-      _ = ‖iteratedFDeriv ℝ k (template m j a) (timeScale b z)‖ *
-          ‖timeScale (X := X) b‖ ^ k := by simp
-      _ ≤ templateBound ha m j k * b ^ k :=
-        mul_le_mul (template_deriv_le ha m j k (timeScale b z))
-          (pow_le_pow_left₀ (norm_nonneg _) (norm_timeScale_le hb) k)
-          (by positivity) (templateBound_nonneg ha m j k)
   calc
-    _ ≤ (b ^ j)⁻¹ * (templateBound ha m j k * b ^ k) :=
-      mul_le_mul_of_nonneg_left hcomp (by positivity)
+    _ ≤ (b ^ j)⁻¹ * (templateBound ha m j k * b ^ k) := by
+      refine mul_le_mul_of_nonneg_left
+        ((ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _).trans ?_)
+        (inv_nonneg.mpr (pow_nonneg hbpos.le j))
+      simp only [Fin.prod_const]
+      exact mul_le_mul (template_deriv_le ha m j k (timeScale b z))
+        (pow_le_pow_left₀ (norm_nonneg _) (norm_timeScale_le (X := X) hb) k)
+        (pow_nonneg (norm_nonneg _) k) (templateBound_nonneg ha m j k)
     _ = (b ^ k / b ^ j) * templateBound ha m j k := by ring
 
 section Family

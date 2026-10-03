@@ -44,7 +44,8 @@ theorem toFieldTower_derivative_path (G : Field P T raw) (s : ℕ) (i : Fin 4) :
 theorem toFieldTower_levelNorm_eq (G : Field P T raw) (s n : ℕ) (hn : n ≤ s)
     (t : Icc (0 : ℝ) T) :
     levelNorm P (toJet P (G.toFieldTower.realization s t)) n =
-      wordSum standardDirection (fun a : LiftTangent => translate P a (G.path t)) n 0 := by
+      wordSum standardDirection
+        (fun a : LiftTangent => translate (V := Vector3) P a (G.path t)) n 0 := by
   rw [levelNorm_eq_words]
   apply sum_congr rfl
   intro w _
@@ -55,7 +56,8 @@ theorem toFieldTower_levelNorm_eq (G : Field P T raw) (s n : ℕ) (hn : n ≤ s)
 theorem toFieldTower_blockNorm_eq (G : Field P T raw) (s q n : ℕ) (hn : n + q ≤ s)
     (t : Icc (0 : ℝ) T) :
     blockNorm P (toJet P (G.toFieldTower.realization s t)) q n =
-      block standardDirection q (fun a : LiftTangent => translate P a (G.path t)) n 0 := by
+      block standardDirection q
+        (fun a : LiftTangent => translate (V := Vector3) P a (G.path t)) n 0 := by
   rw [block_eq_sum_levels standardDirection q _ (path_evaluation_smooth P G.path G.orbit t)]
   apply sum_congr rfl
   intro r hr
@@ -65,7 +67,8 @@ theorem toFieldTower_blockNorm_eq (G : Field P T raw) (s q n : ℕ) (hn : n + q 
 theorem toFieldTower_blockNorm_le (G : Field P T raw) (s q n : ℕ) (hn : n + q ≤ s)
     (t : Icc (0 : ℝ) T) :
     blockNorm P (toJet P (G.toFieldTower.realization s t)) q n ≤
-      block standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) n 0 := by
+      block standardDirection q (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) n 0 := by
   rw [G.toFieldTower_blockNorm_eq s q n hn t]
   rw [← classicalBlockSize_eq P q (G.path t) (path_evaluation_smooth P G.path G.orbit t) n]
   exact path_classicalBlockSize_le P q G.path G.orbit t n
@@ -76,10 +79,11 @@ theorem toFieldTower_derivative_block_sum_le (G : Field P T raw) (s q n : ℕ)
     (hn : n + q ≤ s) (t : Icc (0 : ℝ) T) :
     (∑ i : Fin 4, blockNorm P
       (toJet P (derivativeOperator P s i (G.toFieldTower.realization (s+1) t))) q n) ≤
-      block standardDirection q (fun a : LiftTangent => pathTranslate P a G.path) (n+1) 0 := by
+      block standardDirection q (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) (n+1) 0 := by
   calc
-    _ ≤ ∑ i : Fin 4, block standardDirection q
-        (fun a : LiftTangent => pathTranslate P a (G.derivative i).path) n 0 := by
+    _ ≤ ∑ i : Fin 4, block standardDirection q (fun a : LiftTangent =>
+        pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a (G.derivative i).path) n 0 := by
       apply sum_le_sum
       intro i _
       rw [G.toFieldTower_derivative]
@@ -88,8 +92,10 @@ theorem toFieldTower_derivative_block_sum_le (G : Field P T raw) (s q n : ℕ)
       rw [block_succ standardDirection q _ G.orbit]
       apply sum_congr rfl
       intro i _
-      have he : (fun a : LiftTangent => pathTranslate P a (G.derivative i).path) =
-          directional standardDirection (fun a : LiftTangent => pathTranslate P a G.path) i :=
+      have he : (fun a : LiftTangent =>
+            pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a (G.derivative i).path) =
+          directional standardDirection (fun a : LiftTangent =>
+            pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a G.path) i :=
         funext (derivativePath_translation P G.path G.orbit i)
       rw [he]
 

@@ -114,7 +114,7 @@ theorem inviscid_correction_unique {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 �
   intro t
   have hc : B.c^2*‖value period (u t-v t)‖^2 ≤ E t.val := by
     change _ ≤ ⟪K t.val (e t.val),e t.val⟫_ℝ
-    rw [hKv t,hev t]
+    simp only [hKv t,hev t]
     exact coefficientOperator_coercive (B.metric t).coefficient (B.metric t).measurable
       (B.metric t).bound (B.metric t).norm_bound (B.c^2) (B.coercive t) _
   have heB : E t.val ≤ 0 := by

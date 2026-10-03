@@ -34,7 +34,7 @@ theorem firstParameterSize_literal (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 �
       (7+solutionLabelConstant)*X^1010 := by
   have hX0 := zero_le_one.trans hX
   have hJr : (1 : ℝ) ≤ J := by exact_mod_cast hJ
-  have hden : 1 ≤ 6*(J : ℝ)^2 := by nlinarith
+  have hden : 1 ≤ 6*(J : ℝ)^2 := by nlinarith only [hJr]
   have hi : (6*(J : ℝ)^2)⁻¹ ≤ 1 := inv_le_one_of_one_le₀ hden
   have hT : (baseHorizon J X)⁻¹ ≤ X^498 := by
     unfold baseHorizon
@@ -50,7 +50,7 @@ theorem firstParameterSize_literal (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 �
   have hone : (1 : ℝ) ≤ X^1010 := one_le_pow₀ hX
   have hc : 4+solutionLabelConstant ≤ (4+solutionLabelConstant)*X^1010 := by
     simpa only [mul_one] using mul_le_mul_of_nonneg_left hone (by
-        linarith : 0 ≤ 4+solutionLabelConstant)
+        linarith only [hK] : 0 ≤ 4+solutionLabelConstant)
   unfold firstParameterSize
   rw [hd]
   nlinarith only [hT.trans ht,hh,hc]
@@ -64,7 +64,7 @@ def firstFrequencyPower : ℕ := 1010*frequencyPower
 theorem firstFrequencyConstant_pos : 0 < firstFrequencyConstant := by
   have hK := solutionLabelConstant_one
   unfold firstFrequencyConstant
-  exact mul_pos frequencyConstant_pos (pow_pos (by linarith) _)
+  exact mul_pos frequencyConstant_pos (pow_pos (by linarith only [hK]) _)
 
 theorem first_frequency_cost_bound (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 ≤ X) :
     EulerPacketInitializedOutputCost.uniformConstant *
@@ -161,7 +161,7 @@ theorem literal_radius_frequency_bound (D : ℕ) (hD : 2000 ≤ D) (X : ℝ) (hX
   unfold baseRadius
   rw [rpow_neg hX0,inv_inv]
   calc
-    _ ≤ X^((D : ℝ)*(3/4 : ℝ)) := rpow_le_rpow_of_exponent_le hX (by linarith)
+    _ ≤ X^((D : ℝ)*(3/4 : ℝ)) := rpow_le_rpow_of_exponent_le hX (by linarith only [hDr])
     _ = _ := by rw [rpow_mul hX0,rpow_natCast]
 
 /-- First scale guards data, collecting `x_one`, `radius_small`, `local_time`, `frequency`,
@@ -215,7 +215,7 @@ theorem eventually_firstScaleGuards (J : ℕ) (hJ : 1 ≤ J) (D : ℕ) (hD : 200
     (baseHorizon J X) (add_nonneg hC0 hp0) hC0 hc0 hb.2.1.le
     boundaryLocalizationC2_nonneg hb.2.2.2.1.le
   · linarith only [hpressure]
-  · linarith
+  · linarith only [hb]
   · linarith only [hcore]
   · exact le_rfl
   · exact hb.2.2.2.2.2

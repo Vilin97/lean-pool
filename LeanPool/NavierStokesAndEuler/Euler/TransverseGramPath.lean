@@ -36,14 +36,16 @@ variable {U E : Type*}
 /-- The within-set derivative of an actual adjoint. -/
 theorem hasDerivWithinAt_adjoint (Q : ℝ → U →L[ℝ] E) (Q₁ : U →L[ℝ] E)
     (s : Set ℝ) (t : ℝ) (hQ : HasDerivWithinAt Q Q₁ s t) :
-    HasDerivWithinAt (fun r => (Q r).adjoint) Q₁.adjoint s t :=
+    HasDerivWithinAt (fun r => adjoint (𝕜 := ℝ) (E := U) (F := E) (Q r))
+      (adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁) s t :=
   ((realAdjoint (U := U) (E := E)).hasFDerivAt).comp_hasDerivWithinAt t hQ
 
 /-- The within-set derivative of an actual Gram matrix. -/
 theorem hasDerivWithinAt_gram (Q : ℝ → U →L[ℝ] E) (Q₁ : U →L[ℝ] E)
     (s : Set ℝ) (t : ℝ) (hQ : HasDerivWithinAt Q Q₁ s t) :
     HasDerivWithinAt (fun r => gram (Q r))
-      (Q₁.adjoint.comp (Q t) + (Q t).adjoint.comp Q₁) s t :=
+      ((adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁).comp (Q t) +
+        (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)).comp Q₁) s t :=
   (hasDerivWithinAt_adjoint Q Q₁ s t hQ).clm_comp hQ
 
 /-- Actual inverse differentiation is valid within the time interval, including endpoints. -/
@@ -53,7 +55,8 @@ theorem hasDerivWithinAt_gramInverse (Q : ℝ → U →L[ℝ] E) (c : ℝ) (hc :
     (hd : HasDerivWithinAt Q Q₁ s t) :
     HasDerivWithinAt (fun r => gramInverse (Q r) c hc (hQ r))
       (-(gramInverse (Q t) c hc (hQ t)).comp
-        ((Q₁.adjoint.comp (Q t) + (Q t).adjoint.comp Q₁).comp
+        (((adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁).comp (Q t) +
+            (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)).comp Q₁).comp
           (gramInverse (Q t) c hc (hQ t)))) s t := by
   let B := gram (Q t)
   let hB := gram_coercive (Q t) c (hQ t)
@@ -62,9 +65,8 @@ theorem hasDerivWithinAt_gramInverse (Q : ℝ → U →L[ℝ] E) (c : ℝ) (hc :
     ext x
     exact coerciveEquiv_apply B c hc hB x
   have hui : (↑u⁻¹ : U →L[ℝ] U) = gramInverse (Q t) c hc (hQ t) := rfl
-  have hi := hasFDerivAt_ringInverse (𝕜 := ℝ) u
-  rw [hu] at hi
-  have hcomp := hi.comp_hasDerivWithinAt t (hasDerivWithinAt_gram Q Q₁ s t hd)
+  have hcomp := (hasFDerivAt_ringInverse (𝕜 := ℝ) u).comp_hasDerivWithinAt_of_eq t
+    (hasDerivWithinAt_gram Q Q₁ s t hd) hu
   have hfun : (fun r => gramInverse (Q r) c hc (hQ r)) =
       Ring.inverse ∘ (fun r => gram (Q r)) := by
     funext r
@@ -85,7 +87,8 @@ def gramPath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
 
 /-- Continuous derivative coefficient of the Gram matrix. -/
 def gramDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
-  ⟨fun t => (Q₁ t).adjoint.comp (Q t) + (Q t).adjoint.comp (Q₁ t),
+  ⟨fun t => (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q₁ t)).comp (Q t) +
+      (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)).comp (Q₁ t),
     (((realAdjoint (U := U) (E := E)).continuous.comp Q₁.continuous).clm_comp
       Q.continuous).add
       (((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous).clm_comp
@@ -105,9 +108,8 @@ def gramInversePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) where
     have he : (e.toUnit : U →L[ℝ] U) = gram (Q t) := by
       ext x
       exact coerciveEquiv_apply (gram (Q t)) c hc (gram_coercive (Q t) c (hQ t)) x
-    have hcont := (hasFDerivAt_ringInverse (𝕜 := ℝ) e.toUnit).continuousAt
-    rw [he] at hcont
-    exact hcont.comp (x := t) (gramPath T Q).continuous.continuousAt
+    exact (NormedRing.inverse_continuousAt e.toUnit).comp_of_eq
+      (gramPath T Q).continuous.continuousAt he.symm
 
 /-- Explicit continuous coefficient of the inverse derivative `-K⁻¹ K' K⁻¹`. -/
 def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
@@ -119,14 +121,16 @@ def gramInverseDerivativePath : C(Icc (0 : ℝ) T, U →L[ℝ] U) :=
 
 /-- The canonical left-inverse coefficient is continuous. -/
 def frameLeftInversePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
-  ⟨fun t => (gramInversePath T Q c hc hQ t).comp (Q t).adjoint,
+  ⟨fun t => (gramInversePath T Q c hc hQ t).comp
+      (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)),
     (gramInversePath T Q c hc hQ).continuous.clm_comp
       ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous)⟩
 
 /-- The continuous coefficient of the derivative of the frame left inverse. -/
 def frameLeftInverseDerivativePath : C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
-  ⟨fun t => (gramInverseDerivativePath T Q Q₁ c hc hQ t).comp (Q t).adjoint +
-      (gramInversePath T Q c hc hQ t).comp (Q₁ t).adjoint,
+  ⟨fun t => (gramInverseDerivativePath T Q Q₁ c hc hQ t).comp
+        (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)) +
+      (gramInversePath T Q c hc hQ t).comp (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q₁ t)),
     ((gramInverseDerivativePath T Q Q₁ c hc hQ).continuous.clm_comp
       ((realAdjoint (U := U) (E := E)).continuous.comp Q.continuous)).add
       ((gramInversePath T Q c hc hQ).continuous.clm_comp

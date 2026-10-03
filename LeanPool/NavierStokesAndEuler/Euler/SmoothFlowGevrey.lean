@@ -115,7 +115,7 @@ theorem flow_generating_sum_bound
       1-R*((4*R)⁻¹+derivativeSum (ψ r) N ((4*R)⁻¹) x) ≠ 0 := by
     intro r hr
     have hh := hbefore r hr
-    linarith
+    linarith only [hh]
   have hrate : ContinuousOn
       (fun r => rationalRate B R ((4*R)⁻¹) (derivativeSum (ψ r) N ((4*R)⁻¹) x))
       (Icc 0 s) := by

@@ -60,17 +60,11 @@ theorem viscous_mild_truncated_formula {q : ℕ} (ν : ℝ) (hν : 0 < ν) (T : 
     (t : Icc (0 : ℝ) T) :
     truncateOperator period q (u t) = heatFlow period q ν t.val (truncateOperator period q u₀) +
       duhamel period ν T hT (pathNonlinearity T F hF u) t.val := by
-  let f := pathNonlinearity T F hF u
-  have hc := truncate_heatConvolution period ν hν T hT f t
-  rw [convolution_eq_interval T hT (heatKernel period q ν hν) (parabolicKernelBound ν)
-    (heatKernel_joint_continuous period q ν hν) (parabolicKernelBound_integrable ν T hT)
-    (fun r hr => parabolicKernelBound_nonneg ν r hr.1)
-    (fun r hr y => heatKernel_bound period q ν hν r hr.1 y) f t] at hc
-  rw [hsol t, map_add, truncate_heatOperator]
-  change heatFlow period q ν t.val (truncateOperator period q u₀) +
-    truncateOperator period q (∫ r in (0 : ℝ)..t.val,
-      heatKernel period q ν hν r (extendPath T hT f (t.val-r))) = _
-  rw [hc]
+  have hc := truncate_heatConvolution period ν hν T hT (pathNonlinearity T F hF u) t
+  rw [convolution_eq_interval] at hc
+  refine (congrArg (truncateOperator period q) (hsol t)).trans
+    (((truncateOperator period q).map_add _ _).trans ?_)
+  exact congrArg₂ (· + ·) (truncate_heatOperator period _ u₀) hc
 
 /-- Any bounded heat-commuting derivative block of the constructed mild solution satisfies its
 actual L² evolution. -/
@@ -97,10 +91,9 @@ theorem viscous_mild_block_hasDerivAt {p q : ℕ} (hp : 2 ≤ p)
       duhamel period ν T hT (mapPath period T A f) s.val := by
     intro s
     change A (truncateOperator period q (u s)) = _
-    rw [viscous_mild_truncated_formula period ν hν T hT u₀ F hF u hsol s, map_add, map_duhamel
-        period A hA]
-    congr 1
-    exact hA _ _
+    refine (congrArg A (viscous_mild_truncated_formula period ν hν T hT u₀ F hF u hsol s)).trans
+      ((A.map_add _ _).trans ?_)
+    exact congrArg₂ (· + ·) (hA _ _) (map_duhamel period A hA ν T hT f s.val)
   exact ordinary_mild_hasDerivAt period hp ν hν T hT (A (truncateOperator period q u₀))
     (mapPath period T A f) v hv t ht
 

@@ -11,6 +11,7 @@ import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketBaseScales
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.Scale
 import Mathlib.Algebra.Order.Ring.Star
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Packet Uniform Scale Sums
@@ -36,15 +37,15 @@ theorem polynomial_scale_doubles
     2 * (x n / ((J + n : ℕ) : ℝ) ^ A) ≤ x (n + 1) / ((J + (n + 1) : ℕ) : ℝ) ^ A := by
   have hxp := quadratic_growth_pos J hJ x hx0 hx
   have hj1 : (1 : ℝ) ≤ (J + n : ℕ) := by exact_mod_cast (show 1 ≤ J + n by omega)
-  have hj : (0 : ℝ) < (J + n : ℕ) := by linarith
+  have hj : (0 : ℝ) < (J + n : ℕ) := by linarith only [hj1]
   have hJj : (J : ℝ) ≤ (J + n : ℕ) := by exact_mod_cast (show J ≤ J + n by omega)
   have hJ₀ : (0 : ℝ) ≤ J := by positivity
   have hpower : (2 : ℝ) ^ (A + 1) ≤ ((J + n : ℕ) : ℝ) ^ 2 :=
     hJA.trans (pow_le_pow_left₀ hJ₀ hJj 2)
   have hn : ((J + (n + 1) : ℕ) : ℝ) = ((J + n : ℕ) : ℝ) + 1 := by push_cast; ring
   have hden : (((J + n : ℕ) : ℝ) + 1) ^ A ≤ (2 : ℝ) ^ A * ((J + n : ℕ) : ℝ) ^ A := by
-    have hh := pow_le_pow_left₀ (by linarith : (0 : ℝ) ≤ (J + n : ℕ) + 1)
-      (by linarith : ((J + n : ℕ) : ℝ) + 1 ≤ 2 * ((J + n : ℕ) : ℝ)) A
+    have hh := pow_le_pow_left₀ (by linarith only [hj1] : (0 : ℝ) ≤ (J + n : ℕ) + 1)
+      (by linarith only [hj1] : ((J + n : ℕ) : ℝ) + 1 ≤ 2 * ((J + n : ℕ) : ℝ)) A
     simpa only [mul_pow] using hh
   rw [hx, hn]
   calc

@@ -848,8 +848,8 @@ theorem composeJet_memLp_and_bound
       hf (forward_contDiff T hT A t) q n)
   have hm : AEStronglyMeasurable
       (fun q => jetSeries P (f ∘ (flowData T hT A).forward t) q n) (liftMeasure P) :=
-    (((hf.comp (forward_contDiff T hT A t)).continuous_iteratedFDeriv
-      (m := n) (by simp)).measurable.comp (sectionPoint_measurable P)).aestronglyMeasurable
+    ((hf.comp (forward_contDiff T hT A t)).continuous_iteratedFDeriv
+      (m := n) (by simp)).comp_aestronglyMeasurable (sectionPoint_measurable P).aestronglyMeasurable
   rw [he] at hm ⊢
   apply EulerGevreyJetCompositionLp.composition_memLp_and_bound (liftMeasure P)
     (forward P T hT A t) (forward_measurePreserving P T hT A hA hdiv t)
@@ -966,8 +966,8 @@ theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
         mul_le_mul_of_nonneg_left (majorant_radius_mono S U hS hSU 0 j) hC
   have hm : AEStronglyMeasurable
       (fun q => iteratedFDeriv ℝ n (fun y => f y (g y)) (sectionPoint P q)) (liftMeasure P) :=
-    (((hf.clm_apply hg).continuous_iteratedFDeriv (m := n) (by simp)).measurable.comp
-      (sectionPoint_measurable P)).aestronglyMeasurable
+    ((hf.clm_apply hg).continuous_iteratedFDeriv (m := n) (by simp)).comp_aestronglyMeasurable
+      (sectionPoint_measurable P).aestronglyMeasurable
   obtain ⟨hp,hn⟩ := EulerGevreyProductLp.clm_apply_memLp_and_bound (liftMeasure P) (sectionPoint P)
     f g hf hg n hm U (B*R) C hU (mul_nonneg hB hR) hC 0 0
     (fun j _ => hfB j) (fun j _ => hLp t j) (fun j _ => hgC j)
@@ -988,9 +988,8 @@ theorem accelerationField_memLp_and_bound (B R C S C₁ S₁ : ℝ)
     · exact hw.norm
   have hmacc : AEStronglyMeasurable
       (fun q => jetSeries P (accelerationField T A A₁ t) q n) (liftMeasure P) :=
-    (((accelerationField_contDiff T A A₁ t).continuous_iteratedFDeriv (m := n) (by
-        simp)).measurable.comp
-      (sectionPoint_measurable P)).aestronglyMeasurable
+    ((accelerationField_contDiff T A A₁ t).continuous_iteratedFDeriv (m := n)
+      (by simp)).comp_aestronglyMeasurable (sectionPoint_measurable P).aestronglyMeasurable
   have hdom (q : LiftDomain P) : ‖jetSeries P (accelerationField T A A₁ t) q n‖ ≤
       ∑ i : Fin 2, H i q := by
     rw [congrFun he q]
@@ -1412,6 +1411,7 @@ theorem compositionJet_memLp_and_bound (B R C S : ℝ)
     MemLp (fun q => compositionJet P T hT A t q n) 2 (liftMeasure P) ∧
       (eLpNorm (fun q => compositionJet P T hT A t q n) 2 (liftMeasure P)).toReal ≤
         C*(flowRadius B R T S)^n*(n.factorial : ℝ)^2 := by
+  have : SecondCountableTopology (LiftTangent [×n]→L[ℝ] LiftTangent) := secondCountable_of_proper
   apply EulerGevreyJetCompositionLp.composition_memLp_and_bound (liftMeasure P)
     (forward P T hT A (projIcc 0 T hT t))
     (forward_measurePreserving P T hT A hA hdiv (projIcc 0 T hT t))
@@ -1440,6 +1440,7 @@ theorem displacementJet_memLp_and_bound (B R C S : ℝ)
     MemLp (fun q => displacementJet P T hT A t q n) 2 (liftMeasure P) ∧
       (eLpNorm (fun q => displacementJet P T hT A t q n) 2 (liftMeasure P)).toReal ≤
         (t : ℝ)*C*(flowRadius B R T S)^n*(n.factorial : ℝ)^2 := by
+  have : SecondCountableTopology (LiftTangent [×n]→L[ℝ] LiftTangent) := secondCountable_of_proper
   have hm := (compositionJet_joint_measurable P T hT A hA n).aestronglyMeasurable
     (μ := (volume.restrict (Icc 0 (t : ℝ))).prod (liftMeasure P))
   have hi := EulerGevreyFlowLpIntegration.integrated_composition_bound (t : ℝ) t.property.1

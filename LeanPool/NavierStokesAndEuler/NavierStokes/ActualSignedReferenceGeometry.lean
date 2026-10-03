@@ -424,6 +424,14 @@ theorem waveMask_reference (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
     ActualSignedPhysicalBinding.nativeViews_map]
   rfl
 
+theorem localized_amplitude_eq {D I : Type} (a : PeriodizedWaveBounds.CopyData D I) (i : I) (n : ℕ)
+    (x : D) :
+    (a.localized i).amplitude n x = a.cutoff n i x • a.amplitude n i x := rfl
+
+theorem localized_pressure_eq {D I : Type} (a : PeriodizedWaveBounds.CopyData D I) (i : I) (n : ℕ)
+    (x : D) :
+    (a.localized i).pressure n x = (a.cutoff n i x : ℂ) * a.pressure n i x := rfl
+
 /-- The scalar factor is removed after the one existing native Gaussian
 has been applied. No additional cutoff is introduced. -/
 theorem cylinder_potential_factor (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
@@ -438,17 +446,12 @@ theorem cylinder_potential_factor (L : NativeLabel B N0) (k : Copy) (x : Cylinde
           L) k
         (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
         (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L) x) := by
-  let l := ActualSignedExterior.actualLabel L
   rw [branch_potential_reference P u H hp L k x, waveMask_reference P u H hp L k x]
-  rw [← map_smul]
-  change ActualSignedPhysicalData.potentialMap _ _
-    (((ActualSignedPhysicalBinding.referenceCopies l P u H hp).localized k).amplitude
-      (ActualSignedPhysicalBinding.reference l) x) = _
+  rw [← map_smul, ← localized_amplitude_eq]
   rw [ActualSignedPhysicalData.potentialMap_apply,
     ActualSignedPhysicalBinding.primary_normal_reference,
-    ← ActualSignedPhysicalBinding.localized_amplitude_reference l P u H hp k x]
-  exact ActualSignedUnmaskedBounds.potential_factor (request (B := B) P u) l k
-    (ActualSignedUnmaskedBounds.reference l) (ActualSignedPhysicalBinding.toCommonCylinder l x)
+    ← ActualSignedPhysicalBinding.localized_amplitude_reference _ P u H hp k x]
+  exact ActualSignedUnmaskedBounds.potential_factor (request (B := B) P u) _ k _ _
 
 theorem cylinder_pressure_factor (L : NativeLabel B N0) (k : Copy) (x : Cylinder) :
     ActualSignedPhysicalData.waveMask ActualPrimary.slots L.val
@@ -462,13 +465,10 @@ theorem cylinder_pressure_factor (L : NativeLabel B N0) (k : Copy) (x : Cylinder
           L) k
         (ActualSignedUnmaskedBounds.reference (ActualSignedExterior.actualLabel L))
         (ActualSignedPhysicalBinding.toCommonCylinder (ActualSignedExterior.actualLabel L) x) := by
-  let l := ActualSignedExterior.actualLabel L
   rw [branch_pressure_reference P u H hp L k x, waveMask_reference P u H hp L k x]
-  change (((ActualSignedPhysicalBinding.referenceCopies l P u H hp).localized k).pressure
-    (ActualSignedPhysicalBinding.reference l) x) = _
-  rw [← ActualSignedPhysicalBinding.localized_pressure_reference l P u H hp k x]
-  exact ActualSignedUnmaskedBounds.pressure_factor (request (B := B) P u) l k
-    (ActualSignedUnmaskedBounds.reference l) (ActualSignedPhysicalBinding.toCommonCylinder l x)
+  rw [Complex.real_smul, ← localized_pressure_eq]
+  rw [← ActualSignedPhysicalBinding.localized_pressure_reference _ P u H hp k x]
+  exact ActualSignedUnmaskedBounds.pressure_factor (request (B := B) P u) _ k _ _
 
 theorem native_potential_factor (L : NativeLabel B N0) (k : Copy) (y : Native) :
     ActualSignedPhysicalData.waveMask ActualPrimary.slots L.val

@@ -93,10 +93,11 @@ theorem streamPotential_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     (hmap : MapsTo P V U) (hpos : ∀ s ∈ V, 0 < ell s)
     (hlen : ∀ s ∈ V, ell' (P s) = l * ell s)
     {f : PressureStream.Lift S → ℝ} {fr : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) u f fr)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+      u f fr)
     (hf : ContDiffOn ℝ ∞ fr (PhysicalMeanDomain.slowDomain U))
     (hs : VariableGaugeMean.SupportedGauge a b ell' U fr) :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (u / l)
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) (u / l)
       (VariableGaugeMean.streamPotential d a b M ell v f)
       (VariableGaugeMean.streamPotential d a b N ell' w fr) := by
   intro z hz
@@ -115,8 +116,9 @@ theorem graphDr_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     {d M N u : ℝ} (v w : Plane)
     (hshift : M • TemporalMeanUpdate.coverMap k v = (N * l ^ d) • w)
     {V : Set S} (hV : IsOpen V) {f : PressureStream.Lift S → ℝ} {fr : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) u f fr) :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (u*l)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+      u f fr) :
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) (u*l)
       (PressureStream.graphDr (PressureStream.physicalSpeed d M) ((0 : S), v) f)
       (PressureStream.graphDr (PressureStream.physicalSpeed d N) ((0 : T), w) fr) := by
   apply he.along (PhysicalMeanDomain.slowDomain_open hV)
@@ -134,8 +136,9 @@ theorem graphDr_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
 
 theorem divideRadius_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     {u : ℝ} {V : Set S} {f : PressureStream.Lift S → ℝ} {fr : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) u f fr) :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (u*l)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+      u f fr) :
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) (u*l)
       (PressureStream.divideRadius f) (PressureStream.divideRadius fr) := by
   intro z hz
   change f z / z.1 = (u*l) * (fr (chartEquiv l hl.ne' P k z) / (chartEquiv l hl.ne' P k z).1)
@@ -148,8 +151,9 @@ theorem streamGamma_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     {d M N u : ℝ} (v w : Plane)
     (hshift : M • TemporalMeanUpdate.coverMap k v = (N * l ^ d) • w)
     {V : Set S} (hV : IsOpen V) {f : PressureStream.Lift S → ℝ} {fr : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) u f fr) :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (u*l)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+      u f fr) :
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) (u*l)
       (PressureStream.streamGamma (PressureStream.physicalSpeed d M) ((0 : S), v) f)
       (PressureStream.streamGamma (PressureStream.physicalSpeed d N) ((0 : T), w) fr) :=
   (graphDr_on hl P k v w hshift hV he).add (divideRadius_on hl P k he)
@@ -158,8 +162,9 @@ theorem streamBeta_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     {u b : ℝ} (v : S × Plane) (w : T × Plane)
     (hvec : (P.toContinuousLinearMap.prodMap (TemporalMeanUpdate.coverMap k)) v = b • w)
     {V : Set S} (hV : IsOpen V) {f : PressureStream.Lift S → ℝ} {fr : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) u f fr) :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (u*b)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+      u f fr) :
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) (u*b)
       (PressureStream.streamBeta v f) (PressureStream.streamBeta w fr) := by
   have hd := he.along (PhysicalMeanDomain.slowDomain_open hV)
     (V := fun _ => ((0 : ℝ), v)) (W := fun _ => ((0 : ℝ), w)) (b := b) (by
@@ -222,10 +227,11 @@ theorem temporalAtIndex_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ
     (hclock : clock h n i * ChartScales.Tg ^ k = (c * l) * clock h nr ir)
     {V : Set S} {U : Set T} (hU : IsOpen U) (hmap : MapsTo P V U)
     {f : PressureStream.Lift S → ℝ} {fr : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (c * c * l) f fr)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+      (c * c * l) f fr)
     (hf : ContDiffOn ℝ ∞ fr (PhysicalMeanDomain.slowDomain U))
     (hp : PhysicalMeanDomain.PeriodicOn U fr) :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) c
       (MeanChartCompatibility.temporalAtIndex h n i f)
       (MeanChartCompatibility.temporalAtIndex h nr ir fr) := by
   intro z hz
@@ -256,8 +262,9 @@ theorem fastTime_on {l : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
       b • (r.fastCoefficient nr • r.vT))
     {f : MeanIncrementBounds.Field (PressureStream.Lift S)}
     {fr : MeanIncrementBounds.Field (PressureStream.Lift T)}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) u (f n) (fr nr)) :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (u*b)
+    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+      u (f n) (fr nr)) :
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) (u*b)
       (o.fastTime f n) (r.fastTime fr nr) := by
   have ht := he.along (PhysicalMeanDomain.slowDomain_open hV)
     (V := fun _ => o.fastCoefficient n • o.vT)
@@ -281,8 +288,10 @@ variable [FiniteDimensional ℝ S] [FiniteDimensional ℝ T]
   (h : ℝ) (index indexr : ℕ → ℕ) (n nr : ℕ)
   (ha : 0 < g.radial.inner) (hd : 0 < g.radial.exponent)
   (hg : GaugeOn V l P.toContinuousLinearMap k g gr n nr)
-  (H : StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c l s r n nr)
-  (G : ContextOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c l C Cr n nr)
+  (H : StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+    c l s r n nr)
+  (G : ContextOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k)
+    c l C Cr n nr)
   (hclock : clock h n (index n) * ChartScales.Tg ^ k = (c * l) * clock h nr (indexr nr))
   (hfz : ContDiffOn ℝ ∞ (r.axialResidual Cr nr) (PhysicalMeanDomain.slowDomain U))
   (hpz : PhysicalMeanDomain.PeriodicOn U (r.axialResidual Cr nr))
@@ -293,7 +302,7 @@ include hV hU hmap ha hd hg H G hclock hfz hpz hsz
 
 omit [FiniteDimensional ℝ S] in
 theorem temporalPotential_on :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) (c/l)
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) (c/l)
       (VariableGaugeMean.temporalPotential g h index C s n)
       (VariableGaugeMean.temporalPotential gr h indexr Cr r nr) := by
   have hE := H.axialResidual G (PhysicalMeanDomain.slowDomain_open hV) hl.ne'
@@ -323,7 +332,7 @@ include haxial hfθ hpθ
 
 omit [FiniteDimensional ℝ S] in
 theorem temporalIncrement_on :
-    TripleOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c
+    TripleOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) c
       (VariableGaugeMean.temporalIncrementState g h index axial C s)
       (VariableGaugeMean.temporalIncrementState gr h indexr axialr Cr r) n nr := by
   have hpot := temporalPotential_on hl P k hV hU hmap g gr C Cr s r h index indexr n nr
@@ -338,7 +347,7 @@ theorem temporalIncrement_on :
 
 omit [FiniteDimensional ℝ S] in
 theorem temporalAxialDifference_on :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c
+    ScalarOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) c
       (VariableGaugeMean.temporalAxialDifference g h index C s n)
       (VariableGaugeMean.temporalAxialDifference gr h indexr Cr r nr) := by
   have hD := temporalAtIndex_on hl P k h n (index n) nr (indexr nr) hclock hU hmap
@@ -374,7 +383,7 @@ theorem temporalAliasState_on :
 
 omit [FiniteDimensional ℝ S] in
 theorem temporalBeforePressure_on :
-    StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c l
+    StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) c l
       (s.addIncrement (VariableGaugeMean.temporalIncrementState g h index axial C s) 0 0 0
         ⟨0, 0, VariableGaugeMean.temporalAliasState g h index C s⟩)
       (r.addIncrement (VariableGaugeMean.temporalIncrementState gr h indexr axialr Cr r) 0 0 0
@@ -423,7 +432,7 @@ theorem temporalStage_on
       ((VariableGaugeMean.temporalStageState gr h indexr axialr Cr r).gr Cr nr))
     (hspost : VariableGaugeMean.SupportedGauge gr.radial.inner gr.radial.outer (gr.length nr) U
       ((VariableGaugeMean.temporalStageState gr h indexr axialr Cr r).gr Cr nr)) :
-    StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv l hl.ne' P k) c l
+    StateOn (PhysicalMeanDomain.slowDomain V) (chartEquiv (S := S) (T := T) l hl.ne' P k) c l
       (VariableGaugeMean.temporalStageState g h index axial C s)
       (VariableGaugeMean.temporalStageState gr h indexr axialr Cr r) n nr := by
   have hb := temporalBeforePressure_on hl P k hV hU hmap g gr C Cr s r h index indexr n nr
@@ -459,8 +468,9 @@ theorem clock_band_transport (h : ℝ) (n m i ir k : ℕ) (hi : i + k = ir) :
     unfold CoordinateAlgebra.A
     ring
   rw [hu, clock, clock, ← hi, pow_add,
-    Real.div_rpow (ChartScales.Q_pos n).le (ChartScales.Q_pos m).le]
-  field_simp [(Real.rpow_pos_of_pos (ChartScales.Q_pos m) (1+h)).ne']
+    Real.div_rpow (ChartScales.Q_pos n).le (ChartScales.Q_pos m).le, div_mul_eq_mul_div,
+    eq_div_iff (Real.rpow_pos_of_pos (ChartScales.Q_pos m) (1+h)).ne']
+  ring
 
 /-- Axial direction, given by `((0,1),0)`. -/
 noncomputable def axialDirection : Plane × Plane := ((0,1),0)

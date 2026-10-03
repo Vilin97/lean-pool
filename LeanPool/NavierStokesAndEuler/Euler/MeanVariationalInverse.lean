@@ -29,6 +29,10 @@ source's C¹-in-time inverse deformation.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -315,16 +319,10 @@ theorem meanSolver_unique (f : TimeLp T L2) (u : meanDerivatives T hT FInv)
         ⟪M0 (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ +
         L*⟪A (meanTrace T hT FInv u), meanTrace T hT FInv v⟫_ℝ =
         -⟪f, meanPrimitive T hT FInv v⟫_ℝ) :
-    u = meanSolver T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f := by
-  apply EulerMeanVariationalOperator.meanSolver_unique
-    (meanPrimitive T hT FInv) (meanTrace T hT FInv)
-    (timeMultiplier T hT H) (M0+L • A) (T^2/2) T K B hK hB
-    (meanPrimitive_norm_sq T hT FInv) (meanTrace_norm_sq T hT FInv)
-    (timeMultiplier_quadratic_upper T hT H K hH)
-    (meanTrace_boundary T hT FInv M0 A L B hF0 hboundary) hsmall f u
-  intro v
-  simpa only [Submodule.coe_inner, add_apply, smul_apply, inner_add_left,
-    real_inner_smul_left, add_assoc] using hu v
+    u = meanSolver T hT FInv H M0 A L K B hK hB hF0 hH hboundary hsmall f :=
+  EulerMeanVariationalOperator.meanSolver_unique _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ f u fun v => by
+    simpa only [Submodule.coe_inner, add_apply, smul_apply, inner_add_left,
+      real_inner_smul_left, add_assoc] using hu v
 
 include hK hB hF0 hH hboundary hsmall in
 /-- Existence and uniqueness for the source's mean form, conditional on the

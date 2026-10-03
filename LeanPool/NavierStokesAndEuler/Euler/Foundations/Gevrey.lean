@@ -71,10 +71,10 @@ theorem sum_inv_choose_le_three (n : ℕ) :
           _ = _ := by simp
       have hquot : (n : ℝ) * (1 / (n + 1)) ≤ 1 := by
         rw [mul_one_div, div_le_one hn]
-        linarith
+        linarith only
       rw [sum_range_succ', sum_range_succ]
       norm_num only [Nat.choose_zero_right, Nat.choose_self, Nat.cast_one, div_one]
-      linarith
+      linarith only [hsum, hquot]
 
 /-- Adding nonnegative shifts to both lower factorial indices enlarges the binomial coefficient. -/
 theorem choose_le_shifted (n k d₁ d₂ : ℕ) (hkn : k ≤ n) :
@@ -96,7 +96,7 @@ theorem choose_ratio_le_inv (n k d₁ d₂ : ℕ) (hkn : k ≤ n) :
   have hle : (n.choose k : ℝ) ≤ (n + d₁ + d₂).choose (k + d₁) := by
     exact_mod_cast choose_le_shifted n k d₁ d₂ hkn
   apply (div_le_div_iff₀ (sq_pos_of_pos (lt_of_lt_of_le hc hle)) hc).2
-  nlinarith
+  nlinarith only [hle]
 
 /-- A term of the shifted factorial convolution gains the reciprocal binomial coefficient. -/
 theorem shifted_factorial_kernel_le (n k d₁ d₂ : ℕ) (hkn : k ≤ n) :
@@ -187,7 +187,7 @@ theorem majorant_shift_le (R : ℝ) (hR : 0 ≤ R) (d n : ℕ) :
   have hf : (((n + d).factorial : ℕ) : ℝ) ≤ ((n + (d + 1)).factorial : ℝ) := by
     exact_mod_cast Nat.factorial_le (show n + d ≤ n + (d + 1) by omega)
   have hs : ((n + d).factorial : ℝ) ^ 2 ≤ ((n + (d + 1)).factorial : ℝ) ^ 2 := by
-    nlinarith [show (0 : ℝ) ≤ (n + d).factorial by positivity]
+    nlinarith only [hf, show (0 : ℝ) ≤ (n + d).factorial by positivity]
   unfold majorant
   calc
     _ = R ^ (n + (d + 1)) * ((n + d).factorial : ℝ) ^ 2 := by
@@ -208,7 +208,7 @@ theorem geometric_tail_le_two_mul (q : ℝ) (hq : 0 ≤ q) (hhalf : q ≤ 1 / 2)
         rw [← sum_mul]
         simp only [pow_zero]
         have hm := mul_le_mul_of_nonneg_right ih hq
-        linarith
+        linarith only [hhalf, hm]
   simpa only [pow_succ, ← sum_mul] using mul_le_mul_of_nonneg_right (hgeom n) hq
 
 /-- A coefficient of radius `Rc ≤ q R` has the geometric gain `q^k`. -/
@@ -244,18 +244,18 @@ theorem triangular_inverse_majorant (A Rc R : ℝ)
       (n.choose (k + 1) : ℝ) * Rc ^ (k + 1) * ((k + 1).factorial : ℝ) ^ 2 *
         Z (n - (k + 1)))) :
     ∀ n, Z n ≤ majorant R (d + 1) n := by
-  have hA0 : 0 ≤ A := by linarith
+  have hA0 : 0 ≤ A := by linarith only [hA]
   have hARc : 0 ≤ A * Rc := mul_nonneg hA0 hRc
-  have hR : 0 < R := by linarith
+  have hR : 0 < R := by linarith only [hA, hlarge, hARc]
   have hq0 : 0 ≤ Rc / R := div_nonneg hRc hR.le
   have hqhalf : Rc / R ≤ 1 / 2 := by
     apply (div_le_iff₀ hR).2
-    linarith [mul_nonneg (show 0 ≤ A - 1 by linarith) hRc]
+    linarith only [hA, hlarge, hRc, mul_nonneg (show 0 ≤ A - 1 by linarith) hRc]
   have hscale : Rc ≤ (Rc / R) * R := by rw [div_mul_cancel₀ _ hR.ne']
   have hbudget : A / R + 2 * A * (Rc / R) ≤ 1 := by
     calc
       _ = (A + 2 * A * Rc) / R := by ring
-      _ ≤ 1 := (div_le_one hR).2 (by linarith)
+      _ ≤ 1 := (div_le_one hR).2 (by linarith only [hA, hlarge])
   intro n
   induction n using Nat.strong_induction_on with
   | h n ih =>
@@ -300,14 +300,14 @@ theorem triangular_inverse_polynomial_radius (P : ℝ) (hP : 2 ≤ P) (c d : ℕ
       (n.choose (k + 1) : ℝ) * (P ^ c) ^ (k + 1) * ((k + 1).factorial : ℝ) ^ 2 *
         Z (n - (k + 1)))) :
     ∀ n, Z n ≤ majorant (P ^ (2 * c + 2)) (d + 1) n := by
-  have hPc : 1 ≤ P ^ c := one_le_pow₀ (by linarith)
-  have hPc0 : 0 ≤ P ^ c := by linarith
-  have hP2 : 4 ≤ P ^ 2 := by linarith [sq_nonneg (P - 2)]
+  have hPc : 1 ≤ P ^ c := one_le_pow₀ (by linarith only [hP])
+  have hPc0 : 0 ≤ P ^ c := by linarith only [hPc]
+  have hP2 : 4 ≤ P ^ 2 := by linarith only [hP, sq_nonneg (P - 2)]
   have heq : P ^ (2 * c + 2) = (P ^ c) ^ 2 * P ^ 2 := by
     rw [show 2 * c + 2 = c * 2 + 2 by omega, pow_add, pow_mul]
   have hlarge : 2 * P ^ c * (P ^ c + 1) ≤ P ^ (2 * c + 2) := by
     calc
-      _ ≤ (P ^ c) ^ 2 * 4 := by nlinarith
+      _ ≤ (P ^ c) ^ 2 * 4 := by nlinarith only [hPc]
       _ ≤ (P ^ c) ^ 2 * P ^ 2 := mul_le_mul_of_nonneg_left hP2 (sq_nonneg _)
       _ = _ := heq.symm
   exact triangular_inverse_majorant (P ^ c) (P ^ c) (P ^ (2 * c + 2))

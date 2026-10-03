@@ -79,18 +79,19 @@ theorem forward_positive_bound (B R : ℝ)
     ((displacement_contDiff T hT A t).contDiffAt.of_le (by simp))]
   have hi : ‖iteratedFDeriv ℝ n (id : E → E) x‖ ≤ 1 := by
     have h := norm_iteratedFDeriv_id_le n hn x
-    split_ifs at h <;> linarith
+    split_ifs at h <;> linarith only [h]
   let W := (4*R+1)^n*(n.factorial : ℝ)^2
   have hfact : (1 : ℝ) ≤ n.factorial := by exact_mod_cast Nat.succ_le_of_lt (Nat.factorial_pos n)
   have hW : 1 ≤ W := by
-    have hp : (1 : ℝ) ≤ (4*R+1)^n := one_le_pow₀ (by linarith)
-    have hf : (1 : ℝ) ≤ (n.factorial : ℝ)^2 := by nlinarith
+    have hp : (1 : ℝ) ≤ (4*R+1)^n := one_le_pow₀ (by linarith only [hR])
+    have hf : (1 : ℝ) ≤ (n.factorial : ℝ)^2 := one_le_pow₀ hfact
     calc
       (1 : ℝ) = 1*1 := by ring
       _ ≤ W := mul_le_mul hp hf (by norm_num) (by positivity)
   have hdisp : ‖iteratedFDeriv ℝ n (displacement T hT A t) x‖ ≤ B*T*W := by
     have htB : B*(t : ℝ) ≤ B*T := mul_le_mul_of_nonneg_left t.property.2 hB
-    have hp : (4*R)^n ≤ (4*R+1)^n := pow_le_pow_left₀ (by positivity) (by linarith) n
+    have hp : (4*R)^n ≤ (4*R+1)^n :=
+      pow_le_pow_left₀ (by positivity) (le_add_of_nonneg_right zero_le_one) n
     have hm := mul_le_mul htB hp (pow_nonneg (show 0 ≤ 4*R by positivity) n) (mul_nonneg hB hT)
     have hs := mul_le_mul_of_nonneg_right hm (sq_nonneg (n.factorial : ℝ))
     exact (displacement_positive_bound T hT A B R hB hR hsmall hb n hn t t.property x).trans

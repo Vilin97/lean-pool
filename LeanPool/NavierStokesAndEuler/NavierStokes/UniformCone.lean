@@ -19,6 +19,10 @@ radius are conclusions of the theorems, not assumptions.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -32,7 +36,7 @@ variable {X : Type*} [TopologicalSpace X]
 private theorem continuousOn_max {K : Set X} {f g : X → ℝ}
     (hf : ContinuousOn f K) (hg : ContinuousOn g K) :
     ContinuousOn (fun x => max (f x) (g x)) K :=
-  continuous_max.comp_continuousOn (hf.prodMk hg)
+  (continuous_max.comp_continuousOn (hf.prodMk hg) :)
 
 /-- The positive minimum of a continuous positive function on a compact set.
 This also covers the empty parameter set. -/
@@ -124,23 +128,23 @@ theorem compact_normalized_cone_gap {K : Set X} (hK : IsCompact K)
   obtain ⟨ε, _, hε, _, hbounds, _⟩ := compact_normalized_cone hK hc hj hv hcpos hmargin
   obtain ⟨B, hB⟩ := (hK.image_of_continuousOn (hj.pow 2)).bddAbove
   let M : ℝ := max 0 B + 1
-  have hM : 0 < M := by dsimp [M]; linarith [le_max_left (0 : ℝ) B]
+  have hM : 0 < M := add_pos_of_nonneg_of_pos (le_max_left 0 B) one_pos
   let η : ℝ := ε / (2 * M)
   have hη : 0 < η := div_pos hε (mul_pos (by norm_num) hM)
   have hηM : η * M = ε / 2 := by
     dsimp [η]
-    field_simp [ne_of_gt hM]
+    rw [div_mul_eq_mul_div, mul_div_mul_right _ _ hM.ne']
   have hshift : ∀ x ∈ K, (v x + η - 2) * j x ^ 2 < 2 * c x ^ 2 := by
     intro x hx
     have hjM : j x ^ 2 ≤ M := by
       calc
         j x ^ 2 ≤ B := hB (mem_image_of_mem (fun y => j y ^ 2) hx)
         _ ≤ max 0 B := le_max_right _ _
-        _ ≤ M := by dsimp [M]; linarith
+        _ ≤ M := by dsimp [M]; linarith only
     have hηj : η * j x ^ 2 ≤ ε / 2 :=
       (mul_le_mul_of_nonneg_left hjM hη.le).trans_eq hηM
     have hd := (hbounds x hx).2
-    nlinarith
+    linarith only [hε, hηj, hd]
   obtain ⟨_, p₁, _, hp₁, _, hlarge⟩ := compact_normalized_cone hK hc hj
     (hv.add continuousOn_const) hcpos hshift
   refine ⟨η, max p₁ ((2 + η) / ε), hη,
@@ -176,10 +180,10 @@ theorem compact_equation_eleven {K : Set X} (hK : IsCompact K)
   · exact ha.mul (continuousOn_const.add ((hb.div ha hane).pow 2))
   · intro x hx
     apply sub_pos.mpr
-    exact (div_lt_one (hapos x hx)).mpr (by linarith [hfirst x hx])
+    exact (div_lt_one (hapos x hx)).mpr (by linarith only [hfirst, hx, hfirst x hx])
   · intro x hx
     have h := normalized_test_negative (hapos x hx) (hsecond x hx)
-    linarith
+    linarith only [h]
 
 /-- Equation (11), with a common positive additive gap in both relaxed-cone
 inequalities for every parameter and every sufficiently large amplitude. -/
@@ -200,10 +204,10 @@ theorem compact_equation_eleven_gap {K : Set X} (hK : IsCompact K)
   · exact ha.mul (continuousOn_const.add ((hb.div ha hane).pow 2))
   · intro x hx
     apply sub_pos.mpr
-    exact (div_lt_one (hapos x hx)).mpr (by linarith [hfirst x hx])
+    exact (div_lt_one (hapos x hx)).mpr (by linarith only [hfirst, hx, hfirst x hx])
   · intro x hx
     have h := normalized_test_negative (hapos x hx) (hsecond x hx)
-    linarith
+    linarith only [h]
 
 /-- Coordinates `(P,J,v)` for a stress cone datum, with the product metric. -/
 abbrev ConeDatum := ℝ × ℝ × ℝ
@@ -233,7 +237,7 @@ theorem compact_trueCone_margins {K : Set X} (hK : IsCompact K)
     ∃ ε : ℝ, 0 < ε ∧ ∀ x ∈ K,
       ε ≤ v x - 2 ∧ ε ≤ P x - 2 ∧ ε ≤ coneBound (P x) (J x) - v x := by
   have hbound : ContinuousOn (fun x => coneBound (P x) (J x)) K :=
-    continuous_coneBound.comp_continuousOn (hP.prodMk (hJ.prodMk hv))
+    (continuous_coneBound.comp_continuousOn (hP.prodMk (hJ.prodMk hv)) :)
   obtain ⟨εv, hεv, hboundv⟩ := positive_uniform_margin hK (hv.sub continuousOn_const)
     (fun x hx => sub_pos.mpr (hcone x hx).1)
   obtain ⟨εP, hεP, hboundP⟩ := positive_uniform_margin hK (hP.sub continuousOn_const)

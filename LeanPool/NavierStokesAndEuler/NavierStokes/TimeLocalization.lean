@@ -191,10 +191,10 @@ theorem activatedVelocity_speed_unbounded (u : VelocityField)
   obtain ⟨t, x, ht, hnear, hlarge⟩ := hu M hM (min δ (1 / 4)) hsmall
   have hlate : 3 / 4 < t := by
     have hmin := min_le_right δ (1 / 4 : ℝ)
-    linarith
+    linarith only [hnear, hmin]
   refine ⟨t, x, ht, ?_, ?_⟩
   · have hmin := min_le_left δ (1 / 4 : ℝ)
-    linarith
+    linarith only [hnear, hmin]
   · simpa only [activatedVelocity_eq_late u hlate.le x] using hlarge
 
 theorem activatedVelocity_speed_unbounded_iff (u : VelocityField) :

@@ -68,9 +68,9 @@ theorem accelerationLp_contDiff (f : X → TimeLp T E) (hf : ContDiff ℝ n f) :
 theorem velocityPath_contDiff (f : X → TimeLp T E) (hf : ContDiff ℝ n f) :
     ContDiff ℝ n (fun x => velocityPath T hT (Q x) (Q₁ x) (H x) c hc (hLower x) (hd x)
       K hK (hPotential x) hsmall (f x)) :=
-  ((valuePart T hT).contDiff.comp
+  ((valuePart (E := U) T hT).contDiff.comp
     (velocityLp_contDiff T hT Q Q₁ H c hc hLower hd K hK hPotential hsmall hQ hQ₁ hH f hf)).add
-  ((derivativePart T hT).contDiff.comp
+  ((derivativePart (E := U) T hT).contDiff.comp
     (accelerationLp_contDiff T hT Q Q₁ H c hc hLower hd K hK hPotential hsmall hQ hQ₁ hH f hf))
 
 theorem continuousVelocity_contDiff (f : X → C(Icc (0 : ℝ) T, E)) (hf : ContDiff ℝ n f) :

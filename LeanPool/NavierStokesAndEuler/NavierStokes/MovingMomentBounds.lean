@@ -74,7 +74,7 @@ theorem pressureMass_mem {α : ℝ} {f : ℕ → Point → ℝ}
   have hb := hsource.liftedPressureMass hab₀.le U.isOpen hf hfixed
   refine ⟨fun _ _ _ => zero_le_one, ?_, ?_⟩
   · intro n
-    exact (hm n).comp (MeanMomentBounds.insertSlow (P := PressureStream.Plane)).contDiff.contDiffOn
+    apply (hm n).comp (MeanMomentBounds.insertSlow (P := PressureStream.Plane)).contDiff.contDiffOn
       (fun _ hp => hp)
   · intro m
     obtain ⟨C, hC, k, hbound⟩ := hb m
@@ -88,8 +88,8 @@ theorem pressureMass_mem {α : ℝ} {f : ℕ → Point → ℝ}
       (MeanMomentBounds.insertSlow s)).norm_compContinuousLinearMap_le
         (fun _ => MeanMomentBounds.insertSlow (P := PressureStream.Plane))
     simp only [Finset.prod_const, Finset.card_univ, Fintype.card_fin] at hn
-    have hp : ‖MeanMomentBounds.insertSlow (P := PressureStream.Plane)‖ ^ j ≤ 1 :=
-      pow_le_one₀ (norm_nonneg _) MeanMomentBounds.norm_insertSlow_le
+    have hp := pow_le_one₀ (n := j) (norm_nonneg _)
+      (MeanMomentBounds.norm_insertSlow_le (P := PressureStream.Plane))
     have h := hn.trans ((mul_le_of_le_one_right (norm_nonneg _) hp).trans
       (hbound n (MeanMomentBounds.insertSlow s) hsu j hj))
     simpa only [majorant, StripData.growth, PhysicalMeanDomain.localSlowStripData,

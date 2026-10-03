@@ -27,7 +27,7 @@ theorem fderiv_spatial_slice {u : ℝ × Space → Space} {t : ℝ} {x : Space}
     (hu : DifferentiableAt ℝ u (t, x)) :
     fderiv ℝ (fun y => u (t, y)) x =
       (fderiv ℝ u (t, x)).comp (ContinuousLinearMap.inr ℝ ℝ Space) := by
-  have h := hu.hasFDerivAt.comp x
+  have h := hu.hasFDerivAt.comp (F := ℝ × Space) (f := fun y => (t, y)) x
     ((hasFDerivAt_const t x).prodMk (hasFDerivAt_id x))
   rw [show (fun y => u (t, y)) = u ∘ (fun y => (t, y)) from rfl, h.fderiv]
   congr 1
@@ -37,7 +37,7 @@ joint derivative. -/
 theorem deriv_time_slice {u : ℝ × Space → Space} {t : ℝ} {x : Space}
     (hu : DifferentiableAt ℝ u (t, x)) :
     deriv (fun r => u (r, x)) t = fderiv ℝ u (t, x) (1, 0) := by
-  have h := hu.hasFDerivAt.comp_hasDerivAt t
+  have h := hu.hasFDerivAt.comp_hasDerivAt (F := ℝ × Space) (f := fun r => (id r, x)) t
     ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
   simpa only [Function.comp_def, id_eq] using h.deriv
 
@@ -52,10 +52,10 @@ theorem spatial_fderiv_hasDerivAt {u : ℝ × Space → Space} {t : ℝ} {x : Sp
     filter_upwards [(hu.of_le (show (1 : ℕ∞ω) ≤ 2 by norm_num)).eventually (by norm_num)]
       with z hz
     exact hz.differentiableAt (by norm_num)
-  have htime := hdu.hasFDerivAt.comp_hasDerivAt t
+  have htime := hdu.hasFDerivAt.comp_hasDerivAt (F := ℝ × Space) (f := fun r => (id r, x)) t
     ((hasDerivAt_id t).prodMk (hasDerivAt_const t x))
   have hmatrix := htime.clm_comp (hasDerivAt_const t (ContinuousLinearMap.inr ℝ ℝ Space))
-  have hspatial := hdu.hasFDerivAt.comp x
+  have hspatial := hdu.hasFDerivAt.comp (F := ℝ × Space) (f := fun y => (t, y)) x
     ((hasFDerivAt_const t x).prodMk (hasFDerivAt_id x))
   have hvelocity := hspatial.clm_apply (hasFDerivAt_const (1, (0 : Space)) x)
   have heq : (fun y => deriv (fun r => u (r, y)) t) =ᶠ[𝓝 x]
@@ -95,10 +95,11 @@ theorem time_deriv_differentiableAt {u : ℝ × Space → Space} {t : ℝ} {x : 
 
 /-- The continuous linear coordinate antisymmetrization defining curl. -/
 def curlMatrixCLM : (Space →L[ℝ] Space) →L[ℝ] Space :=
-  (show (Space →L[ℝ] Space) →ₗ[ℝ] Space from
-    { toFun := curlMatrix
-      map_add' := curlMatrix_add
-      map_smul' := curlMatrix_smul }).toContinuousLinearMap
+  LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := Space →L[ℝ] Space) (F' := Space)
+    (show (Space →L[ℝ] Space) →ₗ[ℝ] Space from
+      { toFun := curlMatrix
+        map_add' := curlMatrix_add
+        map_smul' := curlMatrix_smul })
 
 @[simp] theorem curlMatrixCLM_apply (A : Space →L[ℝ] Space) :
     curlMatrixCLM A = curlMatrix A := rfl
@@ -139,7 +140,8 @@ theorem joint_vectorCurl_contDiffAt {u : ℝ × Space → Space} {t : ℝ} {x : 
   filter_upwards [hnear] with z hz
   have hspace : DifferentiableAt ℝ (fun y => u (z.1, y)) z.2 := by
     simpa only [Function.comp_def, id_eq] using
-      hz.comp z.2 (differentiableAt_const z.1 |>.prodMk differentiableAt_id)
+      hz.comp (𝕜 := ℝ) (F := ℝ × Space) (f := fun y => (z.1, id y)) z.2
+        (differentiableAt_const z.1 |>.prodMk differentiableAt_id)
   rw [vectorCurl_eq_matrix _ z.2 hspace, fderiv_spatial_slice hz]
   rfl
 

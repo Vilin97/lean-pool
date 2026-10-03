@@ -24,6 +24,10 @@ section
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 namespace EulerPacketMovingFrame
@@ -85,17 +89,17 @@ theorem physical_size_comparison_order40 (m v r w : ℝ → Space)
   let ρ := 800*e*Θ^5
   let η := K*e*Θ^29
   let A := K*e*Θ^40
-  have hK0 : 0 ≤ K := by linarith
-  have hΘ0 : 0 ≤ Θ := by linarith
-  have hA0 : 0 ≤ A := by dsimp [A]; positivity
+  have hK0 : 0 ≤ K := zero_le_one.trans hK
+  have hΘ0 : 0 ≤ Θ := zero_le_one.trans hΘ
+  have hA0 : 0 ≤ A := mul_nonneg (mul_nonneg hK0 he) (pow_nonneg hΘ0 40)
   have hA : 1000000*A ≤ 1 := by simpa only [A, mul_assoc] using hsmall
   have hp (n : ℕ) (hn : n ≤ 40) : e*Θ^n ≤ A := scaled_power_le hΘ hK he hn
   have hηA : η ≤ A := by
     exact mul_le_mul_of_nonneg_left (pow_le_pow_right₀ hΘ (by decide : 29 ≤ 40))
       (mul_nonneg hK0 he)
-  have hρ0 : 0 ≤ ρ := by dsimp [ρ]; positivity
+  have hρ0 : 0 ≤ ρ := mul_nonneg (mul_nonneg (Nat.ofNat_nonneg _) he) (pow_nonneg hΘ0 5)
   have hρ : ρ ≤ 1/2 := by have hh := hp 5 (by decide); dsimp [ρ]; linarith only [hh, hA]
-  have hη0 : 0 ≤ η := by dsimp [η]; positivity
+  have hη0 : 0 ≤ η := mul_nonneg (mul_nonneg hK0 he) (pow_nonneg hΘ0 29)
   have hη : η ≤ 1/2 := by linarith only [hηA, hA]
   have he1 : e ≤ 1 := by have hh := hp 0 (by decide); norm_num at hh; linarith only [hh, hA]
   have hε1 : ε ≤ 1 := hεe.trans he1
@@ -104,7 +108,7 @@ theorem physical_size_comparison_order40 (m v r w : ℝ → Space)
     (mul_le_mul_of_nonneg_right hε2e (pow_nonneg hΘ0 4)).trans (hp 4 (by decide))
   have hVdiff : |V 1-Z| ≤ Z/2 := by
     have hrel : |V 1/Z-1| ≤ 1/2 := hVrel.trans hη
-    have hid : V 1/Z-1 = (V 1-Z)/Z := by field_simp
+    have hid : V 1/Z-1 = (V 1-Z)/Z := by rw [sub_div, div_self hZ.ne']
     rw [hid, abs_div, abs_of_pos hZ] at hrel
     have hh := (div_le_iff₀ hZ).mp hrel
     linarith only [hh]
@@ -126,7 +130,7 @@ theorem physical_size_comparison_order40 (m v r w : ℝ → Space)
     have hp7 := hp 7 (by decide)
     dsimp [ρ] at hDD
     linarith only [hDD, hp7, hε4, hA]
-  have hb := scalar_size_comparison hs₀.le (show 1 ≤ 1+P₀^2 by linarith [sq_nonneg P₀])
+  have hb := scalar_size_comparison hs₀.le (le_add_of_nonneg_right (sq_nonneg P₀))
     hDsmall hE.1 hEup hZ hVdiff
   have hid := physical_primary_size m v r w hs₀ (ne_of_gt hε) hm hv hmv hVp
   rw [hid]
@@ -169,16 +173,16 @@ theorem physical_ideal_size_comparison_order40 (m v r w : ℝ → Space)
       ‖r (physicalTime t₀ a ε τ)‖*‖w (physicalTime t₀ a ε τ)‖ ≤ 8*s₀*idealPrimarySize σ Z τ := by
   have hτ0 : 0 ≤ τ := by linarith only [hτ]
   have hΘ0 : 0 ≤ Θ := by linarith only [hΘ]
-  have hσ2 : σ^2 ≤ 1 := by nlinarith only [hσ, hσsmall]
+  have hσ2 : σ^2 ≤ 1 := pow_le_one₀ hσ.le (hσsmall.trans (by norm_num))
   have hτ2 : τ^2 ≤ Θ^2 := (sq_le_sq₀ hτ0 hΘ0).mpr hτΘ
-  have hP₀ : |σ^2*τ^2| ≤ Θ^2 := by
-    rw [abs_of_nonneg (mul_nonneg (sq_nonneg σ) (sq_nonneg τ))]
-    exact (mul_le_mul_of_nonneg_right hσ2 (sq_nonneg τ)).trans (by simpa using hτ2)
+  have hP₀ : |σ^2*τ^2| ≤ Θ^2 :=
+    (abs_of_nonneg (mul_nonneg (sq_nonneg σ) (sq_nonneg τ))).trans_le
+      ((mul_le_mul_of_nonneg_right hσ2 (sq_nonneg τ)).trans ((one_mul _).trans_le hτ2))
   have hQ₀ : |-2*σ^2*τ| ≤ 2*Θ^2 := by
-    rw [abs_mul, abs_mul, abs_of_nonneg (sq_nonneg σ), abs_of_nonneg hτ0]
-    norm_num only [abs_neg, abs_of_nonneg (by norm_num : (0:ℝ) ≤ 2)]
     have hh := mul_le_mul_of_nonneg_right hσ2 hτ0
-    linarith only [hh, hτΘ, sq_nonneg (Θ-1), hΘ]
+    have hΘ2 := le_self_pow₀ hΘ two_ne_zero
+    have hn := mul_nonneg (sq_nonneg σ) hτ0
+    exact abs_le.mpr ⟨by linarith only [hh, hτΘ, hΘ2], by linarith only [hn, hΘ2, hΘ]⟩
   have hzpos := equation30_global_positive hσ hσsmall hZ hfluxZ hZ0 hZ₁0 τ hτ0
   have hslope := equation30_primary_logderivative_bound hσ hσsmall hZ hfluxZ hZ0 hZ₁0 τ hτ
   have hr₀ : |-Z₁ τ/Z τ| ≤ 4 := by simpa only [neg_div, abs_neg] using hslope
@@ -186,7 +190,7 @@ theorem physical_ideal_size_comparison_order40 (m v r w : ℝ → Space)
       ≤ 10*(K*e*Θ^29) := by simpa only [neg_div, sub_neg_eq_add] using hratio
   obtain ⟨hl, hu⟩ := physical_size_comparison_order40 m v r w hs₀ hε hm hv hmv hrw
     hΘ hK he hεe hsmall hP₀ hQ₀ hr₀ hzpos hP hQ hN hVrel hr'
-  constructor <;> dsimp only [idealPrimarySize] <;> linarith only [hl, hu]
+  exact ⟨(congrArg (· / 4) (mul_assoc _ _ _)).symm.trans_le hl, hu.trans_eq (mul_assoc _ _ _)⟩
 
 /-- Every controlled neighboring primary before target is bounded by a
 fixed multiple of the center's actual target size.  All comparisons use

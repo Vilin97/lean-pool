@@ -58,14 +58,9 @@ theorem directional_transport_commutator (a : V) (b : V → V) (f : V → W)
     (by
         rw [minSmoothness_of_isRCLikeNormedField]; exact ENat.natCast_le_of_coe_top_le_withTop
             le_rfl 2) a (b x)
-  change fderiv ℝ (transport b f) x a = _ at hdT
-  change fderiv ℝ (directionalDerivative a f) x (b x) = _ at hdA
-  change fderiv ℝ (transport b f) x a =
-    fderiv ℝ (directionalDerivative a f) x (b x) + fderiv ℝ f x (fderiv ℝ b x a)
-  rw [hdT, hdA]
-  simp only [add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.flip_apply,
-    zero_apply, map_zero, zero_add]
-  rw [hs]
+  unfold directionalDerivative transport
+  simp only [hdT, hdA, add_apply, ContinuousLinearMap.comp_apply, ContinuousLinearMap.flip_apply,
+    zero_apply, map_zero, zero_add, hs]
   exact add_comm _ _
 
 theorem directional_transport_commutator_norm (a : V) (b : V → V) (f : V → W)

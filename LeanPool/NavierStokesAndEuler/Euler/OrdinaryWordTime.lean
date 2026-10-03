@@ -36,18 +36,20 @@ local instance instOrdinaryWordTime1 : Fact (0 < (1 : ℝ)) := ⟨by norm_num⟩
 (wordOperator 1 ⟨⟨n, Nat.lt_succ_self n⟩,fun i => (w i).succ⟩)`. -/
 def ordinaryWordOperator {n : ℕ} (w : Fin n → Fin 3) :
     SobolevSpace 1 n →L[ℝ] EulerMeanSolenoidal.L2 :=
-  ordinaryLift.toContinuousLinearMap.adjoint.comp
+  (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := EulerMeanSolenoidal.L2)
+    ordinaryLift.toContinuousLinearMap).comp
     (wordOperator 1 ⟨⟨n, Nat.lt_succ_self n⟩,fun i => (w i).succ⟩)
 
 theorem ordinaryWordOperator_apply (A : SmoothL2Field Space) {n : ℕ} (w : Fin n → Fin 3) :
     ordinaryWordOperator w (ordinarySobolev n A.toLp A.translation_contDiff) =
       (wordField A w).toLp := by
-  change ordinaryLift.toContinuousLinearMap.adjoint
-    ((ordinarySobolev n A.toLp A.translation_contDiff).val
-      ⟨⟨n,Nat.lt_succ_self n⟩,fun i => (w i).succ⟩)=_
-  erw [ordinarySobolev_coordinate]
-  have he (u : EulerMeanSolenoidal.L2) : ordinaryLift.toContinuousLinearMap.adjoint (ordinaryLift
-      u)=u :=
+  refine (congrArg (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := EulerMeanSolenoidal.L2)
+    (F := LiftL2 1) ordinaryLift.toContinuousLinearMap)
+    (ordinarySobolev_coordinate n A.toLp A.translation_contDiff
+      ⟨⟨n,Nat.lt_succ_self n⟩,fun i => (w i).succ⟩)).trans ?_
+  have he (u : EulerMeanSolenoidal.L2) :
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := EulerMeanSolenoidal.L2) (F := LiftL2 1)
+        ordinaryLift.toContinuousLinearMap (ordinaryLift u)=u :=
     congrArg (fun L : EulerMeanSolenoidal.L2 →L[ℝ] EulerMeanSolenoidal.L2 => L u)
       ordinaryLift.adjoint_comp_self
   rw [he,word_toLp_eq_orbit]

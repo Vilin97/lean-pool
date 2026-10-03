@@ -68,6 +68,10 @@ theorem gradientEnergy_continuous : Continuous (gradientEnergy period) := by
   exact (((valueOperator period 0).continuous.comp (derivativeOperator period 0
       i).continuous).norm).pow 2
 
+theorem value_sum {ι : Type*} (s : Finset ι) (f : ι → SobolevSpace period 0) :
+    value period (∑ i ∈ s, f i) = ∑ i ∈ s, value period (f i) :=
+  map_sum (valueOperator period 0) f s
+
 /-- Genuine strong-derivative integration by parts identifies the full gradient pairing with the
 Laplacian. -/
 theorem gradient_pairing (u : SobolevSpace period 2) (v : SobolevSpace period 1) :
@@ -85,10 +89,8 @@ theorem gradient_pairing (u : SobolevSpace period 2) (v : SobolevSpace period 1)
       (derivativeOperator_hasDerivAt period i (derivativeOperator period 1 i u))
       (derivativeOperator_hasDerivAt period i v)
     linarith
-  rw [← laplacianOperator_value period u, laplacianOperator_apply]
-  change _ = -⟪(valueOperator period 0) (∑ i : Fin 4, _), value period v⟫_ℝ
-  simp only [map_sum, sum_inner, hi, Finset.sum_neg_distrib]
-  rfl
+  rw [← laplacianOperator_value period u, laplacianOperator_apply, value_sum]
+  simp only [sum_inner, hi, Finset.sum_neg_distrib]
 
 /-- Actual L² time derivatives of the first spatial derivatives determine the gradient-energy
 derivative. -/
@@ -155,7 +157,7 @@ theorem heat_gradient_energy_bound (u : ℝ → SobolevSpace period 3)
   have hc := neg_le_abs ⟪laplacianEvaluation period 3 (by norm_num) (u t), value period f⟫_ℝ
   have hy := viscosity_young ν ‖laplacianEvaluation period 3 (by
       norm_num) (u t)‖ ‖value period f‖ hν
-  nlinarith
+  linarith only [hb, hc, hy]
 
 end EulerHeatGradientEnergy
 
@@ -599,15 +601,9 @@ theorem first_derivative_difference (T : ℝ) (hT : 0 ≤ T) (ν : ℝ)
     funext s
     exact map_sub ((valueOperator period 2).comp (derivativeOperator period 2 i))
       (u (projIcc 0 T hT s)) (v (projIcc 0 T hT s))
-  have hr : value period (derivativeOperator period 0 i
-        (ν • laplacianOperator period 1 (extendPath T hT (u-v) t) + extendPath T hT (f-g) t)) =
-      value period (derivativeOperator period 0 i
-        (ν • laplacianOperator period 1 (extendPath T hT u t) + extendPath T hT f t)) -
-      value period (derivativeOperator period 0 i
-        (ν • laplacianOperator period 1 (extendPath T hT v t) + extendPath T hT g t)) := by
-    exact linear_heat_rhs_sub ((valueOperator period 0).comp (derivativeOperator period 0 i))
-      (laplacianOperator period 1) ν (u (projIcc 0 T hT t)) (v (projIcc 0 T hT t))
-      (f (projIcc 0 T hT t)) (g (projIcc 0 T hT t))
+  have hr := linear_heat_rhs_sub ((valueOperator period 0).comp (derivativeOperator period 0 i))
+    (laplacianOperator period 1) ν (u (projIcc 0 T hT t)) (v (projIcc 0 T hT t))
+    (f (projIcc 0 T hT t)) (g (projIcc 0 T hT t))
   exact (h.congr_deriv hr.symm).congr_of_eventuallyEq (Filter.Eventually.of_forall (congrFun he))
 
 /-- Restrict a regularized path to its actual H¹ topology. -/

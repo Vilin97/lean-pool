@@ -105,7 +105,7 @@ theorem innerRadius_pos {a qbig : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) (ha : 0 < 
     0 < innerRadius h a s := by
   apply mul_pos (div_pos ha (by norm_num)) (Real.sqrt_pos.mpr ?_)
   exact (SimilarityCoordinates.coordinateQ_spec (a := 2 * h) (p := (1 - s.1, s.2))
-    (by linarith) (by linarith) (sub_pos.mpr hs.1)).1
+    (by linarith only [hh]) (by linarith only [hh1]) (sub_pos.mpr hs.1)).1
 
 theorem physical_radius_scale (n : ℕ) (w : SpaceTime) :
     DirectAngularDiagonal.radius w = Real.sqrt (ChartScales.Q n) *
@@ -129,7 +129,7 @@ theorem innerRadius_le_of_ne (D : PhysicalMeanJetBounds.CoherentFamily h degree 
   obtain ⟨n, hn, hqn, hnq⟩ := PhysicalMeanJetBounds.exists_comparable_band N hqpos hq
   have hu := hcover (PhysicalStageSupport.comparable_graph_mem hh hh1 n (D.gap n) ht hqn hnq)
   have hann := D.annulus_on_tsupport hh hh1 ha hab hU hs n hn ht hu
-    (by linarith : PhysicalWaveSum.physicalQ h w / 2 ≤ ChartScales.Q n) hnq.le
+    (by linarith only [hqpos, hqn] : PhysicalWaveSum.physicalQ h w / 2 ≤ ChartScales.Q n) hnq.le
     (subset_tsupport _ hne)
   have hr : a / 4 ≤ PolarCharts.radius (PhysicalGraphBounds.scaledRadial n w) := by
     exact hann.2.trans (PolarCharts.norm_le_radius _)

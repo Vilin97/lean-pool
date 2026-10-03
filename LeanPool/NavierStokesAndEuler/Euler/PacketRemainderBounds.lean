@@ -59,7 +59,7 @@ theorem primaryRemainder_bound (k : ℝ) (hk : 4 ≤ k)
     (hbase : tailBase R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     (primaryRemainderField hT G hN ha hb k⁻¹).WordBound 6 (4*R)
       ((fixedVelocityGradeCost R S.H0 2+2)/k^2) 0 := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   let B := tailBase R S.H0 BC.termCost N
   have hB : 0 ≤ B := tailBase_nonneg R S.H0 BC.termCost BC.termCost_nonneg N
   have hsmall : k⁻¹*B ≤ 1/2 := by
@@ -71,26 +71,26 @@ theorem primaryRemainder_bound (k : ℝ) (hk : 4 ≤ k)
   have hz : assembledVelocity N a 0=0 := assemble_zero N _ _ hf
   have h := Field.wordBound_evaluateRemainder N hN k⁻¹ B (fixedVelocityGradeCost R S.H0 2)
     (inv_nonneg.mpr hk0.le) hB hsmall (assembledVelocity N a) (velocityGradeField hT G) 6 (4*R)
-    (by linarith) (fun _ _ _ => by rw [hz]; rfl)
+    (by linarith only [hR]) (fun _ _ _ => by rw [hz]; rfl)
     ((velocityGrade_bound hT G hG hR ha 2).fixed_velocity_grade (zero_le_one.trans hR) S.H0_pos.le)
     (fun n _ hn => (velocityGrade_bound hT G hG hR ha n).coarse_velocity_grade
       hR S.H0_one_le BC.termCost BC.one_le_termCost N hN (by omega))
-  exact (h.mono_amplitude (by linarith)
+  exact (h.mono_amplitude (by linarith only [hR])
     (remainder_low_high_le k B (fixedVelocityGradeCost R S.H0 2) hk0
-      (fourth_power_le_frequency k B (by linarith) hB hbase))).of_path_eq _ rfl
+      (fourth_power_le_frequency k B (by linarith only [hk]) hB hbase))).of_path_eq _ rfl
 
 theorem normalizedRemainder_bound (hRc : EulerParameterWordGevrey.sobolevCoefficientRadius (Fin 4)
     BC.Rc ≤ R)
     (k : ℝ) (hk : 4 ≤ k) (hbase : tailBase R S.H0 BC.termCost N ≤ k ^ (1 / 100 : ℝ)) :
     ((C.inverse.multiply (primaryRemainderField hT G hN ha hb k⁻¹)).smul k).WordBound 6 (4*R)
       (BC.multiplierCost*(fixedVelocityGradeCost R S.H0 2+2)/k) 0 := by
-  have hk0 : 0 < k := by linarith
+  have hk0 : 0 < k := by linarith only [hk]
   have hA : 0 ≤ (fixedVelocityGradeCost R S.H0 2+2)/k^2 :=
     div_nonneg (by have := fixedVelocityGradeCost_nonneg R S.H0 (zero_le_one.trans hR) 2; linarith)
       (sq_nonneg k)
   have h := BC.normalized_inverse_bound (primaryRemainderField hT G hN ha hb k⁻¹)
     (primaryRemainder_bound hT G hG hR ha hb hN BC k hk hbase) hA
-    (hRc.trans (by linarith)) k hk0.le
+    (hRc.trans (by linarith only [hR])) k hk0.le
   have he : k*BC.multiplierCost*((fixedVelocityGradeCost R S.H0 2+2)/k^2) =
       BC.multiplierCost*(fixedVelocityGradeCost R S.H0 2+2)/k := by field_simp
   simpa only [he] using h

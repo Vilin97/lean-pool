@@ -59,7 +59,7 @@ variable (M : EulerMeanPacketProvider.Data)
 /-- Initialized uniform budget used in packet initialized uniform budget. -/
 def initializedUniformBudget : EulerAllOrderDriftCorrection.Budget period D.T_pos
     (initializedCorrectionData M D hTime τ hτ hτT B δ hδ ξ hs α Cagree
-      (truncation k) (truncation_bounds k (by linarith)).1 k hk) := by
+      (truncation k) (truncation_bounds k (by linarith only [hk])).1 k hk) := by
   let BC := joinedCoefficientBudget period M D hTime τ hτ hτT B NB
   let L' := initializedJoinedBudget LM L NB BC δ ξ
   let H' := initializedPrimaryBudget LM L NB BC δ ξ
@@ -147,8 +147,8 @@ variable (M : EulerMeanPacketProvider.Data)
   (hF : ∀ t x, fderiv ℝ (Ξ t) x = D.F.field t x)
   (hdet : ∀ t x, (EulerPacketPiola.operatorMatrix (D.F.field t x)).det = 1)
 
-local notation "Q" => initializedUniformBudget M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα
-  L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet
+local notation "Q" => (initializedUniformBudget M D hTime τ hτ hτT B δ hδ hδ1 ξ hs α hα
+  L NB LM Cagree W hW hprofile k hk hX hlog hfrequency Ξ hΞ hF hdet)
 
 theorem initializedUniformBudget_weighted (s N : ℕ) (hN : N + 6 ≤ s) (t : Icc (0 : ℝ) D.T) :
     weightedNorm period 6 N ((Q).initialRadius/4) (((Q).fieldTower period).realization s t) ≤

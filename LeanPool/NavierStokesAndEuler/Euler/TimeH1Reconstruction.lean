@@ -59,43 +59,44 @@ omit [CompleteSpace E] in
 /-- The reconstruction is the literal average plus mean-zero terminal primitive. -/
 theorem reconstruction_apply (T : ℝ) (hT : 0 ≤ T) (p q : TimeLp T E)
     (t : Icc (0 : ℝ) T) :
-    reconstruction T hT (p,q) t =
-      mean T hT p + (terminalPrimitive T hT q t - mean T hT (primitiveTimeLp T hT q)) := rfl
+    reconstruction (E := E) T hT (p,q) t =
+      mean (E := E) T hT p + (terminalPrimitive (E := E) T hT q t -
+        mean (E := E) T hT (primitiveTimeLp (E := E) T hT q)) := rfl
 
 /-- Constant fields have their actual value as time average. -/
 theorem mean_constantField (T : ℝ) (hT : 0 < T) (v : E) :
-    mean T hT.le (constantField T hT.le v) = v := by
-  change (-T)⁻¹ • initialTrace T hT.le (constantField T hT.le v) = v
+    mean (E := E) T hT.le (constantField T hT.le v) = v := by
+  change (-T)⁻¹ • initialTrace (E := E) T hT.le (constantField T hT.le v) = v
   rw [initialTrace_constantField, smul_smul, inv_mul_cancel₀ (neg_ne_zero.mpr hT.ne'), one_smul]
 
 omit [CompleteSpace E] in
 /-- The mean has the expected inverse-square-root time bound. -/
 theorem mean_norm_le (T : ℝ) (hT : 0 ≤ T) (p : TimeLp T E) :
-    ‖mean T hT p‖ ≤ (T⁻¹ * Real.sqrt T) * ‖p‖ := by
-  have htrace : ‖initialTrace T hT p‖ ≤ Real.sqrt T * ‖p‖ :=
+    ‖mean (E := E) T hT p‖ ≤ (T⁻¹ * Real.sqrt T) * ‖p‖ := by
+  have htrace : ‖initialTrace (E := E) T hT p‖ ≤ Real.sqrt T * ‖p‖ :=
     ((initialTrace (E := E) T hT).le_opNorm p).trans
       (mul_le_mul_of_nonneg_right (initialTrace_norm_le (E := E) T hT) (norm_nonneg p))
-  change ‖(-T)⁻¹ • initialTrace T hT p‖ ≤ _
+  change ‖(-T)⁻¹ • initialTrace (E := E) T hT p‖ ≤ _
   rw [norm_smul, norm_inv, norm_neg, Real.norm_of_nonneg hT]
   exact (mul_le_mul_of_nonneg_left htrace (inv_nonneg.mpr hT)).trans_eq (mul_assoc _ _ _).symm
 
 omit [CompleteSpace E] in
 /-- Uniform time evaluation is controlled by the actual L² value and derivative. -/
 theorem reconstruction_norm_le (T : ℝ) (hT : 0 < T) (p q : TimeLp T E) :
-    ‖reconstruction T hT.le (p,q)‖ ≤
+    ‖reconstruction (E := E) T hT.le (p,q)‖ ≤
       (T⁻¹ * Real.sqrt T) * ‖p‖ + (2 * Real.sqrt T) * ‖q‖ := by
-  have hJ : ‖primitiveTimeLp T hT.le q‖ ≤ T*‖q‖ :=
+  have hJ : ‖primitiveTimeLp (E := E) T hT.le q‖ ≤ T*‖q‖ :=
     ((primitiveTimeLp (E := E) T hT.le).le_opNorm q).trans
       (mul_le_mul_of_nonneg_right (primitive_norm_le_time (E := E) T hT.le) (norm_nonneg q))
-  have hmJ : ‖mean T hT.le (primitiveTimeLp T hT.le q)‖ ≤ Real.sqrt T * ‖q‖ := by
+  have hmJ : ‖mean (E := E) T hT.le (primitiveTimeLp (E := E) T hT.le q)‖ ≤ Real.sqrt T * ‖q‖ := by
     apply (mean_norm_le T hT.le _).trans
     have he : (T⁻¹ * Real.sqrt T) * (T*‖q‖) = Real.sqrt T * ‖q‖ := by
       field_simp
     exact (mul_le_mul_of_nonneg_left hJ (by positivity)).trans_eq he
   apply (ContinuousMap.norm_le _ (by positivity)).2
   intro t
-  have hterm : ‖terminalPrimitive T hT.le q t‖ ≤ Real.sqrt T * ‖q‖ :=
-    ((terminalPrimitive T hT.le q).norm_coe_le_norm t).trans
+  have hterm : ‖terminalPrimitive (E := E) T hT.le q t‖ ≤ Real.sqrt T * ‖q‖ :=
+    ((terminalPrimitive (E := E) T hT.le q).norm_coe_le_norm t).trans
       (((terminalPrimitive (E := E) T hT.le).le_opNorm q).trans
         (mul_le_mul_of_nonneg_right (terminalPrimitive_norm_le (E := E) T hT.le) (norm_nonneg q)))
   rw [reconstruction_apply]
@@ -128,22 +129,23 @@ theorem reconstruction_eq_path (T : ℝ) (hT : 0 < T) (p q : TimeLp T E) (η : �
     (hp : (p : ℝ → E) =ᵐ[timeMeasure T] η)
     (hq : ∀ᵐ t ∂timeMeasure T, HasDerivAt η (q t) t)
     (t : Icc (0 : ℝ) T) :
-    reconstruction T hT.le (p,q) t = η t := by
-  have hpEq : p = primitiveTimeLp T hT.le q + constantField T hT.le (η T) := by
+    reconstruction (E := E) T hT.le (p,q) t = η t := by
+  have hpEq : p = primitiveTimeLp (E := E) T hT.le q + constantField T hT.le (η T) := by
     apply Lp.ext
     filter_upwards [hp, primitiveTimeLp_ae T hT.le q,
       constantField_ae T hT.le (η T),
-      Lp.coeFn_add (primitiveTimeLp T hT.le q) (constantField T hT.le (η T)),
+      Lp.coeFn_add (primitiveTimeLp (E := E) T hT.le q) (constantField T hT.le (η T)),
       ae_restrict_mem measurableSet_Icc] with s hps hJs hcs hs hsmem
-    change p s = (primitiveTimeLp T hT.le q + constantField T hT.le (η T)) s
+    change p s = (primitiveTimeLp (E := E) T hT.le q + constantField T hT.le (η T)) s
     rw [hps, hs, Pi.add_apply, hJs, hcs]
     exact eq_primitive_add_terminal T hT.le q η hη hq s hsmem
-  have hm : mean T hT.le p = mean T hT.le (primitiveTimeLp T hT.le q) + η T := by
+  have hm : mean (E := E) T hT.le p =
+      mean (E := E) T hT.le (primitiveTimeLp (E := E) T hT.le q) + η T := by
     rw [hpEq, map_add, mean_constantField T hT]
   rw [reconstruction_apply, hm]
   have he := eq_primitive_add_terminal T hT.le q η hη hq t t.property
-  change mean T hT.le (primitiveTimeLp T hT.le q) + η T +
-    (realPrimitive T q t - mean T hT.le (primitiveTimeLp T hT.le q)) = η t
+  change mean (E := E) T hT.le (primitiveTimeLp (E := E) T hT.le q) + η T +
+    (realPrimitive T q t - mean (E := E) T hT.le (primitiveTimeLp (E := E) T hT.le q)) = η t
   rw [he]
   abel
 
@@ -153,7 +155,7 @@ omit [CompleteSpace E] in
 /-- Smooth parameter dependence passes through the fixed H¹ reconstruction. -/
 theorem reconstruction_contDiff (T : ℝ) (hT : 0 ≤ T)
     (p q : P → TimeLp T E) {n : ℕ∞ω} (hp : ContDiff ℝ n p) (hq : ContDiff ℝ n q) :
-    ContDiff ℝ n (fun x => reconstruction T hT (p x,q x)) := by
+    ContDiff ℝ n (fun x => reconstruction (E := E) T hT (p x,q x)) := by
   exact ((valuePart (E := E) T hT).contDiff.comp hp).add
     ((derivativePart (E := E) T hT).contDiff.comp hq)
 
@@ -166,23 +168,24 @@ theorem reconstruction_gevrey (T : ℝ) (hT : 0 < T)
     (hbp : ∀ n x, ‖iteratedFDeriv ℝ n p x‖ ≤ C * majorant R d n)
     (hbq : ∀ n x, ‖iteratedFDeriv ℝ n q x‖ ≤ D * majorant R d n)
     (n : ℕ) (x : P) :
-    ‖iteratedFDeriv ℝ n (fun y => reconstruction T hT.le (p y,q y)) x‖ ≤
+    ‖iteratedFDeriv ℝ n (fun y => reconstruction (E := E) T hT.le (p y,q y)) x‖ ≤
       ((T⁻¹*Real.sqrt T)*C + (2*Real.sqrt T)*D) * majorant R d n := by
   have hvalue (k : ℕ) (y : P) :
-      ‖iteratedFDeriv ℝ k (fun z => valuePart T hT.le (p z)) y‖ ≤
+      ‖iteratedFDeriv ℝ k (fun z => valuePart (E := E) T hT.le (p z)) y‖ ≤
       ((T⁻¹*Real.sqrt T)*C) * majorant R d k := by
     exact (linear_bound (valuePart (E := E) T hT.le) p hp R C d hbp k y).trans
       (mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_right (valuePart_norm_le (E := E) T hT) hC)
         (majorant_nonneg R hR d k))
   have hderivative (k : ℕ) (y : P) :
-      ‖iteratedFDeriv ℝ k (fun z => derivativePart T hT.le (q z)) y‖ ≤
+      ‖iteratedFDeriv ℝ k (fun z => derivativePart (E := E) T hT.le (q z)) y‖ ≤
       ((2*Real.sqrt T)*D) * majorant R d k := by
     exact (linear_bound (derivativePart (E := E) T hT.le) q hq R D d hbq k y).trans
       (mul_le_mul_of_nonneg_right
         (mul_le_mul_of_nonneg_right (derivativePart_norm_le (E := E) T hT) hD)
         (majorant_nonneg R hR d k))
-  exact add_bound (fun z => valuePart T hT.le (p z)) (fun z => derivativePart T hT.le (q z))
+  exact add_bound (fun z => valuePart (E := E) T hT.le (p z))
+    (fun z => derivativePart (E := E) T hT.le (q z))
     ((valuePart (E := E) T hT.le).contDiff.comp hp)
     ((derivativePart (E := E) T hT.le).contDiff.comp hq)
     R ((T⁻¹*Real.sqrt T)*C) ((2*Real.sqrt T)*D) d hvalue hderivative n x

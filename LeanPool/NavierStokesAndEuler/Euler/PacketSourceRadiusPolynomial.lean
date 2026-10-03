@@ -17,6 +17,10 @@ explicit primitive input. -/
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -65,10 +69,9 @@ theorem primitiveLift_bounds (W : ℝ) (hW : 0 ≤ W) :
   have hac : 0 ≤ accelerationEnvelope W := by unfold accelerationEnvelope; positivity
   have hop : 0 ≤ operatorEnvelope W := by unfold operatorEnvelope; positivity
   have hp : 0 ≤ projectedEnvelope W := by unfold projectedEnvelope; positivity
+  have hsq := sq_nonneg W
   unfold primitiveLift
-  exact ⟨by
-      nlinarith,by
-          nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith,by nlinarith⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> linarith only [hW, hsq, hf, hfo, hac, hop, hp]
 
 theorem coeff_self_lower (W : ℝ) (hW : 0 ≤ W) : W ≤ coeff W W := by
   have hr : 0 ≤ sobolevCoefficientRadius (Fin 4) W := sobolevCoefficientRadius_nonneg W hW
@@ -83,31 +86,34 @@ theorem coeff_self_lower (W : ℝ) (hW : 0 ≤ W) : W ≤ coeff W W := by
       W^k*(k.factorial : ℝ)^2)
   have hm := mul_le_mul_of_nonneg_left hs (by positivity : 0 ≤ (2 : ℝ)^6*W)
   norm_num only [mul_one,pow_succ,pow_zero] at hm ⊢
-  nlinarith
+  nlinarith only [hW, hm]
 
 theorem weakEnvelope_lower_inputs (V : ℝ) (hV : 1 ≤ V) :
     V ≤ EulerPacketRadiusPolynomial.inverseEnvelope V ∧ V ≤ formEnvelope V ∧
     V ≤ 3*coeff V (2*V)*endpointEnvelope V := by
   have hv0 := zero_le_one.trans hV
-  have hv2 : V ≤ V^2 := by nlinarith
+  have hv2 : V ≤ V^2 := by linarith only [mul_nonneg hv0 (sub_nonneg.mpr hV)]
   have hv5 : 0 ≤ V^5 := pow_nonneg hv0 5
-  have hinner : V ≤ 1+2*V^5+2*V^2 := by nlinarith
-  have hinner1 : 1 ≤ 1+2*V^5+2*V^2 := by nlinarith only [hv5,sq_nonneg V]
-  have hi2 : 1+2*V^5+2*V^2 ≤ (1+2*V^5+2*V^2)^2 := by nlinarith
+  have hinner : V ≤ 1+2*V^5+2*V^2 := by linarith only [hv5, hv2, hv0]
+  have hinner1 : 1 ≤ 1+2*V^5+2*V^2 := by linarith only [hv5,sq_nonneg V]
+  have hi2 : 1+2*V^5+2*V^2 ≤ (1+2*V^5+2*V^2)^2 := by
+    linarith only [mul_nonneg (zero_le_one.trans hinner1) (sub_nonneg.mpr hinner1)]
   have ha := coeff_self_lower V hv0
   have hb : coeff V V ≤ coeff V (2*V) := sobolevCoefficientAmplitude_mono_all 6 hv0 hv0 le_rfl (by
-      linarith)
+      linarith only [hV])
   have he : V ≤ endpointEnvelope V := by
     unfold endpointEnvelope
     nlinarith only [mul_le_mul_of_nonneg_right ha hv0,hv2]
-  refine ⟨by unfold EulerPacketRadiusPolynomial.inverseEnvelope; nlinarith,?_,?_⟩
+  refine ⟨by
+    unfold EulerPacketRadiusPolynomial.inverseEnvelope
+    linarith only [hinner, hi2, sq_nonneg (1+2*V^5+2*V^2)],?_,?_⟩
   · unfold formEnvelope
     nlinarith only [mul_nonneg (sq_nonneg V) hv0,hv2]
   · have hprod := mul_le_mul_of_nonneg_right (ha.trans hb) (show 0 ≤ endpointEnvelope V by
       unfold endpointEnvelope
-      exact mul_nonneg (by nlinarith : 0 ≤ 6*coeff V V) hv0)
-    nlinarith only [hprod,mul_nonneg (sub_nonneg.mpr hV) (by
-        nlinarith only [he,hv0] : 0 ≤ endpointEnvelope V),he]
+      exact mul_nonneg (by linarith only [ha, hv0] : 0 ≤ 6*coeff V V) hv0)
+    linarith only [hprod,mul_nonneg (sub_nonneg.mpr hV) (by
+        linarith only [he,hv0] : 0 ≤ endpointEnvelope V),he,hV]
 
 theorem block_le_weak (V : ℝ) (hV : 1 ≤ V) (I R C D : ℝ)
     (hI0 : 0 ≤ I) (hR0 : 0 ≤ R) (hC0 : 0 ≤ C) (hD0 : 0 ≤ D)
@@ -154,7 +160,7 @@ theorem operator_scalar_le (T C C1 H L W : ℝ) (hT : 0 ≤ T) (hT1 : T ≤ 1)
     (hCW : C ≤ W) (hC1W : C1 ≤ W) (hHW : H ≤ W) (hLW : L ≤ W) :
     operatorAmplitude T C C1 H C1 scaledBoundaryOperatorAmplitude L ≤ operatorEnvelope W := by
   have ha := scaledBoundaryOperatorAmplitude_nonneg
-  have ht : T^2/2 ≤ 1 := by nlinarith
+  have ht : T^2/2 ≤ 1 := by nlinarith only [hT1, hT]
   unfold operatorAmplitude
   rw [abs_of_nonneg hL]
   calc
@@ -180,7 +186,9 @@ theorem forward_scalar_le (T C A D CB R V : ℝ)
   have hraw : frozenAmplitude T C CB ≤ 1+36*V^4 := by
     unfold frozenAmplitude
     calc
-      _ ≤ 1+2*V*1*(18*V^3) := by gcongr
+      _ ≤ 1+2*V*1*(18*V^3) := add_le_add_right (mul_le_mul (mul_le_mul
+          (mul_le_mul_of_nonneg_left hCV zero_le_two) hT1 hT (mul_nonneg zero_le_two hV)) hCBV hCB
+          (mul_nonneg (mul_nonneg zero_le_two hV) zero_le_one)) 1
       _ = _ := by ring
   have hr0 : 0 ≤ frozenAmplitude T C CB := by unfold frozenAmplitude; positivity
   have hb : forwardSobolevAmplitude (Fin 4) 6 T C CB R ≤ coeff (4*V) (1+36*V^4) :=
@@ -192,8 +200,9 @@ theorem forward_scalar_le (T C A D CB R V : ℝ)
   have hsiV := sobolevInverseCost_nonneg 1 (coeff (4*V) (1+36*V^4)) zero_le_one hbV 6
   have hc : C*A+C*T*D ≤ V*(2*V+2) := by
     calc
-      _ ≤ V*V+V*1*V := by gcongr
-      _ ≤ _ := by nlinarith
+      _ ≤ V*V+V*1*V := add_le_add (mul_le_mul hCV hAV hA hV)
+          (mul_le_mul (mul_le_mul hCV hT1 hT hV) hDV hD (mul_nonneg hV zero_le_one))
+      _ ≤ _ := by linarith only [hV]
   unfold forwardSobolevCost forwardEnvelope
   apply add_le_add le_rfl
   apply mul_le_mul hsi _ (by positivity) hsiV
@@ -215,7 +224,7 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
   have hb := primitiveLift_bounds W hW0
   have hV : 1 ≤ V := hb.1
   have hV0 := zero_le_one.trans hV
-  have hWV : W ≤ V := (by linarith : W ≤ W+2).trans hb.2.1
+  have hWV : W ≤ V := (by linarith only : W ≤ W+2).trans hb.2.1
   have hCV : C ≤ V := hC.trans hWV
   have hC1V : C1 ≤ V := hC1.trans hWV
   have hRV : R ≤ V := hR.trans hWV
@@ -227,7 +236,8 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
     positivity
   have hh : EulerPacketParentTransverseCosts.historyCost 6 T R C C1 C2 ≤ weakEnvelope V := by
     apply block_le_weak V hV _ _ _ _ (inverseEnvelope_nonneg C C1) hR0
-      (by positivity)
+      (mul_nonneg (mul_nonneg (by norm_num) (sq_nonneg _))
+        (add_nonneg zero_le_one (mul_nonneg (sq_nonneg T) hH0)))
       (by simpa only [forcingBlockAmplitude,derivativeCost,mul_one] using hf0)
       (hI.trans hWV) (hR.trans hWV) hform
     simpa only [forcingBlockAmplitude,derivativeCost,mul_one] using hforce
@@ -239,11 +249,12 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
     · exact (by nlinarith only [pow_le_pow_left₀ hC0 hC 2] : 3*C^2 ≤ 3*W^2).trans hb.2.2.2.2.1
     · exact (acceleration_scalar_le R C C1 v W hR0 hC0 hC10 hv0 hW0 hR hC hC1 hv).trans
         hb.2.2.2.2.2.1
-  have ha1 := hacc 1 zero_le_one (by linarith)
-  have ha2 := hacc (Ti+2) (by positivity) (by linarith)
+  have ha1 := hacc 1 zero_le_one (by linarith only [hW])
+  have ha2 := hacc (Ti+2) (by positivity) (by linarith only [hTi])
   let Ri := EulerPacketParentTransverseCosts.inverseRadius R C
   have hi0 : 0 ≤ Ri := EulerPacketParentTransverseCosts.inverseRadius_nonneg R C hR0
   have hiv : Ri ≤ V := hRi.trans hWV
+  have h4 : 4*Ri ≤ 4*V := mul_le_mul_of_nonneg_left hiv (by norm_num)
   have hpf := (projected_scalar_le Ri C W hi0 hC0 hW0 hRi hC).trans hb.2.2.2.2.2.2.2
   have hpf0 : 0 ≤ EulerSourceCylinderForwardSobolev.forcingCost (Fin 4) 6 Ri C := by
     have hc := coeff_nonneg (4*Ri) (3*Ri*C) (by positivity) (by positivity)
@@ -252,12 +263,16 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
   have hforward : EulerPacketParentTransverseCosts.forwardCost 6 S Ti R C C1 Cp ≤ forwardEnvelope V
       := by
     apply forward_scalar_le S Cp (Ti+2) _ (18*Ri*C*C1) (4*Ri) V
-      hS0 hS hCp0 (by positivity) hpf0 (by positivity) (by positivity) hV0
-      (hCp.trans hWV) ((by linarith : Ti+2 ≤ W+2).trans hb.2.1) hpf
+      hS0 hS hCp0 (add_nonneg hTi0 zero_le_two) hpf0
+      (mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) hi0) hC0) hC10)
+      (mul_nonneg (by norm_num) hi0) hV0
+      (hCp.trans hWV) ((add_le_add_left hTi 2).trans hb.2.1) hpf
     · calc
-        18*Ri*C*C1 ≤ 18*V*V*V := by gcongr
+        18*Ri*C*C1 ≤ 18*V*V*V := mul_le_mul (mul_le_mul (mul_le_mul_of_nonneg_left hiv
+            (by norm_num)) hCV hC0 (mul_nonneg (by norm_num) hV0)) hC1V hC10
+            (mul_nonneg (mul_nonneg (by norm_num) hV0) hV0)
         _ = _ := by ring
-    · gcongr
+    · exact h4
   have hh0 := EulerPacketParentTransverseCosts.historyCost_nonneg 6 T R C C1 C2 hT0 hR0 hC0 hC10
       hC20
   have ha10 := EulerPacketParentTransverseCosts.accelerationCost_nonneg 6 R C C1 1 hR0 hC0 hC10
@@ -271,7 +286,16 @@ theorem joined_radius_le (T S Ti R C C1 C2 Cp W : ℝ) (hW : 1 ≤ W)
   simp only [coefficientRadius_eq]
   calc
     _ ≤ 1+2*(weakEnvelope V+weakEnvelope V+weakEnvelope V)*(16*V+1) +
-        16*(4*V)+2*forwardEnvelope V*(16*(4*V)+1) := by gcongr
+        16*(4*V)+2*forwardEnvelope V*(16*(4*V)+1) := by
+      have h16 := mul_le_mul_of_nonneg_left h4 (by norm_num : (0 : ℝ) ≤ 16)
+      refine add_le_add (add_le_add (add_le_add le_rfl ?_) h16) ?_
+      · exact mul_le_mul (mul_le_mul_of_nonneg_left (add_le_add (add_le_add hh ha1) ha2)
+          zero_le_two) (by linarith only [hRV]) (by linarith only [hR0])
+          (by linarith only [hww])
+      · exact mul_le_mul (mul_le_mul_of_nonneg_left hforward zero_le_two)
+          (add_le_add_left h16 1)
+          (add_nonneg (mul_nonneg (by norm_num) (mul_nonneg (by norm_num) hi0)) zero_le_one)
+          (mul_nonneg zero_le_two hfw)
     _ ≤ sourceRadiusEnvelope W := by
       change _ ≤ 1+V+6*weakEnvelope V*(16*V+1)+64*V+2*forwardEnvelope V*(64*V+1)
       nlinarith only [hV0]
@@ -290,7 +314,7 @@ theorem mean_radius_le (T Ti R C C1 C2 L W : ℝ) (hW : 1 ≤ W)
   have hb := primitiveLift_bounds W hW0
   have hV : 1 ≤ V := hb.1
   have hV0 := zero_le_one.trans hV
-  have hWV : W ≤ V := (by linarith : W ≤ W+2).trans hb.2.1
+  have hWV : W ≤ V := (by linarith only : W ≤ W+2).trans hb.2.1
   have hRV : R ≤ V := hR.trans hWV
   have hH0 : 0 ≤ 27*C^2*C2 := by positivity
   have hop := (operator_scalar_le T C C1 (27*C^2*C2) L W
@@ -319,8 +343,8 @@ theorem mean_radius_le (T Ti R C C1 C2 L W : ℝ) (hW : 1 ≤ W)
     · exact (by nlinarith only [pow_le_pow_left₀ hC0 hC 2] : 3*C^2 ≤ 3*W^2).trans hb.2.2.2.2.1
     · exact (acceleration_scalar_le R C C1 v W hR0 hC0 hC10 hv0 hW0 hR hC hC1 hv).trans
         hb.2.2.2.2.2.1
-  have ha1 := hgram 1 zero_le_one (by linarith)
-  have ha2 := hgram (Ti+2) (by positivity) (by linarith)
+  have ha1 := hgram 1 zero_le_one (by linarith only [hW])
+  have ha2 := hgram (Ti+2) (by positivity) (by linarith only [hTi])
   have hw0 := zero_le_one.trans (EulerPacketParentMeanBudget.weakCost_one_le 6 T R C C1 C2 L hT0
       hR0 hC0 hC10 hC20)
   have ha10 := EulerPacketParentMeanBudget.gramCost_nonneg 6 R C C1 1 hR0 hC0 hC10 zero_le_one

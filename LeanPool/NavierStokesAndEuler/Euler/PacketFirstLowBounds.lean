@@ -46,7 +46,7 @@ theorem normal_norm_le_two
       HasDerivWithinAt f (f' r) (Icc (0 : ℝ) D.T) r := D.normal_hasDerivWithinAt r hr x
   have hb (r : ℝ) (hr : r ∈ Icc (0 : ℝ) D.T) : ‖f' r‖ ≤ CM*‖f r‖ := by
     simp only [f,f',extendPath,projIcc_of_mem D.T_pos.le hr,Data.normalDerivative_apply,norm_neg]
-    exact (((D.M.field ⟨r,hr⟩ x).adjoint.le_opNorm _).trans
+    exact (((adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.M.field ⟨r,hr⟩ x)).le_opNorm _).trans
       (by
           rw [LinearIsometryEquiv.norm_map]; exact mul_le_mul_of_nonneg_right (hM ⟨r,hr⟩)
               (norm_nonneg _)))

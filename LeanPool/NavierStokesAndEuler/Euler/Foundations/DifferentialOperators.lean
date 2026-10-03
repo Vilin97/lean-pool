@@ -8,6 +8,7 @@ module
 
 public import Mathlib.LinearAlgebra.Trace
 public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanSpaceShortcuts
 public import Mathlib.Analysis.Calculus.FDeriv.Basic
 
 /-! Coordinate trace and divergence on the physical three-dimensional Euclidean space. -/
@@ -30,7 +31,11 @@ noncomputable def coordinateTrace : (Space →L[ℝ] Space) →L[ℝ] ℝ :=
 theorem coordinateTrace_eq_linearTrace (A : Space →L[ℝ] Space) :
     coordinateTrace A = LinearMap.trace ℝ Space A.toLinearMap := by
   rw [LinearMap.trace_eq_matrix_trace ℝ (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis]
-  simp [coordinateTrace, Matrix.trace, LinearMap.toMatrix_apply]
+  simp only [coordinateTrace, sum_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.apply_apply, PiLp.proj_apply, Matrix.trace, Matrix.diag_apply,
+      LinearMap.toMatrix_apply, OrthonormalBasis.coe_toBasis, EuclideanSpace.basisFun_apply,
+      ContinuousLinearMap.coe_coe, OrthonormalBasis.coe_toBasis_repr_apply,
+      EuclideanSpace.basisFun_repr]
 
 /-- Classical divergence, defined canonically as the trace of the Fréchet derivative. -/
 noncomputable def divergence (f : Space → Space) (x : Space) : ℝ :=
@@ -39,7 +44,8 @@ noncomputable def divergence (f : Space → Space) (x : Space) : ℝ :=
 theorem divergence_eq_coordinate_sum (f : Space → Space) (x : Space) :
     divergence f x = ∑ i : Fin 3, (fderiv ℝ f x (EuclideanSpace.single i 1)) i := by
   rw [divergence, ← coordinateTrace_eq_linearTrace]
-  simp [coordinateTrace]
+  simp only [coordinateTrace, sum_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.apply_apply, PiLp.proj_apply]
 
 theorem divergence_eq_trace (f : Space → Space) (x : Space) :
     divergence f x = LinearMap.trace ℝ Space (fderiv ℝ f x).toLinearMap :=

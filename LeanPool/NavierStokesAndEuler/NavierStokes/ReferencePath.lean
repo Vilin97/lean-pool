@@ -58,7 +58,7 @@ theorem slopeCutoff_smooth (δ : ℝ) : ContDiff ℝ ∞ (slopeCutoff δ) :=
 theorem slopeCutoff_mem (δ t : ℝ) : slopeCutoff δ t ∈ Icc (0 : ℝ) 1 := by
   have hlo := Real.smoothTransition.nonneg ((t - δ) / δ)
   have hhi := Real.smoothTransition.le_one ((t - δ) / δ)
-  constructor <;> dsimp [slopeCutoff] <;> linarith
+  constructor <;> dsimp [slopeCutoff] <;> linarith only [hhi, hlo]
 
 theorem slopeCutoff_one {δ t : ℝ} (hδ : 0 < δ) (ht : t ≤ δ) : slopeCutoff δ t = 1 := by
   rw [slopeCutoff, Real.smoothTransition.zero_of_nonpos
@@ -66,19 +66,19 @@ theorem slopeCutoff_one {δ t : ℝ} (hδ : 0 < δ) (ht : t ≤ δ) : slopeCutof
 
 theorem slopeCutoff_zero {δ t : ℝ} (hδ : 0 < δ) (ht : 2 * δ ≤ t) : slopeCutoff δ t = 0 := by
   rw [slopeCutoff, Real.smoothTransition.one_of_one_le
-    ((le_div_iff₀ hδ).2 (by linarith)), sub_self]
+    ((le_div_iff₀ hδ).2 (by linarith only [ht])), sub_self]
 
 /-- Damped slope, defined pointwise by `slopeCutoff δ p.1 * radialPartial G p`. -/
-def dampedSlope (δ : ℝ) (G : Field) : Field :=
+def dampedSlope (δ : ℝ) (G : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => slopeCutoff δ p.1 * radialPartial G p
 
 /-- The prescribed continuation, defined by an actual integral of the
 same-time natural derivative. -/
-def continuation (δ : ℝ) (G : Field) : Field :=
+def continuation (δ : ℝ) (G : ProfileHistories.Field) : ProfileHistories.Field :=
   fun p => G (0, p.2) + primitive (dampedSlope δ G) p
 
 theorem dampedSlope_smooth {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
-    {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier) :
     ContDiffOn ℝ ∞ (dampedSlope δ G) (fullStrip J hJ).carrier := by
   intro p hp
@@ -93,7 +93,7 @@ theorem dampedSlope_smooth {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * 
     exact (contDiffAt_const.congr_of_eventuallyEq heq).contDiffWithinAt
 
 theorem continuation_smooth {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
-    {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier) :
     ContDiffOn ℝ ∞ (continuation δ G) (fullStrip J hJ).carrier := by
   apply ContDiffOn.add _ (primitive_smooth (fullStrip J hJ) (dampedSlope_smooth hT hδ hδT hJ hG))
@@ -103,7 +103,7 @@ theorem continuation_smooth {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 *
     (contDiffAt_const.prodMk contDiffAt_snd)).contDiffWithinAt
 
 theorem continuation_hasDerivAt {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
-    {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
     {p : Point} (hp : p.2 ∈ J) :
     HasDerivAt (fun t => continuation δ G (t, p.2))
@@ -114,7 +114,7 @@ theorem continuation_hasDerivAt {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT :
   exact hd
 
 theorem continuation_eq_natural {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
-    {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
     {p : Point} (hp : p.2 ∈ J) (ht : p.1 ≤ δ) : continuation δ G p = G p := by
   have hd : ∀ t ∈ uIcc 0 p.1,
@@ -122,7 +122,7 @@ theorem continuation_eq_natural {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT :
     intro t ht'
     have htδ : t ≤ δ := (mem_uIcc.mp ht').elim
       (fun h => h.2.trans ht) (fun h => h.2.trans hδ.le)
-    have htT : t < T := htδ.trans_lt (by linarith)
+    have htT : t < T := htδ.trans_lt (by linarith only [hδ, hδT])
     simpa only [dampedSlope, slopeCutoff_one hδ htδ, one_mul] using
       radialPartial_hasDerivAt (earlyStrip T hT J hJ) hG (p := (t, p.2)) ⟨htT, hp⟩
   have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt hd
@@ -133,7 +133,7 @@ theorem continuation_eq_natural {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT :
   ring
 
 theorem continuation_frozen {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
-    {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
     {p : Point} (hp : p.2 ∈ J) (ht : 2 * δ ≤ p.1) :
     continuation δ G p = continuation δ G (2 * δ, p.2) := by
@@ -147,7 +147,7 @@ theorem continuation_frozen {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 *
     IntervalIntegrable (fun _ : ℝ => (0 : ℝ)) volume (2 * δ) p.1)
   have heq : (0 : ℝ) = continuation δ G p - continuation δ G (2 * δ, p.2) := by
     simpa only [intervalIntegral.integral_zero, Prod.eta] using hi
-  linarith
+  linarith only [heq]
 
 section CompactSmoothIntegral
 
@@ -182,11 +182,12 @@ theorem masterDomain_open (T : ℝ) {J : Set ℝ} (hJ : IsOpen J) : IsOpen (mast
     (hJ.preimage continuous_snd)
 
 /-- The rescaled transition on a fixed parameter interval, smooth even at δ=0. -/
-def master (G : Field) (p : MasterPoint) : ℝ :=
+def master (G : ProfileHistories.Field) (p : MasterPoint) : ℝ :=
   G (0, p.2) + p.1.1 * p.1.2 *
     ∫ v in (0 : ℝ)..1, slopeCutoff 1 (p.1.2 * v) * radialPartial G (p.1.1 * (p.1.2 * v), p.2)
 
-theorem master_at_zero (G : Field) (u η : ℝ) : master G ((0, u), η) = G (0, η) := by
+theorem master_at_zero (G : ProfileHistories.Field) (u η : ℝ) :
+    master G ((0, u), η) = G (0, η) := by
   simp [master]
 
 theorem slopeCutoff_scaled {δ : ℝ} (hδ : δ ≠ 0) (u : ℝ) :
@@ -195,7 +196,7 @@ theorem slopeCutoff_scaled {δ : ℝ} (hδ : δ ≠ 0) (u : ℝ) :
   congr 2
   field_simp
 
-theorem continuation_rescaled (G : Field) {δ : ℝ} (hδ : δ ≠ 0) (u η : ℝ) :
+theorem continuation_rescaled (G : ProfileHistories.Field) {δ : ℝ} (hδ : δ ≠ 0) (u η : ℝ) :
     continuation δ G (δ * u, η) = master G ((δ, u), η) := by
   unfold continuation master
   rw [primitive_eq_mul_average]
@@ -205,15 +206,17 @@ theorem continuation_rescaled (G : Field) {δ : ℝ} (hδ : δ ≠ 0) (u η : �
   change slopeCutoff δ (v * (δ * u)) * radialPartial G (v * (δ * u), η) = _
   rw [show v * (δ * u) = δ * (u * v) by ring, slopeCutoff_scaled hδ]
 
-theorem master_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+theorem master_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier) :
     ContDiffOn ℝ ∞ (master G) (masterDomain T J) := by
   apply ContDiffOn.add
   · intro p hp
     exact ((hG.contDiffAt ((earlyStrip T hT J hJ).isOpen.mem_nhds
       (show (0, p.2) ∈ (earlyStrip T hT J hJ).carrier from ⟨hT, hp.2⟩))).comp p
-        (contDiffAt_const.prodMk contDiffAt_snd)).contDiffWithinAt
-  · apply ContDiffOn.mul (contDiffOn_fst.fst.mul contDiffOn_fst.snd)
+        ((contDiffAt_const (𝕜 := ℝ) (E := MasterPoint) (F := ℝ)).prodMk
+          contDiffAt_snd)).contDiffWithinAt
+  · apply ContDiffOn.mul
+      ((contDiffOn_fst (𝕜 := ℝ) (E := ℝ × ℝ) (F := ℝ)).fst.mul contDiffOn_fst.snd)
     apply compact_integral_smooth (masterDomain_open T hJ)
     intro p hp v hv
     have hbound : |p.1.1 * (p.1.2 * v)| ≤ |p.1.1 * p.1.2| := by
@@ -224,9 +227,10 @@ theorem master_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J) {G : 
     have hd := (radialPartial_smooth (earlyStrip T hT J hJ) hG).contDiffAt
       ((earlyStrip T hT J hJ).isOpen.mem_nhds hpv)
     exact ((slopeCutoff_smooth 1).contDiffAt.comp (p, v)
-      (contDiffAt_fst.fst.snd.mul contDiffAt_snd)).mul
-        (hd.comp (p, v) ((contDiffAt_fst.fst.fst.mul
-          (contDiffAt_fst.fst.snd.mul contDiffAt_snd)).prodMk contDiffAt_fst.snd))
+      ((contDiffAt_fst (𝕜 := ℝ) (E := MasterPoint) (F := ℝ)).fst.snd.mul contDiffAt_snd)).mul
+        (hd.comp (p, v) (((contDiffAt_fst (𝕜 := ℝ) (E := MasterPoint) (F := ℝ)).fst.fst.mul
+          ((contDiffAt_fst (𝕜 := ℝ) (E := MasterPoint) (F := ℝ)).fst.snd.mul contDiffAt_snd)).prodMk
+            (contDiffAt_fst (𝕜 := ℝ) (E := MasterPoint) (F := ℝ)).snd))
 
 /-- The master representation covers the entire hold by saturating its
 rescaled time at two. This does not change the natural slope's evaluation point. -/
@@ -236,16 +240,16 @@ theorem holdTime_mem {δ t : ℝ} (hδ : 0 < δ) (ht : 0 ≤ t) : holdTime δ t 
   exact ⟨le_min (div_nonneg ht hδ.le) (by norm_num), min_le_right _ _⟩
 
 theorem continuation_eq_master_hold {T δ : ℝ} (hT : 0 < T) (hδ : 0 < δ) (hδT : 2 * δ < T)
-    {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
     {t η : ℝ} (hη : η ∈ J) (_ : 0 ≤ t) :
     continuation δ G (t, η) = master G ((δ, holdTime δ t), η) := by
   by_cases hsmall : t ≤ 2 * δ
-  · have htdiv : t / δ ≤ 2 := (div_le_iff₀ hδ).2 (by nlinarith)
+  · have htdiv : t / δ ≤ 2 := (div_le_iff₀ hδ).2 (by nlinarith only [hsmall])
     rw [holdTime, min_eq_left htdiv, ← continuation_rescaled G hδ.ne']
     rw [mul_div_cancel₀ _ hδ.ne']
   · have hbig : 2 * δ ≤ t := (lt_of_not_ge hsmall).le
-    have htdiv : 2 ≤ t / δ := (le_div_iff₀ hδ).2 (by nlinarith)
+    have htdiv : 2 ≤ t / δ := (le_div_iff₀ hδ).2 (by nlinarith only [hsmall])
     rw [continuation_frozen hT hδ hδT hJ hG hη hbig,
       holdTime, min_eq_right htdiv, ← continuation_rescaled G hδ.ne']
     rw [mul_comm δ 2]
@@ -281,7 +285,7 @@ theorem master_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : Is
     have huabs : |u| ≤ 2 := by rw [abs_of_nonneg hu.1]; exact hu.2
     have hprod := mul_le_mul hδabs huabs (abs_nonneg u) ha.le
     rw [abs_mul]
-    exact hprod.trans_lt (by dsimp [a]; linarith)
+    exact hprod.trans_lt (by dsimp [a]; linarith only [hT])
   have hc : ContinuousOn (parameterJet k F) C := by
     intro p hp
     exact (parameterJet_continuousAt (hF.contDiffAt ((masterDomain_open T hJ).mem_nhds (hCD hp)))
@@ -305,11 +309,11 @@ theorem master_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : Is
   simpa only [Real.dist_eq, hz] using hdist _ hx _ hy hdxy
 
 /-- Transformed master, given by `Φ (master G p, G (0, p.2))`. -/
-def transformedMaster (Φ : ℝ × ℝ → ℝ) (G : Field) (p : MasterPoint) : ℝ :=
+def transformedMaster (Φ : ℝ × ℝ → ℝ) (G : ProfileHistories.Field) (p : MasterPoint) : ℝ :=
   Φ (master G p, G (0, p.2))
 
 theorem transformedMaster_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J)
-    {G : Field} (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
+    {G : ProfileHistories.Field} (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
     {Φ : ℝ × ℝ → ℝ} (hΦ : ContDiff ℝ ∞ Φ) :
     ContDiffOn ℝ ∞ (transformedMaster Φ G) (masterDomain T J) := by
   apply hΦ.comp_contDiffOn
@@ -323,7 +327,7 @@ theorem transformedMaster_smooth {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOp
 endpoint converge uniformly on the whole nonnegative-time hold. Applying Φ
 to x, exp x, x-b, or exp(x-b) gives field, log-field, and relative-field jets. -/
 theorem continuation_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (hJ : IsOpen J)
-    {G : Field} (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
+    {G : ProfileHistories.Field} (hG : ContDiffOn ℝ ∞ G (earlyStrip T hT J hJ).carrier)
     {Φ : ℝ × ℝ → ℝ} (hΦ : ContDiff ℝ ∞ Φ)
     {K : Set ℝ} (hK : IsCompact K) (hKJ : K ⊆ J) (k : ℕ)
     {ε : ℝ} (hε : 0 < ε) :
@@ -335,7 +339,7 @@ theorem continuation_parameter_jet_close {T : ℝ} (hT : 0 < T) {J : Set ℝ} (h
     (fun u η => by simp only [transformedMaster, master_at_zero]) hK hKJ k hε
   refine ⟨min r (T / 4), lt_min hr (by positivity), ?_⟩
   intro δ hδ hδ₀ t ht η hη
-  have hδT : 2 * δ < T := by have := hδ₀.trans_le (min_le_right _ _); linarith
+  have hδT : 2 * δ < T := by have := hδ₀.trans_le (min_le_right _ _); linarith only [hδ, this]
   have hδr : |δ| < r := by rw [abs_of_pos hδ]; exact hδ₀.trans_le (min_le_left _ _)
   have heq : (fun y => Φ (continuation δ G (t, y), G (0, y))) =ᶠ[𝓝 η]
       (fun y => transformedMaster Φ G ((δ, holdTime δ t), y)) := by
@@ -365,7 +369,7 @@ theorem exists_small_length {ε : ℝ} (hε : 0 < ε) :
     have := rampLimit_pos
     linarith
   · have := min_le_right (rampLimit / 4) (ε / 2)
-    linarith
+    linarith only [hε, this]
 
 /-- Only the proved natural-profile regularity and positivity are used in
 constructing REF. The natural ODE is not replaced by a surrogate assumption. -/
@@ -374,9 +378,9 @@ structure Input where
   scale : ℝ
   scale_pos : 0 < scale
   /-- F of `Input`, of type `Field`. -/
-  f : Field
+  f : ProfileHistories.Field
   /-- U of `Input`, of type `Field`. -/
-  U : Field
+  U : ProfileHistories.Field
   f_smooth : ContDiffOn ℝ ∞ f (NaturalProfile.domain scale)
   U_smooth : ContDiffOn ℝ ∞ U (NaturalProfile.domain scale)
   positive : ∀ p ∈ NaturalProfile.domain scale, 0 ≤ scale * p.1 →
@@ -412,9 +416,9 @@ def fromLog (p : Point) : Point := (N.endpoint * Real.exp p.1, p.2)
 /-- Log time, given by `Real.log (X / N.endpoint)`. -/
 def logTime (X : ℝ) : ℝ := Real.log (X / N.endpoint)
 /-- Log F, defined pointwise by `Real.log (N.f (N.fromLog p))`. -/
-def logF : Field := fun p => Real.log (N.f (N.fromLog p))
+def logF : ProfileHistories.Field := fun p => Real.log (N.f (N.fromLog p))
 /-- Log U, defined pointwise by `N.U (N.fromLog p)`. -/
-def logU : Field := fun p => N.U (N.fromLog p)
+def logU : ProfileHistories.Field := fun p => N.U (N.fromLog p)
 
 theorem fromLog_smooth : ContDiff ℝ ∞ N.fromLog :=
   (contDiff_const.mul contDiff_fst.exp).prodMk contDiff_snd
@@ -433,7 +437,7 @@ theorem fromLog_mem {p : Point}
   have hupper : Real.exp p.1 < 41 / 40 := by
     simpa only [rampLimit, Real.exp_log (by
         norm_num : (0 : ℝ) < 41 / 40)] using Real.exp_lt_exp.mpr hp.1
-  refine ⟨⟨?_, ?_⟩, hp.2⟩ <;> nlinarith [Real.exp_pos p.1]
+  refine ⟨⟨?_, ?_⟩, hp.2⟩ <;> nlinarith only [hupper, Real.exp_pos p.1]
 
 theorem fromLog_f_pos {p : Point}
     (hp : p ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
@@ -445,7 +449,7 @@ theorem fromLog_f_pos {p : Point}
     have hupper : Real.exp p.1 < 41 / 40 := by
       simpa only [rampLimit, Real.exp_log (by
           norm_num : (0 : ℝ) < 41 / 40)] using Real.exp_lt_exp.mpr hp.1
-    linarith
+    linarith only [hupper]
 
 theorem logF_smooth : ContDiffOn ℝ ∞ N.logF
     (earlyStrip rampLimit rampLimit_pos parameterInterval parameterInterval_open).carrier := by
@@ -500,16 +504,16 @@ theorem natural_mem_of_le_endpoint {p : Point} (hp : p ∈ N.radialDomain.carrie
   refine ⟨⟨hp.1, ?_⟩, hp.2⟩
   have hb := mul_le_mul_of_nonneg_left hX N.scale_pos.le
   rw [N.scale_endpoint] at hb
-  linarith
+  linarith only [hb]
 
 /-- Ref F, defined pointwise by `if p.1 ≤ N.endpoint then N.f p else Real.exp (continuation δ
 N.logF (N.logTime p.1, p.2))`. -/
-def refF (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.f p else
+def refF (δ : ℝ) : ProfileHistories.Field := fun p => if p.1 ≤ N.endpoint then N.f p else
   Real.exp (continuation δ N.logF (N.logTime p.1, p.2))
 
 /-- Ref U, defined pointwise by `if p.1 ≤ N.endpoint then N.U p else continuation δ N.logU
 (N.logTime p.1, p.2)`. -/
-def refU (δ : ℝ) : Field := fun p => if p.1 ≤ N.endpoint then N.U p else
+def refU (δ : ℝ) : ProfileHistories.Field := fun p => if p.1 ≤ N.endpoint then N.U p else
   continuation δ N.logU (N.logTime p.1, p.2)
 
 theorem refF_eq_natural_initial (δ : ℝ) {p : Point} (hp : p.1 ≤ N.endpoint) :
@@ -525,7 +529,7 @@ theorem refF_pos (δ : ℝ) {p : Point} (hp : p ∈ N.radialDomain.carrier) (hX 
     apply N.positive _ (N.natural_mem_of_le_endpoint hp hx) (mul_nonneg N.scale_pos.le hX)
     have hb := mul_le_mul_of_nonneg_left hx N.scale_pos.le
     rw [N.scale_endpoint] at hb
-    linarith
+    linarith only [hb]
   · rw [refF, ite_eq_right hx]
     exact Real.exp_pos _
 
@@ -536,7 +540,7 @@ theorem refF_eq_natural {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
   · exact N.refF_eq_natural_initial δ hx
   · have hxpos : 0 < p.1 := N.endpoint_pos.trans (lt_of_not_ge hx)
     have ht := (N.logTime_le_iff hxpos).2 hX
-    have htT : N.logTime p.1 < rampLimit := ht.trans_lt (by linarith)
+    have htT : N.logTime p.1 < rampLimit := ht.trans_lt (by linarith only [hδ, hδT])
     rw [refF, ite_eq_right hx, continuation_eq_natural rampLimit_pos hδ hδT
       parameterInterval_open N.logF_smooth (p := (N.logTime p.1, p.2)) hη ht]
     change Real.exp (Real.log (N.f (N.fromLog (N.logTime p.1, p.2)))) = _
@@ -692,7 +696,8 @@ theorem refU_hasDerivAt {δ : ℝ} (hδ : 0 < δ) (hδT : 2 * δ < rampLimit)
   filter_upwards [Ioi_mem_nhds hX] with X hXX
   exact N.refU_eq_logtime hδ hδT hη hXX
 
-theorem natural_logtime_deriv {F : Field} (hF : ContDiffOn ℝ ∞ F (NaturalProfile.domain N.scale))
+theorem natural_logtime_deriv {F : ProfileHistories.Field}
+    (hF : ContDiffOn ℝ ∞ F (NaturalProfile.domain N.scale))
     {p : Point} (hp : p ∈ (earlyStrip rampLimit rampLimit_pos parameterInterval
         parameterInterval_open).carrier) :
     HasDerivAt (fun t => F (N.fromLog (t, p.2)))
@@ -700,7 +705,7 @@ theorem natural_logtime_deriv {F : Field} (hF : ContDiffOn ℝ ∞ F (NaturalPro
   have hf := (hF.contDiffAt ((NaturalProfile.domain_isOpen N.scale).mem_nhds (N.fromLog_mem
       hp))).differentiableAt (by
       simp)
-  have hs := hf.hasFDerivAt.comp_hasDerivAt (N.fromLog p).1
+  have hs := hf.hasFDerivAt.comp_hasDerivAt (F := Point) (N.fromLog p).1
     ((hasDerivAt_id (N.fromLog p).1).prodMk (hasDerivAt_const (N.fromLog p).1 p.2))
   have hd := hs.comp p.1 ((Real.hasDerivAt_exp p.1).const_mul N.endpoint)
   simpa only [fromLog, radialPartial, Function.comp_def, id_eq, mul_comm] using hd
@@ -755,7 +760,8 @@ theorem ref_log_transformed_jet_close {Φ : ℝ × ℝ → ℝ} (hΦ : ContDiff 
     N.logF_smooth hΦ hK hKJ k hε
   refine ⟨min r (rampLimit / 4), lt_min hr (div_pos rampLimit_pos (by norm_num)), ?_⟩
   intro δ hδ hδ₀ X hX η hη
-  have hδT : 2 * δ < rampLimit := by have := hδ₀.trans_le (min_le_right _ _); linarith
+  have hδT : 2 * δ < rampLimit := by have := hδ₀.trans_le (min_le_right _ _); linarith only [hδ,
+      this]
   have hXpos := N.endpoint_pos.trans_le hX
   have ht : 0 ≤ N.logTime X := (N.le_logTime_iff hXpos).2 (by
       simpa only [Real.exp_zero, mul_one] using hX)
@@ -778,7 +784,8 @@ theorem ref_U_transformed_jet_close {Φ : ℝ × ℝ → ℝ} (hΦ : ContDiff �
     N.logU_smooth hΦ hK hKJ k hε
   refine ⟨min r (rampLimit / 4), lt_min hr (div_pos rampLimit_pos (by norm_num)), ?_⟩
   intro δ hδ hδ₀ X hX η hη
-  have hδT : 2 * δ < rampLimit := by have := hδ₀.trans_le (min_le_right _ _); linarith
+  have hδT : 2 * δ < rampLimit := by have := hδ₀.trans_le (min_le_right _ _); linarith only [hδ,
+      this]
   have hXpos := N.endpoint_pos.trans_le hX
   have ht : 0 ≤ N.logTime X := (N.le_logTime_iff hXpos).2 (by
       simpa only [Real.exp_zero, mul_one] using hX)
@@ -879,10 +886,10 @@ theorem freeze_before_Xbig (hscale : 1 ≤ N.scale) {δ : ℝ} (hδT : 2 * δ < 
   have hb : N.endpoint ≤ 4 := by
     change 4 / N.scale ≤ 4
     apply (div_le_iff₀ N.scale_pos).2
-    linarith
+    linarith only [hscale]
   have hm := mul_le_mul_of_nonneg_right hb (Real.exp_pos (2 * δ)).le
   dsimp [Xbig]
-  linarith
+  linarith only [he, hm]
 
 /-- In particular the reference is already frozen throughout [100,110]. -/
 theorem frozen_through_Xi (hscale : 1 ≤ N.scale) {δ : ℝ} (hδ : 0 < δ)

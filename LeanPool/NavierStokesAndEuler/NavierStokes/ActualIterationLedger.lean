@@ -56,10 +56,10 @@ theorem sigma_strictMono : StrictMono sigma := by
   intro j k hjk
   have hk : (j : ℝ) < k := by exact_mod_cast hjk
   simp only [sigma_formula]
-  linarith
+  linarith only [hk]
 
 @[simp] theorem inputSigma_succ (j : ℕ) : inputSigma (j + 1) = sigma j := by
-  simp [inputSigma]
+  simp only [inputSigma, add_tsub_cancel_right]
 
 theorem inputSigma_formula {j : ℕ} (hj : 1 ≤ j) :
     inputSigma j = 1 / 10 + (j : ℝ) / 10 := by
@@ -72,7 +72,8 @@ theorem inputSigma_index {j : ℕ} (hj : 1 ≤ j) : inputSigma j + 1 / 10 = sigm
 
 theorem inputSigma_admissible (j : ℕ) : 1 / 5 ≤ inputSigma j := sigma_admissible _
 
-@[simp] theorem gain_zero (h : ℝ) : gain h 0 = 0 := by simp [gain]
+@[simp] theorem gain_zero (h : ℝ) : gain h 0 = 0 := by simp only [gain, CharP.cast_eq_zero,
+    mul_zero, zero_div]
 
 theorem gain_succ (h : ℝ) (j : ℕ) : gain h (j + 1) = gain h j + h / 10 := by
   simp only [gain, Nat.cast_add, Nat.cast_one]
@@ -113,7 +114,7 @@ theorem gain_add_tendsto_atTop {h : ℝ} (hh : 0 < h) (a : ℝ) :
   have hp := (div_lt_iff₀ hh).mp hN
   have hm := mul_le_mul_of_nonneg_left hn hh.le
   unfold gain
-  nlinarith
+  nlinarith only [hp, hm]
 
 theorem gain_tendsto_atTop {h : ℝ} (hh : 0 < h) : Tendsto (gain h) atTop atTop := by
   simpa only [add_zero] using gain_add_tendsto_atTop hh 0
@@ -198,23 +199,23 @@ theorem mean_physical_gap (h κ : ℝ) {j : ℕ} (hj : 1 ≤ j) :
 theorem gain_le_wave {h κ : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 100000) {j : ℕ} (hj : 1 ≤ j) :
     gain h j ≤ h * waveNative κ j := by
   rw [wave_physical_gap h κ hj]
-  exact le_add_of_nonneg_right (mul_nonneg hh (by linarith))
+  exact le_add_of_nonneg_right (mul_nonneg hh (by linarith only [hκ]))
 
 theorem gain_le_wavePressure {h κ : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 100000) {j : ℕ} (hj : 1 ≤ j) :
     gain h j ≤ h * wavePressureNative κ j := by
   rw [pressure_physical_gap h κ hj]
-  exact le_add_of_nonneg_right (mul_nonneg hh (by linarith))
+  exact le_add_of_nonneg_right (mul_nonneg hh (by linarith only [hκ]))
 
 theorem gain_le_mean {h κ : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 100000) {j : ℕ} (hj : 1 ≤ j) :
     gain h j ≤ h * meanNative κ j := by
   rw [mean_physical_gap h κ hj]
-  exact le_add_of_nonneg_right (mul_nonneg hh (by linarith))
+  exact le_add_of_nonneg_right (mul_nonneg hh (by linarith only [hκ]))
 
 theorem gain_le_radial {h κ : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 100000) {j : ℕ} (hj : 1 ≤ j) :
     gain h j ≤ h * radialNative κ j := by
   have he := gain_le_mean hh hκ hj
   unfold radialNative
-  nlinarith
+  nlinarith only [hh, he]
 
 /-- Offsets data, collecting `wavePotential`, `meanStream`, `directAngular`, `wavePressure`,
 `meanPressure`. -/
@@ -273,7 +274,7 @@ theorem cycle_mean_output (n : ℕ) :
 theorem residual_minimum (J : ℕ) : min (residualWave J) (residualMean J) = residualWave J := by
   apply min_eq_left
   rw [residualWave_formula, residualMean_formula]
-  linarith
+  linarith only
 
 theorem residual_physical_gap (h : ℝ) (J : ℕ) :
     h * residualWave J = gain h J + 7 * h / 10 := by
@@ -290,12 +291,12 @@ theorem residual_mean_physical_gap (h : ℝ) (J : ℕ) :
 theorem gain_le_residualWave {h : ℝ} (hh : 0 ≤ h) (J : ℕ) :
     gain h J ≤ h * residualWave J := by
   rw [residual_physical_gap]
-  linarith
+  linarith only [hh]
 
 theorem gain_le_residualMean {h : ℝ} (hh : 0 ≤ h) (J : ℕ) :
     gain h J ≤ h * residualMean J := by
   rw [residual_mean_physical_gap]
-  linarith
+  linarith only [hh]
 
 theorem gain_le_residualMinimum {h : ℝ} (hh : 0 ≤ h) (J : ℕ) :
     gain h J ≤ h * min (residualWave J) (residualMean J) := by
@@ -324,7 +325,7 @@ theorem residualRate_eq (h beta : ℝ) (J m : ℕ) :
 theorem gain_le_residual_rate {h : ℝ} (hh : 0 ≤ h) (beta : ℝ) (J m : ℕ) :
     gain h J - residualLoss h beta m ≤ residualRate h beta J m := by
   rw [residualRate_eq]
-  linarith
+  linarith only [hh]
 
 theorem residualRate_tendsto_atTop {h : ℝ} (hh : 0 < h) (beta : ℝ) (m : ℕ) :
     Tendsto (fun J => residualRate h beta J m) atTop atTop := by
@@ -387,7 +388,7 @@ theorem StageMetadata.gain_inequalities (H : StageMetadata WA MA MB WP MP κ)
     have hs := H.wavePotentialShift j hj
     have hg := gain_le_wave hh hκ hj
     dsimp only [offsets]
-    linarith
+    linarith only [ha, hs, hg]
   · intro j hj
     have ha := mul_le_mul_of_nonneg_left (H.meanStream j hj) hh
     simpa only [offsets, add_zero] using (gain_le_mean hh hκ hj).trans ha
@@ -399,7 +400,7 @@ theorem StageMetadata.gain_inequalities (H : StageMetadata WA MA MB WP MP κ)
     have hs := H.wavePressureShift j hj
     have hg := gain_le_wavePressure hh hκ hj
     dsimp only [offsets]
-    linarith
+    linarith only [ha, hs, hg]
   · intro j hj
     have ha := mul_le_mul_of_nonneg_left (H.meanPressure j hj) hh
     simpa only [offsets, add_zero] using (gain_le_mean hh hκ hj).trans ha

@@ -112,7 +112,8 @@ theorem pairedBlock_band {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D 
     HarmonicBlock.BandLimited (pairedBlock j k Φ kp a) j.natAbs := by
   refine ⟨fun n i => band_conjugatePair j (fun x => a n x i), ?_⟩
   intro n l hl
-  simp [pairedBlock] at hl
+  simp only [pairedBlock, Finsupp.mem_support_iff, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero,
+      Pi.zero_apply, ne_eq, not_true_eq_false] at hl
 
 theorem pairedBlock_symmetric {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D → ℝ)
     (kp : ℕ → ℤ) (a : ℕ → D → HarmonicCalculus.ComplexVector) (n : ℕ) (i : Fin 3) :
@@ -148,7 +149,8 @@ theorem zeroBlock_band {D : Type} (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp
     (a : MeanVector D) : HarmonicBlock.BandLimited (zeroBlock k Φ kp a) 0 := by
   refine ⟨fun n i => band_constantCoefficient _, ?_⟩
   intro n l hl
-  simp [zeroBlock] at hl
+  simp only [zeroBlock, Finsupp.mem_support_iff, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero,
+      Pi.zero_apply, ne_eq, not_true_eq_false] at hl
 
 theorem zeroBlock_symmetric {D : Type} (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
     (a : MeanVector D) (n : ℕ) (i : Fin 3) :
@@ -156,8 +158,10 @@ theorem zeroBlock_symmetric {D : Type} (k : ℕ → ℝ) (Φ : ℕ → D → ℝ
   intro j x
   classical
   by_cases hj : j = 0
-  · simp [zeroBlock, constantCoefficient, hj]
-  · simp [zeroBlock, constantCoefficient, hj]
+  · simp only [zeroBlock, constantCoefficient, AddMonoidAlgebra.coeff_single, hj, neg_zero,
+      Finsupp.single_eq_same, Complex.conj_ofReal]
+  · simp only [zeroBlock, constantCoefficient, AddMonoidAlgebra.coeff_single, ne_eq, neg_eq_zero,
+      hj, not_false_eq_true, Finsupp.single_eq_of_ne, Pi.zero_apply, map_zero]
 
 section GaussianErrors
 
@@ -175,7 +179,8 @@ theorem dfast_angleIndependent (d : LinearWaveBounds.GraphDirections (D × ℝ))
   let L : D × ℝ →L[ℝ] D := ContinuousLinearMap.fst ℝ D ℝ
   have hq : ContDiff ℝ ∞ q := (hψ n).comp (contDiff_id.prodMk contDiff_const)
   have he : ψ n = q ∘ L := funext (fun p => hψa n p.1 p.2)
-  have hd (t : ℝ) := (((hq.differentiable (by simp)) x).hasFDerivAt).comp (x, t) L.hasFDerivAt
+  have hd (t : ℝ) := (((hq.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) x).hasFDerivAt).comp (x, t) L.hasFDerivAt
   simp only [LinearWaveBounds.GraphDirections.Dfast, LinearWaveBounds.GraphDirections.fastField,
     HarmonicCalculus.along, he, (hd θ).fderiv, (hd 0).fderiv]
 
@@ -192,7 +197,8 @@ theorem slot_coordinate_angleIndependent {s : WeightedClasses.StripData (D × �
     (g : GaussianTailFlat.SlotFamily s) (hangle : ∀ n, g.linear n ((0 : D), 1) = 0) :
     AngleIndependent g.coordinate := by
   intro n x θ
-  have hp : (x, θ) = (x, 0) + θ • ((0 : D), 1) := by ext <;> simp
+  have hp : (x, θ) = (x, 0) + θ • ((0 : D), 1) := by ext <;> simp only [Prod.smul_mk, smul_zero,
+      smul_eq_mul, mul_one, Prod.mk_add_mk, add_zero, zero_add]
   simp only [GaussianTailFlat.SlotFamily.coordinate, hp, map_add, map_smul, hangle,
     smul_zero, add_zero]
 
@@ -365,13 +371,13 @@ theorem pairedBlock_real {D : Type} (j : ℤ) (k : ℕ → ℝ) (Φ : ℕ → D 
     RealBlock (pairedBlock j k Φ kp a) := by
   refine ⟨pairedBlock_symmetric j k Φ kp a, ?_⟩
   intro n l x
-  simp [pairedBlock]
+  simp only [pairedBlock, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply, map_zero]
 
 theorem zeroBlock_real {D : Type} (k : ℕ → ℝ) (Φ : ℕ → D → ℝ) (kp : ℕ → ℤ)
     (a : MeanVector D) : RealBlock (zeroBlock k Φ kp a) := by
   refine ⟨zeroBlock_symmetric k Φ kp a, ?_⟩
   intro n l x
-  simp [zeroBlock]
+  simp only [zeroBlock, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply, map_zero]
 
 theorem gaussianBlock_real {D : Type} [NormedAddCommGroup D] [NormedSpace ℝ D]
     (d : LinearWaveBounds.GraphDirections (D × ℝ))
@@ -407,7 +413,9 @@ theorem band_sum {D ι : Type} (s : Finset ι) (a : ι → Coefficients D) (N : 
     HarmonicFields.BandLimited (∑ l ∈ s, a l) N := by
   classical
   induction s using Finset.induction_on with
-  | empty => simp [HarmonicFields.BandLimited]
+  | empty => simp only [BandLimited, Finset.sum_empty, Finsupp.mem_support_iff,
+      AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply, ne_eq, not_true_eq_false,
+      IsEmpty.forall_iff, implies_true]
   | @insert l s hl ih =>
     rw [Finset.sum_insert hl]
     exact (ha l (Finset.mem_insert_self _ _)).add
@@ -418,7 +426,8 @@ theorem symmetric_sum {D ι : Type} (s : Finset ι) (a : ι → Coefficients D)
     ConjugateSymmetric (∑ l ∈ s, a l) := by
   classical
   induction s using Finset.induction_on with
-  | empty => intro j x; simp
+  | empty => intro j x; simp only [Finset.sum_empty, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero,
+      Pi.zero_apply, map_zero]
   | @insert l s hl ih =>
     rw [Finset.sum_insert hl]
     exact symmetric_add (ha l (Finset.mem_insert_self _ _))
@@ -617,7 +626,7 @@ theorem pressure_refreshes_telescope (steps : ℕ) (r : ReconstructionData)
       CorrectionState.pressureAlias r c (u s))) =
         CorrectionState.pressureAlias r c (u steps) - CorrectionState.pressureAlias r c (u 0) := by
   induction steps with
-  | zero => simp
+  | zero => simp only [Finset.range_zero, Finset.sum_sub_distrib, Finset.sum_empty, sub_self]
   | succ steps ih => rw [Finset.sum_range_succ, ih]; abel
 
 /-- The two retained error types for one label are added as actual finite
@@ -655,7 +664,8 @@ theorem accumulatedErrorBlock_band (steps : ℕ) (g : ℕ → GaussianData (Lift
   · exact ((accumulatedGaussianBlock_band_pow steps g k Φ kp hj).1 n i).add
       (((accumulatedAliasBlock_band steps r h c u k Φ kp).1 n i).mono (Nat.zero_le _))
   · intro n j hj
-    simp [accumulatedErrorBlock] at hj
+    simp only [accumulatedErrorBlock, Finsupp.mem_support_iff, AddMonoidAlgebra.coeff_zero,
+        Finsupp.coe_zero, Pi.zero_apply, ne_eq, not_true_eq_false] at hj
 
 theorem accumulatedErrorBlock_real (steps : ℕ) (g : ℕ → GaussianData (Lift S))
     (r : ReconstructionData) (h : ℝ) (c : Context (Lift S)) (u : ℕ → State (Lift S))
@@ -665,7 +675,8 @@ theorem accumulatedErrorBlock_real (steps : ℕ) (g : ℕ → GaussianData (Lift
     ((accumulatedGaussianBlock_real steps g k Φ kp).1 n i)
     ((accumulatedAliasBlock_real steps r h c u k Φ kp).1 n i), ?_⟩
   intro n j x
-  simp [accumulatedErrorBlock]
+  simp only [accumulatedErrorBlock, AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply,
+      map_zero]
 
 end AliasStages
 
@@ -731,7 +742,11 @@ theorem axisymmetricVelocity_components (B F U : Profile) (q : ProfilePoint) (θ
     AxisymmetricResidual.componentY, AxisymmetricResidual.lift]
   rw [profilePoint_polarSpace]
   simp only [polarSpace, AxisymmetricResidual.pack_zero, AxisymmetricResidual.pack_one]
-  convert! he using 2 <;> ring_nf
+  convert! he using 2
+  · exact congrArg₂ (fun u w => AxisymmetricResidual.pack u w (U (polarProfile q)))
+      (by ring) (by ring)
+  · exact neg_mul_comm _ _
+  · rw [neg_mul_neg]
 
 /-- The literal Cartesian Navier--Stokes residual, expressed in its cylindrical
 frame. This is not an independently specified error oracle. -/
@@ -894,8 +909,9 @@ theorem requestedStress_divergence (p : SignedStressPrimitive.Patch)
 theorem weights_smul (H : Mat2) (T : Vec2) (a : ℝ) (j : Fin 2) :
     SmoothCovariance.weights H (a • T) j = a * SmoothCovariance.weights H T j := by
   fin_cases j <;>
-    simp [SmoothCovariance.weights, SmoothCovariance.cramerNumerator,
-      Pi.smul_apply, smul_eq_mul] <;> ring
+    simp only [SmoothCovariance.weights, SmoothCovariance.cramerNumerator, Fin.isValue,
+        Pi.smul_apply, smul_eq_mul, Fin.zero_eta, cons_val_zero, Fin.mk_one, cons_val_one,
+        cons_val_fin_one] <;> ring
 
 /-- Only primitive matrix/target jets and zeroth-order primary margins occur
 in this record. There is no assumption on an inverse or a signed output. -/
@@ -1093,8 +1109,10 @@ theorem projectedRhs_smul (N Ndot v Av : Space) (δ c : ℝ) :
     TangentProjection.projectedRhs N Ndot (c • v) (c • Av) 0 δ =
       c • TangentProjection.projectedRhs N Ndot v Av 0 δ := by
   ext i
-  simp [TangentProjection.projectedRhs, TangentProjection.tangentProj,
-    inner_smul_right, PiLp.smul_apply]
+  simp only [TangentProjection.projectedRhs, inner_smul_right, inner_self_eq_norm_sq_to_K,
+      RCLike.ofReal_real_eq_id, id_eq, TangentProjection.tangentProj, inner_zero_right, zero_div,
+      zero_smul, sub_self, sub_zero, PiLp.sub_apply, PiLp.add_apply, PiLp.neg_apply,
+      PiLp.smul_apply, smul_eq_mul]
   ring
 
 theorem shear_smul (R F G : D → ℝ) (Vr : D → D) (v : D → ComplexVector)
@@ -1284,7 +1302,9 @@ theorem conjugatePair_apply (a : D → ℂ) (j : ℤ) (x : D) :
   change Finsupp.single (1 : ℤ) (fun x => a x / 2) j x +
     conj (Finsupp.single (1 : ℤ) (fun x => a x / 2) (-j) x) = _
   by_cases hj : j = 1 <;> by_cases hjn : -j = 1 <;>
-    simp [hj, hjn, eq_comm]
+    simp only [hj, Finsupp.single_eq_same, Int.reduceNeg, ne_eq, eq_comm, reduceCtorEq,
+        not_false_eq_true, Finsupp.single_eq_of_ne, Pi.zero_apply, map_zero, add_zero, ↓reduceIte,
+        hjn, map_div₀, zero_add]
 
 /-- Coefficient block, bundling `velocity`, `pressure`, `frequency`, `phase` and the required
 compatibility proofs. -/
@@ -1350,11 +1370,13 @@ theorem conjugatePair_class {s : StripData D} {w : ℕ → D → ℝ} {α : ℝ}
   have hn := hp.map (Complex.conjCLE : ℂ →L[ℝ] ℂ)
   by_cases hj : j = 1
   · subst j
-    simpa [conjugatePair_apply, div_eq_mul_inv,
-      mul_comm] using hp
+    simpa only [conjugatePair_apply, ↓reduceIte, div_eq_mul_inv, Int.reduceNeg, reduceCtorEq,
+        map_zero, add_zero, one_mul, mul_comm] using hp
   by_cases hjn : -j = 1
-  · simpa [conjugatePair_apply, hj, hjn, div_eq_mul_inv, mul_comm] using hn
-  · simpa [conjugatePair_apply, hj, hjn] using
+  · simpa only [conjugatePair_apply, hj, ↓reduceIte, hjn, div_eq_mul_inv, map_mul, map_inv₀,
+      zero_add, one_mul, mul_comm, ContinuousLinearEquiv.coe_coe, ContinuousAlgEquiv.coeCLE_apply,
+      Complex.conjCAE_apply] using hn
+  · simpa only [conjugatePair_apply, hj, ↓reduceIte, hjn, map_zero, add_zero] using
       (MemClass.zero (E := ℂ) (α := α) ha.weight_nonneg)
 
 theorem coefficientBlock_classes {s : StripData D} {P : ℕ → D → ℝ} {α γ : ℝ}
@@ -1656,7 +1678,9 @@ noncomputable def zeroSection : D →L[ℝ] (D × ℝ) := (ContinuousLinearMap.i
 theorem zeroSection_norm_le : ‖zeroSection (D := D)‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
   intro x
-  simp [zeroSection, Prod.norm_def]
+  simp only [zeroSection, ContinuousLinearMap.prod_apply, ContinuousLinearMap.id_apply,
+      _root_.zero_apply, Prod.norm_def, norm_zero, norm_nonneg, sup_of_le_left, one_mul,
+      Std.le_refl]
 
 /-- Section strip, bundling `domain`, `isOpen_domain`, `epsilon`, `epsilon_pos` and the required
 compatibility proofs. -/
@@ -1709,8 +1733,12 @@ theorem angularAverage_re_field (c : HarmonicFields.Coefficients D) (k : ℝ)
   change (∫ θ in (0 : ℝ)..2 * Real.pi, (HarmonicFields.field c k Φ kp (x,θ)).re) =
     (∫ θ in (0 : ℝ)..2 * Real.pi, HarmonicFields.field c k Φ kp (x,θ)).re at hi
   rw [hi]
-  simp [HarmonicFields.angularMean, HarmonicFields.period, Complex.mul_re, div_eq_mul_inv,
-    ← Complex.ofReal_inv, mul_comm]
+  simp only [mul_comm, div_eq_mul_inv, _root_.mul_inv_rev, HarmonicFields.angularMean,
+      HarmonicFields.period, Complex.ofReal_mul, Complex.ofReal_ofNat, ← Complex.ofReal_inv,
+      Complex.mul_re, Complex.ofReal_re, Complex.inv_re, Complex.re_ofNat, Complex.normSq_ofNat,
+      ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, mul_inv_cancel_left₀, Complex.ofReal_im,
+      Complex.inv_im, Complex.im_ofNat, neg_zero, zero_mul, mul_zero, sub_zero, Complex.mul_im,
+      add_zero]
 
 omit [NormedAddCommGroup D] [NormedSpace ℝ D] in
 /-- These are actual angular integrals of the real velocity and pressure. -/
@@ -1765,13 +1793,14 @@ theorem normalizedPulse_along
           (MovingFrameODE.baseAction (f.F ((χ x).1,L*(χ x).2)) (f.shear ((χ x).1,L*(χ x).2))
             (PrimaryPulseBounds.normalizedPulse f lam u L (χ x))) 0 (f.viscosity ((χ x).1,L*(χ
                 x).2)))) 0 := by
-    simpa only [Prod.mk.eta, Function.comp_def] using hd.scomp_of_eq (0 : ℝ) ht' (by simp)
+    simpa only [Prod.mk.eta, Function.comp_def] using hd.scomp_of_eq (0 : ℝ) ht' (by simp only [
+        zero_div, add_zero])
   have hl : HasDerivAt (fun t : ℝ => x + t • V x) (V x) 0 := by
     simpa using ((hasDerivAt_id (0 : ℝ)).smul_const (V x)).const_add x
   have hv' : HasDerivAt (fun t : ℝ => PrimaryPulseBounds.normalizedPulse f lam u L (χ (x+t•V x)))
       (along V (fun y => PrimaryPulseBounds.normalizedPulse f lam u L (χ y)) x) 0 := by
     simpa only [along, Function.comp_def] using hv.hasFDerivAt.comp_hasDerivAt_of_eq (0 : ℝ) hl (by
-        simp)
+        simp only [zero_smul, add_zero])
   simp only [hclock] at hv'
   have he := hv'.unique hd'
   simpa only [smul_smul, one_div, inv_mul_cancel₀ hL.ne', one_smul, Prod.mk.eta] using he
@@ -1885,7 +1914,9 @@ theorem signed_bounds
 
 theorem normalDot_complexify (N v : Space) :
     normalDot N (CurlClassBounds.complexify v) = (⟪N,v⟫_ℝ : ℂ) := by
-  simp [normalDot, PiLp.inner_apply, Fin.sum_univ_three, mul_comm]
+  simp only [normalDot, Fin.isValue, CurlClassBounds.complexify_apply, PiLp.inner_apply,
+      RCLike.inner_apply, conj_trivial, mul_comm, Fin.sum_univ_three, Complex.ofReal_add,
+      Complex.ofReal_mul]
 
 theorem coefficients_tangent {s : StripData D} {d : LinearWaveBounds.GraphDirections D}
     (a : LinearWaveBounds.WaveCoefficients D)
@@ -1979,7 +2010,7 @@ theorem signed_linear_identity
   have hs := coefficients_principal_zero a hcov hR hm hv hHf hTf hRf hmf hfreq hode haction j
   have hs' : ∀ n x, x ∈ s.domain →
       (coefficients a s d H T R mask v Ndot A j).principal s d n x =
-        -(0 : ℕ → D → ComplexVector) n x := by simpa using hs
+        -(0 : ℕ → D → ComplexVector) n x := by simpa only [Pi.zero_apply, neg_zero] using hs
   have hg := hangle.exactConditions (fun n => (hG n).radius_ne) (fun n => (hG n).radial_radius) j
   have hres := (LinearWaveBounds.constructed_linear_wave_with_excluded
     hi hκ hψ hradius hN hb hlo hhi hK hs' hg).2
@@ -2016,7 +2047,9 @@ noncomputable def nativeTangentBlock {D h : ℝ} {vr vt : TorusInverse.Plane}
 
 theorem real_character_one (a t : ℝ) :
     ((a : ℂ) * HarmonicFields.character 1 t).re = a * Real.cos t := by
-  simp [HarmonicFields.character, Complex.mul_re, Complex.exp_re]
+  simp only [HarmonicFields.character, Int.cast_one, one_mul, Complex.mul_re, Complex.ofReal_re,
+      Complex.exp_re, Complex.I_re, mul_zero, Complex.ofReal_im, Complex.I_im, mul_one, sub_self,
+      Real.exp_zero, Complex.mul_im, add_zero, Complex.exp_ofReal_mul_I_im, zero_mul, sub_zero]
 
 theorem nativeTangentBlock_radial {D h : ℝ} {vr vt : TorusInverse.Plane}
     {sys : SlotSystem D h vr vt} {U : UnsignedLabel} (P : PairData sys U)

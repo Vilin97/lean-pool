@@ -53,7 +53,8 @@ theorem exact_physicalPressure_gradient (k : ℝ) (hk : k * κ = 1)
     (hYraw : ∀ (t : Icc (0 : ℝ) D.T) x, Yraw (t, x) = Y t x)
     (t : Icc (0 : ℝ) D.T) (x : Space) :
     gradient (fun y => physicalPressure (S.rawGraphPotential k) Yraw (t,y)) x =
-      κ • (D.FInv.field t (Y t x)).adjoint
+      κ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (D.FInv.field t (Y t x))
         (S.pressure.pointField t (cylinderGraph P k D.m₀ (Y t x))) := by
   have he : (fun y => physicalPressure (S.rawGraphPotential k) Yraw (t,y)) =
       S.graphPotential k t ∘ Y t := by

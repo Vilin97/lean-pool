@@ -119,8 +119,7 @@ def derivativeBundling : C(K,Space →L[ℝ] V) →L[ℝ] (Space →L[ℝ] C(K,V
 theorem derivativeBundling_norm_le_one : ‖derivativeBundling (K := K) (V := V)‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
   intro D
-  change ‖derivativeMap D‖ ≤ 1*‖D‖
-  simpa only [one_mul] using derivativeMap_norm_le D
+  exact (derivativeMap_norm_le D).trans_eq (one_mul _).symm
 
 end Bundling
 
@@ -254,7 +253,7 @@ theorem hasFDerivAt_field (A : SpatialFamily K V) (a : Space) :
     simpa only [sub_self, norm_zero, mul_zero] using hc.tendsto a
 
 theorem fderiv_field (A : SpatialFamily K V) :
-    fderiv ℝ A.field = fun a => derivativeBundling (A.derivative.field a) :=
+    fderiv ℝ A.field = fun a => derivativeBundling (K := K) (V := V) (A.derivative.field a) :=
   funext (fun a => (A.hasFDerivAt_field a).fderiv)
 
 private theorem contDiff_field_aux (n : ℕ) :
@@ -270,9 +269,7 @@ private theorem contDiff_field_aux (n : ℕ) :
     rw [Nat.cast_add, Nat.cast_one, contDiff_succ_iff_fderiv]
     refine ⟨fun a => (A.hasFDerivAt_field a).differentiableAt, by simp, ?_⟩
     rw [A.fderiv_field]
-    exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := (n : ℕ∞ω))
-      (E := C(K,Space →L[ℝ] V)) (F := Space →L[ℝ] C(K,V))
-      (derivativeBundling (K := K) (V := V))).comp (ih (Space →L[ℝ] V) A.derivative)
+    exact (derivativeBundling (K := K) (V := V)).contDiff.comp (ih (Space →L[ℝ] V) A.derivative)
 
 /-- All ordinary pointwise derivatives produce genuine uniform-path smoothness. -/
 theorem contDiff_field (A : SpatialFamily K V) : ContDiff ℝ ∞ A.field :=
@@ -328,11 +325,11 @@ variable {K V : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- Ordinary translation applied to every value of an actual continuous L² path. -/
 def translate (a : Space) (f : C(K, L2Space V)) : C(K,L2Space V) :=
-  (EulerLpTranslation.translation a).toContinuousLinearMap.compLeftContinuous ℝ K f
+  (EulerLpTranslation.translation (V := V) a).toContinuousLinearMap.compLeftContinuous ℝ K f
 
 omit [CompactSpace K] in
 @[simp] theorem translate_apply (a : Space) (f : C(K, L2Space V)) (t : K) :
-    translate a f t = EulerLpTranslation.translation a (f t) := rfl
+    translate a f t = EulerLpTranslation.translation (V := V) a (f t) := rfl
 
 variable (A : K → SmoothL2Field V)
   (hA : ∀ n, Continuous (fun t => (A t).jetLp n))
@@ -345,16 +342,16 @@ def spatialJetPath (n : ℕ) : C(K,L2Space (Space [×n]→L[ℝ] V)) :=
 /-- The actual translation jets form a continuous path because they are
 bounded linear images of the original ordinary L² spatial jets. -/
 def orbitJetPath (n : ℕ) (a : Space) : C(K,Space [×n]→L[ℝ] L2Space V) :=
-  (multilinearBundling (P := Space) (V := V) volume n).compLeftContinuous ℝ K
+  (multilinearBundling (X := Space) (P := Space) (V := V) volume n).compLeftContinuous ℝ K
     (translate a (spatialJetPath A hA n))
 
 include hf in
 omit [CompactSpace K] in
 theorem orbitJetPath_eq (n : ℕ) (a : Space) (t : K) :
     orbitJetPath A hA n a t = iteratedFDeriv ℝ n (fun b : Space => translate b f t) a := by
-  change multilinearBundling (P := Space) (V := V) volume n
-      (EulerLpTranslation.translation a ((A t).jetLp n)) =
-    iteratedFDeriv ℝ n (fun b : Space => EulerLpTranslation.translation b (f t)) a
+  change multilinearBundling (X := Space) (P := Space) (V := V) volume n
+      (EulerLpTranslation.translation (V := Space [×n]→L[ℝ] V) a ((A t).jetLp n)) =
+    iteratedFDeriv ℝ n (fun b : Space => EulerLpTranslation.translation (V := V) b (f t)) a
   rw [hf t]
   exact ((A t).iteratedFDeriv_translation_eq n a).symm
 
@@ -363,7 +360,7 @@ original uniform-time L² bounds. -/
 def forcingFamily : SpatialFamily K (L2Space V) where
   field a := translate a f
   smooth t := by
-    change ContDiff ℝ ∞ (fun a : Space => EulerLpTranslation.translation a (f t))
+    change ContDiff ℝ ∞ (fun a : Space => EulerLpTranslation.translation (V := V) a (f t))
     rw [hf t]
     exact (A t).translation_contDiff
   jet := orbitJetPath A hA
@@ -371,7 +368,8 @@ def forcingFamily : SpatialFamily K (L2Space V) where
   bound n := ‖spatialJetPath A hA n‖
   bound_nonneg n := norm_nonneg _
   bounded n a t := by
-    change ‖iteratedFDeriv ℝ n (fun b : Space => EulerLpTranslation.translation b (f t)) a‖ ≤ _
+    change ‖iteratedFDeriv ℝ n
+      (fun b : Space => EulerLpTranslation.translation (V := V) b (f t)) a‖ ≤ _
     rw [hf t]
     exact ((A t).norm_iteratedFDeriv_translation_le n a).trans
       ((spatialJetPath A hA n).norm_coe_le_norm t)

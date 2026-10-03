@@ -61,7 +61,7 @@ local instance instPacketCoefficientLipschitz10 : NormedSpace ℝ C(Icc (0 : ℝ
     →L[ℝ] V)) := inferInstance
 
 theorem coefficient_label_norm (A : SmoothCoefficientPath (Icc (0 : ℝ) T) V) (x : Space) :
-    ‖pathEvaluation x A.field‖ ≤ ‖A.field‖ := by
+    ‖pathEvaluation (K := Icc (0 : ℝ) T) (V := V) x A.field‖ ≤ ‖A.field‖ := by
   apply (ContinuousMap.norm_le _ (norm_nonneg _)).mpr
   intro t
   exact ((A.field t).norm_coe_le_norm x).trans (A.field.norm_coe_le_norm t)
@@ -77,7 +77,9 @@ theorem coefficient_difference (A : SmoothCoefficientPath (Icc (0 : ℝ) T) V)
 
 theorem coefficient_label_difference (A : SmoothCoefficientPath (Icc (0 : ℝ) T) V)
     (x y : Space) :
-    ‖pathEvaluation x A.field-pathEvaluation y A.field‖ ≤ ‖A.derivative.field‖*‖x-y‖ := by
+    ‖pathEvaluation (K := Icc (0 : ℝ) T) (V := V) x A.field -
+        pathEvaluation (K := Icc (0 : ℝ) T) (V := V) y A.field‖ ≤
+      ‖A.derivative.field‖*‖x-y‖ := by
   apply (ContinuousMap.norm_le _ (mul_nonneg (norm_nonneg _) (norm_nonneg _))).mpr
   intro t
   exact coefficient_difference A t x y

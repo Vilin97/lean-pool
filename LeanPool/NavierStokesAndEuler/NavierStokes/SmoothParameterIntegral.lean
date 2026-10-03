@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.Calculus.ParametricIntegral
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Smooth parameter integrals with local integrable majorants
@@ -55,6 +56,29 @@ theorem integrable_jet
   exact hb.mono' (h_meas k x)
     (hbound.mono fun t ht => ht x (mem_ball_self hε))
 
+/-- Dominated differentiation of an integrated jet from a dominating ball at one parameter,
+with the correct curry map. -/
+theorem hasFDerivAt_integral_jet_of_ball {k : ℕ} {x : H} {ε : ℝ} (hε : 0 < ε)
+    {bound : α → ℝ} (hb : Integrable bound μ)
+    (hbound : ∀ᵐ t ∂μ, ∀ y ∈ ball x ε, ‖jet F (k + 1) y t‖ ≤ bound t)
+    (hd : ∀ᵐ t ∂μ, ∀ y ∈ ball x ε, HasFDerivAt (fun z => jet F k z t)
+      (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => H) E (jet F (k + 1) y t)) y)
+    (hm_near : ∀ᶠ y in 𝓝 x, AEStronglyMeasurable (jet F k y) μ)
+    (hint : Integrable (jet F k x) μ) (hm₁ : AEStronglyMeasurable (jet F (k + 1) x) μ) :
+    HasFDerivAt (fun y => ∫ t, jet F k y t ∂μ)
+      (∫ t, jet F (k + 1) x t ∂μ).curryLeft x := by
+  let curry := continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => H) E
+  have hm := curry.continuous.comp_aestronglyMeasurable hm₁
+  have hnorm : ∀ᵐ t ∂μ, ∀ y ∈ ball x ε,
+      ‖curry (jet F (k + 1) y t)‖ ≤ bound t := by
+    filter_upwards [hbound] with t ht
+    intro y hy
+    simpa only [LinearIsometryEquiv.norm_map] using ht y hy
+  have hi := hasFDerivAt_integral_of_dominated_of_fderiv_le
+    (F' := fun y t => curry (jet F (k + 1) y t)) (Metric.ball_mem_nhds _ hε)
+    hm_near hint hm hnorm hb hd
+  exact hi.congr_fderiv (curry.toContinuousLinearEquiv.integral_comp_comm _)
+
 /-- Differentiation of every integrated genuine jet, with the correct curry map. -/
 theorem hasFDerivAt_integral_jet
     (h_smooth : ∀ᵐ t ∂μ, ContDiff ℝ ∞ (fun x => F x t))
@@ -62,34 +86,14 @@ theorem hasFDerivAt_integral_jet
     (h_dom : LocallyDominated F μ) (k : ℕ) (x : H) :
     HasFDerivAt (fun y => ∫ t, jet F k y t ∂μ)
       (∫ t, jet F (k + 1) x t ∂μ).curryLeft x := by
-  let curry : (H [×(k + 1)]→L[ℝ] E) ≃ₗᵢ[ℝ] (H →L[ℝ] H [×k]→L[ℝ] E) :=
-    continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => H) E
   obtain ⟨ε, hε, bound, hb, hbound⟩ := h_dom (k + 1) x
-  have hm : AEStronglyMeasurable (fun t => curry (jet F (k + 1) x t)) μ :=
-    curry.continuous.comp_aestronglyMeasurable (h_meas (k + 1) x)
-  have hd : ∀ᵐ t ∂μ, ∀ y ∈ ball x ε,
-      HasFDerivAt (fun z => jet F k z t) (curry (jet F (k + 1) y t)) y := by
-    filter_upwards [h_smooth] with t ht
-    intro y _
-    simpa only [jet, fderiv_iteratedFDeriv, Function.comp_apply] using
-      (ht.differentiable_iteratedFDeriv (m := k)
-        (WithTop.coe_lt_coe.mpr (ENat.natCast_lt_top k)) y).hasFDerivAt
-  have hnorm : ∀ᵐ t ∂μ, ∀ y ∈ ball x ε,
-      ‖curry (jet F (k + 1) y t)‖ ≤ bound t := by
-    filter_upwards [hbound] with t ht
-    intro y hy
-    simpa only [LinearIsometryEquiv.norm_map] using ht y hy
-  have hi := hasFDerivAt_integral_of_dominated_of_fderiv_le (Metric.ball_mem_nhds _ hε)
-    (Filter.Eventually.of_forall (h_meas k)) (integrable_jet h_meas h_dom k x)
-    hm hnorm hb hd
-  have hc : (∫ t, curry (jet F (k + 1) x t) ∂μ) =
-      curry (∫ t, jet F (k + 1) x t ∂μ) := by
-    simpa only [LinearIsometryEquiv.coe_toContinuousLinearEquiv] using
-      (ContinuousLinearEquiv.integral_comp_comm (𝕜 := ℝ) (μ := μ)
-        (E := H [×(k + 1)]→L[ℝ] E) (F := H →L[ℝ] H [×k]→L[ℝ] E)
-        (curry.toContinuousLinearEquiv) (fun t => jet F (k + 1) x t))
-  rw [hc] at hi
-  exact hi
+  refine hasFDerivAt_integral_jet_of_ball hε hb hbound ?_
+    (Filter.Eventually.of_forall (h_meas k)) (integrable_jet h_meas h_dom k x) (h_meas (k + 1) x)
+  filter_upwards [h_smooth] with t ht
+  intro y _
+  simpa only [jet, fderiv_iteratedFDeriv, Function.comp_apply] using
+    (ht.differentiable_iteratedFDeriv (m := k)
+      (WithTop.coe_lt_coe.mpr (ENat.natCast_lt_top k)) y).hasFDerivAt
 
 /-- The Taylor series consists of the integrated genuine derivatives. -/
 theorem hasFTaylorSeriesUpTo_integral
@@ -153,41 +157,22 @@ theorem hasFDerivAt_integral_jetOn (hs : IsOpen s)
     (h_dom : LocallyDominatedOn F μ s) (k : ℕ) {x : H} (hx : x ∈ s) :
     HasFDerivAt (fun y => ∫ t, jet F k y t ∂μ)
       (∫ t, jet F (k + 1) x t ∂μ).curryLeft x := by
-  let curry : (H [×(k + 1)]→L[ℝ] E) ≃ₗᵢ[ℝ] (H →L[ℝ] H [×k]→L[ℝ] E) :=
-    continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (k + 1) => H) E
   obtain ⟨ε, hε, hεs, bound, hb, hbound⟩ := h_dom (k + 1) x hx
-  have hm : AEStronglyMeasurable (fun t => curry (jet F (k + 1) x t)) μ :=
-    curry.continuous.comp_aestronglyMeasurable (h_meas (k + 1) x hx)
-  have hd : ∀ᵐ t ∂μ, ∀ y ∈ ball x ε,
-      HasFDerivAt (fun z => jet F k z t) (curry (jet F (k + 1) y t)) y := by
-    filter_upwards [h_smooth] with t ht
-    intro y hy
-    have hc : ContDiffAt ℝ ∞ (fun z => F z t) y :=
-      ht.contDiffAt (hs.mem_nhds (hεs hy))
-    have horder : (1 : WithTop ℕ∞) + (k : WithTop ℕ∞) ≤ ∞ := by
-      change (((1 : ℕ∞) + (k : ℕ∞)) : WithTop ℕ∞) ≤ ((⊤ : ℕ∞) : WithTop ℕ∞)
-      exact WithTop.coe_le_coe.mpr le_top
-    have hj : DifferentiableAt ℝ (iteratedFDeriv ℝ k (fun z => F z t)) y :=
-      (hc.iteratedFDeriv_right (m := 1) horder).differentiableAt (by norm_num)
-    simpa only [jet, fderiv_iteratedFDeriv, Function.comp_apply] using hj.hasFDerivAt
-  have hnorm : ∀ᵐ t ∂μ, ∀ y ∈ ball x ε,
-      ‖curry (jet F (k + 1) y t)‖ ≤ bound t := by
-    filter_upwards [hbound] with t ht
-    intro y hy
-    simpa only [LinearIsometryEquiv.norm_map] using ht y hy
   have hm_near : ∀ᶠ y in 𝓝 x, AEStronglyMeasurable (jet F k y) μ := by
     filter_upwards [hs.mem_nhds hx] with y hy
     exact h_meas k y hy
-  have hi := hasFDerivAt_integral_of_dominated_of_fderiv_le (Metric.ball_mem_nhds _ hε) hm_near
-    (integrable_jetOn h_meas h_dom k hx) hm hnorm hb hd
-  have hcomm : (∫ t, curry (jet F (k + 1) x t) ∂μ) =
-      curry (∫ t, jet F (k + 1) x t ∂μ) := by
-    simpa only [LinearIsometryEquiv.coe_toContinuousLinearEquiv] using
-      (ContinuousLinearEquiv.integral_comp_comm (𝕜 := ℝ) (μ := μ)
-        (E := H [×(k + 1)]→L[ℝ] E) (F := H →L[ℝ] H [×k]→L[ℝ] E)
-        (curry.toContinuousLinearEquiv) (fun t => jet F (k + 1) x t))
-  rw [hcomm] at hi
-  exact hi
+  refine hasFDerivAt_integral_jet_of_ball hε hb hbound ?_ hm_near
+    (integrable_jetOn h_meas h_dom k hx) (h_meas (k + 1) x hx)
+  filter_upwards [h_smooth] with t ht
+  intro y hy
+  have hc : ContDiffAt ℝ ∞ (fun z => F z t) y :=
+    ht.contDiffAt (hs.mem_nhds (hεs hy))
+  have horder : (1 : WithTop ℕ∞) + (k : WithTop ℕ∞) ≤ ∞ := by
+    change (((1 : ℕ∞) + (k : ℕ∞)) : WithTop ℕ∞) ≤ ((⊤ : ℕ∞) : WithTop ℕ∞)
+    exact WithTop.coe_le_coe.mpr le_top
+  have hj : DifferentiableAt ℝ (iteratedFDeriv ℝ k (fun z => F z t)) y :=
+    (hc.iteratedFDeriv_right (m := 1) horder).differentiableAt (by norm_num)
+  simpa only [jet, fderiv_iteratedFDeriv, Function.comp_apply] using hj.hasFDerivAt
 
 theorem hasFTaylorSeriesUpToOn_integral (hs : IsOpen s)
     (h_smooth : ∀ᵐ t ∂μ, ContDiffOn ℝ ∞ (fun x => F x t) s)
@@ -243,9 +228,10 @@ theorem contDiffOn_integral_Ioc_of_continuous_jet (hs : IsOpen s)
     exact h_smooth t ⟨ht.1.le, ht.2⟩
   · intro k x hx
     have hc : ContinuousOn (jet F k x) (Icc a b) :=
-      (h_jet k).comp (continuous_const.prodMk continuous_id).continuousOn
+      (h_jet k).comp (f := fun t => (x, t)) (continuous_const.prodMk continuous_id).continuousOn
         (fun t ht => ⟨hx, ht⟩)
-    exact (hc.mono Ioc_subset_Icc_self).aestronglyMeasurable measurableSet_Ioc
+    exact ContinuousOn.aestronglyMeasurable (h := secondCountableTopologyEither_of_left ℝ _)
+      (hc.mono Ioc_subset_Icc_self) measurableSet_Ioc
   · intro k x hx
     obtain ⟨ε, hε, hεs⟩ := nhds_basis_closedBall.mem_iff.mp (hs.mem_nhds hx)
     have hcompact : IsCompact (closedBall x ε ×ˢ Icc a b) :=

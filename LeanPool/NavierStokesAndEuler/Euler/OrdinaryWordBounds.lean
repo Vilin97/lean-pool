@@ -56,7 +56,8 @@ theorem wordBound_jet_norm {s n : ℕ} {M : ℝ} {A : SmoothL2Field V}
   apply (jet_norm_le_word_sum A n).trans
   calc
     _ ≤ ∑ _w : Fin n → Fin 3, M := sum_le_sum (fun w _ => h n hn w)
-    _ = _ := by simp
+    _ = _ := by simp only [sum_const, card_univ, Fintype.card_pi, Fintype.card_fin, prod_const,
+        nsmul_eq_mul, Nat.cast_pow, Nat.cast_ofNat]
 
 theorem wordBound_toLp {s : ℕ} {M : ℝ} {A : SmoothL2Field V}
     (h : WordBound s M A) : ‖A.toLp‖ ≤ M :=

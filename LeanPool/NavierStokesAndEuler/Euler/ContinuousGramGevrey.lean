@@ -42,8 +42,8 @@ private theorem cost_bounds (c C D : ℝ) (hc : 0 < c) (hD : 0 ≤ D) :
   unfold gramCost
   constructor
   · have h : 0 ≤ c⁻¹*(3*C^2+D+1) := by positivity
-    linarith
-  constructor <;> nlinarith [sq_nonneg C]
+    linarith only [h]
+  constructor <;> nlinarith only [hi, hD, sq_nonneg C]
 
 variable {U E : Type*}
   [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
@@ -139,7 +139,8 @@ theorem inversePath_gevrey (R : ℝ) (hR : 2 * gramCost c C 1 * (Rc + 1) ≤ R) 
       (3*C^2)*(Rc^(j+1)*((j+1).factorial : ℝ)^2) := by
     simpa only [majorant, Nat.add_zero] using hAall (j+1) y
   obtain ⟨hM, hMC, hMD⟩ := cost_bounds c C 1 hc zero_le_one
-  have hR0 : 0 ≤ R := by nlinarith
+  have hR0 : 0 ≤ R := (mul_nonneg (mul_nonneg zero_le_two (zero_le_one.trans hM))
+    (add_nonneg hRc zero_le_one)).trans hR
   have hone : ‖onePath‖ ≤ 1 := by
     apply (ContinuousMap.norm_le _ zero_le_one).2
     intro t

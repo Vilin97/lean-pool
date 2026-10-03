@@ -26,11 +26,12 @@ open scoped SchwartzMap ENNReal ContDiff LineDeriv
 theorem norm_le_sum_coordinates (d : ℕ) (ξ : Domain d) : ‖ξ‖ ≤ ∑ i, ‖ξ i‖ := by
   have he : (∑ i : Fin d, EuclideanSpace.single i (ξ i)) = ξ := by
     ext j
-    simp
+    simp only [WithLp.ofLp_sum, PiLp.ofLp_single, Finset.sum_apply, Finset.sum_pi_single,
+        Finset.mem_univ, ↓reduceIte]
   calc
     ‖ξ‖ = ‖∑ i : Fin d, EuclideanSpace.single i (ξ i)‖ := by rw [he]
     _ ≤ ∑ i : Fin d, ‖EuclideanSpace.single i (ξ i)‖ := norm_sum_le _ _
-    _ = _ := by simp
+    _ = _ := by simp only [PiLp.norm_single, Real.norm_eq_abs]
 
 /-- The operator norm of a derivative tensor is bounded by the sum of its coordinate entries. -/
 theorem multilinear_norm_le_coordinate_sum {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
@@ -41,7 +42,9 @@ theorem multilinear_norm_le_coordinate_sum {F : Type*} [NormedAddCommGroup F] [N
   intro m
   have hm (j : Fin n) : (∑ i : Fin d, (m j i) • EuclideanSpace.single i (1 : ℝ)) = m j := by
     ext i
-    simp [Pi.single_apply, mul_ite]
+    simp only [WithLp.ofLp_sum, WithLp.ofLp_smul, PiLp.ofLp_single, Finset.sum_apply, Pi.smul_apply,
+        Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+        Finset.mem_univ, ↓reduceIte]
   have hexpand : T m = ∑ w : Fin n → Fin d,
       T (fun j => (m j (w j)) • EuclideanSpace.single (w j) (1 : ℝ)) := by
     change T.toMultilinearMap m = ∑ w : Fin n → Fin d,
@@ -97,8 +100,8 @@ theorem besselWeight_three_le_pure_three (d : ℕ) (ξ : Domain d) :
 
 theorem sobolevNorm_three_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)) :
     sobolevNorm d 3 f ≤ ((d : ℝ) + 1) ^ 2 *
-      (‖f.toLp 2‖ + (2 * Real.pi) ^ (-3 : ℤ) *
-        ∑ i : Fin d, ‖(directional d 3 (EuclideanSpace.single i 1) f).toLp 2‖) := by
+      (‖(f.toLp 2 :)‖ + (2 * Real.pi) ^ (-3 : ℤ) *
+        ∑ i : Fin d, ‖((directional d 3 (EuclideanSpace.single i 1) f).toLp 2 :)‖) := by
   let g : Option (Fin d) → 𝓢(Domain d, ℂ) := fun i => match i with
     | none => schwartzFourier f
     | some i => ((2 * Real.pi) ^ (-3 : ℤ) : ℝ) •
@@ -118,17 +121,17 @@ theorem sobolevNorm_three_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)
       simp_rw [← mul_assoc, hp, one_mul]
       rw [add_mul, one_mul, Finset.sum_mul]
     rw [hg]
-    nlinarith [mul_le_mul_of_nonneg_right (besselWeight_three_le_pure_three d ξ)
-      (norm_nonneg (schwartzFourier f ξ))]
+    exact (mul_le_mul_of_nonneg_right (besselWeight_three_le_pure_three d ξ)
+      (norm_nonneg (schwartzFourier f ξ))).trans_eq (mul_assoc _ _ _)
   have h := normLp_le_sum d (weightedFourier d 3 f) g (((d : ℝ) + 1) ^ 2)
     (sq_nonneg _) hpoint
-  have hnorm : ∑ i, ‖(g i).toLp 2‖ = ‖f.toLp 2‖ +
+  have hnorm : ∑ i, ‖(g i).toLp 2 volume‖ = ‖f.toLp 2 volume‖ +
       (2 * Real.pi) ^ (-3 : ℤ) * ∑ i : Fin d,
-        ‖(directional d 3 (EuclideanSpace.single i 1) f).toLp 2‖ := by
+        ‖(directional d 3 (EuclideanSpace.single i 1) f).toLp 2 volume‖ := by
     rw [Fintype.sum_option]
     simp only [g]
-    change ‖(𝓕 f).toLp 2‖ + ∑ i,
-      ‖SchwartzMap.toLpCLM ℝ ℂ 2 volume (((2 * Real.pi) ^ (-3 : ℤ)) •
+    change ‖(𝓕 f).toLp 2 volume‖ + ∑ i,
+      ‖SchwartzMap.toLpCLM (E := Domain d) ℝ ℂ 2 volume (((2 * Real.pi) ^ (-3 : ℤ)) •
         𝓕 (directional d 3 (EuclideanSpace.single i 1) f))‖ = _
     simp only [map_smul, norm_smul,
       Real.norm_of_nonneg (by positivity : 0 ≤ (2 * Real.pi) ^ (-3 : ℤ)),
@@ -139,8 +142,8 @@ theorem sobolevNorm_three_le_pure_derivatives (d : ℕ) (f : 𝓢(Domain d, ℂ)
 /-- Four-dimensional Sobolev embedding stated solely with actual L² derivative norms. -/
 theorem pointwise_le_L2_third_derivatives (f : 𝓢(Domain 4, ℂ)) (x : Domain 4) :
     ‖f x‖ ≤ embeddingConstant 4 3 (by norm_num) * 25 *
-      (‖f.toLp 2‖ + (2 * Real.pi) ^ (-3 : ℤ) *
-        ∑ i : Fin 4, ‖(directional 4 3 (EuclideanSpace.single i 1) f).toLp 2‖) := by
+      (‖(f.toLp 2 :)‖ + (2 * Real.pi) ^ (-3 : ℤ) *
+        ∑ i : Fin 4, ‖((directional 4 3 (EuclideanSpace.single i 1) f).toLp 2 :)‖) := by
   have hA := norm_apply_le_sobolevNorm 4 3 (by norm_num) f x
   have hB := mul_le_mul_of_nonneg_left (sobolevNorm_three_le_pure_derivatives 4 f)
     (show 0 ≤ embeddingConstant 4 3 (by norm_num) from norm_nonneg _)

@@ -98,8 +98,8 @@ def ordinaryTensorOperator (q : ℕ) :
 theorem ordinaryTensorOperator_apply (A : SmoothL2Field Space) (q : ℕ) :
     ordinaryTensorOperator q (ordinarySobolev q A.toLp A.translation_contDiff)=A.jetLp q := by
   have he : ordinaryTensorOperator q (ordinarySobolev q A.toLp A.translation_contDiff) =
-      tensorLpReassembly (volume : Measure Space) q (fun w : Fin q → Fin 3 => (wordField A w).toLp)
-          := by
+      tensorLpReassembly (V := Space) (volume : Measure Space) q
+        (fun w : Fin q → Fin 3 => (wordField A w).toLp) := by
     unfold ordinaryTensorOperator
     rw [ContinuousLinearMap.comp_apply]
     congr 1

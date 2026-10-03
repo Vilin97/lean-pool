@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Algebra.Order.Star.Real
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Explicit scalar choices for the actual drift-aware correction budget.
 The error target is exp(-sqrt X), with X=k^ϑ in the source construction. -/
@@ -48,23 +49,23 @@ theorem initialRadius_bounds (R M Rc : ℝ) (hR : 0 ≤ R) (hM : 0 ≤ M) (hRc :
   unfold initialRadius
   refine ⟨one_div_pos.mpr hd, ?_, ?_, ?_⟩
   · rw [div_mul_eq_mul_div,one_mul,div_le_iff₀ hd]
-    nlinarith
+    nlinarith only [hRc, hmc]
   · rw [show 4*M*(1/(1+8*R+4*M*Rc+Rc)*Rc) =
         (4*M*Rc)/(1+8*R+4*M*Rc+Rc) by ring, div_le_iff₀ hd]
-    nlinarith
+    nlinarith only [hR, hRc]
   · rw [div_mul_eq_mul_div,one_mul,div_le_iff₀ hd]
-    nlinarith
+    nlinarith only [hR, hmc]
 
 /-- The actual residual envelope wins over the Gronwall factor with an
 explicit linear bound on the source growth cost. -/
 theorem residual_small (C T k X : ℝ) (hX : 64 ≤ X) (hk : 1 ≤ Real.log k)
     (hgrowth : 3 * C * T ≤ X / 4) :
     2*residual k X*Real.exp (3*C*T) ≤ delta X/2 := by
-  have hX0 : 0 ≤ X := by linarith
+  have hX0 : 0 ≤ X := by linarith only [hX]
   have hs : Real.sqrt X ≤ X/8 :=
-    (Real.sqrt_le_left (by linarith)).mpr (by nlinarith)
+    (Real.sqrt_le_left (by linarith only [hX])).mpr (by nlinarith only [hX])
   have hl : Real.log 8 ≤ X/8 :=
-    (Real.log_le_sub_one_of_pos (by norm_num : (0 : ℝ) < 8)).trans (by linarith)
+    (Real.log_le_sub_one_of_pos (by norm_num : (0 : ℝ) < 8)).trans (by linarith only [hX])
   have hxlog : X ≤ X*Real.log k := le_mul_of_one_le_right hX0 hk
   have he : Real.log 8 + (-(7/10)*X*Real.log k+3*C*T) ≤ -Real.sqrt X := by
     nlinarith only [hX0,hs,hl,hxlog,hgrowth]
@@ -103,6 +104,6 @@ theorem radius_bounds (T C D ρ0 k X : ℝ) (hC : 0 ≤ C) (hD : 0 ≤ D) (hk : 
   have hu := mul_nonneg hs t.property.1
   have hl := (mul_le_mul_of_nonneg_left t.property.2 hs).trans hdecay
   change ρ0/2 ≤ ρ0-2*C*(D/k+delta X)*t.val ∧ ρ0-2*C*(D/k+delta X)*t.val ≤ ρ0
-  constructor <;> linarith
+  constructor <;> linarith only [hl, hu]
 
 end EulerPacketCorrectionScalar

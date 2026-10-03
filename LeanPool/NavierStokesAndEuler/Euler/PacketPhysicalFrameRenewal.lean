@@ -45,9 +45,11 @@ theorem scaling_cross_flux {a : ℝ} (ha : a ≠ 0) (s₀ ε : ℝ)
         (rowAction (scaledVelocityEntry a ε M) 0 (V 0/V 1) (V 2/V 1))
         (rowAction (scaledVelocityEntry a ε M) 1 (V 0/V 1) (V 2/V 1))
         (rowAction (scaledVelocityEntry a ε M) 2 (V 0/V 1) (V 2/V 1)) := by
-  norm_num [Fin.sum_univ_three, _root_.cross_apply, velocityScale, rayScale,
-    scaledVelocityEntry, frameCrossNumerator, rowAction, Fin.ext_iff,
-    Matrix.cons_val_two, Matrix.tail_cons, Matrix.head_cons]
+  simp only [rayScale, Fin.isValue, Fin.ext_iff, Fin.coe_ofNat_eq_mod, Nat.one_mod, mul_ite,
+    mul_one, ite_mul, velocityScale, one_mul, cross_apply, Nat.succ_eq_add_one, Nat.reduceAdd,
+    ↓reduceIte, Nat.mod_succ, OfNat.ofNat_ne_one, Nat.zero_mod, zero_ne_one, Fin.sum_univ_three,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val_two, Matrix.tail_cons,
+    Matrix.head_cons, frameCrossNumerator, rowAction, scaledVelocityEntry]
   field_simp
   ring
 

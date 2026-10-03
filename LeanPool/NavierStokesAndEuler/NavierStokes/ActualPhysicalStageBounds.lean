@@ -143,10 +143,10 @@ theorem finiteRate_negative_power {D : Type} [NormedAddCommGroup D] [NormedSpace
   let C := 1 + D + a ^ p + a⁻¹
   have hap : 0 ≤ a ^ p := Real.rpow_nonneg ha.le _
   have hai : 0 ≤ a⁻¹ := inv_nonneg.mpr ha.le
-  have hC : 1 ≤ C := by dsimp [C]; linarith
-  have hDC : D ≤ C := by dsimp [C]; linarith
-  have hpC : a ^ p ≤ C := by dsimp [C]; linarith
-  have hiC : a⁻¹ ≤ C := by dsimp [C]; linarith
+  have hC : 1 ≤ C := by dsimp only [C]; linarith only [hD, hap, hai]
+  have hDC : D ≤ C := by dsimp only [C]; linarith only [hap, hai]
+  have hpC : a ^ p ≤ C := by dsimp only [C]; linarith only [hD, hai]
+  have hiC : a⁻¹ ≤ C := by dsimp only [C]; linarith only [hD, hap]
   have hU : IsOpen {z | 0 < f z} := isOpen_lt continuous_const hf.continuous
   refine ⟨WeightedQuotients.orderBound p m * C ^ (2 * m + 1), by
     exact mul_nonneg (WeightedQuotients.orderBound_nonneg p m) (pow_nonneg (zero_le_one.trans hC)
@@ -200,11 +200,11 @@ theorem finiteRate_uniform_comp {D : Type} [NormedAddCommGroup D] [NormedSpace �
     simpa only [Real.rpow_zero] using
       Real.rpow_le_rpow_of_exponent_ge hqz.1 hqz.2 (neg_nonpos.mpr hL)
   have hB : 1 ≤ (C + 1) * q z ^ (-L) :=
-    one_le_mul_of_one_le_of_one_le (by linarith) hqpow
+    one_le_mul_of_one_le_of_one_le (by linarith only [hC]) hqpow
   have hfb : ∀ i, 1 ≤ i → i ≤ m →
       ‖iteratedFDeriv ℝ i f z‖ ≤ (C + 1) * q z ^ (-L) := by
     intro i _ hi
-    exact (hcz i hi).trans (mul_le_mul_of_nonneg_right (by linarith)
+    exact (hcz i hi).trans (mul_le_mul_of_nonneg_right (by linarith only)
       (Real.rpow_nonneg hqz.1.le _))
   intro i hi
   calc
@@ -261,7 +261,7 @@ theorem doubleEnergyPower_smooth (p : ℝ) :
 theorem heatModelCoefficient_smooth (C : ℝ) {h : ℝ} (hh : 0 < h) :
     ContDiffOn ℝ ∞ (heatModelCoefficient C h) positiveRadius :=
   (contDiffOn_const.mul ((energyPower_smooth _).mul
-    ((HeatProfileExtension.extension_contDiff (by linarith : 1 < 1 + h)).comp_contDiffOn
+    ((HeatProfileExtension.extension_contDiff (by linarith only [hh] : 1 < 1 + h)).comp_contDiffOn
       heatRatio_smooth))).mul (doubleEnergyPower_smooth _)
 
 /-- Heat model velocity, given by `heatModelCoefficient C h z • angularVector z`. -/
@@ -273,7 +273,7 @@ theorem heatModelCoefficient_eq (C h : ℝ) {z : SpaceTime}
     heatModelCoefficient C h z =
       BaseExterior.heatCoefficient C h (AxisymmetricFields.profilePoint z.1 z.2) := by
   have hr : heatRatio z = 2 * (1 - z.1) / physicalEnergy z := by
-    simp [heatRatio, heatTime, Real.rpow_neg_one, div_eq_mul_inv]
+    simp only [heatRatio, heatTime, Real.rpow_neg_one, div_eq_mul_inv]
   have hnonneg : 0 ≤ heatRatio z := by
     rw [hr]
     exact div_nonneg (mul_nonneg (by norm_num) (sub_nonneg.mpr ht.le)) hs.le
@@ -339,23 +339,28 @@ theorem heat_velocity_rate {l : Filter SpaceTime} (hl : l ≤ endpoint)
       heatTime_smooth.contDiffOn (energyPower_smooth (-1))
     simp only [zero_add] at he
     exact he
-  obtain ⟨A, hA, ha⟩ := extension_uniform_jets (by linarith : 1 < 1 + h) m
+  obtain ⟨A, hA, ha⟩ := extension_uniform_jets (by linarith only [hh] : 1 < 1 + h) m
   have he := finiteRate_uniform_comp positiveRadius_isOpen hlU heatRatio_smooth
-    (HeatProfileExtension.extension (1 + h)) (HeatProfileExtension.extension_contDiff (by linarith))
-    (powerLoss_nonneg m) hA ha hq hr
+    (HeatProfileExtension.extension (1 + h))
+    (HeatProfileExtension.extension_contDiff (by linarith only [hh])) (powerLoss_nonneg m)
+    hA ha hq hr
   have hp := finiteRate_negative_power physicalEnergy_smooth (isCompact_closedBall _ _) hK hq
     hR hlow (p := RadialHeatProfile.spatialExponent (1 + h))
-    (by unfold RadialHeatProfile.spatialExponent; constructor <;> linarith) m
+    (by
+      unfold RadialHeatProfile.spatialExponent
+      exact ⟨(by norm_num : (-2 : ℝ) ≤ 1 / 2 - (1 + 1 / 2)).trans
+          (sub_le_sub_left (add_le_add le_rfl hh1.le) _),
+        sub_nonpos.mpr ((half_le_self zero_le_one).trans (le_add_of_nonneg_right hh.le))⟩) m
   have hs := (energyPower_smooth (RadialHeatProfile.spatialExponent (1 + h))).mul
-    ((HeatProfileExtension.extension_contDiff (by linarith : 1 < 1 + h)).comp_contDiffOn
+    ((HeatProfileExtension.extension_contDiff (by linarith only [hh] : 1 < 1 + h)).comp_contDiffOn
       heatRatio_smooth)
   have hpe := finiteRate_mul hp he positiveRadius_isOpen hlU hq0 (energyPower_smooth _)
-    ((HeatProfileExtension.extension_contDiff (by linarith : 1 < 1 + h)).comp_contDiffOn
+    ((HeatProfileExtension.extension_contDiff (by linarith only [hh] : 1 < 1 + h)).comp_contDiffOn
       heatRatio_smooth)
   have hC := scalarConst_rate hpe positiveRadius_isOpen hlU hs C
   have hlow2 : ∀ᶠ z in l, (2 * R) * q z ≤ 2 * physicalEnergy z := by
     filter_upwards [hlow] with z hz
-    nlinarith
+    exact (mul_assoc 2 R (q z)).trans_le (mul_le_mul_of_nonneg_left hz zero_le_two)
   have hd := finiteRate_negative_power (contDiff_const.mul physicalEnergy_smooth)
     (isCompact_closedBall _ _) hK hq (mul_pos (by norm_num) hR) hlow2
     (p := -(1 / 2 : ℝ)) (by constructor <;> norm_num) m
@@ -405,9 +410,15 @@ theorem leadingVelocity_eq (h C : ℝ) (d : Coefficients) (z : SpaceTime) :
         (fun _ => 0) z := by
   ext i
   fin_cases i <;>
-    simp [leadingVelocity, AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
-      AxisymmetricResidual.componentY, AxisymmetricResidual.lift, AxisymmetricResidual.pack,
-      BaseExterior.leadingAngular, cartesianMonomial, angularVector, coordinateVector, Fin.ext_iff]
+    simp only [leadingVelocity, cartesianMonomial, one_div, angularVector, Fin.isValue,
+        coordinateVector, neg_smul, smul_add, smul_neg, Fin.zero_eta, PiLp.add_apply,
+        PiLp.neg_apply, PiLp.smul_apply, PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq,
+        zero_ne_one, not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero,
+        AxisymmetricResidual.velocity, AxisymmetricResidual.pack, AxisymmetricResidual.componentX,
+        AxisymmetricResidual.lift, BaseExterior.leadingAngular, zero_add,
+        AxisymmetricResidual.componentY, sub_zero, zero_smul, neg_inj, Fin.mk_one, one_ne_zero,
+        neg_zero, Fin.reduceFinMk, Fin.ext_iff, Fin.coe_ofNat_eq_mod, Nat.mod_succ, Nat.zero_mod,
+        OfNat.ofNat_ne_zero, Nat.one_mod, OfNat.ofNat_ne_one]
           <;> ring
 
 theorem leadingVelocity_rate {l : Filter SpaceTime} {h C lo hi : ℝ}
@@ -436,13 +447,13 @@ theorem heatLoss_controls_core {h : ℝ} (hh1 : h < 1 / 2) (m : ℕ) :
     -heatLoss m ≤ -CoordinateAlgebra.A h - 2 * ((m : ℝ) + 1) := by
   unfold heatLoss powerLoss CoordinateAlgebra.A
   have hm : 0 ≤ (m : ℝ) := by positivity
-  nlinarith [sq_nonneg (m : ℝ)]
+  nlinarith only [hh1, sq_nonneg (m : ℝ)]
 
 theorem heatLoss_controls_middle {h : ℝ} (hh1 : h < 1 / 2) (m : ℕ) :
     -heatLoss m ≤ -CoordinateAlgebra.A h - 1 / 2 - m := by
   have hc := heatLoss_controls_core hh1 m
   have hm : 0 ≤ (m : ℝ) := by positivity
-  linarith
+  linarith only [hc]
 
 theorem heatLoss_mono {n m : ℕ} (hnm : n ≤ m) : heatLoss n ≤ heatLoss m := by
   unfold heatLoss powerLoss
@@ -503,11 +514,11 @@ theorem actual_bounded_rate (upper : ℝ) (B : ℕ) {l : Filter SpaceTime}
   have hr' := finiteRate_weaken hr hq (show -CoordinateAlgebra.A F.data.h - 2 * ((m : ℝ) + 1) ≤
       F.data.h * ((m : ℝ) + 1) - CoordinateAlgebra.A F.data.h - 2 * ((m : ℝ) + 1) by
     have hm : 0 ≤ F.data.h * ((m : ℝ) + 1) := mul_nonneg F.data.h_pos.le (by positivity)
-    linarith)
+    linarith only [hm])
   have hs' := finiteRate_weaken hs hq (show -CoordinateAlgebra.A F.data.h - 2 * ((m : ℝ) + 1) ≤
       -CoordinateAlgebra.A F.data.h - ((m : ℝ) + 1) by
     have hm : 0 ≤ (m : ℝ) := by positivity
-    linarith)
+    linarith only)
   have hsum := finiteRate_add hr' hs' past_isOpen hp
     ((FinalSlowBase.velocity_smooth H v upper B).sub
       (prefixVelocity_smooth F.data.h_pos F.data.h_lt_half hd m W.axis.normalization))
@@ -676,7 +687,7 @@ theorem nonemptyPrefix_jetRate {l : Filter D} {q : D → ℝ} {A : ℕ → D →
   | zero =>
     have he : DiagonalJetBounds.uncutPrefix A (0 + 1) = A 0 := by
       funext x
-      simp [DiagonalJetBounds.uncutPrefix]
+      simp only [DiagonalJetBounds.uncutPrefix, zero_add, Finset.range_one, Finset.sum_singleton]
     rw [he]
     exact hzero
   | succ J ih =>
@@ -699,7 +710,7 @@ theorem prefix_background {l : Filter D} {q : D → ℝ} {A : ℕ → D → V}
     apply (raw_jetRate hraw hS hq hj m).weaken hq
     have hmax := le_max_left (L m) (Lzero m)
     have hgain := hg j hj
-    linarith
+    linarith only [hmax, hgain]
 
 end General
 
@@ -736,7 +747,7 @@ theorem mixed_background {l : Filter SpaceTime} {q : SpaceTime → ℝ}
       (SpatialCurl.spatialCurl (DiagonalJetBounds.uncutPrefix A (J + 1))) U := by
     intro x hx
     exact (SpatialCurl.contDiffAt_spatialCurl (hsA.contDiffAt (hU.mem_nhds hx))
-      (by simp)).contDiffWithinAt
+      (by simp only [ENat.coe_top_add_one, Std.le_refl])).contDiffWithinAt
   exact hc.add hb hU hlU hsCurl hsB
 
 /-- Stage velocity, defined pointwise by `SpatialCurl.spatialCurl (A j) x + B j x`. -/
@@ -747,10 +758,10 @@ theorem uncutVelocity_zero (A B : ℕ → VelocityField) :
     MixedDiagonalResidual.uncutVelocity A B 0 = stageVelocity A B 0 := by
   have hA : DiagonalJetBounds.uncutPrefix A (0 + 1) = A 0 := by
     funext x
-    simp [DiagonalJetBounds.uncutPrefix]
+    simp only [DiagonalJetBounds.uncutPrefix, zero_add, Finset.range_one, Finset.sum_singleton]
   have hB : DiagonalJetBounds.uncutPrefix B (0 + 1) = B 0 := by
     funext x
-    simp [DiagonalJetBounds.uncutPrefix]
+    simp only [DiagonalJetBounds.uncutPrefix, zero_add, Finset.range_one, Finset.sum_singleton]
   funext x
   change SpatialCurl.spatialCurl (DiagonalJetBounds.uncutPrefix A (0 + 1)) x +
     DiagonalJetBounds.uncutPrefix B (0 + 1) x =
@@ -763,7 +774,8 @@ theorem uncutVelocity_eq_stagePrefix {U : Set SpaceTime} (hU : IsOpen U)
       (DiagonalJetBounds.uncutPrefix (stageVelocity A B) (J + 1)) U := by
   intro x hx
   have hcurl := PhysicalParticularWave.spatialCurl_finset_sum (Finset.range (J + 1)) A
-    (fun j _ => (hA j).contDiffAt (hU.mem_nhds hx) |>.differentiableAt (by simp))
+    (fun j _ => (hA j).contDiffAt (hU.mem_nhds hx) |>.differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
   change SpatialCurl.spatialCurl (fun w => ∑ i ∈ Finset.range (J + 1), A i w) x +
     (∑ i ∈ Finset.range (J + 1), B i x) =
     ∑ i ∈ Finset.range (J + 1), (SpatialCurl.spatialCurl (A i) x + B i x)
@@ -797,7 +809,7 @@ theorem mixed_background_from_initial {l : Filter SpaceTime} {q : SpaceTime → 
   have hcurl (j : ℕ) : ContDiffOn ℝ ∞ (SpatialCurl.spatialCurl (A j)) U := by
     intro x hx
     exact (SpatialCurl.contDiffAt_spatialCurl ((hA j).contDiffAt (hU.mem_nhds hx))
-      (by simp)).contDiffWithinAt
+      (by simp only [ENat.coe_top_add_one, Std.le_refl])).contDiffWithinAt
   have hstage (j : ℕ) : ContDiffOn ℝ ∞ (stageVelocity A B j) U :=
     (hcurl j).add (hB j)
   have hinit : JetRate l q (stageVelocity A B 0) m
@@ -808,9 +820,9 @@ theorem mixed_background_from_initial {l : Filter SpaceTime} {q : SpaceTime → 
       (-initialBackgroundLoss Lzero LA LB m) := by
     have hgain := hg j hj
     have ha := ((raw_jetRate hrawA hS hq hj (m + 1)).spatialCurl hU hlU (hA j)).weaken hq
-      (show -initialBackgroundLoss Lzero LA LB m ≤ g j - LA (m + 1) by linarith)
+      (show -initialBackgroundLoss Lzero LA LB m ≤ g j - LA (m + 1) by linarith only [hLA, hgain])
     have hb := (raw_jetRate hrawB hS hq hj m).weaken hq
-      (show -initialBackgroundLoss Lzero LA LB m ≤ g j - LB m by linarith)
+      (show -initialBackgroundLoss Lzero LA LB m ≤ g j - LB m by linarith only [hLB, hgain])
     exact ha.add hb hU hlU (hcurl j) (hB j)
   exact (nonemptyPrefix_jetRate hU hlU hstage hinit hpos J).congr_on hU hlU
     (uncutVelocity_eq_stagePrefix hU A B hA J).symm
@@ -879,7 +891,7 @@ theorem spatialCurl_smoothOn {U : Set SpaceTime} (hU : IsOpen U)
     ContDiffOn ℝ ∞ (SpatialCurl.spatialCurl A) U := by
   intro w hw
   exact (SpatialCurl.contDiffAt_spatialCurl (hA.contDiffAt (hU.mem_nhds hw))
-    (by simp)).contDiffWithinAt
+    (by simp only [ENat.coe_top_add_one, Std.le_refl])).contDiffWithinAt
 
 section NativeInitialization
 
@@ -897,7 +909,7 @@ theorem potentialIncrement_rate (WA : WaveData h D I K (Fin 3))
       (-seedPotentialLoss h WA.alpha WA.shift MA.alpha m) := by
   obtain ⟨C, hC, hb⟩ := potentialIncrement_bound
     (g := 0) (waveOffset := -(h * WA.alpha + WA.shift)) (meanOffset := -(h * MA.alpha))
-    WA MA hh hh1 hq (by linarith) (by linarith) m
+    WA MA hh hh1 hq (by linarith only) (by linarith only) m
   refine ⟨C, hC, ?_⟩
   filter_upwards [endpoint_sublevel hh hh1 hqbig,
     ActualBaseVelocityBounds.endpoint_q_small hh hh1] with w hw hqw
@@ -910,7 +922,7 @@ theorem directIncrement_rate (MB : MeanData h (CoordinateAlgebra.A h))
     JetRate ActualBaseVelocityBounds.endpoint (PhysicalWaveSum.physicalQ h)
       MB.family.angularField m (-seedDirectLoss h MB.alpha m) := by
   obtain ⟨C, hC, hb⟩ := MB.angular_bound_with_gain
-    (g := 0) (delta := -(h * MB.alpha)) hh hh1 hq (by linarith) m
+    (g := 0) (delta := -(h * MB.alpha)) hh hh1 hq (by linarith only) m
   refine ⟨C, hC, ?_⟩
   filter_upwards [endpoint_sublevel hh hh1 hqbig,
     ActualBaseVelocityBounds.endpoint_q_small hh hh1] with w hw hqw
@@ -1156,7 +1168,7 @@ noncomputable def region (h : ℝ) : Set PhysicalGraphBounds.Plane :=
   PhysicalMeanDomain.normalizedSlowDomain (2 * h) (1 / 2) 2
 
 theorem region_open {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) : IsOpen (region h) :=
-  PhysicalMeanDomain.normalizedSlowDomain_open (by linarith) (by linarith) _ _
+  PhysicalMeanDomain.normalizedSlowDomain_open (by linarith only [hh]) (by linarith only [hh1]) _ _
 
 /-- Native facts about an already constructed coherent mean family.
 This record neither constructs a new physical field nor assumes physical
@@ -1251,7 +1263,7 @@ theorem MeanInput.field_bound_with_gain {h degree qbig g delta : ℝ} (M : MeanI
   refine ⟨C, hC, fun w hw hqw => (hb w hw hqw).trans ?_⟩
   exact mul_le_mul_of_nonneg_left
     (Real.rpow_le_rpow_of_exponent_ge (PhysicalWaveSum.physicalQ_pos hh hh1 hw.1) hqw
-      (by linarith)) hC
+      (by linarith only [hg])) hC
 
 theorem MeanInput.angular_bound_with_gain {h degree qbig g delta : ℝ} (M : MeanInput h degree)
     (hh : 0 < h) (hh1 : h < 1 / 2) (hq : qbig ≤ ChartScales.Q M.firstBand)
@@ -1265,7 +1277,7 @@ theorem MeanInput.angular_bound_with_gain {h degree qbig g delta : ℝ} (M : Mea
   refine ⟨C, hC, fun w hw hqw => (hb w hw hqw).trans ?_⟩
   exact mul_le_mul_of_nonneg_left
     (Real.rpow_le_rpow_of_exponent_ge (PhysicalWaveSum.physicalQ_pos hh hh1 hw.1) hqw
-      (by linarith)) hC
+      (by linarith only [hg])) hC
 
 section JetAlgebra
 
@@ -1501,7 +1513,7 @@ private theorem potential_gain {h κ α s : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 
     ActualIterationLedger.gain h (k + 1) ≤ h * α + s + h := by
   have hg := ActualIterationLedger.gain_le_wave hh hκ (Nat.succ_pos k)
   have ha := mul_le_mul_of_nonneg_left hα hh
-  linarith
+  linarith only [hs, hg, ha]
 
 private theorem pressure_gain {h κ α s : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 100000)
     (k : ℕ) (hα : ActualIterationLedger.wavePressureNative κ (k + 1) ≤ α)
@@ -1509,7 +1521,7 @@ private theorem pressure_gain {h κ α s : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 /
     ActualIterationLedger.gain h (k + 1) ≤ h * α + s + 2 * CoordinateAlgebra.A h := by
   have hg := ActualIterationLedger.gain_le_wavePressure hh hκ (Nat.succ_pos k)
   have ha := mul_le_mul_of_nonneg_left hα hh
-  linarith
+  linarith only [hs, hg, ha]
 
 private theorem mean_gain {h κ α : ℝ} (hh : 0 ≤ h) (hκ : κ ≤ 1 / 100000)
     (k : ℕ) (hα : ActualIterationLedger.meanNative κ (k + 1) ≤ α) :
@@ -1686,12 +1698,12 @@ theorem initialIncrement_bound (W : PhysicalStageBounds.WaveData h D I K (Fin 3)
           (-seedPotentialLoss h W.alpha W.shift (min MT.alpha MR.alpha) m) := by
   have htGain : 0 ≤ h * MT.alpha + -(h * min MT.alpha MR.alpha) := by
     have := mul_le_mul_of_nonneg_left (min_le_left MT.alpha MR.alpha) hh.le
-    linarith
+    linarith only [this]
   have hrGain : 0 ≤ h * MR.alpha + -(h * min MT.alpha MR.alpha) := by
     have := mul_le_mul_of_nonneg_left (min_le_right MT.alpha MR.alpha) hh.le
-    linarith
+    linarith only [this]
   have hp0 := W.vector_bound_with_gain (g := 0) (delta := -(h * W.alpha + W.shift))
-    hh hh1 (by linarith) m
+    hh hh1 (by linarith only) m
   have ht0 := MT.angular_bound_with_gain hh hh1 hqT htGain m
   have hr0 := MR.angular_bound_with_gain hh hh1 hqR hrGain m
   simp only [zero_sub] at hp0 ht0 hr0
@@ -1748,9 +1760,9 @@ theorem initialPressureIncrement_bound (W : PhysicalStageBounds.WaveData h D I K
       ‖iteratedFDeriv ℝ m (initialPressureIncrement W M) w‖ ≤
         C * PhysicalWaveSum.physicalQ h w ^ (-initialPressureLoss h W.alpha W.shift M.alpha m) := by
   have hw0 := W.pressure_bound_with_gain (g := 0) (delta := -(h * W.alpha + W.shift))
-    hh hh1 (by linarith) m
+    hh hh1 (by linarith only) m
   have hm0 := M.field_bound_with_gain (g := 0) (delta := -(h * M.alpha))
-    hh hh1 hq (by linarith) m
+    hh hh1 hq (by linarith only) m
   simp only [zero_sub] at hw0 hm0
   have hw := weaken_bound (qbig := qbig)
     (s := -initialPressureLoss h W.alpha W.shift M.alpha m) hh hh1
@@ -1782,7 +1794,7 @@ theorem initialDirect_rate (MB : MeanInput h (CoordinateAlgebra.A h))
     JetRate ActualBaseVelocityBounds.endpoint (PhysicalWaveSum.physicalQ h)
       MB.family.angularField m (-seedDirectLoss h MB.alpha m) := by
   obtain ⟨C, hC, hb⟩ := MB.angular_bound_with_gain (g := 0) (delta := -(h * MB.alpha))
-    hh hh1 hq (by linarith) m
+    hh hh1 hq (by linarith only) m
   refine ⟨C, hC, ?_⟩
   filter_upwards [InitializedPhysicalBackground.endpoint_sublevel hh hh1 hqbig,
     ActualBaseVelocityBounds.endpoint_q_small hh hh1] with w hw hqw

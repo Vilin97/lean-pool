@@ -110,10 +110,12 @@ theorem pressureRepresentative_odd (t : Icc (0 : ℝ) D.T) (x : Space) :
 include hD hodd in
 /-- Canonical radial normalization makes the actual scalar pressure even. -/
 theorem scalar_even (t : ℝ) (x : Space) (θ : ℝ) : G.scalar (t,(-x,θ)) = G.scalar (t,(x,θ)) := by
-  let V : Space → Space := fun y => (D.F.field (D.clamp t) y).adjoint
-    (pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit (D.clamp t) y)
+  let V : Space → Space := fun y =>
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.F.field (D.clamp t) y)
+      (pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit (D.clamp t) y)
   have hV (y : Space) : V (-y) = -V y := by
-    change (D.F.field (D.clamp t) (-y)).adjoint
+    change ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (D.F.field (D.clamp t) (-y))
       (pathRepresentative D.T G.pressureForcePath G.pressureForcePath_orbit (D.clamp t) (-y)) = _
     rw [hD.frame (D.clamp t) y, G.pressureRepresentative_odd hD hodd, map_neg]
   change radialPotential V (-x) = radialPotential V x

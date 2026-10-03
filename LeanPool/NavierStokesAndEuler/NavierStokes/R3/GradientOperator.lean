@@ -63,7 +63,7 @@ theorem norm_fderiv_le_three_mul_sqrt_gradientSq (w : Space → Space) (x : Spac
       exact mul_le_mul (PiLp.norm_apply_le v i)
         (partial_norm_le_sqrt_gradientSq w x i) (norm_nonneg _) (norm_nonneg _)
     _ = (3 * Real.sqrt (gradientSq w x)) * ‖v‖ := by
-      simp
+      simp only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, Nat.cast_ofNat]
       ring
 
 theorem continuous_gradientSq {w : Space → Space} (hw : ContDiff ℝ 1 w) :

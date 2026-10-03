@@ -146,10 +146,10 @@ theorem periodic_lattice {W : Type*} {f : Space → W}
     (n : Fin 3 → ℤ) : Function.Periodic f (∑ i : Fin 3, n i • coordinateVector i) := by
   have hsum (s : Finset (Fin 3)) : Function.Periodic f (∑ i ∈ s, n i • coordinateVector i) := by
     induction s using Finset.induction_on with
-    | empty => simp [Function.Periodic]
+    | empty => simp only [Function.Periodic, Finset.sum_empty, add_zero, implies_true]
     | @insert i s his ih =>
       simpa only [Finset.sum_insert his] using ((hf i).zsmul (n i)).add_period ih
-  simpa using hsum Finset.univ
+  simpa only [Function.Periodic] using hsum Finset.univ
 
 /-- Each point has a representative in the unit cube with the same value
 under every function having the three unit coordinate periods. -/
@@ -165,7 +165,9 @@ theorem exists_cube_representative {W : Type*} {f : Space → W}
     ext j
     change x j = (EuclideanSpace.proj j) (y + ∑ i : Fin 3, (⌊x i⌋ : ℤ) • coordinateVector i)
     simp only [map_add, map_sum, map_zsmul]
-    simp [y, coordinateVector, Int.fract_add_floor]
+    simp only [PiLp.continuousLinearEquiv_symm_apply, PiLp.proj_apply, coordinateVector,
+        PiLp.single_apply, smul_ite, zsmul_eq_mul, mul_one, smul_zero, Finset.sum_ite_eq,
+        Finset.mem_univ, ↓reduceIte, Int.fract_add_floor, y]
   have hp := periodic_lattice hf (fun i => ⌊x i⌋)
   rw [hxy]
   exact (hp y).symm

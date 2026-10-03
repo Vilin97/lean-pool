@@ -92,15 +92,15 @@ theorem kernel_le_wideKernel {t : ℝ} (ht : 0 < t) (x : Space) :
     kernel t x ≤ wideKernel t x := by
   apply mul_le_mul_of_nonneg_left _ (normalization_pos ht).le
   apply Real.exp_le_exp.mpr
-  have hi : (2*t)⁻¹ ≤ t⁻¹ := by apply inv_anti₀ ht; linarith
-  nlinarith [sq_nonneg ‖x‖]
+  have hi : (2*t)⁻¹ ≤ t⁻¹ := by apply inv_anti₀ ht; linarith only [ht]
+  nlinarith only [hi, sq_nonneg ‖x‖]
 
 /-- A Gaussian absorbs its quadratic factor at twice the spatial variance. -/
 theorem norm_sq_kernel_le {t : ℝ} (ht : 0 < t) (x : Space) :
     ‖x‖^2 * kernel t x ≤ 2*t * wideKernel t x := by
   let s : ℝ := (2*t)⁻¹*‖x‖^2
   have hs : 0 ≤ s := by dsimp [s]; positivity
-  have hse : s ≤ Real.exp s := le_trans (by linarith) (Real.add_one_le_exp s)
+  have hse : s ≤ Real.exp s := le_trans (by linarith only) (Real.add_one_le_exp s)
   have he : s*Real.exp (-2*s) ≤ Real.exp (-s) := by
     calc
       _ ≤ Real.exp s * Real.exp (-2*s) := mul_le_mul_of_nonneg_right hse (Real.exp_pos _).le
@@ -119,7 +119,7 @@ theorem norm_sq_kernel_le {t : ℝ} (ht : 0 < t) (x : Space) :
 
 theorem norm_kernel_le {t : ℝ} (ht : 0 < t) (x : Space) :
     ‖x‖ * kernel t x ≤ (1+2*t)*wideKernel t x := by
-  have h : ‖x‖ ≤ 1+‖x‖^2 := by nlinarith [sq_nonneg (‖x‖-1)]
+  have h : ‖x‖ ≤ 1+‖x‖^2 := by nlinarith only [sq_nonneg (‖x‖-1)]
   calc
     _ ≤ (1+‖x‖^2)*kernel t x := mul_le_mul_of_nonneg_right h (kernel_nonneg ht x)
     _ = kernel t x + ‖x‖^2*kernel t x := by ring

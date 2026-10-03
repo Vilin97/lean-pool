@@ -91,7 +91,7 @@ theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient
     (fun i => coefficientSobolevOperator period (K i)) z r (truncateOperator period s e)
   have h := correctionForcing_polynomial period hs KG KG0 κ m c hc hpos N hN ρ Rc M B hρ hRc hM hB
     hbase5 hbase6 hsmall hcoeff hG hG0 L hL C0 K0 C K z e r B0 B1 A0 A2 R hA2 hz hdz hC0 hC hr
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   have hP := productConstant_nonneg period 3
   have hb0 : 0 ≤ B0 := (weightedNorm_nonneg period 6 N ρ hρ z).trans hz
   have hb1 : 0 ≤ B1 := (Finset.sum_nonneg (fun i _ =>
@@ -102,9 +102,11 @@ theorem correctionForcing_metric {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoefficient
   have hlf := lossConstant_nonneg period hM0
   have hlin : 0 ≤ sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
       3*B0) +
-      transportConstant period B M*B0 := by positivity
-  have hquad : 0 ≤ sourceConstant B M*A2*productConstant period 3+transportConstant period B M := by
-      positivity
+      transportConstant period B M*B0 :=
+    add_nonneg (mul_nonneg hsf (add_nonneg (add_nonneg (mul_nonneg hP hb1) ha0)
+      (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two hA2) hP) hb0))) (mul_nonneg htf hb0)
+  have hquad : 0 ≤ sourceConstant B M*A2*productConstant period 3+transportConstant period B M :=
+    add_nonneg (mul_nonneg (mul_nonneg hsf hA2) hP) htf
   exact metric_polynomial_conversion (sourceConstant B M)
     (sourceConstant B M*(productConstant period 3*B1+A0+2*A2*productConstant period
         3*B0)+transportConstant period B M*B0)
@@ -218,7 +220,10 @@ def forcingBoundPath {q : ℕ} (N : ℕ) (hN : N + 6 ≤ q + 1) (T : ℝ)
   refine ⟨fun t => forcingPolynomial period B M B0 B1 A0 A2 residual cM Rc (R t) (X t) (Y t), ?_⟩
   have hi : Continuous (fun t => (R t)⁻¹) := R.continuous.inv₀ (fun t => (hR t).ne')
   unfold forcingPolynomial
-  fun_prop
+  exact ((continuous_const.add (continuous_const.mul X.continuous)).add
+    (continuous_const.mul (X.continuous.pow 2))).add
+    ((((continuous_const.mul (hi.add continuous_const)).mul continuous_const).mul
+      (continuous_const.add X.continuous)).mul Y.continuous)
 
 /-- The actual constructed full-order Bochner forcing obeys the continuous spatial majorant almost
 everywhere. -/
@@ -260,8 +265,7 @@ theorem weightedCorrectionForcing_bound {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (
     (reindexMaximalTime period q T U t) hv B0 B1 A0 A2 residual hA2 (hz τ) (hdz τ) (hC0 τ) (hC τ)
         (hr τ)
     (K τ) cM hcM (hKM τ)
-  rw [hmetric.1, hmetric.2] at h
-  exact hforce.le.trans h
+  exact hforce.le.trans (h.trans_eq (congrArg₂ _ hmetric.1 hmetric.2))
 
 end EulerCorrectionEnergyBound
 

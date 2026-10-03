@@ -47,7 +47,9 @@ theorem radialCommutatorKernel_measurable (R : ℝ) :
 
 @[simp] theorem radialCommutatorKernel_zero (R : ℝ) :
     radialCommutatorKernel R 0 = 0 := by
-  simp [radialCommutatorKernel]
+  simp only [radialCommutatorKernel, norm_zero, Real.rpow_neg_ofNat, Int.reduceNeg, zpow_neg,
+      zpow_ofNat, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, inv_zero, zero_div,
+      zero_le_one, inf_of_le_left, mul_zero]
 
 private theorem kernel_one_le_cube (z : Space) :
     radialCommutatorKernel 1 z ≤ ‖z‖ ^ (-3 : ℝ) := by
@@ -57,13 +59,15 @@ private theorem kernel_one_le_cube (z : Space) :
 private theorem kernel_one_le_square (z : Space) :
     radialCommutatorKernel 1 z ≤ ‖z‖ ^ (-2 : ℝ) := by
   by_cases hz : z = 0
-  · simp [hz]
+  · simp only [hz, radialCommutatorKernel_zero, norm_zero, Real.rpow_neg_ofNat, Int.reduceNeg,
+      zpow_neg, zpow_ofNat, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, inv_zero,
+      Std.le_refl]
   have hn : 0 < ‖z‖ := norm_pos_iff.mpr hz
   calc
     radialCommutatorKernel 1 z ≤ ‖z‖ ^ (-3 : ℝ) * ‖z‖ := by
       unfold radialCommutatorKernel
       gcongr
-      simp
+      simp only [div_one, min_le_iff, Std.le_refl, true_or]
     _ = ‖z‖ ^ (-2 : ℝ) := by
       calc
         _ = ‖z‖ ^ (-3 : ℝ) * ‖z‖ ^ (1 : ℝ) := by rw [Real.rpow_one]

@@ -92,8 +92,9 @@ theorem slowPressure_odd (f : ScalarField) (I : Domain → Space →L[ℝ] Space
     (hI : ∀ (t : Icc (0 : ℝ) T) x θ, I (t, (-x, -θ)) = I (t, (x, θ))) :
     JointOdd T (fun z => slowPressure (I z) (pressureJet f z)) := by
   intro t x θ
-  change (I (t,(-x,-θ))).adjoint (pressureGradient f (t,(-x,-θ))) =
-    -((I (t,(x,θ))).adjoint (pressureGradient f (t,(x,θ))))
+  change adjoint (𝕜 := ℝ) (E := Space) (F := Space) (I (t,(-x,-θ)))
+      (pressureGradient f (t,(-x,-θ))) =
+    -(adjoint (𝕜 := ℝ) (E := Space) (F := Space) (I (t,(x,θ))) (pressureGradient f (t,(x,θ))))
   rw [hI,hf,map_neg]
 
 variable {O : Operators} {p : ℕ} {a : ℕ → Profile}

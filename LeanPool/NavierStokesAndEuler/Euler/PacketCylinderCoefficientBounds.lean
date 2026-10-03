@@ -81,7 +81,8 @@ theorem normalMatrix_bound (Rc C : ℝ)
     intro x
     rfl
   rw [he]
-  exact (mapped_derivative_le (mapCoefficientPath (K := Icc (0 : ℝ) T) normalComponentMap)
+  exact (mapped_derivative_le (mapCoefficientPath (K := Icc (0 : ℝ) T) (V := Space)
+      (W := Space →L[ℝ] Space) normalComponentMap)
     ((mapCoefficientPath_norm_le normalComponentMap).trans normalComponentMap_norm)
     _ N.orbit n a).trans (hN n a)
 
@@ -97,11 +98,7 @@ theorem adjoint_bound (Rc C : ℝ)
     ‖iteratedFDeriv ℝ n (translateCoefficientPath K.adjoint.path) a‖ ≤ C*majorant Rc 0 n := by
   let A : (Space →L[ℝ] Space) →L[ℝ] (Space →L[ℝ] Space) :=
     EulerTransverseGramInverse.realAdjoint
-  have hA : ‖A‖ ≤ 1 := by
-    apply opNorm_le_bound _ zero_le_one
-    intro v
-    change ‖v.adjoint‖ ≤ 1*‖v‖
-    rw [LinearIsometryEquiv.norm_map,one_mul]
+  have hA : ‖A‖ ≤ 1 := LinearMap.mkContinuous_norm_le _ zero_le_one _
   have he : translateCoefficientPath K.adjoint.path =
       (mapCoefficientPath (K := Icc (0 : ℝ) T) A) ∘ translateCoefficientPath K.path := by
     funext b
@@ -112,7 +109,7 @@ theorem adjoint_bound (Rc C : ℝ)
     rfl
   rw [he]
   have hm := mapped_derivative_le
-    (mapCoefficientPath (K := Icc (0 : ℝ) T) A)
+    (mapCoefficientPath (K := Icc (0 : ℝ) T) (V := Space →L[ℝ] Space) (W := Space →L[ℝ] Space) A)
     ((mapCoefficientPath_norm_le A).trans hA)
     (translateCoefficientPath K.path) K.orbit n a
   exact hm.trans (hK n a)

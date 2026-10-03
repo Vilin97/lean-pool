@@ -144,7 +144,7 @@ theorem forwardInitializedExactPhysicalVelocity_eq (t : Icc (0 : ℝ) D.T) (Y : 
       forwardInitializedVelocity M D δ hδ ξ hs α N k⁻¹
         (t,(Y x,k*inner ℝ D.m₀ (Y x))) +
       k⁻¹ • D.F.field t (Y x) (Q.pointField period t (cylinderGraph period k D.m₀ (Y x))) := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := by linarith only [hk]
   have ha : (forwardInitializedCorrectionData M D hTime δ hδ ξ hs α Cagree N hN k hk).approximation
       =
       (coordinateField D (forwardInitializedVelocityField M D hTime δ hδ ξ hs α N k⁻¹)
@@ -205,7 +205,7 @@ theorem forwardInitializedExactPhysicalPressure_gradient
       gradient (fun y => forwardInitializedPressure M D δ hδ ξ hs α N k⁻¹
         (t,(Y t y,k*⟪D.m₀,Y t y⟫_ℝ))) x +
       gradient (Q.physicalPotential D period k Y t) x := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := by linarith only [hk]
   have hkk : k*(forwardInitializedCorrectionData M D hTime δ hδ ξ hs α
       Cagree N hN k hk).κ=1 := mul_inv_cancel₀ hk0
   let S := forwardInitializedExactPacket M D hTime δ hδ ξ hs α Cagree N hN k hk Q
@@ -227,7 +227,8 @@ theorem forwardInitializedExactPhysicalPressure_gradient
     (continuousInverse_hasFDerivAt D X Y hX hXY hY t x)
     ((S.graphPotential_smooth k hkk t).differentiable (by simp) (Y t x)),
     S.graphPotential_gradient k hkk t (Y t x),map_smul]
-  change k⁻¹ • (D.FInv.field t (Y t x)).adjoint
+  change k⁻¹ • ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+    (D.FInv.field t (Y t x))
     (S.pressure.pointField t (cylinderGraph period k D.m₀ (Y t x))) = _
   rw [hpressure,hactual,map_add,smul_add,
     Q.physicalPotential_gradient D period X Y hX hXY hY k hkk t x,
@@ -236,7 +237,9 @@ theorem forwardInitializedExactPhysicalPressure_gradient
   congr 1
   simp only [coordinatePressure,covector,angularPressure,Pi.add_apply,Pi.smul_apply,
     map_add,map_smul,smul_add,smul_smul]
-  match_scalars <;> field_simp
+  match_scalars
+  · exact inv_mul_cancel₀ hk0
+  · rw [pow_two, ← mul_assoc, ← mul_assoc, inv_mul_cancel₀ hk0, one_mul]
 
 include hX hXY hY in
 theorem forwardInitializedExactPhysicalPressure_hessian
@@ -246,7 +249,7 @@ theorem forwardInitializedExactPhysicalPressure_hessian
       fderiv ℝ (gradient (fun y => forwardInitializedPressure M D δ hδ ξ hs α N k⁻¹
         (t,(Y t y,k*⟪D.m₀,Y t y⟫_ℝ)))) x +
       fderiv ℝ (gradient (Q.physicalPotential D period k Y t)) x := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := by linarith only [hk]
   have hkk : k*(forwardInitializedCorrectionData M D hTime δ hδ ξ hs α
       Cagree N hN k hk).κ=1 := mul_inv_cancel₀ hk0
   have hp := ((forwardInitializedPressureWitness M D hTime δ hδ ξ hs α N k⁻¹).changeTime

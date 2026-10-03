@@ -84,29 +84,31 @@ def pastDerivative : C(Icc (0 : ℝ) τ,LiftL2 P) :=
 /-- Future velocity, given by `includePath P D.support D.support_measurable ((zeroForcing
 (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y))`. -/
 def futureVelocity : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
-  includePath P D.support D.support_measurable
+  includePath (K := Icc (0 : ℝ) (D.T-τ)) (V := Vector3) P D.support D.support_measurable
     ((zeroForcing (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y))
 
 /-- Future derivative, given by `includePath P D.support D.support_measurable ((zeroForcing
 (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y))`. -/
 def futureDerivative : C(Icc (0 : ℝ) (D.T-τ),LiftL2 P) :=
-  includePath P D.support D.support_measurable
+  includePath (K := Icc (0 : ℝ) (D.T-τ)) (V := Vector3) P D.support D.support_measurable
     ((zeroForcing (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y))
 
-theorem pastVelocity_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (pastVelocity τ hτ hτT B Y))
-    :=
+theorem pastVelocity_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) τ) (V := Vector3) P a (pastVelocity τ hτ hτT B Y)) :=
   EulerTransversePacketEndpoint.velocityPath_orbit B (endpointData τ hτ hτT Y)
 
-theorem pastDerivative_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (pastDerivative τ hτ hτT B
-    Y)) :=
+theorem pastDerivative_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) τ) (V := Vector3) P a (pastDerivative τ hτ hτT B Y)) :=
   EulerTransversePacketEndpoint.derivativePath_orbit B (endpointData τ hτ hτT Y)
 
-theorem futureVelocity_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (futureVelocity τ hτ hτT B
-    Y)) :=
+theorem futureVelocity_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) (D.T-τ)) (V := Vector3) P a
+      (futureVelocity τ hτ hτT B Y)) :=
   (zeroForcing (D.tail τ hτ.le hτT)).velocityPath_orbit (forwardInitial τ hτ hτT B Y)
 
-theorem futureDerivative_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (futureDerivative τ hτ
-    hτT B Y)) :=
+theorem futureDerivative_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) (D.T-τ)) (V := Vector3) P a
+      (futureDerivative τ hτ hτT B Y)) :=
   (zeroForcing (D.tail τ hτ.le hτT)).derivativePath_orbit (forwardInitial τ hτ hτT B Y)
 
 theorem velocity_match : pastVelocity τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩ =
@@ -121,14 +123,20 @@ theorem velocity_match : pastVelocity τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩ =
     change D.F.field ⟨τ,hτ.le,hτT.le⟩ x (D.R v : Space) =
       D.F.field ⟨τ+0,by linarith,by linarith⟩ x (D.R v : Space)
     simp only [add_zero]
-  change fullOperatorMap P ((D.initial τ hτ hτT.le).frame.field th)
+  change fullOperatorMap (E := U) (F := Space) P ((D.initial τ hτ hτT.le).frame.field th)
     (EulerTransversePacketEndpoint.coordinatePath B (endpointData τ hτ hτT Y) th) =
-      fullOperatorMap P ((D.tail τ hτ.le hτT).frame.field tf)
+      fullOperatorMap (E := U) (F := Space) P ((D.tail τ hτ.le hτT).frame.field tf)
         (((zeroForcing (D.tail τ hτ.le hτT)).coordinatePath (forwardInitial τ hτ hτT B Y) tf) :
           CylinderL2 P U)
   dsimp only [tf]
   erw [Forcing.coordinatePath_initial,hQ]
   rfl
+
+theorem pastVelocity_eq : pastVelocity τ hτ hτT B Y =
+    EulerTransversePacketEndpoint.velocityPath B (endpointData τ hτ hτT Y) := rfl
+
+theorem pastDerivative_eq : pastDerivative τ hτ hτT B Y =
+    EulerTransversePacketEndpoint.derivativePath B (endpointData τ hτ hτT Y) := rfl
 
 theorem past_balance_ae (t : Icc (0 : ℝ) τ) :
     ∀ᵐ x ∂liftMeasure P,
@@ -137,8 +145,39 @@ theorem past_balance_ae (t : Icc (0 : ℝ) τ) :
         (-(2*⟪(D.initial τ hτ hτT.le).normal.field t x.1,
           (D.initial τ hτ hτT.le).M.field t x.1 (pastVelocity τ hτ hτT B Y t x)⟫_ℝ)/
           ‖(D.initial τ hτ hτT.le).normal.field t x.1‖^2) •
-            (D.initial τ hτ hτT.le).normal.field t x.1 = 0 :=
-  EulerTransversePacketEndpoint.balance_ae B (endpointData τ hτ hτT Y) t
+            (D.initial τ hτ hτT.le).normal.field t x.1 = 0 := by
+  have h := EulerTransversePacketEndpoint.balance_ae B (endpointData τ hτ hτT Y) t
+  rw [← pastDerivative_eq, ← pastVelocity_eq] at h
+  exact h
+
+theorem zeroForcing_balance_ae (D : Data U) (I : InitialData P D) (t : Icc (0 : ℝ) D.T) :
+    ∀ᵐ x ∂liftMeasure P,
+      ((zeroForcing D).derivativePath I t : LiftL2 P) x +
+        D.M.field t x.1 (((zeroForcing D).velocityPath I t : LiftL2 P) x) +
+        (-(2*⟪D.normal.field t x.1,
+          D.M.field t x.1 (((zeroForcing D).velocityPath I t : LiftL2 P) x)⟫_ℝ)/
+          ‖D.normal.field t x.1‖^2) • D.normal.field t x.1 = 0 := by
+  have hh := EulerSourceCylinderEquation.velocity_balance_ae P D.support D.support_measurable
+    D.T D.T_pos.le D.frame D.frameDerivative D.frameLower D.frameLower_pos D.frame_lower
+    (zeroForcing D).path I.value
+    (fun t x => D.M.field t x) (fun t x => D.normal.field t x)
+    (HistoryData.normal_ne_zero (D := D)) D.frame_tangent D.frame_range D.frame_strain t
+  have h0 : ((zeroForcing (P := P) D).path t : LiftL2 P) = 0 := rfl
+  filter_upwards [hh,Lp.coeFn_zero Space 2 (liftMeasure P)] with x hx hz
+  simp only [h0,hz,Pi.zero_apply,inner_zero_right,zero_sub] at hx
+  apply hx
+
+theorem futureVelocity_apply (t : Icc (0 : ℝ) (D.T - τ)) :
+    futureVelocity τ hτ hτT B Y t =
+      ((zeroForcing (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y) t :
+        LiftL2 P) :=
+  includePath_apply P D.support D.support_measurable _ t
+
+theorem futureDerivative_apply (t : Icc (0 : ℝ) (D.T - τ)) :
+    futureDerivative τ hτ hτT B Y t =
+      ((zeroForcing (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y) t :
+        LiftL2 P) :=
+  includePath_apply P D.support D.support_measurable _ t
 
 theorem future_balance_ae (t : Icc (0 : ℝ) (D.T - τ)) :
     ∀ᵐ x ∂liftMeasure P,
@@ -148,42 +187,41 @@ theorem future_balance_ae (t : Icc (0 : ℝ) (D.T - τ)) :
           (D.tail τ hτ.le hτT).M.field t x.1 (futureVelocity τ hτ hτT B Y t x)⟫_ℝ)/
           ‖(D.tail τ hτ.le hτT).normal.field t x.1‖^2) •
             (D.tail τ hτ.le hτT).normal.field t x.1 = 0 := by
-  let Df := D.tail τ hτ.le hτT
-  have hh := EulerSourceCylinderEquation.velocity_balance_ae P D.support D.support_measurable
-    Df.T Df.T_pos.le Df.frame Df.frameDerivative Df.frameLower Df.frameLower_pos Df.frame_lower
-    (zeroForcing Df).path (forwardInitial τ hτ hτT B Y).value
-    (fun t x => Df.M.field t x) (fun t x => Df.normal.field t x)
-    (HistoryData.normal_ne_zero (D := Df)) Df.frame_tangent Df.frame_range Df.frame_strain t
-  filter_upwards [hh,Lp.coeFn_zero Space 2 (liftMeasure P)] with x hx hz
-  change futureDerivative τ hτ hτT B Y t x+Df.M.field t x.1 (futureVelocity τ hτ hτT B Y t x) +
-    ((⟪Df.normal.field t x.1,(0 : LiftL2 P) x⟫_ℝ -
-      2*⟪Df.normal.field t x.1,Df.M.field t x.1 (futureVelocity τ hτ hτT B Y t x)⟫_ℝ)/
-      ‖Df.normal.field t x.1‖^2) • Df.normal.field t x.1 = (0 : LiftL2 P) x at hx
-  simpa only [hz,Pi.zero_apply,inner_zero_right,zero_sub] using hx
+  rw [futureDerivative_apply, futureVelocity_apply]
+  exact zeroForcing_balance_ae (D.tail τ hτ.le hτT) _ t
 
 theorem derivative_match : pastDerivative τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩ =
     futureDerivative τ hτ hτT B Y ⟨0,le_rfl,(sub_pos.mpr hτT).le⟩ := by
-  let th : Icc (0 : ℝ) τ := ⟨τ,hτ.le,le_rfl⟩
-  let tf : Icc (0 : ℝ) (D.T-τ) := ⟨0,le_rfl,(sub_pos.mpr hτT).le⟩
-  have hM : (D.initial τ hτ hτT.le).M.field th = (D.tail τ hτ.le hτT).M.field tf :=
+  have hM : (D.initial τ hτ hτT.le).M.field (⟨τ,hτ.le,le_rfl⟩ : Icc (0 : ℝ) τ) =
+      (D.tail τ hτ.le hτT).M.field (⟨0,le_rfl,(sub_pos.mpr hτT).le⟩ : Icc (0 : ℝ) (D.T-τ)) :=
     EulerTransversePacketJoin.source_coefficient_match τ hτ hτT D.M
-  have hm : (D.initial τ hτ hτT.le).normal.field th = (D.tail τ hτ.le hτT).normal.field tf :=
+  have hm : (D.initial τ hτ hτT.le).normal.field (⟨τ,hτ.le,le_rfl⟩ : Icc (0 : ℝ) τ) =
+      (D.tail τ hτ.le hτT).normal.field (⟨0,le_rfl,(sub_pos.mpr hτT).le⟩ : Icc (0 : ℝ) (D.T-τ)) :=
     EulerTransversePacketJoin.normal_match τ hτ hτT
-  have hh := past_balance_ae τ hτ hτT B Y th
+  have hh := past_balance_ae τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩
   rw [hM,hm,velocity_match τ hτ hτT B Y] at hh
   apply Lp.ext
-  filter_upwards [hh,future_balance_ae τ hτ hτT B Y tf] with x hx hy
+  filter_upwards [hh,future_balance_ae τ hτ hτT B Y ⟨0,le_rfl,(sub_pos.mpr hτT).le⟩] with x hx hy
   exact add_right_cancel (add_right_cancel (hx.trans hy.symm))
 
 theorem pastVelocity_time (t : Icc (0 : ℝ) τ) :
     HasDerivWithinAt (extendPath τ hτ.le (pastVelocity τ hτ hτT B Y))
-      (pastDerivative τ hτ hτT B Y t) (Icc (0 : ℝ) τ) t :=
-  EulerTransversePacketEndpoint.velocityPath_time B (endpointData τ hτ hτT Y) t
+      (pastDerivative τ hτ hτT B Y t) (Icc (0 : ℝ) τ) t := by
+  have h := EulerTransversePacketEndpoint.velocityPath_time B (endpointData τ hτ hτT Y) t
+  rw [← pastDerivative_eq, ← pastVelocity_eq] at h
+  exact h
 
 theorem futureVelocity_time (t : Icc (0 : ℝ) (D.T - τ)) :
     HasDerivWithinAt (extendPath (D.T-τ) (sub_pos.mpr hτT).le (futureVelocity τ hτ hτT B Y))
-      (futureDerivative τ hτ hτT B Y t) (Icc (0 : ℝ) (D.T-τ)) t :=
-  (zeroForcing (D.tail τ hτ.le hτT)).vectorField_time (forwardInitial τ hτ hτT B Y) t
+      (futureDerivative τ hτ hτT B Y t) (Icc (0 : ℝ) (D.T-τ)) t := by
+  have hv : futureVelocity τ hτ hτT B Y =
+      (zeroForcing (D.tail τ hτ.le hτT)).fullVelocityPath (forwardInitial τ hτ hτT B Y) := rfl
+  have hd : futureDerivative τ hτ hτT B Y =
+      (zeroForcing (D.tail τ hτ.le hτT)).fullDerivativePath (forwardInitial τ hτ hτT B Y) := rfl
+  have h := (zeroForcing (D.tail τ hτ.le hτT)).fullVelocityPath_time
+    (forwardInitial τ hτ hτT B Y) t
+  rw [← hv, ← hd] at h
+  exact h
 
 end EulerTransversePacketPrimary
 
@@ -227,18 +265,45 @@ def pressurePath : C(Icc (0 : ℝ) D.T,CylinderL2 P ℝ) :=
   sourcePressure P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y)
 
+omit [Fact (0 < P)] [CompleteSpace U] in
+theorem match_sub_nonneg {E : Type*} [TopologicalSpace E] {S σ : ℝ} (hσS : σ < S) {x : E}
+    {v : C(Icc (0 : ℝ) (S - σ), E)} (h : x = v ⟨0, le_rfl, (sub_pos.mpr hσS).le⟩) :
+    x = v ⟨0, le_rfl, sub_nonneg.mpr hσS.le⟩ := h
+
+theorem velocity_match' : pastVelocity τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩ =
+    futureVelocity τ hτ hτT B Y ⟨0,le_rfl,sub_nonneg.mpr hτT.le⟩ :=
+  match_sub_nonneg hτT (velocity_match τ hτ hτT B Y)
+
+theorem derivative_match' : pastDerivative τ hτ hτT B Y ⟨τ,hτ.le,le_rfl⟩ =
+    futureDerivative τ hτ hτT B Y ⟨0,le_rfl,sub_nonneg.mpr hτT.le⟩ :=
+  match_sub_nonneg hτT (derivative_match τ hτ hτT B Y)
+
+theorem velocityPath_eq_join : velocityPath τ hτ hτT B Y =
+    join D.T τ hτ.le hτT.le _ _ (velocity_match' τ hτ hτT B Y) := rfl
+
+theorem derivativePath_eq_join : derivativePath τ hτ hτT B Y =
+    join D.T τ hτ.le hτT.le _ _ (derivative_match' τ hτ hτT B Y) := rfl
+
 theorem velocityPath_orbit :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (velocityPath τ hτ hτT B Y)) :=
-  join_orbit_contDiff P D.T τ hτ.le hτT.le _ _ (velocity_match τ hτ hτT B Y)
+    ContDiff ℝ ∞ (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (velocityPath τ hτ hτT B Y)) := by
+  have h := join_orbit_contDiff P D.T τ hτ.le hτT.le _ _ (velocity_match' τ hτ hτT B Y)
     (pastVelocity_orbit τ hτ hτT B Y) (futureVelocity_orbit τ hτ hτT B Y)
+  rw [velocityPath_eq_join]
+  exact h
 
 theorem derivativePath_orbit :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (derivativePath τ hτ hτT B Y)) :=
-  join_orbit_contDiff P D.T τ hτ.le hτT.le _ _ (derivative_match τ hτ hτT B Y)
+    ContDiff ℝ ∞ (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a
+        (derivativePath τ hτ hτT B Y)) := by
+  have h := join_orbit_contDiff P D.T τ hτ.le hτT.le _ _ (derivative_match' τ hτ hτT B Y)
     (pastDerivative_orbit τ hτ hτT B Y) (futureDerivative_orbit τ hτ hτT B Y)
+  rw [derivativePath_eq_join]
+  exact h
 
 theorem pressurePath_orbit :
-    ContDiff ℝ ∞ (fun a => pathTranslate P a (pressurePath τ hτ hτT B Y)) :=
+    ContDiff ℝ ∞ (fun a =>
+      pathTranslate (K := Icc (0 : ℝ) D.T) (V := ℝ) P a (pressurePath τ hτ hτT B Y)) :=
   sourcePressure_contDiff P D.M D.normal D.normalLower D.normalLower_pos D.normal_lower
     0 (velocityPath τ hτ hτT B Y) (by simpa only [map_zero] using (contDiff_const :
       ContDiff ℝ ∞ (fun _ : LiftTangent => (0 : C(Icc (0 : ℝ) D.T,LiftL2 P)))))
@@ -246,73 +311,121 @@ theorem pressurePath_orbit :
 
 theorem velocityPath_left (t : Icc (0 : ℝ) τ) :
     velocityPath τ hτ hτT B Y ⟨t,t.property.1,t.property.2.trans hτT.le⟩ =
-      pastVelocity τ hτ hτT B Y t :=
-  join_left D.T τ hτ.le hτT.le _ _ (velocity_match τ hτ hτT B Y) t
+      pastVelocity τ hτ hτT B Y t := by
+  have h := join_left D.T τ hτ.le hτT.le _ _ (velocity_match' τ hτ hτT B Y) t
+  rw [velocityPath_eq_join]
+  exact h
 
 theorem derivativePath_left (t : Icc (0 : ℝ) τ) :
     derivativePath τ hτ hτT B Y ⟨t,t.property.1,t.property.2.trans hτT.le⟩ =
-      pastDerivative τ hτ hτT B Y t :=
-  join_left D.T τ hτ.le hτT.le _ _ (derivative_match τ hτ hτT B Y) t
+      pastDerivative τ hτ hτT B Y t := by
+  have h := join_left D.T τ hτ.le hτT.le _ _ (derivative_match' τ hτ hτT B Y) t
+  rw [derivativePath_eq_join]
+  exact h
 
 theorem velocityPath_right (t : Icc τ D.T) :
     velocityPath τ hτ hτT B Y ⟨t,hτ.le.trans t.property.1,t.property.2⟩ =
       futureVelocity τ hτ hτT B Y
-        ⟨(t : ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ :=
-  join_right D.T τ hτ.le hτT.le _ _ (velocity_match τ hτ hτT B Y) t
+        ⟨(t : ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ := by
+  have h := join_right D.T τ hτ.le hτT.le _ _ (velocity_match' τ hτ hτT B Y) t
+  rw [velocityPath_eq_join]
+  exact h
 
 theorem derivativePath_right (t : Icc τ D.T) :
     derivativePath τ hτ hτT B Y ⟨t,hτ.le.trans t.property.1,t.property.2⟩ =
       futureDerivative τ hτ hτT B Y
-        ⟨(t : ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ :=
-  join_right D.T τ hτ.le hτT.le _ _ (derivative_match τ hτ hτT B Y) t
+        ⟨(t : ℝ)-τ,sub_nonneg.mpr t.property.1,sub_le_sub_right t.property.2 τ⟩ := by
+  have h := join_right D.T τ hτ.le hτT.le _ _ (derivative_match' τ hτ hτT B Y) t
+  rw [derivativePath_eq_join]
+  exact h
 
 theorem velocityPath_time (t : Icc (0 : ℝ) D.T) :
     HasDerivWithinAt (extendPath D.T D.T_pos.le (velocityPath τ hτ hτT B Y))
-      (derivativePath τ hτ hτT B Y t) (Icc (0 : ℝ) D.T) t :=
-  join_hasDerivWithinAt D.T τ hτ.le hτT.le
-    (pastVelocity τ hτ hτT B Y) (futureVelocity τ hτ hτT B Y) (velocity_match τ hτ hτT B Y)
-    (pastDerivative τ hτ hτT B Y) (futureDerivative τ hτ hτT B Y) (derivative_match τ hτ hτT B Y)
+      (derivativePath τ hτ hτT B Y t) (Icc (0 : ℝ) D.T) t := by
+  have h := join_hasDerivWithinAt D.T τ hτ.le hτT.le _ _ (velocity_match' τ hτ hτT B Y)
+    _ _ (derivative_match' τ hτ hτT B Y)
     (pastVelocity_time τ hτ hτT B Y) (futureVelocity_time τ hτ hτT B Y) t
+  rw [velocityPath_eq_join, derivativePath_eq_join]
+  exact h
+
+theorem pastVelocity_supported (s : Icc (0 : ℝ) τ) :
+    pastVelocity τ hτ hτT B Y s ∈ Supported P Space D.support D.support_measurable := by
+  have h := EulerTransversePacketEndpoint.velocityPath_supported B (endpointData τ hτ hτT Y) s
+  rw [← pastVelocity_eq] at h
+  exact h
+
+theorem pastDerivative_supported (s : Icc (0 : ℝ) τ) :
+    pastDerivative τ hτ hτT B Y s ∈ Supported P Space D.support D.support_measurable := by
+  have h := EulerTransversePacketEndpoint.derivativePath_supported B (endpointData τ hτ hτT Y) s
+  rw [← pastDerivative_eq] at h
+  exact h
+
+theorem futureVelocity_supported (s : Icc (0 : ℝ) (D.T - τ)) :
+    futureVelocity τ hτ hτT B Y s ∈ Supported P Space D.support D.support_measurable := by
+  rw [futureVelocity_apply]
+  exact ((zeroForcing (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y)
+    s).property
+
+theorem futureDerivative_supported (s : Icc (0 : ℝ) (D.T - τ)) :
+    futureDerivative τ hτ hτT B Y s ∈ Supported P Space D.support D.support_measurable := by
+  rw [futureDerivative_apply]
+  exact ((zeroForcing (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y)
+    s).property
 
 theorem velocityPath_supported (t : Icc (0 : ℝ) D.T) :
-    velocityPath τ hτ hτT B Y t ∈ Supported P Space D.support D.support_measurable :=
-  join_mem D.T τ hτ.le hτT.le _ _ (velocity_match τ hτ hτT B Y) _
-    (EulerTransversePacketEndpoint.velocityPath_supported B (endpointData τ hτ hτT Y))
-    (fun s => ((zeroForcing (D.tail τ hτ.le hτT)).velocityPath (forwardInitial τ hτ hτT B Y)
-        s).property) t
+    velocityPath τ hτ hτT B Y t ∈ Supported P Space D.support D.support_measurable := by
+  have key := join_mem D.T τ hτ.le hτT.le _ _ (velocity_match' τ hτ hτT B Y)
+    (Supported P Space D.support D.support_measurable : Set (LiftL2 P))
+    (pastVelocity_supported τ hτ hτT B Y) (futureVelocity_supported τ hτ hτT B Y) t
+  rw [velocityPath_eq_join]
+  exact key
 
 theorem derivativePath_supported (t : Icc (0 : ℝ) D.T) :
-    derivativePath τ hτ hτT B Y t ∈ Supported P Space D.support D.support_measurable :=
-  join_mem D.T τ hτ.le hτT.le _ _ (derivative_match τ hτ hτT B Y) _
-    (EulerTransversePacketEndpoint.derivativePath_supported B (endpointData τ hτ hτT Y))
-    (fun s => ((zeroForcing (D.tail τ hτ.le hτT)).derivativePath (forwardInitial τ hτ hτT B Y)
-        s).property) t
+    derivativePath τ hτ hτT B Y t ∈ Supported P Space D.support D.support_measurable := by
+  have key := join_mem D.T τ hτ.le hτT.le _ _ (derivative_match' τ hτ hτT B Y)
+    (Supported P Space D.support D.support_measurable : Set (LiftL2 P))
+    (pastDerivative_supported τ hτ hτT B Y) (futureDerivative_supported τ hτ hτT B Y) t
+  rw [derivativePath_eq_join]
+  exact key
+
+theorem pastVelocity_mean_zero (s : Icc (0 : ℝ) τ) :
+    average P (pastVelocity τ hτ hτT B Y s) = 0 := by
+  have h := EulerTransversePacketEndpoint.velocityPath_mean_zero B (endpointData τ hτ hτT Y) s
+  rw [← pastVelocity_eq] at h
+  exact h
+
+theorem pastDerivative_mean_zero (s : Icc (0 : ℝ) τ) :
+    average P (pastDerivative τ hτ hτT B Y s) = 0 := by
+  have h := EulerTransversePacketEndpoint.derivativePath_mean_zero B (endpointData τ hτ hτT Y) s
+  rw [← pastDerivative_eq] at h
+  exact h
+
+theorem futureVelocity_mean_zero (s : Icc (0 : ℝ) (D.T - τ)) :
+    average P (futureVelocity τ hτ hτT B Y s) = 0 := by
+  rw [futureVelocity_apply]
+  exact EulerSourceCylinderEquation.velocity_average_zero P _ _ _ _ _ _ _ _ _ _ _
+    (zeroForcing (D.tail τ hτ.le hτT)).mean_zero (forwardInitial τ hτ hτT B Y).mean_zero s
+
+theorem futureDerivative_mean_zero (s : Icc (0 : ℝ) (D.T - τ)) :
+    average P (futureDerivative τ hτ hτT B Y s) = 0 := by
+  rw [futureDerivative_apply]
+  exact EulerSourceCylinderEquation.velocityDerivative_average_zero P _ _ _ _ _ _ _ _ _ _ _
+    (zeroForcing (D.tail τ hτ.le hτT)).mean_zero (forwardInitial τ hτ hτT B Y).mean_zero s
 
 theorem velocityPath_mean_zero (t : Icc (0 : ℝ) D.T) :
     average P (velocityPath τ hτ hτT B Y t) = 0 := by
-  apply join_mem D.T τ hτ.le hτT.le _ _ (velocity_match τ hτ hτT B Y)
-    {u | average P u = 0} _ _ t
-  · exact EulerTransversePacketEndpoint.velocityPath_mean_zero B (endpointData τ hτ hτT Y)
-  · intro s
-    exact EulerSourceCylinderEquation.velocity_average_zero P D.support D.support_measurable
-      (D.T-τ) (sub_pos.mpr hτT).le (D.tail τ hτ.le hτT).frame (D.tail τ hτ.le hτT).frameDerivative
-      (D.tail τ hτ.le hτT).frameLower (D.tail τ hτ.le hτT).frameLower_pos (D.tail τ hτ.le
-          hτT).frame_lower
-      (zeroForcing (D.tail τ hτ.le hτT)).path (forwardInitial τ hτ hτT B Y).value
-      (zeroForcing (D.tail τ hτ.le hτT)).mean_zero (forwardInitial τ hτ hτT B Y).mean_zero s
+  have key := join_mem D.T τ hτ.le hτT.le _ _ (velocity_match' τ hτ hτT B Y)
+    {u | average P u = 0} (pastVelocity_mean_zero τ hτ hτT B Y)
+    (futureVelocity_mean_zero τ hτ hτT B Y) t
+  rw [velocityPath_eq_join]
+  exact key
 
 theorem derivativePath_mean_zero (t : Icc (0 : ℝ) D.T) :
     average P (derivativePath τ hτ hτT B Y t) = 0 := by
-  apply join_mem D.T τ hτ.le hτT.le _ _ (derivative_match τ hτ hτT B Y)
-    {u | average P u = 0} _ _ t
-  · exact EulerTransversePacketEndpoint.derivativePath_mean_zero B (endpointData τ hτ hτT Y)
-  · intro s
-    exact EulerSourceCylinderEquation.velocityDerivative_average_zero P D.support
-        D.support_measurable
-      (D.T-τ) (sub_pos.mpr hτT).le (D.tail τ hτ.le hτT).frame (D.tail τ hτ.le hτT).frameDerivative
-      (D.tail τ hτ.le hτT).frameLower (D.tail τ hτ.le hτT).frameLower_pos (D.tail τ hτ.le
-          hτT).frame_lower
-      (zeroForcing (D.tail τ hτ.le hτT)).path (forwardInitial τ hτ hτT B Y).value
-      (zeroForcing (D.tail τ hτ.le hτT)).mean_zero (forwardInitial τ hτ hτT B Y).mean_zero s
+  have key := join_mem D.T τ hτ.le hτT.le _ _ (derivative_match' τ hτ hτT B Y)
+    {u | average P u = 0} (pastDerivative_mean_zero τ hτ hτT B Y)
+    (futureDerivative_mean_zero τ hτ hτT B Y) t
+  rw [derivativePath_eq_join]
+  exact key
 
 end EulerTransversePacketPrimary

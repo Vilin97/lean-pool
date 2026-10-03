@@ -60,10 +60,8 @@ theorem field_integral_eq_sub (T : ℝ) (hT : 0 ≤ T)
   have hcA' := ev.continuous.comp (extendPath_continuous (Y := Field) T hT A')
   calc
     (∫ s in (0 : ℝ)..t, extendPath (Y := Field) T hT A' s) x =
-        ∫ s in (0 : ℝ)..t, extendPath (Y := Field) T hT A' s x := by
-      change ev (∫ s in (0 : ℝ)..t, extendPath (Y := Field) T hT A' s) =
-        ∫ s in (0 : ℝ)..t, ev (extendPath (Y := Field) T hT A' s)
-      exact (ContinuousLinearMap.intervalIntegral_comp_comm (𝕜 := ℝ) (E := Field)
+        ∫ s in (0 : ℝ)..t, extendPath (Y := Field) T hT A' s x :=
+      (ContinuousLinearMap.intervalIntegral_comp_comm (𝕜 := ℝ) (E := Field)
         (F := Space →L[ℝ] Space) (μ := volume) ev
         ((extendPath_continuous (Y := Field) T hT A').intervalIntegrable 0 t)).symm
     _ = extendPath (Y := Field) T hT A t x - extendPath (Y := Field) T hT A 0 x := by
@@ -101,18 +99,10 @@ theorem operatorPath_hasDerivWithinAt (T : ℝ) (hT : 0 ≤ T)
       HasDerivWithinAt (extendPath T hT (operatorPath T A)) (operatorPath T A' t)
         (Icc (0 : ℝ) T) t := by
   intro t
-  have hlinear : HasFDerivAt (fun A : Field => multiplierMap A) multiplierMap
-      (extendPath (Y := Field) T hT A t) :=
-    ContinuousLinearMap.hasFDerivAt (𝕜 := ℝ) (E := Field) (F := L2 →L[ℝ] L2) multiplierMap
-  have hfield := field_hasDerivWithinAt T hT A A' hpoint t t.property
-  have hd : HasDerivWithinAt (fun s => multiplierMap (extendPath (Y := Field) T hT A s))
-      (multiplierMap (extendPath (Y := Field) T hT A' t)) (Icc (0 : ℝ) T) t :=
-    hlinear.comp_hasDerivWithinAt (t : ℝ) hfield
-  change HasDerivWithinAt (fun s => multiplierMap (A (projIcc 0 T hT s)))
-    (multiplierMap (A' t)) (Icc (0 : ℝ) T) t
-  change HasDerivWithinAt (fun s => multiplierMap (A (projIcc 0 T hT s)))
-    (multiplierMap (A' (projIcc 0 T hT t))) (Icc (0 : ℝ) T) t at hd
-  rwa [projIcc_of_mem hT t.property] at hd
+  have hfield := (field_hasDerivWithinAt T hT A A' hpoint t t.property).congr_deriv
+    (congrArg A' (projIcc_val (h := hT) t))
+  exact (ContinuousLinearMap.hasFDerivAt (𝕜 := ℝ) (E := Field) (F := L2 →L[ℝ] L2)
+    multiplierMap).comp_hasDerivWithinAt (t : ℝ) hfield
 
 theorem operatorPath_inverse (T : ℝ) (A B : C(Icc (0 : ℝ) T, Field))
     (hAB : ∀ t x v, A t x (B t x v) = v) :

@@ -115,29 +115,29 @@ theorem coverPathMap_norm_le :
 
 /-- Cover path, given by `coverPathMap P (sobolevPath P 3 p hp)`. -/
 def coverPath (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
-    C(K, LiftTangent →ᵇ Space) := coverPathMap P (sobolevPath P 3 p hp)
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
+    C(K, LiftTangent →ᵇ Space) := coverPathMap (K := K) P (sobolevPath P 3 p hp)
 
 @[simp] theorem coverPath_apply (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
     (t : K) (x : LiftTangent) :
     coverPath P p hp t x = pointField P p hp t (coveringMap P x) := rfl
 
 /-- Cover orbit, given by `coverPathMap P (sobolevOrbit P 3 p hp a)`. -/
 def coverOrbit (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
     (a : LiftTangent) : C(K, LiftTangent →ᵇ Space) :=
-  coverPathMap P (sobolevOrbit P 3 p hp a)
+  coverPathMap (K := K) P (sobolevOrbit P 3 p hp a)
 
 theorem coverOrbit_contDiff (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
     ContDiff ℝ ∞ (coverOrbit P p hp) :=
   (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
     (E := C(K, SobolevSpace P 3)) (F := C(K, LiftTangent →ᵇ Space))
     (coverPathMap (K := K) P)).comp (sobolevOrbit_contDiff P 3 p hp)
 
 theorem coverOrbit_apply (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
     (a : LiftTangent) (t : K) (x : LiftTangent) :
     coverOrbit P p hp a t x = coverPath P p hp t (x+a) := by
   have hc : Continuous (pointField P p hp t) :=
@@ -157,7 +157,7 @@ theorem coverOrbit_apply (p : C(K, LiftL2 P))
   exact he
 
 @[simp] theorem coverOrbit_zero (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
     coverOrbit P p hp 0 = coverPath P p hp := by
   apply ContinuousMap.ext
   intro t

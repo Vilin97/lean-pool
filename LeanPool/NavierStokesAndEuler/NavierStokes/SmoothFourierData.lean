@@ -13,6 +13,7 @@ import Mathlib.Analysis.Calculus.SmoothSeries
 import Mathlib.MeasureTheory.Integral.Prod
 public import Mathlib.Analysis.Real.Sqrt
 import Mathlib.NumberTheory.Real.Irrational
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Fourier coefficients of actual smooth periodic functions
@@ -71,7 +72,7 @@ theorem conjugate_product (p q : ℤ) :
     quadraticForm p q * quadraticForm p (-q) = (integerNorm p q : ℝ) := by
   simp only [quadraticForm, integerNorm, Int.cast_neg, Int.cast_sub,
     Int.cast_pow, Int.cast_mul, Int.cast_ofNat]
-  nlinarith [congrArg (fun x : ℝ => x * (q : ℝ) ^ 2) sqrt_two_square]
+  nlinarith only [congrArg (fun x : ℝ => x * (q : ℝ) ^ 2) sqrt_two_square]
 
 theorem integerNorm_ne_zero (p q : ℤ) (hpq : p ≠ 0 ∨ q ≠ 0) :
     integerNorm p q ≠ 0 := by
@@ -131,7 +132,7 @@ theorem radial_product_lower (m n : ℤ) (hmn : m ≠ 0 ∨ n ≠ 0) :
   have hpq : m + n ≠ 0 ∨ -n ≠ 0 := by
     by_cases hn : n = 0
     · left
-      simpa [hn] using hmn.resolve_right (not_not.mpr hn)
+      simpa only [hn, add_zero, ne_eq] using hmn.resolve_right (not_not.mpr hn)
     · exact Or.inr (neg_ne_zero.mpr hn)
   simpa only [radialSymbol, radialConjugate, neg_neg] using
     conjugate_product_lower (m + n) (-n) hpq
@@ -141,7 +142,7 @@ theorem time_product_lower (m n : ℤ) (hmn : m ≠ 0 ∨ n ≠ 0) :
   have hpq : n - m ≠ 0 ∨ m ≠ 0 := by
     by_cases hm : m = 0
     · left
-      simpa [hm] using hmn.resolve_left (not_not.mpr hm)
+      simpa only [hm, sub_zero, ne_eq] using hmn.resolve_left (not_not.mpr hm)
     · exact Or.inr hm
   exact conjugate_product_lower (n - m) m hpq
 
@@ -168,8 +169,8 @@ theorem radialConjugate_upper (m n : ℤ) :
       rw [abs_mul, abs_of_nonneg (by positivity : 0 ≤ 1 + Real.sqrt 2)]
     _ ≤ 3 * frequencyL1 m n := by
       unfold frequencyL1
-      nlinarith [mul_le_mul_of_nonneg_right sqrt_two_le_two (abs_nonneg (n : ℝ)),
-        abs_nonneg (m : ℝ)]
+      nlinarith only [mul_le_mul_of_nonneg_right sqrt_two_le_two (abs_nonneg (n : ℝ)),
+          abs_nonneg (m : ℝ)]
 
 theorem timeConjugate_upper (m n : ℤ) :
     |timeConjugate m n| ≤ 3 * frequencyL1 m n := by
@@ -181,8 +182,8 @@ theorem timeConjugate_upper (m n : ℤ) :
       rw [abs_mul, abs_of_nonneg (by positivity : 0 ≤ 1 + Real.sqrt 2)]
     _ ≤ 3 * frequencyL1 m n := by
       unfold frequencyL1
-      nlinarith [mul_le_mul_of_nonneg_right sqrt_two_le_two (abs_nonneg (m : ℝ)),
-        abs_nonneg (n : ℝ)]
+      nlinarith only [mul_le_mul_of_nonneg_right sqrt_two_le_two (abs_nonneg (m : ℝ)),
+          abs_nonneg (n : ℝ)]
 
 theorem frequencyL1_le_twice_length (m n : ℤ) :
     frequencyL1 m n ≤ 2 * frequencyLength m n := by
@@ -191,13 +192,13 @@ theorem frequencyL1_le_twice_length (m n : ℤ) :
   have hm : |(m : ℝ)| ≤ frequencyLength m n := by
     apply (sq_le_sq₀ (abs_nonneg _) (frequencyLength_nonneg m n)).mp
     rw [sq_abs, hs]
-    nlinarith [sq_nonneg (n : ℝ)]
+    nlinarith only [sq_nonneg (n : ℝ)]
   have hn : |(n : ℝ)| ≤ frequencyLength m n := by
     apply (sq_le_sq₀ (abs_nonneg _) (frequencyLength_nonneg m n)).mp
     rw [sq_abs, hs]
-    nlinarith [sq_nonneg (m : ℝ)]
+    nlinarith only [sq_nonneg (m : ℝ)]
   unfold frequencyL1
-  linarith
+  linarith only [hm, hn]
 
 theorem lower_of_conjugate_bound {a b D : ℝ} (hprod : 1 ≤ |a| * |b|)
     (hD : 0 < D) (hb : |b| ≤ D) : 1 / D ≤ |a| := by
@@ -212,7 +213,7 @@ theorem radial_diophantine_l1 (m n : ℤ) (hmn : m ≠ 0 ∨ n ≠ 0) :
   · have := frequencyL1_nonneg m n
     positivity
   · have := radialConjugate_upper m n
-    linarith
+    linarith only [this]
 
 /-- Explicit Diophantine bound for `v_t = (sqrt 2-1,1)` in the L1 length. -/
 theorem time_diophantine_l1 (m n : ℤ) (hmn : m ≠ 0 ∨ n ≠ 0) :
@@ -222,7 +223,7 @@ theorem time_diophantine_l1 (m n : ℤ) (hmn : m ≠ 0 ∨ n ≠ 0) :
   · have := frequencyL1_nonneg m n
     positivity
   · have := timeConjugate_upper m n
-    linarith
+    linarith only [this]
 
 /-- The manuscript's estimate with an explicit constant and Euclidean length. -/
 theorem radial_diophantine (m n : ℤ) (hmn : m ≠ 0 ∨ n ≠ 0) :
@@ -323,14 +324,15 @@ theorem coveringFrequency_injective : Function.Injective coveringFrequency := by
   have h₁ := congrArg Prod.fst hkl
   have h₂ := congrArg Prod.snd hkl
   simp only [coveringFrequency] at h₁ h₂
-  apply Prod.ext <;> linarith
+  apply Prod.ext <;> linarith only [h₁, h₂]
 
 theorem coveringFrequency_ne_zero (k : ℤ × ℤ) (hk : k ≠ 0) :
     coveringFrequency k ≠ 0 := by
   intro hz
   apply hk
   apply coveringFrequency_injective
-  simpa [coveringFrequency] using hz
+  simpa only [coveringFrequency, Prod.fst_zero, mul_zero, Prod.snd_zero, add_zero, Prod.mk.injEq,
+      Prod.mk_eq_zero] using hz
 
 /-- The radial symbol scales by the smaller eigenvalue of the covering matrix. -/
 theorem radial_symbol_covering (k : ℤ × ℤ) :
@@ -338,7 +340,7 @@ theorem radial_symbol_covering (k : ℤ × ℤ) :
       (4 - Real.sqrt 2) * radialSymbol k.1 k.2 := by
   simp only [coveringFrequency, radialSymbol_formula, Int.cast_add,
     Int.cast_mul, Int.cast_ofNat]
-  nlinarith [congrArg (fun x : ℝ => x * (k.2 : ℝ)) sqrt_two_square]
+  nlinarith only [congrArg (fun x : ℝ => x * (k.2 : ℝ)) sqrt_two_square]
 
 /-- The temporal symbol scales by the larger eigenvalue of the covering matrix. -/
 theorem time_symbol_covering (k : ℤ × ℤ) :
@@ -346,7 +348,7 @@ theorem time_symbol_covering (k : ℤ × ℤ) :
       (4 + Real.sqrt 2) * timeSymbol k.1 k.2 := by
   simp only [coveringFrequency, timeSymbol_formula, Int.cast_add,
     Int.cast_mul, Int.cast_ofNat]
-  nlinarith [congrArg (fun x : ℝ => x * (k.1 : ℝ)) sqrt_two_square]
+  nlinarith only [congrArg (fun x : ℝ => x * (k.1 : ℝ)) sqrt_two_square]
 
 theorem covering_eigenvalues_gt_one :
     1 < 4 - Real.sqrt 2 ∧ 1 < 4 + Real.sqrt 2 := by
@@ -385,7 +387,7 @@ def Rapid (a : Frequency → ℂ) : Prop :=
 
 theorem Rapid.summable_norm {a : Frequency → ℂ} (ha : Rapid a) :
     Summable (fun k => ‖a k‖) := by
-  simpa using ha 0
+  simpa only [pow_zero, one_mul] using ha 0
 
 theorem Rapid.mul_linear {a b : Frequency → ℂ} (ha : Rapid a) (C : ℝ)
     (hb : ∀ k, ‖b k‖ ≤ C * weight k) : Rapid (fun k => b k * a k) := by
@@ -436,7 +438,10 @@ theorem phase_formula (k : Frequency) (x : Plane) :
 
 theorem norm_mode (k : Frequency) (x : Plane) : ‖mode k x‖ = 1 := by
   rw [mode, Complex.norm_exp, phase_formula]
-  simp [omega, Complex.mul_re, Complex.mul_im]
+  simp only [omega, Complex.mul_re, Complex.re_ofNat, Complex.ofReal_re, Complex.im_ofNat,
+      Complex.ofReal_im, mul_zero, sub_zero, Complex.I_re, Complex.mul_im, zero_mul, add_zero,
+      Complex.I_im, mul_one, sub_self, Complex.add_re, Complex.intCast_re, Complex.intCast_im,
+      Complex.add_im, Real.exp_zero]
 
 theorem continuous_mode (k : Frequency) : Continuous (mode k) :=
   Complex.continuous_exp.comp (phase k).continuous
@@ -451,14 +456,14 @@ theorem norm_freqX_le (k : Frequency) : ‖freqX k‖ ≤ ‖omega‖ * weight k
   apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
   unfold weight
   have := abs_nonneg (k.2 : ℝ)
-  linarith
+  linarith only [this]
 
 theorem norm_freqY_le (k : Frequency) : ‖freqY k‖ ≤ ‖omega‖ * weight k := by
   rw [freqY, norm_mul, Complex.norm_intCast]
   apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
   unfold weight
   have := abs_nonneg (k.1 : ℝ)
-  linarith
+  linarith only [this]
 
 theorem Rapid.derivX {a : Frequency → ℂ} (ha : Rapid a) : Rapid (derivX a) :=
   ha.mul_linear ‖omega‖ norm_freqX_le
@@ -539,10 +544,11 @@ theorem contDiff_series_nat (p : ℕ) {a : Frequency → ℂ} (ha : Rapid a) :
   induction p generalizing a with
   | zero => exact contDiff_zero.mpr (continuous_series ha)
   | succ p ih =>
-    rw [show ((p + 1 : ℕ) : WithTop ℕ∞) = (p : WithTop ℕ∞) + 1 by simp,
+    rw [show ((p + 1 : ℕ) : WithTop ℕ∞) = (p : WithTop ℕ∞) + 1 by simp only [Nat.cast_add,
+        Nat.cast_one],
       contDiff_succ_iff_fderiv]
     refine ⟨(fun x => (hasFDerivAt_series ha x).differentiableAt), ?_, ?_⟩
-    · simp
+    · simp only [WithTop.natCast_ne_top, IsEmpty.forall_iff]
     · have heq : fderiv ℝ (series a) =
           (fun x => liftX (series (derivX a) x) + liftY (series (derivY a) x)) :=
         funext (fderiv_series ha)
@@ -598,10 +604,10 @@ theorem length_le_weight (k : Frequency) :
       |(k.1 : ℝ)| + |(k.2 : ℝ)| := by
     apply (sq_le_sq₀ hs (by positivity)).mp
     rw [hsq]
-    nlinarith [sq_abs (k.1 : ℝ), sq_abs (k.2 : ℝ),
-      mul_nonneg (abs_nonneg (k.1 : ℝ)) (abs_nonneg (k.2 : ℝ))]
+    nlinarith only [sq_abs (k.1 : ℝ), sq_abs (k.2 : ℝ),
+        mul_nonneg (abs_nonneg (k.1 : ℝ)) (abs_nonneg (k.2 : ℝ))]
   unfold weight
-  linarith
+  linarith only [ht]
 
 theorem reciprocal_symbol_bound (d : Direction) {k : Frequency} (hk : k ≠ 0) :
     |1 / symbol d k| ≤ 6 * weight k := by
@@ -624,12 +630,14 @@ def inverseCoeff (d : Direction) (a : Frequency → ℂ) (k : Frequency) : ℂ :
   multiplier d k * a k
 
 @[simp] theorem symbol_zero (d : Direction) : symbol d 0 = 0 := by
-  cases d <;> simp [symbol, DiophantineGraph.radialSymbol,
-    DiophantineGraph.timeSymbol, DiophantineGraph.quadraticForm]
+  cases d <;> simp only [symbol, DiophantineGraph.radialSymbol, DiophantineGraph.quadraticForm,
+      Prod.fst_zero, Prod.snd_zero, add_zero, Int.cast_zero, neg_zero, mul_zero,
+      DiophantineGraph.timeSymbol, sub_self]
 
 @[simp] theorem inverseCoeff_zero (d : Direction) (a : Frequency → ℂ) :
     inverseCoeff d a 0 = 0 := by
-  simp [inverseCoeff, multiplier]
+  simp only [inverseCoeff, multiplier, symbol_zero, Complex.ofReal_zero, mul_zero, inv_zero,
+      zero_mul]
 
 theorem norm_multiplier_le (d : Direction) (k : Frequency) :
     ‖multiplier d k‖ ≤ (6 * ‖omega⁻¹‖) * weight k := by
@@ -640,8 +648,8 @@ theorem norm_multiplier_le (d : Direction) (k : Frequency) :
   · have h := reciprocal_symbol_bound d hk
     calc
       ‖multiplier d k‖ = ‖omega⁻¹‖ * |1 / symbol d k| := by
-        simp [multiplier, Complex.norm_real, Real.norm_eq_abs,
-          abs_inv, one_div, mul_inv_rev, mul_comm]
+        simp only [multiplier, mul_inv_rev, mul_comm, Complex.norm_mul, norm_inv, Complex.norm_real,
+            Real.norm_eq_abs, one_div, abs_inv]
       _ ≤ ‖omega⁻¹‖ * (6 * weight k) := mul_le_mul_of_nonneg_left h (norm_nonneg _)
       _ = _ := by ring
 
@@ -666,7 +674,7 @@ theorem inverseCoeff_weighted_bound (d : Direction) (a : Frequency → ℂ)
 theorem coefficient_cancel (d : Direction) {a : Frequency → ℂ} (hzero : a 0 = 0)
     (k : Frequency) : omega * (symbol d k : ℂ) * inverseCoeff d a k = a k := by
   by_cases hk : k = 0
-  · simp [hk, hzero]
+  · simp only [hk, symbol_zero, Complex.ofReal_zero, mul_zero, inverseCoeff_zero, hzero]
   · have hd : omega * (symbol d k : ℂ) ≠ 0 :=
       mul_ne_zero omega_ne_zero (Complex.ofReal_ne_zero.mpr (symbol_ne_zero d hk))
     change (omega * (symbol d k : ℂ)) * ((omega * (symbol d k : ℂ))⁻¹ * a k) = a k
@@ -730,7 +738,8 @@ def torusMode (k : Frequency) : C(Torus, ℂ) where
     ((fourier k.2).continuous.comp continuous_snd)
 
 theorem norm_torusMode (k : Frequency) (z : Torus) : ‖torusMode k z‖ = 1 := by
-  simp [torusMode, fourier_apply, Circle.norm_coe]
+  simp only [torusMode, fourier_apply, ContinuousMap.coe_mk, Complex.norm_mul, Circle.norm_coe,
+      mul_one]
 
 /-- Torus series, given by `∑' k, a k * torusMode k z`. -/
 def torusSeries (a : Frequency → ℂ) (z : Torus) : ℂ := ∑' k, a k * torusMode k z
@@ -750,7 +759,7 @@ theorem series_eq_torusSeries (a : Frequency → ℂ) (x : Plane) :
 
 theorem circle_int_eq_zero (m : ℤ) : (((m : ℝ) : UnitAddCircle)) = 0 := by
   apply (AddCircle.coe_eq_zero_iff (1 : ℝ)).mpr
-  exact ⟨m, by simp⟩
+  exact ⟨m, by simp only [zsmul_eq_mul, mul_one]⟩
 
 /-- Integer translation invariance is actual descent to `(ℝ/ℤ)²`. -/
 theorem series_periodic (a : Frequency → ℂ) (x : Plane) (m n : ℤ) :
@@ -770,7 +779,8 @@ theorem integral_fourier (n : ℤ) :
       if n = 0 then 1 else 0 := by
   have h := (orthonormal_iff_ite.mp (orthonormal_fourier (T := (1 : ℝ)))) 0 n
   rw [ContinuousMap.inner_toLp] at h
-  simpa [fourier_zero, eq_comm] using h
+  simpa only [fourier_apply, eq_comm, zero_smul, AddCircle.toCircle_zero, Circle.coe_one, map_one,
+      mul_one] using h
 
 theorem integral_torusMode (k : Frequency) :
     (∫ z, torusMode k z ∂torusMeasure) = if k = 0 then 1 else 0 := by
@@ -778,7 +788,8 @@ theorem integral_torusMode (k : Frequency) :
     ∂(AddCircle.haarAddCircle : Measure UnitAddCircle).prod AddCircle.haarAddCircle) = _
   rw [integral_prod_mul, integral_fourier, integral_fourier]
   by_cases h₁ : k.1 = 0 <;> by_cases h₂ : k.2 = 0 <;>
-    simp [h₁, h₂, Prod.ext_iff]
+    simp only [h₁, ↓reduceIte, h₂, mul_one, Prod.ext_iff, Prod.fst_zero, Prod.snd_zero, and_self,
+        mul_zero, and_false, and_true]
 
 theorem integrable_torusTerm (a : Frequency → ℂ) (k : Frequency) :
     Integrable (fun z => a k * torusMode k z) torusMeasure := by
@@ -797,8 +808,8 @@ theorem integral_torusSeries {a : Frequency → ℂ} (ha : Rapid a) :
   rw [← integral_tsum_of_summable_integral_norm (integrable_torusTerm a) hsum]
   simp only [integral_const_mul, integral_torusMode]
   simp only [mul_ite, mul_one, mul_zero]
-  rw [tsum_eq_single (0 : Frequency) (fun i hi => by simp [hi])]
-  simp
+  rw [tsum_eq_single (0 : Frequency) (fun i hi => by simp only [hi, ↓reduceIte])]
+  simp only [↓reduceIte]
 
 /-- Weighted absolute Fourier coefficient seminorm. -/
 def coeffSeminorm (p : ℕ) (a : Frequency → ℂ) : ℝ :=
@@ -854,8 +865,8 @@ theorem Rapid.coefficientWord {a : Frequency → ℂ} (ha : Rapid a) (w : List B
 theorem coordinatePartial_series (j : Bool) {a : Frequency → ℂ} (ha : Rapid a) :
     coordinatePartial j (series a) = series (coordinateCoeff j a) := by
   funext x
-  cases j <;> simp [coordinatePartial, coordinateCoeff, fderiv_series ha,
-    liftX_apply, liftY_apply]
+  cases j <;> simp only [coordinatePartial, fderiv_series ha, Bool.false_eq_true, ↓reduceIte,
+      add_apply, liftX_apply, one_smul, liftY_apply, zero_smul, add_zero, coordinateCoeff, zero_add]
 
 theorem derivativeWord_series (w : List Bool) {a : Frequency → ℂ} (ha : Rapid a) :
     derivativeWord w (series a) = series (coefficientWord w a) := by
@@ -874,7 +885,7 @@ theorem norm_coordinateCoeff_le (j : Bool) (a : Frequency → ℂ) (k : Frequenc
 theorem norm_coefficientWord_le (w : List Bool) (a : Frequency → ℂ) (k : Frequency) :
     ‖coefficientWord w a k‖ ≤ (‖omega‖ * weight k) ^ w.length * ‖a k‖ := by
   induction w with
-  | nil => simp [coefficientWord]
+  | nil => simp only [coefficientWord, List.length_nil, pow_zero, one_mul, Std.le_refl]
   | cons j js ih =>
     calc
       ‖coefficientWord (j :: js) a k‖ ≤
@@ -952,7 +963,7 @@ theorem inverse_preserves_parameter_support {P : Type*} (d : Direction)
     (hsupport : ∀ p, p ∉ S → ∀ k, a p k = 0) :
     ∀ p, p ∉ S → ∀ x, directionalInverse d (a p) x = 0 := by
   intro p hp x
-  simp [directionalInverse, series, inverseCoeff, hsupport p hp]
+  simp only [directionalInverse, series, inverseCoeff, hsupport p hp, mul_zero, zero_mul, tsum_zero]
 
 /-- The constructed directional inverse has zero normalized Haar mean. -/
 theorem inverse_zero_mean (d : Direction) {a : Frequency → ℂ} (ha : Rapid a) :
@@ -1012,7 +1023,9 @@ def unitCoeff (f : ℝ → ℂ) (n : ℤ) : ℂ :=
 theorem unitCoeff_eq_integral (f : ℝ → ℂ) (n : ℤ) :
     unitCoeff f n = ∫ x in (0 : ℝ)..1, fourier (-n) (x : UnitAddCircle) * f x := by
   have h := fourierCoeffOn_eq_integral f n (show (0 : ℝ) < 1 by norm_num)
-  simpa [unitCoeff, fourier_coe_apply, smul_eq_mul] using h
+  simpa only [unitCoeff, fourier_apply, neg_smul, fourier_neg', fourier_coe_apply',
+      Complex.ofReal_one, div_one, sub_zero, ne_eq, one_ne_zero, not_false_eq_true, div_self,
+      smul_eq_mul, one_smul] using h
 
 theorem unitCoeff_const_mul (f : ℝ → ℂ) (c : ℂ) (n : ℤ) :
     unitCoeff (fun x => c * f x) n = c * unitCoeff f n :=
@@ -1059,7 +1072,7 @@ theorem xJet_succ (p : ℕ) (f : Plane → ℂ) : xJet (p + 1) f = partialX (xJe
 theorem partialX_smooth {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f) :
     ContDiff ℝ ∞ (partialX f) :=
   (ContinuousLinearMap.apply ℝ ℂ (1, 0)).contDiff.comp
-    (hf.fderiv_right (by simp))
+    (hf.fderiv_right (by simp only [ENat.coe_top_add_one, Std.le_refl]))
 
 theorem xJet_smooth {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f) (p : ℕ) :
     ContDiff ℝ ∞ (xJet p f) := by
@@ -1106,7 +1119,7 @@ theorem coefficient_partialX {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
     funext y
     apply unitCoeff_of_hasDerivAt hk
     · intro x
-      exact hasDerivAt_slice ((hf.differentiable (by simp)) (x, y))
+      exact hasDerivAt_slice ((hf.differentiable (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) (x, y))
     · exact (partialX_smooth hf).continuous.comp (continuous_id.prodMk continuous_const)
     · simpa using hp (0, y) (1, 0)
   unfold coefficient
@@ -1195,9 +1208,10 @@ theorem coefficient_decay_second {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
 
 theorem norm_omega_ge_one : 1 ≤ ‖omega‖ := by
   have hnorm : ‖omega‖ = 2 * Real.pi := by
-    simp [omega, Complex.norm_real, Real.norm_eq_abs, abs_of_pos Real.pi_pos]
+    simp only [omega, Complex.norm_mul, Complex.norm_ofNat, Complex.norm_real, Real.norm_eq_abs,
+        abs_of_pos Real.pi_pos, Complex.norm_I, mul_one]
   rw [hnorm]
-  linarith [Real.two_le_pi]
+  linarith only [Real.two_le_pi]
 
 /-- Multiplying by the first frequency power is controlled by the actual derivative norm. -/
 theorem coefficient_first_moment {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
@@ -1232,7 +1246,7 @@ theorem weight_le_dominant {k : Frequency} (hk : k.1 ≠ 0)
   have hi : (1 : ℤ) ≤ |k.1| := Int.add_one_le_iff.mpr (abs_pos.mpr hk)
   have hr : (1 : ℝ) ≤ |(k.1 : ℝ)| := by exact_mod_cast hi
   unfold weight
-  linarith
+  linarith only [hdom, hr]
 
 theorem weight_moment_of_dominant {k : Frequency} {p : ℕ} {A C : ℝ}
     (hk : k.1 ≠ 0) (hdom : |(k.2 : ℝ)| ≤ |(k.1 : ℝ)|) (hA : 0 ≤ A)
@@ -1272,7 +1286,7 @@ theorem coefficient_polynomial_bound {f : Plane → ℂ} (hf : ContDiff ℝ ∞ 
       (norm_nonneg (coefficient (swapFunction f) (k.2, k.1)))
       (coefficient_first_moment (swapFunction_smooth hf) (swapFunction_periodic hp) hne p hsecond)
     rw [← coefficient_swap hf.continuous k] at h
-    have hw : weight (k.2, k.1) = weight k := by unfold weight; dsimp; ring
+    have hw : weight (k.2, k.1) = weight k := by unfold weight; dsimp only; ring
     simpa only [hw] using h
 
 /-- Smoothness on the compact unit square supplies the derivative bounds;
@@ -1311,10 +1325,10 @@ theorem weight_inv_four_le_product (k : Frequency) :
     (weight k ^ 4)⁻¹ ≤ ((1 + |(k.1 : ℝ)|) ^ 2)⁻¹ * ((1 + |(k.2 : ℝ)|) ^ 2)⁻¹ := by
   have hfirst : 1 + |(k.1 : ℝ)| ≤ weight k := by
     unfold weight
-    linarith [abs_nonneg (k.2 : ℝ)]
+    linarith only [abs_nonneg (k.2 : ℝ)]
   have hsecond : 1 + |(k.2 : ℝ)| ≤ weight k := by
     unfold weight
-    linarith [abs_nonneg (k.1 : ℝ)]
+    linarith only [abs_nonneg (k.1 : ℝ)]
   have hproduct : (1 + |(k.1 : ℝ)|) ^ 2 * (1 + |(k.2 : ℝ)|) ^ 2 ≤ weight k ^ 4 := by
     calc
       _ ≤ (weight k ^ 2) * (weight k ^ 2) :=
@@ -1379,7 +1393,8 @@ noncomputable def torusLift (f : Torus → ℂ) (x : Plane) : ℂ :=
 
 theorem torusLift_periodic (f : Torus → ℂ) : UnitPeriodic (torusLift f) := by
   intro z k
-  simp [torusLift]
+  simp only [torusLift, Prod.fst_add, AddSubgroup.intCast_mem_zmultiples_one,
+      QuotientAddGroup.mk_add_of_mem, Prod.snd_add]
 
 /-- Torus coefficient, given by `∫ z, torusMode (-k) z * f z ∂torusMeasure`. -/
 def torusCoefficient (f : Torus → ℂ) (k : Frequency) : ℂ :=
@@ -1428,7 +1443,8 @@ noncomputable def nativeFunction (f : C(Torus, ℂ)) : C(UnitAddTorus (Fin 2), �
 
 theorem native_mode_eq (k : Fin 2 → ℤ) (z : UnitAddTorus (Fin 2)) :
     UnitAddTorus.mFourier k z = torusMode (k 0, k 1) (z 0, z 1) := by
-  simp [UnitAddTorus.mFourier, torusMode, Fin.prod_univ_two]
+  simp only [UnitAddTorus.mFourier, fourier_apply, Fin.prod_univ_two, Fin.isValue,
+      ContinuousMap.coe_mk, torusMode]
 
 theorem native_coefficient_eq (f : C(Torus, ℂ)) (k : Fin 2 → ℤ) :
     UnitAddTorus.mFourierCoeff (nativeFunction f) k = torusCoefficient f (k 0, k 1) := by
@@ -1475,7 +1491,9 @@ theorem series_coefficient_lift (f : C(Torus, ℂ))
 theorem coefficient_zero_eq_mean (f : C(Torus, ℂ)) :
     coefficient (torusLift f) 0 = ∫ z, f z ∂torusMeasure := by
   rw [coefficient_lift_eq_torus]
-  simp [torusCoefficient, torusMode]
+  simp only [torusCoefficient, torusMode, neg_zero, Prod.fst_zero, fourier_apply, zero_smul,
+      AddCircle.toCircle_zero, Circle.coe_one, Prod.snd_zero, mul_one, ContinuousMap.coe_mk,
+      one_mul]
 
 /-- The constructed inverse now solves the equation for an arbitrary smooth
 zero-mean torus function, not only for a preassigned coefficient sequence. -/
@@ -1492,12 +1510,12 @@ theorem inverse_solves_smooth_torus (d : Direction) (f : C(Torus, ℂ))
 theorem unitPeriodic_first {f : Plane → ℂ} (hp : UnitPeriodic f) (y : ℝ) :
     Periodic (fun x => f (x, y)) 1 := by
   intro x
-  simpa using hp (x, y) (1, 0)
+  simpa only [Int.cast_one, Int.cast_zero, Prod.mk_add_mk, add_zero] using hp (x, y) (1, 0)
 
 theorem unitPeriodic_second {f : Plane → ℂ} (hp : UnitPeriodic f) (x : ℝ) :
     Periodic (fun y => f (x, y)) 1 := by
   intro y
-  simpa using hp (x, y) (0, 1)
+  simpa only [Int.cast_zero, Int.cast_one, Prod.mk_add_mk, add_zero] using hp (x, y) (0, 1)
 
 /-- First lift, given by `(unitPeriodic_first hp y).lift z`. -/
 noncomputable def firstLift (f : Plane → ℂ) (hp : UnitPeriodic f)
@@ -1545,7 +1563,8 @@ theorem series_coefficient {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)
 theorem coefficient_zero_eq_integral (f : Plane → ℂ) :
     coefficient f 0 = ∫ y in (0 : ℝ)..1, ∫ x in (0 : ℝ)..1, f (x, y) := by
   rw [coefficient_eq_doubleIntegral]
-  simp [kernel]
+  simp only [kernel, Prod.fst_zero, neg_zero, fourier_apply, zero_smul, AddCircle.toCircle_zero,
+      Circle.coe_one, Prod.snd_zero, mul_one, one_mul]
 
 /-- The final coefficient bridge to the existing inverse construction. -/
 theorem smooth_periodic_fourier_data {f : Plane → ℂ} (hf : ContDiff ℝ ∞ f)

@@ -20,6 +20,10 @@ are uniform in the transverse parameter.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -50,20 +54,21 @@ noncomputable def upper (P : Patch) (j : Fin 3) : ℝ :=
 
 theorem lower_gt_left (P : Patch) (j : Fin 3) : P.left < lower P j := by
   fin_cases j <;> simp only [lower] <;>
-    norm_num <;> linarith [P.ordered]
+    norm_num <;> linarith only [P.ordered]
 
 theorem lower_lt_upper (P : Patch) (j : Fin 3) : lower P j < upper P j := by
-  dsimp [lower, upper]
-  nlinarith [P.ordered]
+  dsimp only [lower, upper]
+  nlinarith only [P.ordered]
 
 theorem upper_lt_right (P : Patch) (j : Fin 3) : upper P j < P.right := by
   fin_cases j <;> simp only [upper] <;>
-    norm_num <;> linarith [P.ordered]
+    norm_num <;> linarith only [P.ordered]
 
 theorem intervals_separated (P : Patch) (i j : Fin 3) (hij : i < j) :
     upper P i ≤ lower P j := by
   fin_cases i <;> fin_cases j <;> norm_num at hij <;> norm_num <;>
-    dsimp [upper, lower] <;> norm_num <;> linarith [P.ordered]
+    dsimp only [Fin.isValue, upper, Fin.coe_ofNat_eq_mod, Nat.zero_mod, lower, Nat.reduceMod,
+        Nat.cast_ofNat] <;> norm_num <;> linarith only [P.ordered]
 
 /-- Bump, given by `LocalizedMomentRepair.bump (lower P j) (upper P j)`. -/
 noncomputable def bump (P : Patch) (j : Fin 3) : ℝ → ℝ :=
@@ -92,16 +97,16 @@ theorem bump_support_patch (P : Patch) (j : Fin 3) :
 theorem bumps_disjoint (P : Patch) (i j : Fin 3) (hij : i ≠ j) (x : ℝ) :
     bump P i x * bump P j x = 0 := by
   by_cases hi : bump P i x = 0
-  · simp [hi]
+  · simp only [hi, zero_mul]
   by_cases hj : bump P j x = 0
-  · simp [hj]
+  · simp only [hj, mul_zero]
   have hix := bump_tsupport P i (subset_tsupport _ hi)
   have hjx := bump_tsupport P j (subset_tsupport _ hj)
   rcases lt_or_gt_of_ne hij with h | h
   · have hs := intervals_separated P i j h
-    linarith [hix.2, hjx.1]
+    linarith only [hs, hix, hjx, hix.2, hjx.1]
   · have hs := intervals_separated P j i h
-    linarith [hjx.2, hix.1]
+    linarith only [hs, hjx, hix, hjx.2, hix.1]
 
 /-- Correction, given by `∑ j, c j * bump P j x`. -/
 noncomputable def correction (P : Patch) (c : Coeff) (x : ℝ) : ℝ :=
@@ -121,7 +126,7 @@ theorem correction_support (P : Patch) (c : Coeff) :
   have hb : bump P j x = 0 := by
     by_contra hn
     exact hnot (bump_support_patch P j hn)
-  simp [hb]
+  simp only [hb, mul_zero]
 
 theorem correction_tsupport (P : Patch) (c : Coeff) :
     tsupport (correction P c) ⊆ Ioo P.left P.right := by
@@ -135,7 +140,7 @@ theorem correction_tsupport (P : Patch) (c : Coeff) :
       by_contra hn
       exact hnot (mem_iUnion.mpr ⟨j,
         LocalizedMomentRepair.bump_support_subset _ _ (lower_lt_upper P j) hn⟩)
-    simp [hb]
+    simp only [hb, mul_zero]
   have ht := closure_minimal hs
     (LocalizedMomentRepair.repairRegion_isCompact (lower P) (upper P)).isClosed
   intro x hx
@@ -155,7 +160,7 @@ theorem weighted_integrable (P : Patch) (s : ℝ) (g : ℝ → ℝ)
     intro x hx
     apply hs
     intro hz
-    exact hx (by simp [hz])
+    exact hx (by simp only [hz, mul_zero])
   apply (integrableOn_iff_integrable_of_support_subset hsupport).mp
   apply ContinuousOn.integrableOn_Icc
   apply ContinuousOn.mul _ hg.continuousOn
@@ -232,8 +237,13 @@ noncomputable def slope (lam : ℝ) : ℝ := -1 / 2 - lam
 noncomputable def powers (lam : ℝ) : Coeff := ![-1 + slope lam, slope lam, 1 / 2]
 
 theorem powers_injective (lam : ℝ) (hlam : 0 ≤ lam) : Injective (powers lam) := by
-  intro i j hij
-  fin_cases i <;> fin_cases j <;> norm_num [powers, slope] at hij <;> norm_num <;> linarith
+  have h0 : powers lam 0 < powers lam 1 := by
+    change -1 + slope lam < slope lam
+    linarith only
+  have h1 : powers lam 1 < powers lam 2 := by
+    change -1 / 2 - lam < 1 / 2
+    linarith only [hlam]
+  exact (Fin.strictMono_iff_lt_succ.mpr (Fin.forall_fin_two.mpr ⟨h0, h1⟩)).injective
 
 /-- Linear matrix, given by `LocalizedMomentRepair.matrix (powers lam) (lower P) (upper P)`. -/
 noncomputable def linearMatrix (P : Patch) (lam : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
@@ -276,16 +286,34 @@ noncomputable def quadraticBilin (P : Patch) : Coeff →ₗ[ℝ] Coeff →ₗ[�
           (1 / 2) * ∑ j, squareMoment P 0 j * c j * d j, 0]
       map_add' := fun d e => by
         ext i
-        fin_cases i <;> simp [Pi.add_apply, Fin.sum_univ_three] <;> ring
+        fin_cases i <;>
+          simp only [Pi.add_apply, Fin.sum_univ_three, Fin.isValue, Fin.zero_eta, Fin.mk_one,
+            Fin.reduceFinMk, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val,
+            add_zero] <;>
+          ring
       map_smul' := fun r d => by
         ext i
-        fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_three] <;> ring }
+        fin_cases i <;>
+          simp only [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_three, Fin.isValue, Fin.zero_eta,
+            Fin.mk_one, Fin.reduceFinMk, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val,
+            RingHom.id_apply, mul_zero] <;>
+          ring }
   map_add' c d := by
     ext e i
-    fin_cases i <;> simp [Pi.add_apply, Fin.sum_univ_three] <;> ring
+    fin_cases i <;>
+      simp only [Pi.add_apply, Fin.sum_univ_three, Fin.isValue, Fin.zero_eta, Fin.mk_one,
+        Fin.reduceFinMk, LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk, LinearMap.coe_single,
+        comp_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, LinearMap.coe_add,
+        add_zero] <;>
+      ring
   map_smul' r c := by
     ext e i
-    fin_cases i <;> simp [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_three] <;> ring
+    fin_cases i <;>
+      simp only [Pi.smul_apply, smul_eq_mul, Fin.sum_univ_three, Fin.isValue, Fin.zero_eta,
+        Fin.mk_one, Fin.reduceFinMk, LinearMap.coe_comp, LinearMap.coe_mk, AddHom.coe_mk,
+        LinearMap.coe_single, comp_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.cons_val, RingHom.id_apply, LinearMap.coe_smul, mul_zero] <;>
+      ring
 
 /-- Quadratic continuous linear map, constructed using `LinearMap.toContinuousLinearMap`. -/
 noncomputable def quadraticCLM (P : Patch) : Coeff →L[ℝ] Coeff →L[ℝ] Coeff :=
@@ -309,7 +337,8 @@ theorem weightedChange_identity (P : Patch) (lam : ℝ) (c : Coeff) (w x : ℝ) 
     weightedChange P lam c w x =
       x ^ (w + slope lam) * correction P c x + x ^ w * (correction P c x) ^ 2 / 2 := by
   by_cases hc : correction P c x = 0
-  · simp [weightedChange, hc]
+  · simp only [weightedChange, hc, add_zero, sub_self, mul_zero, zero_div, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow]
   have hx : 0 < x := P.left_pos.trans_le (correction_support P c hc).1
   rw [Real.rpow_add hx]
   unfold weightedChange baseProfile
@@ -353,8 +382,10 @@ theorem momentMap_identity (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam) (c : Coeff
   rw [linearEquiv_apply, quadraticCLM_apply]
   ext i
   fin_cases i <;>
-    simp [momentMap, weightedChange_integral, correction_moment, Matrix.mulVec, dotProduct,
-      linearMatrix_entry, powers, Fin.sum_univ_three] <;> ring
+    simp only [Nat.succ_eq_add_one, Nat.reduceAdd, one_div, Fin.sum_univ_three, Fin.isValue,
+        Fin.zero_eta, Pi.add_apply, Matrix.mulVec, dotProduct, linearMatrix_entry, powers,
+        Matrix.cons_val_zero, momentMap, weightedChange_integral, zero_add, correction_moment,
+        Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk, Matrix.cons_val, add_zero] <;> ring
 
 theorem correction_iteratedDeriv (P : Patch) (c : Coeff) (k : ℕ) (x : ℝ) :
     iteratedDeriv k (correction P c) x = ∑ j, c j * iteratedDeriv k (bump P j) x := by
@@ -394,10 +425,10 @@ theorem correction_first_jet_bound (P : Patch) :
       |correction P c x| ≤ D * ‖c‖ ∧ |deriv (correction P c) x| ≤ D * ‖c‖ := by
   obtain ⟨C₀, hC₀, hb₀⟩ := correction_derivative_bound P 0
   obtain ⟨C₁, hC₁, hb₁⟩ := correction_derivative_bound P 1
-  refine ⟨C₀ + C₁ + 1, by linarith, fun c x => ⟨?_, ?_⟩⟩
-  · exact (hb₀ c x).trans (mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg c))
+  refine ⟨C₀ + C₁ + 1, by linarith only [hC₀, hC₁], fun c x => ⟨?_, ?_⟩⟩
+  · exact (hb₀ c x).trans (mul_le_mul_of_nonneg_right (by linarith only [hC₁]) (norm_nonneg c))
   · have ht : |iteratedDeriv 1 (correction P c) x| ≤ (C₀ + C₁ + 1) * ‖c‖ :=
-      (hb₁ c x).trans (mul_le_mul_of_nonneg_right (by linarith) (norm_nonneg c))
+      (hb₁ c x).trans (mul_le_mul_of_nonneg_right (by linarith only [hC₀]) (norm_nonneg c))
     simpa only [iteratedDeriv_one] using ht
 
 theorem baseProfile_positive (lam : ℝ) {x : ℝ} (hx : 0 < x) :
@@ -428,27 +459,29 @@ theorem exists_normalized_compensation (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam
   let β : ℝ := ‖B.symm.toContinuousLinearMap‖ + 1
   let K : ℝ := ‖A‖ + 1
   let r : ℝ := 1 / (4 * β * K)
-  have hβ : 0 < β := by dsimp [β]; positivity
-  have hK : 0 < K := by dsimp [K]; positivity
-  have hr : 0 < r := by dsimp [r]; positivity
+  have hβ : 0 < β := add_pos_of_nonneg_of_pos (norm_nonneg _) one_pos
+  have hK : 0 < K := add_pos_of_nonneg_of_pos (norm_nonneg _) one_pos
+  have hr : 0 < r := one_div_pos.mpr (mul_pos (mul_pos four_pos hβ) hK)
   have hinv : ∀ v, ‖B.symm v‖ ≤ β * ‖v‖ := by
     intro v
     exact (B.symm.toContinuousLinearMap.le_opNorm v).trans
-      (mul_le_mul_of_nonneg_right (by dsimp [β]; linarith) (norm_nonneg v))
-  have hA : ‖A‖ ≤ K := by dsimp [K]; linarith
-  have hsmall : 4 * β * K * r ≤ 1 := by dsimp [r]; field_simp ; rfl
+      (mul_le_mul_of_nonneg_right (le_add_of_nonneg_right zero_le_one) (norm_nonneg v))
+  have hA : ‖A‖ ≤ K := le_add_of_nonneg_right zero_le_one
+  have hsmall : 4 * β * K * r ≤ 1 := by dsimp only [r]; field_simp ; rfl
   obtain ⟨g, hg, hgeq, hglip⟩ := UniformAngularReset.exists_smooth_solver_on_ball
     B A β K r hβ hK.le hr hinv hA hsmall
   obtain ⟨D, hD, hjet⟩ := correction_first_jet_bound P
   obtain ⟨m, hm, hmin⟩ := baseProfile_lower_bound P lam
   let C : ℝ := (1 + D) * (2 * β)
   let ε : ℝ := min (r / (4 * β)) (m / (2 * C))
-  have hC : 0 < C := mul_pos (by linarith) (by positivity)
+  have hβ2 : 0 < 2 * β := mul_pos two_pos hβ
+  have hC : 0 < C := mul_pos (add_pos one_pos hD) hβ2
   have hε : 0 < ε := lt_min (div_pos hr (by positivity)) (div_pos hm (by positivity))
   have hsub : Metric.ball (0 : Coeff) ε ⊆ Metric.ball 0 (r / (4 * β)) :=
     Metric.ball_subset_ball (min_le_left _ _)
-  have hC₀ : 2 * β ≤ C := by dsimp [C]; nlinarith
-  have hC₁ : D * (2 * β) ≤ C := by dsimp [C]; nlinarith
+  have hC₀ : 2 * β ≤ C := le_mul_of_one_le_left hβ2.le (le_add_of_nonneg_right hD.le)
+  have hC₁ : D * (2 * β) ≤ C :=
+    mul_le_mul_of_nonneg_right (le_add_of_nonneg_left zero_le_one) hβ2.le
   have hzero : g 0 = 0 := by
     have hz := (hgeq 0 (Metric.mem_ball_self (div_pos hr (by positivity)))).2
     simpa only [norm_zero, mul_zero, norm_le_zero_iff] using hz
@@ -463,7 +496,7 @@ theorem exists_normalized_compensation (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam
   rw [momentMap_identity] at heq
   refine ⟨heq, hnorm.trans (mul_le_mul_of_nonneg_right hC₀ (norm_nonneg d)), ?_, ?_⟩
   · apply le_trans _ hC₀
-    apply norm_fderiv_le_of_lip' ℝ (by positivity : 0 ≤ 2 * β)
+    apply norm_fderiv_le_of_lip' ℝ hβ2.le
     filter_upwards [Metric.isOpen_ball.mem_nhds (hsub hd)] with e he
     exact hglip e he d (hsub hd)
   · intro x
@@ -479,7 +512,7 @@ theorem exists_normalized_compensation (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam
       have hcancel : C * (m / (2 * C)) = m / 2 := by field_simp
       rwa [hcancel] at ht
     have hlow := neg_abs_le (correction P (g d) x)
-    linarith
+    linarith only [hbase, hval, hsize, hlow, hm]
 
 /-- Evaluation of the finite bump combination is an actual bounded linear map. -/
 noncomputable def correctionCLM (P : Patch) (x : ℝ) : Coeff →L[ℝ] ℝ :=
@@ -626,8 +659,11 @@ noncomputable def amplitudeDebt (a : ℝ) (v : Coeff) : Coeff := -(amplitudeFact
 theorem normalizedDebt_eq (R a : ℝ) (d : Coeff) :
     normalizedDebt R a d = amplitudeDebt a (scaledDebt R d) := by
   ext i
-  fin_cases i <;> simp [normalizedDebt, normalizationFactors, amplitudeDebt, amplitudeFactors,
-    scaledDebt, div_eq_mul_inv, mul_comm, mul_left_comm, mul_assoc]
+  fin_cases i <;>
+    simp only [normalizedDebt, normalizationFactors, amplitudeDebt, amplitudeFactors, scaledDebt,
+      Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk, Fin.isValue, Pi.neg_apply, Pi.mul_apply,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val, neg_inj] <;>
+    ring
 
 theorem amplitudeFactors_contDiffOn {U : Set ℝ} {a : ℝ → ℝ}
     (ha : ContDiffOn ℝ ∞ a U) (hpos : ∀ η ∈ U, 0 < a η) :
@@ -653,22 +689,23 @@ theorem compact_amplitude_bounds {U S : Set ℝ} (hU : IsOpen U) (hS : IsCompact
       |a η| ≤ D ∧ |deriv a η| ≤ D := by
   have hF := amplitudeFactors_contDiffOn ha hpos
   have hFd : ContDiffOn ℝ ∞ (deriv (fun θ => amplitudeFactors (a θ))) U :=
-    hF.deriv_of_isOpen hU (by simp)
-  have had : ContDiffOn ℝ ∞ (deriv a) U := ha.deriv_of_isOpen hU (by simp)
+    hF.deriv_of_isOpen hU (by simp only [ENat.coe_top_add_one, Std.le_refl])
+  have had : ContDiffOn ℝ ∞ (deriv a) U := ha.deriv_of_isOpen hU (by simp only [
+      ENat.coe_top_add_one, Std.le_refl])
   obtain ⟨B₀, hb₀⟩ := hS.exists_bound_of_continuousOn (hF.continuousOn.mono hSU)
   obtain ⟨B₁, hb₁⟩ := hS.exists_bound_of_continuousOn (hFd.continuousOn.mono hSU)
   obtain ⟨B₂, hb₂⟩ := hS.exists_bound_of_continuousOn (ha.continuousOn.mono hSU)
   obtain ⟨B₃, hb₃⟩ := hS.exists_bound_of_continuousOn (had.continuousOn.mono hSU)
   let D : ℝ := 1 + |B₀| + |B₁| + |B₂| + |B₃|
   have hD₀ : B₀ ≤ D := by
-      dsimp [D]; linarith [le_abs_self B₀, abs_nonneg B₁, abs_nonneg B₂, abs_nonneg B₃]
+      dsimp only [D]; linarith only [le_abs_self B₀, abs_nonneg B₁, abs_nonneg B₂, abs_nonneg B₃]
   have hD₁ : B₁ ≤ D := by
-      dsimp [D]; linarith [le_abs_self B₁, abs_nonneg B₀, abs_nonneg B₂, abs_nonneg B₃]
+      dsimp only [D]; linarith only [le_abs_self B₁, abs_nonneg B₀, abs_nonneg B₂, abs_nonneg B₃]
   have hD₂ : B₂ ≤ D := by
-      dsimp [D]; linarith [le_abs_self B₂, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₃]
+      dsimp only [D]; linarith only [le_abs_self B₂, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₃]
   have hD₃ : B₃ ≤ D := by
-      dsimp [D]; linarith [le_abs_self B₃, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₂]
-  refine ⟨D, by dsimp [D]; positivity, fun η hη => ⟨(hb₀ η hη).trans hD₀,
+      dsimp only [D]; linarith only [le_abs_self B₃, abs_nonneg B₀, abs_nonneg B₁, abs_nonneg B₂]
+  refine ⟨D, by dsimp only [D]; positivity, fun η hη => ⟨(hb₀ η hη).trans hD₀,
     (hb₁ η hη).trans hD₁, ?_, ?_⟩⟩
   · exact (hb₂ η hη).trans hD₂
   · exact (hb₃ η hη).trans hD₃
@@ -684,7 +721,7 @@ theorem amplitudeDebt_bounds {U S : Set ℝ} (hU : IsOpen U) (hSU : S ⊆ U)
     ((amplitudeFactors_contDiffOn ha hpos).contDiffAt (hU.mem_nhds (hSU hη))).differentiableAt
       (by simp : (∞ : WithTop ℕ∞) ≠ 0)
   constructor
-  · dsimp [amplitudeDebt]
+  · dsimp only [amplitudeDebt]
     rw [norm_neg]
     exact (norm_mul_le _ _).trans (mul_le_mul_of_nonneg_right (hD η hη).1 (norm_nonneg v))
   · simp only [amplitudeDebt]
@@ -719,11 +756,11 @@ theorem exists_uniform_parameter_compensation (P : Patch) (lam : ℝ) (hlam : 0 
   let T : ℝ := D * B + D * (J * B)
   let C : ℝ := 1 + B + T
   have hB : 0 < B := mul_pos hC₀ hD
-  have hT : 0 < T := by dsimp [T]; positivity
-  have hC : 0 < C := by dsimp [C]; positivity
-  have hBC : B ≤ C := by dsimp [C]; linarith
-  have hTC : T ≤ C := by dsimp [C]; linarith
-  have hDBC : D * B ≤ C := by dsimp [T] at hTC; nlinarith [mul_pos hD (mul_pos hJ hB)]
+  have hT : 0 < T := add_pos (mul_pos hD hB) (mul_pos hD (mul_pos hJ hB))
+  have hC : 0 < C := add_pos (add_pos one_pos hB) hT
+  have hBC : B ≤ C := (le_add_of_nonneg_left zero_le_one).trans (le_add_of_nonneg_right hT.le)
+  have hTC : T ≤ C := le_add_of_nonneg_left (add_pos one_pos hB).le
+  have hDBC : D * B ≤ C := (le_add_of_nonneg_right (mul_pos hD (mul_pos hJ hB)).le).trans hTC
   refine ⟨ε₀ / D, C, div_pos hε₀ hD, hC, ?_⟩
   intro v hv
   let d : ℝ → Coeff := fun η => amplitudeDebt (a η) v
@@ -754,9 +791,9 @@ theorem exists_uniform_parameter_compensation (P : Patch) (lam : ℝ) (hlam : 0 
     exact ((hspec (d η) hm).2.1).trans
       (by simpa only [B, mul_assoc] using mul_le_mul_of_nonneg_left (hd_bound η hη).1 hC₀.le)
   have hdif : DifferentiableAt ℝ d η :=
-    (hd.contDiffAt (hU.mem_nhds hηU)).differentiableAt (by simp)
+    (hd.contDiffAt (hU.mem_nhds hηU)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hcdif : DifferentiableAt ℝ c η :=
-    (hc.contDiffAt (hV.mem_nhds hηV)).differentiableAt (by simp)
+    (hc.contDiffAt (hV.mem_nhds hηV)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
   have hcderiv : ‖deriv c η‖ ≤ B * ‖v‖ := by
     apply (composed_solver_deriv_bound hg (fun w hw => (hspec w hw).2.2.1) hdif hm).trans
     simpa only [B, mul_assoc] using mul_le_mul_of_nonneg_left (hd_bound η hη).2 hC₀.le
@@ -786,7 +823,7 @@ theorem exists_uniform_parameter_compensation (P : Patch) (lam : ℝ) (hlam : 0 
     refine ⟨hmul₀.trans (mul_le_mul_of_nonneg_right hDBC (norm_nonneg v)),
       hmul₁.trans (mul_le_mul_of_nonneg_right hDBC (norm_nonneg v)), ?_⟩
     have hadif : DifferentiableAt ℝ a η :=
-      (ha.contDiffAt (hU.mem_nhds hηU)).differentiableAt (by simp)
+      (ha.contDiffAt (hU.mem_nhds hηU)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)
     have hfdif : DifferentiableAt ℝ (fun θ => correction P (c θ) x) η :=
       (correctionCLM P x).differentiableAt.comp η hcdif
     rw [(hadif.hasDerivAt.fun_mul hfdif.hasDerivAt).deriv]
@@ -797,7 +834,7 @@ theorem exists_uniform_parameter_compensation (P : Patch) (lam : ℝ) (hlam : 0 
         simp only [abs_mul]
         exact add_le_add (mul_le_mul ha₁ (hcorr x).1 (abs_nonneg _) hD.le)
           (mul_le_mul ha₀ hparam (abs_nonneg _) hD.le)
-      _ = T * ‖v‖ := by dsimp [T]; ring
+      _ = T * ‖v‖ := by dsimp only [T]; ring
       _ ≤ C * ‖v‖ := mul_le_mul_of_nonneg_right hTC (norm_nonneg v)
   · intro x hx
     exact mul_pos (hpos η hηU) (((hspec (d η) hm).2.2.2 x).2 hx)
@@ -834,7 +871,7 @@ theorem mixed_moment_unchanged (P : Patch) (lam R a : ℝ) (c : Coeff) (U : ℝ 
   congr 1
   funext X
   by_cases hX : X / R ∈ Ioo P.left P.right
-  · simp [hU X hX]
+  · simp only [hU X hX, zero_mul]
   · rw [physicalProfile_eq_clean_outside P lam R a c X hX]
 
 theorem angular_scale_eq (R : ℝ) (hR : 0 < R) :
@@ -871,22 +908,22 @@ theorem scaled_heatDebt_bound (T : OutgoingTail.TailData) (ν q : ℝ)
   let A := HeatTailEdit.exponent T.h
   have hH : 0 < H := HeatTailEdit.heatConstant_pos T.h_pos hν
   have he : 0 < e := HeatTailEdit.outgoingAmplitude_pos T
-  have hA : 0 < A := by dsimp [A, HeatTailEdit.exponent]; linarith [T.h_pos]
+  have hA : 0 < A := add_pos one_half_pos T.h_pos
   have hh : 0 < T.h := T.h_pos
   let P₀ : ℝ := 2 * H * e ^ 2 / (2 * A + 1)
   let S₀ : ℝ := 2 * H * e ^ 2 / (2 * A)
   let I₀ : ℝ := Real.sqrt 2 * H * e / T.h
-  have hP₀ : 0 < P₀ := by dsimp [P₀]; positivity
-  have hS₀ : 0 < S₀ := by dsimp [S₀]; positivity
-  have hI₀ : 0 < I₀ := by dsimp [I₀]; positivity
+  have hP₀ : 0 < P₀ := by dsimp only [P₀]; positivity
+  have hS₀ : 0 < S₀ := by dsimp only [S₀]; positivity
+  have hI₀ : 0 < I₀ := by dsimp only [I₀]; positivity
   have hsqrt : 0 < Real.sqrt (2 * q) := Real.sqrt_pos.2 (by positivity)
   let C : ℝ := P₀ + S₀ / q + I₀ / (q * Real.sqrt (2 * q))
-  have hC : 0 < C := by dsimp [C]; positivity
   have hSq : 0 < S₀ / q := div_pos hS₀ hq
   have hIq : 0 < I₀ / (q * Real.sqrt (2 * q)) := div_pos hI₀ (mul_pos hq hsqrt)
-  have hCP : P₀ ≤ C := by dsimp [C]; linarith
-  have hCS : S₀ / q ≤ C := by dsimp [C]; linarith
-  have hCI : I₀ / (q * Real.sqrt (2 * q)) ≤ C := by dsimp [C]; linarith
+  have hC : 0 < C := add_pos (add_pos hP₀ hSq) hIq
+  have hCP : P₀ ≤ C := (le_add_of_nonneg_right hSq.le).trans (le_add_of_nonneg_right hIq.le)
+  have hCS : S₀ / q ≤ C := (le_add_of_nonneg_left hP₀.le).trans (le_add_of_nonneg_right hIq.le)
+  have hCI : I₀ / (q * Real.sqrt (2 * q)) ≤ C := le_add_of_nonneg_left (add_pos hP₀ hSq).le
   refine ⟨C, hC, ?_⟩
   intro K hK
   have hqK : 0 < q * K := mul_pos hq hK
@@ -894,14 +931,14 @@ theorem scaled_heatDebt_bound (T : OutgoingTail.TailData) (ν q : ℝ)
   have hrootqK : 0 < Real.sqrt (2 * (q * K)) := Real.sqrt_pos.2 (by positivity)
   have hp : |heatDebt T ν K 0 0| ≤ P₀ / K := by
     convert! (HeatTailEdit.outgoing_pressure T hν hK 0).2 using 1
-    dsimp [P₀, H, e, A]
+    dsimp only [P₀, H, e, A]
     rw [div_div]
     congr 1
     ring
   have hs : |heatDebt T ν K 0 1| ≤ S₀ := (HeatTailEdit.outgoing_energy T hν hK 0).2
   have hi : |heatDebt T ν K 0 2| ≤ I₀ * Real.sqrt K := by
     convert! (HeatTailEdit.outgoing_angular T hν hK 0).2 using 1
-    dsimp [I₀, H, e]
+    dsimp only [I₀, H, e]
     ring
   apply (pi_norm_le_iff_of_nonneg (div_nonneg hC.le hK.le)).mpr
   intro i
@@ -920,8 +957,11 @@ theorem scaled_heatDebt_bound (T : OutgoingTail.TailData) (ν q : ℝ)
       _ ≤ (I₀ * Real.sqrt K) / (q * K * Real.sqrt (2 * (q * K))) :=
         div_le_div_of_nonneg_right hi (mul_pos hqK hrootqK).le
       _ = (I₀ / (q * Real.sqrt (2 * q))) / K := by
-        rw [← mul_assoc 2 q K, Real.sqrt_mul (by positivity : 0 ≤ 2 * q)]
-        field_simp
+        rw [← mul_assoc 2 q K, Real.sqrt_mul (mul_pos two_pos hq).le,
+          show q * K * (Real.sqrt (2 * q) * Real.sqrt K) =
+            q * Real.sqrt (2 * q) * K * Real.sqrt K by ring,
+          mul_div_mul_right _ _ hrootK.ne']
+        exact (div_div _ _ _).symm
       _ ≤ C / K := div_le_div_of_nonneg_right hCI hK.le
 
 theorem FirstJetBound.mono {P : Patch} {a : ℝ → ℝ} {c : ℝ → Coeff} {η L M : ℝ}
@@ -947,7 +987,7 @@ theorem exists_heat_compensation (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam)
     exists_uniform_parameter_compensation P lam hlam hU hS hSU a ha hpos
   obtain ⟨C₂, hC₂, hdebt⟩ := scaled_heatDebt_bound T ν q hν hq
   let K₀ : ℝ := 1 + C₂ / ε
-  have hK₀ : 0 < K₀ := by dsimp [K₀]; positivity
+  have hK₀ : 0 < K₀ := by dsimp only [K₀]; positivity
   refine ⟨K₀, C₁ * C₂, hK₀, mul_pos hC₁ hC₂, ?_⟩
   intro K hlarge
   have hK : 0 < K := hK₀.trans_le hlarge
@@ -957,7 +997,7 @@ theorem exists_heat_compensation (P : Patch) (lam : ℝ) (hlam : 0 ≤ lam)
   have hvsmall : ‖v‖ < ε := by
     apply hv.trans_lt
     apply (div_lt_iff₀ hK).mpr
-    have hk' : C₂ / ε < K := by dsimp [K₀] at hlarge; linarith
+    have hk' : C₂ / ε < K := by dsimp only [K₀] at hlarge; linarith only [hlarge]
     have ht := (div_lt_iff₀ hε).mp hk'
     simpa only [mul_comm] using ht
   obtain ⟨c, V, hV, hSV, hVU, hc, hspec⟩ := hsolve v hvsmall
@@ -1002,7 +1042,7 @@ theorem physicalProfile_eq_clean_of_nonpos (P : Patch) (lam R a : ℝ) (hR : 0 <
   apply physicalProfile_eq_clean_outside
   intro hx
   have hdiv := div_nonpos_of_nonpos_of_nonneg hX hR.le
-  linarith [hx.1, P.left_pos]
+  linarith only [hdiv, hx, hx.1, P.left_pos]
 
 /-- The whole-line definitions equal the usual positive-radius moment integrals. -/
 theorem physicalMoments_positive_radius (P : Patch) (lam R a : ℝ) (hR : 0 < R) (c : Coeff) :
@@ -1015,7 +1055,8 @@ theorem physicalMoments_positive_radius (P : Patch) (lam R a : ℝ) (hR : 0 < R)
   fin_cases i <;> symm <;>
     apply setIntegral_eq_integral_of_forall_compl_eq_zero <;>
     intro X hX <;>
-    rw [physicalProfile_eq_clean_of_nonpos P lam R a hR c (le_of_not_gt hX)] <;> simp
+    rw [physicalProfile_eq_clean_of_nonpos P lam R a hR c (le_of_not_gt hX)] <;> simp only [
+        sub_self, zero_div, Nat.ofNat_nonneg, Real.sqrt_mul, mul_zero]
 
 /-- A reserved patch ending before the heat switch has no overlap with the
 actual heat perturbation on positive radii. -/
@@ -1031,12 +1072,12 @@ theorem patch_heat_disjoint (P : Patch) (lam q K a h ν : ℝ)
       intro hx
       have hl := (div_lt_iff₀ (mul_pos hq hK)).mp hx.2
       have hp := mul_le_mul_of_nonneg_right hpatch hK.le
-      nlinarith
+      linarith only [hl, hp, not_le.mp hXK]
     rw [physicalProfile_eq_clean_outside P lam (q * K) a c X hout, sub_self, zero_mul]
 
 theorem square_change_add_of_disjoint (b p t : ℝ) (hpt : p * t = 0) :
     (b + p + t) ^ 2 - b ^ 2 = ((b + p) ^ 2 - b ^ 2) + ((b + t) ^ 2 - b ^ 2) := by
-  nlinarith
+  linear_combination 2 * hpt
 
 /-- The constructed physical profile is jointly smooth in the parameter and
 positive radius, whenever the amplitude and solved coefficients are smooth. -/

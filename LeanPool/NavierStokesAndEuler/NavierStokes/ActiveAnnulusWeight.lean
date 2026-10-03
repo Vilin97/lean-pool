@@ -49,7 +49,7 @@ theorem edge_mono_pos {c x y : ℝ} (hc : 0 ≤ c) (hx : 0 < x) (hxy : x ≤ y) 
     FlatCutoff.edge c x ≤ FlatCutoff.edge c y := by
   rw [FlatCutoff.edge_of_pos c hx,FlatCutoff.edge_of_pos c (hx.trans_le hxy)]
   apply Real.exp_le_exp.mpr
-  have hs : x^2 ≤ y^2 := by nlinarith
+  have hs : x^2 ≤ y^2 := by nlinarith only [hx, hxy]
   have hd := div_le_div_of_nonneg_left hc (sq_pos_of_pos hx) hs
   simpa only [neg_div] using neg_le_neg hd
 
@@ -170,8 +170,8 @@ theorem weight_lower_middle {c a b d y : ℝ} (hc : 0 ≤ c) (hd : 0 < d)
     (hy : y ∈ Icc (a + d) (b - d)) :
     FlatCutoff.edge c d * FlatCutoff.edge 4 d ≤ weight c a b y := by
   apply mul_le_mul
-  · exact edge_mono_pos hc hd (by linarith [hy.1])
-  · exact edge_mono_pos (by norm_num) hd (by linarith [hy.2])
+  · exact edge_mono_pos hc hd (by linarith only [hy, hy.1])
+  · exact edge_mono_pos (by norm_num) hd (by linarith only [hy, hy.2])
   · exact FlatCutoff.edge_nonneg _ _
   · exact FlatCutoff.edge_nonneg _ _
 
@@ -181,14 +181,14 @@ theorem weight_compare_left {c a b d y : ℝ} (hd : 0 < b - a - d) (hy : y ≤ a
   change FlatCutoff.edge c (y-a) * FlatCutoff.edge 4 (b-a-d) ≤
     FlatCutoff.edge c (y-a) * FlatCutoff.edge 4 (b-y)
   exact mul_le_mul_of_nonneg_left
-    (edge_mono_pos (c := 4) (by norm_num) hd (by linarith)) (FlatCutoff.edge_nonneg _ _)
+    (edge_mono_pos (c := 4) (by norm_num) hd (by linarith only [hy])) (FlatCutoff.edge_nonneg _ _)
 
 theorem weight_compare_right {c a b d y : ℝ} (hc : 0 ≤ c) (hd : 0 < b - a - d) (hy : b - d ≤ y) :
     FlatCutoff.edge 4 (b-y) ≤ weight c a b y / FlatCutoff.edge c (b-a-d) := by
   apply (le_div_iff₀ (FlatCutoff.edge_pos c hd)).2
   rw [mul_comm]
   exact mul_le_mul_of_nonneg_right
-    (edge_mono_pos hc hd (by linarith)) (FlatCutoff.edge_nonneg _ _)
+    (edge_mono_pos hc hd (by linarith only [hy])) (FlatCutoff.edge_nonneg _ _)
 
 theorem distance_power_le_left {a b y : ℝ} (hy : y ∈ Ioo a b) {n N : ℕ} (hn : n ≤ N) :
     edgeDistance a b y ^ N ≤ (y-a)^n := by
@@ -314,14 +314,14 @@ theorem compact_nonzero_collar {K : Set E} (hK : IsCompact K) {B : E × ℝ → 
     rintro ⟨p,x⟩ ⟨hp,hx⟩
     have hx0 : x = 0 := hx
     subst x
-    exact ⟨hK0 ⟨hp,rfl⟩,lt_of_lt_of_le (by linarith) (hmb p hp)⟩
+    exact ⟨hK0 ⟨hp,rfl⟩,lt_of_lt_of_le (by linarith only [hm]) (hmb p hp)⟩
   obtain ⟨d,hd,hdW⟩ := (hK.prod isCompact_singleton).exists_cthickening_subset_open hW hKW
   have hin (p : E) (hp : p ∈ K) (x : ℝ) (hx : x ∈ Icc (0 : ℝ) (d/2)) : (p,x) ∈ W := by
     apply hdW
     apply closedBall_subset_cthickening (show (p,(0 : ℝ)) ∈ K ×ˢ ({0} : Set ℝ) from ⟨hp,rfl⟩) d
     change dist (p,x) (p,(0 : ℝ)) ≤ d
     simp only [Prod.dist_eq,dist_self,Real.dist_eq,sub_zero,abs_of_nonneg hx.1,max_eq_right hx.1]
-    linarith [hx.2]
+    linarith only [hd, hx, hx.2]
   exact ⟨d/2,m/2,by positivity,by positivity,
     fun q hq => (hin q.1 hq.1 q.2 hq.2).1,
     fun p hp x hx => (hin p hp x hx).2.le⟩
@@ -437,10 +437,10 @@ theorem compact_jets_bound {O S : Set (E × ℝ)} (hO : IsOpen O)
   choose C hC hb using hb
   refine ⟨1 + ∑ i ∈ Finset.range (n+1),C i,?_,?_⟩
   · have hs := Finset.sum_nonneg (s := Finset.range (n+1)) (fun i _ => hC i)
-    linarith
+    linarith only [hs]
   · intro i hi q hq
     have hs := Finset.single_le_sum (fun j _ => hC j) (Finset.mem_range.mpr (Nat.lt_succ_of_le hi))
-    exact (hb i q hq).trans (by linarith)
+    exact (hb i q hq).trans (by linarith only [hs])
 
 /-- Positivity inside and genuine nonzero edge factors give one global
 positive lower constant for the explicit product weight. -/
@@ -458,7 +458,7 @@ theorem exists_global_lower_bound {K : Set E} (hK : IsCompact K)
   have hdr' : d ≤ dr := (min_le_right _ _).trans (min_le_left _ _)
   have hmid : K ×ˢ Icc (a+d) (b-d) ⊆ K ×ˢ Icc a b := by
     intro q hq
-    exact ⟨hq.1,by constructor <;> linarith [hq.2.1,hq.2.2]⟩
+    exact ⟨hq.1,by constructor <;> linarith only [hd, hq, hq.2.1, hq.2.2]⟩
   obtain ⟨mm,hmm,hmb⟩ := UniformCone.positive_uniform_margin (hK.prod isCompact_Icc)
     ((hT.mono hmid).norm) (by
       rintro ⟨p,y⟩ ⟨hp,hy⟩
@@ -483,7 +483,7 @@ theorem exists_global_lower_bound {K : Set E} (hK : IsCompact K)
       exact ((mul_le_mul_of_nonneg_left (weight_le_right hc.le a b y) hm.le).trans
         (mul_le_mul_of_nonneg_right hmr' (FlatCutoff.edge_nonneg 4 (b-y)))).trans hh
     · have hyM : y ∈ Icc (a+d) (b-d) := by
-        constructor <;> linarith [lt_of_not_ge hleft,lt_of_not_ge hright]
+        constructor <;> linarith only [hleft, hright, lt_of_not_ge hleft, lt_of_not_ge hright]
       exact (mul_le_of_le_one_right hm.le (weight_le_one hc.le a b y)).trans
         (hmm'.trans (hmb (p,y) ⟨hp,hyM⟩))
 
@@ -504,18 +504,20 @@ theorem exists_global_derivative_bound {K : Set E} (hK : IsCompact K)
   have hdl' : d ≤ dl := min_le_left _ _
   have hdr' : d ≤ dr := (min_le_right _ _).trans (min_le_left _ _)
   have hdgap : d ≤ (b-a)/3 := (min_le_right _ _).trans (min_le_right _ _)
-  have hgap : 0 < b-a-d := by linarith
+  have hgap : 0 < b-a-d := by linarith only [hdgap, hab]
   have hleftSmooth : ∀ p ∈ K, ∀ x : ℝ, 0 < x → x ≤ d →
       ContDiffAt ℝ ∞ (leftChart a T) (p,x) := by
     intro p hp x hx hxd
-    have hh : (p,a+x) ∈ O := hKO ⟨hp,by change a ≤ a+x ∧ a+x ≤ b; constructor <;> linarith⟩
+    have hh : (p,a+x) ∈ O := hKO ⟨hp,by
+      change a ≤ a+x ∧ a+x ≤ b; constructor <;> linarith only [hx, hxd, hdgap, hab]⟩
     have hm : ContDiffAt ℝ ∞ (fun q : E × ℝ => (q.1,a+q.2)) (p,x) :=
       contDiffAt_fst.prodMk (contDiffAt_const.add contDiffAt_snd)
     exact (hT.contDiffAt (hO.mem_nhds hh)).comp (p,x) hm
   have hrightSmooth : ∀ p ∈ K, ∀ x : ℝ, 0 < x → x ≤ d →
       ContDiffAt ℝ ∞ (rightChart b T) (p,x) := by
     intro p hp x hx hxd
-    have hh : (p,b-x) ∈ O := hKO ⟨hp,by change a ≤ b-x ∧ b-x ≤ b; constructor <;> linarith⟩
+    have hh : (p,b-x) ∈ O := hKO ⟨hp,by
+      change a ≤ b-x ∧ b-x ≤ b; constructor <;> linarith only [hx, hxd, hdgap, hab]⟩
     have hm : ContDiffAt ℝ ∞ (fun q : E × ℝ => (q.1,b-q.2)) (p,x) :=
       contDiffAt_fst.prodMk (contDiffAt_const.sub contDiffAt_snd)
     exact (hT.contDiffAt (hO.mem_nhds hh)).comp (p,x) hm
@@ -526,7 +528,7 @@ theorem exists_global_derivative_bound {K : Set E} (hK : IsCompact K)
   have hmiddle : K ×ˢ Icc (a+d) (b-d) ⊆ O := by
     intro q hq
     apply hKO
-    exact ⟨hq.1,by constructor <;> linarith [hq.2.1,hq.2.2]⟩
+    exact ⟨hq.1,by constructor <;> linarith only [hq.2.1,hq.2.2,hd]⟩
   obtain ⟨CM,hCM,hM⟩ := compact_jets_bound hO hT (hK.prod isCompact_Icc) hmiddle n
   let AL := CL / FlatCutoff.edge 4 (b-a-d)
   let AR := CR / FlatCutoff.edge c (b-a-d)
@@ -535,10 +537,10 @@ theorem exists_global_derivative_bound {K : Set E} (hK : IsCompact K)
   have hAR : 0 < AR := div_pos hCR (FlatCutoff.edge_pos _ hgap)
   have hAM : 0 < AM := div_pos hCM (mul_pos (FlatCutoff.edge_pos _ hd) (FlatCutoff.edge_pos _ hd))
   let C := AL + AR + AM
-  have hC : 0 < C := by dsimp [C]; positivity
-  have hALC : AL ≤ C := by dsimp [C]; linarith
-  have hARC : AR ≤ C := by dsimp [C]; linarith
-  have hAMC : AM ≤ C := by dsimp [C]; linarith
+  have hC : 0 < C := add_pos (add_pos hAL hAR) hAM
+  have hALC : AL ≤ C := (le_add_of_nonneg_right hAR.le).trans (le_add_of_nonneg_right hAM.le)
+  have hARC : AR ≤ C := (le_add_of_nonneg_left hAL.le).trans (le_add_of_nonneg_right hAM.le)
+  have hAMC : AM ≤ C := le_add_of_nonneg_left (add_pos hAL hAR).le
   refine ⟨C,hC,NL+NR,?_⟩
   intro i hi p hp y hy
   have hmono (B : ℝ) (hB : B ≤ C) :
@@ -554,10 +556,10 @@ theorem exists_global_derivative_bound {K : Set E} (hK : IsCompact K)
   · by_cases hright : b-y ≤ d
     · have hh := hR i hi p hp (b-y) (sub_pos.mpr hy.2) hright
       rw [norm_iteratedFDeriv_rightChart,show b-(b-y)=y by ring] at hh
-      exact hh.trans ((right_bound_to_weight hc.le hCR.le hgap hy (by linarith)
+      exact hh.trans ((right_bound_to_weight hc.le hCR.le hgap hy (by linarith only [hright])
         (Nat.le_add_left _ _)).trans (hmono AR hARC))
     · have hym : y ∈ Icc (a+d) (b-d) := by
-        constructor <;> linarith [lt_of_not_ge hleft,lt_of_not_ge hright]
+        constructor <;> linarith only [lt_of_not_ge hleft,lt_of_not_ge hright]
       exact (hM i hi (p,y) ⟨hp,hym⟩).trans
         ((interior_bound_to_weight hc.le hCM.le hd hy hym (NL+NR)).trans (hmono AM hAMC))
 
@@ -796,7 +798,7 @@ noncomputable def directionGap (v s t : ℝ) : ℝ := 2*(directionProjection s t
 
 theorem aligned_direction_margin (v s : ℝ) :
     0 < directionProjection s s ∧ 0 < directionGap v s s := by
-  have hs : 0 < 1+s*s := by nlinarith [sq_nonneg s]
+  have hs : 0 < 1+s*s := by nlinarith only [sq_nonneg s]
   constructor
   · exact hs
   · simpa only [directionGap,directionProjection,sub_self,zero_pow (by norm_num : 2 ≠ 0),
@@ -1062,7 +1064,7 @@ theorem exists_natural_activation_factor {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
   have hh := (hbound κ T η hη).1
   rw [he] at hh
   change ε ≤ 0 at hh
-  linarith
+  linarith only [hε, hh]
 
 /-- The coefficient is constructed from the actual reference histories. Its
 boundary tilt is exactly the reference shear tilt, rather than an assumed
@@ -1208,7 +1210,7 @@ theorem natural_activation_true_direction {h j σ Λ C : ℝ} {P0 : ℝ → ℝ}
   unfold shearSize
   rw [hAz,hBz]
   have hh := (hb 0 ⟨le_rfl,hτ.le⟩ η hη).2.1
-  linarith
+  linarith only [hΛ, hh]
 
 end ActualActivation
 

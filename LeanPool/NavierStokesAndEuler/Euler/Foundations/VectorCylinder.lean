@@ -114,7 +114,7 @@ theorem vector_eLpNorm_le_sum_coordinates (q : ℕ) (f : LiftDomain period → D
     exact norm_le_sum_coordinates q (f x)
   have he : (fun x => ∑ i : Fin q, ‖f x i‖) = ∑ i : Fin q, (fun x => ‖f x i‖) := by
     funext x
-    simp
+    simp only [Real.norm_eq_abs, Finset.sum_apply]
   rw [he] at hA
   have hB : eLpNorm (∑ i : Fin q, fun x => ‖f x i‖) 2 (liftMeasure period) ≤
       ∑ i : Fin q, eLpNorm (fun x => f x i) 2 (liftMeasure period) :=
@@ -203,7 +203,7 @@ theorem coordinate_smul (q : ℕ) (i : Fin q) (f : LiftDomain period → ℝ) (g
     Domain q) :
     coordinate q i ∘ (fun x => f x • g x) = f * (coordinate q i ∘ g) := by
   funext x
-  simp [Function.comp_def, map_smul, smul_eq_mul]
+  simp only [Function.comp_apply, map_smul, smul_eq_mul, Function.comp_def, Pi.mul_apply]
 
 /-- Multiplication of an actual vector field by a scalar field is bounded in H⁶. -/
 theorem cylinder_H6_scalar_vector_product (q : ℕ) (f : LiftDomain period → ℝ)

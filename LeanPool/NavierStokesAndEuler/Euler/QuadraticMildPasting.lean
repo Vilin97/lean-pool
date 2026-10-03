@@ -38,7 +38,7 @@ open scoped Topology
 /-- A translated compact time window inside the prescribed coefficient interval. -/
 def timeWindow {S : ℝ} (a T : ℝ) (ha : 0 ≤ a) (haT : a + T ≤ S) :
     C(Icc (0 : ℝ) T, Icc (0 : ℝ) S) where
-  toFun t := ⟨a+t.val, by linarith [t.property.1], by linarith [t.property.2]⟩
+  toFun t := ⟨a+t.val, by linarith only [ha, t.property.1], by linarith only [haT, t.property.2]⟩
   continuous_toFun := (continuous_const.add continuous_subtype_val).subtype_mk _
 
 /-- The mass of the actual parabolic kernel bound is monotone in nonnegative time. -/
@@ -46,7 +46,7 @@ theorem parabolic_mass_mono (ν s t : ℝ) (hst : s ≤ t) :
     s + 2 * parabolicConstant ν * Real.sqrt s ≤ t + 2 * parabolicConstant ν * Real.sqrt t := by
   have hC := parabolicConstant_nonneg ν
   have hroot := Real.sqrt_le_sqrt hst
-  nlinarith
+  nlinarith only [hst, hC, hroot]
 
 variable (period : ℝ) [Fact (0 < period)]
 
@@ -66,7 +66,7 @@ theorem exists_uniform_restart_time (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ
               ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r
                 (C.apply (timeWindow a T ha haT (projIcc 0 T hT (t.val-r)))
                   (u (projIcc 0 T hT (t.val-r)))) := by
-  have hR1 : 0 ≤ R+1 := by linarith
+  have hR1 : 0 ≤ R+1 := add_nonneg hR zero_le_one
   obtain ⟨δ, hδ, hδS, hb, hl⟩ := exists_positive_time_budget ν
     (C.ballBound (R+1)) (C.ballLipschitz (R+1)) 1 S (by norm_num) hS
   refine ⟨δ, hδ, hδS, ?_⟩
@@ -77,13 +77,13 @@ theorem exists_uniform_restart_time (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ
   have hL := C.ballLipschitz_nonneg (R+1) hR1
   have hbudget : ‖u₀‖ + (T+2*parabolicConstant ν*Real.sqrt T)*C.ballBound (R+1) ≤ R+1 := by
     have hh := mul_le_mul_of_nonneg_right hmass hM
-    linarith
+    linarith only [hh, hb, hu₀]
   have hsmall : (T+2*parabolicConstant ν*Real.sqrt T)*C.ballLipschitz (R+1) < 1 :=
     (mul_le_mul_of_nonneg_right hmass hL).trans_lt hl
   obtain ⟨u, hu, hsol⟩ := exists_viscous_mild_solution period q ν hν T hT u₀ D.apply D.continuous
     (R+1) (C.ballBound (R+1)) (C.ballLipschitz (R+1)) hR1 hM hL
-    (fun t x hx => C.apply_bound (R+1) hR1 (timeWindow a T ha haT t) x hx)
-    (fun t x y hx hy => C.apply_sub_bound (R+1) hR1 (timeWindow a T ha haT t) x y hx hy)
+    (fun t => C.apply_bound (R+1) hR1 (timeWindow a T ha haT t))
+    (fun t => C.apply_sub_bound (R+1) hR1 (timeWindow a T ha haT t))
     hbudget hsmall
   refine ⟨u, hu, ?_, hsol⟩
   have hzero := hsol ⟨0, le_rfl, hT⟩
@@ -141,13 +141,13 @@ theorem windowSource_glue_left {S : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X Y
     (hmatch : u ⟨a, ha, le_rfl⟩ = v ⟨0, le_rfl, hb⟩) (r : ℝ) (hr : r ∈ Icc 0 a) :
     extendPath (a+b) (add_nonneg ha hb)
       (windowSource C 0 (a+b) le_rfl (by simpa using habS) (gluePath a b ha hb u v hmatch)) r =
-      extendPath a ha (windowSource C 0 a le_rfl (by linarith) u) r := by
-  have hru : r ∈ Icc 0 (a+b) := ⟨hr.1,by linarith [hr.2]⟩
+      extendPath a ha (windowSource C 0 a le_rfl (by linarith only [hb, habS]) u) r := by
+  have hru : r ∈ Icc 0 (a+b) := ⟨hr.1,by linarith only [hb, hr, hr.2]⟩
   have h1 := windowSource_extend C 0 (a+b) le_rfl (add_nonneg ha hb) (by simpa using habS)
     (gluePath a b ha hb u v hmatch) r hru
-  have h2 := windowSource_extend C 0 a le_rfl ha (by linarith) u r hr
+  have h2 := windowSource_extend C 0 a le_rfl ha (by linarith only [hb, habS]) u r hr
   have ht : timeWindow 0 (a+b) le_rfl (by simpa using habS) ⟨r,hru⟩ =
-      timeWindow 0 a le_rfl (by linarith) ⟨r,hr⟩ := by apply Subtype.ext; rfl
+      timeWindow 0 a le_rfl (by linarith only [hb, habS]) ⟨r,hr⟩ := by apply Subtype.ext; rfl
   exact h1.trans ((congrArg₂ C.apply ht (gluePath_left a b ha hb u v hmatch r hr)).trans h2.symm)
 
 /-- After the restart, the literal nonlinear source of the pasted solution is the translated new
@@ -159,7 +159,7 @@ theorem windowSource_glue_right {S : ℝ} (C : Coefficients (Icc (0 : ℝ) S) X 
     extendPath (a+b) (add_nonneg ha hb)
       (windowSource C 0 (a+b) le_rfl (by simpa using habS) (gluePath a b ha hb u v hmatch)) (a+r) =
       extendPath b hb (windowSource C a b ha habS v) r := by
-  have hru : a+r ∈ Icc 0 (a+b) := ⟨by linarith [hr.1],by linarith [hr.2]⟩
+  have hru : a+r ∈ Icc 0 (a+b) := ⟨by linarith only [ha, hr, hr.1],by linarith only [hr, hr.2]⟩
   have h1 := windowSource_extend C 0 (a+b) le_rfl (add_nonneg ha hb) (by simpa using habS)
     (gluePath a b ha hb u v hmatch) (a+r) hru
   have h2 := windowSource_extend C a b ha hb habS v r hr

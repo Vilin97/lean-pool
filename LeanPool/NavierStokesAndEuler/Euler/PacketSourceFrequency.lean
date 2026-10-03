@@ -96,7 +96,7 @@ theorem correction_guards (C T D ρ0 k : ℝ) (hk : 1 ≤ k) (hρ : 0 < ρ0)
   constructor
   · apply residual_small C T k (expansion k) hX hlog
     have hh := hgrowth.trans (smallPower_le_expansion k hk)
-    linarith
+    linarith only [hh]
   · apply radius_decay C T D ρ0 k (expansion k) hk0
     · have hh := (div_le_iff₀ hρ).mp (hdrift.trans (smallPower_le_frequency k hk))
       nlinarith only [hh]

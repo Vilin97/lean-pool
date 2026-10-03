@@ -51,10 +51,8 @@ theorem Cutoff.exists_taylor_controls (χ : Cutoff) :
       (∀ x, ‖fderiv ℝ (fderiv ℝ χ.field) x‖ ≤ M₂) ∧
       (∀ x, ‖fderiv ℝ (fderiv ℝ (fderiv ℝ χ.field)) x‖ ≤ M₃) := by
   obtain ⟨R, hR⟩ := χ.compact.isBounded.subset_closedBall (0 : Space)
-  have hs₂ : ContDiff ℝ ∞ (fderiv ℝ (fderiv ℝ χ.field)) :=
-    (χ.smooth.fderiv_right (m := ∞) (by simp)).fderiv_right (m := ∞) (by simp)
-  have hs₃ : ContDiff ℝ ∞ (fderiv ℝ (fderiv ℝ (fderiv ℝ χ.field))) :=
-    hs₂.fderiv_right (m := ∞) (by simp)
+  have hs₂ := (χ.smooth.fderiv_right (m := ∞) (by simp)).fderiv_right (m := ∞) (by simp)
+  have hs₃ := hs₂.fderiv_right (m := ∞) (by simp)
   obtain ⟨M₂, h₂⟩ := ((χ.compact.fderiv ℝ).fderiv ℝ).exists_bound_of_continuous hs₂.continuous
   obtain ⟨M₃, h₃⟩ := (((χ.compact.fderiv ℝ).fderiv ℝ).fderiv ℝ).exists_bound_of_continuous
       hs₃.continuous
@@ -102,7 +100,8 @@ theorem weakPotential_differenceError (χ : Cutoff) (a : Space) (h : ℝ) :
       (weakPotential_sub (χ.translate (h • a)) χ)
 
 theorem weakPotential_operatorNorm_le (χ : Cutoff) : ‖weakPotential χ‖ ≤ cutoffBound χ := by
-  change ‖(cutoffCurl χ).adjoint‖ ≤ _
+  change ‖ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := homogeneousSpace) (F := L2)
+    (cutoffCurl χ)‖ ≤ _
   rw [LinearIsometryEquiv.norm_map]
   exact cutoffCurl_norm_le χ
 

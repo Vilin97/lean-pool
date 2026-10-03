@@ -111,12 +111,12 @@ def smoothCoefficient (t : K) : SmoothCoefficient P where
   norm_bound x := (A t).norm_coe_le_norm x.1
   firstBound := ‖iteratedFDeriv ℝ 1 (translateCoefficientPath A) 0‖₊
   norm_first x := by
-    rw [← norm_iteratedFDeriv_one]
-    exact cylinder_norm_iteratedFDeriv_le P A hA 1 t x 0
+    exact (norm_iteratedFDeriv_one (𝕜 := ℝ) _).symm.trans_le
+      (cylinder_norm_iteratedFDeriv_le P A hA 1 t x 0)
   secondBound := ‖iteratedFDeriv ℝ 2 (translateCoefficientPath A) 0‖₊
   norm_second x y := by
-    rw [← norm_iteratedFDeriv_one,norm_iteratedFDeriv_fderiv]
-    exact cylinder_norm_iteratedFDeriv_le P A hA 2 t x y
+    exact ((norm_iteratedFDeriv_one (𝕜 := ℝ) _).symm.trans norm_iteratedFDeriv_fderiv).trans_le
+      (cylinder_norm_iteratedFDeriv_le P A hA 2 t x y)
 
 omit [Fact (0 < P)] in
 @[simp] theorem smoothCoefficient_apply (t : K) (x : LiftDomain P) :
@@ -144,18 +144,19 @@ variable (P : ℝ) [Fact (0 < P)]
   (hA : ContDiff ℝ ∞ (translateCoefficientPath A))
 
 theorem smoothCoefficient_operator (t : K) :
-    (smoothCoefficient P A hA t).operator = fullOperatorMap P (A t) := by
+    (smoothCoefficient P A hA t).operator = fullOperatorMap (E := Space) (F := Space) P (A t) := by
   apply ContinuousLinearMap.ext
   intro f
   apply Lp.ext
   filter_upwards [(smoothCoefficient P A hA t).operator_ae f,
-    EulerLpOperatorField.full_ae (liftMeasure P) (EulerLpCylinderTranslation.fieldLift P (A t)) f]
+    EulerLpOperatorField.full_ae (liftMeasure P)
+      (EulerLpCylinderTranslation.fieldLift (W := Space →L[ℝ] Space) P (A t)) f]
     with x h₁ h₂
   exact h₁.trans h₂.symm
 
 theorem smoothCoefficient_operator_continuous :
     Continuous (fun t => (smoothCoefficient P A hA t).operator) := by
   simp_rw [smoothCoefficient_operator]
-  exact (fullOperatorMap P).continuous.comp A.continuous
+  exact (fullOperatorMap (E := Space) (F := Space) P).continuous.comp A.continuous
 
 end EulerCoefficientPath

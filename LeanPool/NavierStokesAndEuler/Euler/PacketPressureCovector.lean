@@ -113,7 +113,7 @@ theorem gradient_physical_covector (k : ℝ) (m : Space) (p : ScalarField) (t : 
     (hY : HasFDerivAt Y J x)
     (hp : DifferentiableAt ℝ (fun z => p (t, z)) (graphMap k m (Y x))) :
     gradient (fun y => p (t,(Y y,k*⟪m,Y y⟫_ℝ))) x =
-      J.adjoint (covector k m p (t,(Y x,k*⟪m,Y x⟫_ℝ))) := by
+      adjoint (𝕜 := ℝ) (E := Space) (F := Space) J (covector k m p (t,(Y x,k*⟪m,Y x⟫_ℝ))) := by
   have hg : DifferentiableAt ℝ (fun y => p (t,(y,k*⟪m,y⟫_ℝ))) (Y x) :=
     hp.comp (Y x) (graphMap k m).differentiableAt
   have h := EulerLagrangian.gradient_pullback (fun y => p (t,(y,k*⟪m,y⟫_ℝ))) Y J x hY hg

@@ -179,6 +179,11 @@ theorem history_small (H : LowBounds G) : H.K*(G.T^2/2) ≤ 1/2 := by
     (pow_nonneg H.r_nonneg 3)) G.T_pos.le
   linarith [H.small]
 
+theorem transverseData_T : (G.transverseData m hm R S hS).T = G.T := rfl
+
+theorem transverseData_F : (G.transverseData m hm R S hS).F = G.frame.toSmoothCoefficientPath :=
+  rfl
+
 /-- History data, bundling `H`, `jacobi`, `have`, `potential` and the required compatibility
 proofs. -/
 def historyData (H : LowBounds G) : EulerTransversePacketProvider.HistoryData (G.transverseData m
@@ -190,11 +195,11 @@ def historyData (H : LowBounds G) : EulerTransversePacketProvider.HistoryData (G
     · rfl
     · apply ContinuousLinearMap.ext
       intro v
-      change -(G.curvature.field (projIcc 0 G.T G.T_pos.le t) x
-        (G.frame.field (projIcc 0 G.T G.T_pos.le t) x v)) =
-          G.second.field (projIcc 0 G.T G.T_pos.le t) x v
-      rw [projIcc_of_mem G.T_pos.le ht]
-      exact (G.second_equation ⟨t,ht⟩ x v).symm
+      rw [neg_apply, comp_apply]
+      simp only [extendPath, transverseData_T, transverseData_F, projIcc_of_mem G.T_pos.le ht,
+        SmoothTimeField.toSmoothCoefficientPath_field]
+      have hsecond := (G.second_equation ⟨t,ht⟩ x v).symm
+      apply hsecond
     · rfl
   potential := H.K
   potential_nonneg := H.K_nonneg

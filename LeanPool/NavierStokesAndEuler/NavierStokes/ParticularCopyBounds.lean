@@ -125,10 +125,13 @@ theorem localJets (hL : ∀ n, 0 < L n) (W : ℕ → P × Plane → ℝ)
   let B := (2 : ℝ) ^ (N + 1) * rescaleConstant N K ^ 3
   have hB : 1 ≤ B := one_le_mul_of_one_le_of_one_le (one_le_pow₀ (by norm_num))
     (one_le_pow₀ (hK.trans (le_rescaleConstant N K)))
-  have hconst : 0 ≤ ambientJetConstant N := by unfold ambientJetConstant; positivity
+  have hconst : 0 ≤ ambientJetConstant N :=
+    mul_nonneg (pow_nonneg zero_le_two N) (add_nonneg (norm_nonneg _) (norm_nonneg _))
   have hK₀ : 0 ≤ h.boundConstant := zero_le_one.trans h.constant_ge_one
+  have hB0 : 0 ≤ B := zero_le_one.trans hB
   refine ⟨ambientJetConstant N * B ^ (N + 1) * K * h.boundConstant ^ N,
-    by positivity, (m + 2) * (N + 1) + m + h.coordinatePower * N, ?_⟩
+    mul_nonneg (mul_nonneg (mul_nonneg hconst (pow_nonneg hB0 _)) (zero_le_one.trans hK))
+      (pow_nonneg hK₀ _), (m + 2) * (N + 1) + m + h.coordinatePower * N, ?_⟩
   intro n k p hp hcell j hj
   have hG := s.one_le_growth n p
   have hG0 := s.growth_nonneg n p
@@ -178,6 +181,9 @@ theorem localJets (hL : ∀ n, 0 < L n) (W : ℕ → P × Plane → ℝ)
       _ = _ := by rw [mul_pow, pow_mul]
   apply hh.trans
   have hen := (h.envelope_pos n ((g n).coordinates k p.2).2).le
+  have hX := mul_nonneg (mul_nonneg hw (pow_nonneg hB0 (N + 1)))
+    (pow_nonneg hG0 ((m + 2) * (N + 1)))
+  have hY := mul_nonneg (zero_le_one.trans hK) (pow_nonneg hG0 m)
   calc
     _ ≤ ambientJetConstant N *
         ((s.epsilon n ^ α * Real.sqrt (s.zeta p)) * B ^ (N + 1) *
@@ -185,14 +191,15 @@ theorem localJets (hL : ∀ n, 0 < L n) (W : ℕ → P × Plane → ℝ)
         (K * s.growth n p ^ m) * (h.boundConstant ^ N * s.growth n p ^ (h.coordinatePower * N)) :=
             by
       apply mul_le_mul_of_nonneg_left hcp
-      exact mul_nonneg (mul_nonneg hconst (by positivity)) (by positivity)
+      exact mul_nonneg (mul_nonneg hconst (mul_nonneg hX hen)) hY
     _ ≤ ambientJetConstant N *
         ((s.epsilon n ^ α * Real.sqrt (s.zeta p)) * B ^ (N + 1) *
           s.growth n p ^ ((m + 2) * (N + 1)) * W n p) *
         (K * s.growth n p ^ m) * (h.boundConstant ^ N * s.growth n p ^ (h.coordinatePower * N)) :=
             by
-      gcongr
-      exact hW n k p hp hcell
+      exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left
+        (mul_le_mul_of_nonneg_left (hW n k p hp hcell) hX) hconst) hY)
+        (mul_nonneg (pow_nonneg hK₀ _) (pow_nonneg hG0 _))
     _ = _ := by unfold majorant; simp only [pow_add]; ring
 
 end ModalControl

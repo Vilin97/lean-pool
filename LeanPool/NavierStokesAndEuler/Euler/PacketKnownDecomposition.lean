@@ -52,7 +52,9 @@ theorem sum_knownTerm {E : Type*} [AddCommMonoid E] (f : KnownTerm → E) :
        .slow .corrector .high, .slow .corrector .mean, .slow .corrector .corrector,
        .fastMeanHigh, .fastMeanCorrector, .fastCorrectorHigh, .fastCorrectorCorrector} := by decide
   rw [hu]
-  simp [sum_knownPiece, add_assoc]
+  simp only [Finset.mem_insert, reduceCtorEq, Finset.mem_singleton, or_self, not_false_eq_true,
+    sum_insert, KnownTerm.slow.injEq, and_false, and_true, and_self, sum_singleton,
+    sum_knownPiece, add_assoc]
 
 namespace KnownTerm
 
@@ -132,7 +134,9 @@ theorem sum_knownTerm_raw (O : Operators) (p : ℕ) (a : ℕ → Profile) (z : D
         (KnownPiece.corrector.jet O p a z) (KnownPiece.high.jet O p a z) (p+1) +
       convolution (p+1) (fastAdvection (O.normal z))
         (KnownPiece.corrector.jet O p a z) (KnownPiece.corrector.jet O p a z) (p+1) := by
-  simp [knownTermIndices, sum_product, sum_knownTerm, KnownTerm.raw, ite_and, convolution]
+  simp only [knownTermIndices, product_eq_sprod, KnownTerm.raw, ite_and, sum_product,
+    sum_knownTerm, sum_ite_irrel, sum_ite_eq', Finset.mem_range, lt_add_iff_pos_left,
+    add_pos_iff, Order.lt_two_iff, zero_le, or_true, ↓reduceIte, sum_const_zero, convolution]
 
 private theorem convolution_sum_pieces (M n : ℕ)
     (B : VectorJet →ₗ[ℝ] VectorJet →ₗ[ℝ] Space) (u : KnownPiece → ℕ → VectorJet) :
@@ -188,7 +192,7 @@ theorem knownForce_eq_term_sum (O : Operators) (p : ℕ) (hp : 2 ≤ p)
   rw [sum_knownTerm_raw]
   unfold knownForce nonlinearGrade
   rw [hu, convolution_sum_pieces, convolution_sum_pieces,
-    fast_pieces_reduced _ _ _ _ ha hb]
+    fast_pieces_reduced (p+1) (p+1) (O.normal z) (fun k => k.jet O p a z) ha hb]
   abel
 
 end EulerPacketCylinderField

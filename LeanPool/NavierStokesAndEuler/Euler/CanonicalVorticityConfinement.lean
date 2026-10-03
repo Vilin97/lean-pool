@@ -74,10 +74,14 @@ theorem frame_wronskian_constant
   let q : ℝ → ℝ := fun r => ⟪G r v, F r w⟫_ℝ - ⟪F r v, G r w⟫_ℝ
   have hd (r : ℝ) (hr : r ∈ Icc 0 T) :
       HasDerivWithinAt q 0 (Icc 0 T) r := by
-    have hfv := (ContinuousLinearMap.apply ℝ E v).hasFDerivAt.comp_hasDerivWithinAt r (hF r hr)
-    have hfw := (ContinuousLinearMap.apply ℝ E w).hasFDerivAt.comp_hasDerivWithinAt r (hF r hr)
-    have hgv := (ContinuousLinearMap.apply ℝ E v).hasFDerivAt.comp_hasDerivWithinAt r (hG r hr)
-    have hgw := (ContinuousLinearMap.apply ℝ E w).hasFDerivAt.comp_hasDerivWithinAt r (hG r hr)
+    have hfv := (ContinuousLinearMap.apply (E := E) ℝ E v).hasFDerivAt.comp_hasDerivWithinAt r
+      (hF r hr)
+    have hfw := (ContinuousLinearMap.apply (E := E) ℝ E w).hasFDerivAt.comp_hasDerivWithinAt r
+      (hF r hr)
+    have hgv := (ContinuousLinearMap.apply (E := E) ℝ E v).hasFDerivAt.comp_hasDerivWithinAt r
+      (hG r hr)
+    have hgw := (ContinuousLinearMap.apply (E := E) ℝ E w).hasFDerivAt.comp_hasDerivWithinAt r
+      (hG r hr)
     have hh := (hgv.inner ℝ hfw).sub (hfv.inner ℝ hgw)
     convert! hh using 1
     change 0 = (⟪G r v, G r w⟫_ℝ + ⟪H r v, F r w⟫_ℝ) -
@@ -150,10 +154,16 @@ theorem curlMatrix_eq_zero_iff_isSymmetric (A : Space →L[ℝ] Space) :
     change (A (EuclideanSpace.single 0 1)) 1 - (A (EuclideanSpace.single 1 1)) 0 = 0 at h2
     have heq (i j : Fin 3) :
         (A (EuclideanSpace.single i 1)) j = (A (EuclideanSpace.single j 1)) i := by
-      fin_cases i <;> fin_cases j <;>
-        first | rfl | exact sub_eq_zero.mp h0 | exact sub_eq_zero.mp h1 |
-          exact sub_eq_zero.mp h2 | exact (sub_eq_zero.mp h0).symm |
-          exact (sub_eq_zero.mp h1).symm | exact (sub_eq_zero.mp h2).symm
+      fin_cases i <;> fin_cases j
+      · rfl
+      · exact sub_eq_zero.mp h2
+      · exact (sub_eq_zero.mp h1).symm
+      · exact (sub_eq_zero.mp h2).symm
+      · rfl
+      · exact sub_eq_zero.mp h0
+      · exact sub_eq_zero.mp h1
+      · exact (sub_eq_zero.mp h0).symm
+      · rfl
     intro x y
     have hx := (EuclideanSpace.basisFun (Fin 3) ℝ).sum_repr x
     have hy := (EuclideanSpace.basisFun (Fin 3) ℝ).sum_repr y
@@ -256,17 +266,17 @@ theorem strain_symmetric_along_label (x : Space)
       HasDerivWithinAt G (H r) (Icc 0 A.T) r := by
     simpa only [G,H,SmoothTimeField.realField,extendPath,
       projIcc_of_mem A.T_pos.le hr] using A.first_time ⟨r,hr⟩ x
+  have hS0 : S 0 = A.strain.field A.zeroTime x :=
+    congrArg (fun s => A.strain.field s x) (projIcc_left A.T_pos.le)
+  have hSt : S t = A.strain.field t x :=
+    congrArg (fun s => A.strain.field s x) (projIcc_val A.T_pos.le t)
   have hh := strain_symmetric_of_frame_wronskian F G H B S J A.T A.T_pos hF hG
     (fun r _ v => A.second_equation (projIcc 0 A.T A.T_pos.le r) x v)
     (fun r _ => E.curvature_symmetric (projIcc 0 A.T A.T_pos.le r) x)
     (fun r _ v => A.strain_equation (projIcc 0 A.T A.T_pos.le r) x v)
     (fun r _ v => A.inverse_right (projIcc 0 A.T A.T_pos.le r) x v)
-    (by
-      intro v w
-      simpa only [S,Parent.zeroTime,projIcc_of_mem A.T_pos.le (show (0 : ℝ) ∈ Icc 0 A.T from
-        ⟨le_rfl,A.T_pos.le⟩)] using hzero v w) t t.property
-  intro v w
-  simpa only [S,projIcc_of_mem A.T_pos.le t.property] using hh v w
+    (by rw [hS0]; exact hzero) t t.property
+  rwa [hSt] at hh
 
 /-- This statement needs only the actual parent Euler evolution, with no
 additional Sobolev regularity or support hypotheses. -/
@@ -400,7 +410,7 @@ theorem stages_displacement_norm_le_partial_sum (n : ℕ) :
     ∀ (t : Icc (0 : ℝ) (stages S hq hB n).parent.T) (x : Space),
       ‖(stages S hq hB n).parent.displacement.field t x‖ ≤
         ‖(stages S hq hB 0).parent.displacement.field‖ +
-          ∑ i ∈ range n, (frequency S.J S.X i)^(-(1/4 : ℝ)) := by
+          ∑ i ∈ Finset.range n, (frequency S.J S.X i)^(-(1/4 : ℝ)) := by
   induction n with
   | zero =>
     intro t x
@@ -507,7 +517,7 @@ variable {Time : Type*} (H : ℕ → Time → Prop)
 
 include hbase hnest hstep hsmall in
 theorem stage_displacement_le_partial_sum (n : ℕ) (t : Time) (ht : H n t) (x : E) :
-    ‖X n t x - x‖ ≤ M + ∑ i ∈ range n, δ i := by
+    ‖X n t x - x‖ ≤ M + ∑ i ∈ Finset.range n, δ i := by
   induction n generalizing x with
   | zero => simpa using hbase t ht x
   | succ n ih =>
@@ -517,7 +527,7 @@ theorem stage_displacement_le_partial_sum (n : ℕ) (t : Time) (ht : H n t) (x :
 
 include hbase hnest hstep hsmall in
 theorem stage_displacement_le_of_partial_sums {C : ℝ}
-    (hC : ∀ n, ∑ i ∈ range n, δ i ≤ C)
+    (hC : ∀ n, ∑ i ∈ Finset.range n, δ i ≤ C)
     (n : ℕ) (t : Time) (ht : H n t) (x : E) :
     ‖X n t x - x‖ ≤ M + C := by
   exact (stage_displacement_le_partial_sum H X Y M δ hbase hnest hstep hsmall n t ht x).trans
@@ -525,7 +535,7 @@ theorem stage_displacement_le_of_partial_sums {C : ℝ}
 
 include hbase hnest hstep hsmall in
 theorem stage_mapsTo_closedBall_of_partial_sums {C : ℝ}
-    (hC : ∀ n, ∑ i ∈ range n, δ i ≤ C)
+    (hC : ∀ n, ∑ i ∈ Finset.range n, δ i ≤ C)
     (R : ℝ) (n : ℕ) (t : Time) (ht : H n t) :
     MapsTo (X n t) (Metric.closedBall 0 R) (Metric.closedBall 0 (R + M + C)) := by
   intro x hx
@@ -542,7 +552,7 @@ theorem stage_displacement_le_tsum (hδ : Summable δ) (hδ0 : ∀ n, 0 ≤ δ n
     (n : ℕ) (t : Time) (ht : H n t) (x : E) :
     ‖X n t x - x‖ ≤ M + ∑' i, δ i := by
   exact (stage_displacement_le_partial_sum H X Y M δ hbase hnest hstep hsmall n t ht x).trans
-    (add_le_add le_rfl (hδ.sum_le_tsum (range n) (fun i _ => hδ0 i)))
+    (add_le_add le_rfl (hδ.sum_le_tsum (Finset.range n) (fun i _ => hδ0 i)))
 
 include hbase hnest hstep hsmall in
 theorem stage_mapsTo_closedBall (hδ : Summable δ) (hδ0 : ∀ n, 0 ≤ δ n)
@@ -616,10 +626,11 @@ theorem joinedNext_initial_support {n : ℕ} (P : Stage S n) (hn : n ≠ 0)
     (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
     (hP : tsupport (fun x => P.state.evolution.velocity (0, x)) ⊆ Metric.closedBall 0 2) :
     tsupport (fun x => (P.joinedNext hn hq hB).state.evolution.velocity (0, x)) ⊆
-      Metric.closedBall 0 2 :=
-  GeometryJoinedChoice.initial_support (P.joinedInput hn hq hB) P.restrictedState
-    (frequency S.J S.X n) (S.normal_frequency n) (supportScale S.J S.X (n+1))
-    (S.support_pos (n+1)) (S.support_one (n+1)) (P.chooseJoined hn hq hB) symmetric hP
+      Metric.closedBall 0 2 := by
+  rw [P.joinedNext_initial_velocity hn hq hB]
+  have h := (P.joinedInput hn hq hB).initial_support (frequency S.J S.X n)
+  exact (tsupport_add _ _).trans
+    (union_subset hP ((tsupport_add _ _).trans (union_subset h.1 h.2)))
 
 theorem successor_initial_support {n : ℕ} (P : Stage S n)
     (hq : requiredExponent ≤ q) (hB : commonThreshold gradientConstant hessianConstant ≤ B)
@@ -833,7 +844,8 @@ theorem curl_tendsto_of_initial_h3 (U : Evolution T hT) (V : ℕ → Evolution T
     { toFun := curlMatrix
       map_add' := curlMatrix_add
       map_smul' := curlMatrix_smul }
-  have hcurl := (C.toContinuousLinearMap.continuous.tendsto
+  have hcurl := ((LinearMap.toContinuousLinearMap (𝕜 := ℝ) (E := Space →L[ℝ] Space)
+    (F' := Space) C).continuous.tendsto
     (fderiv ℝ (U.velocity t).field x)).comp hgrad
   change Tendsto (fun n => curlMatrix (fderiv ℝ ((V n).velocity t).field x)) atTop
     (𝓝 (curlMatrix (fderiv ℝ (U.velocity t).field x))) at hcurl

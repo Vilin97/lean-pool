@@ -49,7 +49,7 @@ theorem fderiv_scalar (a : ℝ) (f : D → F) (x : D) :
     fderiv ℝ (fun y => a • f y) x = a • fderiv ℝ f x := by
   by_cases ha : a = 0
   · subst a
-    simp
+    simp only [zero_smul, fderiv_fun_const, Pi.zero_apply]
   · have he := (scalarEquiv F a ha).comp_fderiv (f := f) (x := x)
     exact he
 
@@ -77,7 +77,7 @@ theorem reweight {U : Set D} {e : D ≃L[ℝ] E} {a b : ℝ}
 theorem zero (U : Set D) (e : D ≃L[ℝ] E) (a : ℝ) :
     CoefficientsOn U e a 0 0 := by
   intro j x hx
-  simp
+  simp only [AddMonoidAlgebra.coeff_zero, Finsupp.coe_zero, Pi.zero_apply, smul_zero]
 
 theorem add {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
     {c₁ c₂ : Coefficients D} {d₁ d₂ : Coefficients E}
@@ -110,7 +110,8 @@ theorem boundConstant {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
   · subst j
     simpa only [constantCoefficient, AddMonoidAlgebra.coeff_single, Finsupp.single_eq_same] using h
         x hx
-  · simp [constantCoefficient, hj]
+  · simp only [constantCoefficient, AddMonoidAlgebra.coeff_single, ne_eq, hj, not_false_eq_true,
+      Finsupp.single_eq_of_ne, Pi.zero_apply, smul_zero]
 
 theorem convolution_sum {A : Type} (c d : Coefficients A) (S : Finset ℤ)
     (hS : c.support ⊆ S) (j : ℤ) (x : A) :
@@ -118,7 +119,7 @@ theorem convolution_sum {A : Type} (c d : Coefficients A) (S : Finset ℤ)
   rw [convolution_apply]
   exact Finset.sum_subset hS (by
     intro k hk hkc
-    simp [Finsupp.notMem_support_iff.mp hkc])
+    simp only [Finsupp.notMem_support_iff.mp hkc, Pi.zero_apply, zero_mul])
 
 theorem mul {U : Set D} {e : D ≃L[ℝ] E} {a b : ℝ}
     {c₁ c₂ : Coefficients D} {d₁ d₂ : Coefficients E}
@@ -165,7 +166,8 @@ theorem nonconstant {U : Set D} {e : D ≃L[ℝ] E} {a : ℝ}
   intro j x hx
   by_cases hj : j = 0
   · subst j
-    simp [HarmonicResidual.nonconstant]
+    simp only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_same,
+        Pi.zero_apply, smul_zero]
   · simpa only [HarmonicResidual.nonconstant, AddMonoidAlgebra.coeff_erase, Finsupp.erase_ne hj]
       using hc j x hx
 
@@ -291,7 +293,7 @@ theorem vectorLaplacian (H : FrameOn U e c l g r) (hU : IsOpen U) (hl : l ≠ 0)
   have htwo : CoefficientsOn U e 1
       (constantCoefficient (fun _ : D => (2 : ℂ)))
       (constantCoefficient (fun _ : E => (2 : ℂ))) :=
-    CoefficientsOn.boundConstant (by intro x hx; simp)
+    CoefficientsOn.boundConstant (by intro x hx; simp only [one_smul])
   have ht := htwo.mul (rotate (fun i => (hf i).angular kp) i)
   have ht' := ht.reweight (b := a) (one_mul a)
   have hframe := (H.inverseRadiusSq hl).mul (ht'.add (rotate (rotate hf) i))
@@ -1051,7 +1053,10 @@ theorem complexValue (H : TripleOn U e c b br n nr) (x : D) (hx : x ∈ U) :
     (![(b.radial n x : ℂ), (b.angular n x : ℂ), (b.axial n x : ℂ)] : ComplexVector) =
       c • ![(br.radial nr (e x) : ℂ), (br.angular nr (e x) : ℂ), (br.axial nr (e x) : ℂ)] := by
   ext i
-  fin_cases i <;> simp [H.radial x hx, H.angular x hx, H.axial x hx, Complex.real_smul]
+  fin_cases i <;> simp only [H.radial x hx, Complex.ofReal_mul, H.angular x hx, H.axial x hx,
+      Nat.succ_eq_add_one, Nat.reduceAdd, Fin.zero_eta, Fin.isValue, Matrix.cons_val_zero,
+      Pi.smul_apply, Complex.real_smul, Fin.mk_one, Matrix.cons_val_one, Fin.reduceFinMk,
+      Matrix.cons_val]
 
 end TripleOn
 

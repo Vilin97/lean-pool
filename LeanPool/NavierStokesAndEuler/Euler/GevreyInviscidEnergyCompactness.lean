@@ -80,17 +80,29 @@ theorem partial_correction_bootstrap {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS : 0 
   have hr := B.residual_pos
   have hdecayT : 2*C*(B.B0+Δ)*T ≤ ρ0/2 :=
     (mul_le_mul_of_nonneg_left hTS (by positivity : 0 ≤ 2*C*(B.B0+Δ))).trans hdecay
-  have hsmallT : 2*B.residual*Real.exp (3*C*T) ≤ Δ/2 := by
-    apply le_trans _ hsmall
-    gcongr
+  have hsmallT : 2*B.residual*Real.exp (3*C*T) ≤ Δ/2 :=
+    (mul_le_mul_of_nonneg_left (Real.exp_le_exp.mpr
+      (mul_le_mul_of_nonneg_left hTS (mul_nonneg zero_le_three hCp.le)))
+      (mul_nonneg zero_le_two hr.le)).trans hsmall
   have he := correction_mild_divergenceFree period hq ν hν hT hTS
     (lowerData period D KG KL KQ hGq hLq hQq) e hsol
+  have hL : lowerData period Dt (fun t => KG (f t)) (fun t => KL (f t)) (fun i t => KQ i (f t))
+      (hGq.comp f.continuous) (hLq.comp f.continuous) (fun i => (hQq i).comp f.continuous) =
+      (lowerData period D KG KL KQ hGq hLq hQq).comp period f := rfl
+  -- The mild equation is transported under the integral by rewriting the forcing explicitly;
+  -- comparing the two Duhamel formulas as a whole unfolds the Sobolev operations instead.
   have ht := correction_mild_bootstrap period hq T hT Dt
     (fun t => KG (f t)) (fun t => KL (f t)) (fun i t => KQ i (f t))
     (hGq.comp f.continuous) (hLq.comp f.continuous) (fun i => (hQq i).comp f.continuous)
     (hG.comp f.continuous) N hN Rt Rd Bt Kt C Δ ρ0 hC hΔ hΔ1 hρ0
     hdecayT hscale hsmallT (fun t => hR (f t)) (fun _ => rfl) ν hν hν1 e
-    (fun t => hsol t) (fun t => hz (f t)) he
+    (fun t => (hsol t).trans (congrArg
+      (fun F : ℝ → SobolevSpace period q => heatOperator period (q+1) (2*ν*t.val).toNNReal 0 +
+        ∫ r in (0 : ℝ)..t.val, heatKernel period q ν hν r (F r))
+      (funext fun x => by
+        simp only [extendPath, forcingPath, ContinuousMap.coe_mk, hL,
+          CorrectionData.comp_source]
+        rfl))) (fun t => hz (f t)) he
   exact ht
 
 end EulerPartialCorrectionBootstrap
@@ -159,7 +171,7 @@ theorem exists_global_gevrey_correction {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (hS :
     rw [hR t]
     apply (min_le_left (ρ0/2) 1).trans
     have hm := mul_le_mul_of_nonneg_left t.property.2 hcoef
-    linarith
+    linarith only [hdecay, hm]
   have hbound : ∀ (T : ℝ) (hT : 0 ≤ T) (hTS : T ≤ S)
       (e : C(Icc (0 : ℝ) T,SobolevSpace period (q+1))),
       (∀ t, e t = quadraticDuhamel period ν hν hT hTS
@@ -317,9 +329,10 @@ theorem exists_gevrey_inviscid_energy_limit {q : ℕ} (hq : 6 ≤ q) (S : ℝ) (
           energyNorm period P hP (R t) (K.operatorPath period t) (e t) ≤
             2*B.residual*Real.exp (3*C*t.val) ∧
           energyNorm period P hP (R t) (K.operatorPath period t) (e t) ≤ Δ/2 := by
-  obtain ⟨u,hu,hdefect⟩ := exists_viscous_correction_family period (q := q) hq S hS D KG KL KQ hGq
+  have hex := exists_viscous_correction_family period (q := q) hq S hS D KG KL KQ hGq
       hLq hQq hG
     N hN hNfull R B K C Δ ρ0 hC hΔ hΔ1 hρ0 hdecay hscale hsmall hR hz
+  obtain ⟨u,hu,hdefect⟩ := hex
   refine ⟨u,?_⟩
   let M := metricAmplification K.c*(Δ/2)/weight (min (ρ0/2) 1) N
   have huM (n : ℕ) : ‖u n‖ ≤ M := (hu n).2.2.2.2

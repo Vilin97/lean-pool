@@ -42,7 +42,8 @@ theorem zero (T : ℝ) : ProfileParity T (0 : Profile) where
     intro t x θ
     change pressureGradient (0 : ScalarField) (t,(-x,-θ)) =
       -pressureGradient (0 : ScalarField) (t,(x,θ))
-    simp [pressureGradient,pressureJet_zero]
+    simp only [pressureGradient, pressureJet_zero, Prod.snd_zero, ContinuousLinearMap.zero_comp,
+        map_zero, neg_zero]
   highPressure _ _ _ := rfl
   meanPressure _ _ _ := rfl
 

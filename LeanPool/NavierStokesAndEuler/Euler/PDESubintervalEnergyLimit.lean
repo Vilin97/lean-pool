@@ -108,8 +108,8 @@ theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype �
             u) (e' i j u)
           (hKt u hu) (het i j u hu) hsymL)
     have hq := hQ0 i u ⟨hu.1.le, hu.2.le⟩
-    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2)) (by
-        nlinarith : Q i u + δ ^ 2 ≠ 0)).differentiableAt
+    exact (HasDerivAt.sqrt (hd.add_const (δ ^ 2))
+      (add_pos_of_nonneg_of_pos hq (pow_pos hδ 2)).ne').differentiableAt
   have hreg (i : α) (δ : ℝ) (hδ : 0 < δ) (u : ℝ) (hu : u ∈ Ioo s t) :
       deriv (fun v => √(Q i v + δ ^ 2)) u ≤ a u * √(Q i u + δ ^ 2) + F i u := by
     exact finite_sobolev_viscous_energy period hq κ m K (G u) (e i) u δ c ν (K' u)
@@ -137,8 +137,8 @@ theorem weighted_sobolev_energy_integral {α β : Type*} [Fintype α] [Fintype �
           u)) +
       (((K u).bound : ℝ) / c) * weightedForcingSum (ρ u) order (fun i j => forcing i j u) := by
     simp only [Ψ, A, w, w', F, Q, weightedMetricSum, weightedMetricLoss, weightedForcingSum,
-      familyMetricNorm, add_mul, Finset.sum_add_distrib, Finset.mul_sum]
-    simp only [mul_comm, mul_left_comm, mul_assoc]
+      familyMetricNorm, Finset.mul_sum, ← Finset.sum_add_distrib]
+    exact Finset.sum_congr rfl fun i _ => by ring
   simpa only [halg, w, Q, a, weightedMetricSum, familyMetricNorm] using hsum
 
 end EulerWeightedSobolevEnergy
@@ -257,21 +257,20 @@ theorem weighted_pde_energy_subinterval_limit {α β : Type*} [Fintype α] [Fint
     (fun r hr => hz r (hsubo hr)) (fun r hr => hzB r (hsubo hr))
     (fun i j r hr => heq n i j r (hsubo hr))
     (fun i => (hAint i).mono_set hsub) (fun i => (hFint n i).mono_set hsub)
-  rw [hXdef n t ⟨h0s.trans hst, htT⟩, hXdef n s ⟨h0s, hst.trans htT⟩] at h
   have hevalt : extendPath T hT (X n) t = X n ⟨t, h0s.trans hst, htT⟩ :=
     congrArg (X n) (projIcc_of_mem hT ⟨h0s.trans hst, htT⟩)
   have hevals : extendPath T hT (X n) s = X n ⟨s, h0s, hst.trans htT⟩ :=
     congrArg (X n) (projIcc_of_mem hT ⟨h0s, hst.trans htT⟩)
-  rw [hevalt, hevals] at h
   have hi := integral_eq_three_subinterval_paths T hT s t hst a b d (X n) (Y n) (Z n)
     (fun r => viscousGrowthCoefficient period (K r) (K' r) κ m c ν (B r) *
       weightedMetricSum (ρ r) order (K r).operator (fun i j => value period (e n i j r)) +
       (ρ' r / ρ r) * weightedMetricLoss (ρ r) order (K r).operator (fun i j => value period (e n i
           j r)) +
       (((K r).bound : ℝ) / c) * weightedForcingSum (ρ r) order (fun i j => forcing n i j r))
-    (fun r hr => by rw [ha r (hsub hr), hb r (hsub hr), hd r (hsub hr),
+    (fun r hr => by simp only [ha r (hsub hr), hb r (hsub hr), hd r (hsub hr),
       hXdef n r (hsub hr), hYdef n r (hsub hr), hZdef n r (hsub hr)])
-  rw [hi] at h
+  simp only [hXdef n t ⟨h0s.trans hst, htT⟩, hXdef n s ⟨h0s, hst.trans htT⟩, hevalt, hevals,
+    hi] at h
   rw [← subinterval_inner_eq, subinterval_path_inner T hT s t h0s hst htT]
   exact h
 

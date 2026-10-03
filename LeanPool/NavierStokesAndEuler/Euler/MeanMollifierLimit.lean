@@ -102,7 +102,8 @@ theorem scalarMollification_energy_le (φ : ContDiffBump (0 : Space))
   calc
     _ ≤ ∫ x, scalarMollification φ (fun y => f y ^ 2) x :=
       integral_mono (scalarMollification_sq_integrable φ f hf)
-        (φ.integrable_normed.integrable_convolution (ContinuousLinearMap.lsmul ℝ ℝ) hf2)
+        (φ.integrable_normed.integrable_convolution (g := fun y => f y ^ 2)
+          (ContinuousLinearMap.lsmul ℝ ℝ) hf2)
         (scalarMollification_sq_le φ f hf)
     _ = _ := by
       rw [scalarMollification, integral_convolution (ContinuousLinearMap.lsmul ℝ ℝ)

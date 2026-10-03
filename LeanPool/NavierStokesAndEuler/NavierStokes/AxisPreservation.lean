@@ -142,8 +142,8 @@ theorem physicalQ_origin {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {t : ℝ} (ht : t < 1) : physicalQ h (t, 0) = 1 - t := by
   change SimilarityCoordinates.coordinateQ (2 * h) (1 - t, 0) = 1 - t
   have hq := SimilarityCoordinates.coordinateQ_spec
-    (by linarith : 0 < 2 * h) (by linarith : 2 * h < 1)
-    (p := (1 - t, 0)) (by simpa using sub_pos.mpr ht)
+    (by linarith only [hh] : 0 < 2 * h) (by linarith only [hh1] : 2 * h < 1)
+    (p := (1 - t, 0)) (by simpa only [sub_pos] using sub_pos.mpr ht)
   simpa only [SimilarityCoordinates.forwardScalar, zero_pow (by norm_num : 2 ≠ 0),
     zero_mul, sub_zero] using hq.2
 
@@ -152,7 +152,7 @@ theorem physicalQ_origin_tendsto {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2) :
   have hl : Tendsto (fun t : ℝ => 1 - t) (𝓝[<] 1) (𝓝 0) := by
     have hc : ContinuousAt (fun t : ℝ => 1 - t) (1 : ℝ) :=
       continuousAt_const.sub continuousAt_id
-    simpa using hc.tendsto.mono_left
+    simpa only [sub_self] using hc.tendsto.mono_left
       (nhdsWithin_le_nhds (a := (1 : ℝ)) (s := Iio 1))
   apply hl.congr'
   filter_upwards [self_mem_nhdsWithin (a := (1 : ℝ)) (s := Iio 1)] with t ht

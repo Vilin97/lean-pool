@@ -10,6 +10,7 @@ public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Mathlib.Analysis.Normed.Operator.LinearIsometry
 public import Mathlib.Topology.Algebra.Module.Spaces.ContinuousLinearMap
 import Mathlib.Analysis.Calculus.UniformLimitsDeriv
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Closed differentiability for strongly continuous linear isometric actions. -/
 

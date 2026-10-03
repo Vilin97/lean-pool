@@ -134,8 +134,11 @@ theorem scalarProduct_hasDerivAt (L : Vector3 →L[ℝ] ℝ) (i : Fin 4)
           (truncateOperator period 3 u)) v' +
         B (derivativeOperator period 3 i u) (translation period (translationPath period
             (standardDirection i) 0) v)) 0 at h
-  rw [he, hzero, translationPath_zero, translation_zero] at h
-  exact h
+  rw [he] at h
+  exact h.congr_deriv (congrArg₂ (· + ·) (congrArg (B · v') hzero)
+    (congrArg (B (derivativeOperator period 3 i u))
+      ((congrArg (translation period · v) (translationPath_zero period _)).trans
+        (translation_zero period v))))
 
 /-- Pointwise multiplication with q+3 coefficient derivatives produces a genuine q-jet. -/
 def productJet (L : Vector3 →L[ℝ] ℝ) {q : ℕ} (u : SobolevSpace period (q + 3))
@@ -635,7 +638,7 @@ theorem productApprox_value_tendsto {q : ℕ} (hq : 6 ≤ q)
   have hU : Filter.Tendsto U Filter.atTop (𝓝 u) := smoothApprox_tendsto period u
   have hV : Filter.Tendsto (fun n => value period (sobolevMollifier period q n v)) Filter.atTop (𝓝
       (value period v)) :=
-    (valueOperator period q).continuous.tendsto v |>.comp (sobolevMollifier_tendsto period v)
+    ((valueOperator period q).continuous.tendsto v |>.comp (sobolevMollifier_tendsto period v) :)
   have h := (scalarProductBilinear period (by
       omega : 3 ≤ q) L).continuous₂.tendsto (u, value period v) |>.comp (hU.prodMk_nhds hV)
   apply h.congr'

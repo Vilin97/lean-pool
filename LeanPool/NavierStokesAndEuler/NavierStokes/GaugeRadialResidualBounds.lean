@@ -154,11 +154,11 @@ variable {coord cL cR : ℝ} (U : SlowRegion coord)
   (hepsilon_one : ∀ n, epsilon n ≤ 1) (hslow : ∀ n, 1 ≤ slow n)
   (hell : ∀ n, g.length n = VariableGaugeMean.qLength coord)
 
-local notation "strip" => movingStripData U g.radial.inner g.radial.outer cL cR
-  ha hcL hcR epsilon slow hepsilon hepsilon_one hslow
+local notation "strip" => (movingStripData U g.radial.inner g.radial.outer cL cR
+  ha hcL hcR epsilon slow hepsilon hepsilon_one hslow)
 
-local notation "slowStrip" => PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen
-  epsilon slow hepsilon hepsilon_one hslow
+local notation "slowStrip" => (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen
+  epsilon slow hepsilon hepsilon_one hslow)
 
 include hell
 
@@ -217,14 +217,14 @@ variable {h a b cL cR sigma : ℝ} (U : SlowRegion (2 * h))
   (epsilon slow : ℕ → ℝ) (hepsilon : ∀ n, 0 < epsilon n)
   (hepsilon_one : ∀ n, epsilon n ≤ 1) (hslow : ∀ n, 1 ≤ slow n)
 
-local notation "gauge" => VariableGaugeMean.similarityGauge h (ChartScales.radialExponent h)
-  a b Mbase hab index
+local notation "gauge" => (VariableGaugeMean.similarityGauge h (ChartScales.radialExponent h)
+  a b Mbase hab index)
 
-local notation "strip" => movingStripData U a b cL cR ha hcL hcR
-  epsilon slow hepsilon hepsilon_one hslow
+local notation "strip" => (movingStripData U a b cL cR ha hcL hcR
+  epsilon slow hepsilon hepsilon_one hslow)
 
-local notation "slowStrip" => PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen
-  epsilon slow hepsilon hepsilon_one hslow
+local notation "slowStrip" => (PhysicalMeanDomain.localSlowStripData U.carrier U.isOpen
+  epsilon slow hepsilon hepsilon_one hslow)
 
 include ha in
 /-- The normalized bump and sign for the actual similarity gauge. -/

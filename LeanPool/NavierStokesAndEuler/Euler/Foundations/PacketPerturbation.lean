@@ -11,6 +11,7 @@ public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import LeanPool.NavierStokesAndEuler.Euler.Foundations.PacketGrowth
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 Relative perturbation estimates for the finite-dimensional scalar ODE in the
@@ -18,6 +19,10 @@ Euler packet proposal.  These results do not assert the PDE packet lemma.
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 noncomputable section
 
@@ -48,10 +53,10 @@ theorem integral_absorb
   have hKi := mul_le_mul_of_nonneg_left hi hK
   have hKc : K * (c - a) ≤ 1 / 2 := by
     have hm := mul_le_mul_of_nonneg_left hc.2 hK
-    linarith
+    linarith only [hsmall, hm]
   have hmaxn : 0 ≤ g c := hgn c hc
   have hscaled := mul_le_mul_of_nonneg_right hKc hmaxn
-  have hgc : g c ≤ 2 * A := by linarith [hineq c hc]
+  have hgc : g c ≤ 2 * A := by linarith only [hKi, hscaled, hineq, hc, hineq c hc]
   intro t ht
   exact (hmax ht).trans hgc
 
@@ -114,7 +119,7 @@ theorem forced_wronskian_integral
   have hi := intervalIntegral.integral_eq_sub_of_hasDerivAt
     (fun s hs => forced_wronskian_derivative (hu s (hsubset hs)) (hfu s (hsubset hs))
       (hY s (hsubset hs)) (hfY s (hsubset hs))) hint
-  linarith
+  linarith only [hi]
 
 /-- Variation of constants from two homogeneous solutions whose Wronskian
 flux is normalized to one.  This handles forcing in both state components. -/
@@ -145,8 +150,8 @@ theorem forced_variation_of_constants
   dsimp only
   rw [← hWu, ← hWv]
   constructor
-  · linarith [congrArg (fun r : ℝ => r * Y t) hW]
-  · linarith [congrArg (fun r : ℝ => r * Y₁ t) hW]
+  · linarith only [hW, congrArg (fun r : ℝ => r * Y t) hW]
+  · linarith only [hW, congrArg (fun r : ℝ => r * Y₁ t) hW]
 
 /-- First displacement component of the scalar fundamental propagator. -/
 def kernel11 (D u u₁ v v₁ : ℝ → ℝ) (t s : ℝ) : ℝ :=
@@ -277,7 +282,7 @@ theorem equation30_kernel_bound
         (hfluxU r (hs.trans hr.1)) (hfluxV r (hs.trans hr.1))).2)
   constructor
   · have hb := hlin (D s * V₁ s) (-(D s * U₁ s))
-    have hfirst : D s * V₁ s * U s + -(D s * U₁ s) * V s = 1 := by linarith [hW]
+    have hfirst : D s * V₁ s * U s + -(D s * U₁ s) * V s = 1 := by linear_combination hW
     have hsecond : D s * V₁ s * U₁ s + -(D s * U₁ s) * V₁ s = 0 := by ring
     rw [hfirst, hsecond] at hb
     norm_num at hb
@@ -285,7 +290,7 @@ theorem equation30_kernel_bound
     congr 2 <;> dsimp [kernel11, kernel21, D] <;> ring
   · have hb := hlin (-(D s * V s)) (D s * U s)
     have hfirst : -(D s * V s) * U s + D s * U s * V s = 0 := by ring
-    have hsecond : -(D s * V s) * U₁ s + D s * U s * V₁ s = 1 := by linarith [hW]
+    have hsecond : -(D s * V s) * U₁ s + D s * U s * V₁ s = 1 := by linear_combination hW
     rw [hfirst, hsecond] at hb
     norm_num at hb
     convert! hb using 1
@@ -300,7 +305,7 @@ theorem two_column_bound {a b c d x y C : ℝ}
   simp only [abs_mul] at hfirst hsecond
   have hx := mul_le_mul_of_nonneg_right h1 (abs_nonneg x)
   have hy := mul_le_mul_of_nonneg_right h2 (abs_nonneg y)
-  linarith
+  linarith only [hfirst, hsecond, hx, hy]
 
 /-- Passing from Duhamel's formula and relative kernel bounds to a scalar
 relative integral inequality, with the forcing in both components. -/
@@ -351,7 +356,7 @@ theorem kernel_integral_bound
       |∫ s in a..b, K11 s * f s + K12 s * g s| := by rw [hy]; exact abs_add_le _ _
   have hsecond : |y₁| ≤ |K21 a * y0 + K22 a * y₁0| +
       |∫ s in a..b, K21 s * f s + K22 s * g s| := by rw [hy₁]; exact abs_add_le _ _
-  linarith
+  linarith only [hmono, hI, hbase, hfirst, hsecond]
 
 /-- Duhamel's inequality for the exact scalar ODE, measured relative to the
 zero-slope reference solution.  The forcing may occur in both components. -/
@@ -388,7 +393,8 @@ theorem equation30_forced_bound
   have hV₁c : ContinuousOn V₁ (Icc a b) :=
     fun t ht => (equation30_second_derivative (hfluxV t (ha.trans
         ht.1))).continuousAt.continuousWithinAt
-  have hDc : ContinuousOn D (Icc a b) := by fun_prop
+  have hDc : ContinuousOn D (Icc a b) :=
+    (continuous_const.add ((continuous_const.mul (continuous_pow 2)).pow 2)).continuousOn
   have hW : U a * (D a * V₁ a) - (D a * U₁ a) * V a = 1 := by
     have hw := flux_wronskian_constant
       (a := 0) (b := a) (D := D) (c := c)
@@ -468,9 +474,10 @@ theorem equation30_perturbed_bound
       ht.1)).continuousAt.continuousWithinAt
   have hYc : ContinuousOn Y (Icc a b) := fun t ht => (hY t ht).continuousAt.continuousWithinAt
   have hY₁c : ContinuousOn Y₁ (Icc a b) := continuousOn_of_flux
-    (D := fun s => 1 + (ε ^ 2 * s ^ 2) ^ 2) (by fun_prop)
+    (D := fun s => 1 + (ε ^ 2 * s ^ 2) ^ 2)
+    (continuous_const.add ((continuous_const.mul (continuous_pow 2)).pow 2)).continuousOn
     (fun t ht => (hfluxY t ht).continuousAt.continuousWithinAt)
-    (fun _ _ => ne_of_gt (by positivity))
+    (fun _ _ => ne_of_gt (add_pos_of_pos_of_nonneg one_pos (sq_nonneg _)))
   have hNc := hYc.abs.add hY₁c.abs
   have hforcingBound := equation30_forced_bound hε hεsmall hΘ ha hb hU hV hfluxU hfluxV
     hU0 hU₁0 hV₁0 hY hfluxY hfc hgc
@@ -499,7 +506,8 @@ theorem equation30_perturbed_bound
     rw [intervalIntegral.integral_const_mul] at hi
     have hUt : 0 < U t := hUp t (ha.trans ht.1)
     have hscaled := mul_le_mul_of_nonneg_left hi
-      (show 0 ≤ 20 * Θ ^ 8 * U t by positivity)
+      (mul_nonneg (mul_nonneg (by norm_num : (0 : ℝ) ≤ 20) (pow_nonneg (zero_le_one.trans hΘ) 8))
+        hUt.le)
     calc
       |Y t| + |Y₁ t| ≤ 20 * Θ ^ 8 * (U t / U a) * (|Y a| + |Y₁ a|) +
           20 * Θ ^ 8 * U t * ∫ s in a..t, (|f s| + |g s|) / U s := hforcingBound t ht
@@ -510,8 +518,9 @@ theorem equation30_perturbed_bound
   have hresult := relative_integral_absorb
     (f := fun t => |Y t| + |Y₁ t|) (U := U)
     (A := 20 * Θ ^ 8 * (|Y a| + |Y₁ a|) / U a) (K := 20 * Θ ^ 8 * δ)
-    hab hNc hUc (fun _ _ => by positivity) (fun t ht => hUp t (ha.trans ht.1))
-    (by positivity) hsmall hineq
+    hab hNc hUc (fun _ _ => add_nonneg (abs_nonneg _) (abs_nonneg _))
+    (fun t ht => hUp t (ha.trans ht.1))
+    (mul_nonneg (mul_nonneg (by norm_num) (pow_nonneg (zero_le_one.trans hΘ) 8)) hδ) hsmall hineq
   intro t ht
   convert! hresult t ht using 1
   ring
@@ -590,13 +599,18 @@ theorem equation30_perturbed_difference_bound
     (intervalIntegrable_const : IntervalIntegrable
       (fun _ : ℝ => 40 * δ * Θ ^ 8 * (|Y a| + |Y₁ a|) / U a) MeasureTheory.volume a t) hpoint
   simp only [intervalIntegral.integral_const, smul_eq_mul] at hi
-  have hscaled := mul_le_mul_of_nonneg_left hi (show 0 ≤ 20 * Θ ^ 8 * U t by positivity)
-  have hduration : t - a ≤ Θ := by linarith [ht.2]
+  have hΘ0 : 0 ≤ Θ := zero_le_one.trans hΘ
+  have hUt : 0 ≤ U t := (hUp t (ha.trans ht.1)).le
+  have hscaled := mul_le_mul_of_nonneg_left hi
+    (show 0 ≤ 20 * Θ ^ 8 * U t from mul_nonneg (mul_nonneg (by norm_num) (pow_nonneg hΘ0 8)) hUt)
+  have hduration : t - a ≤ Θ := by linarith only [ht.2, hb, ha]
   have hlast : 20 * Θ ^ 8 * U t *
       ((t - a) * (40 * δ * Θ ^ 8 * (|Y a| + |Y₁ a|) / U a)) ≤
       800 * δ * Θ ^ 17 * (U t / U a) * (|Y a| + |Y₁ a|) := by
     have hm := mul_le_mul_of_nonneg_left hduration
-      (show 0 ≤ 800 * δ * Θ ^ 16 * (U t / U a) * (|Y a| + |Y₁ a|) by positivity)
+      (show 0 ≤ 800 * δ * Θ ^ 16 * (U t / U a) * (|Y a| + |Y₁ a|) from
+        mul_nonneg (mul_nonneg (mul_nonneg (mul_nonneg (by norm_num) hδ) (pow_nonneg hΘ0 16))
+          (div_nonneg hUt hUa.le)) (add_nonneg (abs_nonneg _) (abs_nonneg _)))
     convert! hm using 1 <;> ring
   exact (hforced t ht).trans (add_le_add le_rfl (hscaled.trans hlast))
 
@@ -630,10 +644,11 @@ theorem equation30_relative_error_order29
     ∀ t ∈ Icc 0 b,
       |Y t - Z t| + |Y₁ t - Z₁ t| ≤ 800 * e * Θ ^ 29 * (1 + lam) * U t := by
   have hΘ0 : 0 ≤ Θ := le_trans zero_le_one hΘ
-  have hδ : 0 ≤ e * Θ ^ 12 := by positivity
+  have hδ : 0 ≤ e * Θ ^ 12 := mul_nonneg he (pow_nonneg hΘ0 12)
   have hsmall' : 20 * Θ ^ 8 * (e * Θ ^ 12) * (b - 0) ≤ 1 / 2 := by
-    have hm := mul_le_mul_of_nonneg_left hb (show 0 ≤ 20 * e * Θ ^ 20 by positivity)
-    linarith
+    have hm := mul_le_mul_of_nonneg_left hb
+      (show 0 ≤ 20 * e * Θ ^ 20 from mul_nonneg (mul_nonneg (by norm_num) he) (pow_nonneg hΘ0 20))
+    linarith only [hm, hsmall]
   have hdiff := equation30_perturbed_difference_bound hε hεsmall hΘ
     (by norm_num : (0 : ℝ) ≤ 0) hb0 hb hδ hsmall'
     hU hV hfluxU hfluxV hU0 hU₁0 hV₁0 hY hfluxY hZ hfluxZ hfc hgc hforcing

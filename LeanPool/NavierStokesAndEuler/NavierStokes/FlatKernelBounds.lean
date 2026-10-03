@@ -12,6 +12,7 @@ import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Inv
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Sqrt
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Derivative bounds for the normalized flat primitive kernel
@@ -111,8 +112,8 @@ def Expr.pow (e : Expr) : ℕ → Expr
 @[simp] theorem Expr.eval_pow (e : Expr) (n : ℕ) (b : ℝ → ℝ) (x t : ℝ) :
     (e.pow n).eval b x t = (e.eval b x t) ^ n := by
   induction n with
-  | zero => simp [Expr.pow, Expr.eval]
-  | succ n ih => simp [Expr.pow, Expr.eval, ih, pow_succ]
+  | zero => simp only [pow, eval, pow_zero]
+  | succ n ih => simp only [pow, eval, ih, pow_succ]
 
 /-- Diff used in flat kernel bounds. -/
 def Expr.diff : Expr → Expr
@@ -134,7 +135,7 @@ theorem Expr.hasDerivAt_eval (e : Expr) {b : ℝ → ℝ}
   | t => exact hasDerivAt_const x t
   | root => exact hasDerivAt_denominator ht
   | invRoot =>
-      simpa [Expr.diff, Expr.eval, Expr.eval_pow, neg_mul] using
+      simpa only [eval, diff, eval_pow, inv_pow, neg_mul, one_mul] using
         (hasDerivAt_inv_denominator (x := x) ht)
   | jet k =>
       have hk : HasDerivAt (iteratedDeriv k b)
@@ -152,7 +153,7 @@ theorem Expr.iteratedDeriv_eval (e : Expr) {b : ℝ → ℝ}
     iteratedDeriv n (fun x => e.eval b x t) =
       fun x => ((Expr.diff^[n]) e).eval b x t := by
   induction n with
-  | zero => simp
+  | zero => simp only [iteratedDeriv_zero, Function.iterate_zero, id_eq]
   | succ n ih =>
       rw [iteratedDeriv_succ, ih]
       ext x
@@ -241,19 +242,21 @@ theorem Expr.polynomialBound_of_jetBound (e : Expr) {b : ℝ → ℝ} {R : ℝ}
       ∀ y : ℝ, |y| ≤ R → |iteratedDeriv k b y| ≤ C) :
     PolynomialBound R (e.eval b) := by
   induction e with
-  | const c => exact ⟨|c|, 0, abs_nonneg c, by intro x t hx ht; simp [Expr.eval]⟩
-  | x => exact ⟨R, 0, hR, by intro x t hx ht; simpa [Expr.eval] using hx⟩
+  | const c => exact ⟨|c|, 0, abs_nonneg c, by intro x t hx ht; simp only [eval, pow_zero, mul_one,
+      Std.le_refl]⟩
+  | x => exact ⟨R, 0, hR, by intro x t hx ht; simpa only [eval, pow_zero, mul_one] using hx⟩
   | t =>
-      exact ⟨1, 1, by norm_num, by intro x t hx ht; simp [Expr.eval, abs_of_nonneg ht]⟩
+      exact ⟨1, 1, by norm_num, by intro x t hx ht; simp only [eval, abs_of_nonneg ht, pow_one,
+          one_mul, le_add_iff_nonneg_left, zero_le_one]⟩
   | root =>
       refine ⟨1 + R ^ 2, 1, by positivity, ?_⟩
       intro x t hx ht
-      simpa [Expr.eval, abs_of_pos (denominator_pos ht)] using
+      simpa only [eval, abs_of_pos (denominator_pos ht), pow_one] using
         denominator_le_polynomial hR hx ht
   | invRoot =>
       refine ⟨1, 0, by norm_num, ?_⟩
       intro x t hx ht
-      simpa [Expr.eval] using (abs_inv_denominator_le_one (x := x) ht)
+      simpa only [eval, abs_inv, pow_zero, mul_one] using (abs_inv_denominator_le_one (x := x) ht)
   | jet k =>
       obtain ⟨C, hC, hbound⟩ := hjets k (le_refl _)
       refine ⟨C, 0, hC, ?_⟩
@@ -312,17 +315,18 @@ theorem Expr.continuousOn_eval_t (e : Expr) {b : ℝ → ℝ}
 theorem Expr.jetOrder_pow_le (e : Expr) (n : ℕ) :
     (e.pow n).jetOrder ≤ e.jetOrder := by
   induction n with
-  | zero => simp [Expr.pow, Expr.jetOrder]
+  | zero => simp only [pow, jetOrder, zero_le]
   | succ n ih => exact max_le ih le_rfl
 
 theorem Expr.jetOrder_diff_le (e : Expr) : e.diff.jetOrder ≤ e.jetOrder + 1 := by
   induction e with
-  | const c => simp [Expr.diff, Expr.jetOrder]
-  | x => simp [Expr.diff, Expr.jetOrder]
-  | t => simp [Expr.diff, Expr.jetOrder]
-  | root => simp [Expr.diff, Expr.jetOrder]
-  | invRoot => simp [Expr.diff, Expr.jetOrder, Expr.pow]
-  | jet k => simp [Expr.diff, Expr.jetOrder, Expr.pow]
+  | const c => simp only [diff, jetOrder, zero_add, zero_le]
+  | x => simp only [diff, jetOrder, zero_add, zero_le]
+  | t => simp only [diff, jetOrder, zero_add, zero_le]
+  | root => simp only [diff, jetOrder, max_self, zero_add, zero_le]
+  | invRoot => simp only [diff, pow, jetOrder, max_self, zero_add, zero_le]
+  | jet k => simp only [diff, pow, jetOrder, max_self, le_add_iff_nonneg_left, zero_le,
+      sup_of_le_left, Std.le_refl]
   | add e f ihe ihf =>
       exact max_le (ihe.trans (Nat.add_le_add_right (le_max_left _ _) 1))
         (ihf.trans (Nat.add_le_add_right (le_max_right _ _) 1))
@@ -336,7 +340,7 @@ theorem Expr.jetOrder_diff_le (e : Expr) : e.diff.jetOrder ≤ e.jetOrder + 1 :=
 theorem Expr.jetOrder_iterate_diff_le (e : Expr) (n : ℕ) :
     ((Expr.diff^[n]) e).jetOrder ≤ e.jetOrder + n := by
   induction n with
-  | zero => simp
+  | zero => simp only [Function.iterate_zero, id_eq, add_zero, Std.le_refl]
   | succ n ih =>
       rw [Function.iterate_succ_apply']
       exact ((Expr.diff^[n]) e).jetOrder_diff_le.trans
@@ -351,7 +355,7 @@ theorem kernelExpr_jetOrder (j : ℕ) : (kernelExpr j).jetOrder = 0 := by
   have hinv := Expr.invRoot.jetOrder_pow_le 3
   have hroot' : (Expr.root.pow j).jetOrder = 0 := Nat.eq_zero_of_le_zero hroot
   have hinv' : (Expr.invRoot.pow 3).jetOrder = 0 := Nat.eq_zero_of_le_zero hinv
-  simp [kernelExpr, Expr.jetOrder, hroot', hinv']
+  simp only [kernelExpr, Expr.jetOrder, hroot', hinv', max_self]
 
 /-- Kernel, given by `(1 / 2 : ℝ) * Real.exp (-c * t) * (denominator x t ^ j / denominator x t ^
 3) * b (coordinate x t)`. -/
@@ -361,14 +365,15 @@ def kernel (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) : ℝ :=
 
 theorem kernel_eq_expr (c : ℝ) (j : ℕ) (b : ℝ → ℝ) (x t : ℝ) :
     kernel c j b x t = ((1 / 2 : ℝ) * Real.exp (-c * t)) * (kernelExpr j).eval b x t := by
-  simp [kernel, kernelExpr, Expr.eval, Expr.eval_pow, div_eq_mul_inv, inv_pow, mul_assoc]
+  simp only [kernel, div_eq_mul_inv, one_mul, neg_mul, mul_assoc, kernelExpr, Expr.eval,
+      Expr.eval_pow, inv_pow, iteratedDeriv_zero]
 
 theorem Expr.iteratedDeriv_const_mul_eval (e : Expr) {b : ℝ → ℝ}
     (hb : ContDiff ℝ ∞ b) {t : ℝ} (ht : 0 ≤ t) (w : ℝ) (n : ℕ) :
     iteratedDeriv n (fun x => w * e.eval b x t) =
       fun x => w * ((Expr.diff^[n]) e).eval b x t := by
   induction n with
-  | zero => simp
+  | zero => simp only [iteratedDeriv_zero, Function.iterate_zero, id_eq]
   | succ n ih =>
       rw [iteratedDeriv_succ, ih]
       ext x
@@ -406,7 +411,7 @@ theorem unweighted_iteratedDeriv_bound {b : ℝ → ℝ} (hb : ContDiff ℝ ∞ 
   have hcore : (fun y => (denominator y t ^ j / denominator y t ^ 3) *
       b (coordinate y t)) = fun y => (kernelExpr j).eval b y t := by
     funext y
-    simp [kernelExpr, Expr.eval, div_eq_mul_inv, inv_pow]
+    simp only [div_eq_mul_inv, kernelExpr, Expr.eval, Expr.eval_pow, inv_pow, iteratedDeriv_zero]
   rw [hcore, (kernelExpr j).iteratedDeriv_eval hb ht n]
   exact hbound x t hx ht
 

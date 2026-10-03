@@ -47,7 +47,7 @@ noncomputable def character (j : ℤ) (φ : ℝ) : ℂ :=
   Complex.exp ((j : ℂ) * (φ : ℂ) * Complex.I)
 
 @[simp] theorem character_zero (φ : ℝ) : character 0 φ = 1 := by
-  simp [character]
+  simp only [character, Int.cast_zero, zero_mul, Complex.exp_zero]
 
 theorem character_add (i j : ℤ) (φ : ℝ) :
     character (i + j) φ = character i φ * character j φ := by
@@ -110,7 +110,8 @@ theorem evaluate_mul {α : Type*} (c d : Coefficients α) (x : α) (φ : ℝ) :
 
 theorem evaluate_single {α : Type*} (j : ℤ) (a : α → ℂ) (x : α) (φ : ℝ) :
     evaluate (AddMonoidAlgebra.single j a : Coefficients α) x φ = a x * character j φ := by
-  simp [evaluate, Coefficients.sum]
+  simp only [evaluate, Coefficients.sum, AddMonoidAlgebra.coeff_single, Pi.zero_apply, zero_mul,
+      Finsupp.sum_single_index]
 
 theorem evaluate_over {α : Type*} (c : Coefficients α) (s : Finset ℤ)
     (hs : c.support ⊆ s) (x : α) (φ : ℝ) :
@@ -118,7 +119,7 @@ theorem evaluate_over {α : Type*} (c : Coefficients α) (s : Finset ℤ)
   apply Finset.sum_subset hs
   intro j hj hnot
   rw [Finsupp.notMem_support_iff.mp hnot]
-  simp
+  simp only [Pi.zero_apply, zero_mul]
 
 /-- The slow/auxiliary parameter is `x`. Its coefficient functions have
 no angular input. The angular frequency is the literal integer `j*kp`. -/
@@ -174,7 +175,8 @@ theorem field_angular_periodic {α : Type*} (c : Coefficients α) (k : ℝ)
 theorem integral_character (j : ℤ) :
     (∫ θ in (0 : ℝ)..period, character j θ) = if j = 0 then (period : ℂ) else 0 := by
   by_cases hj : j = 0
-  · simp [hj, period]
+  · simp only [hj, character_zero, period, intervalIntegral.integral_const, sub_zero,
+      Complex.real_smul, Complex.ofReal_mul, Complex.ofReal_ofNat, mul_one, ↓reduceIte]
   · rw [ite_eq_right hj]
     have hc : (j : ℂ) * Complex.I ≠ 0 := mul_ne_zero (Int.cast_ne_zero.mpr hj) Complex.I_ne_zero
     have he : character j = fun θ : ℝ => Complex.exp (((j : ℂ) * Complex.I) * θ) := by
@@ -188,7 +190,7 @@ theorem integral_character (j : ℤ) :
       unfold character
       congr 1
       ring
-    simp [hb]
+    simp only [hb, Complex.ofReal_zero, mul_zero, Complex.exp_zero, sub_self, zero_div]
 
 theorem angularMean_const_character (A : ℂ) (j : ℤ) :
     angularMean (fun θ => A * character j θ) = if j = 0 then A else 0 := by
@@ -197,7 +199,7 @@ theorem angularMean_const_character (A : ℂ) (j : ℤ) :
   · rw [ite_eq_left hj, ite_eq_left hj]
     have hp : (period : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr period_ne_zero
     field_simp
-  · simp [hj]
+  · simp only [hj, ↓reduceIte, mul_zero]
 
 theorem angularMean_sum {ι : Type*} (s : Finset ι) (f : ι → ℝ → ℂ)
     (hf : ∀ i ∈ s, Continuous (f i)) :
@@ -215,9 +217,9 @@ theorem angularMean_field {α : Type*} (c : Coefficients α) (k : ℝ) (Φ : α 
   rw [angularMean_sum c.support _ (fun j _ => continuous_const.fun_mul (character_continuous _))]
   simp only [angularMean_const_character, mul_eq_zero, hkp, or_false]
   by_cases h0 : 0 ∈ c.support
-  · simp [h0]
+  · simp only [Finset.sum_ite_eq', h0, ↓reduceIte, character_zero, mul_one]
   · have hc : c 0 = 0 := Finsupp.notMem_support_iff.mp h0
-    simp [h0, hc]
+    simp only [Finset.sum_ite_eq', h0, ↓reduceIte, hc, Pi.zero_apply]
 
 /-- Coefficient mass, given by `∑ j ∈ c.support, ‖c j x‖`. -/
 noncomputable def coefficientMass {α : Type*} (c : Coefficients α) (x : α) : ℝ :=
@@ -254,9 +256,9 @@ theorem convolution_apply {α : Type*} (c d : Coefficients α) (m : ℤ) (x : α
   simp_rw [show ∀ l : ℤ, j + l = m ↔ l = m - j by intro l; omega]
   rw [Finset.sum_ite_eq']
   by_cases hm : m - j ∈ d.support
-  · simp [hm]
+  · simp only [hm, ↓reduceIte]
   · have hd : d (m - j) = 0 := Finsupp.notMem_support_iff.mp hm
-    simp [hm, hd]
+    simp only [hm, ↓reduceIte, hd, Pi.zero_apply, mul_zero]
 
 theorem angularMean_product {α : Type*} (c d : Coefficients α) (k : ℝ) (Φ : α → ℝ)
     {kp : ℤ} (hkp : kp ≠ 0) (x : α) :
@@ -272,7 +274,8 @@ theorem angularMean_product {α : Type*} (c d : Coefficients α) (k : ℝ) (Φ :
 /-- Conjugate reverse, constructed using `AddMonoidAlgebra.ofCoeff`. -/
 noncomputable def conjugateReverse {α : Type*} (c : Coefficients α) : Coefficients α :=
   AddMonoidAlgebra.ofCoeff <| Finsupp.equivMapDomain (Equiv.neg ℤ)
-    (Finsupp.mapRange (fun a : α → ℂ => fun x => conj (a x)) (by ext x; simp) c.coeff)
+    (Finsupp.mapRange (fun a : α → ℂ => fun x => conj (a x)) (by ext x; simp only [Pi.zero_apply,
+        map_zero]) c.coeff)
 
 @[simp] theorem conjugateReverse_apply {α : Type*} (c : Coefficients α) (j : ℤ) (x : α) :
     conjugateReverse c j x = conj (c (-j) x) := rfl
@@ -281,7 +284,8 @@ theorem evaluate_conjugateReverse {α : Type*} (c : Coefficients α) (x : α) (�
     evaluate (conjugateReverse c) x φ = conj (evaluate c x φ) := by
   unfold evaluate conjugateReverse Coefficients.sum
   simp only []
-  rw [Finsupp.sum_equivMapDomain, Finsupp.sum_mapRange_index (fun _ => by simp)]
+  rw [Finsupp.sum_equivMapDomain, Finsupp.sum_mapRange_index (fun _ => by simp only [Pi.zero_apply,
+      Equiv.neg_apply, zero_mul])]
   simp only [Equiv.neg_apply, Finsupp.sum, map_sum, map_mul, character_neg]
 
 /-- Conjugate symmetric, given by `∀ j x, c (-j) x = conj (c j x)`. -/
@@ -295,7 +299,7 @@ theorem conjugateReverse_eq_self {α : Type*} {c : Coefficients α}
   intro j
   funext x
   rw [conjugateReverse_apply, hc j x]
-  simp
+  simp only [RingHomCompTriple.comp_apply, RingHom.id_apply]
 
 theorem evaluate_conj_eq_self {α : Type*} {c : Coefficients α}
     (hc : ConjugateSymmetric c) (x : α) (φ : ℝ) : conj (evaluate c x φ) = evaluate c x φ := by
@@ -379,7 +383,7 @@ theorem band_single_zero {α : Type*} (a : α → ℂ) :
     BandLimited (AddMonoidAlgebra.single (0 : ℤ) a : Coefficients α) 0 := by
   intro j hj
   have hj0 : j = 0 := Finset.mem_singleton.mp (Finsupp.support_single_subset hj)
-  simp [hj0]
+  simp only [hj0, Int.natAbs_zero, Std.le_refl]
 
 /-- Constant coefficient, given by `AddMonoidAlgebra.single 0 a`. -/
 noncomputable def constantCoefficient {α : Type*} (a : α → ℂ) : Coefficients α :=
@@ -498,7 +502,8 @@ noncomputable def derivativeCoefficient (V : E → E) (k : ℝ) (Φ : E → ℝ)
 theorem derivativeCoefficient_zero (V : E → E) (k : ℝ) (Φ : E → ℝ) (j : ℤ) :
     derivativeCoefficient V k Φ j (0 : E → ℂ) = 0 := by
   funext x
-  simp [derivativeCoefficient, HarmonicCalculus.along]
+  simp only [derivativeCoefficient, HarmonicCalculus.along, fderiv_zero, Pi.zero_apply, zero_apply,
+      mul_zero, add_zero]
 
 /-- Differentiate, constructed using `AddMonoidAlgebra.ofCoeff`. -/
 noncomputable def differentiate (V : E → E) (k : ℝ) (Φ : E → ℝ)
@@ -537,7 +542,7 @@ theorem wave_differentiate_expansion (V : E → E) (k : ℝ) (Φ : E → ℝ)
       intro j hj hnot
       change HarmonicCalculus.mode (k * (j : ℝ)) Φ (differentiate V k Φ c j) x = 0
       rw [Finsupp.notMem_support_iff.mp hnot]
-      simp [HarmonicCalculus.mode])
+      simp only [HarmonicCalculus.mode, Pi.zero_apply, zero_mul])
   exact hs
 
 /-- Differentiating the actual finite wave applies the full product rule
@@ -640,9 +645,10 @@ theorem iteratedAlong_wave {U : Set E} (hU : IsOpen U)
     intro x hx
     change HarmonicCalculus.along V (iteratedAlong V n (wave c k Φ)) x = _
     rw [HarmonicCalculus.along_congr hU ih hx]
-    exact along_wave V k Φ _ ((hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp))
+    exact along_wave V k Φ _ ((hΦ.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp only [
+        ne_eq, WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
       (fun j hj => ((iteratedCoefficients_contDiffOn hU hV hΦ k hc n j hj).contDiffAt
-        (hU.mem_nhds hx)).differentiableAt (by simp))
+        (hU.mem_nhds hx)).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
 
 end Derivatives
 
@@ -654,12 +660,12 @@ theorem character_hasDerivAt (j : ℤ) (θ : ℝ) :
   have he : ∀ x : ℝ, Complex.exp (c * (x : ℂ)) = character j x := by
     intro x
     apply congrArg Complex.exp
-    dsimp [c]
+    dsimp only [c]
     ring
   have hd := hc.cexp
   simp only [he] at hd
   convert! hd using 1
-  dsimp [c]
+  dsimp only [c]
   ring
 
 /-- Angular differentiate, constructed using `AddMonoidAlgebra.ofCoeff`. -/
@@ -672,7 +678,7 @@ noncomputable def angularDifferentiate {α : Type*} (kp : ℤ) (c : Coefficients
     apply hj
     have hc : c j = 0 := Finsupp.notMem_support_iff.mp hn
     funext x
-    simp [hc])
+    simp only [Int.cast_mul, hc, Pi.zero_apply, mul_zero])
 
 @[simp] theorem angularDifferentiate_apply {α : Type*} (kp : ℤ) (c : Coefficients α)
     (j : ℤ) (x : α) :

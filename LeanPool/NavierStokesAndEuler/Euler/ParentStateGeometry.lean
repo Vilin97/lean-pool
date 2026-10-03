@@ -97,13 +97,14 @@ def geometryFrameOfPhysicalUpdate (τ : ℝ) (hτ : 0 ≤ τ)
     (hM : ∀ t ∈ Icc τ N.T, ‖G.centerStrain t‖ ≤ CM)
     (hH : ∀ t ∈ Icc τ N.T, ‖G.centerCurvature t‖ ≤ CH)
     (hpacket : ∀ t ∈ Icc τ N.T,
-      ‖fderiv ℝ (w t) 0 - c • rankOne ℝ (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t)‖ ≤
+      ‖fderiv ℝ (w t) 0 - c • rankOne ℝ (E := Space) (F := Space)
+        (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t)‖ ≤
           error) :
     ParentFrame (N.transverseData mNew hmNew RNew SNew hSNew) τ :=
   G.geometryFrameOfCenterExpansion m hm R S hS
     (N.transverseData mNew hmNew RNew SNew hSNew) hTime τ hτ η hη w c CM CH K error
     hCM hK he hMK hHK hM hH
-    (G.center_update_of_odd N hTime u w hu hw hGvelocity hNvelocity hGodd hNodd) hpacket
+    (G.center_update_of_odd N hTime u w hu hw hGvelocity hNvelocity hGodd hNodd :) hpacket
 
 end Parent
 end EulerParentPacketFrames
@@ -134,10 +135,11 @@ variable (G : Parent)
 theorem forward_primary_center_term (η : U) (δ : ℝ) (hδ : 0 < δ) (α k : ℝ)
     (t : Icc (0 : ℝ) G.T) (Y : Space → Space) (hY : Y 0 = 0) :
     (α*deriv (profile δ) (k*⟪m,Y 0⟫_ℝ)) •
-      rankOne ℝ (EulerPacketForwardFactorization.canonicalVelocity
+      rankOne ℝ (E := Space) (F := Space) (EulerPacketForwardFactorization.canonicalVelocity
         (G.transverseData m hm R S hS) η t (Y 0))
         ((G.transverseData m hm R S hS).normal.field t (Y 0)) =
-      (α/δ) • rankOne ℝ (G.sourceVelocity m hm R S hS η t) (G.sourceNormal m t) := by
+      (α/δ) • rankOne ℝ (E := Space) (F := Space) (G.sourceVelocity m hm R S hS η t)
+        (G.sourceNormal m t) := by
   rw [hY]
   simp only [inner_zero_right,mul_zero,profile_deriv_zero δ hδ,
     EulerPacketForwardFactorization.canonicalVelocity,innerCutoff_zero,one_smul,div_eq_mul_inv]
@@ -151,9 +153,10 @@ theorem joined_primary_center_term
     (δ : ℝ) (hδ : 0 < δ) (α k : ℝ)
     (t : Icc (0 : ℝ) G.T) (Y : Space → Space) (hY : Y 0 = 0) :
     (α*deriv (profile δ) (k*⟪m,Y 0⟫_ℝ)) •
-      rankOne ℝ (EulerPacketPrimaryFactorization.canonicalVelocity s hs hsT B ξ hcut t (Y 0))
+      rankOne ℝ (E := Space) (F := Space)
+        (EulerPacketPrimaryFactorization.canonicalVelocity s hs hsT B ξ hcut t (Y 0))
         ((G.transverseData m hm R S hS).normal.field t (Y 0)) =
-      (α/δ) • rankOne ℝ
+      (α/δ) • rankOne ℝ (E := Space) (F := Space)
         (G.sourceVelocity m hm R S hS (B.coefficients.labelCoordinate 0 ξ ⟨0,le_rfl,hs.le⟩) t)
         (G.sourceNormal m t) := by
   rw [hY]
@@ -186,7 +189,7 @@ hSNew) τ`. -/
 def forwardGeometryFrame (η : U) (hη : η ≠ 0)
     (hsource20 : ∀ t : Icc (0 : ℝ) G.T, τ ≤ (t : ℝ) →
       ‖fderiv ℝ (w t) 0-(α*deriv (profile δ) (k*⟪m,Y t 0⟫_ℝ)) •
-        rankOne ℝ (EulerPacketForwardFactorization.canonicalVelocity
+        rankOne ℝ (E := Space) (F := Space) (EulerPacketForwardFactorization.canonicalVelocity
           (G.transverseData m hm R S hS) η t (Y t 0))
           ((G.transverseData m hm R S hS).normal.field t (Y t 0))‖ ≤ error) :
     ParentFrame (N.transverseData mNew hmNew RNew SNew hSNew) τ := by
@@ -207,7 +210,8 @@ def joinedGeometryFrame
     (ξ : U) (hξ : ξ ≠ 0) (hcut : tsupport innerCutoff ⊆ S)
     (hsource20 : ∀ t : Icc (0 : ℝ) G.T, τ ≤ (t : ℝ) →
       ‖fderiv ℝ (w t) 0-(α*deriv (profile δ) (k*⟪m,Y t 0⟫_ℝ)) •
-        rankOne ℝ (EulerPacketPrimaryFactorization.canonicalVelocity s hs hsT B ξ hcut t (Y t 0))
+        rankOne ℝ (E := Space) (F := Space)
+          (EulerPacketPrimaryFactorization.canonicalVelocity s hs hsT B ξ hcut t (Y t 0))
           ((G.transverseData m hm R S hS).normal.field t (Y t 0))‖ ≤ error) :
     ParentFrame (N.transverseData mNew hmNew RNew SNew hSNew) τ := by
   apply G.geometryFrameOfPhysicalUpdate N hTime u w hu hw hGvelocity hNvelocity hGodd hNodd
@@ -283,7 +287,7 @@ def forwardRenewal (ξ : U) (hξ : ξ ≠ 0)
     (hsource : ∀ t : Icc (0 : ℝ) A.T, τ ≤ (t : ℝ) →
       ‖fderiv ℝ (S.velocityIncrement T t) 0 -
         (α*deriv (profile δ) (k*⟪m,S.evolution.inverse.normalized t 0⟫_ℝ)) •
-          rankOne ℝ (EulerPacketForwardFactorization.canonicalVelocity
+          rankOne ℝ (E := Space) (F := Space) (EulerPacketForwardFactorization.canonicalVelocity
             (A.transverseData m hm J support hSupport) ξ t (S.evolution.inverse.normalized t 0))
             ((A.transverseData m hm J support hSupport).normal.field t
               (S.evolution.inverse.normalized t 0))‖ ≤ error) :
@@ -303,8 +307,9 @@ def joinedRenewal (s : ℝ) (hs : 0 < s) (hsT : s < A.T)
     (hsource : ∀ t : Icc (0 : ℝ) A.T, τ ≤ (t : ℝ) →
       ‖fderiv ℝ (S.velocityIncrement T t) 0 -
         (α*deriv (profile δ) (k*⟪m,S.evolution.inverse.normalized t 0⟫_ℝ)) •
-          rankOne ℝ (EulerPacketPrimaryFactorization.canonicalVelocity s hs hsT H ξ hcut t
-            (S.evolution.inverse.normalized t 0))
+          rankOne ℝ (E := Space) (F := Space)
+            (EulerPacketPrimaryFactorization.canonicalVelocity s hs hsT H ξ hcut t
+              (S.evolution.inverse.normalized t 0))
             ((A.transverseData m hm J support hSupport).normal.field t
               (S.evolution.inverse.normalized t 0))‖ ≤ error) :
     ParentFrame (N.transverseData mNext hmNext JNext supportNext hSupportNext) τ :=

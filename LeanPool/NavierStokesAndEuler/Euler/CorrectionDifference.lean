@@ -159,6 +159,19 @@ def differenceRemainder {q : ℕ} {T : Type*} [TopologicalSpace T]
     algebraicBilinear period hq (fun i => coefficientSobolevOperator period ((D.quadratic i).jet t))
       (u-v) (D.approximation t+v)
 
+/-- The difference of two quadratic sources linearized about `z`, for a bilinear map `B₁ + B₂` and
+a composite linear map `C ∘ S`, in abstract normed spaces. -/
+theorem sub_linearize_expansion {X Y Z : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X]
+    [NormedAddCommGroup Y] [NormedSpace ℝ Y] [NormedAddCommGroup Z] [NormedSpace ℝ Z]
+    (B₁ B₂ : X →L[ℝ] X →L[ℝ] Y) (C : Z →L[ℝ] Y) (S : X →L[ℝ] Z) (r : Y) (z u v : X) :
+    (r + linearize (B₁ + B₂) (C.comp S) z u + (B₁ + B₂) u u) -
+        (r + linearize (B₁ + B₂) (C.comp S) z v + (B₁ + B₂) v v) =
+      B₁ (z + u) (u - v) +
+        (B₁ (u - v) (z + v) + C (S (u - v)) + B₂ (z + u) (u - v) + B₂ (u - v) (z + v)) := by
+  simp only [linearize_apply, add_apply, ContinuousLinearMap.comp_apply, map_add, map_sub,
+    sub_apply]
+  abel
+
 /-- Exact bilinear subtraction exposes one cancellable top transport and the actual lower-order
 difference. -/
 theorem rawSource_sub {q : ℕ} {T : Type*} [TopologicalSpace T]
@@ -169,16 +182,8 @@ theorem rawSource_sub {q : ℕ} {T : Type*} [TopologicalSpace T]
         (velocityComponents_norm D.κ D.direction D.scale_bound D.direction_bound) (D.approximation
             t+u) (u-v) +
       differenceRemainder period D hq t u v := by
-  let B := eulerBilinear period hq (velocityComponents D.κ D.direction)
-    (velocityComponents_norm D.κ D.direction D.scale_bound D.direction_bound)
-    (fun i => coefficientSobolevOperator period ((D.quadratic i).jet t))
-  let A := (coefficientSobolevOperator period (D.linear.jet t)).comp (truncateOperator period q)
-  change (D.residual t+linearize B A (D.approximation t) u+B u u) -
-    (D.residual t+linearize B A (D.approximation t) v+B v v)=_
-  dsimp only [B,A]
-  simp only [differenceRemainder,linearize_apply,eulerBilinear,add_apply,map_add,map_sub,sub_apply,
-    ContinuousLinearMap.comp_apply]
-  abel
+  -- Unification unfolds `rawSource` and `differenceRemainder` against the abstract identity.
+  apply sub_linearize_expansion
 
 /-- The actual algebraic quadratic term has an L² bound in its second input. -/
 theorem algebraic_norm {q : ℕ} (hq : 6 ≤ q) (C : Fin 3 → SmoothCoefficient period)
@@ -250,10 +255,10 @@ theorem differenceRemainder_norm {q : ℕ} {T : Type*} [TopologicalSpace T]
           d))‖+
       ‖value period (algebraicBilinear period hq C (D.approximation t+u) d)‖+
       ‖value period (algebraicBilinear period hq C d (D.approximation t+v))‖ := by
-    change ‖(_+_+_+_ : LiftL2 period)‖ ≤ _
-    exact (norm_add_le _ _).trans (add_le_add
-      ((norm_add_le _ _).trans (add_le_add (norm_add_le _ _) le_rfl)) le_rfl)
-  exact hsum.trans ((add_le_add (add_le_add (add_le_add htrans hlin) halg1) halg2).trans_eq (by
-      dsimp [d]; ring))
+    refine le_trans (le_of_eq ?_) norm_add₄_le
+    rfl
+  apply hsum.trans ((add_le_add (add_le_add (add_le_add htrans hlin) halg1) halg2).trans_eq ?_)
+  dsimp only [d]
+  ring
 
 end EulerCorrectionDifference

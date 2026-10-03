@@ -78,7 +78,7 @@ theorem directional_square_identity (A : SmoothL2Field ℝ) (v : Space) :
   change ⟪B.toLp,C.toLp⟫_ℝ = -⟪A.toLp,(C.directionalField v).toLp⟫_ℝ at hi
   rw [hs,hd] at hi
   change ‖S.toLp‖^2 = -3*⟪(scalarProduct A S).toLp,(B.directionalField v).toLp⟫_ℝ
-  linarith
+  linarith only [hi]
 
 theorem directional_square_norm (A : SmoothL2Field ℝ) (v : Space)
     (K : ℝ) (hK : ∀ x, ‖A.field x‖ ≤ K) :
@@ -95,7 +95,7 @@ theorem directional_square_norm (A : SmoothL2Field ℝ) (v : Space)
       _ ≤ 3*|⟪(scalarProduct A S).toLp,Z.toLp⟫_ℝ| := by
         rw [hi]
         have h := neg_le_abs ⟪(scalarProduct A S).toLp,Z.toLp⟫_ℝ
-        linarith
+        linarith only [h]
       _ ≤ 3*(‖(scalarProduct A S).toLp‖*‖Z.toLp‖) :=
         mul_le_mul_of_nonneg_left (abs_real_inner_le_norm _ _) (by norm_num)
       _ ≤ 3*((K*‖S.toLp‖)*‖Z.toLp‖) :=
@@ -104,7 +104,7 @@ theorem directional_square_norm (A : SmoothL2Field ℝ) (v : Space)
       _ = _ := by ring
   change ‖S.toLp‖ ≤ 3*K*‖Z.toLp‖
   have hc : 0 ≤ 3*K*‖Z.toLp‖ := by positivity
-  nlinarith [norm_nonneg S.toLp]
+  nlinarith only [hs, hc, norm_nonneg S.toLp]
 
 theorem scalarProduct_norm_of_square_bounds (A B : SmoothL2Field ℝ)
     (C : ℝ) (hC : 0 ≤ C)
@@ -115,7 +115,7 @@ theorem scalarProduct_norm_of_square_bounds (A B : SmoothL2Field ℝ)
     rw [scalarProduct_norm_square]
     exact (real_inner_le_norm _ _).trans
       ((mul_le_mul hA hB (norm_nonneg _) hC).trans_eq (by ring))
-  nlinarith [norm_nonneg (scalarProduct A B).toLp]
+  nlinarith only [hs, hC, norm_nonneg (scalarProduct A B).toLp]
 
 end EulerOrdinarySobolev
 
@@ -176,7 +176,9 @@ theorem scalar_secondWord_product_gradient (A : SmoothL2Field Space) (K N : ℝ)
 theorem norm_le_sum_coordinates (x : Space) : ‖x‖ ≤ ∑ i : Fin 3, ‖x i‖ := by
   have hx : (∑ i : Fin 3, x i • axis i)=x := by
     ext j
-    simp [axis,Pi.single_apply,mul_ite]
+    simp only [axis, WithLp.ofLp_sum, WithLp.ofLp_smul, PiLp.ofLp_single, Finset.sum_apply,
+        Pi.smul_apply, Pi.single_apply, smul_eq_mul, mul_ite, mul_one, mul_zero, sum_ite_eq,
+        mem_univ, ↓reduceIte]
   calc
     _ = ‖∑ i : Fin 3, x i • axis i‖ := congrArg norm hx.symm
     _ ≤ ∑ i : Fin 3, ‖x i • axis i‖ := norm_sum_le _ _
@@ -218,7 +220,7 @@ theorem coordinateProduct_gradient (A : SmoothL2Field Space) (K N : ℝ)
     ‖(coordinateProduct i (wordField A w) (wordField A v)).toLp‖ ≤ 9*K*N := by
   have hK0 : 0 ≤ K := (norm_nonneg (fderiv ℝ A.field 0)).trans (hK 0)
   have hN0 := wordBound_nonneg hN
-  have hc : K*N ≤ 9*K*N := by linarith [mul_nonneg hK0 hN0]
+  have hc : K*N ≤ 9*K*N := by linarith only [hK0, hN0, mul_nonneg hK0 hN0]
   by_cases hk1 : k=1
   · subst k
     have hs (x : Space) :
@@ -351,7 +353,7 @@ theorem eulerRhs_word_gradient (A P : SmoothL2Field Space) (K : ℝ)
   have hX : 0 ≤ X := Real.sqrt_nonneg _
   have hb' : ‖(transportCommutator A A w).toLp‖ ≤ 27*(2 : ℝ)^n*K*X := by
     apply hb.trans
-    have hcoef : 27*((2 : ℝ)^n-1) ≤ 27*(2 : ℝ)^n := by linarith
+    have hcoef : 27*((2 : ℝ)^n-1) ≤ 27*(2 : ℝ)^n := by linarith only
     exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hcoef hK0) hX
   rw [eulerRhs_pairing A P hdiv hA hP w]
   calc
@@ -375,7 +377,8 @@ theorem h3_energy_gradient (A P : SmoothL2Field Space) (K : ℝ)
       _ ≤ ∑ _w : Fin n → Fin 3, 27*(2 : ℝ)^n*K*wordEnergy 3 A :=
         sum_le_sum (fun w _ => eulerRhs_word_gradient A P K hK hdiv hA hP
           (by have := mem_range.mp hn; omega) w)
-      _ = _ := by simp
+      _ = _ := by simp only [sum_const, card_univ, Fintype.card_pi, Fintype.card_fin, prod_const,
+          nsmul_eq_mul, Nat.cast_pow, Nat.cast_ofNat]
   have hp (n : ℕ) : (3 : ℝ)^n*(27*(2 : ℝ)^n*K*wordEnergy 3 A) =
       (6 : ℝ)^n*(27*K*wordEnergy 3 A) := by
     rw [show (6 : ℝ)=3*2 by norm_num,mul_pow]

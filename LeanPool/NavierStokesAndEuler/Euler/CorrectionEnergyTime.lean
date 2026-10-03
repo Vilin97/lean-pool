@@ -55,8 +55,8 @@ theorem projected_negative_split {s : ℕ} {A : SmoothCoefficient period}
   let P := pressureSobolevOperator period K κ m c hc hpos
   let G := coefficientSobolevOperator period K
   change -(T+F-G (P (T+F))) = -(T+F-G (P F)-G (P T))
-  rw [map_add P T F, map_add G (P T) (P F)]
-  abel
+  have h : G (P (T+F)) = G (P T) + G (P F) := (congrArg G (P.map_add T F)).trans (G.map_add _ _)
+  exact (congrArg (fun x => -(T+F-x)) h).trans (by abel)
 
 /-- The signed actual pressure is the negative sum of the two genuine component pressure solves. -/
 theorem pressure_negative_split {s : ℕ} {A : SmoothCoefficient period}
@@ -274,8 +274,7 @@ theorem forcingFamilyTime_ae {α β : Type*} [Fintype β] {q : ℕ}
     ae_all_iff.mpr (fun j => forcingWordTime_ae period (hd i j) (w i j) T hT A G U F P)] with t h1
         h2
   change familyTime T _ t = _
-  rw [h1]
-  exact funext h2
+  exact h1.trans (funext h2)
 
 /-- The limiting weighted forcing is the genuine finite sum of norms of the literal differentiated
 PDE forcing. -/
@@ -295,9 +294,8 @@ theorem weighted_forcing_ae {α β : Type*} [Fintype α] [Fintype β] {q : ℕ}
   filter_upwards [weightedForcingTime_ae T hT weights (forcingFamilyTime period d w hd T hT A G U F
       P),
     ae_all_iff.mpr (fun i => forcingFamilyTime_ae period d w hd T hT A G U F P i)] with t h1 h2
-  rw [h1]
-  exact Finset.sum_congr rfl (fun i _ => congrArg (fun v : β → LiftL2 period =>
-    extendPath T hT (weights i) t * familyNorm v) (h2 i))
+  exact h1.trans (Finset.sum_congr rfl (fun i _ => congrArg (fun v : β → LiftL2 period =>
+    extendPath T hT (weights i) t * familyNorm v) (h2 i)))
 
 end EulerRegularizedForcingRepresentative
 
@@ -513,7 +511,7 @@ theorem weightedCorrectionForcing_ae {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT 
     with t hweight hraw hvel hVU hF hP
   change weightedForcingTime T hT _ (forcingFamilyTime period energyLength energyWord
       (energyLength_le hN) T hT A G U F P) t = _
-  rw [hweight]
+  refine hweight.trans ?_
   apply Finset.sum_congr rfl
   intro I _
   apply congrArg (fun v : BaseWord 6 → LiftL2 period => EulerPacketWeights.weight (R (projIcc 0 T
@@ -526,7 +524,7 @@ theorem weightedCorrectionForcing_ae {q : ℕ} (hq : 6 ≤ q + 1) (T : ℝ) (hT 
           have := energyLength_le hN I a; omega) (energyWord I a) (U t)) +
     (D.metric.coefficient τ).operator (word period (P t) (energyLength_le hN I a) (energyWord I a))
         = _
-  rw [transportL2Path_apply]
+  simp only [transportL2Path_apply]
   exact EulerProjectedForcingFields.forcing_word_of_actual_fields period hq (D.metric.jet τ) (K6 τ)
       N hN
     D.κ D.direction D.coercivity D.coercivity_pos (D.metric_pos τ)

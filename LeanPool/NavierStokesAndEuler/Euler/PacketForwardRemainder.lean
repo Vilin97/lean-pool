@@ -132,13 +132,15 @@ theorem forwardInitializedPrimaryRemainder_physical_fderiv_inv (N : ℕ) (hN : 1
     ‖fderiv ℝ (fun y => forwardInitializedPrimaryRemainder M D δ hδ ξ hs α N k⁻¹
       (t,(Y y,k*inner ℝ D.m₀ (Y y)))) x‖ ≤
       (forwardInitializedRemainderDerivativeCost L.R S.H0/k)*‖fderiv ℝ Y x‖ := by
-  have hk0 : k ≠ 0 := by linarith
+  have hk0 : k ≠ 0 := (zero_lt_four.trans_le hk).ne'
   have hc := fixedVelocityGradeCost_nonneg L.R S.H0 (zero_le_one.trans L.radius_one) 2
   have he := sobolevEmbeddingConstant_nonneg period 3
   have hr : 0 ≤ L.R := zero_le_one.trans L.radius_one
   have hb : 0 ≤ sobolevEmbeddingConstant period 3 *
-      ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2)*(4*L.R) := by positivity
-  have hf := frequencyFactor_le_linear k (by linarith) D.m₀
+      ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2)*(4*L.R) :=
+    mul_nonneg (mul_nonneg he (div_nonneg (add_nonneg hc zero_le_two) (sq_nonneg k)))
+      (mul_nonneg zero_le_four hr)
+  have hf := frequencyFactor_le_linear k (le_trans (by norm_num) hk) D.m₀
   rw [D.m₀_unit] at hf
   norm_num only at hf
   have h := forwardInitializedPrimaryRemainder_physical_fderiv M D hTime δ hδ ξ hs α
@@ -149,6 +151,13 @@ theorem forwardInitializedPrimaryRemainder_physical_fderiv_inv (N : ℕ) (hN : 1
     _ ≤ ((‖coordinateEquiv.symm.toContinuousLinearMap‖*2*k)*(sobolevEmbeddingConstant period 3 *
         ((fixedVelocityGradeCost L.R S.H0 2+2)/k^2)*(4*L.R)))*‖fderiv ℝ Y x‖ :=
       mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hf hb) (norm_nonneg _)
-    _ = _ := by unfold forwardInitializedRemainderDerivativeCost; field_simp; ring
+    _ = _ := by
+      unfold forwardInitializedRemainderDerivativeCost
+      generalize ‖coordinateEquiv.symm.toContinuousLinearMap‖ = a
+      generalize ‖fderiv ℝ Y x‖ = f
+      generalize sobolevEmbeddingConstant period 3 = s
+      generalize fixedVelocityGradeCost L.R S.H0 2 + 2 = g
+      rw [div_eq_mul_inv _ (k ^ 2), div_eq_mul_inv _ k]
+      linear_combination (8 * a * s * L.R * g * f * k⁻¹) * mul_inv_cancel₀ hk0
 
 end EulerPacketTerminalDatum

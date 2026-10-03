@@ -28,6 +28,7 @@ theorem timeApply_memLp (T : ℝ) (hT : 0 ≤ T) (A : C(Icc (0 : ℝ) T, E →L[
     (u : TimeLp T E) : MemLp (fun t => extendPath T hT A t (u t)) 2 (timeMeasure T) := by
   apply (Lp.memLp u).of_le_mul (c := ‖A‖)
   · exact (continuous_fst.clm_apply continuous_snd).comp_aestronglyMeasurable
+      (f := fun t => (extendPath T hT A t, u t))
       ((extendPath_continuous T hT A).aestronglyMeasurable.prodMk (Lp.aestronglyMeasurable u))
   · exact Filter.Eventually.of_forall fun t =>
       ((extendPath T hT A t).le_opNorm (u t)).trans

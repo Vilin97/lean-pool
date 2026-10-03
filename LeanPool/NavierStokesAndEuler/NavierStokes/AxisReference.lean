@@ -129,22 +129,22 @@ theorem cubicLower_gt_quarter (t : ℝ) (ht : t ≤ 41 / 20) :
     ring
   norm_num [cubicLower] at hidentity
   unfold cubicLower
-  nlinarith
+  nlinarith only [ht, h3]
 
 /-- A direct rational verification of the numerical strict inequality
 used for the initial cone margin. -/
 theorem quarticUpper_lt_neg_eighteen_hundredths
     (t : ℝ) (hlo : 99 / 50 ≤ t) (hhi : t ≤ 2) :
     quarticUpper t < -(18 / 100) := by
-  have ht : 0 ≤ t := by linarith
-  have hsmall : 0 ≤ 1 - t / 2 := by linarith
-  have hsmall_le : 1 - t / 2 ≤ 1 / 100 := by linarith
+  have ht : 0 ≤ t := by linarith only [hlo]
+  have hsmall : 0 ≤ 1 - t / 2 := by linarith only [hhi]
+  have hsmall_le : 1 - t / 2 ≤ 1 / 100 := by linarith only [hlo]
   have hsquare := pow_le_pow_left₀ hsmall hsmall_le 2
   have hcube := pow_le_pow_left₀ (show (0 : ℝ) ≤ 99 / 50 by norm_num) hlo 3
   have hfour := pow_le_pow_left₀ ht hhi 4
   norm_num at hsquare hcube hfour
   unfold quarticUpper
-  nlinarith
+  nlinarith only [hsquare, hcube, hfour]
 
 /-- The first four actual displayed series terms, for a concrete link
 between the coefficient calculation and the lower polynomial. -/
@@ -168,7 +168,7 @@ theorem first_five_weighted_terms_eq_quartic (χ Y : ℝ) :
 def leadingAxial (Z L Y : ℝ) : ℝ := -Y * Z / (2 * L)
 
 theorem leadingAxial_zero (Z L : ℝ) : leadingAxial Z L 0 = 0 := by
-  simp [leadingAxial]
+  simp only [leadingAxial, neg_zero, zero_mul, zero_div]
 
 theorem hasDerivAt_leadingAxial (Z L Y : ℝ) :
     HasDerivAt (leadingAxial Z L) (-Z / (2 * L)) Y := by
@@ -230,12 +230,13 @@ theorem term_norm_le (k n : ℕ) (t R : ℝ) (hR : 0 ≤ R) (ht : |t| ≤ R) :
   calc
     ‖term k n t‖ = |t| ^ n /
         ((n.factorial : ℝ) * ((n + k).factorial : ℝ)) := by
-      simp [term, Real.norm_eq_abs]
+      simp only [term, norm_div, norm_pow, norm_neg, Real.norm_eq_abs, norm_mul,
+          RCLike.norm_natCast]
     _ ≤ R ^ n / ((n.factorial : ℝ) * ((n + k).factorial : ℝ)) := by
       gcongr
     _ ≤ R ^ n / (n.factorial : ℝ) := by
       apply div_le_div_of_nonneg_left (pow_nonneg hR _) hn
-      nlinarith
+      nlinarith only [hf]
 
 /-- Absolute summability, proved by comparison with the exponential series. -/
 theorem summable_term (k : ℕ) (t : ℝ) : Summable (fun n : ℕ => term k n t) := by
@@ -276,12 +277,12 @@ theorem bessel_eq_constant_add_tail (k : ℕ) (t : ℝ) :
 theorem hasDerivAt_bessel (k : ℕ) (t : ℝ) :
     HasDerivAt (bessel k) (-bessel (k + 1) t) t := by
   let R : ℝ := |t| + 1
-  have hR : 0 < R := by dsimp [R]; positivity
+  have hR : 0 < R := by dsimp only [R]; positivity
   have ht : t ∈ Ioo (-R) R := by
-    dsimp [R]
+    dsimp only [R]
     constructor
-    · linarith [neg_abs_le t]
-    · linarith [le_abs_self t]
+    · linarith only [neg_abs_le t]
+    · linarith only [le_abs_self t]
   have htail : HasDerivAt (fun x : ℝ => ∑' n : ℕ, term k (n + 1) x)
       (∑' n : ℕ, -term (k + 1) n t) t := by
     apply hasDerivAt_tsum_of_isPreconnected
@@ -365,7 +366,8 @@ theorem bessel_ode (k : ℕ) (t : ℝ) :
 
 theorem bessel_zero (k : ℕ) : bessel k 0 = 1 / (k.factorial : ℝ) := by
   rw [bessel_eq_constant_add_tail]
-  simp [term]
+  simp only [one_div, term, neg_zero, ne_eq, Nat.add_eq_zero_iff, one_ne_zero, and_false,
+      not_false_eq_true, zero_pow, zero_div, tsum_zero, add_zero]
 
 /-- The leading regular angular profile in the manuscript's scaled radius. -/
 def profile (χ Y : ℝ) : ℝ := bessel 1 ((χ / 2) * Y)
@@ -380,7 +382,8 @@ theorem profile_eq_tsum (χ Y : ℝ) :
   ring
 
 theorem profile_zero (χ : ℝ) : profile χ 0 = 1 := by
-  simp [profile, bessel_zero]
+  simp only [profile, mul_zero, bessel_zero, Nat.factorial_one, Nat.cast_one, ne_eq, one_ne_zero,
+      not_false_eq_true, div_self]
 
 theorem hasDerivAt_profile (χ Y : ℝ) :
     HasDerivAt (profile χ) (-(χ / 2) * bessel 2 ((χ / 2) * Y)) Y := by
@@ -452,16 +455,16 @@ theorem magnitude_tail_antitone (k j : ℕ) (hj : 1 ≤ j)
   have hnj : (1 : ℝ) ≤ ((n + j : ℕ) : ℝ) := by
     exact_mod_cast (show 1 ≤ n + j by omega)
   have hk : (0 : ℝ) ≤ k := Nat.cast_nonneg k
-  have hleft : (2 : ℝ) ≤ ((n + j : ℕ) : ℝ) + 1 := by linarith
-  have hright : (2 : ℝ) ≤ ((n + j : ℕ) : ℝ) + k + 1 := by linarith
+  have hleft : (2 : ℝ) ≤ ((n + j : ℕ) : ℝ) + 1 := by linarith only [hnj]
+  have hright : (2 : ℝ) ≤ ((n + j : ℕ) : ℝ) + k + 1 := by linarith only [hnj]
   have hprod := mul_le_mul hleft hright (by norm_num : (0 : ℝ) ≤ 2)
     (by positivity : 0 ≤ ((n + j : ℕ) : ℝ) + 1)
-  linarith
+  linarith only [ht, hprod]
 
 /-- The cubic tail is an instance of the preceding magnitude estimate. -/
 theorem cubic_tail_antitone (t : ℝ) (ht0 : 0 ≤ t) (ht : t ≤ 41 / 20) :
     Antitone (fun n : ℕ => term 1 (n + 4) (-t)) :=
-  magnitude_tail_antitone 1 4 (by norm_num) t ht0 (by linarith)
+  magnitude_tail_antitone 1 4 (by norm_num) t ht0 (by linarith only [ht])
 
 /-- The infinite alternating tail following the cubic has nonnegative sum. -/
 theorem cubic_tail_nonneg (t : ℝ) (ht0 : 0 ≤ t) (ht : t ≤ 41 / 20) :
@@ -486,7 +489,7 @@ theorem cubic_lower_le_bessel (t : ℝ) (ht0 : 0 ≤ t) (ht : t ≤ 41 / 20) :
   rw [hpoly] at hs
   have ht' := cubic_tail_nonneg t ht0 ht
   unfold bessel
-  linarith
+  linarith only [hs, ht']
 
 /-- A uniform positive lower bound for the actual infinite leading series. -/
 theorem bessel_one_gt_quarter (t : ℝ) (ht0 : 0 ≤ t) (ht : t ≤ 41 / 20) :
@@ -500,12 +503,12 @@ theorem profile_gt_quarter (χ Y : ℝ) (hχ0 : 0 ≤ χ) (hχ1 : χ ≤ 1)
     (hY0 : 0 ≤ Y) (hY1 : Y ≤ 41 / 10) : 1 / 4 < profile χ Y := by
   apply bessel_one_gt_quarter
   · positivity
-  · nlinarith [mul_nonneg (sub_nonneg.mpr hχ1) hY0]
+  · nlinarith only [hY1, hχ1, hY0, mul_nonneg (sub_nonneg.mpr hχ1) hY0]
 
 theorem profile_pos (χ Y : ℝ) (hχ0 : 0 ≤ χ) (hχ1 : χ ≤ 1)
     (hY0 : 0 ≤ Y) (hY1 : Y ≤ 41 / 10) : 0 < profile χ Y := by
   have h := profile_gt_quarter χ Y hχ0 hχ1 hY0 hY1
-  linarith
+  linarith only [h]
 
 /-- A convergent alternating tail beginning with its positive sign has
 nonnegative total, for every offset starting after at least one term. -/
@@ -517,10 +520,11 @@ theorem alternating_tail_nonneg (k j : ℕ) (hj : 1 ≤ j)
       ((summable_nat_add_iff (f := fun n : ℕ => ‖term k n (-t)‖) j).mpr
         (summable_norm_term k (-t)))
     intro n
-    simp
+    simp only [norm_mul, norm_pow, norm_neg, norm_one, one_pow, Real.norm_eq_abs, one_mul,
+        Std.le_refl]
   have hb := Antitone.alternating_series_le_tendsto hs.hasSum.tendsto_sum_nat
     (magnitude_tail_antitone k j hj t ht0 ht) 0
-  simpa using hb
+  simpa only [ge_iff_le, mul_zero, Finset.range_zero, Finset.sum_empty] using hb
 
 /-- Every odd-length truncation with at least one term is an upper bound
 on the actual series on this interval. -/
@@ -540,19 +544,21 @@ theorem bessel_le_odd_partial_sum (k j : ℕ) (hj : 1 ≤ j) (hodd : Odd j)
   have hnonneg := alternating_tail_nonneg k j hj t ht0 ht
   rw [htail] at hs
   unfold bessel
-  linarith
+  linarith only [hs, hnonneg]
 
 theorem bessel_one_le_one (t : ℝ) (ht0 : 0 ≤ t) (ht : t ≤ 4) :
     bessel 1 t ≤ 1 := by
   have h := bessel_le_odd_partial_sum 1 1 (by norm_num) (by norm_num) t ht0 ht
-  simpa [Finset.sum_range_succ, term] using h
+  simpa only [ge_iff_le, Finset.range_one, term, Finset.sum_singleton, pow_zero, Nat.factorial_zero,
+      Nat.cast_one, zero_add, Nat.factorial_one, mul_one, ne_eq, one_ne_zero, not_false_eq_true,
+      div_self] using h
 
 /-- The quartic upper bound controls the actual factorial-square series. -/
 theorem bessel_zero_lt_neg_eighteen_hundredths
     (t : ℝ) (ht0 : 99 / 50 ≤ t) (ht1 : t ≤ 2) :
     bessel 0 t < -(18 / 100) := by
   have h := bessel_le_odd_partial_sum 0 5 (by norm_num) ⟨2, by norm_num⟩ t
-    (by linarith) (by linarith)
+    (by linarith only [ht0]) (by linarith only [ht1])
   have hpoly : (∑ n ∈ Finset.range 5, term 0 n t) = AxisProfile.quarticUpper t := by
     norm_num [Finset.sum_range_succ, term, AxisProfile.quarticUpper, Nat.factorial_succ]
     ring
@@ -570,19 +576,19 @@ theorem bessel_one_add_mul_deriv (t : ℝ) :
 theorem bessel_one_log_slope_gt (t : ℝ) (ht0 : 99 / 50 ≤ t) (ht1 : t ≤ 2) :
     236 / 100 < -2 * t * deriv (bessel 1) t / bessel 1 t := by
   have hpos : 0 < bessel 1 t := by
-    have h := bessel_one_gt_quarter t (by linarith) (by linarith)
-    linarith
-  have hupper := bessel_one_le_one t (by linarith) (by linarith)
+    have h := bessel_one_gt_quarter t (by linarith only [ht0]) (by linarith only [ht1])
+    linarith only [h]
+  have hupper := bessel_one_le_one t (by linarith only [ht0]) (by linarith only [ht1])
   have hsign := bessel_zero_lt_neg_eighteen_hundredths t ht0 ht1
   rw [← bessel_one_add_mul_deriv t] at hsign
   apply (lt_div_iff₀ hpos).mpr
-  nlinarith
+  nlinarith only [hupper, hsign]
 
 /-- The exact leading profile has the stated `2.36` slope margin at `Y=4`
 when `χ≥0.99`. No perturbation estimate is asserted. -/
 theorem profile_log_slope_at_four (χ : ℝ) (hχ0 : 99 / 100 ≤ χ) (hχ1 : χ ≤ 1) :
     236 / 100 < -8 * deriv (profile χ) 4 / profile χ 4 := by
-  have h := bessel_one_log_slope_gt ((χ / 2) * 4) (by linarith) (by linarith)
+  have h := bessel_one_log_slope_gt ((χ / 2) * 4) (by linarith only [hχ0]) (by linarith only [hχ1])
   rw [deriv_bessel] at h
   rw [deriv_profile]
   unfold profile
@@ -759,15 +765,15 @@ theorem log_slope_stability {v₀ v d₀ d : ℝ}
     1 / 8 < v ∧ 23 / 10 < -8 * d / v := by
   have hv : 1 / 8 < v := by
     have := (abs_le.mp hvalue).1
-    linarith
+    linarith only [hv₀, this]
   refine ⟨hv, ?_⟩
-  have hvpos : 0 < v := by linarith
-  have hv₀pos : 0 < v₀ := by linarith
+  have hvpos : 0 < v := by linarith only [hv]
+  have hv₀pos : 0 < v₀ := by linarith only [hv₀]
   rw [lt_div_iff₀ hvpos]
   rw [lt_div_iff₀ hv₀pos] at hslope
   have he0 := (abs_le.mp hvalue).2
   have he1 := (abs_le.mp hderiv).2
-  nlinarith
+  nlinarith only [hv₀, hslope, hv₀pos, he0, he1]
 
 /-- A single lower bound on the scale makes both evaluation constants
 small enough for positivity and logarithmic-slope stability. -/
@@ -776,9 +782,9 @@ theorem scaled_error_le {C C₀ C₁ K Λ : ℝ}
     (hK : 0 ≤ K) (hΛ : 1 + 500 * (C₀ + C₁) * K ≤ Λ) :
     C * (K / (2 * Λ)) ≤ 1 / 1000 := by
   have hsum : 0 ≤ C₀ + C₁ := add_nonneg hC₀ hC₁
-  have hΛpos : 0 < Λ := by nlinarith [mul_nonneg hsum hK]
+  have hΛpos : 0 < Λ := by nlinarith only [hΛ, hsum, hK, mul_nonneg hsum hK]
   rw [← mul_div_assoc, div_le_iff₀ (by positivity : 0 < 2 * Λ)]
-  nlinarith [mul_le_mul_of_nonneg_right hCsum hK]
+  nlinarith only [hΛ, hCsum, hK, mul_le_mul_of_nonneg_right hCsum hK]
 
 /-- This explicit threshold controls both values and first radial derivatives
 on `|Y|≤5`, uniformly over the parameter interval. -/
@@ -832,9 +838,9 @@ theorem positive_of_uniformMixedError (I : Window) {ε K Λ : ℝ} (hε : 0 < ε
   have href := referenceCoefficients_gt_quarter I hε χ d hd
     (show η ∈ I.interval from ⟨hη.1.le, hη.2.le⟩) hχ0 hχ1 hY0 hY1
   have he := value_error_le I hε hK hΛ herr
-    (p := (Y, η)) (by simpa only [abs_of_nonneg hY0] using (show Y ≤ 5 by linarith)) hη
+    (p := (Y, η)) (by simpa only [abs_of_nonneg hY0] using (show Y ≤ 5 by linarith only [hY1])) hη
   have he' := (abs_le.mp he).1
-  linarith
+  linarith only [hε, href, he']
 
 /-- The same scale preserves a strict slope greater than `2.3` wherever
 the parameter coefficient is at least `0.99`. -/
@@ -849,7 +855,7 @@ theorem log_slope_of_uniformMixedError (I : Window) {ε K Λ : ℝ} (hε : 0 < �
     23 / 10 < -8 * partialY Φ (4, η) / Φ (4, η) := by
   have hη' : η ∈ I.interval := ⟨hη.1.le, hη.2.le⟩
   have href := referenceCoefficients_gt_quarter I hε χ d hd hη'
-    (by linarith : 0 ≤ inputValue I ε χ η) hχ1
+    (by linarith only [hχ99] : 0 ≤ inputValue I ε χ η) hχ1
     (by norm_num : (0 : ℝ) ≤ 4) (by norm_num : (4 : ℝ) ≤ 41 / 10)
   have hslope := referenceCoefficients_log_slope_at_four I hε χ d hd hη' hχ99 hχ1
   exact (log_slope_stability href

@@ -33,7 +33,9 @@ variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 theorem tangentProj_smul_normal (n f : H) {s : ℝ} (hs : s ≠ 0) :
     tangentProj (s • n) f = tangentProj n f := by
   by_cases hn : n = 0
-  · simp [hn, tangentProj]
+  · simp only [tangentProj, hn, smul_zero, inner_zero_left, inner_self_eq_norm_sq_to_K, norm_zero,
+      RCLike.ofReal_real_eq_id, id_eq, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+      div_zero, sub_zero]
   have hn2 : ⟪n, n⟫_ℝ ≠ 0 := inner_self_ne_zero.mpr hn
   simp only [tangentProj, real_inner_smul_left, real_inner_smul_right, smul_smul]
   congr 2
@@ -59,7 +61,9 @@ theorem pressureCoefficient_rescale (n nDot u Ku f : H)
       ((rate * amp) • Ku) ((rate * amp) • f) =
         (rate * amp / s) * pressureCoefficient n nDot u Ku f := by
   by_cases hn : n = 0
-  · simp [hn, pressureCoefficient]
+  · simp only [pressureCoefficient, hn, smul_zero, inner_zero_left, zero_sub, add_zero,
+      inner_self_eq_norm_sq_to_K, norm_zero, RCLike.ofReal_real_eq_id, id_eq, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow, div_zero, mul_zero]
   have hn2 : ⟪n, n⟫_ℝ ≠ 0 := inner_self_ne_zero.mpr hn
   simp only [pressureCoefficient, real_inner_smul_left, real_inner_smul_right]
   field_simp
@@ -92,7 +96,8 @@ theorem projectedOperator_rescale (n nDot : H) (K : H →L[ℝ] H)
   have hn : TangentODE.projectedOperator (s • n) ((s * rate) • nDot)
       (rate • K) (rate * δ) x =
       projectedRhs (s • n) ((s * rate) • nDot) x (rate • K x) 0 (rate * δ) := by
-    simpa [tangentProj] using
+    simpa only [tangentProj, inner_zero_right, inner_self_eq_norm_sq_to_K, RCLike.ofReal_real_eq_id,
+        id_eq, zero_div, zero_smul, sub_self, sub_zero, smul_apply] using
       TangentODE.projectedOperator_apply (s • n) ((s * rate) • nDot) x 0
         (rate • K) (rate * δ)
   have ho : TangentODE.projectedOperator n nDot K δ x =

@@ -9,6 +9,7 @@ public import Mathlib.Topology.ContinuousMap.Compact
 public import Mathlib.Analysis.Normed.Operator.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Continuous coefficient data for the correction source, with proved uniform ball bounds. -/
 
@@ -45,7 +46,7 @@ theorem source_continuous {T : Type*} [TopologicalSpace T]
 /-- The exact product difference identity needs no symmetry of the bilinear source. -/
 theorem quadratic_sub (B : X →L[ℝ] X →L[ℝ] Y) (u v : X) :
     B u u - B v v = B (u-v) u + B v (u-v) := by
-  simp only [map_sub, sub_apply]
+  simp only [ContinuousLinearMap.map_sub, sub_apply]
   abel
 
 /-- The quadratic source has the genuine pointwise bound used for Picard existence. -/
@@ -70,12 +71,13 @@ theorem source_sub_bound (P : Y →L[ℝ] Y) (r : Y) (A : X →L[ℝ] Y) (B : X 
     (R : ℝ) (_hR : 0 ≤ R) (u v : X) (hu : ‖u‖ ≤ R) (hv : ‖v‖ ≤ R) :
     ‖source P r A B u - source P r A B v‖ ≤ ‖P‖ * (‖A‖ + 2 * ‖B‖ * R) * ‖u-v‖ := by
   have he : source P r A B u - source P r A B v = -(P (A (u-v) + B (u-v) u + B v (u-v))) := by
-    simp only [source, map_add, map_sub, sub_apply]
+    simp only [source, ContinuousLinearMap.map_add, ContinuousLinearMap.map_sub, sub_apply]
     abel
-  have h1 : ‖B (u-v) u‖ ≤ ‖B‖ * ‖u-v‖ * R := (B.le_opNorm₂ _ _).trans
-    (mul_le_mul_of_nonneg_left hu (mul_nonneg (norm_nonneg B) (norm_nonneg _)))
-  have h2 : ‖B v (u-v)‖ ≤ ‖B‖ * R * ‖u-v‖ := (B.le_opNorm₂ _ _).trans
-    (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hv (norm_nonneg B)) (norm_nonneg _))
+  have h1 := (B.le_opNorm₂ (u - v) u).trans
+    (mul_le_mul_of_nonneg_left hu (mul_nonneg (norm_nonneg B) (norm_nonneg (u - v))))
+  have h2 := (B.le_opNorm₂ v (u - v)).trans
+    (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hv (norm_nonneg B))
+      (norm_nonneg (u - v)))
   have hs : ‖A (u-v) + B (u-v) u + B v (u-v)‖ ≤ (‖A‖ + 2 * ‖B‖ * R) * ‖u-v‖ := by
     calc
       ‖A (u-v) + B (u-v) u + B v (u-v)‖ ≤ ‖A (u-v)‖ + ‖B (u-v) u‖ + ‖B v (u-v)‖ :=

@@ -59,7 +59,8 @@ theorem zero_slice_hasFDerivAt (A : Space × ℝ → Space) (x a : Space)
 theorem zero_phase_graph_hasFDerivAt (A : Space × ℝ → Space) (a m : Space)
     (hA : DifferentiableAt ℝ A (0, 0)) (hzero : ∀ y, A (y, 0) = 0)
     (ha : HasDerivAt (fun θ : ℝ => A (0,θ)) a 0) (c k : ℝ) :
-    HasFDerivAt (fun y => c • A (y,k*⟪m,y⟫_ℝ)) ((c*k) • rankOne ℝ a m) 0 := by
+    HasFDerivAt (fun y => c • A (y,k*⟪m,y⟫_ℝ))
+      ((c*k) • rankOne ℝ (E := Space) (F := Space) a m) 0 := by
   have hp : HasFDerivAt A ((toSpanSingleton ℝ a).comp (snd ℝ Space ℝ)) (graphMap k m 0) := by
     rw [map_zero]
     change HasFDerivAt A ((toSpanSingleton ℝ a).comp (snd ℝ Space ℝ)) (0,0)
@@ -74,8 +75,8 @@ theorem zero_phase_graph_hasFDerivAt (A : Space × ℝ → Space) (a m : Space)
   ring
 
 theorem rankOne_normalized (c : ℝ) (v m : Space) (hv : v ≠ 0) (hm : m ≠ 0) :
-    c • rankOne ℝ v m =
-      (c*(‖m‖*‖v‖)) • rankOne ℝ (unit v) (unit m) := by
+    c • rankOne ℝ (E := Space) (F := Space) v m =
+      (c*(‖m‖*‖v‖)) • rankOne ℝ (E := Space) (F := Space) (unit v) (unit m) := by
   apply ContinuousLinearMap.ext
   intro x
   simp only [smul_apply,rankOne_apply,unit,real_inner_smul_left,smul_smul]
@@ -93,7 +94,8 @@ def historyWave (α k : ℝ) (t : Icc (0 : ℝ) τ) (y : Space) : Space :=
 
 theorem historyWave_hasFDerivAt (α k : ℝ) (hk : k ≠ 0) (t : Icc (0 : ℝ) τ) :
     HasFDerivAt (historyWave τ hτ hτT B δ hδ ξ hs α k t)
-      ((α/δ) • rankOne ℝ (B.coefficients.labelVelocity 0 ξ t) D.m₀) 0 := by
+      ((α/δ) • rankOne ℝ (E := Space) (F := Space)
+        (B.coefficients.labelVelocity 0 ξ t) D.m₀) 0 := by
   let A : Space × ℝ → Space := fun z =>
     vector τ hτ hτT B (initialData D δ hδ ξ hs) (t,z)
   have hA : DifferentiableAt ℝ A (0,0) :=
@@ -125,24 +127,23 @@ theorem historyWave_physical_hasFDerivAt (α k : ℝ) (hk : k ≠ 0)
     (hX : HasFDerivAt X (D.F.field ⟨t, t.property.1, t.property.2.trans hτT.le⟩ 0) 0)
     (hY : DifferentiableAt ℝ Y (X 0)) (hleft : ∀ y, Y (X y) = y) :
     HasFDerivAt (fun x => historyWave τ hτ hτT B δ hδ ξ hs α k t (Y x))
-      ((α/δ) • rankOne ℝ (B.coefficients.labelVelocity 0 ξ t)
+      ((α/δ) • rankOne ℝ (E := Space) (F := Space) (B.coefficients.labelVelocity 0 ξ t)
         (D.normal.field ⟨t,t.property.1,t.property.2.trans hτT.le⟩ 0)) (X 0) := by
   let tg : Icc (0 : ℝ) D.T := ⟨t,t.property.1,t.property.2.trans hτT.le⟩
   have he : (Y ∘ X) = id := funext hleft
   have hdY := EulerLagrangian.derivative_pullback_inverse Y X (D.deformationEquiv tg 0) 0 hX hY
-  rw [he,fderiv_id,id_comp] at hdY
+  simp only [he,fderiv_id,id_comp] at hdY
   have hy : HasFDerivAt Y (D.deformationEquiv tg 0).symm.toContinuousLinearMap (X 0) :=
     hdY ▸ hY.hasFDerivAt
   have hp : HasFDerivAt (historyWave τ hτ hτT B δ hδ ξ hs α k t)
-      ((α/δ) • rankOne ℝ (B.coefficients.labelVelocity 0 ξ t) D.m₀) (Y (X 0)) := by
+      ((α/δ) • rankOne ℝ (E := Space) (F := Space)
+        (B.coefficients.labelVelocity 0 ξ t) D.m₀) (Y (X 0)) := by
     rw [hleft]
     exact historyWave_hasFDerivAt τ hτ hτT B δ hδ ξ hs α k hk t
-  convert! hp.comp (X 0) hy using 1
-  apply ContinuousLinearMap.ext
-  intro v
+  refine (hp.comp (X 0) hy).congr_fderiv (ContinuousLinearMap.ext fun v => ?_)
   simp only [smul_apply,comp_apply,rankOne_apply]
   congr 2
-  exact (D.FInv.field tg 0).adjoint_inner_left v D.m₀
+  exact ((D.FInv.field tg 0).adjoint_inner_left v D.m₀).symm
 
 theorem historyWave_physical_norm (α k : ℝ) (hα : 0 ≤ α) (hk : k ≠ 0)
     (t : Icc (0 : ℝ) τ) (X Y : Space → Space)

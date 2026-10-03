@@ -319,11 +319,9 @@ theorem correction_source_identity {q : ℕ} (hq : 6 ≤ q)
         (r t + C₀ t (truncateOperator period q e) +
           eulerBilinear period hq L hL (fun i => C i t) (z t+e) (z t+e) -
           eulerBilinear period hq L hL (fun i => C i t) (z t) (z t))) := by
-  change -(projectedSourceOperator period (K t) κ m c hc (hpos t)
-    (r t + linearize (eulerBilinear period hq L hL (fun i => C i t))
-      ((C₀ t).comp (truncateOperator period q)) (z t) e +
-      eulerBilinear period hq L hL (fun i => C i t) e e)) = _
-  congr 2
+  simp only [Coefficients.apply, source, correctionCoefficients, pressureProjectionPath,
+    ContinuousMap.coe_mk]
+  refine congrArg (fun w => -(projectedSourceOperator period (K t) κ m c hc (hpos t) w)) ?_
   simp only [linearize_apply, map_add, add_apply, ContinuousLinearMap.comp_apply]
   abel
 

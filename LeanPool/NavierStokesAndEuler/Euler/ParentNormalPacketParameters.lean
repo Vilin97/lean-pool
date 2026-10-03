@@ -106,20 +106,24 @@ theorem source_size_le (J D : ℕ) (hJ : 2 ≤ J) (X : ℝ) (hX : 1 ≤ X)
   have hsmallpoly : ((J+n : ℕ) : ℝ)^20*(scaleSequence J X n)^20 ≤ F :=
     monomial_le_polynomialFactor J (by omega) X hX n 20 20 le_rfl (by decide)
   have hCpF : Cp ≤ (1120*(2*Cθ)^10)*(F*E) := by
+    have hc0 : (0 : ℝ) ≤ 2*Cθ := mul_nonneg zero_le_two (zero_le_one.trans hθ)
+    have hc10 : (0 : ℝ) ≤ 1120*(2*Cθ)^10 := mul_nonneg (by norm_num) (pow_nonneg hc0 10)
     calc
-      _ ≤ 560*(2*Cθ*((J+n : ℕ) : ℝ)^2*(scaleSequence J X n)^2)^10*(2*exp z) := by
-        apply hCp.trans
-        gcongr
+      _ ≤ 560*(2*Cθ*((J+n : ℕ) : ℝ)^2*(scaleSequence J X n)^2)^10*(2*exp z) :=
+        hCp.trans (mul_le_mul (mul_le_mul_of_nonneg_left (pow_le_pow_left₀ hΘ0 hΘbig 10)
+          (by norm_num)) hEibig hEi0 (mul_nonneg (by norm_num)
+          (pow_nonneg (mul_nonneg (mul_nonneg hc0 (sq_nonneg _)) (sq_nonneg _)) 10)))
       _ = (1120*(2*Cθ)^10)*(((J+n : ℕ) : ℝ)^20*(scaleSequence J X n)^20)*exp z := by
         simp only [mul_pow,← pow_mul]
         ring
-      _ ≤ (1120*(2*Cθ)^10)*F*E := by
-        gcongr
+      _ ≤ (1120*(2*Cθ)^10)*F*E :=
+        mul_le_mul (mul_le_mul_of_nonneg_left hsmallpoly hc10) hExp (exp_pos z).le
+          (mul_nonneg hc10 hF0)
       _ = _ := by ring
   have hsum : parameterSize K Ti TiTotal Cp B (spike J X n) ξ+shear J X n ≤
       boundConstant Cθ CB Cξ*(F*E) := by
     unfold parameterSize boundConstant
-    nlinarith only [hFE,hKF,hTiF,hTiTotalF,hBF,hξF,hDF,hhF,hCpF]
+    linarith only [hFE,hKF,hTiF,hTiTotalF,hBF,hξF,hDF,hhF,hCpF]
   apply hsum.trans_eq
   dsimp [F,E,z,parameterEnvelope,polynomialFactor,predecessorExponent]
   ring
@@ -260,7 +264,7 @@ def envelope (J : ℕ) (C X : ℝ) (n : ℕ) : ℝ := parameterEnvelope J (sourc
 /-- Frequency spec, constructed using `frequencyCostSpec`. -/
 def frequencySpec (C : ℝ) : CostSpec :=
   frequencyCostSpec (1+frequencyConstant) (sourceConstant C) 320
-    (by have h := frequencyConstant_pos; linarith) (sourceConstant_pos C)
+    (by have h := frequencyConstant_pos; linarith only [h]) (sourceConstant_pos C)
     20 1000 (frequencyPower+1) (theta/100) (by norm_num [theta])
 
 theorem previousShear_one (J : ℕ) (hJ : 1 ≤ J) (X : ℝ) (hX : 1 ≤ X) (n : ℕ) :
@@ -278,7 +282,7 @@ theorem frequency_guard (J : ℕ) (C X P : ℝ) (n : ℕ)
     frequencyConstant*P^frequencyPower ≤ smallPower (frequency J X n) := by
   have hE : 1 ≤ envelope J C X n := hP.trans hPE
   have hguard := guard_of_cost_le J (1+frequencyConstant) (sourceConstant C) 320
-    (by have h := frequencyConstant_pos; linarith) (sourceConstant_pos C)
+    (by have h := frequencyConstant_pos; linarith only [h]) (sourceConstant_pos C)
     20 1000 (frequencyPower+1) (theta/100) (by norm_num [theta]) X n hcost
   apply le_trans _ hguard
   have hpow := pow_le_pow_left₀ (zero_le_one.trans hP) hPE frequencyPower
@@ -326,7 +330,7 @@ theorem normalParameterSize_bound (J D : ℕ) (hJ : 2 ≤ J) (C X : ℝ) (hC : 1
   rw [hM,hH] at hterm
   have hterm' : ‖G.terminal‖ ≤ terminalCap*L.K^4 := hterm.trans
     (mul_le_mul_of_nonneg_right (by
-        unfold terminalCap; linarith) (pow_nonneg (zero_le_one.trans L.K_one) _))
+        unfold terminalCap; linarith only) (pow_nonneg (zero_le_one.trans L.K_one) _))
   have hboundary := boundary_parameter_bound gradientConstant H.Bc H.L X hX hBc hL
   have hEi : P.epsilon⁻¹ ≤ 2*previousShear J X n := by
     rw [← hshear]

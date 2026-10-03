@@ -74,7 +74,8 @@ and remainder controlled by the frame estimates. -/
 theorem gradient_lower (hn : n ≠ 0) : previousShear S.J S.X n/2 ≤ P.activationGradient := by
   let t : Icc (0 : ℝ) P.parent.T := ⟨P.time,P.time_nonneg,P.time_lt.le⟩
   let M := P.parent.strain.field t 0
-  let Q := P.frame.shear • rankOne ℝ (unit (P.frame.v P.time)) (unit (P.frame.m P.time))
+  let Q := P.frame.shear •
+    rankOne ℝ (E := Space) (F := Space) (unit (P.frame.v P.time)) (unit (P.frame.m P.time))
   have hs := (S.previousShear_one n)
   have hnorm : ‖Q‖=previousShear S.J S.X n := by
     simp only [Q,norm_smul,Real.norm_eq_abs,P.frame_shear,

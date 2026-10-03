@@ -366,14 +366,16 @@ theorem CommonChart.amplitude_bound {s : StripData D} {h α σ a b r0 : ℝ}
         A * ChartScales.Q I.1.val.1 ^ (h * α + σ) * ChartScales.S I.1.val.1 ^ p := by
   obtain ⟨A, hA, p, hb⟩ := hf.chart_bound m
   obtain ⟨B, hB, q, hq⟩ := hc.positive_jets m
-  refine ⟨(m.factorial : ℝ) * A * B ^ m, by positivity, p + q * m, ?_⟩
+  refine ⟨(m.factorial : ℝ) * A * B ^ m,
+    mul_nonneg (mul_nonneg (Nat.cast_nonneg _) hA) (pow_nonneg (zero_le_one.trans hB) _),
+    p + q * m, ?_⟩
   intro I x hx j hj
   have hS : 1 ≤ ChartScales.S I.1.val.1 := PhysicalGraphBounds.S_ge_one (by
       have := I.1.property; omega)
   have hQ := ChartScales.Q_pos I.1.val.1
   have hS0 : 0 ≤ ChartScales.S I.1.val.1 := zero_le_one.trans hS
-  have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p := by
-      positivity
+  have hA0 : 0 ≤ A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p :=
+    mul_nonneg (mul_nonneg hA (Real.rpow_nonneg hQ.le _)) (pow_nonneg hS0 _)
   have hB0 : 1 ≤ B * ChartScales.S I.1.val.1 ^ q :=
     one_le_mul_of_one_le_of_one_le hB (one_le_pow₀ hS)
   have hjb := composition_jet_bound (hf.smooth (hc.sourceIndex I) I.1.val.1)
@@ -387,9 +389,7 @@ theorem CommonChart.amplitude_bound {s : StripData D} {h α σ a b r0 : ℝ}
   change ‖iteratedFDeriv ℝ j (fun x => (ChartScales.Q I.1.val.1 ^ σ) •
     (f (hc.sourceIndex I) I.1.val.1 ∘ hc.map I) x) x‖ ≤ _
   rw [iteratedFDeriv_const_smul_apply' (hcomp.of_le (nat_le_infty j)),
-    norm_smul (ChartScales.Q I.1.val.1 ^ σ)
-      (iteratedFDeriv ℝ j (f (hc.sourceIndex I) I.1.val.1 ∘ hc.map I) x),
-    Real.norm_of_nonneg (Real.rpow_pos_of_pos hQ σ).le]
+    norm_smul_of_nonneg (Real.rpow_pos_of_pos hQ σ).le]
   calc
     _ ≤ ChartScales.Q I.1.val.1 ^ σ * ((m.factorial : ℝ) *
         (A * ChartScales.Q I.1.val.1 ^ (h * α) * ChartScales.S I.1.val.1 ^ p) *
@@ -585,8 +585,7 @@ theorem spatialCurl_jet_bound {A : ProblemStatement.VelocityField}
     filter_upwards [hU.mem_nhds hz] with y hy
     exact spatialCurl_eq_joint ((hA.contDiffAt (hU.mem_nhds hy)).differentiableAt (by simp))
   rw [PhysicalWaveSum.iteratedFDeriv_eq_of_eventuallyEq he m]
-  have hd : ContDiffAt ℝ ∞ (fderiv ℝ A) z :=
-    (hA.contDiffAt (hU.mem_nhds hz)).fderiv_right (by simp)
+  have hd := (hA.contDiffAt (hU.mem_nhds hz)).fderiv_right (m := ∞) (by simp)
   have hb := PhysicalWaveSum.norm_jet_linear_comp_at (hd.of_le (nat_le_infty m)) jointCurl
   simpa only [norm_iteratedFDeriv_fderiv] using hb
 
@@ -702,15 +701,15 @@ theorem cylindricalMap_positiveJets {a b : ℝ} (ha : 0 < a) (m : ℕ) :
   have hann : PhysicalGraphBounds.liftXY x ∈ PhysicalGraphBounds.annulus (a / 2) (b + 1) := by
     refine ⟨?_, hx.1.le⟩
     simpa only [Metric.mem_closedBall, dist_zero_right] using hx.2.le
-  have hrad : ContDiffAt ℝ ∞ (cartesianRadius ∘ PhysicalGraphBounds.liftXY) x :=
+  have hrad :=
     (cartesianRadius_smooth.contDiffAt (PhysicalGraphBounds.axisFree_open.mem_nhds haxis)).comp x
       PhysicalGraphBounds.liftXY.contDiff.contDiffAt
-  have hrb : ‖iteratedFDeriv ℝ j (cartesianRadius ∘ PhysicalGraphBounds.liftXY) x‖ ≤ B := by
-    exact (PhysicalGraphBounds.norm_jet_comp_linear PhysicalGraphBounds.axisFree_open
+  have hrb :=
+    (PhysicalGraphBounds.norm_jet_comp_linear PhysicalGraphBounds.axisFree_open
       cartesianRadius_smooth PhysicalGraphBounds.liftXY haxis j).trans
       ((mul_le_mul (hb j hjm _ hann)
         (pow_le_one₀ (norm_nonneg _) PhysicalGraphBounds.norm_liftXY_le)
-        (by positivity) (zero_le_one.trans hB)).trans_eq (mul_one B))
+        (pow_nonneg (norm_nonneg _) _) (zero_le_one.trans hB)).trans_eq (mul_one B))
   change ‖iteratedFDeriv ℝ j
     (fun y => ((cartesianRadius ∘ PhysicalGraphBounds.liftXY) y, slowFast y)) x‖ ≤ B
   rw [PhysicalGraphBounds.iteratedFDeriv_pair (hrad.of_le (nat_le_infty j))

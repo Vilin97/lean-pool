@@ -110,13 +110,12 @@ theorem superposition_taylor_bound (A : SmoothTimeField K E V)
   intro t
   change ‖A.field t (v t) - A.field t (u t) - A.superpositionDerivative u (v-u) t‖ ≤ _
   rw [A.superpositionDerivative_apply]
-  have h₂ (x : E) : ‖fderiv ℝ (fderiv ℝ (A.field t : E → V)) x‖ ≤ ‖A.jet 2‖ := by
-    rw [← norm_iteratedFDeriv_one, norm_iteratedFDeriv_fderiv, ← A.jet_eq]
-    exact ((A.jet 2 t).norm_coe_le_norm x).trans ((A.jet 2).norm_coe_le_norm t)
-  have h := quadratic_taylor_bound
-    (A.field t : E → V) (A.smooth t) ‖A.jet 2‖ (norm_nonneg _) h₂ (u t) (v t-u t)
-  have he : u t + (v t-u t) = v t := by abel
-  rw [he] at h
+  have h := quadratic_taylor_bound (A.field t : E → V) (A.smooth t) ‖A.jet 2‖ (norm_nonneg _)
+    (fun x => by
+      rw [← norm_iteratedFDeriv_one, norm_iteratedFDeriv_fderiv, ← A.jet_eq]
+      exact ((A.jet 2 t).norm_coe_le_norm x).trans ((A.jet 2).norm_coe_le_norm t))
+    (u t) (v t-u t)
+  rw [add_sub_cancel (u t) (v t)] at h
   have hv : ‖v t-u t‖ ≤ ‖v-u‖ := (v-u).norm_coe_le_norm t
   exact h.trans (mul_le_mul_of_nonneg_left
     (pow_le_pow_left₀ (norm_nonneg _) hv 2) (norm_nonneg _))

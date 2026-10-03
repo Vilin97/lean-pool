@@ -27,7 +27,7 @@ open Set EulerSmoothLimit EulerPacketProfileRecursion EulerPacketTimeProfile
 
 theorem rawTimeDerivative_zero (T : ℝ) : rawTimeDerivative T 0=0 := by
   funext z
-  simp [rawTimeDerivative]
+  simp only [rawTimeDerivative, Pi.zero_apply, derivWithin_fun_const]
 
 namespace ProfileRegularity
 

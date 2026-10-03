@@ -9,6 +9,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 public import Mathlib.Analysis.Real.Sqrt
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Gaussian bounds from a decreasing instantaneous rate
@@ -31,6 +32,10 @@ on its parameter derivatives.
 -/
 
 @[expose] public section
+
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
 
 namespace NavierStokes.PulseGrowth
 
@@ -77,7 +82,7 @@ theorem reference_characteristic_equation {a b lam s : ℝ} (hdisc : lam ^ 2 = a
 /-- Reversing the sign of the slot parameter does not change the growth. -/
 theorem netGrowth_even (lam u s : ℝ) :
     netGrowth lam u (-s) = netGrowth lam u s := by
-  simp [netGrowth]
+  simp only [netGrowth, even_two, Even.neg_pow]
 
 /-- The prescribed damping exactly cancels growth at the threshold. -/
 theorem netGrowth_at_threshold (lam u : ℝ) : netGrowth lam u u = 0 := by
@@ -87,7 +92,7 @@ theorem netGrowth_at_threshold (lam u : ℝ) : netGrowth lam u u = 0 := by
 /-- Strict decrease in squared distance from zero, for a positive reference rate. -/
 theorem netGrowth_strictAnti_sq {lam u s t : ℝ} (hlam : 0 < lam)
     (hst : s ^ 2 < t ^ 2) : netGrowth lam u t < netGrowth lam u s := by
-  have hst' : 1 + s ^ 2 < 1 + t ^ 2 := by linarith
+  have hst' : 1 + s ^ 2 < 1 + t ^ 2 := by linarith only [hst]
   have hr : Real.sqrt (1 + s ^ 2) < Real.sqrt (1 + t ^ 2) :=
     Real.sqrt_lt_sqrt (le_of_lt (one_add_sq_pos s)) hst'
   have hg : lam / Real.sqrt (1 + t ^ 2) < lam / Real.sqrt (1 + s ^ 2) := by
@@ -134,19 +139,19 @@ theorem netGrowth_sign {lam u s : ℝ} (hlam : 0 < lam) :
     constructor
     · exact ⟨fun _ => hs, fun _ => hg⟩
     constructor
-    · constructor <;> intro h <;> linarith
-    · constructor <;> intro h <;> linarith
+    · constructor <;> intro h <;> linarith only [hg, h, hs]
+    · constructor <;> intro h <;> linarith only [hg, h, hs]
   · have hg : netGrowth lam u s = 0 := netGrowth_zero_of_abs_eq hs
     constructor
-    · constructor <;> intro h <;> linarith
+    · constructor <;> intro h <;> linarith only [hg, h, hs]
     constructor
     · exact ⟨fun _ => hs, fun _ => hg⟩
-    · constructor <;> intro h <;> linarith
+    · constructor <;> intro h <;> linarith only [hg, h, hs]
   · have hg := netGrowth_neg_of_abs_gt (lam := lam) hlam hs
     constructor
-    · constructor <;> intro h <;> linarith
+    · constructor <;> intro h <;> linarith only [hg, h, hs]
     constructor
-    · constructor <;> intro h <;> linarith
+    · constructor <;> intro h <;> linarith only [hg, h, hs]
     · exact ⟨fun _ => hs, fun _ => hg⟩
 
 /-- For positive magnitudes the reference growth is strictly decreasing. -/
@@ -174,15 +179,15 @@ theorem slotMagnitude_nonneg {u ell v : ℝ} (hu : 0 ≤ u) (hell : 0 < ell)
 
 theorem slotMagnitude_lt_threshold {u ell v : ℝ} (hu : 0 < u) (hell : 0 < ell)
     (hv : v < ell / 2) : slotMagnitude u ell v < u := by
-  have hdiv : u * v / ell < u / 2 := (div_lt_iff₀ hell).2 (by nlinarith)
+  have hdiv : u * v / ell < u / 2 := (div_lt_iff₀ hell).2 (by nlinarith only [hu, hv])
   unfold slotMagnitude
-  linarith
+  linarith only [hdiv]
 
 theorem slotMagnitude_gt_threshold {u ell v : ℝ} (hu : 0 < u) (hell : 0 < ell)
     (hv : ell / 2 < v) : u < slotMagnitude u ell v := by
-  have hdiv : u / 2 < u * v / ell := (lt_div_iff₀ hell).2 (by nlinarith)
+  have hdiv : u / 2 < u * v / ell := (lt_div_iff₀ hell).2 (by nlinarith only [hu, hv])
   unfold slotMagnitude
-  linarith
+  linarith only [hdiv]
 
 /-- Positive reference growth on the first half of a slot. -/
 theorem netGrowth_slot_positive {lam u ell v : ℝ} (hlam : 0 < lam) (hu : 0 < u)
@@ -201,7 +206,7 @@ theorem netGrowth_slot_midpoint (lam u ell : ℝ) (hell : ell ≠ 0) :
 theorem netGrowth_slot_negative {lam u ell v : ℝ} (hlam : 0 < lam) (hu : 0 < u)
     (hell : 0 < ell) (hmid : ell / 2 < v) :
     netGrowth lam u (slotMagnitude u ell v) < 0 := by
-  have hv : 0 ≤ v := by linarith
+  have hv : 0 ≤ v := by linarith only [hell, hmid]
   apply netGrowth_neg_of_abs_gt hlam
   rw [abs_of_pos hu, abs_of_nonneg (slotMagnitude_nonneg (le_of_lt hu) hell hv)]
   exact slotMagnitude_gt_threshold hu hell hmid
@@ -281,7 +286,7 @@ theorem integral_quadratic_bounds {D : Set ℝ} {rate : ℝ → ℝ}
       intro x hx
       have h := hhi x (hsub hx) midpoint hm hx.2
       rw [hzero] at h
-      linarith
+      linarith only [h]
     have hu : (∫ x in time..midpoint, rate x) ≤
         ∫ x in time..midpoint, lower * (x - midpoint) := by
       apply intervalIntegral.integral_mono_on htm hint
@@ -289,10 +294,10 @@ theorem integral_quadratic_bounds {D : Set ℝ} {rate : ℝ → ℝ}
       intro x hx
       have h := hlo x (hsub hx) midpoint hm hx.2
       rw [hzero] at h
-      linarith
+      linarith only [h]
     rw [integral_centered_linear] at hl hu
     rw [intervalIntegral.integral_symm time midpoint]
-    constructor <;> linarith
+    constructor <;> linarith only [hu, hl]
 
 /-- Gaussian upper and lower bounds with the manuscript's slot-length normalization. -/
 theorem gaussian_envelope_bounds {D : Set ℝ} {rate : ℝ → ℝ}
@@ -315,7 +320,7 @@ theorem gaussian_envelope_bounds {D : Set ℝ} {rate : ℝ → ℝ}
 
 @[simp] theorem envelope_at_midpoint (rate : ℝ → ℝ) (midpoint : ℝ) :
     envelope rate midpoint midpoint = 1 := by
-  simp [envelope]
+  simp only [envelope, intervalIntegral.integral_same, Real.exp_zero]
 
 theorem envelope_pos (rate : ℝ → ℝ) (midpoint time : ℝ) :
     0 < envelope rate midpoint time := Real.exp_pos _
@@ -346,7 +351,8 @@ noncomputable def referenceSlope (lam u s : ℝ) : ℝ :=
 theorem hasDerivAt_netGrowth (lam u s : ℝ) :
     HasDerivAt (PulseGrowth.netGrowth lam u) (referenceSlope lam u s) s := by
   have hp : HasDerivAt (fun x : ℝ => 1 + x ^ 2) (2 * s) s := by
-    simpa using ((hasDerivAt_id s).pow 2).const_add 1
+    simpa only [hasDerivAt_const_add_iff, Pi.pow_apply, id_eq, Nat.cast_ofNat, Nat.add_one_sub_one,
+        pow_one, mul_one] using ((hasDerivAt_id s).pow 2).const_add 1
   have hr := hp.sqrt (ne_of_gt (PulseGrowth.one_add_sq_pos s))
   have hd := ((hasDerivAt_const s lam).div hr (ne_of_gt (PulseGrowth.radius_pos s))).sub
     ((hp.const_mul lam).div_const ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)))
@@ -382,9 +388,9 @@ theorem referenceSlope_bounds {lam u s : ℝ} (hlam : 0 < lam) (hu : 0 < u)
     (hs : s ∈ Icc (u / 2) (3 * u / 2)) :
     -referenceMaxSlope lam u ≤ referenceSlope lam u s ∧
       referenceSlope lam u s ≤ -referenceMinSlope lam u := by
-  have hspos : 0 < s := by linarith [hs.1]
+  have hspos : 0 < s := (half_pos hu).trans_le hs.1
   have hn : 0 ≤ lam * s := le_of_lt (mul_pos hlam hspos)
-  have hS : 1 ≤ 1 + s ^ 2 := by linarith [sq_nonneg s]
+  have hS : 1 ≤ 1 + s ^ 2 := le_add_of_nonneg_right (sq_nonneg s)
   have hroot : 1 ≤ Real.sqrt (1 + s ^ 2) := Real.one_le_sqrt.2 hS
   have hden : 1 ≤ (1 + s ^ 2) * Real.sqrt (1 + s ^ 2) := by
     calc
@@ -393,21 +399,24 @@ theorem referenceSlope_bounds {lam u s : ℝ} (hlam : 0 < lam) (hu : 0 < u)
         mul_le_mul hS hroot (by norm_num) (le_of_lt (PulseGrowth.one_add_sq_pos s))
   have hfirst : lam * s / ((1 + s ^ 2) * Real.sqrt (1 + s ^ 2)) ≤ lam * s := by
     apply (div_le_iff₀ (PulseGrowth.dampingDenominator_pos s)).2
-    linarith [mul_le_mul_of_nonneg_left hden hn]
+    exact (mul_one _).symm.trans_le (mul_le_mul_of_nonneg_left hden hn)
   have hfirst0 : 0 ≤ lam * s / ((1 + s ^ 2) * Real.sqrt (1 + s ^ 2)) :=
     div_nonneg hn (le_of_lt (PulseGrowth.dampingDenominator_pos s))
-  have hfirstUpper : lam * s ≤ 3 * lam * u / 2 := by nlinarith [hs.2]
+  have hfirstUpper : lam * s ≤ 3 * lam * u / 2 :=
+    (mul_le_mul_of_nonneg_left hs.2 hlam.le).trans_eq (by ring)
   have hsecondUpper : 2 * lam * s / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) ≤
       3 * lam * u / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) := by
     apply (div_le_div_iff_of_pos_right (PulseGrowth.dampingDenominator_pos u)).2
-    linarith [hs.2]
+    linarith only [hfirstUpper]
   have hsecondLower : lam * u / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) ≤
       2 * lam * s / ((1 + u ^ 2) * Real.sqrt (1 + u ^ 2)) := by
     apply (div_le_div_iff_of_pos_right (PulseGrowth.dampingDenominator_pos u)).2
-    nlinarith [hs.1]
+    exact (by ring : lam * u = 2 * lam * (u / 2)).trans_le
+      (mul_le_mul_of_nonneg_left hs.1 (mul_pos two_pos hlam).le)
   unfold referenceSlope referenceMaxSlope referenceMinSlope
   rw [neg_mul, neg_div]
-  constructor <;> linarith
+  exact ⟨by linarith only [hfirst, hfirstUpper, hsecondUpper],
+    by linarith only [hfirst0, hsecondLower]⟩
 
 /-- The reference rate expressed in slot time. -/
 noncomputable def referenceRate (lam u ell time : ℝ) : ℝ :=
@@ -419,7 +428,7 @@ theorem hasDerivAt_referenceRate (lam u ell time : ℝ) :
   have hs : HasDerivAt (PulseGrowth.slotMagnitude u ell) (u / ell) time := by
     change HasDerivAt (fun x : ℝ => u / 2 + u * x / ell) (u / ell) time
     convert! (((hasDerivAt_id time).const_mul u).div_const ell).const_add (u / 2) using 1
-    simp
+    simp only [mul_one]
   exact (hasDerivAt_netGrowth lam u (PulseGrowth.slotMagnitude u ell time)).comp time hs
 
 theorem slotMagnitude_mem_interval {u ell time : ℝ} (hu : 0 ≤ u) (hell : 0 < ell)
@@ -430,7 +439,7 @@ theorem slotMagnitude_mem_interval {u ell time : ℝ} (hu : 0 ≤ u) (hell : 0 <
     apply (div_le_iff₀ hell).2
     exact mul_le_mul_of_nonneg_left ht.2 hu
   unfold PulseGrowth.slotMagnitude
-  constructor <;> linarith
+  constructor <;> linarith only [hq0, hq1]
 
 /-- Bounds on the derivative in slot time, uniformly for all positive slot lengths. -/
 theorem referenceRate_deriv_bounds {lam u ell time : ℝ}
@@ -463,7 +472,7 @@ theorem reference_gaussian_bounds {lam u ell time : ℝ}
     hdiff.continuous.continuousOn hdiff.differentiableOn
   · intro x hx
     exact referenceRate_deriv_bounds hlam hu hell (interior_subset hx)
-  · constructor <;> linarith
+  · constructor <;> linarith only [hell]
   · exact ht
   · exact PulseGrowth.netGrowth_slot_midpoint lam u ell (ne_of_gt hell)
 

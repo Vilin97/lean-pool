@@ -104,8 +104,9 @@ theorem maximal_metric_paths {q : ℕ} (N : ℕ) (hN : N + 6 ≤ q + 1) (T : ℝ
   filter_upwards [reindexMaximalTime_restriction period T hT e U hU] with t ht
   have hv : value period (reindexMaximalTime period q T U t) = value period (e (projIcc 0 T hT t))
       := congrArg (value period) ht
-  rw [energyPath_apply, lossPath_apply]
-  exact ⟨energyNorm_of_value_eq period N (by omega) hN _ _ _ _ hv,
-    energyLoss_of_value_eq period N (by omega) hN _ _ _ _ hv⟩
+  exact ⟨(energyNorm_of_value_eq period N (by omega) hN _ _ _ _ hv).trans
+      (energyPath_apply period N hN T R K e _).symm,
+    (energyLoss_of_value_eq period N (by omega) hN _ _ _ _ hv).trans
+      (lossPath_apply period N hN T R K e _).symm⟩
 
 end EulerEnergyMetricPaths

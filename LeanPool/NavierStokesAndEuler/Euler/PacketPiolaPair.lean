@@ -266,22 +266,23 @@ synthesis. -/
 local instance instPacketPiola2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 theorem adjoint_apply_coordinate (A : Space →L[ℝ] Space) (q : Space) (i : Fin 3) :
-    (A.adjoint q) i = ⟪A (EuclideanSpace.single i 1), q⟫_ℝ := by
+    (adjoint (𝕜 := ℝ) (E := Space) (F := Space) A q) i = ⟪A (EuclideanSpace.single i 1), q⟫_ℝ := by
   simpa only [EuclideanSpace.inner_single_left, conj_trivial, one_mul] using
     A.adjoint_inner_right (EuclideanSpace.single i 1) q
 
 /-- Pull back a Euclidean covector field by the actual derivative of the coordinate map. -/
 def pullbackCovector (Ξ Q : Space → Space) (x : Space) : Space :=
-  (fderiv ℝ Ξ x).adjoint (Q x)
+  adjoint (𝕜 := ℝ) (E := Space) (F := Space) (fderiv ℝ Ξ x :) (Q x)
 
 /-- Symmetric second derivatives remove the entire derivative-of-Jacobian term from curl. -/
 theorem curl_pullbackCovector (Ξ Q : Space → Space) (hΞ : ContDiff ℝ 2 Ξ)
     (x : Space) (hQ : DifferentiableAt ℝ Q x) :
     vectorCurl (pullbackCovector Ξ Q) x =
-      curlMatrix ((fderiv ℝ Ξ x).adjoint.comp (fderiv ℝ Q x)) := by
+      curlMatrix ((adjoint (𝕜 := ℝ) (E := Space) (F := Space) (fderiv ℝ Ξ x :)).comp
+        (fderiv ℝ Q x)) := by
   have hD : DifferentiableAt ℝ (fderiv ℝ Ξ) x :=
     ((hΞ.fderiv_right (m := 1) le_rfl).differentiable one_ne_zero).differentiableAt
-  have hA : HasFDerivAt (fun y => (fderiv ℝ Ξ y).adjoint)
+  have hA : HasFDerivAt (fun y => adjoint (𝕜 := ℝ) (E := Space) (F := Space) (fderiv ℝ Ξ y))
       ((realAdjoint (U := Space) (E := Space)).comp (fderiv ℝ (fderiv ℝ Ξ) x)) x :=
     (realAdjoint (U := Space) (E := Space)).hasFDerivAt.comp x hD.hasFDerivAt
   have hp := hA.clm_apply hQ.hasFDerivAt
@@ -289,14 +290,17 @@ theorem curl_pullbackCovector (Ξ Q : Space → Space) (hΞ : ContDiff ℝ 2 Ξ)
       (((realAdjoint (U := Space) (E := Space)).comp
         (fderiv ℝ (fderiv ℝ Ξ) x)).flip (Q x)) = 0 := by
     ext i
-    change ((fderiv ℝ (fderiv ℝ Ξ) x (EuclideanSpace.single (i + 1) 1)).adjoint (Q x)) (i + 2) -
-      ((fderiv ℝ (fderiv ℝ Ξ) x (EuclideanSpace.single (i + 2) 1)).adjoint (Q x)) (i + 1) = 0
+    change (adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (fderiv ℝ (fderiv ℝ Ξ) x (EuclideanSpace.single (i + 1) 1)) (Q x)) (i + 2) -
+      (adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (fderiv ℝ (fderiv ℝ Ξ) x (EuclideanSpace.single (i + 2) 1)) (Q x)) (i + 1) = 0
     rw [adjoint_apply_coordinate, adjoint_apply_coordinate]
     have hs := ((hΞ.contDiffAt (x := x)).isSymmSndFDerivAt (n := 2) (by simp)).eq
       (EuclideanSpace.single (i + 1) 1) (EuclideanSpace.single (i + 2) 1)
     rw [hs, sub_self]
-  change vectorCurl (fun y => (fderiv ℝ Ξ y).adjoint (Q y)) x = _
-  rw [vectorCurl_eq_matrix _ x hp.differentiableAt, hp.fderiv, curlMatrix_add, hzero, add_zero]
+  change vectorCurl (fun y => adjoint (𝕜 := ℝ) (E := Space) (F := Space) (fderiv ℝ Ξ y) (Q y)) x = _
+  simp only [vectorCurl_eq_matrix _ x hp.differentiableAt, hp.fderiv, curlMatrix_add, hzero,
+    add_zero]
 
 /-- The source's slow transformed curl `d × Q`, with `d=F⁻ᵀ ∇`. -/
 def transformedCurl (F : Space → Space ≃L[ℝ] Space) (Q : Space → Space) (x : Space) : Space :=
@@ -361,7 +365,8 @@ synthesis. -/
 local instance instPacketLiftedPiola2 : NormedSpace ℝ (Space →L[ℝ] Space) := inferInstance
 
 theorem realAdjoint_apply (A : Space →L[ℝ] Space) :
-    realAdjoint A = A.adjoint := rfl
+    realAdjoint (U := Space) (E := Space) A =
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) A := rfl
 
 /-- Covering curl, given by `curlMatrix ((fderiv ℝ q z).comp (EulerGraphPullback.liftedDirection
 κ m))`. -/
@@ -372,21 +377,21 @@ def coveringCurl (κ : ℝ) (m : Space) (q : LiftTangent → Space)
 /-- Covering pullback covector, given by `(fderiv ℝ Ξ z.1).adjoint (q z)`. -/
 def coveringPullbackCovector (Ξ : Space → Space) (q : LiftTangent → Space)
     (z : LiftTangent) : Space :=
-  (fderiv ℝ Ξ z.1).adjoint (q z)
+  ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (fderiv ℝ Ξ z.1 :) (q z)
 
 /-- Cancellation of the actual Hessian in all constant lifted directions. -/
 theorem coveringCurl_pullback (κ : ℝ) (m : Space) (Ξ : Space → Space)
     (q : LiftTangent → Space) (hΞ : ContDiff ℝ 2 Ξ) (z : LiftTangent)
     (hq : DifferentiableAt ℝ q z) :
     coveringCurl κ m (coveringPullbackCovector Ξ q) z =
-      curlMatrix ((fderiv ℝ Ξ z.1).adjoint.comp
+      curlMatrix ((ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (fderiv ℝ Ξ z.1 :)).comp
         ((fderiv ℝ q z).comp (EulerGraphPullback.liftedDirection κ m))) := by
   have hD : DifferentiableAt ℝ (fderiv ℝ Ξ) z.1 :=
     ((hΞ.fderiv_right (m := 1) le_rfl).differentiable one_ne_zero).differentiableAt
-  have hX : HasFDerivAt (fun w : LiftTangent => fderiv ℝ Ξ w.1)
-      ((fderiv ℝ (fderiv ℝ Ξ) z.1).comp (ContinuousLinearMap.fst ℝ Space ℝ)) z :=
-    hD.hasFDerivAt.comp z hasFDerivAt_fst
-  have hA : HasFDerivAt (fun w : LiftTangent => (fderiv ℝ Ξ w.1).adjoint)
+  have hX := hD.hasFDerivAt.comp z (hasFDerivAt_fst (𝕜 := ℝ) (p := z))
+  have hA : HasFDerivAt (fun w : LiftTangent =>
+        ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (fderiv ℝ Ξ w.1))
       ((realAdjoint (U := Space) (E := Space)).comp
         ((fderiv ℝ (fderiv ℝ Ξ) z.1).comp (ContinuousLinearMap.fst ℝ Space ℝ))) z :=
     (realAdjoint (U := Space) (E := Space)).hasFDerivAt.comp z hX
@@ -400,16 +405,20 @@ theorem coveringCurl_pullback (κ : ℝ) (m : Space) (Ξ : Space → Space)
       ContinuousLinearMap.flip_apply, EulerGraphPullback.liftedDirection_apply,
       ContinuousLinearMap.coe_fst', realAdjoint_apply, PiLp.zero_apply]
     change
-      ((fderiv ℝ (fderiv ℝ Ξ) z.1 (κ • EuclideanSpace.single (i + 1) 1)).adjoint (q z)) (i + 2) -
-      ((fderiv ℝ (fderiv ℝ Ξ) z.1 (κ • EuclideanSpace.single (i + 2) 1)).adjoint (q z)) (i + 1) = 0
+      (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (fderiv ℝ (fderiv ℝ Ξ) z.1 (κ • EuclideanSpace.single (i + 1) 1)) (q z)) (i + 2) -
+      (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (fderiv ℝ (fderiv ℝ Ξ) z.1 (κ • EuclideanSpace.single (i + 2) 1)) (q z)) (i + 1) = 0
     rw [adjoint_apply_coordinate, adjoint_apply_coordinate]
     simp only [map_smul, smul_apply, real_inner_smul_left]
     have hs := ((hΞ.contDiffAt (x := z.1)).isSymmSndFDerivAt (n := 2) (by simp)).eq
       (EuclideanSpace.single (i + 1) 1) (EuclideanSpace.single (i + 2) 1)
     rw [hs, sub_self]
-  change curlMatrix ((fderiv ℝ (fun w : LiftTangent => (fderiv ℝ Ξ w.1).adjoint (q w)) z).comp
+  change curlMatrix ((fderiv ℝ (fun w : LiftTangent =>
+      ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (fderiv ℝ Ξ w.1) (q w)) z).comp
       (EulerGraphPullback.liftedDirection κ m)) = _
-  rw [hp.fderiv, ContinuousLinearMap.add_comp, curlMatrix_add, hzero, add_zero]
+  simp only [hp.fderiv, ContinuousLinearMap.add_comp, curlMatrix_add, hzero, add_zero]
   rfl
 
 /-- Unit determinant transforms the full slow-plus-angular curl by the inverse Jacobian. -/
@@ -430,7 +439,7 @@ variable (period : ℝ)
 /-- Lifted pullback covector, given by `(fderiv ℝ Ξ x.1).adjoint (Q x)`. -/
 def liftedPullbackCovector (Ξ : Space → Space) (Q : LiftDomain period → Space)
     (x : LiftDomain period) : Space :=
-  (fderiv ℝ Ξ x.1).adjoint (Q x)
+  ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) (fderiv ℝ Ξ x.1 :) (Q x)
 
 /-- Transformed lifted curl, given by `curlMatrix ((fieldFDeriv period Q x).comp
 ((EulerGraphPullback.liftedDirection κ m).comp (F x.1).symm.toContinuousLinearMap))`. -/
@@ -474,7 +483,8 @@ theorem liftedPullbackCovector_smooth (Ξ : Space → Space)
     (hQ : ∀ x, ContDiff ℝ ∞ (localFieldLift period Q x)) (x : LiftDomain period) :
     ContDiff ℝ ∞ (localFieldLift period (liftedPullbackCovector period Ξ Q) x) := by
   change ContDiff ℝ ∞ (fun z : LiftTangent =>
-    (fderiv ℝ Ξ (x.1 + z.1)).adjoint (localFieldLift period Q x z))
+    ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (fderiv ℝ Ξ (x.1 + z.1)) (localFieldLift period Q x z))
   exact ((realAdjoint (U := Space) (E := Space)).contDiff.comp
     ((hΞ.fderiv_right (m := ∞) (by simp)).comp
       (contDiff_const.add contDiff_fst))).clm_apply (hQ x)
@@ -555,7 +565,7 @@ open MeasureTheory InnerProductSpace EulerSmoothLimit EulerMeanBoundary
 open scoped ContDiff
 
 theorem curlMatrix_rankOne (a b : Space) :
-    curlMatrix (rankOne ℝ a b) = cross b a := by
+    curlMatrix (rankOne ℝ (E := Space) (F := Space) a b) = cross b a := by
   ext i
   fin_cases i <;>
     simp [curlMatrix, rankOne_apply, EuclideanSpace.inner_single_right,
@@ -566,14 +576,17 @@ theorem curl_lifted_split (κ : ℝ) (m : Space) (L : LiftTangent →L[ℝ] Spac
     (G : Space →L[ℝ] Space) :
     curlMatrix (L.comp ((EulerGraphPullback.liftedDirection κ m).comp G)) =
       κ • curlMatrix (L.comp ((ContinuousLinearMap.inl ℝ Space ℝ).comp G)) +
-        cross (G.adjoint m) (L (0, 1)) := by
+        cross (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) G m)
+          (L (0, 1)) := by
   have he : L.comp ((EulerGraphPullback.liftedDirection κ m).comp G) =
       κ • (L.comp ((ContinuousLinearMap.inl ℝ Space ℝ).comp G)) +
-        rankOne ℝ (L (0, 1)) (G.adjoint m) := by
+        rankOne ℝ (E := Space) (F := Space) (L (0, 1))
+          (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) G m) := by
     apply ContinuousLinearMap.ext
     intro v
     change L (κ • G v, ⟪m, G v⟫_ℝ) =
-      κ • L (G v, 0) + ⟪G.adjoint m, v⟫_ℝ • L (0, 1)
+      κ • L (G v, 0) +
+        ⟪ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space) G m, v⟫_ℝ • L (0, 1)
     rw [G.adjoint_inner_left]
     have hv : (κ • G v, ⟪m, G v⟫_ℝ) =
         κ • (G v, (0 : ℝ)) + ⟪m, G v⟫_ℝ • ((0 : Space), (1 : ℝ)) := by
@@ -614,15 +627,21 @@ theorem coveringPotential_pair_piola (P κ : ℝ) (m₀ : Space) (Ξ : Space →
     (F : Space → Space ≃L[ℝ] Space) (z : LiftTangent)
     (hF : fderiv ℝ Ξ z.1 = (F z.1).toContinuousLinearMap)
     (hdet : (operatorMatrix (F z.1).toContinuousLinearMap).det = 1)
-    (hm : (F z.1).symm.toContinuousLinearMap.adjoint m₀ ≠ 0)
-    (htan : ⟪(F z.1).symm.toContinuousLinearMap.adjoint m₀, A z⟫_ℝ = 0)
+    (hm : ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F z.1).symm.toContinuousLinearMap m₀ ≠ 0)
+    (htan : ⟪ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F z.1).symm.toContinuousLinearMap m₀, A z⟫_ℝ = 0)
     (hA : Continuous (fun θ => A (z.1, θ)))
     (hq : DifferentiableAt ℝ
-      (coveringPotential P (fun y => (F y).symm.toContinuousLinearMap.adjoint m₀) A) z) :
+      (coveringPotential P (fun y => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (F y).symm.toContinuousLinearMap m₀) A) z) :
     (F z.1).symm (A z + κ • coveringSlowCurl (F z.1).symm.toContinuousLinearMap
-      (coveringPotential P (fun y => (F y).symm.toContinuousLinearMap.adjoint m₀) A) z) =
+      (coveringPotential P (fun y => ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (F y).symm.toContinuousLinearMap m₀) A) z) =
       coveringCurl κ m₀ (coveringPullbackCovector Ξ
-        (coveringPotential P (fun y => (F y).symm.toContinuousLinearMap.adjoint m₀) A)) z := by
+        (coveringPotential P (fun y =>
+          ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+            (F y).symm.toContinuousLinearMap m₀) A)) z := by
   have hp := covering_piola_curl κ m₀ Ξ _ hΞ z (F z.1) hF hdet hq
   rw [curl_lifted_split, coveringPotential_angle_derivative P _ A z hA hq,
     cross_potentialMultiplier _ _ hm htan] at hp
@@ -642,7 +661,8 @@ theorem transformedLiftedCurl_split (κ : ℝ) (m₀ : Space)
     (x : LiftDomain period) :
     transformedLiftedCurl period κ m₀ F Q x =
       κ • liftedSlowCurl period F Q x +
-        cross ((F x.1).symm.toContinuousLinearMap.adjoint m₀)
+        cross (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+            (F x.1).symm.toContinuousLinearMap m₀)
           (fieldDerivative period (0, 1) Q x) :=
   curl_lifted_split κ m₀ (fieldFDeriv period Q x) (F x.1).symm.toContinuousLinearMap
 
@@ -653,10 +673,13 @@ theorem lifted_pair_piola (κ : ℝ) (m₀ : Space) (Ξ : Space → Space)
     (hF : ∀ y, fderiv ℝ Ξ y = (F y).toContinuousLinearMap)
     (hdet : ∀ y, (operatorMatrix (F y).toContinuousLinearMap).det = 1)
     (hQ : ∀ x, ContDiff ℝ ∞ (localFieldLift period Q x)) (x : LiftDomain period)
-    (hm : (F x.1).symm.toContinuousLinearMap.adjoint m₀ ≠ 0)
-    (htan : ⟪(F x.1).symm.toContinuousLinearMap.adjoint m₀, A x⟫_ℝ = 0)
+    (hm : ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F x.1).symm.toContinuousLinearMap m₀ ≠ 0)
+    (htan : ⟪ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F x.1).symm.toContinuousLinearMap m₀, A x⟫_ℝ = 0)
     (hangle : fieldDerivative period (0, 1) Q x =
-      potentialMultiplier ((F x.1).symm.toContinuousLinearMap.adjoint m₀) (A x)) :
+      potentialMultiplier (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (F x.1).symm.toContinuousLinearMap m₀) (A x)) :
     (F x.1).symm (A x + κ • liftedSlowCurl period F Q x) =
       liftedCurl period κ m₀ (liftedPullbackCovector period Ξ Q) x := by
   have hp := lifted_piola_curl period κ m₀ Ξ Q hΞ F hF hdet hQ x
@@ -670,10 +693,13 @@ theorem weighted_lifted_pair_piola (κ : ℝ) (m₀ : Space) (Ξ : Space → Spa
     (hF : ∀ y, fderiv ℝ Ξ y = (F y).toContinuousLinearMap)
     (hdet : ∀ y, (operatorMatrix (F y).toContinuousLinearMap).det = 1)
     (hQ : ∀ x, ContDiff ℝ ∞ (localFieldLift period Q x)) (x : LiftDomain period)
-    (hm : (F x.1).symm.toContinuousLinearMap.adjoint m₀ ≠ 0)
-    (htan : ⟪(F x.1).symm.toContinuousLinearMap.adjoint m₀, A x⟫_ℝ = 0)
+    (hm : ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F x.1).symm.toContinuousLinearMap m₀ ≠ 0)
+    (htan : ⟪ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F x.1).symm.toContinuousLinearMap m₀, A x⟫_ℝ = 0)
     (hangle : fieldDerivative period (0, 1) Q x =
-      potentialMultiplier ((F x.1).symm.toContinuousLinearMap.adjoint m₀) (A x)) (p : ℕ) :
+      potentialMultiplier (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (F x.1).symm.toContinuousLinearMap m₀) (A x)) (p : ℕ) :
     (F x.1).symm (κ ^ p • A x + κ ^ (p + 1) • liftedSlowCurl period F Q x) =
       κ ^ p • liftedCurl period κ m₀ (liftedPullbackCovector period Ξ Q) x := by
   have he : κ ^ p • A x + κ ^ (p + 1) • liftedSlowCurl period F Q x =
@@ -702,10 +728,13 @@ theorem piolaPairLp_ae (κ : ℝ) (m₀ : Space) (Ξ : Space → Space)
     (F : Space → Space ≃L[ℝ] Space)
     (hF : ∀ y, fderiv ℝ Ξ y = (F y).toContinuousLinearMap)
     (hdet : ∀ y, (operatorMatrix (F y).toContinuousLinearMap).det = 1)
-    (hm : ∀ x, (F x).symm.toContinuousLinearMap.adjoint m₀ ≠ 0)
-    (htan : ∀ x, ⟪(F x.1).symm.toContinuousLinearMap.adjoint m₀, A x⟫_ℝ = 0)
+    (hm : ∀ x, ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F x).symm.toContinuousLinearMap m₀ ≠ 0)
+    (htan : ∀ x, ⟪ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+      (F x.1).symm.toContinuousLinearMap m₀, A x⟫_ℝ = 0)
     (hangle : ∀ x, fieldDerivative period (0, 1) Q x =
-      potentialMultiplier ((F x.1).symm.toContinuousLinearMap.adjoint m₀) (A x)) (p : ℕ) :
+      potentialMultiplier (ContinuousLinearMap.adjoint (𝕜 := ℝ) (E := Space) (F := Space)
+        (F x.1).symm.toContinuousLinearMap m₀) (A x)) (p : ℕ) :
     (piolaPairLp period κ m₀ Ξ Q hΞ hc hQ p : LiftDomain period → Space) =ᵐ[liftMeasure period]
       fun x => (F x.1).symm (κ ^ p • A x + κ ^ (p + 1) • liftedSlowCurl period F Q x) := by
   filter_upwards [Lp.coeFn_smul (κ ^ p) (piolaLiftedCurlLp period κ m₀ Ξ Q hΞ hc hQ),

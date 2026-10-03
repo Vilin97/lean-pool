@@ -57,7 +57,7 @@ theorem WordBound.coarse_velocity_grade (hG : G.WordBound q R (3 * H ^ (2 * n)) 
   have hC0 : 0 ≤ C := zero_le_one.trans hC
   have hH0 : 0 ≤ H := zero_le_one.trans hH
   have hNN : (2 : ℝ) ≤ ((N+2 : ℕ) : ℝ) := by exact_mod_cast (show 2 ≤ N+2 by omega)
-  have hP : (3 : ℝ) ≤ 1+18*((N+2 : ℕ) : ℝ)^2 := by nlinarith
+  have hP : (3 : ℝ) ≤ 1+18*((N+2 : ℕ) : ℝ)^2 := by nlinarith only [hNN]
   have hPC : (3 : ℝ) ≤ (1+18*((N+2 : ℕ) : ℝ)^2)*C :=
     hP.trans (le_mul_of_one_le_right (by positivity) hC)
   have ha : 3*H^(2*n) ≤ (1+18*((N+2 : ℕ) : ℝ)^2)*C*H^(2*n+2) := by
@@ -67,7 +67,7 @@ theorem WordBound.coarse_velocity_grade (hG : G.WordBound q R (3 * H ^ (2 * n)) 
   have hA : 0 ≤ (1+18*((N+2 : ℕ) : ℝ)^2)*C*H^(2*n+2) := by positivity
   have h := (hG.mono_amplitude (zero_le_one.trans hR) ha).coarse_grade hR hA N n hN hn
     (show highShift n ≤ 110*(n+1) by unfold highShift; omega)
-  exact h.mono_amplitude (by linarith) (tailBase_absorption R H C hC0 N n)
+  exact h.mono_amplitude (by linarith only [hR]) (tailBase_absorption R H C hC0 N n)
 
 end Field
 end EulerPacketCylinderField

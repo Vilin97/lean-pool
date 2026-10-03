@@ -52,7 +52,7 @@ theorem shiftedSet_measurable (a : Space) (S : Set Space) (hS : MeasurableSet S)
 /-- Translation carries an actual supported L² field into its translated support set. -/
 theorem translation_mem (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ : MeasurableSet Ω)
     (hsub : shiftedSet a S ⊆ Ω) (u : supportedSpace (V := V) volume S hS) :
-    translation a (u : L2Space V) ∈ supportedSpace volume Ω hΩ := by
+    translation (V := V) a (u : L2Space V) ∈ supportedSpace volume Ω hΩ := by
   apply (mem_supportedSpace_ae volume Ω hΩ _).2
   have hu := (mem_supportedSpace_ae volume S hS (u : L2Space V)).1 u.property
   filter_upwards [translation_ae a (u : L2Space V),
@@ -75,7 +75,7 @@ def intoLarger (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ : Meas
 @[simp] theorem intoLarger_coe (a : Space) (S Ω : Set Space) (hS : MeasurableSet S) (hΩ :
     MeasurableSet Ω)
     (hsub : shiftedSet a S ⊆ Ω) (u : supportedSpace (V := V) volume S hS) :
-    (intoLarger a S Ω hS hΩ hsub u : L2Space V) = translation a (u : L2Space V) := rfl
+    (intoLarger a S Ω hS hΩ hsub u : L2Space V) = translation (V := V) a (u : L2Space V) := rfl
 
 /-- The translated coefficient is the literal original field at `x+a`. -/
 def translatedField (A : Field (α := Space) (V := V)) (a : Space) : Field (α := Space) (V := V) :=
@@ -90,14 +90,11 @@ theorem operator_intertwines (a : Space) (S Ω : Set Space) (hS : MeasurableSet 
       intoLarger a S Ω hS hΩ hsub (operator volume S hS A u) := by
   apply Subtype.ext
   apply Lp.ext
-  filter_upwards [full_ae volume (translatedField A a) (translation a (u : L2Space V)),
+  filter_upwards [full_ae volume (translatedField A a) (translation (V := V) a (u : L2Space V)),
     translation_ae a (u : L2Space V), translation_ae a (full volume A (u : L2Space V)),
     (measurePreserving_add_right (volume : Measure Space) a).quasiMeasurePreserving.ae
       (full_ae volume A (u : L2Space V))] with x hl hu hr ha
-  change (full volume (translatedField A a) (translation a (u : L2Space V))) x =
-    (translation a (full volume A (u : L2Space V))) x
-  rw [hl, hu, hr, ha]
-  rfl
+  exact hl.trans ((congrArg (translatedField A a x) hu).trans (ha.symm.trans hr.symm))
 
 /-- Compactly supported data have a qualitative translation neighborhood
 inside any prescribed larger open support region. -/
@@ -143,10 +140,11 @@ def translate (a : LiftTangent) : CylinderL2 period V →ₗᵢ[ℝ] CylinderL2 
     (measurePreserving_translation period (coveringMap period a))
 
 theorem translate_ae (a : LiftTangent) (u : CylinderL2 period V) :
-    translate period a u =ᵐ[liftMeasure period] fun x => u (x+coveringMap period a) :=
+    translate (V := V) period a u =ᵐ[liftMeasure period] fun x => u (x+coveringMap period a) :=
   Lp.coeFn_compMeasurePreserving u (measurePreserving_translation period (coveringMap period a))
 
-@[simp] theorem translate_zero (u : CylinderL2 period V) : translate period 0 u = u := by
+@[simp] theorem translate_zero (u : CylinderL2 period V) :
+    translate (V := V) period 0 u = u := by
   apply Lp.ext
   filter_upwards [translate_ae period 0 u] with x hx
   simpa only [coveringMap, Prod.fst_zero, Prod.snd_zero, AddCircle.coe_zero, Prod.mk_zero_zero,
@@ -160,16 +158,18 @@ theorem coveringMap_add (a b : LiftTangent) :
   · simp only [coveringMap, Prod.snd_add, QuotientAddGroup.mk_add]
 
 theorem translate_add (a b : LiftTangent) (u : CylinderL2 period V) :
-    translate period a (translate period b u) = translate period (a+b) u := by
+    translate (V := V) period a (translate (V := V) period b u) =
+      translate (V := V) period (a+b) u := by
   apply Lp.ext
-  filter_upwards [translate_ae period a (translate period b u), translate_ae period (a+b) u,
+  filter_upwards [translate_ae period a (translate (V := V) period b u),
+    translate_ae period (a+b) u,
     (measurePreserving_translation period (coveringMap period a)).quasiMeasurePreserving.ae
       (translate_ae period b u)] with x ha hab hb
   rw [ha,hb,hab,coveringMap_add,add_assoc]
 
 /-- This is an actual strongly continuous action on the full cylinder L². -/
 theorem translate_continuous (u : CylinderL2 period V) :
-    Continuous (fun a : LiftTangent => translate period a u) := by
+    Continuous (fun a : LiftTangent => translate (V := V) period a u) := by
   let g : LiftTangent → C(LiftDomain period,LiftDomain period) := fun a =>
     ⟨fun x => x+coveringMap period a, continuous_id.add continuous_const⟩
   have hg : Continuous g := ContinuousMap.continuous_of_continuous_uncurry g
@@ -181,11 +181,11 @@ variable {K : Type*} [TopologicalSpace K] [CompactSpace K]
 
 /-- The same mixed translation on actual continuous time paths. -/
 def pathTranslate (a : LiftTangent) : C(K,CylinderL2 period V) →L[ℝ] C(K,CylinderL2 period V) :=
-  (translate period a).toContinuousLinearMap.compLeftContinuous ℝ K
+  (translate (V := V) period a).toContinuousLinearMap.compLeftContinuous ℝ K
 
 omit [CompactSpace K] in
 @[simp] theorem pathTranslate_apply (a : LiftTangent) (u : C(K, CylinderL2 period V)) (t : K) :
-    pathTranslate period a u t = translate period a (u t) := rfl
+    pathTranslate (K := K) (V := V) period a u t = translate (V := V) period a (u t) := rfl
 
 theorem pathTranslate_norm (a : LiftTangent) : ‖pathTranslate (K := K) (V := V) period a‖ ≤ 1 := by
   apply opNorm_le_bound _ zero_le_one
@@ -193,7 +193,7 @@ theorem pathTranslate_norm (a : LiftTangent) : ‖pathTranslate (K := K) (V := V
   rw [one_mul]
   apply (ContinuousMap.norm_le _ (norm_nonneg u)).2
   intro t
-  change ‖translate period a (u t)‖ ≤ ‖u‖
+  change ‖translate (V := V) period a (u t)‖ ≤ ‖u‖
   rw [LinearIsometry.norm_map]
   exact u.norm_coe_le_norm t
 
@@ -209,7 +209,7 @@ def fieldLift : (Space →ᵇ W) →L[ℝ] (LiftDomain period →ᵇ W) :=
 
 omit [Fact (0 < period)] in
 @[simp] theorem fieldLift_apply (A : Space →ᵇ W) (x : LiftDomain period) :
-    fieldLift period A x = A x.1 := rfl
+    fieldLift (W := W) period A x = A x.1 := rfl
 
 omit [Fact (0 < period)] in
 theorem fieldLift_norm : ‖fieldLift (W := W) period‖ ≤ 1 := by
@@ -228,7 +228,7 @@ def fieldPathLift : C(K,Space →ᵇ W) →L[ℝ] C(K,LiftDomain period →ᵇ W
 
 omit [CompactSpace K] [Fact (0 < period)] in
 @[simp] theorem fieldPathLift_apply (A : C(K, Space →ᵇ W)) (t : K) (x : LiftDomain period) :
-    fieldPathLift period A t x = A t x.1 := rfl
+    fieldPathLift (K := K) (W := W) period A t x = A t x.1 := rfl
 
 omit [Fact (0 < period)] in
 theorem fieldPathLift_norm : ‖fieldPathLift (K := K) (W := W) period‖ ≤ 1 := by
@@ -260,7 +260,7 @@ theorem translate_mem (a : LiftTangent) (S Ω : Set Space) (hS : MeasurableSet S
     (hsub : EulerLpSupportedTranslation.shiftedSet a.1 S ⊆ Ω)
     (u : supportedSpace (V := V) (liftMeasure period) (spatialSet period S) (spatialSet_measurable
         period S hS)) :
-    translate period a (u : CylinderL2 period V) ∈
+    translate (V := V) period a (u : CylinderL2 period V) ∈
       supportedSpace (liftMeasure period) (spatialSet period Ω) (spatialSet_measurable period Ω hΩ)
           := by
   apply (mem_supportedSpace_ae _ _ _ _).2

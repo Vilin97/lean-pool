@@ -82,10 +82,10 @@ theorem baseSize_inverse_bound (directions : ι → P)
       have h := baseSize_succ directions q f hf x
       change baseSize directions (q+1) f x = _ at h
       dsimp only [N]
-      linarith [norm_nonneg (f x)]
+      linarith only [h, norm_nonneg (f x)]
     have hdA : (∑ i, baseSize directions q (directional directions A i) x) ≤ B := by
       have h := baseSize_succ directions q A hA x
-      linarith [norm_nonneg (A x)]
+      linarith only [hAb, h, norm_nonneg (A x)]
     have hdi (i : ι) : baseSize directions q (directional directions u i) x ≤
         C*(baseSize directions q (directional directions f i) x +
           (2 : ℝ)^q*baseSize directions q (directional directions A i) x*baseSize directions q u x)
@@ -98,7 +98,7 @@ theorem baseSize_inverse_bound (directions : ι → P)
           directional directions f i y-directional directions A i y (u y)
         apply eq_sub_iff_add_eq.mpr
         have hd := congrFun (directional_bilinear directions
-          ((ContinuousLinearMap.apply ℝ E).flip) A u hA hu i) y
+          ((ContinuousLinearMap.apply (E := E) ℝ E).flip) A u hA hu i) y
         have he := congrArg (fun g : P → E => directional directions g i y) (funext heq)
         exact hd.symm.trans he
       have h := ih (directional directions u i) fᵢ (directional_contDiff directions u hu i) hfᵢ
@@ -121,9 +121,10 @@ theorem baseSize_inverse_bound (directions : ι → P)
             (2 : ℝ)^q*(∑ i, baseSize directions q (directional directions A i) x)*baseSize
                 directions q u x) := by
           simp only [← mul_sum, sum_add_distrib, ← sum_mul]
-        _ ≤ C*(N+(2 : ℝ)^q*B*(C*N)) := by
-          gcongr
-          exact baseSize_nonneg directions q u x
+        _ ≤ C*(N+(2 : ℝ)^q*B*(C*N)) :=
+          mul_le_mul_of_nonneg_left (add_le_add hdf (mul_le_mul
+            (mul_le_mul_of_nonneg_left hdA (pow_nonneg zero_le_two q)) huq
+            (baseSize_nonneg directions q u x) (mul_nonneg (pow_nonneg zero_le_two q) hB))) hC
     rw [baseSize_succ directions q u hu x]
     calc
       _ ≤ I*N+C*(N+(2 : ℝ)^q*B*(C*N)) := add_le_add hzero hsum

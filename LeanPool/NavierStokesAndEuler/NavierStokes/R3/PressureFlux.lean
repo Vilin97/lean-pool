@@ -163,7 +163,7 @@ theorem compact_time_integration_by_parts {T : ℝ} {a F D : ℝ → ℝ}
     exact (lt_irrefl T) (hsupp h).2)
   rw [intervalIntegral.integral_add hi₁ hi₂, Pi.mul_apply, Pi.mul_apply, ha0, haT, zero_mul,
       zero_mul, sub_self] at hFTC
-  linarith
+  linarith only [hFTC]
 
 /-- The compact pressure-gradient identity integrated against a time test.
 Both derivatives of the velocity have transferred to the two test functions. -/
@@ -531,7 +531,7 @@ theorem norm_sub_cutoffTest_le (R : ℝ) (ψ : Space → ℂ) (x : Space) :
     ring
   rw [heq, norm_mul, Complex.norm_real, Real.norm_eq_abs,
     abs_of_nonneg (sub_nonneg.mpr (cutoff_le_one R x))]
-  exact mul_le_of_le_one_left (norm_nonneg _) (by linarith [cutoff_nonneg R x])
+  exact mul_le_of_le_one_left (norm_nonneg _) (by linarith only [cutoff_nonneg R x])
 
 /-- The compact approximations converge uniformly on all of space. -/
 theorem tendstoUniformly_cutoffTest {ψ : Space → ℂ} (hψ : Continuous ψ)
@@ -766,7 +766,7 @@ theorem timeAverage_norm_integral_le {E : Type*} [NormedAddCommGroup E]
       integral_mono hF.integral_prod_right.norm hF.integral_norm_prod_right
         (fun x => norm_integral_le_integral_norm (fun t => a t • f (t, x)))
     _ = ∫ t in Icc 0 T, ∫ x : Space, ‖a t • f (t, x)‖ :=
-      (integral_integral_swap hF.norm).symm
+      (integral_integral_swap (f := fun t x => ‖a t • f (t, x)‖) hF.norm).symm
     _ ≤ ∫ t in Icc 0 T, ‖a t‖ * M := by
       apply integral_mono_ae hF.integral_norm_prod_left (ha.norm.integrableOn_Icc.mul_const M)
       filter_upwards [ae_restrict_mem measurableSet_Icc] with t ht
@@ -784,7 +784,7 @@ theorem integral_timeAverage_eq {E : Type*} [NormedAddCommGroup E]
       ∫ t in Icc 0 T, a t • (∫ x : Space, f (t, x)) := by
   have hF := timeAverage_integrand_integrable ha hf hslice hbound
   change (∫ x : Space, ∫ t in Icc 0 T, a t • f (t, x)) = _
-  rw [← integral_integral_swap hF]
+  rw [← integral_integral_swap (f := fun t x => a t • f (t, x)) hF]
   simp only [integral_smul]
 
 /-- Cauchy--Schwarz for a Bochner integral over a finite measure space. -/
@@ -856,7 +856,7 @@ theorem l2Sq_timeIntegral_le {E : Type*} [NormedAddCommGroup E]
       simpa only [Prod.swap_prod_mk] using norm_integral_sq_le_measure_mul_integral_sq hxtwo
     _ = ((volume : Measure ℝ).restrict (Icc 0 T)).real univ *
         ∫ t in Icc 0 T, ∫ x : Space, ‖f (t, x)‖ ^ 2 := by
-      rw [integral_const_mul, ← integral_integral_swap hsq]
+      rw [integral_const_mul, ← integral_integral_swap (f := fun t x => ‖f (t, x)‖ ^ 2) hsq]
 
 /-- Squared norm integrability of the weighted joint field follows from a
 uniform spatial square-integral bound. -/
@@ -886,7 +886,8 @@ theorem timeAverage_memLp_two {E : Type*} [NormedAddCommGroup E]
     (hslice : ∀ t ∈ Icc 0 T, Integrable (fun x : Space => ‖f (t, x)‖ ^ 2))
     (hbound : ∀ t ∈ Icc 0 T, (∫ x : Space, ‖f (t, x)‖ ^ 2) ≤ M) :
     MemLp (timeAverage T a f) 2 volume :=
-  memLp_two_timeIntegral (aestronglyMeasurable_slab (continuousOn_time_weight ha hf))
+  memLp_two_timeIntegral (E := E) (T := T) (f := fun z : SpaceTime => a z.1 • f z)
+    (aestronglyMeasurable_slab (continuousOn_time_weight ha hf))
     (timeAverage_integrand_integrable_sq_norm ha hf hslice hbound)
 
 /-- A quantitative square-integral estimate using only the time weight and
@@ -984,7 +985,8 @@ theorem timeAverage_difference_component_memLp_two {T : ℝ} {a : ℝ → ℝ}
   obtain ⟨M, _, hM⟩ :=
     uniformFiniteEnergy_difference_component_l2Sq_bound hu_cont hv_cont hu hv k
   exact timeAverage_memLp_two ha
-    ((EuclideanSpace.proj k : Space →L[ℝ] ℝ).continuous.comp_continuousOn (hu_cont.sub hv_cont))
+    ((EuclideanSpace.proj k : Space →L[ℝ] ℝ).continuous.comp_continuousOn (f := u - v)
+      (hu_cont.sub hv_cont))
     (fun t ht => (hM t ht).1) (fun t ht => (hM t ht).2)
 
 /-- Each nonlinear tensor component is jointly continuous on the slab. -/
@@ -1024,13 +1026,13 @@ theorem l2_inner_integrable_and_norm_integral_le {E : Type*} [NormedAddCommGroup
   have hg_sq := (memLp_two_iff_integrable_sq_norm hg.aestronglyMeasurable).1 hg
   have hpoint (x : Space) : ‖⟪f x, g x⟫_ℝ‖ ≤ ‖f x‖ ^ 2 + ‖g x‖ ^ 2 := by
     apply (norm_inner_le_norm (f x) (g x)).trans
-    nlinarith [sq_nonneg (‖f x‖ - ‖g x‖), mul_nonneg (norm_nonneg (f x)) (norm_nonneg (g x))]
-  have hint := (hf_sq.add hg_sq).mono'
-    (hf.aestronglyMeasurable.inner hg.aestronglyMeasurable)
+    nlinarith only [sq_nonneg (‖f x‖ - ‖g x‖), mul_nonneg (norm_nonneg (f x)) (norm_nonneg (g x))]
+  have hint := (hf_sq.add hg_sq).mono' (β := ℝ)
+    (hf.aestronglyMeasurable.inner (𝕜 := ℝ) (E := E) hg.aestronglyMeasurable)
     (Filter.Eventually.of_forall hpoint)
   refine ⟨hint, ?_⟩
   calc
-    (∫ x : Space, ‖⟪f x, g x⟫_ℝ‖) ≤ ∫ x : Space, ‖f x‖ ^ 2 + ‖g x‖ ^ 2 :=
+    (∫ x : Space, ‖⟪f x, g x⟫_ℝ‖) ≤ ∫ x : Space, ‖f x‖ ^ (2 : ℕ) + ‖g x‖ ^ (2 : ℕ) :=
       integral_mono hint.norm (hf_sq.add hg_sq) hpoint
     _ = l2Sq f + l2Sq g := integral_add hf_sq hg_sq
 
@@ -1143,13 +1145,13 @@ theorem l2_complex_mul_integrable_and_norm_integral_le {f : Space → ℝ} {ψ :
   have hψ_sq := (memLp_two_iff_integrable_sq_norm hψ.aestronglyMeasurable).1 hψ
   have hpoint (x : Space) : ‖(f x : ℂ) * ψ x‖ ≤ ‖f x‖ ^ 2 + ‖ψ x‖ ^ 2 := by
     rw [norm_mul, Complex.norm_real]
-    nlinarith [sq_nonneg (‖f x‖ - ‖ψ x‖), mul_nonneg (norm_nonneg (f x)) (norm_nonneg (ψ x))]
+    nlinarith only [sq_nonneg (‖f x‖ - ‖ψ x‖), mul_nonneg (norm_nonneg (f x)) (norm_nonneg (ψ x))]
   have hmeas := (Complex.continuous_ofReal.comp_aestronglyMeasurable
     hf.aestronglyMeasurable).mul hψ.aestronglyMeasurable
   have hint := (hf_sq.add hψ_sq).mono' hmeas (Filter.Eventually.of_forall hpoint)
   refine ⟨hint, ?_⟩
   calc
-    (∫ x : Space, ‖(f x : ℂ) * ψ x‖) ≤ ∫ x : Space, ‖f x‖ ^ 2 + ‖ψ x‖ ^ 2 :=
+    (∫ x : Space, ‖(f x : ℂ) * ψ x‖) ≤ ∫ x : Space, ‖f x‖ ^ (2 : ℕ) + ‖ψ x‖ ^ (2 : ℕ) :=
       integral_mono hint.norm (hf_sq.add hψ_sq) hpoint
     _ = l2Sq f + l2Sq ψ := integral_add hf_sq hψ_sq
 
@@ -1301,12 +1303,12 @@ theorem velocityAverage_pairing {T : ℝ} {u v : VelocityField} {p q : PressureF
   obtain ⟨M, _, hM⟩ := uniformFiniteEnergy_difference_component_l2Sq_bound
     H.smooth_u.continuousOn H.smooth_v.continuousOn H.energy_u H.energy_v k
   have hf : ContinuousOn (fun z => (u - v) z k) (Comparison.slab 0 T) :=
-    (EuclideanSpace.proj k : Space →L[ℝ] ℝ).continuous.comp_continuousOn
+    (EuclideanSpace.proj k : Space →L[ℝ] ℝ).continuous.comp_continuousOn (f := u - v)
       (H.smooth_u.continuousOn.sub H.smooth_v.continuousOn)
   have h := timeAverage_complex_pairing_of_memLp_two
     (f := fun z => (u - v) z k) (ψ := (realTest ψ hψ hcψ : Space → ℂ)) ha hf
     (fun t ht => (hM t ht).1) (fun t ht => (hM t ht).2)
-    (realTest ψ hψ hcψ).continuous ((realTest ψ hψ hcψ).memLp 2)
+    (realTest ψ hψ hcψ).continuous ((realTest ψ hψ hcψ).memLp 2 volume)
   apply Complex.ofReal_injective
   simpa only [velocityAverage, realTest_apply, ← Complex.ofReal_mul, integral_complex_ofReal] using
       h
@@ -1728,7 +1730,7 @@ theorem norm_r_le {φ : Space → ℝ} {w : Space → Space} {x : Space}
     ‖r φ w x‖ ≤ (8 * L) * ‖(φ x ^ 3) • w x‖ := by
   have hp2 : φ x ^ 2 ≤ 1 := pow_le_one₀ hφ0 hφ1
   have hp : φ x ^ 5 ≤ φ x ^ 3 := by
-    nlinarith [mul_le_mul_of_nonneg_left hp2 (pow_nonneg hφ0 3)]
+    nlinarith only [hp2, hφ0, mul_le_mul_of_nonneg_left hp2 (pow_nonneg hφ0 3)]
   have happly : ‖fderiv ℝ φ x (w x)‖ ≤ L * ‖w x‖ :=
     ((fderiv ℝ φ x).le_opNorm (w x)).trans
       (mul_le_mul_of_nonneg_right hL (norm_nonneg _))
@@ -1738,7 +1740,7 @@ theorem norm_r_le {φ : Space → ℝ} {w : Space → Space} {x : Space}
     _ ≤ 8 * φ x ^ 5 * (L * ‖w x‖) :=
       mul_le_mul_of_nonneg_left happly (by positivity)
     _ ≤ (8 * L) * (φ x ^ 3 * ‖w x‖) := by
-      nlinarith [mul_le_mul_of_nonneg_right hp (mul_nonneg hL0 (norm_nonneg (w x)))]
+      nlinarith only [hp, hL0, mul_le_mul_of_nonneg_right hp (mul_nonneg hL0 (norm_nonneg (w x)))]
     _ = (8 * L) * ‖(φ x ^ 3) • w x‖ := by
       rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg hφ0 3)]
 
@@ -1785,8 +1787,8 @@ private theorem norm_fderiv_apply_le {φ : Space → ℝ} {w : Space → Space} 
       ‖fderiv ℝ φ x‖ * ‖fderiv ℝ w x‖ + ‖fderiv ℝ (fderiv ℝ φ) x‖ * ‖w x‖ := by
   have hflip : ‖(fderiv ℝ (fderiv ℝ φ) x).flip (w x)‖ ≤
       ‖fderiv ℝ (fderiv ℝ φ) x‖ * ‖w x‖ := by
-    apply ContinuousLinearMap.opNorm_le_bound _ (by positivity)
-    intro z
+    refine ContinuousLinearMap.opNorm_le_bound _
+      (mul_nonneg (ContinuousLinearMap.opNorm_nonneg _) (norm_nonneg _)) fun z => ?_
     change ‖fderiv ℝ (fderiv ℝ φ) x z (w x)‖ ≤ _
     calc
       _ ≤ ‖fderiv ℝ (fderiv ℝ φ) x z‖ * ‖w x‖ :=
@@ -1795,9 +1797,8 @@ private theorem norm_fderiv_apply_le {φ : Space → ℝ} {w : Space → Space} 
         mul_le_mul_of_nonneg_right ((fderiv ℝ (fderiv ℝ φ) x).le_opNorm z)
           (norm_nonneg _)
       _ = _ := by ring
-  rw [fderiv_clm_apply hφ hw]
-  exact (norm_add_le _ _).trans
-    (add_le_add (ContinuousLinearMap.opNorm_comp_le _ _) hflip)
+  exact (congrArg (‖·‖) (fderiv_clm_apply hφ hw)).trans_le ((norm_add_le _ _).trans
+    (add_le_add (ContinuousLinearMap.opNorm_comp_le _ _) hflip))
 
 /-- Product differentiation before replacing the cutoff derivative norms by constants. -/
 theorem norm_fderiv_r_le_raw {φ : Space → ℝ} {w : Space → Space}
@@ -1821,19 +1822,13 @@ theorem norm_fderiv_r_le_raw {φ : Space → ℝ} {w : Space → Space}
     have heq : fderiv ℝ (fun y => φ y ^ 5) x = (5 * φ x ^ 4) • fderiv ℝ φ x := by
       simpa only [Function.comp_def, Nat.cast_ofNat, Nat.reduceSub] using
         ((hasDerivAt_pow 5 (φ x)).comp_hasFDerivAt x hdφ.hasFDerivAt).fderiv
-    rw [heq]
-    calc
-      _ ≤ ‖(5 : ℝ) * φ x ^ 4‖ * ‖fderiv ℝ φ x‖ :=
-        ContinuousLinearMap.opNorm_smul_le (5 * φ x ^ 4) (fderiv ℝ φ x)
-      _ = _ := by rw [Real.norm_of_nonneg (by positivity : 0 ≤ 5 * φ x ^ 4)]
+    rw [heq, norm_smul, Real.norm_of_nonneg (mul_nonneg (by norm_num) (pow_nonneg hφ0 4))]
   have hq : ‖q x‖ ≤ ‖fderiv ℝ φ x‖ * ‖w x‖ := (fderiv ℝ φ x).le_opNorm _
-  have hDq : ‖fderiv ℝ q x‖ ≤ ‖fderiv ℝ φ x‖ * ‖fderiv ℝ w x‖ +
-      ‖fderiv ℝ (fderiv ℝ φ) x‖ * ‖w x‖ := norm_fderiv_apply_le hdDφ hdw
+  have hDq := norm_fderiv_apply_le hdDφ hdw
   calc
     ‖fderiv ℝ (r φ w) x‖ ≤ 8 * ‖fderiv ℝ (fun y => φ y ^ 5 * q y) x‖ := by
-      rw [hr, fderiv_const_mul (a := fun y => φ y ^ 5 * q y) ((hdφ.pow 5).mul hdq) 8]
-      simpa using ContinuousLinearMap.opNorm_smul_le (8 : ℝ)
-        (fderiv ℝ (fun y => φ y ^ 5 * q y) x)
+      rw [hr, fderiv_const_mul (a := fun y => φ y ^ 5 * q y) ((hdφ.pow 5).mul hdq) 8,
+        norm_smul, Real.norm_of_nonneg (by norm_num : (0 : ℝ) ≤ 8)]
     _ ≤ 8 * (φ x ^ 5 * ‖fderiv ℝ q x‖ +
         ‖q x‖ * ‖fderiv ℝ (fun y => φ y ^ 5) x‖) := by
       apply mul_le_mul_of_nonneg_left _ (by norm_num)
@@ -1844,7 +1839,7 @@ theorem norm_fderiv_r_le_raw {φ : Space → ℝ} {w : Space → Space}
         (‖fderiv ℝ φ x‖ * ‖w x‖) * (5 * φ x ^ 4 * ‖fderiv ℝ φ x‖)) := by
       apply mul_le_mul_of_nonneg_left _ (by norm_num)
       apply add_le_add (mul_le_mul_of_nonneg_left hDq (pow_nonneg hφ0 5))
-      exact mul_le_mul hq hpow (norm_nonneg _) (by positivity)
+      exact mul_le_mul hq hpow (norm_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))
     _ = _ := by ring
 
 /-- Only the weighted velocity derivative occurs in the pointwise bound. -/
@@ -1857,8 +1852,7 @@ theorem norm_fderiv_r_le_amplitude {φ : Space → ℝ} {w : Space → Space}
         (40 * L ^ 2 + 8 * J) * ‖w x‖ := by
   have hp4 : φ x ^ 4 ≤ 1 := pow_le_one₀ hφ0 hφ1
   have hp5 : φ x ^ 5 ≤ 1 := pow_le_one₀ hφ0 hφ1
-  have hp54 : φ x ^ 5 ≤ φ x ^ 4 := by
-    nlinarith [mul_le_mul_of_nonneg_left hφ1 (pow_nonneg hφ0 4)]
+  have hp54 : φ x ^ 5 ≤ φ x ^ 4 := pow_le_pow_of_le_one hφ0 hφ1 (by norm_num)
   have hgrad := GradientOperator.norm_fderiv_le_three_mul_sqrt_gradientSq w x
   have h1 : φ x ^ 5 * ‖fderiv ℝ φ x‖ * ‖fderiv ℝ w x‖ ≤
       3 * L * WeightedSobolev.cutoffGradientAmplitude φ w x := by
@@ -1867,10 +1861,8 @@ theorem norm_fderiv_r_le_amplitude {φ : Space → ℝ} {w : Space → Space}
         mul_le_mul (mul_le_mul hp54 hL (norm_nonneg _) (pow_nonneg hφ0 4)) hgrad
           (norm_nonneg _) (mul_nonneg (pow_nonneg hφ0 4) hL0)
       _ = _ := by unfold WeightedSobolev.cutoffGradientAmplitude; ring
-  have h2 : φ x ^ 5 * ‖fderiv ℝ (fderiv ℝ φ) x‖ * ‖w x‖ ≤ J * ‖w x‖ := by
-    apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
-    simpa only [one_mul] using
-      mul_le_mul hp5 hJ (norm_nonneg (fderiv ℝ (fderiv ℝ φ) x)) zero_le_one
+  have h2 := mul_le_mul_of_nonneg_right
+    ((mul_le_mul hp5 hJ (norm_nonneg _) zero_le_one).trans_eq (one_mul J)) (norm_nonneg (w x))
   have hsquare : ‖fderiv ℝ φ x‖ ^ 2 ≤ L ^ 2 :=
     pow_le_pow_left₀ (norm_nonneg _) hL 2
   have h3 : 5 * φ x ^ 4 * ‖fderiv ℝ φ x‖ ^ 2 * ‖w x‖ ≤
@@ -1906,7 +1898,8 @@ theorem memLp_and_lpNorm_fderiv_r_two_le {φ : Space → ℝ} {w : Space → Spa
   have hG24 : MemLp (fun x => (24 * L) • G x) 2 volume := hG.const_smul (24 * L)
   have hw40 : MemLp (fun x => (40 * L ^ 2 + 8 * J) • ‖w x‖) 2 volume :=
     hw2.norm.const_mul (40 * L ^ 2 + 8 * J)
-  have hc : 0 ≤ 40 * L ^ 2 + 8 * J := by positivity
+  have hc : 0 ≤ 40 * L ^ 2 + 8 * J :=
+    add_nonneg (mul_nonneg (by norm_num) (sq_nonneg L)) (mul_nonneg (by norm_num) hJ0)
   refine ⟨memLp_fderiv_r hφ hs hw 2, ?_⟩
   calc
     comparisonLpNorm 2 (fderiv ℝ (r φ w)) ≤
@@ -1915,10 +1908,10 @@ theorem memLp_and_lpNorm_fderiv_r_two_le {φ : Space → ℝ} {w : Space → Spa
       intro x
       have hp := norm_fderiv_r_le_amplitude hφ hw x (hφ0 x) (hφ1 x) hL0 (hL x) (hJ x)
       simpa only [Pi.add_apply, smul_eq_mul, Real.norm_eq_abs,
-        abs_of_nonneg (show 0 ≤ (24 * L) * G x + (40 * L ^ 2 + 8 * J) * ‖w x‖ by
-          have := WeightedSobolev.cutoffGradientAmplitude_nonneg φ w x
-          dsimp [G] at *
-          positivity)] using hp
+        abs_of_nonneg (show 0 ≤ (24 * L) * G x + (40 * L ^ 2 + 8 * J) * ‖w x‖ from
+          add_nonneg (mul_nonneg (mul_nonneg (by norm_num) hL0)
+            (WeightedSobolev.cutoffGradientAmplitude_nonneg φ w x))
+            (mul_nonneg hc (norm_nonneg _)))] using hp
     _ ≤ comparisonLpNorm 2 (fun x => (24 * L) • G x) +
         comparisonLpNorm 2 (fun x => (40 * L ^ 2 + 8 * J) • ‖w x‖) :=
       LpNormTools.lpNorm_add_le (by norm_num) hG24 hw40
@@ -1943,7 +1936,7 @@ theorem lpNorm_fderiv_r_two_le {φ : Space → ℝ} {w : Space → Space}
   have h := (memLp_and_lpNorm_fderiv_r_two_le hφ hs hw hw2 hφ0 hφ1 hL0 hJ0 hL hJ).2
   have hA := Real.sqrt_nonneg (∫ x, φ x ^ 8 * gradientSq w x)
   have hM := LpNormTools.lpNorm_nonneg 2 w
-  nlinarith [mul_nonneg hL0 hA, mul_nonneg hJ0 hM]
+  nlinarith only [h, hL0, hA, hJ0, hM, mul_nonneg hL0 hA, mul_nonneg hJ0 hM]
 
 /-- The actual test at radius `R` in the fixed cutoff family. -/
 def cutoffTest (R : ℝ) (w : Space → Space) : Space → ℝ :=
@@ -2434,7 +2427,8 @@ theorem norm_weighted_tensorDiff_le (u v : VelocityField) (t : ℝ) (i j : Fin 3
       mul_le_mul_of_nonneg_left ht (sq_nonneg s)
     _ ≤ 2 * (‖a‖ * ‖w‖) + ‖s • w‖ ^ 2 := by
       rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg hs0]
-      nlinarith [mul_nonneg (sub_nonneg.mpr hs2) (mul_nonneg (norm_nonneg a) (norm_nonneg w))]
+      nlinarith only [hs2,
+          mul_nonneg (sub_nonneg.mpr hs2) (mul_nonneg (norm_nonneg a) (norm_nonneg w))]
 
 /-- Compactness supplies finite weighted tensor norms without any growth
 assumption on either velocity. -/
@@ -2479,12 +2473,10 @@ theorem weighted_tensorDiff_bound {φ : Space → ℝ} {u v : VelocityField} {t 
       apply LpNormTools.lpNorm_mono_of_norm_le (h2P.add hQ)
       intro x
       change ‖φ x ^ 2 * tensorDiff u v t i j x‖ ≤ ‖2 * P x + Q x‖
-      have hn : ‖2 * P x + Q x‖ = 2 * P x + Q x := by
-        rw [Real.norm_eq_abs, abs_of_nonneg]
-        dsimp [P, Q]
-        positivity
-      rw [hn]
-      exact norm_weighted_tensorDiff_le u v t i j x (hφ0 x) (hφ1 x)
+      have hn : ‖2 * P x + Q x‖ = 2 * P x + Q x :=
+        Real.norm_of_nonneg (add_nonneg (mul_nonneg zero_le_two
+          (mul_nonneg (norm_nonneg _) (norm_nonneg _))) (sq_nonneg _))
+      exact (norm_weighted_tensorDiff_le u v t i j x (hφ0 x) (hφ1 x)).trans_eq hn.symm
     _ ≤ comparisonLpNorm (6 / 5) (fun x => (2 : ℝ) • P x) + comparisonLpNorm (6 / 5) Q :=
       LpNormTools.lpNorm_add_le (by
         apply (ENNReal.toReal_le_toReal ENNReal.one_ne_top six_fifths_ne_top).mp
@@ -2497,7 +2489,7 @@ theorem weighted_tensorDiff_bound {φ : Space → ℝ} {u v : VelocityField} {t 
         comparisonLpNorm 2 (fun x => (u - v) (t, x)) ^ (3 / 2 : ℝ) *
           comparisonLpNorm 6 (fun x => φ x ^ 4 • (u - v) (t, x)) ^ (1 / 2 : ℝ) +
         2 * comparisonLpNorm 2 (fun x => (u - v) (t, x)) * comparisonLpNorm 3 (fun x => u (t, x))
-      nlinarith
+      linarith only [hPb, hQb]
 
 end NavierStokesR3.LocalizedTensorBounds
 
@@ -2924,16 +2916,17 @@ theorem uniform_expression_bound {C₁ C₂ M₀ U₀ G₀ M U G A B R : ℝ}
   have hM₀p := Real.rpow_nonneg hM₀ (3 / 2 : ℝ)
   have hM₀p₄ := Real.rpow_nonneg hM₀ (1 / 4 : ℝ)
   have hRp := Real.rpow_nonneg hR.le (-(7 / 4 : ℝ))
+  have hm0 : 0 ≤ 2 * M₀ := mul_nonneg zero_le_two hM₀
+  have hm0u0 : 0 ≤ 2 * M₀ * U₀ := mul_nonneg hm0 hU₀
   have hMU : 2 * M * U ≤ 2 * M₀ * U₀ :=
-    mul_le_mul (mul_le_mul_of_nonneg_left hMM (by norm_num)) hUU hU (by positivity)
+    mul_le_mul (mul_le_mul_of_nonneg_left hMM zero_le_two) hUU hU hm0
   have hT : M ^ (3 / 2 : ℝ) * B ^ (1 / 2 : ℝ) + 2 * M * U ≤
       (M₀ ^ (3 / 2 : ℝ) + 2 * M₀ * U₀) * (B ^ (1 / 2 : ℝ) + 1) := by
     have h := add_le_add (mul_le_mul_of_nonneg_right hMp hB₁) hMU
-    have hm0u0 : 0 ≤ 2 * M₀ * U₀ := by positivity
     exact h.trans (by simpa only [mul_one] using
       sum_products_le_product_sums hM₀p hm0u0 hB₁ zero_le_one)
   have hAR : 0 ≤ A / R := div_nonneg hA hR.le
-  have hInv : 0 ≤ 1 / R ^ 2 := by positivity
+  have hInv : 0 ≤ 1 / R ^ 2 := div_nonneg zero_le_one (sq_nonneg R)
   have hD : A / R + M / R ^ 2 ≤ (M₀ + 1) * (A / R + 1 / R ^ 2) := by
     have hdiv := (div_le_div_iff_of_pos_right (sq_pos_of_pos hR)).2 hMM
     have hdiv' : M / R ^ 2 ≤ M₀ * (1 / R ^ 2) := by simpa only [mul_one_div] using hdiv
@@ -2947,7 +2940,9 @@ theorem uniform_expression_bound {C₁ C₂ M₀ U₀ G₀ M U G A B R : ℝ}
     calc
       _ ≤ (C₁ * ((M₀ ^ (3 / 2 : ℝ) + 2 * M₀ * U₀) * (B ^ (1 / 2 : ℝ) + 1))) *
           ((M₀ + 1) * (A / R + 1 / R ^ 2)) :=
-        mul_le_mul (mul_le_mul_of_nonneg_left hT hC₁) hD (by positivity) (by positivity)
+        mul_le_mul (mul_le_mul_of_nonneg_left hT hC₁) hD
+          (add_nonneg hAR (div_nonneg hM (sq_nonneg R)))
+          (mul_nonneg hC₁ (mul_nonneg (add_nonneg hM₀p hm0u0) (add_nonneg hB₁ zero_le_one)))
       _ = _ := by ring
   have hcoeff : C₂ * G * M ^ (1 / 4 : ℝ) ≤ C₂ * G₀ * M₀ ^ (1 / 4 : ℝ) :=
     mul_le_mul (mul_le_mul_of_nonneg_left hGG hC₂) hMp₄
@@ -2957,9 +2952,11 @@ theorem uniform_expression_bound {C₁ C₂ M₀ U₀ G₀ M U G A B R : ℝ}
     calc
       _ = (C₂ * G * M ^ (1 / 4 : ℝ)) * (R ^ (-(7 / 4 : ℝ)) * B ^ (3 / 4 : ℝ)) := by ring
       _ ≤ _ := mul_le_mul_of_nonneg_right hcoeff (mul_nonneg hRp hB₃)
-  have hK₁ : 0 ≤ C₁ * (M₀ ^ (3 / 2 : ℝ) + 2 * M₀ * U₀) * (M₀ + 1) := by positivity
-  have hK₂ : 0 ≤ C₂ * G₀ * M₀ ^ (1 / 4 : ℝ) := by positivity
-  have hE₁ : 0 ≤ (B ^ (1 / 2 : ℝ) + 1) * (A / R + 1 / R ^ 2) := by positivity
+  have hK₁ : 0 ≤ C₁ * (M₀ ^ (3 / 2 : ℝ) + 2 * M₀ * U₀) * (M₀ + 1) :=
+    mul_nonneg (mul_nonneg hC₁ (add_nonneg hM₀p hm0u0)) (add_nonneg hM₀ zero_le_one)
+  have hK₂ : 0 ≤ C₂ * G₀ * M₀ ^ (1 / 4 : ℝ) := mul_nonneg (mul_nonneg hC₂ hG₀) hM₀p₄
+  have hE₁ : 0 ≤ (B ^ (1 / 2 : ℝ) + 1) * (A / R + 1 / R ^ 2) :=
+    mul_nonneg (add_nonneg hB₁ zero_le_one) (add_nonneg hAR hInv)
   have hE₂ : 0 ≤ R ^ (-(7 / 4 : ℝ)) * B ^ (3 / 4 : ℝ) := mul_nonneg hRp hB₃
   unfold uniformCoefficient
   exact (add_le_add hlocal hcomm).trans (sum_products_le_product_sums hK₁ hK₂ hE₁ hE₂)
@@ -2994,7 +2991,7 @@ theorem cutoff_commutator_bound {R : ℝ} (hR : 0 < R) {w : Space → Space}
     (ComparisonCutoffs.cutoff_smooth R).continuous.measurable
     (ComparisonCutoffs.cutoff_mem_Icc R) (cutoff_lipschitz hR) hg
     (rTest R hR w hw) (fluxTest R hR w hw)
-    (fluxTest_eq_multiplier_rTest R hR w hw) ((rTest R hR w hw).memLp 4)
+    (fluxTest_eq_multiplier_rTest R hR w hw) ((rTest R hR w hw).memLp 4 volume)
   have hH := Comparison.rieszCommutatorConstant_pos.le
   have hD := (ComparisonCutoffs.derivativeConstant_pos 1).le
   have hm : 0 ≤ max (2 * ComparisonCutoffs.derivativeConstant 1) 1 :=

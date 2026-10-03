@@ -46,7 +46,8 @@ theorem WordBound.coverTensor_bound (hG : G.WordBound q R A 0)
   let J := toJet P (G.toFieldTower.realization (n+q) t)
   have hl : levelNorm P J n ≤ blockNorm P J q n := by
     have h := single_le_sum (s := range (q+1)) (f := fun r => levelNorm P J (n+r))
-      (fun r _ => levelNorm_nonneg J) (show 0 ∈ range (q+1) by simp)
+      (fun r _ => levelNorm_nonneg J) (show 0 ∈ range (q+1) by simp only [Finset.mem_range,
+          lt_add_iff_pos_left, Order.lt_add_one_iff, zero_le])
     simpa only [blockNorm, Nat.add_zero] using h
   have hb : levelNorm P J n ≤ A*majorant R 0 n :=
     hl.trans ((G.toFieldTower_blockNorm_le (n+q) q n le_rfl t).trans (hG n))
@@ -94,8 +95,10 @@ theorem tensor_add (f g : LiftDomain P → V)
     (hf : ∀ q, ContDiff ℝ ∞ (localFieldLift P f q))
     (hg : ∀ q, ContDiff ℝ ∞ (localFieldLift P g q)) (n : ℕ) (q : LiftDomain P) :
     tensor P (fun x => f x + g x) n q = tensor P f n q + tensor P g n q := by
-  exact iteratedFDeriv_add_apply ((coverField_contDiff P f hf).of_le (by simp)).contDiffAt
-    ((coverField_contDiff P g hg).of_le (by simp)).contDiffAt
+  exact iteratedFDeriv_add_apply ((coverField_contDiff P f hf).of_le (by simp only [
+      WithTop.le_coe_top, ne_eq, WithTop.natCast_ne_top, not_false_eq_true])).contDiffAt
+    ((coverField_contDiff P g hg).of_le (by simp only [WithTop.le_coe_top, ne_eq,
+        WithTop.natCast_ne_top, not_false_eq_true])).contDiffAt
 
 theorem tensor_add_memLp (f g : LiftDomain P → V)
     (hf : ∀ q, ContDiff ℝ ∞ (localFieldLift P f q))

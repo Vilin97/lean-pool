@@ -48,6 +48,8 @@ theorem product_memLp (A : SmoothCoefficientPath K (V →L[ℝ] W)) (t : K)
     memLp_finsetSum' _ (fun i _ => hg i)
   have hm : AEStronglyMeasurable
       (iteratedFDeriv ℝ n (fun x => A.field t x (f.field x))) volume :=
+    haveI : SecondCountableTopologyEither Space (Space [×n]→L[ℝ] W) :=
+      secondCountableTopologyEither_of_left _ _
     (((A.smooth t).clm_apply f.smooth).continuous_iteratedFDeriv (m := n) (by
         simp)).aestronglyMeasurable
   apply hsum.mono' hm
@@ -104,12 +106,11 @@ theorem product_derivative_field (A : SmoothCoefficientPath K (V →L[ℝ] W)) (
   apply ContinuousLinearMap.ext
   intro w
   have he := congrArg (fun D : Space →L[ℝ] W => D w) hd.fderiv
-  have hflip (D : Space →L[ℝ] V →L[ℝ] W) (v : V) (a : Space) :
-      (flipₗᵢ ℝ Space V W).toContinuousLinearEquiv.toContinuousLinearMap D v a = D a v := rfl
   simpa only [product, addField_field, SmoothL2Field.derivative,
     leftDerivative, rightDerivative, SmoothCoefficientPath.map_apply,
     SmoothCoefficientPath.derivative, SmoothCoefficientPath.derivativeField_eq,
-    hflip, flip_apply, compL_apply, comp_apply, add_apply] using he
+    ContinuousLinearEquiv.coe_coe, LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+    coe_flipₗᵢ, flip_apply, compL_apply, comp_apply, add_apply] using he
 
 theorem jetLp_congr (f g : SmoothL2Field V) (h : f.field = g.field) (n : ℕ) :
     f.jetLp n = g.jetLp n := by

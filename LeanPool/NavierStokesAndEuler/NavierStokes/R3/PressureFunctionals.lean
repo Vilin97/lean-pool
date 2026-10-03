@@ -30,6 +30,10 @@ section
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 open MeasureTheory
@@ -66,7 +70,8 @@ theorem integral_first_moment_le {f : Space → ℂ}
   let b : Space → ℝ := fun ξ => (1 + ‖ξ‖ ^ 2) * ‖ξ‖ * ‖f ξ‖
   have ha : AEStronglyMeasurable a := by
     exact ((continuous_const.add (continuous_norm.pow 2)).inv₀
-      (fun ξ : Space => ne_of_gt (by positivity : (0 : ℝ) < 1 + ‖ξ‖ ^ 2))).aestronglyMeasurable
+      (fun ξ : Space =>
+        (add_pos_of_pos_of_nonneg zero_lt_one (sq_nonneg ‖ξ‖)).ne')).aestronglyMeasurable
   have hb : AEStronglyMeasurable b := by
     exact (by fun_prop : Continuous
       (fun ξ : Space => (1 + ‖ξ‖ ^ 2) * ‖ξ‖)).aestronglyMeasurable.mul hf.norm
@@ -75,9 +80,9 @@ theorem integral_first_moment_le {f : Space → ℂ}
     calc
       ((1 + ‖ξ‖ ^ 2) * ‖ξ‖ * ‖f ξ‖) ^ 2 =
           (1 + ‖ξ‖ ^ 2) ^ 2 * ‖ξ‖ ^ 2 * ‖f ξ‖ ^ 2 := by ring
-      _ ≤ (1 + ‖ξ‖ ^ 2) ^ 2 * (1 + ‖ξ‖ ^ 2) * ‖f ξ‖ ^ 2 := by
-        gcongr
-        linarith
+      _ ≤ (1 + ‖ξ‖ ^ 2) ^ 2 * (1 + ‖ξ‖ ^ 2) * ‖f ξ‖ ^ 2 :=
+        mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left
+          (le_add_of_nonneg_left zero_le_one) (sq_nonneg _)) (sq_nonneg _)
       _ = (1 + ‖ξ‖ ^ 2) ^ 3 * ‖f ξ‖ ^ 2 := by ring
   have hb_int : Integrable (fun ξ => b ξ ^ 2) :=
     hw.mono' (hb.pow 2) (Filter.Eventually.of_forall fun ξ => by
@@ -88,14 +93,16 @@ theorem integral_first_moment_le {f : Space → ℂ}
   have hb_lp : MemLp b 2 := (memLp_two_iff_integrable_sq hb).mpr hb_int
   have hcs := integral_mul_le_Lp_mul_Lq_of_nonneg
     (μ := (volume : Measure Space)) (f := a) (g := b) Real.HolderConjugate.two_two
-    (Filter.Eventually.of_forall (fun ξ => by dsimp [a]; positivity))
-    (Filter.Eventually.of_forall (fun ξ => by dsimp [b]; positivity))
+    (Filter.Eventually.of_forall (fun ξ => inv_nonneg.mpr (add_nonneg zero_le_one (sq_nonneg _))))
+    (Filter.Eventually.of_forall (fun ξ =>
+      mul_nonneg (mul_nonneg (add_nonneg zero_le_one (sq_nonneg _)) (norm_nonneg _))
+        (norm_nonneg _)))
     (by simpa using ha_lp) (by simpa using hb_lp)
   simp only [Real.rpow_two, ← Real.sqrt_eq_rpow] at hcs
   have hprod : (fun ξ : Space => a ξ * b ξ) = fun ξ => ‖ξ‖ * ‖f ξ‖ := by
     funext ξ
     dsimp [a, b]
-    have hq : (1 + ‖ξ‖ ^ 2 : ℝ) ≠ 0 := by positivity
+    have hq : (1 + ‖ξ‖ ^ 2 : ℝ) ≠ 0 := (add_pos_of_pos_of_nonneg zero_lt_one (sq_nonneg _)).ne'
     simp [← mul_assoc, hq]
   rw [hprod] at hcs
   exact hcs.trans (mul_le_mul_of_nonneg_left
@@ -326,7 +333,7 @@ open ProblemStatement Comparison HarmonicTestFunctionals PressureTestBounds
 theorem integrable_l2_pair {W : Space → ℝ} (hW : MemLp W 2) (ψ : ComplexTest) :
     Integrable (fun x : Space => (W x : ℂ) * ψ x) := by
   have hprod : Integrable (fun x : Space => ‖W x‖ * ‖ψ x‖) :=
-    hW.norm.integrable_mul (ψ.memLp 2).norm
+    hW.norm.integrable_mul (ψ.memLp 2 volume).norm
   apply hprod.mono'
   · exact (Complex.continuous_ofReal.comp_aestronglyMeasurable hW.aestronglyMeasurable).mul
       ψ.continuous.aestronglyMeasurable
@@ -345,7 +352,7 @@ theorem norm_l2_pair_le {W : Space → ℝ} (hW : MemLp W 2) (ψ : ComplexTest) 
         (f := fun x => ‖W x‖) (g := fun x => ‖ψ x‖) Real.HolderConjugate.two_two
         (Filter.Eventually.of_forall fun _ => norm_nonneg _)
         (Filter.Eventually.of_forall fun _ => norm_nonneg _)
-        (by simpa using hW.norm) (by simpa using (ψ.memLp 2).norm)
+        (by simpa using hW.norm) (by simpa using (ψ.memLp 2 volume).norm)
       simpa only [Real.rpow_two, ← Real.sqrt_eq_rpow, l2Sq] using h
 
 /-- An `L¹` coefficient may be paired with any Schwartz test. -/
@@ -412,10 +419,10 @@ def l2PairLinear (W : Space → ℝ) (hW : MemLp W 2) : ComplexTest →ₗ[ℂ] 
 def l1PairLinear (g : Space → ℝ) (hg : Integrable g) : ComplexTest →ₗ[ℂ] ℂ :=
   integralPairLinear g testValueLinear (integrable_l1_pair hg)
 
-@[simp] theorem l2PairLinear_apply (W : Space → ℝ) (hW : MemLp W 2) (ψ : ComplexTest) :
+@[simp] theorem l2PairLinear_apply (W : Space → ℝ) (hW : MemLp W 2 volume) (ψ : ComplexTest) :
     l2PairLinear W hW ψ = ∫ x : Space, (W x : ℂ) * ψ x := rfl
 
-@[simp] theorem l1PairLinear_apply (g : Space → ℝ) (hg : Integrable g) (ψ : ComplexTest) :
+@[simp] theorem l1PairLinear_apply (g : Space → ℝ) (hg : Integrable g volume) (ψ : ComplexTest) :
     l1PairLinear g hg ψ = ∫ x : Space, (g x : ℂ) * ψ x := rfl
 
 /-- The coefficients are the two time averages of velocity and the time average
@@ -549,7 +556,7 @@ def pressurePairLinear (i j : Fin 3) (g : Space → ℝ) (hg : Integrable g) :
     (integrable_l1_riesz_pair hg i j)
 
 @[simp] theorem pressurePairLinear_apply (i j : Fin 3) (g : Space → ℝ)
-    (hg : Integrable g) (ψ : ComplexTest) :
+    (hg : Integrable g volume) (ψ : ComplexTest) :
     pressurePairLinear i j g hg ψ = pressurePair i j g ψ := rfl
 
 /-- The averaged pressure-gradient difference determined by the stated
@@ -567,7 +574,7 @@ def averagedPressureDifference (W0 W1 : Space → ℝ)
 
 @[simp] theorem averagedPressureDifference_apply (W0 W1 : Space → ℝ)
     (G : Fin 3 → Fin 3 → Space → ℝ)
-    (hW0 : MemLp W0 2) (hW1 : MemLp W1 2)
+    (hW0 : MemLp W0 2 volume) (hW1 : MemLp W1 2 volume)
     (hG : ∀ i j : Fin 3, Integrable (G i j)) (k : Fin 3) (ψ : ComplexTest) :
     averagedPressureDifference W0 W1 G hW0 hW1 hG k ψ =
       averagedPressureDifferenceValue W0 W1 G k ψ := by
@@ -579,7 +586,7 @@ def averagedPressureDifference (W0 W1 : Space → ℝ)
 /-- The actual complex-linear functional satisfies a uniform `H³` estimate. -/
 theorem averagedPressureDifference_bound {W0 W1 : Space → ℝ}
     {G : Fin 3 → Fin 3 → Space → ℝ}
-    (hW0 : MemLp W0 2) (hW1 : MemLp W1 2)
+    (hW0 : MemLp W0 2 volume) (hW1 : MemLp W1 2 volume)
     (hG : ∀ i j : Fin 3, Integrable (G i j)) (k : Fin 3) :
     ∃ C : ℝ, 0 ≤ C ∧ ∀ ψ : ComplexTest,
       ‖averagedPressureDifference W0 W1 G hW0 hW1 hG k ψ‖ ≤

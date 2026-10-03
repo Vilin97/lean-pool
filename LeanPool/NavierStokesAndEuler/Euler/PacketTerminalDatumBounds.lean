@@ -81,7 +81,8 @@ private theorem norm_iteratedFDeriv_translation_aux (n : ℕ) :
       (K : Set (LiftDomain P)) (hK : IsCompact K) (_hs : tsupport A.field ⊆ K)
       (C : ℝ) (_hb : ∀ x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C)
       (a : LiftTangent),
-      ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate P b A.toLp) a‖ ≤ C*supportMass P K hK
+      ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate (V := V) P b A.toLp) a‖ ≤
+        C*supportMass P K hK
           := by
   induction n with
   | zero =>
@@ -100,9 +101,9 @@ private theorem norm_iteratedFDeriv_translation_aux (n : ℕ) :
       (A.derivative.translation_contDiff.contDiffAt (x := a)) (n := n) (by simp)
     have hi := ih (LiftTangent →L[ℝ] V) A.derivative K hK
       (A.derivative_support.trans hs) C (fun x => by
-        change ‖iteratedFDeriv ℝ n (localFieldLift P (fieldFDeriv P A.field) x) 0‖ ≤ C
-        rw [localFieldLift_fieldFDeriv,norm_iteratedFDeriv_fderiv]
-        exact hb x) a
+        have hbx := hb x
+        rw [← norm_iteratedFDeriv_fderiv,← localFieldLift_fieldFDeriv] at hbx
+        exact hbx) a
     exact hl.trans ((mul_le_mul_of_nonneg_right
       (derivativeBundling_norm_le_one (P := LiftTangent) (V := V) (liftMeasure P)) (norm_nonneg
           _)).trans
@@ -112,14 +113,15 @@ theorem norm_iteratedFDeriv_translation_le (A : CompactField P V)
     (K : Set (LiftDomain P)) (hK : IsCompact K) (hs : tsupport A.field ⊆ K)
     (n : ℕ) (C : ℝ) (hb : ∀ x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C)
     (a : LiftTangent) :
-    ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate P b A.toLp) a‖ ≤ C*supportMass P K hK :=
+    ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate (V := V) P b A.toLp) a‖ ≤
+      C*supportMass P K hK :=
   norm_iteratedFDeriv_translation_aux n V A K hK hs C hb a
 
 theorem translation_gevrey (A : CompactField P V)
     (K : Set (LiftDomain P)) (hK : IsCompact K) (hs : tsupport A.field ⊆ K)
     (R C : ℝ) (hb : ∀ n x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C * majorant R 0 n)
     (n : ℕ) (a : LiftTangent) :
-    ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate P b A.toLp) a‖ ≤
+    ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate (V := V) P b A.toLp) a‖ ≤
       (C*supportMass P K hK)*majorant R 0 n :=
   (A.norm_iteratedFDeriv_translation_le K hK hs n (C*majorant R 0 n) (hb n) a).trans_eq (by ring)
 
@@ -129,16 +131,16 @@ theorem translation_block_bound {ι : Type*} [Fintype ι]
     (R C : ℝ) (hR : 0 ≤ R) (hC : 0 ≤ C)
     (hb : ∀ n x, ‖iteratedFDeriv ℝ n (localFieldLift P A.field x) 0‖ ≤ C * majorant R 0 n)
     (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b : LiftTangent => translate P b A.toLp) n a ≤
+    block directions q (fun b : LiftTangent => translate (V := V) P b A.toLp) n a ≤
       sobolevCoefficientAmplitude ι q R (C*supportMass P K hK) *
         majorant (sobolevCoefficientRadius ι R) 0 n := by
   have hm : 0 ≤ supportMass P K hK := norm_nonneg _
   have hi := coefficientBlock_of_tensor_bound directions hd q
-    (fun b : LiftTangent => translate P b A.toLp) A.translation_contDiff
+    (fun b : LiftTangent => translate (V := V) P b A.toLp) A.translation_contDiff
     R (C*supportMass P K hK) hR (mul_nonneg hC hm) (A.translation_gevrey K hK hs R C hb) n a
   have hpow : (1 : ℝ) ≤ (2 : ℝ)^q := one_le_pow₀ (by norm_num)
-  have hl : block directions q (fun b : LiftTangent => translate P b A.toLp) n a ≤
-      coefficientBlock directions q (fun b : LiftTangent => translate P b A.toLp) n a := by
+  have hl : block directions q (fun b : LiftTangent => translate (V := V) P b A.toLp) n a ≤
+      coefficientBlock directions q (fun b : LiftTangent => translate (V := V) P b A.toLp) n a := by
     exact (one_mul _).symm.trans_le (mul_le_mul_of_nonneg_right hpow (block_nonneg directions q _ n
         a))
   exact hl.trans hi
@@ -206,7 +208,7 @@ theorem scalarField_jet_bound (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1)
   have hc : 0 ≤ (9 / rawBump 0)^3 := by have := rawBump_pos_zero; positivity
   have hp : 0 ≤ 100*(δ^2)⁻¹ := by positivity
   have hR₁ : (64 : ℝ) ≤ jetRadius δ := le_add_of_nonneg_right (by positivity)
-  have hR₂ : 40*(δ^2)⁻¹ ≤ jetRadius δ := by unfold jetRadius; linarith
+  have hR₂ : 40*(δ^2)⁻¹ ≤ jetRadius δ := by unfold jetRadius; linarith only
   have hb₁ (k : ℕ) (b : LiftTangent) :=
     (cutoffLift_bound y k b).trans (mul_le_mul_of_nonneg_left
       (majorant_radius_mono 64 (jetRadius δ) (by norm_num) hR₁ 0 k) hc)
@@ -245,7 +247,7 @@ theorem terminalMass_nonneg : 0 ≤ terminalMass := norm_nonneg _
 
 theorem terminal_jet_bound {U : Type*} [NormedAddCommGroup U] [NormedSpace ℝ U]
     (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U) (n : ℕ) (a : LiftTangent) :
-    ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate period b (terminal δ hδ ξ)) a‖ ≤
+    ‖iteratedFDeriv ℝ n (fun b : LiftTangent => translate (V := U) period b (terminal δ hδ ξ)) a‖ ≤
       (scalarJetCost δ * ‖ξ‖ * terminalMass) * majorant (jetRadius δ) 0 n :=
   (compactField δ hδ ξ).translation_gevrey supportSet supportSet_compact (field_support δ ξ)
     (jetRadius δ) (scalarJetCost δ * ‖ξ‖) (fun k x => field_jet_bound δ hδ hδ1 ξ k x 0) n a
@@ -263,7 +265,7 @@ theorem terminal_block_bound {ι U : Type*} [Fintype ι]
     [NormedAddCommGroup U] [NormedSpace ℝ U]
     (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (δ : ℝ) (hδ : 0 < δ) (hδ1 : δ ≤ 1) (ξ : U) (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b : LiftTangent => translate period b (terminal δ hδ ξ)) n a ≤
+    block directions q (fun b : LiftTangent => translate (V := U) period b (terminal δ hδ ξ)) n a ≤
       sobolevCoefficientAmplitude ι q (jetRadius δ) (scalarJetCost δ * ‖ξ‖ * terminalMass) *
         majorant (wordRadius ι δ) 0 n :=
   (compactField δ hδ ξ).translation_block_bound directions hd q supportSet supportSet_compact

@@ -48,8 +48,10 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- Momentum derivative path as an element of `U`. -/
 def momentumDerivativePath (u : TimeLp T E) (t : ℝ) : U :=
-  (extendPath T hT Q₁ t).adjoint (physicalVelocityPath T hT Q Q₁ c hc hQ H u t) -
-    (extendPath T hT Q t).adjoint (extendPath T hT H t (initialRealPrimitive T u t))
+  adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q₁ t)
+      (physicalVelocityPath T hT Q Q₁ c hc hQ H u t) -
+    adjoint (𝕜 := ℝ) (E := U) (F := E) (extendPath (Y := U →L[ℝ] E) T hT Q t)
+      (extendPath T hT H t (initialRealPrimitive T u t))
 
 theorem momentumDerivativePath_continuous (u : TimeLp T E) :
     Continuous (momentumDerivativePath T hT Q Q₁ c hc hQ H u) :=
@@ -223,42 +225,28 @@ theorem rawCoordinateAcceleration_projected (hTpos : 0 < T)
     (huRange : ∀ t : Icc (0 : ℝ) T, ∃ x : U, Q t x = initialRealPrimitive T u t)
     (t : Icc (0 : ℝ) T) :
     gram (Q t) (rawCoordinateAcceleration T hT Q Q₁ Q₂ c hc hQ H u t) =
-      (Q t).adjoint (0 - (2 : ℝ) • Q₁ t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)) := by
+      adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)
+        (0 - (2 : ℝ) • Q₁ t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)) := by
   have hp := momentumPath_hasDerivWithinAt T hT Q Q₁ c hc hQ H hTpos hd u hweak huRange t
   have hξ := initialCoordinates_hasDerivWithinAt T hT Q Q₁ c hc hQ H hTpos hd u hweak huRange t
   have hv := coordinateVelocityPath_hasDerivWithinAt_raw T hT Q Q₁ Q₂ c hc hQ H
     hTpos hd hd₁ u hweak huRange t
   have hG := gramPath_hasDerivWithinAt T Q Q₁ hT hd t
   have hC := mixedPath_hasDerivWithinAt T Q Q₁ Q₂ hT hd hd₁ t
-  have hb := (hG.clm_apply hv).add (hC.clm_apply hξ)
-  change HasDerivWithinAt
-    (fun s => extendPath T hT (gramPath T Q) s (coordinateVelocityPath T hT Q Q₁ c hc hQ H u s) +
-      extendPath T hT (mixedPath T Q Q₁) s (initialCoordinates T hT Q c hc hQ u s)) _ _ _ at hb
-  have he : (fun s => extendPath T hT (gramPath T Q) s
-        (coordinateVelocityPath T hT Q Q₁ c hc hQ H u s) +
-      extendPath T hT (mixedPath T Q Q₁) s (initialCoordinates T hT Q c hc hQ u s)) =
-        momentumPath T hT Q Q₁ H u :=
-    funext (coordinateMomentum_identity T hT Q Q₁ c hc hQ H u)
-  rw [he] at hb
+  have hb := ((hG.clm_apply hv).add (hC.clm_apply hξ)).congr_of_mem
+    (fun s _ => (coordinateMomentum_identity T hT Q Q₁ c hc hQ H u s).symm) t.property
   have hbal := (hp.derivWithin ((uniqueDiffOn_Icc hTpos) t t.property)).symm.trans
     (hb.derivWithin ((uniqueDiffOn_Icc hTpos) t t.property))
   have hη := initialCoordinates_reconstruct T hT Q c hc hQ u huRange t
-  simp only [momentumDerivativePath, extendPath, projIcc_of_mem hT t.property] at hbal
-  rw [← hη] at hbal
+  simp only [momentumDerivativePath, extendPath, projIcc_of_mem hT t.property, ← hη] at hbal
   apply projected_equation_of_momentum_balance (Q t) (Q₁ t) (Q₂ t) (H t)
     (initialCoordinates T hT Q c hc hQ u t) (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)
     (rawCoordinateAcceleration T hT Q Q₁ Q₂ c hc hQ H u t)
     (physicalVelocityPath T hT Q Q₁ c hc hQ H u t) 0
   · simp only [physicalVelocityPath, extendPath, projIcc_of_mem hT t.property]
   · exact hframe t
-  · change _ =
-      ((Q₁ t).adjoint.comp (Q t) + (Q t).adjoint.comp (Q₁ t))
-        (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t) +
-      gram (Q t) (rawCoordinateAcceleration T hT Q Q₁ Q₂ c hc hQ H u t) +
-      (((Q₁ t).adjoint.comp (Q₁ t) + (Q t).adjoint.comp (Q₂ t))
-        (initialCoordinates T hT Q c hc hQ u t) +
-        (Q t).adjoint (Q₁ t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t))) at hbal
-    simpa only [map_zero, add_zero, add_assoc] using hbal
+  · apply (add_eq_left.mpr (ContinuousLinearMap.map_zero _)).trans
+      (hbal.trans (add_assoc _ _ _).symm)
 
 theorem rawCoordinateAcceleration_eq_generator (hTpos : 0 < T)
     (hd : ∀ t : Icc (0 : ℝ) T,
@@ -279,7 +267,8 @@ theorem rawCoordinateAcceleration_eq_generator (hTpos : 0 < T)
       hTpos hd hd₁ hframe u hweak huRange t)
   rw [inverse_gram_apply] at he
   change _ = (-2 : ℝ) • gramInverse (Q t) c hc (hQ t)
-    ((Q t).adjoint (Q₁ t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)))
+    (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)
+      (Q₁ t (coordinateVelocityPath T hT Q Q₁ c hc hQ H u t)))
   simpa only [map_sub, map_zero, map_smul, zero_sub, neg_smul, map_neg] using he
 
 /-- Equation (10) for the actual coordinate displacement, written as the

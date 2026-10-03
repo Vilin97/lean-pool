@@ -10,6 +10,8 @@ public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Integral.Prod
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
+import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 A jointly measurable field which represents an actual Bochner L² family belongs

@@ -53,7 +53,7 @@ theorem weight_lower (ρ δ : ℝ) (hδ : 0 < δ) (hδρ : δ ≤ ρ) (hδ1 : δ
   have hp : δ^N ≤ ρ^n := (pow_le_pow_of_le_one hδ.le hδ1 hn).trans (pow_le_pow_left₀ hδ.le hδρ n)
   have hf : (n.factorial : ℝ) ≤ (N.factorial : ℝ) := by exact_mod_cast Nat.factorial_le hn
   have hsq : (n.factorial : ℝ)^2 ≤ (N.factorial : ℝ)^2 := by
-    nlinarith [show (0 : ℝ) ≤ (n.factorial : ℝ) from Nat.cast_nonneg _]
+    nlinarith only [hf, show (0 : ℝ) ≤ (n.factorial : ℝ) from Nat.cast_nonneg _]
   exact div_le_div₀ (pow_nonneg hρ n) hp (by positivity) hsq
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -361,8 +361,8 @@ open scoped Topology
 /-- The next actual time window ends at the smaller of one full step and the terminal time. -/
 theorem advance_time_eq (a δ S : ℝ) : a+min δ (S-a) = min (a+δ) S := by
   by_cases h : δ ≤ S-a
-  · rw [min_eq_left h, min_eq_left (by linarith : a+δ ≤ S)]
-  · rw [min_eq_right (le_of_not_ge h), min_eq_right (by linarith : S ≤ a+δ)]
+  · rw [min_eq_left h, min_eq_left (by linarith only [h] : a+δ ≤ S)]
+  · rw [min_eq_right (le_of_not_ge h), min_eq_right (by linarith only [h] : S ≤ a+δ)]
     ring
 
 /-- Repeated genuine local windows reach each successive point of a fixed finite time grid. -/
@@ -377,7 +377,7 @@ theorem advance_grid (S δ a : ℝ) (hδ : 0 ≤ δ) (n : ℕ)
       push_cast
       nlinarith only [hna]
     · have hSa : S ≤ a := by simpa only [min_eq_right (le_of_not_ge hn)] using hgrid
-      exact (min_le_right _ _).trans (by linarith)
+      exact (min_le_right _ _).trans (by linarith only [hδ, hSa])
   · exact min_le_right _ _
 
 variable (period : ℝ) [Fact (0 < period)]
@@ -403,7 +403,7 @@ theorem exists_global_mild_of_bound (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ
     intro n
     induction n with
     | zero =>
-      obtain ⟨u,_,_,hsol⟩ := hlocal 0 0 le_rfl le_rfl (by linarith) hδ.le u₀ hu₀
+      obtain ⟨u,_,_,hsol⟩ := hlocal 0 0 le_rfl le_rfl (by linarith only [hS]) hδ.le u₀ hu₀
       refine ⟨0,le_rfl,hS.le,?_,u,?_⟩
       · simpa only [Nat.cast_zero,zero_mul] using min_le_left (0 : ℝ) S
       · apply (quadratic_mild_window_iff period ν hν le_rfl hS.le C u₀ u).mpr
@@ -413,7 +413,7 @@ theorem exists_global_mild_of_bound (q : ℕ) (ν : ℝ) (hν : 0 < ν) (S : ℝ
       let b := min δ (S-a)
       have hb : 0 ≤ b := le_min hδ.le (sub_nonneg.mpr haS)
       have hbδ : b ≤ δ := min_le_left _ _
-      have habS : a+b ≤ S := by have h := min_le_right δ (S-a); dsimp [b]; linarith
+      have habS : a+b ≤ S := by have h := min_le_right δ (S-a); dsimp [b]; linarith only [h]
       have hu : ‖u ⟨a,ha,le_rfl⟩‖ ≤ R :=
         (u.norm_coe_le_norm _).trans (hbound a ha haS u hsolu)
       obtain ⟨v,_,hv0,hsolv⟩ := hlocal a b ha hb habS hbδ (u ⟨a,ha,le_rfl⟩) hu

@@ -66,7 +66,8 @@ theorem add (hf : LocalShell a b U f) (hg : LocalShell a b U g) :
   refine ⟨hf.smooth.add hg.smooth, ?_⟩
   intro n x hx hn
   by_contra hr
-  exact hn (by simp [hf.zero_of_not_mem n x hx hr, hg.zero_of_not_mem n x hx hr])
+  exact hn (by simp only [Pi.add_apply, hf.zero_of_not_mem n x hx hr, hg.zero_of_not_mem n x hx hr,
+      add_zero])
 
 theorem neg (hf : LocalShell a b U f) : LocalShell a b U (-f) :=
   ⟨hf.smooth.neg, fun n x hx hn => hf.supported n x hx (neg_ne_zero.mp hn)⟩
@@ -96,7 +97,8 @@ theorem directional (hf : LocalShell a b U f) (hU : IsOpen U) (v : Point P) :
     filter_upwards [(PhysicalMeanDomain.slowDomain_open hU).mem_nhds hx,
       (isClosed_Icc.preimage continuous_fst).isOpen_compl.mem_nhds hr] with y hy hyr
     exact hf.zero_of_not_mem n y hy hyr
-  exact hn (by change fderiv ℝ (f n) x v = 0; rw [he.fderiv_eq]; simp)
+  exact hn (by change fderiv ℝ (f n) x v = 0; rw [he.fderiv_eq]; simp only [fderiv_fun_const,
+      Pi.zero_apply, zero_apply])
 
 theorem coefficient_mul (hf : LocalShell a b U f) (ha : 0 < a) (hU : IsOpen U)
     (hg : SmoothOn (positiveDomain U) g) : LocalShell a b U (g * f) := by
@@ -359,14 +361,17 @@ theorem defects_update_on (n : ℕ) {p : P} (hp : p ∈ U) :
   have hT := thetaDefect_update_on ha hU hb hm hh W hW n hp
   have hZ := axialDefect_update_on ha hU hop hb hm hh W hW n hp
   funext i
-  fin_cases i <;> simp [defects, linearRows, remainders, hP, hT, hZ]
+  fin_cases i <;> simp only [defects, hP, hT, hZ, one_div, Fin.zero_eta, Fin.isValue,
+      Matrix.cons_val_zero, linearRows, Matrix.add_cons, Matrix.head_cons, Matrix.tail_cons,
+      Matrix.empty_add_empty, remainders, Pi.add_apply, Fin.mk_one, Matrix.cons_val_one,
+      Fin.reduceFinMk, Matrix.cons_val]
 
 include ha hU hop hb hm hh hW in
 theorem defects_after_solved_rows_on (n : ℕ) {p : P} (hp : p ∈ U)
     (hrows : linearRows o base h n p = -defects o base m W n p) :
     defects o base (updated m h) W n p = remainders o base m h W n p := by
   rw [defects_update_on ha hU hop hb hm hh W hW n hp, hrows]
-  simp
+  simp only [add_neg_cancel, zero_add]
 
 end ExactMoments
 
@@ -450,7 +455,8 @@ theorem barMoment_slow_on {U : Set P} {f : ScalarField (Point P)}
   apply integral_congr_ae
   filter_upwards [] with R
   congr 1
-  simp [PressureStream.torusAverage, PressureStream.torusInner, hf n R p hp]
+  simp only [PressureStream.torusAverage, PressureStream.torusInner, hf n R p hp,
+      intervalIntegral.integral_const, sub_zero, smul_eq_mul, one_mul]
 
 theorem linearRows_eq_neg_of_fiveRows_on {a b : ℝ} (ha : 0 < a) {U : Set P} (hU : IsOpen U)
     {o : Operators (Point P)} (hop : LocalOperators U o) {base m h : Triple (Point P)}
@@ -499,7 +505,8 @@ theorem linearRows_eq_neg_of_fiveRows_on {a b : ℝ} (ha : 0 < a) {U : Set P} (h
         simp only [slowSlice, axialLeading, leadingRadial, Operators.invRadius, hop.radius_eq,
           Pi.mul_apply, Pi.smul_apply, smul_eq_mul, pow_one]
         by_cases hr : R = 0
-        · simp [hr]
+        · simp only [hr, zero_mul, one_div, ne_eq, OfNat.ofNat_ne_zero, not_false_eq_true, zero_pow,
+            inv_zero, mul_zero, sub_self]
         · field_simp
       _ = _ := hrows.2.2.2.2
 
@@ -701,8 +708,8 @@ theorem axial_exact {a b : ℝ} (ha : 0 < a) (hab : a < b) (hU : IsOpen U)
     (rankDesired_slice_smooth r c u n p.2.1)
     (hg.desired_slice_support n hp (hleft n _ hp) (hright n _ hp))
     (hg.desired_mass_zero n hp)
-    ((hF.contDiffAt ((PhysicalMeanDomain.slowDomain_open hU).mem_nhds hp)).differentiableAt (by
-        simp))
+    ((hF.contDiffAt ((PhysicalMeanDomain.slowDomain_open hU).mem_nhds hp)).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
   simpa only [VariableGaugeMean.rankIncrementState, PressureStream.streamGamma,
       PressureStream.graphDr,
     PressureStream.divideRadius, he.fderiv_eq, he.self_of_nhds] using h
@@ -712,7 +719,8 @@ end RankGeometry
 theorem streamBeta_smul (a : ℝ) (w : P × PressureStream.Plane) (F : Point P → ℝ) :
     PressureStream.streamBeta (a • w) F = fun p => a * PressureStream.streamBeta w F p := by
   funext p
-  have he : ((0 : ℝ), a • w) = a • ((0 : ℝ), w) := by simp
+  have he : ((0 : ℝ), a • w) = a • ((0 : ℝ), w) := by simp only [Prod.smul_mk, smul_eq_mul,
+      mul_zero]
   simp only [PressureStream.streamBeta, PressureStream.graphDz, he, map_smul, smul_eq_mul]
   ring
 
@@ -794,7 +802,8 @@ theorem divergence_zero {a b : ℝ} (ha : 0 < a) (hab : a < b) (hU : IsOpen U)
     ((PhysicalMeanDomain.slowDomain_open hU).mem_nhds hp)
   exact PressureStream.stream_divergence_zero _ _
     (hpot.of_le (ENat.natCast_lt_of_coe_top_le_withTop le_rfl 2).le)
-    ((PressureStream.physicalSpeed_smooth _ _ hr).differentiableAt (by simp)) hr
+    ((PressureStream.physicalSpeed_smooth _ _ hr).differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hr
 
 theorem fiveRows {a b : ℝ} (ha : 0 < a) (hab : a < b) (hU : IsOpen U)
     (hleft : ∀ n x, x ∈ U → a ≤ r.length n x * r.inner)
@@ -1011,7 +1020,8 @@ theorem supportedGauge_directional {a b : ℝ} {ell : P → ℝ} {U : Set P}
     rcases hzo with hlo | hhi
     · exact (not_lt_of_ge hsz.1) hlo
     · exact (not_lt_of_ge hsz.2) hhi
-  exact hn (by change fderiv ℝ f p v = 0; rw [hzero.fderiv_eq]; simp)
+  exact hn (by change fderiv ℝ f p v = 0; rw [hzero.fderiv_eq]; simp only [fderiv_fun_const,
+      Pi.zero_apply, zero_apply])
 
 namespace RankGeometry
 

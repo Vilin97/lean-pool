@@ -68,8 +68,9 @@ theorem inhomogeneous_heat_restart {q : ℕ} (ν : ℝ) (hν : 0 ≤ ν) (T : �
     heatFlow period q ν t u₀ + duhamel period ν T hT f t =
       heatFlow period q ν (t-a) (heatFlow period q ν a u₀ + duhamel period ν T hT f a) +
         ∫ s in a..t, heatFlow period q ν (t-s) (extendPath T hT f s) := by
-  rw [map_add, heatFlow_semigroup period ν hν (t-a) a (sub_nonneg.mpr hat) ha,
-    sub_add_cancel, duhamel_restart period ν hν T hT f a t ha hat, add_assoc]
+  have hs := heatFlow_semigroup period ν hν (t-a) a (sub_nonneg.mpr hat) ha u₀
+  simp only [ContinuousLinearMap.map_add, hs, sub_add_cancel,
+    duhamel_restart period ν hν T hT f a t ha hat, add_assoc]
 
 /-- The old-history and new-source identity written in elapsed time after the restart. -/
 theorem duhamel_restart_shifted {q : ℕ} (ν : ℝ) (hν : 0 ≤ ν) (T : ℝ) (hT : 0 ≤ T)
@@ -130,11 +131,9 @@ theorem inhomogeneous_restart_shifted {q : ℕ} (ν : ℝ) (hν : 0 ≤ ν)
     heatFlow period q ν (a+t) u₀+duhamel period ν T hT f (a+t) =
       heatFlow period q ν t (heatFlow period q ν a u₀+duhamel period ν T hT f a) +
         ∫ r in (0 : ℝ)..t, heatFlow period q ν (t-r) (extendPath T hT f (a+r)) := by
-  rw [map_add, heatFlow_semigroup period ν hν t a ht ha,
-    duhamel_restart_shifted period ν hν T hT f a t ha ht]
-  have he : t+a = a+t := add_comm _ _
-  rw [he]
-  abel
+  have hs := heatFlow_semigroup period ν hν t a ht ha u₀
+  simp only [ContinuousLinearMap.map_add, hs, add_comm t a,
+    duhamel_restart_shifted period ν hν T hT f a t ha ht, add_assoc]
 
 /-- The elapsed-time part of a genuine Duhamel integral is the restarted source integral. -/
 theorem shifted_source_integral {q : ℕ} (ν a b T : ℝ) (hb : 0 ≤ b) (hT : 0 ≤ T)
@@ -186,11 +185,12 @@ theorem glue_ordinary_mild {q : ℕ} (ν : ℝ) (hν : 0 ≤ ν) (a b : ℝ) (ha
     have hrestart := inhomogeneous_restart_shifted period ν hν (a+b) (add_nonneg ha hb) f u₀ a r ha
         hr.1
     have hs := shifted_source_integral period ν a b (a+b) hb (add_nonneg ha hb) f f2 r hr hF2
-    rw [← hua,hs,htval] at hrestart
     calc
       _ = extendPath b hb v r := glueFunction_right a b ha hb u v hmatch t.val hat
       _ = v ⟨r,hr⟩ := congrArg v (projIcc_of_mem hb hr)
       _ = heatFlow period q ν r (u ⟨a,ha,le_rfl⟩)+duhamel period ν b hb f2 r := hsolv _
-      _ = _ := hrestart.symm
+      _ = _ := (congrArg₂ (· + ·) (congrArg (heatFlow period q ν r) hua) hs.symm).trans
+        (hrestart.symm.trans (congrArg (fun s => heatFlow period q ν s u₀ +
+          duhamel period ν (a+b) (add_nonneg ha hb) f s) htval))
 
 end EulerDuhamelPasting

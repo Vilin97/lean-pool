@@ -13,6 +13,7 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.SpecialFunctions.Gaussian.FourierTransform
 import Mathlib.MeasureTheory.Function.L2Space
+import LeanPool.NavierStokesAndEuler.ForMathlib.L2HilbertShortcuts
 
 /-!
 The normalized Gaussian on ordinary three-dimensional space.  The estimates
@@ -61,7 +62,7 @@ theorem kernel_smooth (t : ℝ) : ContDiff ℝ ∞ (kernel t) := by
 theorem exp_integrable {b : ℝ} (hb : 0 < b) :
     Integrable (fun x : Space => Real.exp (-b*‖x‖^2)) := by
   have h := (GaussianFourier.integrable_cexp_neg_mul_sq_norm_add
-    (V := Space) (b := (b : ℂ)) (by simpa using hb) 0 0).re
+    (V := Space) (b := (b : ℂ)) (by simpa only [Complex.ofReal_re] using hb) 0 0).re
   change Integrable (fun x : Space => (Complex.exp
     (-(b : ℂ)*‖x‖^2 + 0*inner ℝ (0 : Space) x)).re) at h
   simpa only [zero_mul, add_zero, ← Complex.ofReal_pow, ← Complex.ofReal_mul,
@@ -72,7 +73,8 @@ theorem kernel_integrable {t : ℝ} (ht : 0 < t) : Integrable (kernel t) :=
 
 theorem integral_kernel {t : ℝ} (ht : 0 < t) :
     (∫ x : Space, kernel t x) = 1 := by
-  have hdim : Module.finrank ℝ Space = 3 := by simp [Space]
+  have hdim : Module.finrank ℝ Space = 3 := by simp only [Space, finrank_euclideanSpace,
+      Fintype.card_fin]
   simp only [kernel]
   rw [integral_const_mul,
     GaussianFourier.integral_rexp_neg_mul_sq_norm (inv_pos.mpr ht), hdim]
@@ -152,8 +154,10 @@ theorem norm_integral_smul_le (k : Space → ℝ) (f : Space → V)
     ‖∫ x : Space, k x • f x‖ ≤
       Real.sqrt (∫ x : Space, ‖k x‖^2) * (eLpNorm f 2 volume).toReal := by
   have hp : (2:ℝ).HolderConjugate 2 := by norm_num [Real.holderConjugate_iff]
-  have hk' : MemLp (fun x => ‖k x‖) (ENNReal.ofReal (2:ℝ)) volume := by simpa using hk.norm
-  have hf' : MemLp (fun x => ‖f x‖) (ENNReal.ofReal (2:ℝ)) volume := by simpa using hf.norm
+  have hk' : MemLp (fun x => ‖k x‖) (ENNReal.ofReal (2:ℝ)) volume := by simpa only [
+      Real.norm_eq_abs, ENNReal.ofReal_ofNat] using hk.norm
+  have hf' : MemLp (fun x => ‖f x‖) (ENNReal.ofReal (2:ℝ)) volume := by simpa only [
+      ENNReal.ofReal_ofNat] using hf.norm
   have h := integral_mul_le_Lp_mul_Lq_of_nonneg hp
     (Eventually.of_forall (fun x => norm_nonneg (k x)))
     (Eventually.of_forall (fun x => norm_nonneg (f x))) hk' hf'

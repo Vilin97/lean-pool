@@ -9,6 +9,7 @@ module
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Add
 import Mathlib.Analysis.Calculus.Deriv.Mul
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 An explicit extension converts one-sided derivatives on a nondegenerate

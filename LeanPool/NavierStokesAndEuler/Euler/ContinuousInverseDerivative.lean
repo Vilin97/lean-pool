@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.Calculus.FDeriv.Defs
 import Mathlib.Analysis.Calculus.FDeriv.OfCompLeft
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! An actual continuous inverse has the inverse Jacobian as its derivative.
 This is the easy half of the inverse function theorem; no differentiability

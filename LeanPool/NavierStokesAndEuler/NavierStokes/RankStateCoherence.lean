@@ -44,7 +44,8 @@ regularity and the actual torus covering. -/
 theorem sourceMoment_on {l a : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k m : ℕ)
     {V : Set S} {U : Set T} (hU : IsOpen U) (hmap : MapsTo P V U)
     {f : PressureStream.Lift S → ℝ} {g : PressureStream.Lift T → ℝ}
-    (he : ScalarOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k)
+    (he : ScalarOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k)
         a f g)
     (hg : ContDiffOn ℝ ∞ g (PhysicalMeanDomain.slowDomain U))
     (hp : PhysicalMeanDomain.PeriodicOn U g) {s : S} (hs : s ∈ V) :
@@ -88,10 +89,10 @@ theorem measured_debt_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     {Cr : CorrectionState.Context (PressureStream.Lift T)}
     {u : CorrectionState.State (PressureStream.Lift S)}
     {ur : CorrectionState.State (PressureStream.Lift T)} {n nr : ℕ}
-    (H : StateOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
-        l u ur n nr)
-    (G : ContextOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k)
-        c l C Cr n nr)
+    (H : StateOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l u ur n nr)
+    (G : ContextOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l C Cr n nr)
     (R : DebtRegular U Cr ur nr) {s : S} (hs : s ∈ V) :
     CorrectionState.debt C u n s =
       MeanRankUpdate.scaleDebt l⁻¹ c (CorrectionState.debt Cr ur nr (P s)) := by
@@ -108,12 +109,15 @@ theorem measured_debt_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
   fin_cases i
   · change MeanChartCompatibility.sourceMoment 0 (u.gr C n) s = _
     rw [h0]
-    simp [MeanRankUpdate.scaleDebt, MeanChartCompatibility.sourceDebt, hl.ne', pow_two]
+    simp only [MeanRankUpdate.scaleDebt, MeanChartCompatibility.sourceDebt, Fin.zero_eta,
+      Matrix.cons_val_zero]
+    rw [zero_add, pow_one, mul_div_cancel_right₀ _ hl.ne', pow_two]
   · change MeanChartCompatibility.sourceMoment 2
       (MeanIncrementBounds.thetaAxial C.base u.mean n + u.covariance 2 1 n) s = _
     rw [htheta2]
-    simp [MeanRankUpdate.scaleDebt, MeanChartCompatibility.sourceDebt,
-      div_eq_mul_inv, pow_two, mul_comm, mul_assoc]
+    simp only [MeanRankUpdate.scaleDebt, MeanChartCompatibility.sourceDebt, Fin.mk_one,
+      Matrix.cons_val_one, Matrix.cons_val_zero, Pi.add_apply]
+    ring
   · change MeanChartCompatibility.sourceMoment 1
       (MeanIncrementBounds.axialAxial C.base u.mean n + u.covariance 2 2 n) s - (1/2:ℝ) *
       MeanChartCompatibility.sourceMoment 2 (u.gr C n) s = _
@@ -122,7 +126,8 @@ theorem measured_debt_on {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
       Matrix.cons_val_two, Matrix.cons_val_one, Matrix.cons_val_zero,
       Matrix.cons_val_zero', Matrix.cons_val_succ', Matrix.vecHead, Matrix.vecTail,
       Matrix.cons_val_succ, Function.comp_def, Pi.add_apply]
-    field_simp; ring
+    rw [pow_succ l 2, mul_div_mul_right (c * c) (l ^ 2) hl.ne']
+    ring
 
 /-- Primitive rank data use one dimensionless kernel.  No rank-output or
 debt equality is a field of this structure. -/
@@ -185,10 +190,10 @@ variable {l c : ℝ} (hl : 0 < l) (hc : c ≠ 0) (P : S ≃L[ℝ] T) (k : ℕ)
   {Cr : CorrectionState.Context (PressureStream.Lift T)}
   {u : CorrectionState.State (PressureStream.Lift S)}
   {ur : CorrectionState.State (PressureStream.Lift T)} {n nr : ℕ}
-  (H : StateOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l
-      u ur n nr)
-  (G : ContextOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
-      l C Cr n nr)
+  (H : StateOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+      (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l u ur n nr)
+  (G : ContextOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+      (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l C Cr n nr)
   (R : DebtRegular U Cr ur nr)
   {r : CorrectionState.RankData S} {rr : CorrectionState.RankData T}
   (K : RankOn V P l c r rr n nr)
@@ -196,14 +201,16 @@ variable {l c : ℝ} (hl : 0 < l) (hc : c ≠ 0) (P : S ≃L[ℝ] T) (k : ℕ)
 include hc hV hU hmap H G R K
 
 theorem rankAngular_on :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
+    ScalarOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
       (MeanRankUpdate.slowLift (CorrectionState.rankAngular r C u n))
       (MeanRankUpdate.slowLift (CorrectionState.rankAngular rr Cr ur nr)) := by
   intro z hz
   exact K.angular hl.ne' hc hz (measured_debt_on hl P k hV hU hmap H G R hz) z.1
 
 theorem rankDesiredAxial_on :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
+    ScalarOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
       (MeanRankUpdate.slowLift (CorrectionState.rankDesiredAxial r C u n))
       (MeanRankUpdate.slowLift (CorrectionState.rankDesiredAxial rr Cr ur nr)) := by
   intro z hz
@@ -218,7 +225,8 @@ include J F
 /-- Naturality of the literal moving-gauge rank potential.  Its source is
 the already constructed five-row inverse of the measured debt. -/
 theorem rankPotential_on :
-    ScalarOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) (c/l)
+    ScalarOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) (c/l)
       (VariableGaugeMean.rankPotential g r C u n) (VariableGaugeMean.rankPotential gr rr Cr ur nr)
           := by
   have ha : 0 < g.radial.inner := J.inner ▸ F.primitive_inner_pos
@@ -243,7 +251,8 @@ rank correction.  No output-increment coherence is assumed. -/
 theorem rankIncrementState_on (axial : S × PressureStream.Plane) (axialr : T × PressureStream.Plane)
     (ha : (P.toContinuousLinearMap.prodMap (TemporalMeanUpdate.coverMap k))
         (C.operators.epsilon n • axial) = l • (Cr.operators.epsilon nr • axialr)) :
-    TripleOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
+    TripleOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
       (VariableGaugeMean.rankIncrementState g r axial C u)
       (VariableGaugeMean.rankIncrementState gr rr axialr Cr ur) n nr := by
   have hpot := rankPotential_on hl hc P k hV hU hmap H G R K J F
@@ -294,10 +303,10 @@ theorem rankStageState_on {l c : ℝ} (hl : 0 < l) (hc : c ≠ 0) (P : S ≃L[�
     {Cr : CorrectionState.Context (PressureStream.Lift T)}
     {u : CorrectionState.State (PressureStream.Lift S)}
     {ur : CorrectionState.State (PressureStream.Lift T)} {n nr : ℕ}
-    (H : StateOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
-        l u ur n nr)
-    (G : ContextOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k)
-        c l C Cr n nr)
+    (H : StateOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l u ur n nr)
+    (G : ContextOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l C Cr n nr)
     (R : DebtRegular U Cr ur nr)
     {r : CorrectionState.RankData S} {rr : CorrectionState.RankData T}
     (K : RankOn V P l c r rr n nr)
@@ -312,7 +321,8 @@ theorem rankStageState_on {l c : ℝ} (hl : 0 < l) (hc : c ≠ 0) (P : S ≃L[�
     (hp : PhysicalMeanDomain.PeriodicOn U ((rankAddedState gr rr axialr Cr ur).gr Cr nr))
     (hs : VariableGaugeMean.SupportedGauge gr.radial.inner gr.radial.outer (gr.length nr) U
       ((rankAddedState gr rr axialr Cr ur).gr Cr nr)) :
-    StateOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l
+    StateOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l
       (VariableGaugeMean.rankStageState g r axial C u)
       (VariableGaugeMean.rankStageState gr rr axialr Cr ur) n nr := by
   have hi := rankIncrementState_on hl hc P k hV hU hmap H G R K J F axial axialr ha
@@ -347,7 +357,7 @@ theorem normalized_rank_on {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
                 h)
     rw [SimilarityHomogeneity.coordinateQ_scale_h hh hh1 hQ (hV s hs),
       Real.mul_rpow hQ.le (SimilarityCoordinates.coordinateQ_spec (by
-          linarith) (by linarith) (hV s hs)).1.le,
+          linarith only [hh]) (by linarith only [hh1]) (hV s hs)).1.le,
       ← mul_assoc, ← Real.rpow_add hQ, add_neg_cancel, Real.rpow_zero, one_mul]
   · intro s hs
     change MeanRankUpdate.shapedAmplitude B (SimilarityCoordinates.coordinateEta (2*h) s) =
@@ -356,7 +366,7 @@ theorem normalized_rank_on {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
           (ChartScales.Q n / ChartScales.Q m)^CoordinateAlgebra.D h*s.2))
     rw [SimilarityHomogeneity.coordinateEta_scale_h hh hh1 hQ (hV s hs)]
   · intro s hs
-    exact (VariableGaugeMean.qLength_pos (by linarith) (by linarith) (hpos s hs)).ne'
+    exact (VariableGaugeMean.qLength_pos (by linarith) (by linarith only [hh1]) (hpos s hs)).ne'
   · intro s hs
     exact (Real.rpow_pos_of_pos
       (SimilarityCoordinates.coordinateQ_spec (by linarith) (by linarith) (hpos s hs)).1 _).ne'
@@ -413,7 +423,8 @@ theorem fiveRows_chart {l c : ℝ} (hl : 0 < l)
 
 theorem scalarOn_slice {l c : ℝ} (hl : 0 < l) (P : S ≃L[ℝ] T) (k : ℕ)
     {V : Set S} {f : PressureStream.Lift S → ℝ} {g : PressureStream.Lift T → ℝ}
-    (H : ScalarOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
+    (H : ScalarOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
         f g)
     {s : S} (hs : s ∈ V) (R : ℝ) : f (R,(s,0)) = c * g (l*R,(P s,0)) := by
   simpa only [GaugeStateCoherence.chartEquiv_apply, map_zero] using H (R,(s,0)) hs
@@ -427,10 +438,10 @@ theorem rankIncrementState_fiveRows_on [FiniteDimensional ℝ T]
     {Cr : CorrectionState.Context (PressureStream.Lift T)}
     {u : CorrectionState.State (PressureStream.Lift S)}
     {ur : CorrectionState.State (PressureStream.Lift T)} {n nr : ℕ}
-    (H : StateOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k) c
-        l u ur n nr)
-    (G : ContextOn (PhysicalMeanDomain.slowDomain V) (GaugeStateCoherence.chartEquiv l hl.ne' P k)
-        c l C Cr n nr)
+    (H : StateOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l u ur n nr)
+    (G : ContextOn (E := PressureStream.Lift T) (PhysicalMeanDomain.slowDomain V)
+        (GaugeStateCoherence.chartEquiv l hl.ne' P k) c l C Cr n nr)
     (R : DebtRegular U Cr ur nr)
     {r : CorrectionState.RankData S} {rr : CorrectionState.RankData T}
     (K : RankOn V P l c r rr n nr)

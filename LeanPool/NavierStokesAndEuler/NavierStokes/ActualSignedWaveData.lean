@@ -98,8 +98,8 @@ theorem norm_coverEquiv_symm_le (y : TorusInverse.Plane) :
   rw [CommonCoverSolve.coverEquiv_apply, SlotGeometry.cover_apply] at he
   have h1 := congrArg Prod.fst he
   have h2 := congrArg Prod.snd he
-  have hx : x.1 = (5 * y.1 - y.2) / 14 := by dsimp only at h1 h2; linarith
-  have hy : x.2 = (3 * y.2 - y.1) / 14 := by dsimp only at h1 h2; linarith
+  have hx : x.1 = (5 * y.1 - y.2) / 14 := by dsimp only at h1 h2; linarith only [h1, h2]
+  have hy : x.2 = (3 * y.2 - y.1) / 14 := by dsimp only at h1 h2; linarith only [h1, h2]
   have hY1 : |y.1| ≤ ‖y‖ := by simpa only [Real.norm_eq_abs] using norm_fst_le y
   have hY2 : |y.2| ≤ ‖y‖ := by simpa only [Real.norm_eq_abs] using norm_snd_le y
   have hX : |x.1| ≤ ‖y‖ := by
@@ -107,13 +107,13 @@ theorem norm_coverEquiv_symm_le (y : TorusInverse.Plane) :
     apply (div_le_iff₀ (by norm_num : (0 : ℝ) < 14)).mpr
     have ha := abs_sub (5 * y.1) y.2
     rw [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 5)] at ha
-    linarith [norm_nonneg y]
+    linarith only [hY1, hY2, ha, norm_nonneg y]
   have hY : |x.2| ≤ ‖y‖ := by
     rw [hy, abs_div, abs_of_pos (by norm_num : (0 : ℝ) < 14)]
     apply (div_le_iff₀ (by norm_num : (0 : ℝ) < 14)).mpr
     have ha := abs_sub (3 * y.2) y.1
     rw [abs_mul, abs_of_pos (by norm_num : (0 : ℝ) < 3)] at ha
-    linarith [norm_nonneg y]
+    linarith only [hY1, hY2, ha, norm_nonneg y]
   exact max_le hX hY
 
 theorem norm_coverPower_symm_le (d : ℕ) (y : TorusInverse.Plane) :
@@ -404,7 +404,7 @@ theorem singleton_rawPotential (l : Label B N0) (k : Copy)
         (ActualSignedPhysicalBinding.reference l) k z) := by
   rw [native_raw_amplitude]
   simp only [ActualSignedPhysicalData.rawPotential, ActualSignedPhysicalData.rawSignedAmplitude,
-      singleton_referenceRequest]
+      singleton_referenceRequest, ActualSignedPhysicalData.potentialMap_apply]
   dsimp only [DependentSignedPhysicalFamily.Family.singleton]
   simp only [family, ActualSignedExterior.family, ActualSignedExterior.actualLabel_nativeLabel]
   dsimp only [DependentSignedPhysicalFamily.Family.singletonLabel]
@@ -539,7 +539,8 @@ theorem selection_other_label {E : Type*} [Zero E]
     (I : ActualSignedPhysicalData.SourceIndex) (n : ℕ) (y : Native) (hI : I.1.1 ≠ L) :
     selection g ⟨L, I⟩ n y = 0 := by
   classical
-  by_cases hL : L ∈ ActualSignedExterior.labels B N0 <;> simp [selection, hL, hI]
+  by_cases hL : L ∈ ActualSignedExterior.labels B N0 <;> simp only [selection, hL, ↓reduceDIte, hI,
+      Int.cast_ofNat_Int, Int.reduceNeg, false_and, ↓reduceIte]
 
 theorem selection_active_function {E : Type*} [Zero E]
     (g : (Label B N0 × Copy) → ℕ → Native → E) (I : SourceIndex) (n : ℕ)
@@ -559,7 +560,8 @@ theorem selection_zero_function {E : Type*} [Zero E]
   funext y
   rcases hz with hL | hI
   · simp only [selection, dite_eq_right hL]
-  · by_cases hL : I.1 ∈ ActualSignedExterior.labels B N0 <;> simp [selection, hL, hI]
+  · by_cases hL : I.1 ∈ ActualSignedExterior.labels B N0 <;> simp only [selection, hL, ↓reduceDIte,
+      Int.cast_ofNat_Int, Int.reduceNeg, hI, ↓reduceIte]
 
 theorem selection_uniform {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
     {α : ℝ} {g : (Label B N0 × Copy) → ℕ → Native → E}
@@ -856,7 +858,8 @@ theorem gate_amplitude_ne_zero_iff (f : CopyFamily H K) (k : K) (I : WaveIndex H
     (x : LiftPoint) :
     (gate f).amplitude k I x ≠ 0 ↔ x ∈ liftPast ∧ f.amplitude k I x ≠ 0 := by
   classical
-  by_cases hx : x ∈ liftPast <;> simp [gate, hx]
+  by_cases hx : x ∈ liftPast <;> simp only [gate, hx, ↓reduceIte, ne_eq, true_and,
+      not_true_eq_false, false_and]
 
 theorem gate_amplitude_germ (f : CopyFamily H K) (k : K) (I : WaveIndex H)
     {x : LiftPoint} (hx : x ∈ liftPast) :
@@ -1197,13 +1200,14 @@ theorem primitive_annulus (hh0 : 0 < h) (hh1 : h < 1 / 2)
       ‖PhysicalGraphBounds.liftZT x‖ ≤ 2 := by
   let y := PhysicalClassBounds.cylindricalMap x
   have hy := hloc.normalized L y hx (Real.sqrt_nonneg _) hm hT
-  have hq : 0 < SimilarityCoordinates.coordinateQ (2 * h) y.2.1 := by linarith [hy.1]
+  have hq : 0 < SimilarityCoordinates.coordinateQ (2 * h) y.2.1 := by linarith only [hh0, hh1, hy,
+      hy.1]
   have hs := Real.sqrt_pos.mpr hq
   have hslow := normalized_slow_norm hh0 hh1 hx hy.1 hy.2.1
   have hlo : 1 / 2 ≤ Real.sqrt (SimilarityCoordinates.coordinateQ (2 * h) y.2.1) :=
-    (Real.le_sqrt (by norm_num) hq.le).mpr (by linarith [hy.1])
+    (Real.le_sqrt (by norm_num) hq.le).mpr (by linarith only [hh0, hh1, hy, hy.1])
   have hhi : Real.sqrt (SimilarityCoordinates.coordinateQ (2 * h) y.2.1) ≤ 2 :=
-    (Real.sqrt_le_left (by norm_num)).mpr (by linarith [hy.2.1])
+    (Real.sqrt_le_left (by norm_num)).mpr (by linarith only [hh0, hh1, hy, hy.2.1])
   have hradlo := (le_div_iff₀ hs).mp hy.2.2.1
   have hradhi := (div_le_iff₀ hs).mp hy.2.2.2
   have hR : y.1 = PolarCharts.radius (PhysicalGraphBounds.liftXY x) := rfl
@@ -1214,7 +1218,7 @@ theorem primitive_annulus (hh0 : 0 < h) (hh1 : h < 1 / 2)
   have hnormlo : a / 4 ≤ ‖PhysicalGraphBounds.liftXY x‖ := by
     have hradius := PolarCharts.radius_le_two_norm (PhysicalGraphBounds.liftXY x)
     have hmul := mul_le_mul_of_nonneg_left hlo ha.le
-    linarith
+    linarith only [hradlo, hradius, hmul]
   constructor
   · exact ⟨by simpa only [Metric.mem_closedBall, dist_zero_right] using hnorm, hnormlo⟩
   · change max ‖x.1.2.2.2‖ ‖x.1.1‖ ≤ 2
@@ -1279,9 +1283,9 @@ theorem potential_support (i : Fin 3) :
       simpa only [potentialCopies, PositiveTimeCopyFamily.gate,
         ActualSignedPhysicalData.potentialFamily, extendedCarrier, dite_eq_left hL] using
         angular_integer sys f G ⟨L.val, L.property, hL⟩ k
-    · exact ⟨0, by simp [potentialCopies, PositiveTimeCopyFamily.gate,
-        ActualSignedPhysicalData.potentialFamily, extendedCarrier, hL,
-        ActualSignedPhysicalData.carrier]⟩
+    · exact ⟨0, by simp only [potentialCopies, PositiveTimeCopyFamily.gate, potentialFamily,
+        extendedCarrier, ActualSignedPhysicalData.carrier, Fin.isValue, Int.cast_ofNat_Int,
+        Int.reduceNeg, PhysicalGraphBounds.liftXY_apply, hL, ↓reduceDIte, mul_zero, Int.cast_zero]⟩
   geometry_support k I w hw := by
     obtain ⟨hpast, hraw⟩ := (PositiveTimeCopyFamily.gate_amplitude_ne_zero_iff
       (ActualSignedPhysicalData.potentialFamily sys hh f i) k I _).mp hw
@@ -1323,9 +1327,9 @@ theorem pressure_support :
       simpa only [pressureCopies, PositiveTimeCopyFamily.gate,
         ActualSignedPhysicalData.pressureFamily, extendedCarrier, dite_eq_left hL] using
         angular_integer sys f G ⟨L.val, L.property, hL⟩ k
-    · exact ⟨0, by simp [pressureCopies, PositiveTimeCopyFamily.gate,
-        ActualSignedPhysicalData.pressureFamily, extendedCarrier, hL,
-        ActualSignedPhysicalData.carrier]⟩
+    · exact ⟨0, by simp only [pressureCopies, PositiveTimeCopyFamily.gate, pressureFamily,
+        extendedCarrier, ActualSignedPhysicalData.carrier, Fin.isValue, Int.cast_ofNat_Int,
+        Int.reduceNeg, hL, ↓reduceDIte, mul_zero, Int.cast_zero]⟩
   geometry_support k I w hw := by
     obtain ⟨hpast, hraw⟩ := (PositiveTimeCopyFamily.gate_amplitude_ne_zero_iff
       (ActualSignedPhysicalData.pressureFamily sys hh f) k I _).mp hw
@@ -1473,7 +1477,8 @@ noncomputable def identitySourceChart {N : ℕ} {K I : Type}
     intro k J x hx j hj hjm
     simp only [pow_zero, mul_one]
     exact (PhysicalGraphBounds.norm_positive_jet_linear_le
-      (ContinuousLinearMap.id ℝ LiftPoint) x hj).trans (by simp)
+      (ContinuousLinearMap.id ℝ LiftPoint) x hj).trans (by simp only [ContinuousLinearMap.norm_id,
+          Std.le_refl])
   amplitude_eq k J x hx :=
     (PositiveTimeCopyFamily.gate_amplitude_eq f k J hx.2).trans (he k J x)
   contains k J z _ _ _ _ hz := by
@@ -1513,7 +1518,7 @@ theorem potential_source_domain (i : Fin 3) (k : Frequency)
   have hu : ‖PhysicalGraphBounds.liftXY x‖ ≤ 2 * b := by
     simpa only [Metric.mem_closedBall, dist_zero_right] using hg.1.1
   have hl : a / 4 ≤ ‖PhysicalGraphBounds.liftXY x‖ := hg.1.2
-  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith⟩
+  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith only [hh0, hh1, hu]⟩
 
 theorem pressure_source_domain (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1)
     (x : LiftPoint) (hx : x ∈ PositiveTimeCopyFamily.liftPast)
@@ -1527,7 +1532,7 @@ theorem pressure_source_domain (k : Frequency) (I : PhysicalWaveSum.WaveIndex 1)
   have hu : ‖PhysicalGraphBounds.liftXY x‖ ≤ 2 * b := by
     simpa only [Metric.mem_closedBall, dist_zero_right] using hg.1.1
   have hl : a / 4 ≤ ‖PhysicalGraphBounds.liftXY x‖ := hg.1.2
-  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith⟩
+  exact ⟨by change a / 4 / 2 < _; linarith, by change _ < 2 * b + 1; linarith only [hh0, hh1, hu]⟩
 
 variable (hp : NativeProfiles (h := h) f) (hn : NativeRegular sys hh f)
   {P : ℝ} (hP : 1 ≤ P)
@@ -2527,9 +2532,9 @@ theorem potential_frequencies (i : Fin 3) (k : TorusInverse.Frequency) (L : Band
       (singleton_frequencies_of_states s M) k L
   · rw [DependentSignedPhysicalFamily.Family.copyAt_inactive _ _ hL]
     have hP := zero_le_one.trans (ActualPhaseJetBounds.one_le_phaseSize (B := B) (N0 := N0))
-    exact ⟨by simpa [DependentSignedPhysicalFamily.zeroCopies] using hP,
-      by simpa [DependentSignedPhysicalFamily.zeroCopies] using hP,
-      by simpa [DependentSignedPhysicalFamily.zeroCopies] using hP⟩
+    exact ⟨by simpa only [DependentSignedPhysicalFamily.zeroCopies, Fin.isValue, abs_zero] using hP,
+      by simpa only [DependentSignedPhysicalFamily.zeroCopies, Fin.isValue, abs_zero] using hP,
+      by simpa only [DependentSignedPhysicalFamily.zeroCopies, Fin.isValue, abs_zero] using hP⟩
 
 theorem pressure_frequencies (k : TorusInverse.Frequency) (L : BandLabel) :
     |((pressureCopies s).carrier k L).angular| ≤ ActualPhaseJetBounds.phaseSize B N0 ∧
@@ -2550,9 +2555,9 @@ theorem pressure_frequencies (k : TorusInverse.Frequency) (L : BandLabel) :
       (singleton_frequencies_of_states s M) k L
   · rw [DependentSignedPhysicalFamily.Family.copyAt_inactive _ _ hL]
     have hP := zero_le_one.trans (ActualPhaseJetBounds.one_le_phaseSize (B := B) (N0 := N0))
-    exact ⟨by simpa [DependentSignedPhysicalFamily.zeroCopies] using hP,
-      by simpa [DependentSignedPhysicalFamily.zeroCopies] using hP,
-      by simpa [DependentSignedPhysicalFamily.zeroCopies] using hP⟩
+    exact ⟨by simpa only [DependentSignedPhysicalFamily.zeroCopies, Fin.isValue, abs_zero] using hP,
+      by simpa only [DependentSignedPhysicalFamily.zeroCopies, Fin.isValue, abs_zero] using hP,
+      by simpa only [DependentSignedPhysicalFamily.zeroCopies, Fin.isValue, abs_zero] using hP⟩
 
 /-! ## The jointly indexed Cartesian sources -/
 
@@ -2916,7 +2921,7 @@ noncomputable def signedInputs (B N0 : ℕ)
   potential_exponent j := by
     change 1 / 2 + ActualIterationLedger.sigma j - ChartScales.kappa ≤
       1 + ActualIterationLedger.sigma j - ChartScales.kappa
-    linarith
+    linarith only
   pressure_exponent _ := le_rfl
   potential_shift _ := rfl
   pressure_shift _ := rfl

@@ -107,8 +107,8 @@ theorem radius_guards (q : ℕ) (T Ti R C C₁ C₂ L : ℝ)
   have hgc' := mul_nonneg hgc hr
   unfold radius
   constructor
-  · linarith
-  constructor <;> linarith
+  · linarith only [hg', hgc']
+  constructor <;> linarith only [hw', hgc', hg']
 
 variable (D : EulerMeanPacketProvider.Data) (q : ℕ) (Ti R C C₁ C₂ : ℝ)
   (hT : D.T ≤ 1) (hTi : D.T⁻¹ ≤ Ti) (hR : 1024 ≤ R)
@@ -144,18 +144,18 @@ def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C
       weakCost q D.T R C C₁ C₂ D.L := by
     apply (mul_le_mul_of_nonneg_right hs ho).trans
     unfold weakCost
-    linarith [mul_nonneg hs0 hf]
+    linarith only [mul_nonneg hs0 hf]
   have hfp : sobolevInverseCost (sourceFixedCoercivity D.T D.F D.F₁ D.opInv)⁻¹
       (operatorCost q D.T R C C₁ C₂ D.L) q*forcingCost q D.T R C C₁ ≤
       weakCost q D.T R C C₁ C₂ D.L := by
     apply (mul_le_mul_of_nonneg_right hs hf).trans
     unfold weakCost
-    linarith [mul_nonneg hs0 ho]
-  have hsqrt : sqrt D.T ≤ 1 := by nlinarith [sqrt_nonneg D.T, sq_sqrt D.T_pos.le]
+    linarith only [mul_nonneg hs0 ho]
+  have hsqrt : sqrt D.T ≤ 1 := Real.sqrt_le_one.mpr hT
   have htrace : coordinateTraceCost D.T ≤ Ti+2 := by
     unfold coordinateTraceCost
     have hmul := mul_le_mul hTi hsqrt (sqrt_nonneg D.T) hTi0
-    linarith
+    linarith only [hmul, hsqrt]
   have ht0 := coordinateTraceCost_nonneg D.T D.T_pos.le
   have hg0 : 0 ≤ D.frameLower⁻¹ := inv_nonneg.mpr D.frameLower_pos.le
   have hd0 := accelerationBlockAmplitude_nonneg (ι := Fin 4) q R C C₁ 1 1 hR0 hC hC₁ zero_le_one
@@ -167,7 +167,8 @@ def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C
     have ha := sobolevCoefficientAmplitude_nonneg (ι := Fin 4) q R C hR0 hC
     have hb := sobolevCoefficientAmplitude_nonneg (ι := Fin 4) q R C₁ hR0 hC₁
     unfold accelerationBlockAmplitude
-    gcongr
+    exact mul_le_mul_of_nonneg_left (add_le_add le_rfl (mul_le_mul_of_nonneg_left htrace
+      (mul_nonneg (Nat.ofNat_nonneg 6) hb))) (mul_nonneg (Nat.ofNat_nonneg 3) ha)
   have hg := inverseBlockCost_mono (ι := Fin 4) q hg0 hR0 (by
       positivity : 0 ≤ 3*C^2) hd0 hGram le_rfl le_rfl
   have hgc := inverseBlockCost_mono (ι := Fin 4) q hg0 hR0 (by
@@ -206,7 +207,7 @@ def sourceMeanBudget : EulerMeanPacketProvider.Budget D q (radius q D.T Ti R C C
   · exact (mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hgc (by
       norm_num : (0 : ℝ) ≤ 2)) hr0).trans hr.2.2
   · intro n x
-    have he : (D.M0.field : Space → EndSpace) = D.F₁.field ⟨0,le_rfl,D.T_pos.le⟩ :=
+    have he : (D.M0.field : Space → EndSpace) = ⇑(D.F₁.field ⟨0,le_rfl,D.T_pos.le⟩) :=
       funext (fun y => (D.derivative_initial y).symm)
     rw [he]
     exact hF₁ n ⟨0,le_rfl,D.T_pos.le⟩ x

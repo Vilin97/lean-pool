@@ -22,6 +22,10 @@ there is no separate post-target growth hypothesis.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -44,18 +48,21 @@ theorem equation30_short_size_comparison {σ s t : ℝ} {Z Z₁ : ℝ → ℝ}
     convert! (((((hasDerivAt_id x).pow 2).const_mul (σ^2)).const_add 1).mul (hZ x hx)) using 1
     dsimp [W₁]
     ring
-  have hWpos (x : ℝ) (hx : 0 ≤ x) : 0 < W x := mul_pos (by positivity) (hzpos x hx)
+  have hq (x : ℝ) : 0 < 1+σ^2*x^2 :=
+    add_pos_of_pos_of_nonneg one_pos (mul_nonneg (sq_nonneg σ) (sq_nonneg x))
+  have hWpos (x : ℝ) (hx : 0 ≤ x) : 0 < W x := mul_pos (hq x) (hzpos x hx)
   have hderivBound (x : ℝ) (hx : 1 ≤ x) : |W₁ x| ≤ 6*W x := by
     have hx0 : 0 ≤ x := by linarith only [hx]
     have hlog := equation30_primary_logderivative_bound hσ hσsmall hZ hfluxZ hZ0 hZ₁0 x hx
     have hzx := hzpos x hx0
     rw [abs_div, abs_of_pos hzx, div_le_iff₀ hzx] at hlog
     have ht := abs_add_le ((2*σ^2*x)*Z x) ((1+σ^2*x^2)*Z₁ x)
-    rw [abs_of_nonneg (by positivity : 0 ≤ (2*σ^2*x)*Z x), abs_mul,
-      abs_of_pos (by positivity : 0 < 1+σ^2*x^2)] at ht
-    have hh := mul_le_mul_of_nonneg_left hlog (show 0 ≤ 1+σ^2*x^2 by positivity)
-    have hx2 : x ≤ x^2 := by nlinarith only [hx]
-    have hcoef := mul_le_mul_of_nonneg_right hx2 (show 0 ≤ 2*σ^2*Z x by positivity)
+    have hc : 0 ≤ 2*σ^2*Z x := mul_nonneg (mul_nonneg zero_le_two (sq_nonneg σ)) hzx.le
+    rw [abs_of_nonneg (mul_nonneg (mul_nonneg (mul_nonneg zero_le_two (sq_nonneg σ)) hx0) hzx.le),
+      abs_mul, abs_of_pos (hq x)] at ht
+    have hh := mul_le_mul_of_nonneg_left hlog (hq x).le
+    have hx2 : x ≤ x^2 := (le_mul_of_one_le_right hx0 hx).trans_eq (sq x).symm
+    have hcoef := mul_le_mul_of_nonneg_right hx2 hc
     dsimp [W₁, W]
     linarith only [ht, hh, hcoef, hzx]
   have hcont : ContinuousOn W (Icc s t) := fun x hx =>
@@ -74,8 +81,8 @@ theorem equation30_short_size_comparison {σ s t : ℝ} {Z Z₁ : ℝ → ℝ}
   rw [gronwallBound_ε0, Real.norm_eq_abs, abs_of_pos (hWpos t ht0)] at hg
   have hexp : exp (6*(t-s)) ≤ exp 6 := exp_le_exp.mpr (by linarith only [hshort])
   have hgrowth : W t ≤ W s*exp 6 := hg.trans (mul_le_mul_of_nonneg_left hexp (hWpos s hs0).le)
-  have htWeight := (quadratic_weight_sqrt (show 0 ≤ σ^2*t^2 by positivity)).1
-  have hsWeight := (quadratic_weight_sqrt (show 0 ≤ σ^2*s^2 by positivity)).2
+  have htWeight := (quadratic_weight_sqrt (mul_nonneg (sq_nonneg σ) (sq_nonneg t))).1
+  have hsWeight := (quadratic_weight_sqrt (mul_nonneg (sq_nonneg σ) (sq_nonneg s))).2
   have hleft := mul_le_mul_of_nonneg_right htWeight (hzpos t ht0).le
   have hright' := mul_le_mul_of_nonneg_right hsWeight (hzpos s hs0).le
   have hrightExp := mul_le_mul_of_nonneg_right hright' (exp_pos (6:ℝ)).le

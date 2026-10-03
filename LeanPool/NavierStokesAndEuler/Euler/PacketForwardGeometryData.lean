@@ -109,7 +109,7 @@ theorem initial_inverse (x : Space) :
 
 include G in
 theorem initial_normal (x : Space) : sourceRay D x 0=cross (unit (P.m 0)) (unit (P.v 0)) := by
-  change (D.FInv.field (D.clamp 0) x).adjoint D.m₀=_
+  change adjoint (𝕜 := ℝ) (E := Space) (F := Space) (D.FInv.field (D.clamp 0) x) D.m₀=_
   rw [show D.clamp 0=⟨0,le_rfl,D.T_pos.le⟩ from Data.clamp_coe D ⟨0,le_rfl,D.T_pos.le⟩,
     G.initial_inverse,adjoint_id,ContinuousLinearMap.id_apply,G.normal_choice]
 
@@ -139,7 +139,8 @@ theorem sourceVelocity_equation (x : Space) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 
 
 omit [CompleteSpace U] in
 theorem sourceRay_equation (x : Space) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T) :
-    HasDerivWithinAt (sourceRay D x) (-(sourceMatrix D x t).adjoint (sourceRay D x t))
+    HasDerivWithinAt (sourceRay D x)
+      (-adjoint (𝕜 := ℝ) (E := Space) (F := Space) (sourceMatrix D x t) (sourceRay D x t))
       (Icc (0 : ℝ) D.T) t := by
   have h := EulerPacketPrimaryFactorization.canonicalNormal_equation (D := D) ⟨t,ht⟩ x
   have hc : D.clamp t=⟨t,ht⟩ := Data.clamp_coe D ⟨t,ht⟩
@@ -176,18 +177,15 @@ omit [CompleteSpace U] in
 theorem sourceError_bound (x : Space) (hx : ‖x‖ ≤ G.radius)
     (t : ℝ) (ht : t ∈ Icc (0 : ℝ) D.T) : ‖P.sourceError x t‖ ≤ P.forwardError G.radius := by
   have hd := EulerPacketActivationHistory.coefficient_difference D.M (D.clamp t) x 0
-  rw [sub_zero] at hd
   have hr := P.remainder_bound t ht
-  calc
-    ‖P.sourceError x t‖ = ‖(sourceMatrix D x t-sourceMatrix D 0 t)+P.sourceError 0 t‖ := by
-      congr 1
-      unfold ParentFrame.sourceError
-      module
-    _ ≤ ‖sourceMatrix D x t-sourceMatrix D 0 t‖+‖P.sourceError 0 t‖ := norm_add_le _ _
-    _ ≤ ‖D.M.derivative.field‖*‖x‖+P.error := add_le_add hd hr
-    _ ≤ ‖D.M.derivative.field‖*G.radius+P.error :=
-      add_le_add (mul_le_mul_of_nonneg_left hx (norm_nonneg _)) le_rfl
-    _ = P.forwardError G.radius := by unfold ParentFrame.forwardError; ring
+  have he : P.sourceError x t = (sourceMatrix D x t-sourceMatrix D 0 t)+P.sourceError 0 t := by
+    unfold ParentFrame.sourceError
+    module
+  rw [he]
+  refine (norm_add_le _ _).trans ((add_le_add ((hd.trans_eq (by rw [sub_zero])).trans
+    (mul_le_mul_of_nonneg_left hx (norm_nonneg _))) hr).trans_eq ?_)
+  unfold ParentFrame.forwardError
+  ring
 
 end ForwardGuards
 end EulerPacketSourceGeometry

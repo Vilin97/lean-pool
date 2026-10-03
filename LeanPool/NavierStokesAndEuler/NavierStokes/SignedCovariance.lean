@@ -22,6 +22,10 @@ a separate term; it is not included in the linear covariance identity.
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 
 noncomputable section
 
@@ -518,7 +522,7 @@ theorem class_input_envelope {s : StripData E} {w g r : ℕ → E → ℝ}
   obtain ⟨C0, hC0, p0, hl⟩ := hlower
   let C := Cg + Cr + C0 + 1
   let p := pg + pr + p0
-  have hC : 1 ≤ C := by dsimp [C]; linarith
+  have hC : 1 ≤ C := by dsimp [C]; linarith only [hCg, hCr, hC0]
   refine ⟨C, hC, p, ?_⟩
   intro n x hx
   have hm (A : ℝ) (hA : 0 ≤ A) (hAC : A ≤ C) (k : ℕ) (hkp : k ≤ p) :
@@ -537,14 +541,14 @@ theorem class_input_envelope {s : StripData E} {w g r : ℕ → E → ℝ}
       _ ≤ Cg * s.growth n x ^ pg * w n x := by
         simpa only [majorant, Real.rpow_zero, mul_one] using hgj n x hx j hj
       _ ≤ (C * s.growth n x ^ p) * w n x := mul_le_mul_of_nonneg_right
-        (hm Cg hCg (by dsimp [C]; linarith) pg (by dsimp [p]; omega)) (hw n x hx).le
+        (hm Cg hCg (by dsimp [C]; linarith only [hCr, hC0]) pg (by dsimp [p]; omega)) (hw n x hx).le
       _ = _ := by ring
   · intro j hj
     calc
       _ ≤ Cr * s.growth n x ^ pr * w n x := by
         simpa only [majorant, Real.rpow_zero, mul_one] using hrj n x hx j hj
       _ ≤ (C * s.growth n x ^ p) * w n x := mul_le_mul_of_nonneg_right
-        (hm Cr hCr (by dsimp [C]; linarith) pr (by dsimp [p]; omega)) (hw n x hx).le
+        (hm Cr hCr (by dsimp [C]; linarith only [hCg, hC0]) pr (by dsimp [p]; omega)) (hw n x hx).le
       _ = _ := by ring
 
 /-- Signed jet cost, given by `WeightedQuotients.chooseSum j * WeightedQuotients.orderBound (-(1
@@ -559,12 +563,12 @@ noncomputable def prefixJetCost (m : ℕ) : ℝ :=
 theorem prefixJetCost_pos (m : ℕ) : 0 < prefixJetCost m := by
   have hs := Finset.sum_nonneg (s := Finset.range (m + 1)) (fun j _ => abs_nonneg (signedJetCost j))
   dsimp [prefixJetCost]
-  linarith
+  linarith only [hs]
 
 theorem signedJetCost_le {j m : ℕ} (hj : j ≤ m) : signedJetCost j ≤ prefixJetCost m := by
   have hs := Finset.single_le_sum (f := fun j => |signedJetCost j|)
     (fun k _ => abs_nonneg (signedJetCost k)) (Finset.mem_range.mpr (Nat.lt_succ_of_le hj))
-  exact (le_abs_self _).trans (hs.trans (by dsimp [prefixJetCost]; linarith))
+  exact (le_abs_self _).trans (hs.trans (by dsimp [prefixJetCost]; linarith only))
 
 theorem signedJetCost_nonneg (j : ℕ) : 0 ≤ signedJetCost j :=
   div_nonneg (mul_nonneg (WeightedQuotients.chooseSum_nonneg j)
@@ -803,7 +807,7 @@ theorem increment_sq_bound (H : Mat2) (T R : Vec2)
   norm_num only [OfNat.ofNat, Nat.cast_ofNat]
   calc
     _ ≤ d ^ 2 / (4 * (H⁻¹.mulVec T) j) := div_le_div_of_nonneg_right hr2 (by positivity)
-    _ ≤ _ := div_le_div_of_nonneg_left (sq_nonneg d) (by positivity) (by linarith)
+    _ ≤ _ := div_le_div_of_nonneg_left (sq_nonneg d) (by positivity) (by linarith only [hY])
 
 theorem squareColumn_abs_bound (H : Mat2) (T R : Vec2)
     (hcone : SmoothCovariance.StrictCone H T) (i : Fin 2)

@@ -132,14 +132,17 @@ theorem freezeState_coherent (u : State D) (m n nr : ℕ) (U : Set D) :
     PhysicalResidualNaturality.StateOn U (ContinuousLinearEquiv.refl ℝ D) 1 1
       (freezeState u m) (freezeState u m) n nr := by
   refine ⟨⟨?_, ?_, ?_⟩, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
-    simp [PhysicalResidualNaturality.ScalarOn, freezeState, freezeTriple]
+    simp only [PhysicalResidualNaturality.ScalarOn, freezeState, freezeTriple,
+        ContinuousLinearEquiv.refl_apply, one_mul, implies_true, mul_one]
 
 theorem freezeContext_coherent (c : Context D) (m n nr : ℕ) (U : Set D) :
     PhysicalResidualNaturality.ContextOn U (ContinuousLinearEquiv.refl ℝ D) 1 1
       (freezeContext c m) (freezeContext c m) n nr := by
   refine ⟨?_, ⟨?_, ?_, ?_⟩, ?_, ?_⟩
-  · refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> simp [freezeContext_frame]
-  all_goals simp [PhysicalResidualNaturality.ScalarOn, freezeContext, freezeTriple]
+  · refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> simp only [freezeContext_frame,
+      ContinuousLinearEquiv.refl_apply, one_smul, implies_true, mul_one, one_mul]
+  all_goals simp only [PhysicalResidualNaturality.ScalarOn, freezeContext, freezeTriple,
+      ContinuousLinearEquiv.refl_apply, one_mul, implies_true, mul_one]
 
 end Freeze
 
@@ -207,13 +210,15 @@ theorem ratioPower_self {Q : ℝ} (hQ : 0 < Q) (a : ℝ) :
 
 theorem slowChange_self (h : ℝ) {Q : ℝ} (hQ : 0 < Q) (z : Plane) :
     PhysicalSignedWave.slowChange h Q Q z = z := by
-  simp [PhysicalSignedWave.slowChange, ratioPower_self hQ]
+  simp only [PhysicalSignedWave.slowChange, ratioPower_self hQ, one_smul,
+      ContinuousLinearMap.coe_prodMap', ContinuousLinearMap.coe_id', Prod.map_id, id_eq]
 
 theorem requestChart_self (h : ℝ) {Q : ℝ} (hQ : 0 < Q) :
     PhysicalSignedWave.requestChart h hQ hQ 0 = ContinuousLinearEquiv.refl ℝ Point := by
   ext x <;>
-  simp [PhysicalSignedWave.requestChart_apply, ratioPower_self hQ, slowChange_self h hQ,
-    TemporalMeanUpdate.coverMap]
+  simp only [PhysicalSignedWave.requestChart_apply, one_div, ratioPower_self hQ, one_mul,
+      slowChange_self h hQ, TemporalMeanUpdate.coverMap, ContinuousLinearMap.id_apply, Prod.mk.eta,
+      ContinuousLinearEquiv.refl_apply]
 
 variable {U : PhaseJetBounds.Domain ℕ PhaseCalculus.Slow}
 
@@ -239,8 +244,11 @@ noncomputable def identityViews (B : PhysicalSignedWave.PrimaryData U) (m : ℕ)
     (h Q : ℝ) (cover : ℕ) (hQ : 0 < Q) (hfrequency : B.base.frequency m ≠ 0)
     (n : ℕ) (x : Cylinder) :
     (identityViews B m h Q cover hQ hfrequency).map n x = x := by
-  simp [PhysicalSignedWave.PrimaryData.Views.map, identityViews,
-    PhysicalParticularWave.cylinderChange, ratioPower_self hQ, CommonCoverSolve.coverPower]
+  simp only [PhysicalSignedWave.PrimaryData.Views.map, PhysicalParticularWave.cylinderChange,
+      identityViews, tsub_self, ContinuousLinearMap.prod_apply, ContinuousLinearMap.comp_apply,
+      ContinuousLinearMap.coe_fst', PhysicalParticularWave.chartChange_apply, one_div,
+      ratioPower_self hQ, one_mul, Prod.mk.eta, CommonCoverSolve.coverPower,
+      ContinuousLinearEquiv.refl_apply, ContinuousLinearMap.coe_snd']
 
 @[simp] theorem identityViews_velocity (B : PhysicalSignedWave.PrimaryData U) (m : ℕ)
     (h Q : ℝ) (cover : ℕ) (hQ : 0 < Q) (hfrequency : B.base.frequency m ≠ 0) (n : ℕ) :
@@ -475,10 +483,12 @@ noncomputable def nativeViews (l : Label B N0) : (primary l).Views (reference l)
 
 @[simp] theorem nativeViews_map (l : Label B N0) (n : ℕ) (x : Cylinder) :
     (nativeViews l).map n x = x := by
-  simp [PhysicalSignedWave.PrimaryData.Views.map, nativeViews, identityViews,
-    PhysicalParticularWave.cylinderChange, ActualReferenceRebase.ratioPower_self (ChartScales.Q_pos
-        _),
-    CommonCoverSolve.coverPower]
+  simp only [PhysicalSignedWave.PrimaryData.Views.map, PhysicalParticularWave.cylinderChange,
+      nativeViews, identityViews, tsub_self, ContinuousLinearMap.prod_apply,
+      ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_fst',
+      PhysicalParticularWave.chartChange_apply, one_div,
+      ActualReferenceRebase.ratioPower_self (ChartScales.Q_pos _), one_mul, Prod.mk.eta,
+      CommonCoverSolve.coverPower, ContinuousLinearEquiv.refl_apply, ContinuousLinearMap.coe_snd']
 
 @[simp] theorem nativeViews_velocity (l : Label B N0) (n : ℕ) :
     (nativeViews l).velocity n = 1 := by
@@ -500,10 +510,17 @@ theorem native_change_cancel (l : Label B N0) (x : Cylinder) :
       (ChartScales.Q (reference l))
       (ChartScales.nativeIndex h (reference l) - CommonWindow.index h (reference l))
       (PhysicalResidualTZ.swapCylinder (toCommonCylinder l x)) = x := by
-  simp [PhysicalParticularWave.cylinderChange_apply, PhysicalParticularWave.chartChange_apply,
-    toCommonCylinder, toCommon, PhysicalResidualTZ.swapCylinder_apply,
-    PhysicalResidualTZ.swapSlow_apply, ActualReferenceRebase.ratioPower_self (ChartScales.Q_pos _),
-    CorrectionStep.cycleAssoc, ActualReferenceRebase.inverseCover, ParticularWaveBounds.liftAssoc]
+  simp only [toCommonCylinder, toCommon, CorrectionStep.cycleAssoc, ParticularWaveBounds.liftAssoc,
+      LinearIsometryEquiv.toContinuousLinearEquiv_symm, ActualReferenceRebase.inverseCover,
+      LinearIsometryEquiv.symm_symm, ContinuousLinearEquiv.trans_apply,
+      LinearIsometryEquiv.coe_toContinuousLinearEquiv, PhysicalResidualTZ.swapCylinder_apply,
+      PhysicalResidualTZ.swapSlow_apply, ContinuousLinearEquiv.prodCongr_apply,
+      LinearIsometryEquiv.coe_symm_toContinuousLinearEquiv, LinearIsometryEquiv.coe_prodAssoc_symm,
+      Equiv.prodAssoc_symm_apply, ContinuousLinearEquiv.refl_apply,
+      LinearIsometryEquiv.coe_prodAssoc, Equiv.prodAssoc_apply, Prod.mk.eta,
+      PhysicalParticularWave.cylinderChange_apply, PhysicalParticularWave.chartChange_apply,
+      one_div, ActualReferenceRebase.ratioPower_self (ChartScales.Q_pos _), one_mul,
+      ContinuousLinearEquiv.apply_symm_apply]
 
 theorem primary_phase (l : Label B N0) (n : ℕ) :
     (primary l).base.phase n =
@@ -550,7 +567,7 @@ theorem primary_radial (l : Label B N0) (n : ℕ) :
   funext x
   simp only [primary, directions, freezeDirections,
     LinearWaveBounds.GraphDirections.radialField, ActualReferenceRebase.pullDirections,
-    ← map_smul, ← map_add]
+    ← ContinuousLinearEquiv.map_smul, ← ContinuousLinearEquiv.map_add]
   change (toCommonCylinder l).symm
     ((PrimaryResidualClass.directions (commonContext B)).radialField (reference l)
       (toCommonCylinder l x)) = _
@@ -572,11 +589,12 @@ theorem primary_radial (l : Label B N0) (n : ℕ) :
                                           Equiv.prodAssoc_symm_apply,
                                               ContinuousLinearEquiv.refl_apply,
                                                   LinearIsometryEquiv.coe_prodAssoc,
-                                                      Equiv.prodAssoc_apply, Prod.mk.eta, map_smul,
+                                                      Equiv.prodAssoc_apply, Prod.mk.eta,
+                                                          ContinuousLinearEquiv.map_smul,
                                                           Prod.mk.injEq, true_and, and_true]
   apply (CommonCoverSolve.coverPower (ChartScales.nativeIndex h (reference l) -
     CommonWindow.index h (reference l))).injective
-  simp only [map_smul, ContinuousLinearEquiv.apply_symm_apply]
+  simp only [ContinuousLinearEquiv.map_smul, ContinuousLinearEquiv.apply_symm_apply]
   rw [show CommonCoverSolve.coverPower (ChartScales.nativeIndex h (reference l) -
       CommonWindow.index h (reference l)) PhysicalGraphBounds.radialDirection =
       ChartScales.Lambda ^ (ChartScales.nativeIndex h (reference l) - CommonWindow.index h
@@ -602,8 +620,8 @@ theorem primary_axial (l : Label B N0) (n : ℕ) :
   change (primary l).strip.epsilon n •
     (toCommonCylinder l).symm (((0, ((0, 1), 0)), 0) : Cylinder) = _
   rw [primary_epsilon, toCommonCylinder_symm_apply]
-  simp [PhysicalResidualBridge.ScaledGraph.axial, PhysicalResidualBridge.commonGraph,
-      ChartScales.epsilon]
+  simp only [ChartScales.epsilon, map_zero, Prod.smul_mk, smul_eq_mul, mul_zero, mul_one, smul_zero,
+      PhysicalResidualBridge.ScaledGraph.axial, PhysicalResidualBridge.commonGraph, one_div]
 
 theorem primary_chart (l : Label B N0) (n : ℕ) :
     PhysicalSignedWave.ChartGeometry (primary l).base (primary l).strip (primary l).directions n
@@ -674,12 +692,17 @@ noncomputable def primaryAngular (l : Label B N0) (P : SignedStressPrimitive.Pat
     (primary l).Angular (nativeStateData l P u H hp).referenceRequest (reference l) where
   mode := PrimaryGeometryAssembly.angularMode certificate modulation (choice B N0).prepared l.2 l.1
   phase := primary_phase_affine l (reference l)
-  coordinate := by intro x t; simp [primary]
-  target := by intro x t; simp [primary]
+  coordinate := by intro x t; simp only [primary, Fin.isValue, Prod.smul_mk, smul_zero, smul_eq_mul,
+      mul_one, Prod.fst_add, add_zero]
+  target := by intro x t; simp only [primary, Fin.isValue, Prod.smul_mk, smul_zero, smul_eq_mul,
+      mul_one, Prod.fst_add, add_zero]
   request := PhysicalSignedWave.stateRequest_invariant _ _ _ _ _ _
-  mask := by intro x t; simp [primary]
-  normalMotion := by intro x t; simp [primary]
-  action := by intro x t; simp [primary]
+  mask := by intro x t; simp only [primary, Fin.isValue, Prod.smul_mk, smul_zero, smul_eq_mul,
+      mul_one, Prod.fst_add, add_zero]
+  normalMotion := by intro x t; simp only [primary, Fin.isValue, Prod.smul_mk, smul_zero,
+      smul_eq_mul, mul_one, Prod.fst_add, add_zero]
+  action := by intro x t; simp only [primary, Fin.isValue, Prod.smul_mk, smul_zero, smul_eq_mul,
+      mul_one, Prod.fst_add, add_zero]
 
 /-! The same individual native copy as the frozen signed stage. -/
 
@@ -731,7 +754,8 @@ theorem nativePoint_reference (l : Label B N0) (k : TorusInverse.Frequency) (x :
   rw [show PhysicalParticularWave.velocityWeight h (ChartScales.Q (reference l))
       (ChartScales.Q (reference l)) = 1 from
         ActualReferenceRebase.ratioPower_self (ChartScales.Q_pos _) _]
-  simp [PhysicalSignedWave.coefficientScale, (Real.sqrt_pos.mpr (ChartScales.epsilon_pos h _)).ne']
+  simp only [PhysicalSignedWave.coefficientScale, one_mul, ne_eq,
+      (Real.sqrt_pos.mpr (ChartScales.epsilon_pos h _)).ne', not_false_eq_true, div_self]
 
 @[simp] theorem signed_clockScale_reference (l : Label B N0) :
     ActualSignedStageControls.clockScale l (reference l) = 1 :=
@@ -746,7 +770,7 @@ theorem nativePoint_reference (l : Label B N0) (k : TorusInverse.Frequency) (x :
   rw [ActualReferenceRebase.ratioPower_self (ChartScales.Q_pos _) _]
   have hK : (ChartScales.carrier h (reference l) : ℝ) ≠ 0 :=
     (Scaling.carrier_frequency_pos (ChartScales.epsilon_pos h _)).ne'
-  simp [hK]
+  simp only [ne_eq, hK, not_false_eq_true, div_self, mul_one]
 
 theorem signed_matrix_reference (l : Label B N0) (k : TorusInverse.Frequency) (x : Cylinder) :
     ActualSignedStageControls.matrix l k (reference l) (toCommonCylinder l x) =
@@ -825,7 +849,8 @@ theorem primary_radial_pull (l : Label B N0) (n : ℕ) (x : Cylinder) :
       (toCommonCylinder l).symm ((PrimaryResidualClass.directions (commonContext B)).radialField
         (reference l) (toCommonCylinder l x)) := by
   simp only [primary, directions, freezeDirections, ActualReferenceRebase.pullDirections,
-    LinearWaveBounds.GraphDirections.radialField, map_add, map_smul]
+    LinearWaveBounds.GraphDirections.radialField, ContinuousLinearEquiv.map_add,
+    ContinuousLinearEquiv.map_smul]
 
 theorem primary_axial_pull (l : Label B N0) (n : ℕ) (x : Cylinder) :
     (primary l).directions.axialField (primary l).strip n x =
@@ -834,7 +859,7 @@ theorem primary_axial_pull (l : Label B N0) (n : ℕ) (x : Cylinder) :
             standardRegion))
           (reference l) (toCommonCylinder l x)) := by
   simp only [primary, directions, freezeDirections, ActualReferenceRebase.pullDirections,
-    LinearWaveBounds.GraphDirections.axialField, map_smul]
+    LinearWaveBounds.GraphDirections.axialField, ContinuousLinearEquiv.map_smul]
   rfl
 
 /-- Actual Fréchet derivatives transform with the native frame; no smoothness
@@ -909,7 +934,8 @@ theorem nativeView_target (l : Label B N0) :
   have he : PhysicalSignedWave.coefficientScale (ChartScales.epsilon h (reference l))
       (ChartScales.epsilon h (reference l)) 1 = 1 := by
     unfold PhysicalSignedWave.coefficientScale
-    simp [(Real.sqrt_pos.mpr (ChartScales.epsilon_pos h (reference l))).ne']
+    simp only [one_mul, ne_eq, (Real.sqrt_pos.mpr (ChartScales.epsilon_pos h (reference l))).ne',
+        not_false_eq_true, div_self]
   rw [he]
   simp only [one_pow, one_smul]
   rfl
@@ -952,7 +978,9 @@ theorem dynamicCoefficients_eq (l : Label B N0)
     (ActualPeriodizedSignedRealization.nativeUnit (primary l) (layout l) (nativeViews l) l.2 k) = _
   unfold ActualPeriodizedSignedRealization.coefficientsWith nativeCoefficients
   rw [nativeView_base, nativeView_target]
-  congr 1
+  with_reducible congr 1
+  · rfl
+  · rfl
   · funext n x
     simp only [nativeViews_map]
     rfl

@@ -55,7 +55,7 @@ theorem transportConstant_nonneg {B M : ℝ} (hB : 0 ≤ B) (hM : 0 ≤ M) : 0 �
           norm_num) hM) (mul_nonneg (by norm_num) (lowerProductConstant_nonneg period 3))))
 
 theorem lossConstant_nonneg {M : ℝ} (hM : 0 ≤ M) : 0 ≤ lossConstant period M :=
-  mul_nonneg (by linarith) (productConstant_nonneg period 3)
+  mul_nonneg (by linarith only [hM]) (productConstant_nonneg period 3)
 
 /-- The actual full forcing is bounded with constants depending only on fixed base coefficient
 bounds and the fixed inverse majorant. -/
@@ -80,10 +80,10 @@ theorem correctionForcing_uniform_bound {s : ℕ} (hs : 6 ≤ s) {A : SmoothCoef
       sourceConstant B M*weightedNorm period 6 N ρ f +
         transportConstant period B M*weightedNorm period 6 N ρ u*weightedNorm period 6 N ρ v +
         lossConstant period M*(ρ⁻¹+Rc)*weightedNorm period 6 N ρ u*weightedLoss period 6 N ρ v := by
-  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith [mul_nonneg hρ.le hRc]
+  have hhalf : ρ*Rc ≤ 1/2 := by nlinarith only [hM, hsmall, mul_nonneg hρ.le hRc]
   have hw := weightedCoefficient_uniform period K N ρ Rc B hρ hRc hhalf hB hcoeff
   have hb := baseCoefficientSum_le period K0 B hB0
-  have hM0 : 0 ≤ M := by linarith
+  have hM0 : 0 ≤ M := by linarith only [hM]
   have hsf : 1+2*M*(weightedCoefficient period K 6 N ρ+448*baseCoefficientSum period K0) ≤
       sourceConstant B M := by
     have h := add_le_add (le_refl (1 : ℝ)) (mul_le_mul_of_nonneg_left

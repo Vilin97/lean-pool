@@ -92,7 +92,7 @@ theorem initialized_five_costs_bound (W H0 : ℝ) (hδ : 0 < δ)
   have hEW : W ≤ envelope W := by unfold envelope; linarith
   have hER : EulerPacketRadiusPolynomial.radiusEnvelope W ≤ envelope W := by
     unfold envelope
-    linarith
+    linarith only [hH0, hHW, hPE]
   have hEP : EulerPacketCorrectionPrimitive.primitiveEnvelope period W ≤ envelope W := by
     unfold envelope
     linarith

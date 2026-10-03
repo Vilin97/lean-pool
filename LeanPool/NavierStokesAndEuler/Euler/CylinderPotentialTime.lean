@@ -31,8 +31,10 @@ open scoped ContDiff
 
 variable (P : ℝ) [Fact (0 < P)]
   (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a p))
+  (hf : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT p) (f t) (Icc (0 : ℝ) T) t)
 
 include hd
@@ -52,8 +54,8 @@ theorem matrixSlowCurl_hasDerivWithinAt (t : Icc (0 : ℝ) T) (x : LiftDomain P)
       (Icc (0 : ℝ) T) t := by
   have hL : HasDerivWithinAt (fun r => (ContinuousLinearMap.inl ℝ Space ℝ).comp (G r))
       ((ContinuousLinearMap.inl ℝ Space ℝ).comp G₁) (Icc (0 : ℝ) T) t := by
-    have h := ((hasDerivAt_const (t : ℝ) (ContinuousLinearMap.inl ℝ Space
-        ℝ)).hasDerivWithinAt).clm_comp hG
+    have h := (hasDerivWithinAt_const (t : ℝ) (Icc (0 : ℝ) T)
+      (ContinuousLinearMap.inl ℝ Space ℝ)).clm_comp hG
     simpa only [ContinuousLinearMap.zero_comp, zero_add] using h
   have hD := pointField_fderiv_hasDerivWithinAt P T hT p f hp hf hd t x
   have h := curlOperator.hasFDerivAt.comp_hasDerivWithinAt (t : ℝ) (hD.clm_comp hL)
@@ -98,8 +100,10 @@ variable (P : ℝ) [Fact (0 < P)] (T : ℝ) (hT : 0 ≤ T)
   (hB : ContDiff ℝ ∞ (translateCoefficientPath B))
   (hB₁ : ContDiff ℝ ∞ (translateCoefficientPath B₁))
   (p f : C(Icc (0 : ℝ) T, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a p))
+  (hf : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a f))
 
 /-- Potential derivative, given by `potentialPath P B₁ p + potentialPath P B f`. -/
 def potentialDerivative : C(Icc (0 : ℝ) T,LiftL2 P) :=
@@ -107,7 +111,8 @@ def potentialDerivative : C(Icc (0 : ℝ) T,LiftL2 P) :=
 
 include hB hB₁ hp hf in
 theorem potentialDerivative_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (potentialDerivative P T B B₁ p f)) := by
+    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a
+      (potentialDerivative P T B B₁ p f)) := by
   simp only [potentialDerivative, map_add]
   exact (potentialPath_orbit P B₁ hB₁ p hp).add (potentialPath_orbit P B hB f hf)
 
@@ -137,8 +142,8 @@ include hBt hd
 theorem potentialPath_hasDerivWithinAt (t : Icc (0 : ℝ) T) :
     HasDerivWithinAt (extendPath T hT (potentialPath P B p))
       (potentialDerivative P T B B₁ p f t) (Icc (0 : ℝ) T) t :=
-  fullProduct_hasDerivWithinAt P T hT B B₁ hBt (pathPrimitive P p) (pathPrimitive P f)
-    (pathPrimitive_time_derivative P T hT p f hd) t
+  fullProduct_hasDerivWithinAt P T hT B B₁ hBt (pathPrimitive (K := Icc (0 : ℝ) T) P p)
+    (pathPrimitive (K := Icc (0 : ℝ) T) P f) (pathPrimitive_time_derivative P T hT p f hd) t
 
 theorem potentialField_hasDerivWithinAt (t : Icc (0 : ℝ) T) (x : LiftDomain P) :
     HasDerivWithinAt (fun r => potentialField P B hB p hp (projIcc 0 T hT r) x)

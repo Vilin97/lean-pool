@@ -35,7 +35,7 @@ def weight (g : C(K, ℝ)) : C(K,E) →L[ℝ] C(K,E) :=
     g.continuous.smul continuous_const⟩
 
 @[simp] theorem weight_apply (g : C(K, ℝ)) (f : C(K, E)) (t : K) :
-    weight g f t = g t • f t := rfl
+    weight (E := E) g f t = g t • f t := rfl
 
 /-- The reciprocal of a positive continuous profile is an actual continuous path. -/
 def reciprocal (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) : C(K,ℝ) :=
@@ -46,30 +46,30 @@ def normalize (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) : C(K,E) →L[ℝ] C(K,E) :=
   weight (reciprocal g hg)
 
 @[simp] theorem normalize_apply (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) (f : C(K, E)) (t : K) :
-    normalize g hg f t = (g t)⁻¹ • f t := rfl
+    normalize (E := E) g hg f t = (g t)⁻¹ • f t := rfl
 
 /-- Weighting and normalization are actual inverse operators. -/
 theorem normalize_weight (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) (f : C(K, E)) :
-    normalize g hg (weight g f) = f := by
+    normalize (E := E) g hg (weight (E := E) g f) = f := by
   ext t
   simp only [normalize_apply, weight_apply, smul_smul, inv_mul_cancel₀ (hg t).ne', one_smul]
 
 /-- Normalization and weighting are inverse in the other order too. -/
 theorem weight_normalize (g : C(K, ℝ)) (hg : ∀ t, 0 < g t) (f : C(K, E)) :
-    weight g (normalize g hg f) = f := by
+    weight (E := E) g (normalize (E := E) g hg f) = f := by
   ext t
   simp only [normalize_apply, weight_apply, smul_smul, mul_inv_cancel₀ (hg t).ne', one_smul]
 
 /-- Literal pointwise control of a weighted path, with no profile extremum. -/
 theorem weight_pointwise_bound (g : C(K, ℝ)) (hg : ∀ t, 0 ≤ g t) (f : C(K, E)) (t : K) :
-    ‖weight g f t‖ ≤ g t * ‖f‖ := by
+    ‖weight (E := E) g f t‖ ≤ g t * ‖f‖ := by
   rw [weight_apply, norm_smul, Real.norm_eq_abs, abs_of_nonneg (hg t)]
   exact mul_le_mul_of_nonneg_left (f.norm_coe_le_norm t) (hg t)
 
 /-- A pointwise profile bound gives the normalized uniform norm directly. -/
 theorem normalize_norm_le (g : C(K, ℝ)) (hg : ∀ t, 0 < g t)
     (f : C(K, E)) (D : ℝ) (hD : 0 ≤ D) (hf : ∀ t, ‖f t‖ ≤ D * g t) :
-    ‖normalize g hg f‖ ≤ D := by
+    ‖normalize (E := E) g hg f‖ ≤ D := by
   apply (ContinuousMap.norm_le _ hD).2
   intro t
   rw [normalize_apply, norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr (hg t))]
@@ -80,13 +80,13 @@ theorem normalize_norm_le (g : C(K, ℝ)) (hg : ∀ t, 0 < g t)
 /-- Scalar normalization commutes with every coefficient multiplier. -/
 theorem normalize_multiplier (g : C(K, ℝ)) (hg : ∀ t, 0 < g t)
     (A : C(K, E →L[ℝ] E)) (f : C(K, E)) :
-    normalize g hg (multiplier A f) = multiplier A (normalize g hg f) := by
+    normalize (E := E) g hg (multiplier A f) = multiplier A (normalize (E := E) g hg f) := by
   ext t
   simp only [normalize_apply, multiplier_apply, map_smul]
 
 /-- Scalar weighting commutes with every coefficient multiplier. -/
 theorem weight_multiplier (g : C(K, ℝ)) (A : C(K, E →L[ℝ] E)) (f : C(K, E)) :
-    weight g (multiplier A f) = multiplier A (weight g f) := by
+    weight (E := E) g (multiplier A f) = multiplier A (weight (E := E) g f) := by
   ext t
   simp only [weight_apply, multiplier_apply, map_smul]
 

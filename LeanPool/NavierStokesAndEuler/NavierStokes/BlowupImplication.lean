@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Conditional blow-up and obstruction to continuous extension

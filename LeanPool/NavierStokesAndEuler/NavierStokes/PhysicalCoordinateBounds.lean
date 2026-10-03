@@ -94,8 +94,8 @@ theorem inverseCoordinates_slope_pos {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {p : P
 theorem inverseCoordinates_hasFDerivAt {a : ℝ} (ha : 0 < a) (ha1 : a < 1) {p : Point}
     (hp : p ∈ positiveTime) :
     HasFDerivAt (inverseCoordinates a) (inverseDifferential a (inverseCoordinates a p)) p := by
-  have hq := ((coordinateQ_smooth ha ha1 (p := (p.1, p.2.2)) hp).differentiableAt (by
-      simp)).hasFDerivAt
+  have hq := ((coordinateQ_smooth ha ha1 (p := (p.1, p.2.2)) hp).differentiableAt
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero)).hasFDerivAt
   have hm : HasFDerivAt (fun p : Point => (p.1, p.2.2))
       ((ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ)).prod
         ((ContinuousLinearMap.snd ℝ ℝ ℝ).comp (ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ)))) p :=
@@ -126,8 +126,9 @@ theorem inverseDifferential_contDiffAt {a : ℝ} {y : Point}
   have hn : ContDiffAt ℝ ∞ (fun y : Point => 2 * y.2.2 * y.1 ^ a) y :=
     (contDiffAt_const.mul contDiffAt_snd.snd).mul
       (contDiffAt_fst.rpow_const_of_ne hy.ne')
-  exact (contDiffAt_const.clm_comp (((hm.inv hs).smul contDiffAt_const).add
-    ((hn.div hm hs).smul contDiffAt_const))).add contDiffAt_const
+  exact ((contDiffAt_const (𝕜 := ℝ) (F := ℝ →L[ℝ] Point)).clm_comp
+    (((hm.inv hs).smul contDiffAt_const).add
+      ((hn.div hm hs).smul (contDiffAt_const (𝕜 := ℝ) (F := Point →L[ℝ] ℝ))))).add contDiffAt_const
 
 /-- Actual inverse jets, computed by recursively differentiating through
 the inverse Jacobian. This definition assumes no derivative estimates. -/
@@ -144,13 +145,11 @@ theorem inverseJet_contDiffAt {a : ℝ} {g : Point → ℝ} {y : Point}
     ContDiffAt ℝ ∞ (inverseJet a g n) y := by
   induction n with
   | zero =>
-    exact hg.continuousLinearMap_comp
-      ((continuousMultilinearCurryFin0 ℝ Point ℝ).symm : ℝ →L[ℝ] Point[×0]→L[ℝ] ℝ)
+    exact (continuousMultilinearCurryFin0 ℝ Point ℝ).symm.contDiff.comp_contDiffAt y hg
   | succ n ih =>
-    exact ((ih.fderiv_right infty_add_one_le).clm_comp
-      (inverseDifferential_contDiffAt hy hs)).continuousLinearMap_comp
-        ((continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => Point) ℝ).symm :
-          (Point →L[ℝ] Point[×n]→L[ℝ] ℝ) →L[ℝ] Point[×(n + 1)]→L[ℝ] ℝ)
+    exact (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => Point) ℝ).symm.contDiff
+      |>.comp_contDiffAt y
+        ((ih.fderiv_right infty_add_one_le).clm_comp (inverseDifferential_contDiffAt hy hs))
 
 theorem iteratedFDeriv_comp_inverse {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {g : Point → ℝ} (hg : ContDiffOn ℝ ∞ g positiveTime)
@@ -170,9 +169,10 @@ theorem iteratedFDeriv_comp_inverse {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
         (show inverseCoordinates a p ∈ positiveTime from hq))) n
     change (continuousMultilinearCurryLeftEquiv ℝ (fun _ : Fin (n + 1) => Point) ℝ).symm
       (fderiv ℝ (iteratedFDeriv ℝ n (g ∘ inverseCoordinates a)) p) = _
-    rw [heq.fderiv_eq]
-    rw [fderiv_comp p (hj.differentiableAt (by simp))
-      ((inverseCoordinates_contDiffAt ha ha1 hp).differentiableAt (by simp)),
+    simp only [heq.fderiv_eq, fderiv_comp p (hj.differentiableAt
+        (WithTop.coe_ne_zero.2 ENat.top_ne_zero))
+      ((inverseCoordinates_contDiffAt ha ha1 hp).differentiableAt
+          (WithTop.coe_ne_zero.2 ENat.top_ne_zero)),
       (inverseCoordinates_hasFDerivAt ha ha1 hp).fderiv]
     rfl
 
@@ -186,10 +186,10 @@ theorem normalizedCompact_isCompact (lo hi : ℝ) : IsCompact (normalizedCompact
 theorem normalized_slope_pos {a lo hi : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {y : Point} (hy : y ∈ normalizedCompact lo hi) : 0 < scalarSlope a y.2.2 y.1 := by
   have hy1 : y.1 = 1 := hy.1
-  have hz : y.2.2 ^ 2 ≤ 1 := by nlinarith [hy.2.2.1, hy.2.2.2]
+  have hz : y.2.2 ^ 2 ≤ 1 := by nlinarith only [ha, ha1, hy, hy.2.2.1, hy.2.2.2]
   have haz := mul_le_mul_of_nonneg_left hz ha.le
   simp only [scalarSlope, hy1, Real.one_rpow, mul_one]
-  nlinarith
+  nlinarith only [ha1, haz]
 
 theorem exists_normalized_jet_bound {a : ℝ} (ha : 0 < a) (ha1 : a < 1)
     {g : Point → ℝ} (hg : ContDiffOn ℝ ∞ g positiveTime) (lo hi : ℝ) (n : ℕ) :
@@ -216,7 +216,8 @@ noncomputable def dilation (a r : ℝ) : Point →L[ℝ] Point :=
 
 theorem dilation_inv_cancel {r : ℝ} (hr : 0 < r) (a : ℝ) (p : Point) :
     dilation a r (dilation a r⁻¹ p) = p := by
-  ext <;> simp [dilation_apply, Real.inv_rpow hr.le, hr.ne', (Real.rpow_pos_of_pos hr (D a)).ne']
+  ext <;> simp only [dilation_apply, Real.inv_rpow hr.le, ne_eq, hr.ne', not_false_eq_true,
+      mul_inv_cancel_left₀, (Real.rpow_pos_of_pos hr (D a)).ne', Prod.mk.eta]
 
 theorem dilation_positive {r : ℝ} (hr : 0 < r) (a : ℝ) {p : Point}
     (hp : p ∈ positiveTime) : dilation a r p ∈ positiveTime := mul_pos hr hp
@@ -225,12 +226,12 @@ theorem forwardScalar_dilation {r q : ℝ} (hr : 0 < r) (hq : 0 < q) (a z : ℝ)
     forwardScalar a (r ^ D a * z) (r * q) = r * forwardScalar a z q := by
   have hscale : (r ^ D a) ^ 2 * r ^ a = r := by
     rw [← Real.rpow_mul_natCast hr.le, ← Real.rpow_add hr]
-    have he : D a * (2 : ℕ) + a = 1 := by dsimp [D]; ring
+    have he : D a * (2 : ℕ) + a = 1 := by dsimp only [D, Nat.cast_ofNat]; ring
     rw [he, Real.rpow_one]
   rw [forwardScalar, Real.mul_rpow hr.le hq.le, mul_pow]
   calc
     _ = r * q - ((r ^ D a) ^ 2 * r ^ a) * (z ^ 2 * q ^ a) := by ring
-    _ = _ := by rw [hscale]; dsimp [forwardScalar]; ring
+    _ = _ := by rw [hscale]; dsimp only [forwardScalar]; ring
 
 theorem qCoord_dilation {a r : ℝ} (ha : 0 < a) (ha1 : a < 1) (hr : 0 < r)
     {p : Point} (hp : p ∈ positiveTime) : qCoord a (dilation a r p) = r * qCoord a p := by
@@ -307,7 +308,7 @@ theorem scaleFactor_pos (a qbig : ℝ) : 0 < scaleFactor a qbig :=
 
 theorem norm_inverse_dilation_le {a q qbig : ℝ} (ha : 0 < a) (hq : 0 < q)
     (hqb : q ≤ qbig) : ‖dilation a q⁻¹‖ ≤ scaleFactor a qbig / q := by
-  have he : 0 ≤ 1 - D a := by dsimp [D]; linarith
+  have he : 0 ≤ 1 - D a := by dsimp only [D]; linarith only [ha]
   have hpow : q ^ (1 - D a) ≤ scaleFactor a qbig :=
     (Real.rpow_le_rpow hq.le hqb he).trans (le_max_right _ _)
   have hfirst : q⁻¹ ≤ scaleFactor a qbig / q := by
@@ -374,9 +375,10 @@ theorem homogeneous_derivative_bound {a b : ℝ} (ha : 0 < a) (ha1 : a < 1)
       mul_le_mul_of_nonneg_left
         (ContinuousMultilinearMap.norm_compContinuousLinearMap_le _ _)
         (Real.rpow_pos_of_pos hq b).le
-    _ = q ^ b * (‖iteratedFDeriv ℝ n F (L p)‖ * ‖L‖ ^ n) := by simp
+    _ = q ^ b * (‖iteratedFDeriv ℝ n F (L p)‖ * ‖L‖ ^ n) := by simp only [Finset.prod_const,
+        Finset.card_univ, Fintype.card_fin]
     _ ≤ q ^ b * (K * (scaleFactor a qbig / q) ^ n) :=
-      mul_le_mul_of_nonneg_left (mul_le_mul hjet hLn (by positivity) hK.le)
+      mul_le_mul_of_nonneg_left (mul_le_mul hjet hLn (pow_nonneg (norm_nonneg _) n) hK.le)
         (Real.rpow_pos_of_pos hq b).le
     _ = K * scaleFactor a qbig ^ n * q ^ (b - n) := by
       rw [Real.rpow_sub hq, Real.rpow_natCast, div_pow]
@@ -473,7 +475,7 @@ theorem timeShift_eq (p : Point) :
   · change 1 - p.1 = 1 + -p.1
     ring
   · change p.2 = (0 : ℝ × ℝ) + p.2
-    simp
+    simp only [zero_add]
 
 theorem norm_iteratedFDeriv_timeShift (F : Point → ℝ) (n : ℕ) (p : Point) :
     ‖iteratedFDeriv ℝ n (F ∘ timeShift) p‖ = ‖iteratedFDeriv ℝ n F (timeShift p)‖ := by

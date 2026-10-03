@@ -156,7 +156,7 @@ def initialLimit : SmoothL2Field Space :=
   sumField (fun n => (A n).increment (frequency J X n))
     (actual_increment_summable A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency)
 
-local notation "V" => initialLimit A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency
+local notation "V" => (initialLimit A J hJ C c hC hc p q X hX hparameter hscale hσ hk hfrequency)
 
 theorem initialLimit_Hm (s : ℕ) :
     Tendsto (fun N => derivativeSum s (initialPartial A J X N-(V).field)) atTop (𝓝 0) := by

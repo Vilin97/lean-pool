@@ -68,7 +68,7 @@ theorem PrefixFields.knownForce_angleIndependent (F : PrefixFields P T p a)
       map_zero,add_zero]
   have hpr (s : ℝ) : slowPressure (O.inverseFrame (t,(x,s)))
       (pressureJet (a (p-1)).highPressure (t,(x,s))) = 0 := by
-    change (O.inverseFrame (t,(x,s))).adjoint
+    change adjoint (𝕜 := ℝ) (E := Space) (F := Space) (O.inverseFrame (t,(x,s)))
       (pressureGradient (a (p-1)).highPressure (t,(x,s))) = 0
     rw [hpressure t x hx s,map_zero]
   unfold EulerPacketProfileRecursion.knownForce

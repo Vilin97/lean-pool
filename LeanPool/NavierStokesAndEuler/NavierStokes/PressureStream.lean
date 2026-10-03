@@ -99,7 +99,7 @@ theorem torusAverage_contDiff {f : Lift S → ℝ} (hf : ContDiff ℝ ∞ f) :
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem torusAverage_zero_of_forall {f : Lift S → ℝ} {p : ℝ × S}
     (hzero : ∀ Y : Plane, f (p.1, (p.2, Y)) = 0) : torusAverage f p = 0 := by
-  simp [torusAverage, torusInner, hzero]
+  simp only [torusAverage, torusInner, hzero, intervalIntegral.integral_zero]
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem torusAverage_supported {a b : ℝ} {f : Lift S → ℝ}
@@ -130,7 +130,7 @@ theorem torusAverage_sub_slow {f : Lift S → ℝ} (hf : ContDiff ℝ ∞ f)
   unfold torusAverage
   simp_rw [hi]
   rw [intervalIntegral.integral_sub hy intervalIntegrable_const]
-  simp
+  simp only [intervalIntegral.integral_const, sub_zero, smul_eq_mul, one_mul]
 
 /-- Pressure mass, given by `∫ r, torusAverage f (r, s)`. -/
 noncomputable def pressureMass (f : Lift S → ℝ) (s : S) : ℝ :=
@@ -184,7 +184,7 @@ theorem pressureSource_supported {a b : ℝ} (hab : a < b) {f : Lift S → ℝ}
   by_contra hn
   have hf : f p = 0 := by by_contra hne; exact hn (hs hne)
   have hρ : rho a b hab p.1 = 0 := by by_contra hne; exact hn (rho_support a b hab hne)
-  exact hp (by simp [pressureSource, hf, hρ])
+  exact hp (by simp only [pressureSource, hf, hρ, zero_mul, sub_self])
 
 theorem torusAverage_pressureSource {a b : ℝ} (hab : a < b) {f : Lift S → ℝ}
     (hf : ContDiff ℝ ∞ f) (p : ℝ × S) :
@@ -201,7 +201,7 @@ theorem pressureSource_mass_zero {a b : ℝ} (hab : a < b) {f : Lift S → ℝ}
   simp_rw [torusAverage_pressureSource hab hf]
   rw [integral_sub (torusAverage_slice_integrable hf hs s)
     ((rho_integrable a b hab).mul_const _), integral_mul_const, rho_integral, one_mul]
-  simp [pressureMass]
+  simp only [pressureMass, sub_self]
 
 end Average
 
@@ -228,7 +228,7 @@ theorem graphDz_contDiff {f : ℝ × E → ℝ} (hf : ContDiff ℝ ∞ f) (w : E
 theorem graphDr_contDiff {f : ℝ × E → ℝ} {k : ℝ → ℝ}
     (hf : ContDiff ℝ ∞ f) (hk : ContDiff ℝ ∞ k) (v : E) :
     ContDiff ℝ ∞ (graphDr k v f) :=
-  (hf.fderiv_right (by simp)).clm_apply
+  (hf.fderiv_right (by simp only [ENat.coe_top_add_one, Std.le_refl])).clm_apply
     (contDiff_const.prodMk ((hk.comp contDiff_fst).smul contDiff_const))
 
 theorem radialVector_hasFDerivAt {k : ℝ → ℝ} (v : E) {p : ℝ × E}
@@ -243,7 +243,9 @@ theorem radialVector_cross_derivative {k : ℝ → ℝ} (v w : E) {p : ℝ × E}
     (hk : DifferentiableAt ℝ k p.1) :
     fderiv ℝ (radialVector k v) p (0, w) = 0 := by
   rw [(radialVector_hasFDerivAt v hk).fderiv]
-  simp
+  simp only [ContinuousLinearMap.prod_apply, zero_apply, ContinuousLinearMap.smulRight_apply,
+      ContinuousLinearMap.comp_apply, ContinuousLinearMap.coe_fst', fderiv_eq_smul_deriv,
+      smul_eq_mul, zero_mul, zero_smul, Prod.mk_eq_zero, and_self]
 
 /-- Exact commutation is proved from symmetry of the second derivative and
 the vanishing cross derivative of the radial vector field. -/
@@ -270,7 +272,7 @@ theorem divideRadius_supported {a b : ℝ} {f : ℝ × E → ℝ}
   intro p hp
   apply hs
   intro hf
-  exact hp (by simp [divideRadius, hf])
+  exact hp (by simp only [divideRadius, hf, zero_div])
 
 /-- Division by radius is harmless for a smooth field supported away from the axis. -/
 theorem divideRadius_contDiff {a b : ℝ} (ha : 0 < a) {f : ℝ × E → ℝ}
@@ -281,9 +283,9 @@ theorem divideRadius_contDiff {a b : ℝ} (ha : 0 < a) {f : ℝ × E → ℝ}
   by_cases hp : p.1 = 0
   · have hz : divideRadius f =ᶠ[𝓝 p] fun _ => 0 := by
       have hnear : ∀ᶠ q : ℝ × E in 𝓝 p, q.1 < a :=
-        continuousAt_fst.eventually (Iio_mem_nhds (by simpa [hp] using ha))
+        continuousAt_fst.eventually (Iio_mem_nhds (by simpa only [hp] using ha))
       filter_upwards [hnear] with q hq
-      simp [divideRadius, radial_zero_of_lt hs hq]
+      simp only [divideRadius, radial_zero_of_lt hs hq, zero_div]
     exact contDiffAt_const.congr_of_eventuallyEq hz
   · exact hf.contDiffAt.div contDiffAt_fst hp
 
@@ -313,7 +315,8 @@ theorem graphDz_divideRadius {f : ℝ × E → ℝ} (w : E) {p : ℝ × E}
     graphDz w (divideRadius f) p = graphDz w f p / p.1 := by
   unfold graphDz
   rw [(divideRadius_hasFDerivAt hf hr).fderiv]
-  simp [div_eq_mul_inv, mul_comm]
+  simp only [neg_smul, smul_neg, add_apply, neg_apply, smul_apply, ContinuousLinearMap.coe_fst',
+      smul_eq_mul, mul_zero, neg_zero, zero_add, div_eq_mul_inv, mul_comm]
 
 theorem graphDr_divideRadius {f : ℝ × E → ℝ} (k : ℝ → ℝ) (v : E) {p : ℝ × E}
     (hf : DifferentiableAt ℝ f p) (hr : p.1 ≠ 0) :
@@ -361,7 +364,7 @@ theorem graphDr_supported {a b : ℝ} {f : ℝ × E → ℝ}
   intro p hp
   apply radialSupport_fderiv hs
   intro hd
-  exact hp (by simp [graphDr, hd])
+  exact hp (by simp only [graphDr, hd, zero_apply])
 
 theorem graphDz_supported {a b : ℝ} {f : ℝ × E → ℝ}
     (hs : RadialAlias.RadiallySupported a b f) (w : E) :
@@ -378,11 +381,11 @@ theorem graphDr_contDiff_of_support {a b : ℝ} (ha : 0 < a)
   by_cases hp : p.1 = 0
   · have hz : graphDr k v f =ᶠ[𝓝 p] fun _ => 0 := by
       have hnear : ∀ᶠ q : ℝ × E in 𝓝 p, q.1 < a :=
-        continuousAt_fst.eventually (Iio_mem_nhds (by simpa [hp] using ha))
+        continuousAt_fst.eventually (Iio_mem_nhds (by simpa only [hp] using ha))
       filter_upwards [hnear] with q hq
       exact radial_zero_of_lt (graphDr_supported hs k v) hq
     exact contDiffAt_const.congr_of_eventuallyEq hz
-  · exact (hf.fderiv_right (by simp)).contDiffAt.clm_apply
+  · exact (hf.fderiv_right (by simp only [ENat.coe_top_add_one, Std.le_refl])).contDiffAt.clm_apply
       (contDiffAt_const.prodMk (((hk p.1 hp).comp p contDiffAt_fst).smul contDiffAt_const))
 
 /-- Physical speed, given by `RadialPullback.radialJacobian d r * M`. -/
@@ -457,7 +460,7 @@ theorem weightedSource_supported {a b : ℝ} {γd : ℝ × E → ℝ}
   intro p hp
   apply hs
   intro hγ
-  exact hp (by simp [weightedSource, hγ])
+  exact hp (by simp only [weightedSource, hγ, mul_zero])
 
 /-- The actual physical stream `r⁻¹ Ic(r γd)`. -/
 noncomputable def streamPotential (d a b M : ℝ) (v : E) (γd : ℝ × E → ℝ) : ℝ × E → ℝ :=
@@ -510,7 +513,8 @@ theorem streamGamma_eq_desired_sub_alias {d a b M : ℝ} (ha : 0 < a) (hab : a <
   rw [show divideRadius (divideRadius (RadialPullback.physicalCompact d a b M v
       (weightedSource γd))) p =
       divideRadius (RadialPullback.physicalCompact d a b M v (weightedSource γd)) p / p.1 from rfl]
-  rw [graphDr_divideRadius _ _ (hH.differentiable (by simp) p) hr, graphDr_eq_physical,
+  rw [graphDr_divideRadius _ _ (hH.differentiable
+      (WithTop.coe_ne_zero.2 ENat.top_ne_zero) p) hr, graphDr_eq_physical,
     RadialPullback.physicalGraphDeriv_physicalCompact ha hab hd (weightedSource_contDiff hγ)
       (weightedSource_supported hs) M v p hp]
   unfold weightedSource
@@ -525,7 +529,7 @@ theorem reconstructed_divergence_zero_of_ne {d a b M : ℝ} (ha : 0 < a) (hab : 
   stream_divergence_zero v w
     ((streamPotential_contDiff ha hab hd v hγ hs).contDiffAt.of_le
       (ENat.natCast_lt_of_coe_top_le_withTop le_rfl 2).le)
-    ((physicalSpeed_smooth d M hp).differentiableAt (by simp)) hp
+    ((physicalSpeed_smooth d M hp).differentiableAt (WithTop.coe_ne_zero.2 ENat.top_ne_zero)) hp
 
 end Stream
 
@@ -566,18 +570,18 @@ omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem pressureSource_periodic {a b : ℝ} (hab : a < b) {f : Lift S → ℝ}
     (hp : TorusPeriodicLift f) : TorusPeriodicLift (pressureSource a b hab f) := by
   intro r s Y k
-  dsimp [pressureSource]
+  dsimp only [pressureSource]
   have he := hp r s Y k
-  dsimp at he
+  dsimp only at he
   rw [he]
 
 omit [NormedAddCommGroup S] [NormedSpace ℝ S] in
 theorem weightedSource_periodic {f : Lift S → ℝ} (hp : TorusPeriodicLift f) :
     TorusPeriodicLift (weightedSource f) := by
   intro r s Y k
-  dsimp [weightedSource]
+  dsimp only [weightedSource]
   have he := hp r s Y k
-  dsimp at he
+  dsimp only at he
   rw [he]
 
 omit [NormedSpace ℝ S] in
@@ -634,7 +638,7 @@ theorem torusAverage_physicalAlias {d a b M : ℝ}
       (RadialPullback.normalizeSource_contDiff ha hd hf).continuous
       (RadialPullback.normalizeSource_supported ha hab hd hs),
       RadialPullback.normalized_radial_integral ha hd hab.le hf M U ((0 : S), v) (p.2, Y)]
-    simp [Prod.add_def, Prod.smul_def]
+    simp only [Prod.smul_def, smul_zero, smul_eq_mul, Prod.add_def, add_zero]
   rw [heq, torusMean_shifted_integral hab.le hf.continuous hp
     (continuous_const.fun_mul ((Real.continuous_rpow_const hd.le).fun_sub continuous_const)) v p.2,
     ← pressureMass_eq_interval hf hs p.2]
@@ -751,7 +755,7 @@ theorem streamBeta_supported {a b : ℝ} {Ψ : ℝ × E → ℝ}
   intro p hp
   apply graphDz_supported hs w
   intro hz
-  exact hp (by simp [streamBeta, hz])
+  exact hp (by simp only [streamBeta, hz, neg_zero])
 
 theorem streamGamma_supported {a b : ℝ} {Ψ : ℝ × E → ℝ}
     (hs : RadialAlias.RadiallySupported a b Ψ) (k : ℝ → ℝ) (v : E) :
@@ -764,7 +768,7 @@ theorem streamGamma_supported {a b : ℝ} {Ψ : ℝ × E → ℝ}
   have hQ : divideRadius Ψ p = 0 := by
     by_contra hne
     exact hn (divideRadius_supported hs hne)
-  exact hp (by simp [streamGamma, hR, hQ])
+  exact hp (by simp only [streamGamma, hR, hQ, add_zero])
 
 /-- The support proof handles the axis as well as the positive annulus. -/
 theorem reconstructed_divergence_zero {d a b M : ℝ} (ha : 0 < a) (hab : a < b)
@@ -776,7 +780,7 @@ theorem reconstructed_divergence_zero {d a b M : ℝ} (ha : 0 < a) (hab : a < b)
   by_cases hp : p.1 ≠ 0
   · exact reconstructed_divergence_zero_of_ne ha hab hd v w hγ hs p hp
   · have hp₀ : p.1 = 0 := not_ne_iff.mp hp
-    have hpa : p.1 < a := by simpa [hp₀] using ha
+    have hpa : p.1 < a := by simpa only [hp₀] using ha
     have hΨs := streamPotential_supported (M := M) ha hab hd v hγ hs
     have hβs := streamBeta_supported hΨs w
     have hγs := streamGamma_supported hΨs (physicalSpeed d M) v
@@ -800,7 +804,7 @@ theorem streamGamma_eq_desired_sub_alias_global {d a b M : ℝ}
       radial_zero_of_lt hs hpa,
       radial_zero_of_lt (RadialPullback.physicalAlias_supported ha hab hd M v (weightedSource γd))
           hpa]
-    simp
+    simp only [zero_div, sub_self]
 
 /-- The total physical radial integral, written in normalized transport coordinates. -/
 noncomputable def physicalTotal (d a M : ℝ) (v : E) (g : ℝ × E → ℝ) (p : ℝ × E) : ℝ :=

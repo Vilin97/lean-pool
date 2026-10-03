@@ -122,10 +122,10 @@ theorem scaledDomain_open {J : Set ℝ} (hJ : IsOpen J) : IsOpen (scaledDomain J
   isOpen_univ.prod (isOpen_univ.prod hJ)
 
 /-- The auxiliary parameters are `(κ,T)` and the point is `(u,η)`. -/
-noncomputable def rescale (F : Field) (q : ScaledPoint) : ℝ :=
+noncomputable def rescale (F : ProfileHistories.Field) (q : ScaledPoint) : ℝ :=
   F (q.1.2 * q.2.1, q.2.2)
 
-theorem rescale_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem rescale_smooth {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (rescale F) (scaledDomain J) :=
   hF.comp ((contDiff_fst.snd.mul contDiff_snd.fst).prodMk contDiff_snd.snd).contDiffOn
@@ -144,7 +144,7 @@ theorem activation_scaled {T : ℝ} (hT : T ≠ 0) (κ u : ℝ) :
     activation T κ (T * u) = activation 1 κ u := by
   simp [activation, mul_div_cancel_left₀ u hT]
 
-theorem primitive_rescaled (T : ℝ) (F : Field) (u η : ℝ) :
+theorem primitive_rescaled (T : ℝ) (F : ProfileHistories.Field) (u η : ℝ) :
     primitive F (T * u, η) = T * primitive (fun p => F (T * p.1, p.2)) (u, η) := by
   have ha : ProfileHistories.average F (T * u, η) =
       ProfileHistories.average (fun p => F (T * p.1, p.2)) (u, η) := by
@@ -159,7 +159,8 @@ theorem primitive_rescaled (T : ℝ) (F : Field) (u η : ℝ) :
   rw [ha]
   ring
 
-theorem weightedPrimitive_rescaled {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B : Field) (u η : ℝ) :
+theorem weightedPrimitive_rescaled {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B : ProfileHistories.Field)
+    (u η : ℝ) :
     weightedPrimitive T κ B (T * u, η) =
       T * weightedPrimitive 1 κ (fun p => B (T * p.1, p.2)) (u, η) := by
   unfold weightedPrimitive
@@ -171,15 +172,16 @@ theorem weightedPrimitive_rescaled {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B : Fiel
   rw [activation_scaled hT]
 
 /-- Primitive error factor, given by `parameterFactor (rescale B)`. -/
-noncomputable def primitiveErrorFactor (B : Field) : ScaledPoint → ℝ :=
+noncomputable def primitiveErrorFactor (B : ProfileHistories.Field) : ScaledPoint → ℝ :=
   parameterFactor (rescale B)
 
-theorem primitiveErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {B : Field}
+theorem primitiveErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {B : ProfileHistories.Field}
     (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (primitiveErrorFactor B) (scaledDomain J) :=
   parameterFactor_smooth isOpen_univ hJ (rescale_smooth hJ hB)
 
-theorem weightedPrimitive_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B : Field) (u η : ℝ) :
+theorem weightedPrimitive_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B : ProfileHistories.Field)
+    (u η : ℝ) :
     weightedPrimitive T κ B (T * u, η) =
       scaledDistance ((κ, T), (u, η)) * primitiveErrorFactor B ((κ, T), (u, η)) := by
   rw [weightedPrimitive_rescaled hT]
@@ -189,16 +191,16 @@ theorem weightedPrimitive_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ) (B :
   ring
 
 /-- Controlled error factor, defined pointwise by `-primitiveErrorFactor (radialPartial F) q`. -/
-noncomputable def controlledErrorFactor (F : Field) : ScaledPoint → ℝ :=
+noncomputable def controlledErrorFactor (F : ProfileHistories.Field) : ScaledPoint → ℝ :=
   fun q => -primitiveErrorFactor (radialPartial F) q
 
-theorem controlledErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem controlledErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (controlledErrorFactor F) (scaledDomain J) :=
   (primitiveErrorFactor_smooth hJ (radialPartial_smooth (logDomain J hJ) hF)).neg
 
 theorem controlled_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
     controlled T κ F (T * u, η) - F (T * u, η) =
       scaledDistance ((κ, T), (u, η)) * controlledErrorFactor F ((κ, T), (u, η)) := by
@@ -207,33 +209,33 @@ theorem controlled_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   ring
 
 /-- Controlled value, given by `rescale F q + scaledDistance q * controlledErrorFactor F q`. -/
-noncomputable def controlledValue (F : Field) (q : ScaledPoint) : ℝ :=
+noncomputable def controlledValue (F : ProfileHistories.Field) (q : ScaledPoint) : ℝ :=
   rescale F q + scaledDistance q * controlledErrorFactor F q
 
-theorem controlledValue_smooth {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem controlledValue_smooth {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (controlledValue F) (scaledDomain J) :=
   (rescale_smooth hJ hF).add (scaledDistance_smooth.contDiffOn.mul (controlledErrorFactor_smooth hJ
       hF))
 
 theorem controlledValue_eq {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
     controlledValue F ((κ, T), (u, η)) = controlled T κ F (T * u, η) := by
   have h := controlled_scaled_factor hT κ hJ hF u hη
   dsimp only [controlledValue, rescale]
-  linarith
+  linarith only [h]
 
 /-- Angular value, defined pointwise by `Real.exp (controlledValue L q)`. -/
-noncomputable def angularValue (L : Field) : ScaledPoint → ℝ :=
+noncomputable def angularValue (L : ProfileHistories.Field) : ScaledPoint → ℝ :=
   fun q => Real.exp (controlledValue L q)
 
 /-- Relative error factor, given by `controlledErrorFactor L q * meanExp (scaledDistance q *
 controlledErrorFactor L q)`. -/
-noncomputable def relativeErrorFactor (L : Field) (q : ScaledPoint) : ℝ :=
+noncomputable def relativeErrorFactor (L : ProfileHistories.Field) (q : ScaledPoint) : ℝ :=
   controlledErrorFactor L q * meanExp (scaledDistance q * controlledErrorFactor L q)
 
-theorem relativeErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem relativeErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (relativeErrorFactor L) (scaledDomain J) :=
   (controlledErrorFactor_smooth hJ hL).mul
@@ -241,7 +243,7 @@ theorem relativeErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {L : Field}
       (controlledErrorFactor_smooth hJ hL)))
 
 theorem angular_relative_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
     activatedAngular T κ L (T * u, η) / referenceAngular L (T * u, η) - 1 =
       scaledDistance ((κ, T), (u, η)) * relativeErrorFactor L ((κ, T), (u, η)) := by
@@ -251,16 +253,16 @@ theorem angular_relative_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
   ring
 
 /-- Angular error factor, given by `Real.exp (rescale L q) * relativeErrorFactor L q`. -/
-noncomputable def angularErrorFactor (L : Field) (q : ScaledPoint) : ℝ :=
+noncomputable def angularErrorFactor (L : ProfileHistories.Field) (q : ScaledPoint) : ℝ :=
   Real.exp (rescale L q) * relativeErrorFactor L q
 
-theorem angularErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem angularErrorFactor_smooth {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) :
     ContDiffOn ℝ ∞ (angularErrorFactor L) (scaledDomain J) :=
   (rescale_smooth hJ hL).exp.mul (relativeErrorFactor_smooth hJ hL)
 
 theorem angular_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
     activatedAngular T κ L (T * u, η) - referenceAngular L (T * u, η) =
       scaledDistance ((κ, T), (u, η)) * angularErrorFactor L ((κ, T), (u, η)) := by
@@ -286,7 +288,7 @@ theorem width_uniform_jet_bound {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact 
     ∃ M : ℝ, 0 ≤ M ∧ ∀ T ∈ Ioc (0 : ℝ) T0, ∀ κ ∈ Icc (0 : ℝ) 1,
       ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
         |iteratedDeriv n (E κ T y) η| ≤ M * y * activation T κ y := by
-  obtain ⟨M, hM, hb⟩ := compact_parameter_jet_bound isOpen_univ
+  obtain ⟨M, hM, hb⟩ := compact_parameter_jet_bound (E := ℝ × ℝ) isOpen_univ
     (isCompact_Icc.prod isCompact_Icc)
     (subset_univ (Icc (0 : ℝ) 1 ×ˢ Icc (0 : ℝ) T0)) hJ hK hKJ hH n
   refine ⟨M, hM, ?_⟩
@@ -313,10 +315,10 @@ theorem width_uniform_jet_bound {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact 
   have hm := mul_le_mul_of_nonneg_left
     (hb (κ, T) ⟨hκ, hT.1.le, hT.2⟩ u hu η hη)
     (mul_nonneg hy.1 (activation_nonneg T κ y hκ.2))
-  nlinarith
+  nlinarith only [hm]
 
 theorem weightedPrimitive_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
-    (hKJ : K ⊆ J) {B : Field} (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier)
+    (hKJ : K ⊆ J) {B : ProfileHistories.Field} (hB : ContDiffOn ℝ ∞ B (logDomain J hJ).carrier)
     (T0 : ℝ) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ T ∈ Ioc (0 : ℝ) T0, ∀ κ ∈ Icc (0 : ℝ) 1,
       ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
@@ -327,7 +329,7 @@ theorem weightedPrimitive_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsC
   exact weightedPrimitive_scaled_factor hT.ne' κ B u η
 
 theorem controlled_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
-    (hKJ : K ⊆ J) {F : Field} (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier)
+    (hKJ : K ⊆ J) {F : ProfileHistories.Field} (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier)
     (T0 : ℝ) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ T ∈ Ioc (0 : ℝ) T0, ∀ κ ∈ Icc (0 : ℝ) 1,
       ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
@@ -338,7 +340,7 @@ theorem controlled_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact 
   exact controlled_scaled_factor hT.ne' κ hJ hF u hη
 
 theorem angular_relative_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
-    (hKJ : K ⊆ J) {L : Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
+    (hKJ : K ⊆ J) {L : ProfileHistories.Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (T0 : ℝ) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ T ∈ Ioc (0 : ℝ) T0, ∀ κ ∈ Icc (0 : ℝ) 1,
       ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
@@ -350,7 +352,7 @@ theorem angular_relative_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCo
   exact angular_relative_scaled_factor hT.ne' κ hJ hL u hη
 
 theorem angular_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
-    (hKJ : K ⊆ J) {L : Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
+    (hKJ : K ⊆ J) {L : ProfileHistories.Field} (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (T0 : ℝ) (n : ℕ) :
     ∃ M : ℝ, 0 ≤ M ∧ ∀ T ∈ Ioc (0 : ℝ) T0, ∀ κ ∈ Icc (0 : ℝ) 1,
       ∀ y ∈ Icc (0 : ℝ) T, ∀ η ∈ K,
@@ -364,7 +366,7 @@ theorem angular_uniform_jets {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K)
 /-! ## Width-uniform factors for the actual five histories -/
 
 /-- Density error factor as an element of `ℝ`. -/
-noncomputable def densityErrorFactor (X0 : ℝ) (L U : Field)
+noncomputable def densityErrorFactor (X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) (q : ScaledPoint) : ℝ :=
   let x := radius X0 (q.1.2 * q.2.1)
   let df := angularErrorFactor L q
@@ -380,7 +382,8 @@ noncomputable def densityErrorFactor (X0 : ℝ) (L U : Field)
   | .energy => x * (du * (ua + ur) - x * df * (fa + fr))
   | .pressure => x * df * (fa + fr)
 
-theorem densityErrorFactor_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+theorem densityErrorFactor_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J)
+    {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow) :
     ContDiffOn ℝ ∞ (densityErrorFactor X0 L U r) (scaledDomain J) := by
@@ -401,7 +404,7 @@ theorem densityErrorFactor_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U 
   | pressure => exact (hx.mul hdf).mul (hfa.add hfr)
 
 theorem density_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ X0 : ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (r : HistoryRow) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
@@ -418,7 +421,7 @@ theorem density_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ X0 : ℝ)
       scaledDistance ((κ, T), (u, η)) * angularErrorFactor L ((κ, T), (u, η)) := by
     rw [hfa]
     dsimp only [rescale, referenceAngular] at hf ⊢
-    linarith
+    linarith only [hf]
   have hu' : controlledValue U ((κ, T), (u, η)) = rescale U ((κ, T), (u, η)) +
       scaledDistance ((κ, T), (u, η)) * controlledErrorFactor U ((κ, T), (u, η)) := rfl
   change radius X0 (T * u) * radialDensity r (radius X0 (T * u))
@@ -430,35 +433,37 @@ theorem density_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ X0 : ℝ)
     simp only [hf', hu'] <;> ring
 
 /-- History coefficient, given by `q.1.2 * q.2.1 * densityErrorFactor X0 L U r q`. -/
-noncomputable def historyCoefficient (X0 : ℝ) (L U : Field)
+noncomputable def historyCoefficient (X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) (q : ScaledPoint) : ℝ :=
   q.1.2 * q.2.1 * densityErrorFactor X0 L U r q
 
 /-- History error factor, given by `parameterFactor (historyCoefficient X0 L U r)`. -/
-noncomputable def historyErrorFactor (X0 : ℝ) (L U : Field)
+noncomputable def historyErrorFactor (X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) : ScaledPoint → ℝ :=
   parameterFactor (historyCoefficient X0 L U r)
 
-theorem historyErrorFactor_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+theorem historyErrorFactor_smooth (X0 : ℝ) {J : Set ℝ} (hJ : IsOpen J)
+    {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) (r : HistoryRow) :
     ContDiffOn ℝ ∞ (historyErrorFactor X0 L U r) (scaledDomain J) :=
   parameterFactor_smooth isOpen_univ hJ
     ((contDiffOn_fst.snd.mul contDiffOn_snd.fst).mul (densityErrorFactor_smooth X0 hJ hL hU r))
 
-@[simp] theorem historyErrorFactor_zero (X0 : ℝ) (L U : Field)
+@[simp] theorem historyErrorFactor_zero (X0 : ℝ) (L U : ProfileHistories.Field)
     (r : HistoryRow) (κ T η : ℝ) : historyErrorFactor X0 L U r ((κ, T), (0, η)) = 0 := by
   exact parameterFactor_zero _ _ _
 
 theorem history_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ X0 : ℝ)
-    (initial : HistoryRow → ℝ → ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    (initial : HistoryRow → ℝ → ℝ) {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (r : HistoryRow) (u : ℝ) {η : ℝ} (hη : η ∈ J) :
     logHistory X0 initial (activatedAngular T κ L) (controlled T κ U) r (T * u, η) -
       logHistory X0 initial (referenceAngular L) U r (T * u, η) =
         scaledDistance ((κ, T), (u, η)) * historyErrorFactor X0 L U r ((κ, T), (u, η)) := by
-  let D : Field := fun p => logDensity X0 (activatedAngular T κ L) (controlled T κ U) r p -
+  let D : ProfileHistories.Field := fun p =>
+    logDensity X0 (activatedAngular T κ L) (controlled T κ U) r p -
     logDensity X0 (referenceAngular L) U r p
   have ha := radial_slice_intervalIntegrable (logDomain J hJ)
     (logDensity_smooth X0 hJ (activatedAngular_smooth T κ hJ hL)
@@ -491,7 +496,7 @@ theorem history_scaled_factor {T : ℝ} (hT : T ≠ 0) (κ X0 : ℝ)
       ring
 
 theorem history_uniform_jets (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {L U : Field}
+    {J K : Set ℝ} (hJ : IsOpen J) (hK : IsCompact K) (hKJ : K ⊆ J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (T0 : ℝ) (r : HistoryRow) (n : ℕ) :
@@ -520,8 +525,8 @@ theorem etaLinear_hasDerivAt {J : Set ℝ} (hJ : IsOpen J) {H : ScaledPoint → 
     HasDerivAt (fun ξ => H (q.1, (q.2.1, ξ))) (etaLinear H q) q.2.2 := by
   have hd := (hH.contDiffAt ((scaledDomain_open hJ).mem_nhds hq)).differentiableAt (by simp)
   have h := hd.hasFDerivAt.comp_hasDerivAt q.2.2
-    ((hasDerivAt_const q.2.2 q.1).prodMk
-      ((hasDerivAt_const q.2.2 q.2.1).prodMk (hasDerivAt_id q.2.2)))
+    ((hasDerivAt_const q.2.2 q.1).prodMk (G := Point)
+      ((hasDerivAt_const q.2.2 q.2.1).prodMk (G := ℝ) (hasDerivAt_id q.2.2)))
   simp only [Function.comp_def, id_eq] at h
   exact h
 
@@ -546,7 +551,7 @@ theorem etaD_scaledDistance_mul (H : ScaledPoint → ℝ) (q : ScaledPoint) :
     etaD (fun z => scaledDistance z * H z) q = scaledDistance q * etaD H q := by
   exact deriv_const_mul_field (scaledDistance q)
 
-theorem etaD_rescale {J : Set ℝ} (hJ : IsOpen J) {F : Field}
+theorem etaD_rescale {J : Set ℝ} (hJ : IsOpen J) {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F (logDomain J hJ).carrier) {q : ScaledPoint}
     (hq : q ∈ scaledDomain J) : etaD (rescale F) q = rescale (parameterPartial F) q :=
   (parameterPartial_hasDerivAt (logDomain J hJ) hF
@@ -562,7 +567,7 @@ theorem etaD_congr {J : Set ℝ} (hJ : IsOpen J) {H G : ScaledPoint → ℝ}
 /-! ## Independence of the continuation length on the natural overlap -/
 
 theorem continuation_radialPartial {R δ : ℝ} (hR : 0 < R) (hδ : 0 < δ)
-    (hδR : 2 * δ < R) {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    (hδR : 2 * δ < R) {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (ReferencePath.earlyStrip R hR J hJ).carrier)
     {p : Point} (hη : p.2 ∈ J) :
     radialPartial (ReferencePath.continuation δ G) p =
@@ -573,7 +578,7 @@ theorem continuation_radialPartial {R δ : ℝ} (hR : 0 < R) (hδ : 0 < δ)
 
 theorem controlled_continuation_independent {R δ₁ δ₂ : ℝ} (hR : 0 < R)
     (hδ₁ : 0 < δ₁) (hδ₁R : 2 * δ₁ < R) (hδ₂ : 0 < δ₂) (hδ₂R : 2 * δ₂ < R)
-    {J : Set ℝ} (hJ : IsOpen J) {G : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {G : ProfileHistories.Field}
     (hG : ContDiffOn ℝ ∞ G (ReferencePath.earlyStrip R hR J hJ).carrier)
     (T κ : ℝ) {p : Point} (hη : p.2 ∈ J) (hp₁ : p.1 ≤ δ₁) (hp₂ : p.1 ≤ δ₂) :
     controlled T κ (ReferencePath.continuation δ₁ G) p =
@@ -897,7 +902,7 @@ noncomputable def add (A B : SmoothPair Ω w) : SmoothPair Ω w where
   actual_smooth := A.actual_smooth.add B.actual_smooth
   reference_smooth := A.reference_smooth.add B.reference_smooth
   factor_smooth := A.factor_smooth.add B.factor_smooth
-  difference := by intro p hp; nlinarith [A.difference p hp, B.difference p hp]
+  difference := by intro p hp; nlinarith only [hp, A.difference p hp, B.difference p hp]
 
 /-- Neg, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
 compatibility proofs. -/
@@ -908,7 +913,7 @@ noncomputable def neg (A : SmoothPair Ω w) : SmoothPair Ω w where
   actual_smooth := A.actual_smooth.neg
   reference_smooth := A.reference_smooth.neg
   factor_smooth := A.factor_smooth.neg
-  difference := by intro p hp; nlinarith [A.difference p hp]
+  difference := by intro p hp; nlinarith only [hp, A.difference p hp]
 
 /-- Sub, given by `A.add B.neg`. -/
 noncomputable def sub (A B : SmoothPair Ω w) : SmoothPair Ω w := A.add B.neg
@@ -959,26 +964,28 @@ end SmoothPair
 end SmoothPairs
 
 /-- Eta D, given by `deriv (fun η => F (p.1, η)) p.2`. -/
-noncomputable def etaD (F : Field) (p : Point) : ℝ :=
+noncomputable def etaD (F : ProfileHistories.Field) (p : Point) : ℝ :=
   deriv (fun η => F (p.1, η)) p.2
 
-theorem etaD_eq_parameterPartial {D : RadialDomain} {F : Field}
+theorem etaD_eq_parameterPartial {D : RadialDomain} {F : ProfileHistories.Field}
     (hF : ContDiffOn ℝ ∞ F D.carrier) {p : Point} (hp : p ∈ D.carrier) :
     etaD F p = parameterPartial F p :=
   (parameterPartial_hasDerivAt D hF hp).deriv
 
 /-- Log view one, constructed using `stockOne`. -/
-noncomputable def logViewOne (h X0 : ℝ) (f : Field) (H : HistoryRow → Field) (p : Point) : ℝ :=
+noncomputable def logViewOne (h X0 : ℝ) (f : ProfileHistories.Field)
+    (H : HistoryRow → ProfileHistories.Field) (p : Point) : ℝ :=
   stockOne h (radius X0 p.1) p.2 (f p) (H .mass p) (etaD (H .mass) p)
     (H .angular p) (etaD (H .angular) p) (H .transport p) (etaD (H .transport) p)
 
 /-- Log view two, constructed using `stockTwo`. -/
-noncomputable def logViewTwo (h X0 : ℝ) (f U : Field) (H : HistoryRow → Field) (p : Point) : ℝ :=
+noncomputable def logViewTwo (h X0 : ℝ) (f U : ProfileHistories.Field)
+    (H : HistoryRow → ProfileHistories.Field) (p : Point) : ℝ :=
   stockTwo h (radius X0 p.1) p.2 (f p) (U p) (H .mass p) (etaD (H .mass) p)
     (H .energy p) (etaD (H .energy) p) (H .pressure p) (etaD (H .pressure) p)
 
 theorem etaD_history_identity {D : RadialDomain} (P : Profiles D) (r : HistoryRow)
-    {J : Set ℝ} (hJ : IsOpen J) {X y η : ℝ} (hη : η ∈ J) {H : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {X y η : ℝ} (hη : η ∈ J) {H : ProfileHistories.Field}
     (hmem : (X, η) ∈ D.carrier)
     (heq : ∀ ξ ∈ J, H (y, ξ) = profileHistory P r (X, ξ)) :
     etaD H (y, η) = parameterPartial (profileHistory P r) (X, η) := by
@@ -990,7 +997,7 @@ theorem etaD_history_identity {D : RadialDomain} (P : Profiles D) (r : HistoryRo
 theorem profileStockOne_logView {D : RadialDomain} (P : Profiles D) (h X0 : ℝ)
     {J : Set ℝ} (hJ : IsOpen J) {p : Point} (hη : p.2 ∈ J)
     (hmem : (radius X0 p.1, p.2) ∈ D.carrier) (hX : radius X0 p.1 ≠ 0)
-    {f : Field} {H : HistoryRow → Field}
+    {f : ProfileHistories.Field} {H : HistoryRow → ProfileHistories.Field}
     (hfield : f p = P.f (radius X0 p.1, p.2)) (hf : f p ≠ 0)
     (hH : ∀ r ξ, ξ ∈ J → H r (p.1, ξ) = profileHistory P r (radius X0 p.1, ξ)) :
     profileStockOne P h (radius X0 p.1, p.2) = logViewOne h X0 f H p := by
@@ -1010,7 +1017,7 @@ theorem profileStockOne_logView {D : RadialDomain} (P : Profiles D) (h X0 : ℝ)
 theorem profileStockTwo_logView {D : RadialDomain} (P : Profiles D) (h X0 : ℝ)
     {J : Set ℝ} (hJ : IsOpen J) {p : Point} (hη : p.2 ∈ J)
     (hmem : (radius X0 p.1, p.2) ∈ D.carrier) (hX : 0 < radius X0 p.1)
-    {f U : Field} {H : HistoryRow → Field}
+    {f U : ProfileHistories.Field} {H : HistoryRow → ProfileHistories.Field}
     (hfield : f p = P.f (radius X0 p.1, p.2))
     (hU : U p = P.U (radius X0 p.1, p.2))
     (hH : ∀ r ξ, ξ ∈ J → H r (p.1, ξ) = profileHistory P r (radius X0 p.1, ξ)) :
@@ -1148,7 +1155,7 @@ noncomputable def etaPair {J : Set ℝ} (hJ : IsOpen J) (A : StockPair J) : Stoc
     exact he
 
 theorem etaPair_actual_eq {J : Set ℝ} (hJ : IsOpen J) (A : StockPair J)
-    (F : Field) (κ T u : ℝ) {η : ℝ} (hη : η ∈ J)
+    (F : ProfileHistories.Field) (κ T u : ℝ) {η : ℝ} (hη : η ∈ J)
     (heq : ∀ ξ ∈ J, A.actual ((κ, T), (u, ξ)) = F (T * u, ξ)) :
     (etaPair hJ A).actual ((κ, T), (u, η)) = etaD F (T * u, η) := by
   apply Filter.EventuallyEq.deriv_eq
@@ -1156,7 +1163,7 @@ theorem etaPair_actual_eq {J : Set ℝ} (hJ : IsOpen J) (A : StockPair J)
   exact heq ξ hξ
 
 theorem etaPair_reference_eq {J : Set ℝ} (hJ : IsOpen J) (A : StockPair J)
-    (F : Field) (κ T u : ℝ) {η : ℝ} (hη : η ∈ J)
+    (F : ProfileHistories.Field) (κ T u : ℝ) {η : ℝ} (hη : η ∈ J)
     (heq : ∀ ξ ∈ J, A.reference ((κ, T), (u, ξ)) = F (T * u, ξ)) :
     (etaPair hJ A).reference ((κ, T), (u, η)) = etaD F (T * u, η) := by
   apply Filter.EventuallyEq.deriv_eq
@@ -1165,7 +1172,7 @@ theorem etaPair_reference_eq {J : Set ℝ} (hJ : IsOpen J) (A : StockPair J)
 
 /-- Controlled pair, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
 compatibility proofs. -/
-noncomputable def controlledPair {J : Set ℝ} (hJ : IsOpen J) {U : Field}
+noncomputable def controlledPair {J : Set ℝ} (hJ : IsOpen J) {U : ProfileHistories.Field}
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier) : StockPair J where
   actual := ActivationBounds.controlledValue U
   reference := ActivationBounds.rescale U
@@ -1177,7 +1184,7 @@ noncomputable def controlledPair {J : Set ℝ} (hJ : IsOpen J) {U : Field}
 
 /-- Angular pair, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
 compatibility proofs. -/
-noncomputable def angularPair {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+noncomputable def angularPair {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier) : StockPair J where
   actual := ActivationBounds.angularValue L
   reference := fun q => Real.exp (ActivationBounds.rescale L q)
@@ -1201,7 +1208,7 @@ noncomputable def angularPair {J : Set ℝ} (hJ : IsOpen J) {L : Field}
 /-- History pair, bundling `actual`, `reference`, `factor`, `actual_smooth` and the required
 compatibility proofs. -/
 noncomputable def historyPair (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (hi : ∀ r, ContDiffOn ℝ ∞ (initial r) J) (r : HistoryRow) : StockPair J where
@@ -1219,7 +1226,7 @@ noncomputable def historyPair (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
   difference := by intro q hq; ring
 
 theorem historyPair_actual_eq (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (hi : ∀ r, ContDiffOn ℝ ∞ (initial r) J)
@@ -1228,9 +1235,9 @@ theorem historyPair_actual_eq (X0 : ℝ) (initial : HistoryRow → ℝ → ℝ)
       logHistory X0 initial (activatedAngular T κ L) (controlled T κ U) r (T * u, η) := by
   have he := ActivationBounds.history_scaled_factor hT κ X0 initial hJ hL hU r u hη
   dsimp only [historyPair, ActivationBounds.rescale]
-  linarith
+  linarith only [he]
 
-theorem angularPair_actual_eq {J : Set ℝ} (hJ : IsOpen J) {L : Field}
+theorem angularPair_actual_eq {J : Set ℝ} (hJ : IsOpen J) {L : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     {T : ℝ} (hT : T ≠ 0) (κ u : ℝ) {η : ℝ} (hη : η ∈ J) :
     (angularPair hJ hL).actual ((κ, T), (u, η)) = activatedAngular T κ L (T * u, η) := by
@@ -1405,7 +1412,7 @@ theorem stockTwoPair_reference {J : Set ℝ} (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0)
 section ConstructedFactors
 
 variable (h : ℝ) {X0 : ℝ} (hX0 : 0 < X0) (initial : HistoryRow → ℝ → ℝ)
-    {J : Set ℝ} (hJ : IsOpen J) {L U : Field}
+    {J : Set ℝ} (hJ : IsOpen J) {L U : ProfileHistories.Field}
     (hL : ContDiffOn ℝ ∞ L (logDomain J hJ).carrier)
     (hU : ContDiffOn ℝ ∞ U (logDomain J hJ).carrier)
     (hi : ∀ r, ContDiffOn ℝ ∞ (initial r) J)
@@ -1563,7 +1570,7 @@ theorem log_stocks_uniform_jets {K : Set ℝ} (hK : IsCompact K) (hKJ : K ⊆ J)
   have ha : 0 ≤ y * activation T κ y := mul_nonneg hy.1 (activation_nonneg T κ y hκ.2)
   have hinc1 := mul_nonneg (sub_nonneg.mpr (le_max_left M₁ M₂)) ha
   have hinc2 := mul_nonneg (sub_nonneg.mpr (le_max_right M₁ M₂)) ha
-  constructor <;> nlinarith
+  constructor <;> nlinarith only [hb1, hinc1, hb2, hinc2]
 
 end ConstructedFactors
 
@@ -1701,7 +1708,7 @@ noncomputable def naturalDomain {Λ : ℝ} (hΛ : 0 < Λ) : RadialDomain where
       exact ⟨mul_nonneg ht.1 hx, mul_le_of_le_one_left hx ht.2⟩
     · rw [uIcc_of_ge hx]
       constructor
-      · nlinarith [ht.2]
+      · nlinarith only [hx, ht, ht.2]
       · exact mul_nonpos_of_nonneg_of_nonpos ht.1 hx
 
 section NaturalHistories
@@ -1722,12 +1729,13 @@ noncomputable def naturalHistories : Profiles (naturalDomain hΛ) where
   pressure0_smooth := fun _ _ => hP0.contDiffAt
 
 include hΛ in
-theorem radialPartial_natural_field {G : Field} (hG : ContDiffOn ℝ ∞ G (domain Λ))
+theorem radialPartial_natural_field {G : ProfileHistories.Field} (hG : ContDiffOn ℝ ∞ G (domain Λ))
     {p : Point} (hp : p ∈ domain Λ) : radialPartial G p = partialY G p :=
   (radialPartial_hasDerivAt (naturalDomain hΛ) hG hp).deriv.symm
 
 include hΛ in
-theorem parameterPartial_natural_field {G : Field} (hG : ContDiffOn ℝ ∞ G (domain Λ))
+theorem parameterPartial_natural_field {G : ProfileHistories.Field}
+    (hG : ContDiffOn ℝ ∞ G (domain Λ))
     {p : Point} (hp : p ∈ domain Λ) : parameterPartial G p = partialEta G p :=
   (parameterPartial_hasDerivAt (naturalDomain hΛ) hG hp).deriv.symm
 
@@ -1750,7 +1758,7 @@ theorem naturalHistories_pressure {p : Point} (hp : p ∈ domain Λ) :
   have he := F.natural.pressure_integral p hp
   change F.Pi p - P0 p.2 = ∫ x in (0 : ℝ)..p.1, F.f (x, p.2) ^ 2 at he
   change P0 p.2 + (∫ x in (0 : ℝ)..p.1, F.f (x, p.2) ^ 2) = F.Pi p
-  linarith
+  linarith only [he]
 
 theorem naturalHistories_average_derivative {p : Point} (hp : p ∈ domain Λ) :
     parameterPartial (naturalHistories F hΛ hP0).Ubar p = partialEta F.Ubar p := by
@@ -1868,7 +1876,7 @@ theorem reference_stocks_natural {δ : ℝ} (hδ : 0 < δ)
     profileStockTwo P h p = NaturalEntrance.p2 F.f F.U p
   have hηJ : η ∈ ReferencePath.parameterInterval :=
       NaturalAxisCoefficients.original_interval_interior hη
-  have hyT : y < ReferencePath.rampLimit := by linarith
+  have hyT : y < ReferencePath.rampLimit := by linarith only [hδ, hδT, hy]
   have hp : p ∈ domain Λ := N.fromLog_mem ⟨hyT, hηJ⟩
   have hpN : p ∈ N.radialDomain.carrier :=
     StressActivation.FromReference.log_radius_mem N y hηJ
@@ -1895,7 +1903,7 @@ theorem reference_stocks_natural {δ : ℝ} (hδ : 0 < δ)
       simpa only [ReferencePath.rampLimit, Real.exp_log (by norm_num : (0 : ℝ) < 41 / 40)] using
         Real.exp_lt_exp.mpr hyT
     rw [hs]
-    linarith
+    linarith only [he]
   have hf : ∀ x ∈ uIcc (0 : ℝ) p.1, F.f (x, p.2) ≠ 0 := by
     intro x hx
     have hx' : x ∈ Icc (0 : ℝ) p.1 := by simpa only [uIcc_of_le hX.le] using hx

@@ -14,6 +14,7 @@ public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 public import Mathlib.Data.Finset.NatAntidiagonal
 import Mathlib.Data.Nat.Choose.Vandermonde
 import Mathlib.Tactic.FieldSimp
+public import LeanPool.NavierStokesAndEuler.ForMathlib.BoundedContinuousFunctionShortcuts
 
 /-!
 # A complete coefficient space with compatible actual derivatives
@@ -81,7 +82,7 @@ theorem squareDecay_succ_le (n : ℕ) : squareDecay (n + 1) ≤ squareDecay n :=
   unfold squareDecay
   apply one_div_le_one_div_of_le (by positivity)
   push_cast
-  linarith [show (0 : ℝ) ≤ n by positivity]
+  linarith only [show (0 : ℝ) ≤ n by positivity]
 
 theorem squareDecay_le_four_succ (n : ℕ) : squareDecay n ≤ 4 * squareDecay (n + 1) := by
   unfold squareDecay
@@ -97,12 +98,12 @@ theorem squareDecay_le_four_succ (n : ℕ) : squareDecay n ≤ 4 * squareDecay (
 /-- Elementary telescoping majorant for the square summability estimate. -/
 theorem reciprocal_square_telescope (x : ℝ) (hx : 1 ≤ x) :
     1 / x ^ 2 ≤ 2 / x - 2 / (x + 1) := by
-  have hx0 : 0 < x := by linarith
-  have hx1 : 0 < x + 1 := by linarith
+  have hx0 : 0 < x := by linarith only [hx]
+  have hx1 : 0 < x + 1 := by linarith only [hx]
   have hid : 2 / x - 2 / (x + 1) = 2 / (x * (x + 1)) := by
     field_simp; ring
   rw [hid, div_le_div_iff₀ (sq_pos_of_pos hx0) (mul_pos hx0 hx1)]
-  nlinarith
+  nlinarith only [hx]
 
 theorem sum_squareDecay_le (n : ℕ) :
     (∑ i ∈ Finset.range (n + 1), squareDecay i) ≤ 2 - 2 / ((n : ℝ) + 2) := by
@@ -111,20 +112,20 @@ theorem sum_squareDecay_le (n : ℕ) :
   | succ n ih =>
       rw [Finset.sum_range_succ]
       have hn : (0 : ℝ) ≤ n := by positivity
-      have htel := reciprocal_square_telescope ((n : ℝ) + 2) (by linarith)
+      have htel := reciprocal_square_telescope ((n : ℝ) + 2) (by linarith only)
       have hid : squareDecay (n + 1) = 1 / ((n : ℝ) + 2) ^ 2 := by
-        simp [squareDecay, Nat.cast_add, Nat.cast_one]
+        simp only [squareDecay, Nat.cast_add, Nat.cast_one, one_div, inv_inj]
         ring
       rw [hid]
       push_cast
       ring_nf at ih htel ⊢
-      linarith
+      linarith only [ih, htel]
 
 theorem sum_squareDecay_le_two (n : ℕ) :
     (∑ i ∈ Finset.range (n + 1), squareDecay i) ≤ 2 := by
   have h := sum_squareDecay_le n
   have hp : 0 ≤ 2 / ((n : ℝ) + 2) := by positivity
-  linarith
+  linarith only [h, hp]
 
 theorem squareDecay_product_le (i j : ℕ) :
     squareDecay i * squareDecay j ≤
@@ -164,7 +165,7 @@ theorem squareDecay_convolution_le (n : ℕ) :
     exact hfirst
   rw [← Finset.mul_sum, Finset.sum_add_distrib] at hsum
   have hd := (squareDecay_pos n).le
-  nlinarith
+  nlinarith only [hsum, hfirst, hd, hsecond]
 
 /-- A term of Vandermonde's sum gives the binomial estimate used in the norm. -/
 theorem choose_product_le (i j k l : ℕ) :
@@ -239,7 +240,7 @@ theorem coreWeight_radial_le {ε : ℝ} (hε : 0 < ε) (n m : ℕ) :
         coreWeight ε n m * ((n : ℝ) + m + 1) := by
       exact mul_le_mul_of_nonneg_left (by
         have hm : (0 : ℝ) ≤ m := by positivity
-        linarith)
+        linarith only)
         (coreWeight_pos hε n m).le
     _ = 20 * coreWeight ε (n + 1) m * ((n : ℝ) + 1) := by
       rw [coreWeight_radial_identity hε]
@@ -556,7 +557,7 @@ theorem averageJet_bound {ε F : ℝ} (_hε : 0 < ε) (_hF : 0 ≤ F)
   rw [abs_div, abs_of_pos (by positivity : 0 < (n : ℝ) + 1)]
   exact (div_le_self (abs_nonneg _) (by
     have hn : (0 : ℝ) ≤ n := by positivity
-    linarith)).trans (hf n m)
+    linarith only)).trans (hf n m)
 
 theorem primitiveJet_bound {ε F : ℝ} (hε : 0 < ε) (hF : 0 ≤ F)
     (f : ℕ → ℕ → ℝ) (hf : ∀ n m, |f n m| ≤ F * weight ε n m) (n m : ℕ) :
@@ -576,8 +577,8 @@ theorem primitiveJet_bound {ε F : ℝ} (hε : 0 < ε) (hF : 0 ≤ F)
 theorem radialDivisor_ge_one {r : ℕ} (hr : 1 ≤ r) (n : ℕ) : 1 ≤ radialDivisor r n := by
   have hn : (0 : ℝ) ≤ n := by positivity
   have hr' : (1 : ℝ) ≤ r := by exact_mod_cast hr
-  have ha : (1 : ℝ) ≤ n + 1 := by linarith
-  have hb : (1 : ℝ) ≤ n + r := by linarith
+  have ha : (1 : ℝ) ≤ n + 1 := by linarith only
+  have hb : (1 : ℝ) ≤ n + r := by linarith only [hr']
   simpa only [one_mul, radialDivisor] using
     (mul_le_mul ha hb (by norm_num : (0 : ℝ) ≤ 1) (by positivity : 0 ≤ (n : ℝ) + 1))
 
@@ -698,22 +699,23 @@ theorem continuous_jet_joint (I : Window) (w : ℕ → ℕ → ℝ) (n m : ℕ) 
         (continuous_const.prodMk (I.continuous_project.comp continuous_snd))))
 
 @[simp] theorem jet_zero (I : Window) (w : ℕ → ℕ → ℝ) (n m : ℕ) (x : ℝ) :
-    jet I w 0 n m x = 0 := by simp [jet]
+    jet I w 0 n m x = 0 := by simp only [jet, BoundedContinuousFunction.coe_zero, Pi.zero_apply,
+        mul_zero]
 
 @[simp] theorem jet_add (I : Window) (w : ℕ → ℕ → ℝ) (A B : RawJets I)
     (n m : ℕ) (x : ℝ) :
     jet I w (A + B) n m x = jet I w A n m x + jet I w B n m x := by
-  simp [jet, mul_add]
+  simp only [jet, BoundedContinuousFunction.coe_add, Pi.add_apply, mul_add]
 
 @[simp] theorem jet_sub (I : Window) (w : ℕ → ℕ → ℝ) (A B : RawJets I)
     (n m : ℕ) (x : ℝ) :
     jet I w (A - B) n m x = jet I w A n m x - jet I w B n m x := by
-  simp [jet, mul_sub]
+  simp only [jet, BoundedContinuousFunction.coe_sub, Pi.sub_apply, mul_sub]
 
 @[simp] theorem jet_smul (I : Window) (w : ℕ → ℕ → ℝ) (c : ℝ) (A : RawJets I)
     (n m : ℕ) (x : ℝ) :
     jet I w (c • A) n m x = c * jet I w A n m x := by
-  simp [jet]
+  simp only [jet, BoundedContinuousFunction.coe_smul, smul_eq_mul]
   ring
 
 /-- Compatibility is an actual FTC identity for every successive pair of
@@ -728,7 +730,7 @@ def compatibleSubmodule (I : Window) (w : ℕ → ℕ → ℝ) : Submodule ℝ (
   carrier := {A | Compatible I w A}
   zero_mem' := by
     intro n m x hx
-    simp
+    simp only [jet_zero, intervalIntegral.integral_zero, add_zero]
   add_mem' := by
     intro A B hA hB n m x hx
     simp only [jet_add]
@@ -795,7 +797,7 @@ theorem iteratedDerivWithin_jet (I : Window) (w : ℕ → ℕ → ℝ)
     (A : CoefficientSpace I w) (n q m : ℕ) {x : ℝ} (hx : x ∈ I.interval) :
     iteratedDerivWithin m (jet I w A.1 n q) I.interval x = jet I w A.1 n (q + m) x := by
   induction m generalizing x with
-  | zero => simp
+  | zero => simp only [iteratedDerivWithin_zero, add_zero]
   | succ m ih =>
     rw [iteratedDerivWithin_succ,
       derivWithin_congr (fun y hy => ih hy) (ih hx), derivWithin_jet I w A n (q + m) hx]

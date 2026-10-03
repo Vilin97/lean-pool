@@ -109,19 +109,14 @@ include hdir hQ hQ₁ hH hRc hC₀ hC₁ hCH hCf hbQ hbQ₁ hbH hRweak hRstrong
 
 /-- The actual cylinder acceleration in time L², with the same external radius. -/
 theorem accelerationLp_block_bound (f : TimeLp T (CylinderL2 P E))
-    (hf : ContDiff ℝ ∞ (fun a => timeLift T (translate P a).toContinuousLinearMap f))
+    (hf : ContDiff ℝ ∞ (fun a => timeLift T (translate (V := E) P a).toContinuousLinearMap f))
     (d : ℕ) (hfb : ∀ n, block directions q
-      (fun a => timeLift T (translate P a).toContinuousLinearMap f) n 0 ≤ Cf * majorant R d n)
+      (fun a => timeLift T (translate (V := E) P a).toContinuousLinearMap f) n 0 ≤
+        Cf * majorant R d n)
     (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b => timeLift T (translate P b).toContinuousLinearMap
+    block directions q (fun b => timeLift T (translate (V := U) P b).toContinuousLinearMap
       (D.accelerationLp P f)) n a ≤ majorant R (d+2) n := by
-  let g : LiftTangent → TimeLp T (CylinderL2 P E) :=
-    fun b => timeLift T (translate P b).toContinuousLinearMap f
-  change ContDiff ℝ ∞ g at hf
-  have he : (fun b : LiftTangent => (D.shifted b.1).accelerationLp P
-      (timeLift T (translate P b).toContinuousLinearMap f)) =
-      fun b => timeLift T (translate P b).toContinuousLinearMap (D.accelerationLp P f) :=
-    funext (fun b => D.accelerationLp_translation P b f)
+  have he := funext fun b : LiftTangent => D.accelerationLp_translation P b f
   rw [← he]
   apply EulerFixedEvolutionSobolev.accelerationLp_block_gevrey directions hdir q T D.time_pos.le
     (fun b : LiftTangent => (D.shifted b.1).frame P)
@@ -136,7 +131,7 @@ theorem accelerationLp_block_bound (f : TimeLp T (CylinderL2 P E))
     (fun k b => D.frameOrbit_bound P hQ k _ (hbQ k) b)
     (fun k b => D.frameDerivativeOrbit_bound P hQ₁ k _ (hbQ₁ k) b)
     (fun k b => D.hessianOrbit_bound P hH k _ (hbH k) b) hRweak hRstrong
-    g hf d _ n a
+    _ hf d _ n a
   intro k b
   rw [time_block_constant P directions q T f hf k b]
   exact hfb k
@@ -144,14 +139,16 @@ theorem accelerationLp_block_bound (f : TimeLp T (CylinderL2 P E))
 /-- The actual continuous velocity trace from cylinder forcing. -/
 theorem continuousVelocity_block_bound (hT1 : T ≤ 1)
     (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
-    (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f))
-    (d : ℕ) (hfb : ∀ n, block directions q (fun a => pathTranslate P a f) n 0 ≤ Cf * majorant R d n)
+    (hf : ContDiff ℝ ∞ (fun a => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a f))
+    (d : ℕ) (hfb : ∀ n, block directions q
+      (fun a => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a f) n 0 ≤ Cf * majorant R d n)
     (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b => pathTranslate P b
+    block directions q (fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P b
       (D.velocityPath P (pathLp T D.time_pos.le f))) n a ≤ traceCost T*majorant R (d+2) n := by
   have he : (fun b : LiftTangent => (D.shifted b.1).velocityPath P
-      (pathLp T D.time_pos.le (pathTranslate P b f))) =
-      fun b => pathTranslate P b (D.velocityPath P (pathLp T D.time_pos.le f)) := by
+      (pathLp T D.time_pos.le (pathTranslate (K := Icc (0 : ℝ) T) (V := E) P b f))) =
+      fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P b
+        (D.velocityPath P (pathLp T D.time_pos.le f)) := by
     funext b
     apply ContinuousMap.ext
     intro t
@@ -170,7 +167,7 @@ theorem continuousVelocity_block_bound (hT1 : T ≤ 1)
     (fun k b => D.frameOrbit_bound P hQ k _ (hbQ k) b)
     (fun k b => D.frameDerivativeOrbit_bound P hQ₁ k _ (hbQ₁ k) b)
     (fun k b => D.hessianOrbit_bound P hH k _ (hbH k) b) hRweak hRstrong D.time_pos hT1
-    (fun b => pathTranslate P b f) hf d _ n a
+    (fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P b f) hf d _ n a
   intro k b
   rw [path_block_constant P directions q f hf k b]
   exact hfb k
@@ -182,13 +179,15 @@ theorem accelerationPath_block_bound (hT1 : T ≤ 1)
  (sobolevCoefficientRadius ι Rc + 1)
           ≤ R)
     (f : C(Icc (0 : ℝ) T, CylinderL2 P E))
-    (hf : ContDiff ℝ ∞ (fun a => pathTranslate P a f))
-    (d : ℕ) (hfb : ∀ n, block directions q (fun a => pathTranslate P a f) n 0 ≤ Cf * majorant R d n)
+    (hf : ContDiff ℝ ∞ (fun a => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a f))
+    (d : ℕ) (hfb : ∀ n, block directions q
+      (fun a => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P a f) n 0 ≤ Cf * majorant R d n)
     (n : ℕ) (a : LiftTangent) :
-    block directions q (fun b => pathTranslate P b (D.accelerationPath P f)) n a ≤
-      majorant R (d+3) n := by
-  have he : (fun b : LiftTangent => (D.shifted b.1).accelerationPath P (pathTranslate P b f)) =
-      fun b => pathTranslate P b (D.accelerationPath P f) := by
+    block directions q (fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P b
+      (D.accelerationPath P f)) n a ≤ majorant R (d+3) n := by
+  have he : (fun b : LiftTangent => (D.shifted b.1).accelerationPath P
+      (pathTranslate (K := Icc (0 : ℝ) T) (V := E) P b f)) =
+      fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := U) P b (D.accelerationPath P f) := by
     funext b
     apply ContinuousMap.ext
     intro t
@@ -208,7 +207,7 @@ theorem accelerationPath_block_bound (hT1 : T ≤ 1)
     (fun k b => D.frameOrbit_bound P hQ k _ (hbQ k) b)
     (fun k b => D.frameDerivativeOrbit_bound P hQ₁ k _ (hbQ₁ k) b)
     (fun k b => D.hessianOrbit_bound P hH k _ (hbH k) b) hRweak hRstrong D.time_pos hT1 hRuniform
-    (fun b => pathTranslate P b f) hf d _ n a
+    (fun b => pathTranslate (K := Icc (0 : ℝ) T) (V := E) P b f) hf d _ n a
   intro k b
   rw [path_block_constant P directions q f hf k b]
   exact hfb k

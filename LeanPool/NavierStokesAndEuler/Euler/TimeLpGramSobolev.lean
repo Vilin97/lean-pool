@@ -52,7 +52,8 @@ theorem gramSolution_block_gevrey (directions : ι → P)
     (n : ℕ) (x : P) :
     block directions q (fun y => gramSolver T hT (Q y) c hc (hLower y) (f y)) n x ≤
       majorant R (d+1) n :=
-  inverse_block_gevrey_of_tensor directions hd q (fun y => gramOperator T hT (Q y))
+  inverse_block_gevrey_of_tensor directions hd q
+    (fun y => gramOperator (U := U) (E := E) T hT (Q y))
     (fun y => gramSolver T hT (Q y) c hc (hLower y) (f y)) f
     (gramOperator_contDiff T hT Q hQ)
     (gramSolution_contDiff T hT Q c hc hLower f hQ hf) hf

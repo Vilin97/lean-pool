@@ -43,7 +43,8 @@ theorem zero_initial_condition_decay :
     Comparator.InitialVelocityConditionDecay (fun _ : Space => (0 : Space)) := by
   refine ⟨⟨fun x => Comparator.divergence_const 0 x, contDiff_const⟩, ?_⟩
   intro m K
-  exact ⟨0, by simp⟩
+  exact ⟨0, by simp only [iteratedFDeriv_fun_zero, Pi.zero_apply, norm_zero, zero_div, Std.le_refl,
+      implies_true]⟩
 
 /-- A global whole-space solution in the original physical coordinates. -/
 structure GlobalSolutionRn (f : VelocityField) (v : VelocityField) (p : PressureField) : Prop where

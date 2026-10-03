@@ -68,7 +68,8 @@ def mapPath (L : V →L[ℝ] W) : C(K,E →ᵇ V) →L[ℝ] C(K,E →ᵇ W) :=
 /-- Derivative field, given by `mapPath (continuousMultilinearCurryFin1 ℝ E
 V).toContinuousLinearEquiv.toContinuousLinearMap (A.jet 1)`. -/
 def derivativeField (A : SmoothTimeField K E V) : C(K,E →ᵇ (E →L[ℝ] V)) :=
-  mapPath (continuousMultilinearCurryFin1 ℝ E V).toContinuousLinearEquiv.toContinuousLinearMap
+  mapPath (K := K) (E := E)
+    (continuousMultilinearCurryFin1 ℝ E V).toContinuousLinearEquiv.toContinuousLinearMap
     (A.jet 1)
 
 theorem derivativeField_eq (A : SmoothTimeField K E V) (t : K) (x : E) :
@@ -83,7 +84,7 @@ theorem derivativeField_eq (A : SmoothTimeField K E V) (t : K) (x : E) :
 /-- Derivative jet, constructed using `mapPath`. -/
 def derivativeJet (A : SmoothTimeField K E V) (n : ℕ) :
     C(K,E →ᵇ (E [×n]→L[ℝ] (E →L[ℝ] V))) :=
-  mapPath (K := K) (V := E [×(n+1)]→L[ℝ] V) (W := E [×n]→L[ℝ] (E →L[ℝ] V))
+  mapPath (K := K) (E := E) (V := E [×(n+1)]→L[ℝ] V) (W := E [×n]→L[ℝ] (E →L[ℝ] V))
     (continuousMultilinearCurryRightEquiv' ℝ n E V).toContinuousLinearEquiv.toContinuousLinearMap
     (A.jet (n+1))
 

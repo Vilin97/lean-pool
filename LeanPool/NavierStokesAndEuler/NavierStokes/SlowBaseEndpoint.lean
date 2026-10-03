@@ -367,12 +367,10 @@ theorem radialEnergy_pos_of_nonzero_of_axial_zero {x : Space} (hx : x ≠ 0) (hz
   by_contra h
   have hr := AxisymmetricFields.radialEnergy_nonneg x
   have he : AxisymmetricFields.radialEnergy x = 0 := le_antisymm (le_of_not_gt h) hr
-  have h0 : x 0 = 0 := by
-    dsimp only [AxisymmetricFields.radialEnergy] at he
-    nlinarith [sq_nonneg (x 1), sq_nonneg (x 0)]
-  have h1 : x 1 = 0 := by
-    dsimp only [AxisymmetricFields.radialEnergy] at he
-    nlinarith [sq_nonneg (x 1), sq_nonneg (x 0)]
+  have hs := (add_eq_zero_iff_of_nonneg (sq_nonneg (x 0)) (sq_nonneg (x 1))).mp
+    ((div_eq_zero_iff.mp he).resolve_right two_ne_zero)
+  have h0 : x 0 = 0 := (pow_eq_zero_iff two_ne_zero).mp hs.1
+  have h1 : x 1 = 0 := (pow_eq_zero_iff two_ne_zero).mp hs.2
   apply hx
   ext i
   fin_cases i <;> simpa only [PiLp.zero_apply] using (show x _ = 0 from by assumption)

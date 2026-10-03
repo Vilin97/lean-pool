@@ -39,7 +39,8 @@ variable {P : ℝ} [Fact (0 < P)]
 /-- The genuine cylinder forcing path is determined by its prescribed raw field. -/
 theorem path_unique (G H : Forcing P D raw) : G.path = H.path := by
   have he := G.forcingField.path_eq_of_same_raw H.forcingField
-  have hp := congrArg (projectPath P D.support D.support_measurable) he
+  have hp := congrArg (projectPath (K := Set.Icc (0 : ℝ) D.T)
+    (V := EulerLiftedGradientSpace.Vector3) P D.support D.support_measurable) he
   simpa only [forcingField,project_include] using hp
 
 end EulerTransversePacketProvider.Forcing
@@ -73,8 +74,8 @@ theorem scalar_independent_of_witness : scalar τ hτ hτT B G = scalar τ hτ h
     rw [pressurePath_eq_source,pressurePath_eq_source,hv]
     exact congrArg (fun p => sourcePressure P D.M D.normal D.normalLower D.normalLower_pos
         D.normal_lower
-      (includePath P D.support D.support_measurable p) (velocityPath τ hτ hτT B H)) (G.path_unique
-          H)
+      (includePath (K := Icc (0 : ℝ) D.T) (V := Space) P D.support D.support_measurable p)
+      (velocityPath τ hτ hτT B H)) (G.path_unique H)
   funext z
   exact congrFun (scalarPointField_eq_of_slice_eq P _ _ (pressurePath_orbit τ hτ hτT B G)
     (pressurePath_orbit τ hτ hτT B H) (D.clamp z.1) (D.clamp z.1)

@@ -22,6 +22,10 @@ section
 
 @[expose] public section
 
+-- Numeric exponents elaborate as natural numbers at once: left to the default instance,
+-- every `x ^ 2` of a long statement stays pending and is retried after each later binder.
+local macro_rules | `($x ^ $n:num) => `($x ^ ($n : ℕ))
+
 noncomputable section
 
 namespace EulerPacketScaleActivation
@@ -37,9 +41,9 @@ theorem source_activation_ode_guards {j x β : ℝ}
     1 / sqrt β ≤ (j ^ 2 * x) / sqrt β ∧
     (j ^ 2 * x) / sqrt β ≤ 2 * j ^ 2 * x ^ 2 ∧
     0 < 1 / (j ^ 2 * x) ∧ 1 / (j ^ 2 * x) ≤ 1 / 2 := by
-  have hxp : 0 < x := by linarith
-  have hjp : 0 < j := by linarith
-  have hβ : 0 < β := by nlinarith only [hβx, sq_nonneg x]
+  have hxp : 0 < x := by linarith only [hx]
+  have hjp : 0 < j := by linarith only [hj]
+  have hβ : 0 < β := pos_of_mul_pos_left (one_half_pos.trans_le hβx) (sq_nonneg x)
   have hx64 : 64 ≤ x ^ 2 := by nlinarith only [hx]
   have hm := mul_le_mul_of_nonneg_left hx64 hβ.le
   have hβsmall : β ≤ 1 / 16 := by linarith only [hm, hβx₂]
@@ -56,9 +60,7 @@ theorem source_activation_ode_guards {j x β : ℝ}
   norm_num only [mul_one, sqrt_one, div_one] at htime
   have htUp : (j ^ 2 * x) / sqrt β ≤ 2 * j ^ 2 * x ^ 2 := by linarith only [htime.2]
   have hy : 0 < 1 / (j ^ 2 * x) := by positivity
-  have hy₂ : 1 / (j ^ 2 * x) ≤ 1 / 2 := by
-    apply (div_le_iff₀ (by positivity : 0 < j ^ 2 * x)).2
-    linarith only [hX]
+  have hy₂ : 1 / (j ^ 2 * x) ≤ 1 / 2 := one_div_le_one_div_of_le two_pos hX
   exact ⟨hβ, hβsmall, hσ, hσsmall, htLow, htUp, hy, hy₂⟩
 
 /-- The source polynomial horizon contains the target activation time. -/
@@ -262,8 +264,8 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
   have hd : 0 ≤ priorError J D X n+neighborError J D X c n := by
     have hp := (previousShear_pos J hXp n).le
     have hk := (previousFrequency_pos J D hXp n).le
-    unfold priorError neighborError supportScale
-    positivity
+    exact add_nonneg (Real.rpow_nonneg hk _)
+      (mul_nonneg (mul_nonneg (Real.exp_pos _).le (Real.rpow_nonneg hk _)) (Real.rpow_nonneg hp _))
   have he0 : geometryError J D C c X a n ≤ 1 := by
     have hh := coefficient_small J D hJ C c X δ hC1 hX hb a ha₀ ha₂ 0 (by omega) n
     norm_num only [pow_zero, mul_one] at hh
@@ -277,7 +279,7 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
     unfold geometryError at he0
     linarith only [he0, hh, hd]
   have htθ : targetTime J X (β n) n ≤ sourceTheta J C (scaleSequence J X) n := by
-    have hnonneg : 0 ≤ ((J+n:ℕ):ℝ)^2*scaleSequence J X n^2 := by positivity
+    have hnonneg : 0 ≤ ((J+n:ℕ):ℝ)^2*scaleSequence J X n^2 := mul_nonneg (sq_nonneg _) (sq_nonneg _)
     have hm := mul_le_mul_of_nonneg_right hC (by
         linarith only [hnonneg] : 0 ≤ 1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
     unfold sourceTheta
@@ -288,7 +290,8 @@ theorem stage_guards (J D : ℕ) (hJ : 3 ≤ J) (C c X K δ : ℝ)
   · simpa only [one_div, scaleSequence_succ] using hact.2.2.2.2.2.2.2
   · simpa only [targetTime, scaleSequence_succ] using hact.2.2.2.2.1
   · exact le_add_of_nonneg_right hextra₀
-  · have hnonneg : 0 ≤ ((J+n:ℕ):ℝ)^2*scaleSequence J X n^2 := by positivity
+  · have hnonneg : 0 ≤ ((J+n:ℕ):ℝ)^2*scaleSequence J X n^2 :=
+      mul_nonneg (sq_nonneg _) (sq_nonneg _)
     have hm := mul_le_mul_of_nonneg_right hC (by
         linarith only [hnonneg] : 0 ≤ 1+((J+n:ℕ):ℝ)^2*scaleSequence J X n^2)
     unfold horizon sourceTheta

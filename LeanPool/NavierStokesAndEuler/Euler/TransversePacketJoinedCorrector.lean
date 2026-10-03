@@ -48,14 +48,14 @@ def potentialTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderPotential.potentialDerivative P D.T D.potentialCoefficientPath D.potentialDerivative
     (velocityPath τ hτ hτT B G) (derivativePath τ hτ hτT B G)
 
-theorem potentialPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (potentialPath τ hτ hτT B
-    G)) :=
+theorem potentialPath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (potentialPath τ hτ hτT B G)) :=
   EulerCylinderPotential.potentialPath_orbit P D.potentialCoefficientPath
       D.potentialCoefficientPath_orbit
     (velocityPath τ hτ hτT B G) (velocityPath_orbit τ hτ hτT B G)
 
-theorem potentialTimePath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (potentialTimePath τ hτ
-    hτT B G)) :=
+theorem potentialTimePath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (potentialTimePath τ hτ hτT B G)) :=
   EulerCylinderPotential.potentialDerivative_orbit P D.T D.potentialCoefficientPath
       D.potentialDerivative
     D.potentialCoefficientPath_orbit D.potentialDerivative_orbit
@@ -80,13 +80,13 @@ def correctorTimePath : C(Icc (0 : ℝ) D.T,LiftL2 P) :=
   EulerCylinderSlowCurl.derivative P D.T D.FInv.field D.inverseDerivative
     (potentialPath τ hτ hτT B G) (potentialTimePath τ hτ hτT B G)
 
-theorem correctorPath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (correctorPath τ hτ hτT B
-    G)) :=
+theorem correctorPath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (correctorPath τ hτ hτT B G)) :=
   EulerCylinderSlowCurl.path_orbit P D.FInv.field D.FInv.translation_contDiff
     (potentialPath τ hτ hτT B G) (potentialPath_orbit τ hτ hτT B G)
 
-theorem correctorTimePath_orbit : ContDiff ℝ ∞ (fun a => pathTranslate P a (correctorTimePath τ hτ
-    hτT B G)) :=
+theorem correctorTimePath_orbit : ContDiff ℝ ∞ (fun a =>
+    pathTranslate (K := Icc (0 : ℝ) D.T) (V := Vector3) P a (correctorTimePath τ hτ hτT B G)) :=
   EulerCylinderSlowCurl.derivative_orbit P D.T D.FInv.field D.inverseDerivative
     D.FInv.translation_contDiff D.inverseDerivative_orbit
     (potentialPath τ hτ hτT B G) (potentialTimePath τ hτ hτT B G)

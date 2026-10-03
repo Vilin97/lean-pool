@@ -72,7 +72,10 @@ theorem valuePath_tendsto_of_truncate {q : ℕ} (T : ℝ)
     (hconv : Filter.Tendsto (fun n => (truncateOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ)
         T) (u n))
       Filter.atTop (𝓝 e)) :
-    Filter.Tendsto (fun n => valuePath period T (u n)) Filter.atTop (𝓝 (valuePath period T e)) :=
-  ((valueOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ) T)).continuous.tendsto e |>.comp hconv
+    Filter.Tendsto (fun n => valuePath period T (u n)) Filter.atTop (𝓝 (valuePath period T e)) := by
+  -- Elaborated before meeting the goal: matching `Tendsto.comp` against it first fails slowly.
+  have h := ((valueOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ) T)).continuous.tendsto e
+    |>.comp hconv
+  exact h
 
 end EulerViscousSourcePathLimit

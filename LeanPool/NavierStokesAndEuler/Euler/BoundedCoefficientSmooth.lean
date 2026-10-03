@@ -49,12 +49,11 @@ def derivativeBundlingLinear : (Space →ᵇ (Space →L[ℝ] V)) →ₗ[ℝ]
 def derivativeBundling : (Space →ᵇ (Space →L[ℝ] V)) →L[ℝ]
     (Space →L[ℝ] (Space →ᵇ V)) where
   toLinearMap := derivativeBundlingLinear
-  cont := AddMonoidHomClass.continuous_of_bound derivativeBundlingLinear 1 (fun A => by
-    change ‖fieldDerivativeMap A‖ ≤ 1 * ‖A‖
-    simpa only [one_mul] using fieldDerivativeMap_norm_le A)
+  cont := AddMonoidHomClass.continuous_of_bound (derivativeBundlingLinear (V := V)) 1 (fun A => by
+    exact (fieldDerivativeMap_norm_le A).trans_eq (one_mul _).symm)
 
 @[simp] theorem derivativeBundling_apply (A : Space →ᵇ (Space →L[ℝ] V)) :
-    derivativeBundling A = fieldDerivativeMap A := rfl
+    derivativeBundling (V := V) A = fieldDerivativeMap A := rfl
 
 /-- A concrete smooth coefficient with globally bounded actual derivatives of every order. -/
 structure BoundedSmoothField (V : Type u) [NormedAddCommGroup V] [NormedSpace ℝ V] where
@@ -88,7 +87,8 @@ theorem translation_hasFDerivAt (A : BoundedSmoothField V) (a : Space) :
   exact hM x
 
 theorem translation_fderiv (A : BoundedSmoothField V) :
-    fderiv ℝ (translated A.field) = fun a => derivativeBundling (translated A.derivative.field a) :=
+    fderiv ℝ (translated A.field) =
+      fun a => derivativeBundling (V := V) (translated A.derivative.field a) :=
   funext (fun a => (A.translation_hasFDerivAt a).fderiv)
 
 private theorem translation_contDiff_nat_aux (n : ℕ) :

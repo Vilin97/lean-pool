@@ -8,6 +8,7 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.Calculus.ParametricIntegral
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # The radial heat continuation profile
@@ -54,7 +55,7 @@ theorem kernel_le_gamma {a : ℝ} (ha : 1 < a) (n : ℕ) {z v : ℝ}
     kernel a n z v ≤ Real.exp (-v) * v ^ (a + (n : ℝ) - 1) := by
   have hn : 0 ≤ (n : ℝ) := Nat.cast_nonneg n
   have hp : (1 + z * v) ^ (1 - a - (n : ℝ)) ≤ 1 :=
-    Real.rpow_le_one_of_one_le_of_nonpos (base_one_le hz hv.le) (by linarith)
+    Real.rpow_le_one_of_one_le_of_nonpos (base_one_le hz hv.le) (by linarith only [ha])
   exact (mul_le_mul_of_nonneg_left hp
     (mul_nonneg (Real.exp_pos _).le (Real.rpow_pos_of_pos hv _).le)).trans_eq (mul_one _)
 
@@ -94,7 +95,7 @@ theorem kernel_hasDerivAt_z (a : ℝ) (n : ℕ) {z v : ℝ} (hz : 0 ≤ z) (hv :
     rw [show a + ((n + 1 : ℕ) : ℝ) - 1 = (a + (n : ℝ) - 1) + 1 by push_cast; ring,
       Real.rpow_add_one hv.ne']
   convert! hd.const_mul (Real.exp (-v) * v ^ (a + (n : ℝ) - 1)) using 1
-  dsimp [kernel]
+  dsimp only [kernel, id_eq]
   rw [hvpow]
   have he : 1 - a - ((n + 1 : ℕ) : ℝ) = (1 - a - (n : ℝ)) - 1 := by push_cast; ring
   rw [he]
@@ -133,7 +134,8 @@ theorem profile_pos {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) : 0 < profile a z :=
 
 theorem profile_zero {a : ℝ} (ha : 1 < a) : profile a 0 = 1 := by
   rw [profile, moment_zero ha]
-  simp [(Real.Gamma_pos_of_pos (zero_lt_one.trans ha)).ne']
+  simp only [CharP.cast_eq_zero, add_zero, ne_eq,
+      (Real.Gamma_pos_of_pos (zero_lt_one.trans ha)).ne', not_false_eq_true, inv_mul_cancel₀]
 
 theorem profile_le_one {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) : profile a z ≤ 1 := by
   have h := mul_le_mul_of_nonneg_left (moment_le_gamma ha 0 hz)
@@ -161,14 +163,14 @@ theorem moment_hasDerivAt {a z : ℝ} (ha : 1 < a) (n : ℕ) (hz : 0 < z) :
     intro y hy
     have hd : |y - z| < z / 2 := by simpa only [Metric.mem_ball, Real.dist_eq] using hy
     have hlow := (abs_lt.mp hd).1
-    linarith
+    linarith only [hz, hlow]
   have hga : 0 < a + ((n + 1 : ℕ) : ℝ) := by positivity
   have hi := hasDerivAt_integral_of_dominated_loc_of_deriv_le
     (F := fun z v => kernel a n z v)
     (F' := fun z v => (1 - a - (n : ℝ)) * kernel a (n + 1) z v)
     (bound := fun v : ℝ => ‖1 - a - (n : ℝ)‖ *
       (Real.exp (-v) * v ^ (a + ((n + 1 : ℕ) : ℝ) - 1)))
-    (μ := volume.restrict (Ioi 0)) (Metric.ball_mem_nhds _ (show 0 < z / 2 by linarith))
+    (μ := volume.restrict (Ioi 0)) (Metric.ball_mem_nhds _ (show 0 < z / 2 by linarith only [hz]))
     (by
       filter_upwards [isOpen_Ioi.mem_nhds hz] with y hy
       exact (kernel_continuousOn_v a n (show 0 < y from hy).le).aestronglyMeasurable
@@ -201,7 +203,8 @@ theorem moment_hasDerivWithinAt {a z : ℝ} (ha : 1 < a) (n : ℕ) (hz : 0 ≤ z
     · exact self_mem_nhdsWithin
     · have hc : ContinuousWithinAt
           (fun z => (1 - a - (n : ℝ)) * moment a (n + 1) z) (Ioi 0) 0 :=
-        ((continuousOn_const.mul (moment_continuousOn ha (n + 1))) 0 (by simp)).mono
+        ((continuousOn_const.mul (moment_continuousOn ha (n + 1))) 0 (by simp only [mem_Ici,
+            Std.le_refl])).mono
           Ioi_subset_Ici_self
       apply hc.congr'
       filter_upwards [self_mem_nhdsWithin] with y hy
@@ -221,13 +224,13 @@ theorem profileJet_hasDerivWithinAt {a z : ℝ} (ha : 1 < a) (n : ℕ) (hz : 0 �
     HasDerivWithinAt (profileJet a n) (profileJet a (n + 1) z) (Ici 0) z := by
   convert! (moment_hasDerivWithinAt ha n hz).const_mul
     ((Real.Gamma a)⁻¹ * derivativeCoeff a n) using 1
-  dsimp [profileJet, derivativeCoeff]
+  dsimp only [profileJet, derivativeCoeff]
   ring
 
 theorem iteratedDerivWithin_profile {a : ℝ} (ha : 1 < a) (n : ℕ) {z : ℝ} (hz : 0 ≤ z) :
     iteratedDerivWithin n (profile a) (Ici 0) z = profileJet a n z := by
   induction n generalizing z with
-  | zero => simp [profileJet, derivativeCoeff, profile]
+  | zero => simp only [iteratedDerivWithin_zero, profile, profileJet, derivativeCoeff, mul_one]
   | succ n ih =>
       rw [iteratedDerivWithin_succ]
       exact ((profileJet_hasDerivWithinAt ha n hz).congr_of_mem
@@ -301,7 +304,8 @@ theorem boundaryTerm_hasDerivAt (a : ℝ) {z v : ℝ} (hz : 0 ≤ z) (hv : 0 < v
   ring
 
 theorem boundaryTerm_zero {a : ℝ} (ha : 1 < a) (z : ℝ) : boundaryTerm a z 0 = 0 := by
-  simp [boundaryTerm, Real.zero_rpow (ne_of_gt (zero_lt_one.trans ha))]
+  simp only [boundaryTerm, neg_zero, Real.exp_zero,
+      Real.zero_rpow (ne_of_gt (zero_lt_one.trans ha)), mul_zero, add_zero, Real.one_rpow, mul_one]
 
 theorem boundaryTerm_continuous_zero {a : ℝ} (ha : 1 < a) (z : ℝ) :
     ContinuousWithinAt (boundaryTerm a z) (Ici 0) 0 := by
@@ -309,7 +313,8 @@ theorem boundaryTerm_continuous_zero {a : ℝ} (ha : 1 < a) (z : ℝ) :
     continuousAt_id.rpow_const (Or.inr (zero_lt_one.trans ha).le)
   have hb : ContinuousAt (fun v : ℝ => (1 + z * v) ^ (-a)) 0 :=
     (continuousAt_const.add (continuousAt_const.mul continuousAt_id)).rpow_const
-      (Or.inl (by simp))
+      (Or.inl (by simp only [Pi.add_apply, Pi.mul_apply, id_eq, mul_zero, add_zero, ne_eq,
+          one_ne_zero, not_false_eq_true]))
   have he : ContinuousAt (fun v : ℝ => Real.exp (-v)) 0 :=
     (Real.continuous_exp.comp continuous_neg).continuousAt
   exact ((he.fun_mul hp).fun_mul hb).continuousWithinAt
@@ -323,7 +328,7 @@ theorem boundaryTerm_tendsto_zero {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) :
         (Real.rpow_pos_of_pos (base_pos hz hv.le) _)
     rw [Real.norm_eq_abs, abs_of_pos hb]
     exact (mul_le_mul_of_nonneg_left
-      (Real.rpow_le_one_of_one_le_of_nonpos (base_one_le hz hv.le) (by linarith : -a ≤ 0))
+      (Real.rpow_le_one_of_one_le_of_nonpos (base_one_le hz hv.le) (by linarith only [ha] : -a ≤ 0))
       (mul_pos (Real.exp_pos _) (Real.rpow_pos_of_pos hv a)).le).trans_eq (mul_one _)
   · simpa only [neg_one_mul, mul_neg_one, mul_comm] using
       tendsto_rpow_mul_exp_neg_mul_atTop_nhds_zero a 1 zero_lt_one
@@ -418,18 +423,18 @@ theorem profile_hasDerivWithinAt {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) :
     HasDerivWithinAt (profile a) (profileJet a 1 z) (Ici 0) z := by
   have he : profileJet a 0 = profile a := by
     funext x
-    simp [profileJet, derivativeCoeff, profile]
+    simp only [profileJet, derivativeCoeff, mul_one, profile]
   simpa only [he, Nat.zero_add] using profileJet_hasDerivWithinAt ha 0 hz
 
 theorem profile_derivWithin {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) :
     derivWithin (profile a) (Ici 0) z =
       (Real.Gamma a)⁻¹ * (1 - a) * moment a 1 z := by
-  simpa [profileJet, derivativeCoeff] using
+  simpa only [profileJet, derivativeCoeff, CharP.cast_eq_zero, sub_zero, one_mul] using
     (profile_hasDerivWithinAt ha hz).derivWithin ((uniqueDiffOn_Ici 0) z hz)
 
 theorem profile_deriv {a z : ℝ} (ha : 1 < a) (hz : 0 < z) :
     deriv (profile a) z = (Real.Gamma a)⁻¹ * (1 - a) * moment a 1 z := by
-  simpa [profileJet, derivativeCoeff] using
+  simpa only [profileJet, derivativeCoeff, CharP.cast_eq_zero, sub_zero, one_mul] using
     ((profile_hasDerivWithinAt ha hz.le).hasDerivAt (Ici_mem_nhds hz)).deriv
 
 theorem profile_derivWithin_neg {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) :
@@ -448,7 +453,7 @@ theorem profile_logSlopeWithin_lt {a z : ℝ} (ha : 1 < a) (hz : 0 ≤ z) :
     (moment_slope_gap_pos ha hz)
   rw [profile_derivWithin ha hz]
   dsimp only [profile]
-  nlinarith
+  nlinarith only [hp]
 
 theorem profile_logSlope_lt {a z : ℝ} (ha : 1 < a) (hz : 0 < z) :
     -z * deriv (profile a) z / profile a z < a - 1 := by
@@ -547,7 +552,7 @@ theorem spatialProfile_hasDerivAt_time {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ
     HasDerivAt (fun τ => spatialProfile a τ s)
       (2 * s ^ (spatialExponent a - 1) * profileJet a 1 (2 * τ / s)) τ := by
   have hz : 0 < 2 * τ / s := by positivity
-  have hd := ((profile_hasDerivAt ha hz).comp τ
+  have hd := ((profile_hasDerivAt ha hz).comp (h := fun τ => 2 * id τ / s) τ
     (((hasDerivAt_id τ).const_mul 2).div_const s)).const_mul (s ^ spatialExponent a)
   simp only [Function.comp_def, id_eq] at hd
   convert! hd using 1
@@ -585,7 +590,7 @@ theorem spatial_heat_identity {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs : 0
   have hsum : (2 * τ / s) ^ 2 * profileJet a 2 (2 * τ / s) +
       (2 * a * (2 * τ / s)) * profileJet a 1 (2 * τ / s) +
       a * (a - 1) * profile a (2 * τ / s) = -profileJet a 1 (2 * τ / s) := by
-    linarith
+    linear_combination hode
   rw [hsum]
   ring
 
@@ -603,18 +608,20 @@ def radialSecond (a τ r : ℝ) : ℝ :=
 theorem radiusSquared_hasDerivAt (r : ℝ) :
     HasDerivAt (fun r : ℝ => r ^ 2 / 2) r r := by
   convert! ((hasDerivAt_id r).pow 2).div_const 2 using 1
-  simp
+  simp only [Nat.cast_ofNat, id_eq, Nat.add_one_sub_one, pow_one, mul_one, ne_eq,
+      OfNat.ofNat_ne_zero, not_false_eq_true, mul_div_cancel_left₀]
 
 theorem radialProfile_hasDerivAt_radius {a τ r : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hr : 0 < r) :
     HasDerivAt (radialProfile a τ) (radialFirst a τ r) r := by
   have hs : 0 < r ^ 2 / 2 := by positivity
-  exact (spatialProfile_hasDerivAt_s ha hτ hs).comp r (radiusSquared_hasDerivAt r)
+  exact (spatialProfile_hasDerivAt_s ha hτ hs).comp (h := fun r : ℝ => r ^ 2 / 2) r
+    (radiusSquared_hasDerivAt r)
 
 theorem radialFirst_hasDerivAt_radius {a τ r : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hr : 0 < r) :
     HasDerivAt (radialFirst a τ) (radialSecond a τ r) r := by
   have hs : 0 < r ^ 2 / 2 := by positivity
-  have hd := ((spatialFirst_hasDerivAt_s ha hτ hs).comp r (radiusSquared_hasDerivAt r)).mul
-    (hasDerivAt_id r)
+  have hd := ((spatialFirst_hasDerivAt_s ha hτ hs).comp (h := fun r : ℝ => r ^ 2 / 2) r
+    (radiusSquared_hasDerivAt r)).mul (hasDerivAt_id r)
   convert! hd using 1
   dsimp only [radialSecond, Function.comp_apply, id]
   ring
@@ -672,7 +679,7 @@ theorem spatialFirst_neg {a τ s : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hs : 0 < s)
   have hb : spatialExponent a * profile a (2 * τ / s) -
       (2 * τ / s) * profileJet a 1 (2 * τ / s) < 0 := by
     dsimp only [spatialExponent]
-    nlinarith
+    nlinarith only [hpos, hlog]
   exact mul_neg_of_pos_of_neg (Real.rpow_pos_of_pos hs _) hb
 
 theorem radialProfile_derivative_neg {a τ r : ℝ} (ha : 1 < a) (hτ : 0 < τ) (hr : 0 < r) :
@@ -689,7 +696,7 @@ theorem spatialProfile_joint_contDiffOn {a : ℝ} (ha : 1 < a) :
     contDiffOn_fst.rpow_const_of_ne (fun p hp => hp.1.ne')
   have hz : ContDiffOn ℝ ∞ (fun p : ℝ × ℝ => 2 * p.2 / p.1)
       {p | 0 < p.1 ∧ 0 ≤ p.2} :=
-    (contDiffOn_const.mul contDiffOn_snd).div contDiffOn_fst (fun p hp => hp.1.ne')
+    ContDiffOn.div (contDiffOn_const.mul contDiffOn_snd) contDiffOn_fst (fun p hp => hp.1.ne')
   exact hp.mul ((profile_contDiffOn ha).comp hz (by
     intro p hp
     change 0 ≤ 2 * p.2 / p.1
@@ -719,14 +726,14 @@ theorem radialProfile_source_formula (h τ r : ℝ) :
 
 theorem profile_h_sub_one_bound {h z : ℝ} (hh : 0 < h) (hz : 0 ≤ z) :
     |profile (1 + h) z - 1| ≤ h * (1 + h) * z := by
-  have hb := profile_sub_one_bound (a := 1 + h) (by linarith) hz
+  have hb := profile_sub_one_bound (a := 1 + h) (by linarith only [hh]) hz
   convert! hb using 1
   ring
 
 theorem profile_h_logSlope_lt {h z : ℝ} (hh : 0 < h) (hz : 0 < z) :
     -z * deriv (profile (1 + h)) z / profile (1 + h) z < h := by
   simpa only [add_sub_cancel_left] using
-    profile_logSlope_lt (a := 1 + h) (by linarith) hz
+    profile_logSlope_lt (a := 1 + h) (by linarith only [hh]) hz
 
 /-- Any fixed normalization constant preserves the actual forward heat equation. -/
 theorem scaled_forward_radial_heat_equation (C : ℝ) {a t r : ℝ}

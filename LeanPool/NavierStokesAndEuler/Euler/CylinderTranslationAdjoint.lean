@@ -24,16 +24,17 @@ variable (P : ℝ) [Fact (0 < P)] {V : Type*}
   [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
 
 theorem translate_adjoint (a : LiftTangent) :
-    ((translate (V := V) P a).toContinuousLinearMap).adjoint =
-      (translate P (-a)).toContinuousLinearMap := by
+    adjoint (𝕜 := ℝ) (E := CylinderL2 P V) (F := CylinderL2 P V)
+        (translate (V := V) P a).toContinuousLinearMap =
+      (translate (V := V) P (-a)).toContinuousLinearMap := by
   apply ContinuousLinearMap.ext
   intro u
   apply ext_inner_right ℝ
   intro v
   rw [adjoint_inner_left]
-  change ⟪u,translate P a v⟫_ℝ = ⟪translate P (-a) u,v⟫_ℝ
+  change ⟪u,translate (V := V) P a v⟫_ℝ = ⟪translate (V := V) P (-a) u,v⟫_ℝ
   simpa only [translate_add,add_neg_cancel,translate_zero] using
-    (translate (V := V) P a).inner_map_map (translate P (-a) u) v
+    (translate (V := V) P a).inner_map_map (translate (V := V) P (-a) u) v
 
 end EulerLpCylinderTranslation
 

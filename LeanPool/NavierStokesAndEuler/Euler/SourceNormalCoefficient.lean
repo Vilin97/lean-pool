@@ -61,11 +61,12 @@ theorem normalFunctional_apply (t : K) (x : Space) (v : E) :
     normalFunctional m c hc hm t x v = ⟪m.field t x,v⟫_ℝ / ‖m.field t x‖^2 := by
   have hn : ‖m.field t x‖^2 ≠ 0 := ne_of_gt (hc.trans_le (hm t x))
   have he := gram_inverse_apply ((normalColumn m).field t x) c hc (normalColumn_lower m c hm t x)
-    (((normalColumn m).field t x).adjoint v)
-  change ((normalColumn m).field t x).adjoint
+    (adjoint (𝕜 := ℝ) (E := ℝ) (F := E) ((normalColumn m).field t x) v)
+  change adjoint (𝕜 := ℝ) (E := ℝ) (F := E) ((normalColumn m).field t x)
     ((normalColumn m).field t x (normalFunctional m c hc hm t x v)) =
-      ((normalColumn m).field t x).adjoint v at he
-  have hadj : ((normalColumn m).field t x).adjoint = innerSL ℝ (m.field t x) :=
+      adjoint (𝕜 := ℝ) (E := ℝ) (F := E) ((normalColumn m).field t x) v at he
+  have hadj : adjoint (𝕜 := ℝ) (E := ℝ) (F := E) ((normalColumn m).field t x) =
+      innerSL ℝ (m.field t x) :=
     adjoint_toSpanSingleton (m.field t x)
   rw [hadj] at he
   change ⟪m.field t x,(normalFunctional m c hc hm t x v) • m.field t x⟫_ℝ =
@@ -75,7 +76,7 @@ theorem normalFunctional_apply (t : K) (x : Space) (v : E) :
 
 /-- The pressure coefficient has genuine translated uniform-path regularity. -/
 theorem normalFunctional_translation_contDiff :
-    ContDiff ℝ ∞ (translateCoefficientPath (normalFunctional m c hc hm)) :=
+    ContDiff ℝ ∞ (translateCoefficientPath (V := E →L[ℝ] ℝ) (normalFunctional m c hc hm)) :=
   sourceForcing_translation_contDiff (normalColumn m) c hc (normalColumn_lower m c hm)
 
 theorem normalFunctional_translation_bound
@@ -83,7 +84,8 @@ theorem normalFunctional_translation_bound
     (hRi : 2 * gramCost c C 1 * (Rc + 1) ≤ Ri)
     (hbm : ∀ n t x, ‖iteratedFDeriv ℝ n (m.field t : Space → E) x‖ ≤ C * majorant Rc 0 n)
     (n : ℕ) (a : Space) :
-    ‖iteratedFDeriv ℝ n (translateCoefficientPath (normalFunctional m c hc hm)) a‖ ≤
+    ‖iteratedFDeriv ℝ n
+        (translateCoefficientPath (V := E →L[ℝ] ℝ) (normalFunctional m c hc hm)) a‖ ≤
       (3*Ri*C)*majorant (4*Ri) 0 n := by
   apply sourceForcing_translation_bound (normalColumn m) c hc (normalColumn_lower m c hm)
     Rc C Ri hRc hC hRi _ n a

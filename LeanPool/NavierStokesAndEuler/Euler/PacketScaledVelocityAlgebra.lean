@@ -59,7 +59,9 @@ theorem scaling_velocity_rate {a ε s₀ D : ℝ}
       -(∑ j : Fin 3, scaledVelocityEntry a ε (fun i j => M i j+S i j) i j * V j) +
         2*(rayScale ε i)^2*R i*J/D := by
   fin_cases i <;>
-    norm_num [Fin.sum_univ_three, velocityScale, rayScale, scaledVelocityEntry, Fin.ext_iff] <;>
+    simp only [Fin.sum_univ_three, velocityScale, rayScale, scaledVelocityEntry, Fin.zero_eta,
+      Fin.isValue, Fin.mk_one, Fin.reduceFinMk, Fin.reduceEq, ↓reduceIte, one_mul, mul_one,
+      div_one, one_pow] <;>
     field_simp
 
 /-- Scaled velocity rhs as an element of `ℝ`. -/

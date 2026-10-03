@@ -41,8 +41,10 @@ theorem Data.lower_twice {T : ℝ} (A : Data period T) (q : ℕ) :
         A.atOrder period q := by
   unfold lowerData Data.atOrder
   congr 1
-  · rw [A.approximation.truncate period ((q+1)+1),A.approximation.truncate period (q+1)]
-  · rw [A.residual.truncate period (q+1),A.residual.truncate period q]
+  · exact (congrArg ((truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T))
+      (A.approximation.truncate period ((q+1)+1))).trans (A.approximation.truncate period (q+1))
+  · exact (congrArg ((truncateOperator period q).compLeftContinuous ℝ (Icc (0 : ℝ) T))
+      (A.residual.truncate period (q+1))).trans (A.residual.truncate period q)
 
 end EulerAllOrderCorrectionData
 
@@ -81,6 +83,23 @@ local instance limitEquationGroup (s : ℕ) : NormedAddCommGroup (SobolevSpace p
 /-- The inherited real normed space on each actual Sobolev value space. -/
 local instance limitEquationSpace (s : ℕ) : NormedSpace ℝ (SobolevSpace period s) := inferInstance
 
+private theorem extendPath_valuePath {q : ℕ} (T : ℝ) (hT : 0 ≤ T)
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period q)) :
+    extendPath T hT (valuePath period T u) = fun r => value period (extendPath T hT u r) := rfl
+
+private theorem extendPath_valuePath_sourcePath {q : ℕ} (T : ℝ) (hT : 0 ≤ T)
+    (C : Coefficients (Icc (0 : ℝ) T) (SobolevSpace period (q + 1)) (SobolevSpace period q))
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period (q + 1))) (r : ℝ) :
+    extendPath T hT (valuePath period T (sourcePath C u)) r =
+      value period (C.apply (projIcc 0 T hT r) (u (projIcc 0 T hT r))) := rfl
+
+private theorem viscousDefect_add_valuePath {q : ℕ} (hq : 2 ≤ (q + 1) + 1) (ν T : ℝ)
+    (C : Coefficients (Icc (0 : ℝ) T) (SobolevSpace period (q + 1)) (SobolevSpace period q))
+    (u : C(Icc (0 : ℝ) T, SobolevSpace period ((q + 1) + 1))) :
+    viscousDefect period hq ν T u + valuePath period T (sourcePath C
+      ((truncateOperator period (q+1)).compLeftContinuous ℝ (Icc (0 : ℝ) T) u)) =
+    viscousSourcePath period hq ν T C u := rfl
+
 /-- A genuine bounded viscous family converging one Sobolev order lower solves the actual inviscid
 correction equation at the limit.
 The nonlinear source restriction and convergence, the vanishing viscosity term, and the integral
@@ -116,18 +135,19 @@ theorem correction_limit_equation {q : ℕ} (hq : 6 ≤ q) (T : ℝ) (hT : 0 ≤
   have hd : ∀ n r, r ∈ Ioo 0 T → HasDerivAt (extendPath T hT (valuePath period T (u n)))
       (extendPath T hT (f n) r) r := by
     intro n r hr
-    exact lower_mild_path_derivative period hq T hT D KG KL KQ hG hL hQ
+    have h := lower_mild_path_derivative period hq T hT D KG KL KQ hG hL hQ
       (viscositySequence n) (viscositySequence_pos n) (u n) (hsol n) r hr
+    rw [viscousDefect_add_valuePath] at h
+    exact h
   have heq : ∀ τ, valuePath period T e τ = valuePath period T e ⟨0,le_rfl,hT⟩ +
       pathIntegralOperator T hT 0 τ.val g :=
     integral_equation_limit T hT (fun n => valuePath period T (u n)) f (valuePath period T e) g
         huval hf
       (fun n => integral_equation_of_hasDerivAt T hT (valuePath period T (u n)) (f n) (hd n))
   have hder := hasDerivAt_of_integral_equation T hT (valuePath period T e) g heq t ht
-  change HasDerivAt (fun r => value period (extendPath T hT e r))
-    (value period ((Dlow.coefficients period hq).apply (projIcc 0 T hT t) (e (projIcc 0 T hT t))))
-        t at hder
-  rw [projIcc_of_mem hT ⟨ht.1.le,ht.2.le⟩] at hder
+  rw [extendPath_valuePath period T hT e,
+    extendPath_valuePath_sourcePath period T hT (Dlow.coefficients period hq) e t,
+    projIcc_of_mem hT ⟨ht.1.le,ht.2.le⟩] at hder
   exact hder
 
 end EulerCorrectionLimitEquation

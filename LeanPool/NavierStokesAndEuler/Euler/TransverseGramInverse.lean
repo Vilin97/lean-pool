@@ -38,16 +38,16 @@ variable {U E : Type*}
 
 /-- Taking an adjoint is an actual bounded real-linear map. -/
 def realAdjoint : (U →L[ℝ] E) →L[ℝ] (E →L[ℝ] U) :=
-  ({ toFun := fun Q => Q.adjoint
+  ({ toFun := fun Q => adjoint (𝕜 := ℝ) (E := U) (F := E) Q
      map_add' := fun A B => map_add ContinuousLinearMap.adjoint A B
      map_smul' := fun a A => by simp } :
       (U →L[ℝ] E) →ₗ[ℝ] (E →L[ℝ] U)).mkContinuous 1
     (fun Q => by
-      change ‖Q.adjoint‖ ≤ (1 : ℝ) * ‖Q‖
+      change ‖adjoint (𝕜 := ℝ) (E := U) (F := E) Q‖ ≤ (1 : ℝ) * ‖Q‖
       rw [LinearIsometryEquiv.norm_map, one_mul])
 
 /-- The transverse Gram matrix as a genuine bounded operator. -/
-def gram (Q : U →L[ℝ] E) : U →L[ℝ] U := Q.adjoint.comp Q
+def gram (Q : U →L[ℝ] E) : U →L[ℝ] U := (adjoint (𝕜 := ℝ) (E := U) (F := E) Q).comp Q
 
 /-- The Gram quadratic form is precisely the squared physical-frame norm. -/
 theorem gram_inner (Q : U →L[ℝ] E) (x : U) :
@@ -87,7 +87,7 @@ theorem gramInverse_norm (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
 /-- A canonical bounded left inverse for the physical transverse frame. -/
 def frameLeftInverse (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hQ : ∀ x, c * ‖x‖ ^ 2 ≤ ‖Q x‖ ^ 2) : E →L[ℝ] U :=
-  (gramInverse Q c hc hQ).comp Q.adjoint
+  (gramInverse Q c hc hQ).comp (adjoint (𝕜 := ℝ) (E := U) (F := E) Q)
 
 /-- The canonical left inverse recovers every transverse coordinate. -/
 theorem frameLeftInverse_apply (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
@@ -98,14 +98,16 @@ theorem frameLeftInverse_apply (Q : U →L[ℝ] E) (c : ℝ) (hc : 0 < c)
 /-- Differentiating the actual adjoint commutes with the real derivative. -/
 theorem hasDerivAt_adjoint (Q : ℝ → U →L[ℝ] E) (Q₁ : U →L[ℝ] E) (t : ℝ)
     (hQ : HasDerivAt Q Q₁ t) :
-    HasDerivAt (fun s => (Q s).adjoint) Q₁.adjoint t := by
+    HasDerivAt (fun s => adjoint (𝕜 := ℝ) (E := U) (F := E) (Q s))
+      (adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁) t := by
   exact ((realAdjoint (U := U) (E := E)).hasFDerivAt).comp_hasDerivAt t hQ
 
 /-- The Gram derivative is the literal product rule. -/
 theorem hasDerivAt_gram (Q : ℝ → U →L[ℝ] E) (Q₁ : U →L[ℝ] E) (t : ℝ)
     (hQ : HasDerivAt Q Q₁ t) :
     HasDerivAt (fun s => gram (Q s))
-      (Q₁.adjoint.comp (Q t) + (Q t).adjoint.comp Q₁) t :=
+      ((adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁).comp (Q t) +
+        (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)).comp Q₁) t :=
   (hasDerivAt_adjoint Q Q₁ t hQ).clm_comp hQ
 
 /-- The constructed Gram inverse has the actual inverse derivative. -/
@@ -114,7 +116,8 @@ theorem hasDerivAt_gramInverse (Q : ℝ → U →L[ℝ] E) (c : ℝ) (hc : 0 < c
     (Q₁ : U →L[ℝ] E) (t : ℝ) (hd : HasDerivAt Q Q₁ t) :
     HasDerivAt (fun s => gramInverse (Q s) c hc (hQ s))
       (-(gramInverse (Q t) c hc (hQ t)).comp
-        ((Q₁.adjoint.comp (Q t) + (Q t).adjoint.comp Q₁).comp
+        (((adjoint (𝕜 := ℝ) (E := U) (F := E) Q₁).comp (Q t) +
+            (adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t)).comp Q₁).comp
           (gramInverse (Q t) c hc (hQ t)))) t :=
   hasDerivAt_coerciveInverse (fun s => gram (Q s)) c hc
     (fun s => gram_coercive (Q s) c (hQ s)) t _ (hasDerivAt_gram Q Q₁ t hd)
@@ -124,12 +127,14 @@ open MeasureTheory Set EulerTimeLp EulerVolterraConvolution
 /-- The adjoint of a continuous coefficient path is a continuous coefficient path. -/
 def adjointPath (T : ℝ) (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
     C(Icc (0 : ℝ) T, E →L[ℝ] U) :=
-  ⟨fun t => (Q t).adjoint, (realAdjoint (U := U) (E := E)).continuous.comp Q.continuous⟩
+  ⟨fun t => adjoint (𝕜 := ℝ) (E := U) (F := E) (Q t),
+    (realAdjoint (U := U) (E := E)).continuous.comp Q.continuous⟩
 
 /-- The actual Bochner multiplier adjoint is pointwise transposition of the coefficient. -/
 theorem timeMultiplier_adjoint (T : ℝ) (hT : 0 ≤ T)
     (Q : C(Icc (0 : ℝ) T, U →L[ℝ] E)) :
-    (timeMultiplier T hT Q).adjoint = timeMultiplier T hT (adjointPath T Q) := by
+    adjoint (𝕜 := ℝ) (E := TimeLp T U) (F := TimeLp T E) (timeMultiplier T hT Q) =
+      timeMultiplier T hT (adjointPath T Q) := by
   apply ContinuousLinearMap.ext
   intro u
   apply ext_inner_right ℝ

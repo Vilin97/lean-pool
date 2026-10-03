@@ -16,6 +16,7 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.MeasureTheory.Function.LpSeminorm.SMul
 import Mathlib.MeasureTheory.Function.LpSeminorm.TriangleInequality
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-! Gevrey-two composition with the outer derivatives in actual L².
 Only the inner positive derivatives are bounded in sup norm.  The outer

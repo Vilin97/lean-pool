@@ -67,8 +67,9 @@ theorem finite_cylinder_viscous_energy {ι : Type*} [Fintype ι]
       (((K t).bound : ℝ) / c) * familyNorm forcing := by
   let β := transportEnergyConstant period (K t) κ m B
   let C := heatEnergyConstant period (K t) c
-  have hβ : 0 ≤ β := by dsimp [β, transportEnergyConstant]; positivity
-  have hC : 0 ≤ C := by dsimp [C, heatEnergyConstant]; positivity
+  have hβ : 0 ≤ β := mul_nonneg (mul_nonneg (by norm_num) (NNReal.coe_nonneg _))
+    (mul_nonneg (add_nonneg (abs_nonneg κ) (norm_nonneg m)) (NNReal.coe_nonneg B))
+  have hC : 0 ≤ C := div_nonneg (mul_nonneg zero_le_two (sq_nonneg _)) (sq_nonneg c)
   have hcoer : ∀ u, c ^ 2 * ‖u‖ ^ 2 ≤ ⟪(K t).operator u, u⟫_ℝ :=
     coefficientOperator_coercive (K t).coefficient (K t).measurable
       (K t).bound (K t).norm_bound (c ^ 2) hpos
@@ -89,8 +90,8 @@ theorem finite_cylinder_viscous_energy {ι : Type*} [Fintype ι]
     have h := metric_heat_bound period (K t) (e i t) (J i) c hc hpos
     have hd : 0 ≤ ∑ j : Fin 4, ‖(J i).word (fun _ : Fin 1 => j)‖ ^ 2 :=
       Finset.sum_nonneg (fun j _ => sq_nonneg _)
-    dsimp [C, heatEnergyConstant]
-    nlinarith [sq_nonneg c]
+    exact h.trans (add_le_of_nonpos_left ((neg_mul _ _).trans_le
+      (neg_nonpos.mpr (mul_nonneg (div_nonneg (sq_nonneg c) zero_le_two) hd))))
   have h := family_regularized_energy_evolution (fun s => (K s).operator) e t δ c β C ν K' e'
     (fun i => EulerRepresentativeMetricEvolution.liftedTransport period κ m (g i) z (hDg i) B hzB)
     (fun i => G.operator (p i)) forcing (fun i => jetLaplacian period (J i))

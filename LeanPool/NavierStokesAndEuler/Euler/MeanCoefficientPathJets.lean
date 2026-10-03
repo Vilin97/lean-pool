@@ -92,10 +92,8 @@ theorem operatorPathMap_norm_le_one (T : ℝ) : ‖operatorPathMap T‖ ≤ 1 :=
 
 theorem operatorPathTranslation_contDiff (T : ℝ)
     (A : SmoothCoefficientPath (Icc (0 : ℝ) T) (Space →L[ℝ] Space)) :
-    ContDiff ℝ ∞ (fun a => operatorPath T (translatedPath T A.field a)) := by
-  exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := ∞)
-    (E := C(Icc (0 : ℝ) T, Field)) (F := C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
-    (operatorPathMap T)).comp A.translation_contDiff
+    ContDiff ℝ ∞ (fun a => operatorPath T (translatedPath T A.field a)) :=
+  A.translation_contDiff.continuousLinearMap_comp (operatorPathMap T)
 
 /-- The true parameter derivatives of the operator path inherit the exact pointwise bounds. -/
 theorem norm_iteratedFDeriv_operatorPathTranslation_le (T : ℝ)
@@ -105,9 +103,8 @@ theorem norm_iteratedFDeriv_operatorPathTranslation_le (T : ℝ)
     (a : Space) :
     ‖iteratedFDeriv ℝ n (fun b => operatorPath T (translatedPath T A.field b)) a‖ ≤ C := by
   have h := ContinuousLinearMap.norm_iteratedFDeriv_comp_left (𝕜 := ℝ) (E := Space)
-    (F := C(Icc (0 : ℝ) T, Field)) (G := C(Icc (0 : ℝ) T, L2 →L[ℝ] L2))
     (operatorPathMap T) (A.translation_contDiff.contDiffAt (x := a)) (n := n) (by simp)
   exact h.trans ((mul_le_mul_of_nonneg_right (operatorPathMap_norm_le_one T) (norm_nonneg _)).trans
-    (by simpa only [one_mul] using A.norm_iteratedFDeriv_translation_le n C hC hbound a))
+    ((one_mul _).trans_le (A.norm_iteratedFDeriv_translation_le n C hC hbound a)))
 
 end EulerMeanCoefficients

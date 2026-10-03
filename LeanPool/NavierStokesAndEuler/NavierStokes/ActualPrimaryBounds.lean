@@ -210,7 +210,7 @@ theorem copyCost_one : 1 ≤ copyCost := by
         ActualPrimary.vectors_det)
     (CommonWindow.gap ActualPrimary.h + SlotColoring.nativeGap ActualPrimary.h)
   unfold copyCost
-  linarith
+  linarith only [ha, hb]
 
 theorem copyLinear_bound {l : SignedLabel B N0} {n : ℕ} (hn : near l n) :
     ‖copyLinear l n‖ ≤ copyCost * nativeStrip.slow n :=
@@ -418,9 +418,10 @@ theorem copied_uniformLocalJets {E : Type*} [NormedAddCommGroup E] [NormedSpace 
           _ ≤ (copyCost * nativeStrip.slow n) ^ m :=
             (pow_le_pow_left₀ (norm_nonneg _) (copyLinear_bound hn) j).trans (pow_le_pow_right₀ hB
                 hj)
-          _ ≤ (copyCost * nativeStrip.growth n x) ^ m := by
-            gcongr
-            exact nativeStrip.slow_le_growth n x
+          _ ≤ (copyCost * nativeStrip.growth n x) ^ m :=
+            pow_le_pow_left₀ (mul_nonneg (zero_le_one.trans hcost) (zero_le_one.trans hS))
+              (mul_le_mul_of_nonneg_left (nativeStrip.slow_le_growth n x)
+                (zero_le_one.trans hcost)) m
           _ = _ := mul_pow _ _ _
       have hu : ‖iteratedFDeriv ℝ j (fun y => f l (copyPoint l n k y)) x‖ ≤
           ‖iteratedFDeriv ℝ j (f l) (copyPoint l n k x)‖ * ‖copyLinear l n‖ ^ j := by
@@ -477,7 +478,11 @@ theorem copied_uniformLocalJets {E : Type*} [NormedAddCommGroup E] [NormedSpace 
           ring
         _ ≤ (C * 25 ^ p * copyCost ^ m) * nativeStrip.growth n x ^ (p + m) *
             (A * nativeStrip.epsilon n ^ α) *
-            (Real.sqrt (nativeStrip.zeta x) * envelope l n x) := by gcongr
+            (Real.sqrt (nativeStrip.zeta x) * envelope l n x) :=
+          mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hscale
+            (mul_nonneg (mul_nonneg (mul_nonneg (zero_le_one.trans hC)
+              (pow_nonneg (by norm_num) p)) (pow_nonneg (zero_le_one.trans hcost) m))
+              (pow_nonneg (zero_le_one.trans hG) (p + m)))) hW
         _ = majorant nativeStrip (fun n x => Real.sqrt (nativeStrip.zeta x) * envelope l n x) α
             (C * 25 ^ p * copyCost ^ m * A) (p + m) n x := by unfold majorant; ring
     · rw [show copied a f l n k = fun _ => 0 from funext (fun _ => ite_eq_right hn),
@@ -605,7 +610,7 @@ theorem near_of_closed_band (l : SignedLabel B N0) (n : ℕ) {p : PhaseCalculus.
   have ht : 0 < p.2.2 := hm.1.1
   have hq0 : SimilarityHomogeneity.chartQ ActualPrimary.h p ∈ Ioo (1 / 2 : ℝ) 2 := hm.1.2
   let q := ChartScales.Q n * SimilarityHomogeneity.chartQ ActualPrimary.h p
-  have hqpos : 0 < q := mul_pos (ChartScales.Q_pos _) (by linarith [hq0.1])
+  have hqpos : 0 < q := mul_pos (ChartScales.Q_pos _) (by linarith only [hq0, hq0.1])
   have he : SimilarityHomogeneity.chartQ ActualPrimary.h
       (ActualSignedGeometry.slowChange ActualPrimary.h (ChartScales.Q n)
         (ChartScales.Q (BaseChartJets.cellBand l.2)) p) = q / ChartScales.Q (BaseChartJets.cellBand
@@ -617,18 +622,21 @@ theorem near_of_closed_band (l : SignedLabel B N0) (n : ℕ) {p : PhaseCalculus.
     ring
   rw [he] at hq
   have hn := PhysicalWaveSum.logCoordinate_in_band hqpos
-    (show ChartScales.Q n / 2 ≤ q by dsimp [q]; nlinarith [ChartScales.Q_pos n, hq0.1])
-    (show q ≤ 2 * ChartScales.Q n by dsimp [q]; nlinarith [ChartScales.Q_pos n, hq0.2])
+    (show ChartScales.Q n / 2 ≤ q by dsimp [q]; nlinarith only [hqpos, hq0, ChartScales.Q_pos n,
+        hq0.1])
+    (show q ≤ 2 * ChartScales.Q n by dsimp [q]; nlinarith only [hq0, ChartScales.Q_pos n, hq0.2])
   have hL := PhysicalWaveSum.logCoordinate_in_band hqpos
     (show ChartScales.Q (BaseChartJets.cellBand l.2) / 2 ≤ q by
       have hh := (le_div_iff₀ (ChartScales.Q_pos _)).mp hq.1
-      linarith)
+      linarith only [hh])
     ((div_le_iff₀ (ChartScales.Q_pos _)).mp hq.2)
   have hnm : n ≤ BaseChartJets.cellBand l.2 + 2 := by
-    have hh : (n : ℝ) ≤ (BaseChartJets.cellBand l.2 : ℝ) + 2 := by linarith [hn.1, hL.2]
+    have hh : (n : ℝ) ≤ (BaseChartJets.cellBand l.2 : ℝ) + 2 := by linarith only [hn, hL, hn.1,
+        hL.2]
     exact_mod_cast hh
   have hmn : BaseChartJets.cellBand l.2 ≤ n + 2 := by
-    have hh : (BaseChartJets.cellBand l.2 : ℝ) ≤ (n : ℝ) + 2 := by linarith [hL.1, hn.2]
+    have hh : (BaseChartJets.cellBand l.2 : ℝ) ≤ (n : ℝ) + 2 := by linarith only [hL, hn, hL.1,
+        hn.2]
     exact_mod_cast hh
   have hm4 : 4 ≤ BaseChartJets.cellBand l.2 := label_large l
   refine ⟨by omega, ?_⟩
@@ -947,7 +955,7 @@ theorem chart_cut_amplitude_uniform :
     (fun l : SignedLabel B N0 => fun y => CurlClassBounds.complexify
         (ActualPrimary.attachedRawVelocity l.1 l.2 y))
     hs l n (ActualSignedGeometry.meanEquiv.symm x.1) x.2
-  rw [periodized_velocity_eq l n hx x.2] at he
+  rw [periodized_velocity_eq l n (x := ActualSignedGeometry.meanEquiv.symm x.1) hx x.2] at he
   simp only [ActualSignedGeometry.meanEquiv.apply_symm_apply,
     LinearWaveBounds.WaveCoefficients.withCutoff] at he ⊢
   exact he
@@ -969,7 +977,7 @@ theorem chart_cut_pressure_uniform :
     (fun l : SignedLabel B N0 => ActualPrimary.attachedRawPressure l.1 l.2)
     (fun l y => ActualPrimary.attachedRawPressure_core l.1 l.2 y)
     l n (ActualSignedGeometry.meanEquiv.symm x.1) x.2
-  rw [periodized_pressure_eq l n hx x.2] at he
+  rw [periodized_pressure_eq l n (x := ActualSignedGeometry.meanEquiv.symm x.1) hx x.2] at he
   simp only [ActualSignedGeometry.meanEquiv.apply_symm_apply,
     LinearWaveBounds.WaveCoefficients.withCutoff] at he ⊢
   exact he
@@ -1105,8 +1113,9 @@ theorem slotLinear_bound {l : SignedLabel B N0} {n : ℕ} (hn : near l n) :
     _ ≤ ‖slotOfNative‖ * (‖copyLinear l n‖ * ‖nativeOfFull‖) :=
       (ContinuousLinearMap.opNorm_comp_le _ _).trans
         (mul_le_mul_of_nonneg_left (ContinuousLinearMap.opNorm_comp_le _ _) (norm_nonneg _))
-    _ ≤ 1 * (‖copyLinear l n‖ * 1) := by
-        gcongr <;> first | exact slotOfNative_norm | exact nativeOfFull_norm
+    _ ≤ 1 * (‖copyLinear l n‖ * 1) :=
+      mul_le_mul slotOfNative_norm (mul_le_mul_of_nonneg_left nativeOfFull_norm (norm_nonneg _))
+        (mul_nonneg (norm_nonneg _) (norm_nonneg _)) zero_le_one
     _ ≤ _ := by simp only [one_mul, mul_one]; exact copyLinear_bound hn
 
 theorem slotCopy_affine (l : SignedLabel B N0) (n : ℕ) (k : TorusInverse.Frequency) (x :
@@ -1161,20 +1170,19 @@ theorem polynomial_on_control {E : Type*} [NormedAddCommGroup E] [NormedSpace �
         _ ≤ (copyCost * fullStrip.slow n) ^ m :=
           (pow_le_pow_left₀ (norm_nonneg _) (slotLinear_bound hc.1) j).trans
             (pow_le_pow_right₀ (one_le_mul_of_one_le_of_one_le hcost hS) hj)
-        _ ≤ (copyCost * fullStrip.growth n x) ^ m := by gcongr; exact fullStrip.slow_le_growth n x
+        _ ≤ (copyCost * fullStrip.growth n x) ^ m :=
+          pow_le_pow_left₀ (mul_nonneg (zero_le_one.trans hcost) (zero_le_one.trans hS))
+            (mul_le_mul_of_nonneg_left (fullStrip.slow_le_growth n x) (zero_le_one.trans hcost)) m
         _ = _ := mul_pow _ _ _
     have hu := norm_jet_comp_affine (D.isOpen i.1) (hf.smooth i.1)
       (slotLinear i.1 n) (slotOfNative (copyPoint i.1 n i.2 0))
       (by simpa only [← slotCopy_affine] using hm) j
     simp only [← slotCopy_affine] at hu
+    have hfb := (hb i.1 j hj _ hm).trans (mul_le_mul_of_nonneg_left
+      (pow_le_pow_left₀ (zero_le_one.trans (D.one_le_scale i.1)) hscale p) (zero_le_one.trans hC))
     calc
-      _ ≤ ‖iteratedFDeriv ℝ j (f i.1) ((fullCopy i.1 n i.2 x).1, (fullCopy i.1 n i.2 x).2.2)‖ *
-          ‖slotLinear i.1 n‖ ^ j := hu
-      _ ≤ (C * (25 * fullStrip.growth n x) ^ p) * (copyCost ^ m * fullStrip.growth n x ^ m) := by
-        have hfb := (hb i.1 j hj _ hm).trans (mul_le_mul_of_nonneg_left
-          (pow_le_pow_left₀ (zero_le_one.trans (D.one_le_scale i.1)) hscale p) (zero_le_one.trans
-              hC))
-        exact mul_le_mul hfb hlin (pow_nonneg (norm_nonneg _) _) ((norm_nonneg _).trans hfb)
+      _ ≤ (C * (25 * fullStrip.growth n x) ^ p) * (copyCost ^ m * fullStrip.growth n x ^ m) :=
+        hu.trans (mul_le_mul hfb hlin (pow_nonneg (norm_nonneg _) _) ((norm_nonneg _).trans hfb))
       _ = majorant fullStrip (fun _ _ => 1) 0 (C * 25 ^ p * copyCost ^ m) (p + m) n x := by
         rw [majorant, mul_pow, pow_add, Real.rpow_zero]
         ring
@@ -1197,9 +1205,9 @@ theorem native_normal_polynomial :
   let r := min (ActualPrimary.phases B N0 0).r (ActualPrimary.phases B N0 1).r
   have hM0 := (ActualPrimary.phases B N0 0).one_le_M
   have hM1 := (ActualPrimary.phases B N0 1).one_le_M
-  have hM : 1 ≤ M := by dsimp [M]; linarith
+  have hM : 1 ≤ M := by dsimp [M]; linarith only [hM0, hM1]
   have hMj (j : Fin 2) : (ActualPrimary.phases B N0 j).M ≤ M := by
-    fin_cases j <;> dsimp [M] <;> linarith
+    fin_cases j <;> dsimp [M] <;> linarith only [hM1, hM0]
   have hr : 0 < r := lt_min (ActualPrimary.phases B N0 0).r_pos (ActualPrimary.phases B N0 1).r_pos
   have hrj (j : Fin 2) : r ≤ (ActualPrimary.phases B N0 j).r := by
     fin_cases j
@@ -1581,7 +1589,7 @@ theorem carrier_band : BandBound fullStrip (-(1 / 2 : ℝ))
   have hs1 := Real.sqrt_le_one.mpr (fullStrip.epsilon_le_one n)
   have hle : (ChartScales.carrier ActualPrimary.h n : ℝ) ≤ 2 / Real.sqrt (fullStrip.epsilon n) := by
     apply (le_div_iff₀ hs).mpr
-    exact hu.trans (by linarith)
+    exact hu.trans (by linarith only [hs1])
   rw [Real.sqrt_eq_rpow] at hle
   simpa only [Real.norm_eq_abs, abs_of_pos hk, pow_zero, mul_one,
     Real.rpow_neg he.le, div_eq_mul_inv] using hle
@@ -1710,7 +1718,7 @@ theorem cut_amplitude_eq (l : SignedLabel B N0) (n : ℕ) {x : ActualPrimary.Ful
     (fun l : SignedLabel B N0 => fun y => CurlClassBounds.complexify
         (ActualPrimary.attachedRawVelocity l.1 l.2 y))
     hs l n (ActualSignedGeometry.meanEquiv.symm x.1) x.2
-  rw [periodized_velocity_eq l n hx x.2] at he
+  rw [periodized_velocity_eq l n (x := ActualSignedGeometry.meanEquiv.symm x.1) hx x.2] at he
   simp only [ActualSignedGeometry.meanEquiv.apply_symm_apply,
     cutCoefficients, LinearWaveBounds.WaveCoefficients.withCutoff] at he ⊢
   exact he.symm
@@ -1724,7 +1732,7 @@ theorem cut_pressure_eq (l : SignedLabel B N0) (n : ℕ) {x : ActualPrimary.Full
     (fun l : SignedLabel B N0 => ActualPrimary.attachedRawPressure l.1 l.2)
     (fun l y => ActualPrimary.attachedRawPressure_core l.1 l.2 y)
     l n (ActualSignedGeometry.meanEquiv.symm x.1) x.2
-  rw [periodized_pressure_eq l n hx x.2] at he
+  rw [periodized_pressure_eq l n (x := ActualSignedGeometry.meanEquiv.symm x.1) hx x.2] at he
   simp only [ActualSignedGeometry.meanEquiv.apply_symm_apply,
     cutCoefficients, LinearWaveBounds.WaveCoefficients.withCutoff] at he ⊢
   exact he.symm

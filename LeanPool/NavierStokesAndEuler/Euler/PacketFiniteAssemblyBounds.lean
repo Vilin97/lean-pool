@@ -53,6 +53,6 @@ theorem wordBound_assembleFamily (M : ℕ) (f c : ℕ → VectorField)
       have hp : A^(2*n) ≤ A^(2*(n+1)) := pow_le_pow_right₀ hA (by omega)
       have hnext := (hh n).mono_shift hR (pow_nonneg hA0 _) hshift
       have hs := (hg (n+1)).add hnext
-      exact hs.mono_amplitude (zero_le_one.trans hR) (by nlinarith)
+      exact hs.mono_amplitude (zero_le_one.trans hR) (by nlinarith only [hp])
 
 end EulerPacketCylinderField.Field

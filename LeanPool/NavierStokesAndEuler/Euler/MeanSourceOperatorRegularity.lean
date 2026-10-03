@@ -107,8 +107,8 @@ theorem sourceSolution_translation_contDiff (c : ℝ) (hc : 0 < c)
     ContDiff ℝ ∞ (fun a : Space => timeSolenoidalTranslation T a
       (coerciveInverse (fixedMeanOperator T hT (operatorPath T F.field) (operatorPath T F₁.field)
         (operatorPath T H.field) (multiplier M0.field) (boundaryOperator χ) L) c hc hcoercive
-          (-(fixedMeanPrimitive T hT (operatorPath T F.field) (operatorPath T F₁.field)).adjoint
-              f))) :=
+          (-(adjoint (𝕜 := ℝ) (F := TimeLp T L2)
+            (fixedMeanPrimitive T hT (operatorPath T F.field) (operatorPath T F₁.field)) f)))) :=
   solution_translation_contDiff T hT (operatorPath T F.field) (operatorPath T F₁.field)
     (operatorPath T H.field) (multiplier M0.field) (boundaryOperator χ) L c hc hcoercive f
     (translatedSourceOperator_contDiff T hT F F₁ H M0 χ L)

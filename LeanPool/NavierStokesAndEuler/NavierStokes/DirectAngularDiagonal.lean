@@ -121,8 +121,13 @@ theorem divergence_rotationField {F : AxisymmetricFields.Profile} {w : SpaceTime
     (coordinateVector i) i) = 0
   rw [show fderiv ℝ (fun x => rotationField F (w.1, x)) w.2 = _ from hd.fderiv,
     Fin.sum_univ_three]
-  simp [AxisymmetricResidual.packDerivative_apply, AxisymmetricFields.profileDerivative_apply,
-    AxisymmetricFields.projection, coordinateVector]
+  simp only [AxisymmetricFields.projection, Fin.isValue, EuclideanSpace.coe_proj, Pi.neg_apply,
+      neg_smul, smul_neg, PiLp.proj_apply, coordinateVector,
+      AxisymmetricResidual.packDerivative_apply, add_apply, neg_apply, smul_apply,
+      AxisymmetricFields.profileDerivative_apply, PiLp.single_eq_same, mul_one, ne_eq, one_ne_zero,
+      not_false_eq_true, PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, zero_mul,
+      smul_eq_mul, neg_zero, zero_apply, AxisymmetricResidual.pack_zero, zero_ne_one, zero_add,
+      AxisymmetricResidual.pack_one, one_mul, AxisymmetricResidual.pack_two]
   ring
 
 theorem rotationField_smoothAt {F : AxisymmetricFields.Profile} {w : SpaceTime}
@@ -207,7 +212,7 @@ theorem field_divergence (hU : IsOpen U) {w : SpaceTime} (hw : w ∈ physicalDom
     have he' : (fun y : Space => angularField D.scalar (w.1, y)) =ᶠ[𝓝 w.2] fun _ => 0 := he
     unfold spatialDivergence spatialDerivative
     rw [he'.fderiv_eq]
-    simp
+    simp only [fderiv_fun_const, Pi.zero_apply, zero_apply, PiLp.zero_apply, Finset.sum_const_zero]
 
 /-- Multiply, bundling `scalar`, `smooth`, `inner`, `inner_continuous` and the required
 compatibility proofs. -/
@@ -224,7 +229,7 @@ end AngularData
 
 theorem angularField_axis (b : Coefficient) (t : ℝ) (x : Space) (h0 : x 0 = 0) (h1 : x 1 = 0) :
     angularField b (t, x) = 0 := by
-  simp [angularField, h0, h1]
+  simp only [angularField, Fin.isValue, h1, neg_zero, zero_div, zero_mul, zero_smul, h0, add_zero]
 
 theorem angularField_mul (f b : Coefficient) :
     angularField (fun p => f p * b p) = fun w => f (cylPoint w) • angularField b w := by
@@ -339,7 +344,8 @@ theorem angularSum_divergence {U : Set Slow} (hU : IsOpen U) (D : ℕ → Angula
         (fun j => angularField (D j).scalar) j (x.1, y)) x.2 :=
     ((SolenoidalDiagonal.cutStage_contDiffAt hqAt
       (fun j => (D j).field_smoothAt hU hx) j).comp x.2
-        (contDiffAt_const.prodMk contDiffAt_id)).differentiableAt (by simp)
+        (contDiffAt_const.prodMk contDiffAt_id)).differentiableAt (by simp only [ne_eq,
+            WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])
   change spatialDivergence (fun y => ∑ j ∈ Finset.range N,
     SolenoidalDiagonal.cutStage a (fun x => q (cylPoint x)) (fun j => angularField (D j).scalar) j
         y) x.1 x.2 = 0
@@ -400,8 +406,10 @@ theorem mixedVelocity_divergence {U : Set Slow} (hU : IsOpen U) (D : ℕ → Ang
   have hd := (angularSum_smooth hU D ha hqp hpos).contDiffAt hmem
   unfold mixedVelocity
   rw [ResidualCalculus.spatialDivergence_add _ _ _ _
-    ((hc.comp x.2 (contDiffAt_const.prodMk contDiffAt_id)).differentiableAt (by simp))
-    ((hd.comp x.2 (contDiffAt_const.prodMk contDiffAt_id)).differentiableAt (by simp)),
+    ((hc.comp x.2 (contDiffAt_const.prodMk contDiffAt_id)).differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true]))
+    ((hd.comp x.2 (contDiffAt_const.prodMk contDiffAt_id)).differentiableAt (by simp only [ne_eq,
+        WithTop.coe_eq_zero, ENat.top_ne_zero, not_false_eq_true])),
     SolenoidalDiagonal.divergence_velocitySum_on ha (physicalDomain_open hU) hpos hqp hA x hx,
     angularSum_divergence hU D ha q hq hqp hpos hx, add_zero]
 
@@ -764,7 +772,8 @@ theorem mixedVelocity_axis_zero_germ {U : Set Slow} (hU : IsOpen U) (D : ℕ →
   change SpatialCurl.spatialCurl (SolenoidalDiagonal.potentialSum a q A) y +
     angularSum a q (fun j => (D j).scalar) y = 0
   rw [hy, hdy]
-  simp [SpatialCurl.spatialCurl, SpatialCurl.curl]
+  simp only [SpatialCurl.spatialCurl, SpatialCurl.curl, fderiv_fun_const, Pi.zero_apply, map_zero,
+      add_zero]
 
 theorem mixedVelocity_axis_jets {U : Set Slow} (hU : IsOpen U) (D : ℕ → AngularData U)
     {a : ℕ → ℝ} (ha : Tendsto a atTop atTop) {q : SpaceTime → ℝ}

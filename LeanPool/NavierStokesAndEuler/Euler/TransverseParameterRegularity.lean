@@ -48,7 +48,7 @@ variable (T : ℝ) (hT : 0 ≤ T)
 
 /-- Adjoint regularity with both operator spaces fixed before composition. -/
 theorem contDiff_adjoint {A : P → U →L[ℝ] E} (hA : ContDiff ℝ n A) :
-    ContDiff ℝ n (fun x => (A x).adjoint) := by
+    ContDiff ℝ n (fun x => adjoint (𝕜 := ℝ) (E := U) (F := E) (A x)) := by
   have hAdj : ContDiff ℝ n (realAdjoint (U := U) (E := E)) :=
     ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := n)
       (E := U →L[ℝ] E) (F := E →L[ℝ] U) _
@@ -71,12 +71,11 @@ theorem contDiff_fixedFrameOperator (hQ : ContDiff ℝ n Q) (hQ₁ : ContDiff �
     (hH : ContDiff ℝ n H) :
     ContDiff ℝ n (fun x => fixedFrameOperator T hT (Q x) (Q₁ x) (H x)) := by
   have hD := contDiff_fixedFrameDerivative T hT Q Q₁ hQ hQ₁
-  have hA : ContDiff ℝ n (fun x => dirichletOperator (primitiveTimeLp T hT)
-      (timeMultiplier T hT (H x))) := by
+  have hA : ContDiff ℝ n (fun x => dirichletOperator (V := TimeLp T E) (W := TimeLp T E)
+      (primitiveTimeLp (E := E) T hT) (timeMultiplier (E := E) (F := E) T hT (H x))) := by
     exact contDiff_const.sub
       (contDiff_const.clm_comp ((contDiff_timeMultiplier T hT H hH).clm_comp contDiff_const))
-  exact ((realAdjoint (U := zeroTraceDerivatives (U := U) T hT)
-    (E := TimeLp T E)).contDiff.comp hD).clm_comp (hA.clm_comp hD)
+  exact (contDiff_adjoint hD).clm_comp (hA.clm_comp hD)
 
 variable (c : ℝ) (hc : 0 < c)
   (hLower : ∀ x t v, c * ‖v‖ ^ 2 ≤ ‖Q x t v‖ ^ 2)
@@ -95,7 +94,7 @@ theorem contDiff_fixedFrameSolver (hQ : ContDiff ℝ n Q) (hQ₁ : ContDiff ℝ 
         K hK (hPotential x) hsmall) := by
   have hA := contDiff_fixedFrameOperator T hT Q Q₁ H hQ hQ₁ hH
   have hi := contDiff_coerciveInverse_variable
-    (fun x => fixedFrameOperator T hT (Q x) (Q₁ x) (H x))
+    (fun x => fixedFrameOperator (U := U) (E := E) T hT (Q x) (Q₁ x) (H x))
     (fun x => fixedCoercivity T (Q x) (Q₁ x) c)
     (fun x => fixedCoercivity_pos T hT (Q x) (Q₁ x) c hc)
     (fun x => fixedFrameOperator_coercive T hT (Q x) (Q₁ x) (H x)

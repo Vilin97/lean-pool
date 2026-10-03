@@ -396,11 +396,8 @@ theorem hasFDerivAt_multiplierTerm {f : Source} (hf : ContDiff ℝ ∞ f)
       (multiplierTermDerivative m f k z) z := by
   have hc : HasFDerivAt (fun w : Point => coefficient f w.1 k)
       (jointLiftP (coefficient (parameterPartial f) z.1 k)) z := by
-    convert! (coefficient_hasDerivAt hf k z.1).hasFDerivAt.comp z
-      (hasFDerivAt_fst) using 1
-  have he : HasFDerivAt (fun w : Point => mode k w.2)
-      (mode k z.2 • ((phase k).comp (ContinuousLinearMap.snd ℝ ℝ Plane))) z :=
-    ((phase k).hasFDerivAt.comp z (hasFDerivAt_snd)).cexp
+    exact (coefficient_hasDerivAt hf k z.1).hasFDerivAt.comp z (hasFDerivAt_fst)
+  have he := ((phase k).hasFDerivAt.comp z (hasFDerivAt_snd (p := z))).cexp
   have hd : multiplierTermDerivative m f k z =
       (m k * coefficient f z.1 k) •
         (mode k z.2 • ((phase k).comp (ContinuousLinearMap.snd ℝ ℝ Plane))) +
@@ -416,7 +413,7 @@ theorem hasFDerivAt_multiplierTerm {f : Source} (hf : ContDiff ℝ ∞ f)
     simp only [Complex.real_smul, smul_eq_mul]
     ring
   rw [hd]
-  exact (hc.const_mul (m k)).mul he
+  apply (hc.const_mul (m k)).mul he
 
 theorem norm_multiplierTermDerivative_le (m : Frequency → ℂ) (f : Source)
     (k : Frequency) (z : Point) :
@@ -444,17 +441,18 @@ theorem uniform_multiplierDerivative_bound {m : Frequency → ℂ} (hm : Polynom
     (parameterPartial_smooth hf) (parameterPartial_periodic hp) a b
   obtain ⟨CX, hCX, hX⟩ := uniform_multiplied_coeff_bound hm.mulX hf hp a b
   obtain ⟨CY, hCY, hY⟩ := uniform_multiplied_coeff_bound hm.mulY hf hp a b
-  refine ⟨‖jointLiftP‖ * CP + ‖jointLiftX‖ * CX + ‖jointLiftY‖ * CY, by positivity, ?_⟩
+  refine ⟨‖jointLiftP‖ * CP + ‖jointLiftX‖ * CX + ‖jointLiftY‖ * CY,
+    add_nonneg (add_nonneg (mul_nonneg (norm_nonneg _) hCP) (mul_nonneg (norm_nonneg _) hCX))
+      (mul_nonneg (norm_nonneg _) hCY), ?_⟩
   intro z hz k
   apply (norm_multiplierTermDerivative_le m f k z).trans
   calc
     _ ≤ ‖jointLiftP‖ * (CP * (weight k ^ 4)⁻¹) +
         ‖jointLiftX‖ * (CX * (weight k ^ 4)⁻¹) +
-        ‖jointLiftY‖ * (CY * (weight k ^ 4)⁻¹) := by
-      gcongr
-      · exact hP z.1 hz k
-      · exact hX z.1 hz k
-      · exact hY z.1 hz k
+        ‖jointLiftY‖ * (CY * (weight k ^ 4)⁻¹) :=
+      add_le_add (add_le_add (mul_le_mul_of_nonneg_left (hP z.1 hz k) (norm_nonneg _))
+        (mul_le_mul_of_nonneg_left (hX z.1 hz k) (norm_nonneg _)))
+        (mul_le_mul_of_nonneg_left (hY z.1 hz k) (norm_nonneg _))
     _ = _ := by ring
 
 theorem hasFDerivAt_applyMultiplier {m : Frequency → ℂ} (hm : PolynomialGrowth m)
@@ -516,7 +514,7 @@ theorem applyMultiplier_smooth_nat (n : ℕ) {m : Frequency → ℂ} (hm : Polyn
           jointLiftY (applyMultiplier (multiplierY m) f z) :=
         funext (fderiv_applyMultiplier hm hf hp)
       rw [he]
-      exact ((jointLiftP.contDiff.comp
+      apply ((jointLiftP.contDiff.comp
         (ih hm (parameterPartial_smooth hf) (parameterPartial_periodic hp))).add
         (jointLiftX.contDiff.comp (ih hm.mulX hf hp))).add
         (jointLiftY.contDiff.comp (ih hm.mulY hf hp))

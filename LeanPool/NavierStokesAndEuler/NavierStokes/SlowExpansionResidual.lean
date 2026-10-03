@@ -85,20 +85,20 @@ theorem partialT_radialB {V : Profile} {p : ProfilePoint}
     (hV : DifferentiableAt ℝ V p) (hs : p.2.1 ≠ 0) :
     partialT (radialB V) p = radialB (partialT V) p := by
   rw [partialT, fderiv_radialB_apply hV hs]
-  simp [radialB, partialT]
+  simp only [mul_zero, zero_div, add_zero, radialB, partialT]
 
 theorem partialZ_radialB {V : Profile} {p : ProfilePoint}
     (hV : DifferentiableAt ℝ V p) (hs : p.2.1 ≠ 0) :
     partialZ (radialB V) p = radialB (partialZ V) p := by
   rw [partialZ, fderiv_radialB_apply hV hs]
-  simp [radialB, partialZ]
+  simp only [mul_zero, zero_div, add_zero, radialB, partialZ]
 
 theorem partialS_radialB_explicit {V : Profile} {p : ProfilePoint}
     (hV : DifferentiableAt ℝ V p) (hs : p.2.1 ≠ 0) :
     partialS (radialB V) p =
       -partialS V p / (2 * p.2.1) + V p / (2 * p.2.1 ^ 2) := by
   rw [partialS, fderiv_radialB_apply hV hs]
-  simp [partialS]
+  simp only [mul_one, partialS]
 
 theorem partialS_radialB {V : Profile} {p : ProfilePoint}
     (hV : DifferentiableAt ℝ V p) (hs : p.2.1 ≠ 0) :
@@ -196,8 +196,11 @@ theorem divergence_velocity_at {B F U : Profile} {t : ℝ} {x : Space}
         2 * radialEnergy x * partialS B (profilePoint t x) := by
   unfold spatialDivergence spatialDerivative
   rw [(hasFDerivAt_velocity_at hB hF hU).fderiv, Fin.sum_univ_three]
-  simp [velocityJacobian, packDerivative_apply, profileDerivative_apply,
-    coordinateVector, profilePoint, radialEnergy, lift]
+  simp only [velocityJacobian, Fin.isValue, lift, profilePoint, radialEnergy, neg_add_rev,
+    coordinateVector, packDerivative_apply, add_apply, neg_apply, smul_apply, projection_apply,
+    ne_eq, one_ne_zero, not_false_eq_true, PiLp.single_eq_of_ne, smul_eq_mul, mul_zero, neg_zero,
+    profileDerivative_apply, PiLp.single_eq_same, mul_one, add_zero, Fin.reduceEq, zero_mul,
+    zero_add, sub_apply, pack_zero, zero_ne_one, pack_one, one_mul, pack_two]
   ring
 
 /-- Actual Cartesian divergence, needing regularity only at the evaluated
@@ -220,7 +223,8 @@ theorem radial_flux_velocity (V F U : Profile) (t : ℝ) (x : Space)
         V (profilePoint t x) := by
   calc
     _ = -2 * radialEnergy x * radialB V (profilePoint t x) := by
-      simp [AxisymmetricResidual.velocity, componentX, componentY, lift, radialEnergy]
+      simp only [Fin.isValue, AxisymmetricResidual.velocity, componentX, lift, neg_add_rev,
+          componentY, pack_zero, pack_one, radialEnergy, neg_mul]
       ring
     _ = _ := by
       change -2 * radialEnergy x * (-V (profilePoint t x) / (2 * radialEnergy x)) = _
@@ -288,14 +292,15 @@ open scoped BigOperators Topology ContDiff
 /-- The manuscript's slow order `λ_n=2nh`. -/
 def slowOrder (h : ℝ) (n : ℕ) : ℝ := 2 * (n : ℝ) * h
 
-@[simp] theorem slowOrder_zero (h : ℝ) : slowOrder h 0 = 0 := by simp [slowOrder]
+@[simp] theorem slowOrder_zero (h : ℝ) : slowOrder h 0 = 0 := by simp only [slowOrder,
+    CharP.cast_eq_zero, mul_zero, zero_mul]
 theorem slowOrder_add (h : ℝ) (i j : ℕ) :
     slowOrder h (i + j) = slowOrder h i + slowOrder h j := by
-  simp [slowOrder, Nat.cast_add]
+  simp only [slowOrder, Nat.cast_add]
   ring
 theorem slowOrder_succ (h : ℝ) (n : ℕ) :
     slowOrder h (n + 1) = slowOrder h n + 2 * h := by
-  simp [slowOrder, Nat.cast_add]
+  simp only [slowOrder, Nat.cast_add, Nat.cast_one]
   ring
 
 /-- Finite series, given by `∑ n ∈ Finset.range (N + 1), q ^ (b + slowOrder h n) * a n`. -/
@@ -329,11 +334,14 @@ noncomputable def previous (a : ℕ → ℝ) : ℕ → ℝ
 @[simp] theorem previous_succ (a : ℕ → ℝ) (n : ℕ) : previous a (n + 1) = a n := rfl
 
 @[simp] theorem finiteSeries_order_zero (q h b : ℝ) (a : ℕ → ℝ) :
-    finiteSeries 0 q h b a = q ^ b * a 0 := by simp [finiteSeries]
+    finiteSeries 0 q h b a = q ^ b * a 0 := by simp only [finiteSeries, zero_add, Finset.range_one,
+        Finset.sum_singleton, slowOrder_zero, add_zero]
 
 @[simp] theorem pairTail_order_zero (w : ℕ → ℝ) (K : ℕ → ℕ → ℝ) :
     pairTail 0 w K = 0 := by
-  simp [pairTail, pairs, Finset.sum_filter]
+  simp only [pairTail, add_pos_iff, pairs, zero_add, Finset.range_one, Finset.product_singleton,
+      Finset.map_singleton, Function.Embedding.sectL_apply, Finset.sum_filter, Finset.sum_singleton,
+      lt_self_iff_false, or_self, ↓reduceIte]
 
 theorem finiteConvolution_eq {N n : ℕ} (hn : n ≤ N) (K : ℕ → ℕ → ℝ) :
     finiteConvolution N K n = convolution K n := by
@@ -369,7 +377,7 @@ theorem finiteSeries_mul {q : ℝ} (hq : 0 < q) (N : ℕ) (h b c : ℝ) (a d : �
 theorem finiteSeries_add (N : ℕ) (q h b : ℝ) (a d : ℕ → ℝ) :
     finiteSeries N q h b (fun n => a n + d n) =
       finiteSeries N q h b a + finiteSeries N q h b d := by
-  simp [finiteSeries, mul_add, Finset.sum_add_distrib]
+  simp only [finiteSeries, mul_add, Finset.sum_add_distrib]
 
 theorem finiteSeries_scale (N : ℕ) (q h b c : ℝ) (a : ℕ → ℝ) :
     finiteSeries N q h b (fun n => c * a n) = c * finiteSeries N q h b a := by
@@ -473,7 +481,7 @@ theorem shifted_sum (N : ℕ) (w a : ℕ → ℝ) :
     (∑ n ∈ Finset.range (N + 1), w (n + 1) * a n) =
       (∑ n ∈ Finset.range (N + 1), w n * previous a n) + w (N + 1) * a N := by
   induction N with
-  | zero => simp
+  | zero => simp only [zero_add, Finset.range_one, Finset.sum_singleton, previous_zero, mul_zero]
   | succ N ih =>
       simp only [Finset.sum_range_succ, previous_succ] at ih ⊢
       linarith
@@ -577,7 +585,8 @@ theorem secondAlong_sum {ι : Type*} (s : Finset ι) (f : ι → Profile)
   have hev : ∀ᶠ y in nhds p, ∀ i ∈ s, DifferentiableAt ℝ (f i) y := by
     rw [Finset.eventually_all]
     intro i hi
-    exact ((hf i hi).eventually (by simp)).mono fun y hy => hy.differentiableAt (by norm_num)
+    exact ((hf i hi).eventually (by simp only [ne_eq, WithTop.ofNat_eq_coe, ENat.ofNat_ne_top,
+        not_false_eq_true])).mono fun y hy => hy.differentiableAt (by norm_num)
   have he : derivativeAlong v (fun y => ∑ i ∈ s, f i y) =ᶠ[nhds p]
       (fun y => ∑ i ∈ s, derivativeAlong v (f i) y) := by
     filter_upwards [hev] with y hy
@@ -596,7 +605,8 @@ def finiteProfile (N : ℕ) (h b : ℝ) (f : ℕ → InnerProfile) : Profile :=
 @[simp] theorem finiteProfile_order_zero (h b : ℝ) (f : ℕ → InnerProfile) :
     finiteProfile 0 h b f = pullback h b (f 0) := by
   funext p
-  simp [finiteProfile]
+  simp only [finiteProfile, zero_add, Finset.range_one, Finset.sum_singleton, slowOrder_zero,
+      add_zero]
 
 theorem finiteProfile_value (N : ℕ) (h b : ℝ) (f : ℕ → InnerProfile) (p : ProfilePoint) :
     finiteProfile N h b f p = finiteSeries N (SimilarityProfile.q h p) h b
@@ -719,7 +729,8 @@ def transportTail (N : ℕ) (q h e α : ℝ) (v u f : ℕ → InnerProfile) (w :
     (v u f : ℕ → InnerProfile) (w : InnerPoint) :
     transportTail 0 q h e α v u f w =
       -q ^ (e - 1 + 2 * h) * Z2 h e (f 0) w := by
-  simp [transportTail, slowOrder_succ]
+  simp only [transportTail, pairTail_order_zero, zero_add, slowOrder_succ, slowOrder_zero, add_zero,
+      zero_sub, neg_mul]
 
 theorem q_mul_X {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
     {p : ProfilePoint} (hp : p.1 < 1) :
@@ -793,7 +804,8 @@ theorem secondAlong_scale (c : ℝ) {f : Profile} {p : ProfilePoint}
       c * derivativeAlong w (derivativeAlong v f) p := by
   have he : derivativeAlong v (fun y => c * f y) =ᶠ[nhds p]
       (fun y => c * derivativeAlong v f y) := by
-    filter_upwards [hf.eventually (by simp)] with y hy
+    filter_upwards [hf.eventually (by simp only [ne_eq, WithTop.ofNat_eq_coe, ENat.ofNat_ne_top,
+        not_false_eq_true])] with y hy
     exact derivativeAlong_scale c (hy.differentiableAt (by norm_num)) v
   change fderiv ℝ _ p w = _
   rw [he.fderiv_eq]
@@ -881,7 +893,7 @@ def pressureCoefficient (h C : ℝ) (f : SlowProfiles) (n : ℕ) (w : InnerPoint
 @[simp] theorem finiteProfile_zero (N : ℕ) (h b : ℝ) :
     finiteProfile N h b (fun _ _ => 0) = fun _ => 0 := by
   funext p
-  simp [finiteProfile, SimilarityProfile.pullback]
+  simp only [finiteProfile, pullback, mul_zero, Finset.sum_const_zero]
 
 /-- The physical angular equation for the finite swirl expansion. -/
 theorem angular_finite_expansion {h : ℝ} (hh : 0 < h) (hh1 : h < 1 / 2)
@@ -1181,10 +1193,13 @@ theorem slowVelocity_components (N : ℕ) (h C : ℝ) (f : SlowProfiles)
         (slowAxial N h f (profilePoint t x)) := by
   ext i
   fin_cases i <;>
-    simp [slowVelocity, AxisymmetricResidual.velocity, AxisymmetricResidual.componentX,
-      AxisymmetricResidual.componentY, AxisymmetricResidual.lift, RadialFluxResidual.radialB,
-      AxisymmetricResidual.pack, ProblemStatement.coordinateVector,
-      profilePoint] <;> ring
+    simp only [slowVelocity, AxisymmetricResidual.velocity, AxisymmetricResidual.pack,
+        AxisymmetricResidual.componentX, Fin.isValue, AxisymmetricResidual.lift,
+        RadialFluxResidual.radialB, profilePoint, neg_add_rev, ProblemStatement.coordinateVector,
+        AxisymmetricResidual.componentY, Fin.zero_eta, PiLp.add_apply, PiLp.smul_apply,
+        PiLp.single_eq_same, smul_eq_mul, mul_one, ne_eq, zero_ne_one, not_false_eq_true,
+        PiLp.single_eq_of_ne, mul_zero, add_zero, Fin.reduceEq, Fin.mk_one, one_ne_zero, zero_add,
+        Fin.reduceFinMk] <;> ring
 
 theorem slowVelocity_radial_flux (N : ℕ) (h C : ℝ) (f : SlowProfiles)
     (t : ℝ) (x : ProblemStatement.Space) (hs : 0 < radialEnergy x) :

@@ -179,7 +179,7 @@ theorem integral_weighted_second_partial {χ : Space → ℝ} {w : Space → Spa
     dsimp only [spatialPartial]
     ring
   rw [hsecond_lhs, integral_const_mul] at hsecond
-  linarith
+  linear_combination hfirst - (1 / 2 : ℝ) * hsecond
 
 /-- Compactly weighted Laplacian energy identity for an arbitrary smooth
 spatial vector field. No global integrability assumption on the vector field
@@ -428,7 +428,7 @@ theorem hasDerivAt_difference_energy_balance {a b t : ℝ} {χ : Space → ℝ}
     (time_differentiable_at_interior hu ht) (time_differentiable_at_interior hv ht)
     hdivu hdivv hNS
   convert! hd using 1
-  linarith
+  linear_combination -2 * hb
 
 end NavierStokesR3.LocalizedDifferenceEnergy
 
@@ -472,7 +472,7 @@ theorem exists_rpow_absorption {C δ p : ℝ}
     (hC : 0 ≤ C) (hδ : 0 < δ) (hp0 : 0 ≤ p) (hp2 : p < 2) :
     ∃ D ≥ 0, ∀ A ≥ 0, C * A ^ p ≤ δ * A ^ 2 + D := by
   have hevent : ∀ᶠ A : ℝ in atTop, C / δ ≤ A ^ (2 - p) :=
-    (tendsto_rpow_atTop (by linarith : 0 < 2 - p)).eventually
+    (tendsto_rpow_atTop (by linarith only [hp2] : 0 < 2 - p)).eventually
       (eventually_ge_atTop (C / δ))
   obtain ⟨b, hb⟩ := eventually_atTop.mp hevent
   let K : ℝ := max 1 b
@@ -508,11 +508,11 @@ theorem exists_shifted_rpow_absorption {C δ p : ℝ}
   obtain ⟨D, hD, hbound⟩ := exists_rpow_absorption hC (half_pos hδ) hp0 hp2
   refine ⟨D + δ, add_nonneg hD hδ.le, ?_⟩
   intro A hA
-  have hboundA := hbound (A + 1) (by linarith)
+  have hboundA := hbound (A + 1) (by linarith only [hA])
   have hsquare : (A + 1) ^ 2 ≤ 2 * A ^ 2 + 2 := by
-    linarith [sq_nonneg (A - 1)]
+    linarith only [sq_nonneg (A - 1)]
   have hscaled := mul_le_mul_of_nonneg_left hsquare (half_pos hδ).le
-  linarith
+  linear_combination hboundA + hscaled
 
 /-- Dividing the shifted estimate by a radius at least one preserves the
 arbitrarily small square coefficient and makes the constant decay as `1 / R`. -/
@@ -529,8 +529,7 @@ theorem exists_scaled_shifted_rpow_absorption {C δ p : ℝ}
   have hscaled := mul_le_mul_of_nonneg_right (hbound A hA) hInv
   have hquadratic := mul_le_mul_of_nonneg_left hInv1
     (mul_nonneg hδ.le (sq_nonneg A))
-  simp only [div_eq_mul_inv]
-  linarith
+  linear_combination hscaled + hquadratic
 
 /-- The pressure and transport cutoff remainders are controlled by one shifted
 subquadratic power. The estimate retains the full factor `1 / R`. -/
@@ -546,8 +545,8 @@ theorem cutoff_expression_le {C A R : ℝ}
   have hInv1 : R⁻¹ ≤ 1 := (inv_le_one₀ hRpos).mpr hR
   have hx : 0 ≤ A + R⁻¹ := add_nonneg hA hInv
   have hxB : A + R⁻¹ ≤ A + 1 := add_le_add_right hInv1 A
-  have hB1 : 1 ≤ A + 1 := by linarith
-  have hBpos : 0 < A + 1 := by linarith
+  have hB1 : 1 ≤ A + 1 := le_add_of_nonneg_left hA
+  have hBpos : 0 < A + 1 := add_pos_of_nonneg_of_pos hA zero_lt_one
   have hR2 : R ^ (-2 : ℝ) ≤ R⁻¹ := by
     simpa only [Real.rpow_neg_one] using
       (Real.rpow_le_rpow_of_exponent_le hR (by norm_num : (-2 : ℝ) ≤ -1))
@@ -558,9 +557,10 @@ theorem cutoff_expression_le {C A R : ℝ}
       2 * (A + 1) ^ (1 / 2 : ℝ) := by
     have hmon := Real.rpow_le_rpow hx hxB (by norm_num : (0 : ℝ) ≤ 1 / 2)
     have hone := Real.one_le_rpow hB1 (by norm_num : (0 : ℝ) ≤ 1 / 2)
-    linarith
+    exact (add_le_add hmon hone).trans_eq (two_mul _).symm
   have hlinear : R⁻¹ * A + R ^ (-2 : ℝ) ≤ R⁻¹ * (A + 1) := by
-    linarith
+    rw [mul_add, mul_one]
+    exact add_le_add_right hR2 _
   have hlinear0 : 0 ≤ R⁻¹ * A + R ^ (-2 : ℝ) :=
     add_nonneg (mul_nonneg hInv hA) (Real.rpow_nonneg hRpos.le _)
   have hprod : (A + 1) ^ (1 / 2 : ℝ) * (A + 1) =
@@ -587,8 +587,8 @@ theorem cutoff_expression_le {C A R : ℝ}
   have hterm2 := mul_le_mul_of_nonneg_left
     (mul_le_mul hR74 hthreeQuarters (Real.rpow_nonneg hx _) hInv) hC
   have hterm3 := mul_le_mul_of_nonneg_left hthreeHalves (mul_nonneg hC hInv)
-  simp only [div_eq_mul_inv]
-  linarith only [hterm1, hterm2, hterm3]
+  rw [mul_assoc C, mul_assoc C (R ^ (-7 / 4 : ℝ))]
+  exact (add_le_add (add_le_add hterm1 hterm2) hterm3).trans_eq (by ring)
 
 /-- Scalar Young absorption of all cutoff remainders. The same nonnegative
 constant works for every nonnegative gradient norm and every radius at least
@@ -650,7 +650,7 @@ theorem exists_uniform_flux_absorption {C1 C2 S M δ : ℝ}
   have hSMQ : S * M ≤ Q :=
     (mul_le_mul_of_nonneg_left (le_max_right 1 M) hS).trans (le_max_right _ _)
   have hQ0 : 0 ≤ Q := (mul_nonneg hS hM).trans hSMQ
-  have hQsq1 : 1 ≤ Q ^ 2 := by linarith [sq_nonneg (Q - 1)]
+  have hQsq1 : 1 ≤ Q ^ 2 := by linarith only [hQ1, sq_nonneg (Q - 1)]
   let C : ℝ := (C1 + C2) * Q ^ 2
   have hC : 0 ≤ C := mul_nonneg (add_nonneg hC1 hC2) (sq_nonneg _)
   have hC1Q : C1 * Q ^ 2 ≤ C :=
@@ -687,7 +687,7 @@ theorem exists_uniform_flux_absorption {C1 C2 S M δ : ℝ}
       _ ≤ C2 * (Q ^ 2 * (x ^ (1 / 2 : ℝ) + 1)) :=
         mul_le_mul_of_nonneg_left hhalfOne hC2
       _ = (C2 * Q ^ 2) * (x ^ (1 / 2 : ℝ) + 1) := by ring
-      _ ≤ _ := mul_le_mul_of_nonneg_right hC2Q (by positivity)
+      _ ≤ _ := mul_le_mul_of_nonneg_right hC2Q (add_nonneg (Real.rpow_nonneg hx _) zero_le_one)
   have hRminus2 : R ^ (-2 : ℝ) = 1 / R ^ 2 := by
     rw [Real.rpow_neg hRpos.le, Real.rpow_two, one_div]
   have hlinear : A / R + 1 / R ^ 2 = R⁻¹ * A + R ^ (-2 : ℝ) := by
@@ -701,31 +701,24 @@ theorem exists_uniform_flux_absorption {C1 C2 S M δ : ℝ}
     exact mul_le_mul_of_nonneg_right hfactor hlinear0
   have hcommutator : C2 * (R ^ (-7 / 4 : ℝ) * B ^ (3 / 4 : ℝ)) ≤
       C * R ^ (-7 / 4 : ℝ) * x ^ (3 / 4 : ℝ) := by
+    have hRa := Real.rpow_nonneg hRpos.le (-7 / 4 : ℝ)
     calc
-      _ = (C2 * R ^ (-7 / 4 : ℝ)) * B ^ (3 / 4 : ℝ) := by ring
-      _ ≤ (C2 * R ^ (-7 / 4 : ℝ)) * (Q ^ 2 * x ^ (3 / 4 : ℝ)) :=
-        mul_le_mul_of_nonneg_left hquarter (mul_nonneg hC2 (Real.rpow_nonneg hRpos.le _))
-      _ = (C2 * Q ^ 2) * (R ^ (-7 / 4 : ℝ) * x ^ (3 / 4 : ℝ)) := by ring
-      _ ≤ C * (R ^ (-7 / 4 : ℝ) * x ^ (3 / 4 : ℝ)) :=
-        mul_le_mul_of_nonneg_right hC2Q (by positivity)
-      _ = _ := by ring
+      _ ≤ C2 * (R ^ (-7 / 4 : ℝ) * (Q ^ 2 * x ^ (3 / 4 : ℝ))) :=
+        mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hquarter hRa) hC2
+      _ = (C2 * Q ^ 2) * R ^ (-7 / 4 : ℝ) * x ^ (3 / 4 : ℝ) := by ring
+      _ ≤ _ := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hC2Q hRa)
+        (Real.rpow_nonneg hx _)
   have htransport : C1 / R * B ^ (3 / 2 : ℝ) ≤
       C * R⁻¹ * x ^ (3 / 2 : ℝ) := by
     calc
       _ ≤ C1 / R * (Q ^ 2 * x ^ (3 / 2 : ℝ)) :=
         mul_le_mul_of_nonneg_left hthree (div_nonneg hC1 hRpos.le)
-      _ = (C1 * Q ^ 2) * (R⁻¹ * x ^ (3 / 2 : ℝ)) := by ring
-      _ ≤ C * (R⁻¹ * x ^ (3 / 2 : ℝ)) :=
-        mul_le_mul_of_nonneg_right hC1Q (by positivity)
-      _ = _ := by ring
-  have hsum : C1 / R * B ^ (3 / 2 : ℝ) +
-      C2 * ((B ^ (1 / 2 : ℝ) + 1) * (A / R + 1 / R ^ 2) +
-        R ^ (-7 / 4 : ℝ) * B ^ (3 / 4 : ℝ)) ≤
-      C * (x ^ (1 / 2 : ℝ) + 1) * (R⁻¹ * A + R ^ (-2 : ℝ)) +
-        C * R ^ (-7 / 4 : ℝ) * x ^ (3 / 4 : ℝ) +
-        C * R⁻¹ * x ^ (3 / 2 : ℝ) := by
-    linarith only [hpressure, hcommutator, htransport]
-  exact hsum.trans (hD_bound A hA R hR)
+      _ = (C1 * Q ^ 2) * R⁻¹ * x ^ (3 / 2 : ℝ) := by ring
+      _ ≤ _ := mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hC1Q hInv)
+        (Real.rpow_nonneg hx _)
+  have hsum := add_le_add htransport (add_le_add hpressure hcommutator)
+  rw [← mul_add] at hsum
+  exact hsum.trans ((add_comm _ _).trans_le (hD_bound A hA R hR))
 
 /-- One radius-independent constant turns the full localized energy inequality
 into the differential inequality required by Gronwall. -/
@@ -744,13 +737,11 @@ theorem exists_uniform_rate_bound {C0 C1 C2 S M : ℝ}
   refine ⟨2 * (C0 + D), by positivity, ?_⟩
   intro R hR A hA B hB hSobolev E E' G henergy
   have hRpos : 0 < R := zero_lt_one.trans_le hR
-  have hRsq : R ≤ R ^ 2 := by linarith [sq_nonneg (R - 1)]
+  have hRsq : R ≤ R ^ 2 := by linarith only [hR, sq_nonneg (R - 1)]
   have hC0radius : C0 / R ^ 2 ≤ C0 / R :=
     div_le_div_of_nonneg_left hC0 hRpos hRsq
   have hbound := hflux R hR A hA B hB hSobolev
-  have hdivide : 2 * (C0 + D) / R = 2 * (C0 / R + D / R) := by ring
-  rw [hdivide]
-  linarith only [henergy, hbound, hC0radius, sq_nonneg A]
+  linear_combination 2 * henergy + 2 * hbound + 2 * hC0radius + sq_nonneg A
 
 end NavierStokesR3.ComparisonRateBound
 
@@ -813,7 +804,7 @@ theorem neg_coupling_le_weightedEnergy {χ : Space → ℝ} {u w : VelocityField
     G * (χ x * ‖w (t, x)‖ ^ 2)
   have h := NavierStokes.SolutionDifference.nonlinear_energy_bound
     (spatialDerivative u t x) (w (t, x)) (hG x)
-  linarith [mul_le_mul_of_nonneg_left h (hχ0 x)]
+  linarith only [h, hχ0, mul_le_mul_of_nonneg_left h (hχ0 x)]
 
 /-- Derivative of the energy weight. -/
 theorem fderiv_cutoff_eight {φ : Space → ℝ} {x : Space}
@@ -1062,7 +1053,7 @@ theorem exp_neg_mul_le_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
   intro t ht
   have hle := Gronwall.exp_neg_mul_le_add_of_deriv_le_add hT hK hε hcont hderiv hbound t ht
   simp only [sub_zero] at hle
-  exact hle.trans (by linarith)
+  exact hle.trans (by linarith only [hinitial])
 
 /-- Perturbed Gronwall, retaining the actual time in the bound. -/
 theorem le_exp_mul_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
@@ -1074,7 +1065,7 @@ theorem le_exp_mul_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
   intro t ht
   have hle := Gronwall.le_exp_mul_add_of_deriv_le_add hT hK hε hcont hderiv hbound t ht
   simp only [sub_zero] at hle
-  exact hle.trans (mul_le_mul_of_nonneg_right (by linarith) (Real.exp_pos _).le)
+  exact hle.trans (mul_le_mul_of_nonneg_right (by linarith only [hinitial]) (Real.exp_pos _).le)
 
 /-- Perturbed Gronwall with one bound valid throughout the closed interval. -/
 theorem le_uniform_exp_mul_of_deriv_le {T K ε : ℝ} {E E' : ℝ → ℝ}
@@ -1124,12 +1115,12 @@ theorem eq_zero_of_forall_radius_bound {x D : ℝ} (hx : 0 ≤ x) (hD : 0 ≤ D)
   let R : ℝ := (D + 1) / x + 1
   have hR : 1 ≤ R := by
     dsimp [R]
-    linarith [div_nonneg (show 0 ≤ D + 1 by linarith) hx]
+    linarith only [hD, hx, div_nonneg (show 0 ≤ D + 1 by linarith) hx]
   have hRpos : 0 < R := lt_of_lt_of_le zero_lt_one hR
   have hmul : x * R ≤ D := (le_div_iff₀ hRpos).mp (hbound R hR)
   have hcancel : (D + 1) / x * x = D + 1 := div_mul_cancel₀ _ hxpos.ne'
   dsimp [R] at hmul
-  linarith
+  linarith only [hxpos, hmul, hcancel]
 
 /-- For a fixed compact set, the cutoff bound is available only after the
 radius contains that set. Such a bound is still sufficient for vanishing. -/
@@ -1144,7 +1135,7 @@ theorem eq_zero_of_forall_large_radius_bound {x D R₀ : ℝ} (hx : 0 ≤ x)
   have hsize : (D + 1) / x + 1 ≤ R := le_max_right _ _
   have hsize_mul := mul_le_mul_of_nonneg_left hsize hx
   have hcancel : (D + 1) / x * x = D + 1 := div_mul_cancel₀ _ hxpos.ne'
-  linarith
+  linarith only [hxpos, hmul, hsize_mul, hcancel]
 
 end NavierStokesR3.ComparisonGronwall
 
@@ -1465,7 +1456,7 @@ theorem continuousOn_integral_norm_cube {T : ℝ} {u : VelocityField}
     (hsupp : ∀ t ∈ Icc (0 : ℝ) T, tsupport (fun x : Space => u (t, x)) ⊆ K) :
     ContinuousOn (fun t => ∫ x : Space, ‖u (t, x)‖ ^ 3) (Icc (0 : ℝ) T) := by
   apply CompactTimeIntegral.continuousOn_integral
-    (F := fun z : SpaceTime => ‖u z‖ ^ 3) hK (hu.norm.pow 3)
+    (F := (fun z : SpaceTime => ‖u z‖ ^ 3 :)) hK (hu.norm.pow 3)
   intro t ht x hx
   have hzero : u (t, x) = 0 :=
     image_eq_zero_of_notMem_tsupport (f := fun y : Space => u (t, y))
@@ -1542,7 +1533,7 @@ theorem uniformFiniteEnergy_of_compact_slab {T : ℝ} {u : VelocityField}
   have hcont : ContinuousOn (fun t => ∫ x : Space, ‖u (t, x)‖ ^ 2)
       (Icc (0 : ℝ) T) := by
     apply CompactTimeIntegral.continuousOn_integral
-      (F := fun z : SpaceTime => ‖u z‖ ^ 2) hK (hu.continuousOn.norm.pow 2)
+      (F := (fun z : SpaceTime => ‖u z‖ ^ 2 :)) hK (hu.continuousOn.norm.pow 2)
     intro t ht x hx
     have hzero : u (t, x) = 0 :=
       image_eq_zero_of_notMem_tsupport (f := fun y : Space => u (t, y))
@@ -1606,7 +1597,7 @@ theorem classical_uniqueness_on_Icc {T : ℝ} (hT : 0 < T)
       AEStronglyMeasurable (fun x => v (t, x)) volume :=
     fun t ht => (spatial_smooth hv ht).continuous.aestronglyMeasurable
   have hew := uniformFiniteEnergy_sub hum hvm heu hev
-  obtain ⟨M, hM0, hM⟩ := uniformFiniteEnergy_lpNorm_two_bound
+  obtain ⟨M, hM0, hM⟩ := uniformFiniteEnergy_lpNorm_two_bound (u := fun z => u z - v z)
     (fun t ht => (hum t ht).sub (hvm t ht)) hew
   obtain ⟨U, hU0, hU⟩ := CompactComparisonBounds.exists_lpNorm_three_bound
     hu.continuousOn hK hsupp

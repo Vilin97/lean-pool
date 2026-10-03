@@ -47,7 +47,7 @@ theorem primitive_hasDerivWithinAt (s : Set ℝ) (t : ℝ) (u : ℝ → LiftL2 P
   (primitive P).hasFDerivAt.comp_hasDerivWithinAt t hu
 
 theorem primitive_mixed_translation (a : LiftTangent) (u : LiftL2 P) :
-    primitive P (translate P a u) = translate P a (primitive P u) :=
+    primitive P (translate (V := Vector3) P a u) = translate (V := Vector3) P a (primitive P u) :=
   primitive_translation P _ u
 
 variable {X ι : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] [Fintype ι]
@@ -88,7 +88,7 @@ def pathPrimitive : C(K,LiftL2 P) →L[ℝ] C(K,LiftL2 P) :=
 
 omit [CompactSpace K] in
 @[simp] theorem pathPrimitive_apply (u : C(K, LiftL2 P)) (t : K) :
-    pathPrimitive P u t = primitive P (u t) := rfl
+    pathPrimitive (K := K) P u t = primitive P (u t) := rfl
 
 theorem pathPrimitive_norm : ‖pathPrimitive (K := K) P‖ ≤ P := by
   have hP : 0 ≤ P := le_of_lt (Fact.out : 0 < P)
@@ -103,7 +103,8 @@ theorem pathPrimitive_norm : ‖pathPrimitive (K := K) P‖ ≤ P := by
 -/
 theorem pathPrimitive_block_bound (directions : ι → X) (q : ℕ)
     (f : X → C(K, LiftL2 P)) (hf : ContDiff ℝ ∞ f) (n : ℕ) (x : X) :
-    block directions q (fun y => pathPrimitive P (f y)) n x ≤ P*block directions q f n x := by
+    block directions q (fun y => pathPrimitive (K := K) P (f y)) n x ≤
+      P*block directions q f n x := by
   have h := block_comp_clm_le (E := C(K,LiftL2 P)) (F := C(K,LiftL2 P))
     directions q (pathPrimitive (K := K) P) f hf n x
   have hn : ‖pathPrimitive (K := K) P‖ ≤ P := pathPrimitive_norm P
@@ -112,7 +113,7 @@ theorem pathPrimitive_block_bound (directions : ι → X) (q : ℕ)
 theorem pathPrimitive_block_majorant (directions : ι → X) (q : ℕ)
     (f : X → C(K, LiftL2 P)) (hf : ContDiff ℝ ∞ f) (R C : ℝ) (d : ℕ)
     (hb : ∀ n x, block directions q f n x ≤ C * majorant R d n) (n : ℕ) (x : X) :
-    block directions q (fun y => pathPrimitive P (f y)) n x ≤ (P*C)*majorant R d n :=
+    block directions q (fun y => pathPrimitive (K := K) P (f y)) n x ≤ (P*C)*majorant R d n :=
   (pathPrimitive_block_bound P directions q f hf n x).trans
     ((mul_le_mul_of_nonneg_left (hb n x) (le_of_lt (Fact.out : 0 < P))).trans_eq
       (mul_assoc P C _).symm)
@@ -140,33 +141,37 @@ variable (P : ℝ) [Fact (0 < P)]
 
 omit [CompactSpace K] in
 theorem pathPrimitive_translation (p : C(K, LiftL2 P)) (a : LiftTangent) :
-    pathPrimitive P (pathTranslate P a p) = pathTranslate P a (pathPrimitive P p) := by
+    pathPrimitive (K := K) P (pathTranslate (K := K) (V := Vector3) P a p) =
+      pathTranslate (K := K) (V := Vector3) P a (pathPrimitive (K := K) P p) := by
   apply ContinuousMap.ext
   intro t
   exact primitive_mixed_translation P a (p t)
 
 theorem pathPrimitive_orbit_contDiff (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (pathPrimitive P p)) := by
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p)) :
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (pathPrimitive (K := K) P p)) := by
   simpa only [Function.comp_def, pathPrimitive_translation] using
     (pathPrimitive (K := K) P).contDiff.comp hp
 
 theorem primitive_sobolevPath (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p)) (q : ℕ) (t : K) :
-    sobolevPath P q (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t =
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
+    (q : ℕ) (t : K) :
+    sobolevPath P q (pathPrimitive (K := K) P p) (pathPrimitive_orbit_contDiff P p hp) t =
       sobolevPrimitive P q (sobolevPath P q p hp t) := by
   apply value_injective P
-  change value P (sobolevPath P q (pathPrimitive P p) _ t) =
+  change value P (sobolevPath P q (pathPrimitive (K := K) P p) _ t) =
     primitive P (value P (sobolevPath P q p hp t))
   rw [sobolevPath_value, sobolevPath_value]
   rfl
 
 /-- The representative of the time-dependent L² primitive is the same explicit angular integral. -/
 theorem pointField_primitive_formula (p : C(K, LiftL2 P))
-    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+    (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
     (hmean : ∀ t y, (∫ s in (0 : ℝ)..P, pointField P p hp t (y,(s : AddCircle P)))=0)
     (t : K) (y : Vector3) (θ : ℝ) :
-    pointField P (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t (y,(θ : AddCircle P)) =
+    pointField P (pathPrimitive (K := K) P p) (pathPrimitive_orbit_contDiff P p hp) t
+        (y,(θ : AddCircle P)) =
       EulerAngleMeanZeroPrimitive.primitive P
         (fun s => pointField P p hp t (y,(s : AddCircle P))) θ := by
   unfold pointField
@@ -180,14 +185,16 @@ theorem pointField_primitive_formula (p : C(K, LiftL2 P))
 section Time
 
 variable (T : ℝ) (hT : 0 ≤ T) (p f : C(Icc (0 : ℝ) T, LiftL2 P))
-  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
-  (hf : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a f))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a p))
+  (hf : ContDiff ℝ ∞ (fun a : LiftTangent =>
+    pathTranslate (K := Icc (0 : ℝ) T) (V := Vector3) P a f))
   (hd : ∀ t : Icc (0 : ℝ) T, HasDerivWithinAt (extendPath T hT p) (f t) (Icc (0 : ℝ) T) t)
 
 include hd in
 theorem pathPrimitive_time_derivative (t : Icc (0 : ℝ) T) :
-    HasDerivWithinAt (extendPath T hT (pathPrimitive P p)) (pathPrimitive P f t)
-      (Icc (0 : ℝ) T) t :=
+    HasDerivWithinAt (extendPath T hT (pathPrimitive (K := Icc (0 : ℝ) T) P p))
+      (pathPrimitive (K := Icc (0 : ℝ) T) P f t) (Icc (0 : ℝ) T) t :=
   primitive_hasDerivWithinAt P _ t (extendPath T hT p) (f t) (hd t)
 
 include hd in
@@ -200,7 +207,8 @@ theorem classicalPrimitive_time_derivative
         (fun s => pointField P p hp (projIcc 0 T hT r) (y,(s : AddCircle P))) θ)
       (EulerAngleMeanZeroPrimitive.primitive P
         (fun s => pointField P f hf t (y,(s : AddCircle P))) θ) (Icc (0 : ℝ) T) t := by
-  have h := pointField_hasDerivWithinAt P T hT (pathPrimitive P p) (pathPrimitive P f)
+  have h := pointField_hasDerivWithinAt P T hT (pathPrimitive (K := Icc (0 : ℝ) T) P p)
+    (pathPrimitive (K := Icc (0 : ℝ) T) P f)
     (pathPrimitive_orbit_contDiff P p hp) (pathPrimitive_orbit_contDiff P f hf)
     (pathPrimitive_time_derivative P T hT p f hd) t (y,(θ : AddCircle P))
   rw [pointField_primitive_formula P f hf hfm t y θ] at h
@@ -231,16 +239,19 @@ open scoped ContDiff BoundedContinuousFunction
 variable (P : ℝ) [Fact (0 < P)]
   {K : Type*} [TopologicalSpace K] [CompactSpace K]
   (B : C(K, Space →ᵇ Space →L[ℝ] Space))
-  (hB : ContDiff ℝ ∞ (translateCoefficientPath B))
-  (p : C(K, LiftL2 P)) (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a p))
+  (hB : ContDiff ℝ ∞ (translateCoefficientPath (K := K) (V := Space →L[ℝ] Space) B))
+  (p : C(K, LiftL2 P))
+  (hp : ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p))
 
 /-- Potential path, given by `fullMultiplierMap P B (pathPrimitive P p)`. -/
-def potentialPath : C(K,LiftL2 P) := fullMultiplierMap P B (pathPrimitive P p)
+def potentialPath : C(K,LiftL2 P) :=
+  fullMultiplierMap (K := K) (E := Space) (F := Space) P B (pathPrimitive (K := K) P p)
 
 include hB hp in
 theorem potentialPath_orbit :
-    ContDiff ℝ ∞ (fun a : LiftTangent => pathTranslate P a (potentialPath P B p)) :=
-  product_orbit_contDiff P B hB (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp)
+    ContDiff ℝ ∞ (fun a : LiftTangent =>
+      pathTranslate (K := K) (V := Vector3) P a (potentialPath P B p)) :=
+  product_orbit_contDiff P B hB (pathPrimitive (K := K) P p) (pathPrimitive_orbit_contDiff P p hp)
 
 /-- Potential field, given by `pointField P (potentialPath P B p) (potentialPath_orbit P B hB p
 hp) t`. -/
@@ -249,11 +260,12 @@ def potentialField (t : K) : LiftDomain P → Space :=
 
 theorem potentialPath_ae (t : K) :
     (potentialPath P B p t : LiftDomain P → Space) =ᵐ[liftMeasure P]
-      fun x => B t x.1 (pointField P (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t x)
-          := by
-  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P) (fieldLift P (B t))
-      (pathPrimitive P p t),
-    pointField_ae P (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t] with x hB hp
+      fun x => B t x.1 (pointField P (pathPrimitive (K := K) P p)
+        (pathPrimitive_orbit_contDiff P p hp) t x) := by
+  filter_upwards [EulerLpOperatorField.full_ae (liftMeasure P)
+      (fieldLift (W := Space →L[ℝ] Space) P (B t)) (pathPrimitive (K := K) P p t),
+    pointField_ae P (pathPrimitive (K := K) P p) (pathPrimitive_orbit_contDiff P p hp) t]
+      with x hB hp
   exact hB.trans (congrArg (B t x.1) hp)
 
 /-- The canonical representative is the coefficient times the literal angular primitive. -/
@@ -264,7 +276,8 @@ theorem potentialField_formula
       B t y (EulerAngleMeanZeroPrimitive.primitive P
         (fun s => pointField P p hp t (y,(s : AddCircle P))) θ) := by
   have he : potentialField P B hB p hp t = fun x =>
-      B t x.1 (pointField P (pathPrimitive P p) (pathPrimitive_orbit_contDiff P p hp) t x) := by
+      B t x.1 (pointField P (pathPrimitive (K := K) P p)
+        (pathPrimitive_orbit_contDiff P p hp) t x) := by
     apply Measure.eq_of_ae_eq
       ((pointField_ae P (potentialPath P B p) (potentialPath_orbit P B hB p hp) t).symm.trans
         (potentialPath_ae P B p hp t))
@@ -272,7 +285,7 @@ theorem potentialField_formula
     · exact ((B t).continuous.comp continuous_fst).clm_apply
         (smoothField_continuous P _ (pointField_smooth P _ _ t))
   rw [he]
-  change B t y (pointField P (pathPrimitive P p)
+  change B t y (pointField P (pathPrimitive (K := K) P p)
     (pathPrimitive_orbit_contDiff P p hp) t (y,(θ : AddCircle P))) = _
   rw [pointField_primitive_formula P p hp hmean t y θ]
 
@@ -313,17 +326,20 @@ theorem potentialPath_block_bound {ι : Type*} [Fintype ι]
     (directions : ι → LiftTangent) (hd : ∀ i, ‖directions i‖ ≤ 1) (q : ℕ)
     (Rc C R D : ℝ) (hRc : 0 ≤ Rc) (hC : 0 ≤ C) (hD : 0 ≤ D)
     (hR : sobolevCoefficientRadius ι Rc ≤ R)
-    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath B) a‖ ≤ C * majorant Rc 0 n)
-    (d : ℕ) (hbp : ∀ n, block directions q (fun a : LiftTangent => pathTranslate P a p) n 0 ≤
+    (hbB : ∀ n a, ‖iteratedFDeriv ℝ n (translateCoefficientPath (K := K) (V := Space →L[ℝ] Space)
+      B) a‖ ≤ C * majorant Rc 0 n)
+    (d : ℕ) (hbp : ∀ n, block directions q
+      (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p) n 0 ≤
       D*majorant R d n) (n : ℕ) :
-    block directions q (fun a : LiftTangent => pathTranslate P a (potentialPath P B p)) n 0 ≤
+    block directions q (fun a : LiftTangent =>
+        pathTranslate (K := K) (V := Vector3) P a (potentialPath P B p)) n 0 ≤
       (3*sobolevCoefficientAmplitude ι q Rc C*(P*D))*majorant R d n := by
-  apply product_orbit_block_bound P B hB directions hd q (pathPrimitive P p)
+  apply product_orbit_block_bound P B hB directions hd q (pathPrimitive (K := K) P p)
     (pathPrimitive_orbit_contDiff P p hp) Rc C R (P*D) hRc hC
     (mul_nonneg (le_of_lt (Fact.out : 0 < P)) hD) hR hbB d _ n
   intro j
   have h := pathPrimitive_block_bound P directions q
-    (fun a : LiftTangent => pathTranslate P a p) hp j 0
+    (fun a : LiftTangent => pathTranslate (K := K) (V := Vector3) P a p) hp j 0
   simp only [pathPrimitive_translation] at h
   exact h.trans ((mul_le_mul_of_nonneg_left (hbp j) (le_of_lt (Fact.out : 0 < P))).trans_eq
     (mul_assoc P D _).symm)

@@ -31,6 +31,8 @@ public import Mathlib.LinearAlgebra.Trace
 public import Mathlib.MeasureTheory.Integral.Bochner.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
 public import Mathlib.Order.CompletePartialOrder
+public import LeanPool.NavierStokesAndEuler.ForMathlib.EuclideanMeasureShortcuts
+public import LeanPool.NavierStokesAndEuler.ForMathlib.L2NormedShortcuts
 
 /-!
 # Solution-side definitions for the Euler Comparator challenge
@@ -53,7 +55,7 @@ contains no challenge theorem or proof placeholder and does not import `Euler`.
 
 
 -- Inline the only needed notation from FormalConjecturesForMathlib.Geometry.3d.
-local notation "ℝ³" => EuclideanSpace ℝ (Fin 3)
+local notation "ℝ³" => (EuclideanSpace ℝ (Fin 3))
 
 open ContDiff Set InnerProductSpace MeasureTheory
 

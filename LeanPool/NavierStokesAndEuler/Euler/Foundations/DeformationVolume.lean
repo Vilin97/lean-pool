@@ -12,6 +12,7 @@ public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.MeasureTheory.Group.Measure
 public import Mathlib.Topology.Algebra.Module.Determinant
 public import Mathlib.Topology.Algebra.Module.ModuleTopology
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 # Deformation Volume

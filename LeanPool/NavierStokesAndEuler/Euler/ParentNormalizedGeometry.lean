@@ -264,7 +264,7 @@ theorem acceleration_eq_neg_gradient
   have hi := (hasDerivAt_id (t : ℝ)).prodMk hp
   have ho : HasFDerivAt u (fderiv ℝ u (t,A.position t x)) (id (t : ℝ),A.realPosition t x) := by
     simpa only [id_eq,A.realPosition_apply] using (hdiff t ht (A.position t x)).hasFDerivAt
-  have hc := ho.comp_hasDerivAt (t : ℝ) hi
+  have hc := ho.comp_hasDerivAt (f := fun s => (id s, A.realPosition s x)) (t : ℝ) hi
   have hc' : HasDerivAt (fun s => u (s,A.realPosition s x))
       (fderiv ℝ u (t,A.position t x) (1,A.velocity.field t x)) t := by
     simpa only [Function.comp_def,id_eq,A.realPosition_apply] using hc
@@ -296,7 +296,7 @@ theorem acceleration_physical_of_euler
   let g : ℝ → Space := fun s => -force (projIcc 0 A.T A.T_pos.le s) (A.realPosition s x)
   have hf : Continuous f :=
     (A.acceleration.realField_joint_continuous A.T A.T_pos.le).comp
-      (continuous_id.prodMk continuous_const)
+      (f := fun s : ℝ => (id s, x)) (continuous_id.prodMk continuous_const)
   have hg : Continuous g :=
     (hforce.comp ((show Continuous (projIcc 0 A.T A.T_pos.le) from continuous_projIcc).prodMk
       (A.realPosition_joint_continuous.comp (continuous_id.prodMk continuous_const)))).neg
@@ -346,14 +346,9 @@ theorem jointDerivative_contDiffAt_one
   have hq := realField_contDiffAt_one T hT A₁ A₂ hA₁ t ht x
   have hJ := realField_contDiffAt_one T hT A.derivative A₁.derivative
     (TimeDerivative.derivative T hT A A₁ hA) t ht x
-  have hs := (ContinuousLinearMap.toSpanSingletonLIE ℝ
-      V).toContinuousLinearEquiv.contDiff.contDiffAt.comp
-    (t,x) hq
-  let L : ((ℝ →L[ℝ] V) × (E →L[ℝ] V)) →L[ℝ] ((ℝ × E) →L[ℝ] V) :=
-    (ContinuousLinearMap.coprodEquivL (𝕜 := ℝ) (E := ℝ) (F := E) (G := V) ℝ).toContinuousLinearMap
-  exact (ContinuousLinearMap.contDiff (𝕜 := ℝ) (n := 1)
-    (E := (ℝ →L[ℝ] V) × (E →L[ℝ] V)) (F := (ℝ × E) →L[ℝ] V) L).contDiffAt.comp
-    (t,x) (hs.prodMk hJ)
+  have hs := (ContinuousLinearMap.toSpanSingletonLIE ℝ V).contDiff.contDiffAt.comp (t,x) hq
+  exact ((ContinuousLinearMap.coprodEquivL (𝕜 := ℝ) (E := ℝ) (F := E) (G := V)
+    ℝ).contDiff.contDiffAt.comp (t,x) (hs.prodMk hJ) :)
 
 theorem realField_contDiffAt_two
     (hA : TimeDerivative T hT A A₁) (hA₁ : TimeDerivative T hT A₁ A₂)
@@ -410,7 +405,8 @@ theorem realPosition_contDiffAt_two (t : ℝ) (ht : t ∈ Ioo 0 A.T) (x : Space)
 
 theorem packetPosition_contDiffAt_two (t : ℝ) (ht : t ∈ Ioo 0 A.T) (x : Space) :
     ContDiffAt ℝ 2 A.packetPosition (t,x) :=
-  ((A.realPosition_contDiffAt_two t ht (A.ell • x)).comp (t,x)
+  ((A.realPosition_contDiffAt_two t ht (A.ell • x)).comp
+    (f := fun y : ℝ × Space => (y.1, A.ell • y.2)) (t,x)
     (contDiffAt_fst.prodMk (contDiffAt_snd.const_smul A.ell))).const_smul A.ell⁻¹
 
 theorem packetPosition_joint_continuous : Continuous A.packetPosition :=

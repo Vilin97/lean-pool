@@ -7,6 +7,7 @@ Authors: OpenAI
 module
 
 public import Mathlib.Analysis.InnerProductSpace.LaxMilgram
+public import LeanPool.NavierStokesAndEuler.ForMathlib.ElaborationShortcuts
 
 /-!
 The Hilbert-space inverse used for the packet pressure equation.
@@ -174,7 +175,9 @@ theorem projectedInverse_norm_le (G : E →L[ℝ] E) (c : ℝ) (hc : 0 < c)
 theorem projectedOperator_sub (G H : E →L[ℝ] E) :
     projectedOperator S (G - H) = projectedOperator S G - projectedOperator S H := by
   ext x
-  simp [projectedOperator]
+  simp only [projectedOperator, sub_comp, comp_sub, sub_apply, comp_apply, Submodule.coe_subtypeL,
+      Submodule.subtype_apply, AddSubgroupClass.coe_sub,
+      Submodule.coe_orthogonalProjectionOnto_apply]
 
 theorem projectedOperator_norm_le (G : E →L[ℝ] E) :
     ‖projectedOperator S G‖ ≤ ‖G‖ := by

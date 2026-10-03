@@ -111,7 +111,7 @@ theorem cutoff_hasDerivAt (P : Patch) (r : ℝ) : HasDerivAt (cutoff P) (density
   have hs := TransportPrimitive.pastIntegral_contDiff (M := 0) (v := (0 : ℝ))
     (densityLift_contDiff P) (densityLift_supported P)
   have hd := ((hs.differentiable (by simp)) (r, 0)).hasFDerivAt.comp_hasDerivAt r
-    ((hasDerivAt_id r).prodMk (hasDerivAt_const r (0 : ℝ)))
+    ((hasDerivAt_id r).prodMk (G := ℝ) (hasDerivAt_const r (0 : ℝ)))
   have ht := TransportPrimitive.transport_pastIntegral (M := 0) (v := (0 : ℝ))
     (densityLift_contDiff P) (densityLift_supported P) (r, 0)
   simp only [TransportPrimitive.fixedDeriv, zero_smul, densityLift] at ht
@@ -127,7 +127,7 @@ noncomputable def inversePower (P : Patch) (e : ℕ) (r : ℝ) : ℝ :=
 
 theorem inversePower_contDiff (P : Patch) (e : ℕ) : ContDiff ℝ ∞ (inversePower P e) :=
   ((RadialPullback.positiveRadius_contDiff _).pow e).inv
-    (fun r => pow_ne_zero _ (RadialPullback.positiveRadius_pos (by linarith [P.a_pos]) r).ne')
+    (fun r => pow_ne_zero _ (RadialPullback.positiveRadius_pos (by linarith only [P.a_pos]) r).ne')
 
 theorem inversePower_nonneg (P : Patch) (e : ℕ) (r : ℝ) : 0 ≤ inversePower P e r :=
   inv_nonneg.mpr (pow_nonneg (RadialPullback.positiveRadius_pos (by linarith [P.a_pos]) r).le e)
@@ -135,7 +135,7 @@ theorem inversePower_nonneg (P : Patch) (e : ℕ) (r : ℝ) : 0 ≤ inversePower
 theorem inversePower_eq (P : Patch) (e : ℕ) {r : ℝ} (hr : P.a ≤ r) :
     inversePower P e r = (r ^ e)⁻¹ := by
   unfold inversePower
-  rw [RadialPullback.positiveRadius_eq_self (by linarith [P.a_pos]) (by linarith [P.a_pos])]
+  rw [RadialPullback.positiveRadius_eq_self (by linarith only [P.a_pos]) (by linarith [P.a_pos])]
 
 /-- Moment density, given by `inversePower P e r * density P r`. -/
 noncomputable def momentDensity (P : Patch) (e : ℕ) (r : ℝ) : ℝ := inversePower P e r * density P r
@@ -357,7 +357,7 @@ theorem primitive_hasDerivAt (P : Patch) (e : ℕ) {F : ℝ × E → ℝ}
     HasDerivAt (fun t => primitive P e F (t, p)) (r ^ e * adjusted P e F (r, p)) r := by
   have hp := primitive_contDiff P e hF hs
   have hd := ((hp.differentiable (by simp)) (r, p)).hasFDerivAt.comp_hasDerivAt r
-    ((hasDerivAt_id r).prodMk (hasDerivAt_const r p))
+    ((hasDerivAt_id r).prodMk (G := E) (hasDerivAt_const r p))
   have ht := TransportPrimitive.transport_compactIntegral (M := 0) (v := (0 : E))
     (cutoff_contDiff P) (weightedSource_contDiff e hF) (weightedSource_supported e hs) (r, p)
   simp only [TransportPrimitive.fixedDeriv, zero_smul, cutoff_deriv,
@@ -401,7 +401,7 @@ theorem angular_divergence (P : Patch) {F : ℝ × E → ℝ}
   calc
     _ = 2 * r * sigma P 2 F (r, p) + r ^ 2 * deriv (fun t => sigma P 2 F (t, p)) r := by
       field_simp; ring
-    _ = _ := by nlinarith [he]
+    _ = _ := by nlinarith only [he]
 
 theorem axial_divergence (P : Patch) {F : ℝ × E → ℝ}
     (hF : ContDiff ℝ ∞ F) (hs : RadialAlias.RadiallySupported P.a P.b F) (p : E) {r : ℝ} (hr : 0 <
@@ -418,7 +418,7 @@ theorem axial_divergence (P : Patch) {F : ℝ × E → ℝ}
   calc
     _ = sigma P 1 F (r, p) + r * deriv (fun t => sigma P 1 F (t, p)) r := by
       field_simp; ring
-    _ = _ := by nlinarith [he]
+    _ = _ := by nlinarith only [he]
 
 /-- All fixed-order constants come from the proved weighted integral estimate
 and bounded radial multipliers on a fixed positive annulus. -/
@@ -900,7 +900,7 @@ theorem physical_angular_divergence (P : Patch) {q : E → ℝ}
   calc
     _ = 2 * r * physicalSigma P 2 q F (r, p) +
         r ^ 2 * deriv (fun t => physicalSigma P 2 q F (t, p)) r := by field_simp; ring
-    _ = _ := by nlinarith [he]
+    _ = _ := by nlinarith only [he]
 
 theorem physical_axial_divergence (P : Patch) {q : E → ℝ}
     (hq : ContDiff ℝ ∞ q) (hpos : ∀ p, 0 < q p) {F : ℝ × E → ℝ}
@@ -918,7 +918,7 @@ theorem physical_axial_divergence (P : Patch) {q : E → ℝ}
   calc
     _ = physicalSigma P 1 q F (r, p) + r * deriv (fun t => physicalSigma P 1 q F (t, p)) r := by
       field_simp; ring
-    _ = _ := by nlinarith [he]
+    _ = _ := by nlinarith only [he]
 
 omit [NormedAddCommGroup E] [NormedSpace ℝ E] in
 /-- Taking the torus bar preserves support described by the physical q. -/
@@ -1180,10 +1180,10 @@ theorem compact_jet_bounds {X Y : Type*} [NormedAddCommGroup X] [NormedSpace ℝ
   choose C hC hbound using hb
   refine ⟨1 + ∑ j ∈ Finset.range (m + 1), C j, ?_, ?_⟩
   · have h := Finset.sum_nonneg (s := Finset.range (m + 1)) (fun j _ => hC j)
-    linarith
+    linarith only [h]
   · intro j hj x hx
     have h := Finset.single_le_sum (fun j _ => hC j) (Finset.mem_range.mpr (Nat.lt_succ_of_le hj))
-    exact (hbound j x hx).trans (by linarith)
+    exact (hbound j x hx).trans (by linarith only [h])
 
 /-- Smooth coordinate changes and multipliers have actual finite-jet operator
 bounds on compact sets; the bound is uniform over every input function. -/
