@@ -204,6 +204,7 @@ public import LeanPool.PentagonalNumberTheorem.Imports
 public import LeanPool.PentagonalNumberTheoremAnalytic.Imports
 public import LeanPool.PermanentFormulaLowerBound.Imports
 public import LeanPool.PhaseRetrieval.Imports
+public import LeanPool.PoincareGeometry.Imports
 public import LeanPool.PoincareThreeBody.Imports
 public import LeanPool.PointwiseBirkhoff.Imports
 public import LeanPool.PolyaEnumerationTheorem.Imports
