@@ -15,6 +15,7 @@ public import LeanPool.BannaiBannaiStanton.Imports
 public import LeanPool.Basic.Imports
 public import LeanPool.BeckFialaMatrix.Imports
 public import LeanPool.Besicovitch.Imports
+public import LeanPool.BeyondBethe.Imports
 public import LeanPool.BicausalOT.Imports
 public import LeanPool.Biswal.Imports
 public import LeanPool.BlockSpectralSensitivity.Imports
