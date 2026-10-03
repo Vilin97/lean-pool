@@ -40,6 +40,7 @@ public import LeanPool.CircuitComplexity.Imports
 public import LeanPool.Circuitlib.Imports
 public import LeanPool.ClassificationOfSurfaces.Imports
 public import LeanPool.Clawristotle.Imports
+public import LeanPool.CoarseGraining.Imports
 public import LeanPool.CommonNeighbourConjecture.Imports
 public import LeanPool.CompactSpectral.Imports
 public import LeanPool.CompactnessAndDegeneracy.Imports

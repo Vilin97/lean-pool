@@ -1,0 +1,74 @@
+/-
+Copyright (c) 2026 Scott Armstrong, Tuomo Kuusi. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: Scott Armstrong, Tuomo Kuusi
+-/
+module
+
+
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.AssemblyPieces
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.BesovLeGagliardo
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeDivergenceRescaling
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanH2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeEuclideanL2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalCZFullNorm
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CenteredCubeFractionalGradientMemLp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ClassicalDualComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.CongruenceAE
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Constants
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousInterpolation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ContinuousKFunctional
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoLpBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ConvexApproxGagliardoSmoothing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.Definitions
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.DefinitionsAPI
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ENNRealBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanGagliardoCoordinateBridgeP
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanH2
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWsp
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualExtension
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCompletedDualGraph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspCongruence
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspDilation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspExactOverlapFullControl
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLegacyCircComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspLpMembership
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspNegativeLocalization
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspPowerTwoBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDensity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDual
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualBesovBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualFieldPairing
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothDualNegativeBesov
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothGraph
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspSmoothMembership
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.EuclideanWspTranslation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanFullComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanLpDisjointBridge
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapEuclideanPoincare
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePAveraging
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePDepthTriangle
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePFullCZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePGlobalBound
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePHomogeneity
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePOneDepthCZ
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPDESplitting
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapFinitePPoincareDepth
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ExactOverlapScalarPComparison
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.GagliardoLeBesov
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.JensenStep
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapCount
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.OverlapIntegral
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.PairCapture
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.ShellGeometry
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.TailSummation
+public import LeanPool.CoarseGraining.Homogenization.Sobolev.Fractional.UnitCubeEuclideanL2
+
+/-! Supporting modules for Coarse-graining theory for elliptic equations. -/
+
+@[expose] public section
