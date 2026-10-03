@@ -12879,3 +12879,59 @@ projects:
     - bernstein-degree
     msc:
     - 16S32
+  - slug: viscosity-solution-theory
+    title: Viscosity solutions, Aleksandrov differentiability and harmonic Dirichlet problems
+    summary: Develops second-order semijets, smooth test-function equivalence, Jensen contact sets,
+      convex Aleksandrov differentiability, the quadratic-penalty Ishii lemma and compact-domain
+      comparison for degenerate elliptic equations. Perron assembly retains explicit comparison,
+      barrier and bumping assumptions; these are discharged for classical harmonic Dirichlet
+      existence on bounded open domains satisfying a uniform exterior sphere condition.
+    branch: partial differential equations
+    entry_module: LeanPool.ViscositySolutionTheory
+    authors:
+    - William M. Feldman
+    - AleksandrovDifferentiability contributors
+    - The Tau Ceti contributors
+    source:
+      arxiv: math/9207212
+      url: https://github.com/willmfeldman/viscosity-solution-theory/tree/067e2540ad1594408c0b6145c5bde01b4d5791a9
+      github_repo: willmfeldman/viscosity-solution-theory
+      commit: 067e2540ad1594408c0b6145c5bde01b4d5791a9
+    license: Apache-2.0
+    status: verified
+    provenance: AI
+    main_declarations:
+    - ViscositySolns.dirichlet_harmonic_modulus_of_uniformExteriorSphere
+    main_results:
+    - declaration: AleksandrovDifferentiability.convexAleksandrovAE
+      informal: A convex real-valued function on an open subset of any finite-dimensional real inner
+        product space is second-order differentiable at Lebesgue-almost every point.
+    - declaration: ViscositySolns.JensenContactSetPositiveMeasureOnClosedBallTheorem.proof
+      informal: Under the localized semiconvexity and strict-contact hypotheses, the contact set
+        arising from sufficiently small linear perturbations has positive Lebesgue measure.
+    - declaration: ViscositySolns.QuadraticPenaltyIshiiLemmaOn.proof
+      informal: For an upper semicontinuous function and a lower semicontinuous function on locally
+        compact subsets of real coordinate space, doubled-variable maxima with the quadratic
+        penalty yield closed semijets satisfying the Ishii block-matrix bounds.
+    - declaration: ViscositySolns.comparison_of_constantShift_boundary_proof
+      informal: A viscosity subsolution lies below a supersolution on a nonempty locally compact
+        domain with compact closure, assuming boundary comparison, semicontinuity on the closure,
+        properness, operator continuity, the Ishii structural condition and uniform scalar decrease.
+    - declaration: ViscositySolns.viscositySubsolution_iff_smoothTestFunctionSubsolution
+      informal: On an open domain, semijet and smooth C² test-function formulations of viscosity
+        subsolutions agree for Hessian-continuous, symmetric-part-invariant operators.
+    - declaration: ViscositySolns.dirichlet_harmonic_modulus_of_uniformExteriorSphere
+      informal: On a bounded open subset of finite-dimensional Euclidean space with a uniform
+        exterior sphere condition, Lipschitz data on its closure admit a continuous
+        extension that agrees on the boundary and is C² and harmonic in the domain, with a
+        boundary modulus depending only on the domain and Lipschitz constant.
+    tags:
+    - pde
+    - viscosity-solutions
+    - convex-analysis
+    - harmonic-functions
+    - perron-method
+    msc:
+    - 35D40
+    - 35J60
+    - 26B25
