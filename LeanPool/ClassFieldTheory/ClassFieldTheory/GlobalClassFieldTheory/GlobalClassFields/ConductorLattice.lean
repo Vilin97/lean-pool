@@ -1,0 +1,199 @@
+/-
+Copyright (c) 2026 n-yamaguchi-0729. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: n-yamaguchi-0729
+-/
+module
+
+
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.AlgebraicNumberTheory.RayClass.Topology
+public import LeanPool.ClassFieldTheory.ClassFieldTheory.GlobalClassFieldTheory.GlobalClassFields.ConductorLocalComparison
+/-!
+# Lattice operations on narrow finite conductors
+
+Increasing a modulus decreases its ray congruence subgroup.  This
+contravariance makes the narrow finite conductor of an intersection of
+norm subgroups the pointwise maximum of their narrow finite conductors.
+Under class-field correspondence, this is the finite-part lcm formula
+for a compositum.  For a generated subgroup one obtains the
+complementary divisibility by the pointwise minimum.
+-/
+
+@[expose] public section
+
+open scoped NumberField
+noncomputable
+section
+
+namespace GlobalClassFieldTheory
+namespace GlobalClassFields
+
+open NumberField IsDedekindDomain
+
+variable {K : Type*} [Field K] [NumberField K]
+
+open scoped Classical in
+/-- Finite idèle congruence subgroups are contravariant in the modulus. -/
+theorem rayClassFiniteCongruenceSubgroup_antitone
+    {m n : RayClass.FiniteModulus K} (hmn : m ≤ n) :
+    RayClass.finiteCongruenceSubgroup n ≤
+      RayClass.finiteCongruenceSubgroup m := by
+  intro a ha v
+  exact
+    RayClass.localHigherUnitGroup_antitone
+      (K := K) v (hmn v) (ha v)
+
+open scoped Classical in
+/-- Infinite idèle congruence subgroups are contravariant in the full
+modulus: selecting more real places imposes more positivity conditions. -/
+theorem rayClassInfiniteCongruenceSubgroup_antitone
+    {m n : RayClass.Modulus K} (hmn : m ≤ n) :
+    n.infiniteCongruenceSubgroup ≤
+      m.infiniteCongruenceSubgroup := by
+  intro a ha
+  rw [RayClass.Modulus.mem_infiniteCongruenceSubgroup_iff] at ha ⊢
+  intro v hv
+  exact ha v (hmn.2 hv)
+
+open scoped Classical in
+/-- Idèle congruence subgroups are contravariant in the modulus. -/
+theorem rayClassIdeleCongruenceSubgroup_antitone
+    {m n : RayClass.Modulus K} (hmn : m ≤ n) :
+    n.ideleCongruenceSubgroup ≤
+      m.ideleCongruenceSubgroup := by
+  rintro a ⟨haInfinite, haFinite⟩
+  exact
+    ⟨rayClassInfiniteCongruenceSubgroup_antitone
+        (K := K) hmn haInfinite,
+      rayClassFiniteCongruenceSubgroup_antitone
+        (K := K) hmn.1 haFinite⟩
+
+open scoped Classical in
+/-- Ray congruence subgroups in the idèle class group are
+contravariant in the modulus. -/
+theorem rayClassCongruenceSubgroup_antitone
+    {m n : RayClass.Modulus K} (hmn : m ≤ n) :
+    n.congruenceSubgroup ≤
+      m.congruenceSubgroup := by
+  unfold RayClass.Modulus.congruenceSubgroup
+  apply Subgroup.map_mono
+  exact
+    sup_le
+      ((rayClassIdeleCongruenceSubgroup_antitone
+        (K := K) hmn).trans le_sup_left)
+      le_sup_right
+
+open scoped Classical in
+/-- Once a modulus defines a subgroup, every larger modulus also
+defines it. -/
+theorem isDefiningModulus_mono
+    (H : Subgroup (IdeleClassGroup K))
+    {m n : RayClass.Modulus K}
+    (hm : IsDefiningModulus H m)
+    (hmn : m ≤ n) :
+    IsDefiningModulus H n :=
+  (rayClassCongruenceSubgroup_antitone
+    (K := K) hmn).trans hm
+
+namespace ConductorialSubgroup
+
+open scoped Classical in
+/-- The exact narrow finite conductor, interpreted as a full modulus with
+positivity at every real place, is a defining modulus. -/
+theorem narrowFiniteConductor_isDefiningModulus
+    (H : ConductorialSubgroup K) :
+    IsDefiningModulus H.1
+      (RayClass.Modulus.narrowOfFinite H.narrowFiniteConductor) := by
+  obtain ⟨m, hm, hfinite⟩ :=
+    H.exists_definingModulus_finitePart_eq_narrowFiniteConductor
+  apply isDefiningModulus_mono H.1 hm
+  exact ⟨hfinite.le, Finset.subset_univ _⟩
+
+open scoped Classical in
+/-- The join of the narrow finite conductors defines the intersection of
+the two underlying subgroups. -/
+theorem inf_narrowFiniteConductor_isDefiningModulus
+    (H J : ConductorialSubgroup K) :
+    IsDefiningModulus (H.1 ⊓ J.1)
+      (RayClass.Modulus.narrowOfFinite
+        (H.narrowFiniteConductor ⊔ J.narrowFiniteConductor)) := by
+  apply le_inf
+  · exact
+      isDefiningModulus_mono H.1 H.narrowFiniteConductor_isDefiningModulus
+        ⟨le_sup_left, Finset.subset_univ _⟩
+  · exact
+      isDefiningModulus_mono J.1 J.narrowFiniteConductor_isDefiningModulus
+        ⟨le_sup_right, Finset.subset_univ _⟩
+
+open scoped Classical in
+/-- The intersection of two conductorial subgroups, with its defining
+modulus obtained from the two actual narrow finite conductors. -/
+noncomputable def inf
+  (H J : ConductorialSubgroup K) :
+    ConductorialSubgroup K :=
+  ⟨H.1 ⊓ J.1,
+    ⟨RayClass.Modulus.narrowOfFinite
+        (H.narrowFiniteConductor ⊔ J.narrowFiniteConductor),
+      H.inf_narrowFiniteConductor_isDefiningModulus J⟩⟩
+
+open scoped Classical in
+/-- The subgroup generated by two conductorial subgroups. -/
+noncomputable def sup
+  (H J : ConductorialSubgroup K) :
+    ConductorialSubgroup K :=
+  ⟨H.1 ⊔ J.1,
+    ⟨RayClass.Modulus.narrowOfFinite H.narrowFiniteConductor,
+      H.narrowFiniteConductor_isDefiningModulus.trans le_sup_left⟩⟩
+
+open scoped Classical in
+/-- The narrow finite conductor of an intersection is the pointwise
+maximum of the two narrow finite conductors. -/
+theorem narrowFiniteConductor_inf
+    (H J : ConductorialSubgroup K) :
+    (H.inf J).narrowFiniteConductor =
+      H.narrowFiniteConductor ⊔ J.narrowFiniteConductor := by
+  apply le_antisymm
+  · exact
+      (H.inf J).narrowFiniteConductor_le
+        (H.inf_narrowFiniteConductor_isDefiningModulus J)
+  · apply sup_le
+    · exact
+        (H.inf J).narrowFiniteConductor_antitone H (by
+          change H.1 ⊓ J.1 ≤ H.1
+          exact inf_le_left)
+    · exact
+        (H.inf J).narrowFiniteConductor_antitone J (by
+          change H.1 ⊓ J.1 ≤ J.1
+          exact inf_le_right)
+
+open scoped Classical in
+/-- The finite-prime support of the narrow finite conductor of an
+intersection is the union of the two conductor supports. -/
+theorem narrowFiniteConductor_inf_support
+    (H J : ConductorialSubgroup K) :
+    (H.inf J).narrowFiniteConductor.support =
+      H.narrowFiniteConductor.support ∪
+        J.narrowFiniteConductor.support := by
+  rw [H.narrowFiniteConductor_inf J, Finsupp.support_sup]
+
+open scoped Classical in
+/-- The narrow finite conductor of the subgroup generated by two
+conductorial subgroups divides the pointwise minimum of their conductors. -/
+theorem narrowFiniteConductor_sup_le_inf
+    (H J : ConductorialSubgroup K) :
+    (H.sup J).narrowFiniteConductor ≤
+      H.narrowFiniteConductor ⊓ J.narrowFiniteConductor := by
+  apply le_inf
+  · exact
+      H.narrowFiniteConductor_antitone (H.sup J) (by
+        change H.1 ≤ H.1 ⊔ J.1
+        exact le_sup_left)
+  · exact
+      J.narrowFiniteConductor_antitone (H.sup J) (by
+        change J.1 ≤ H.1 ⊔ J.1
+        exact le_sup_right)
+
+end ConductorialSubgroup
+
+end GlobalClassFields
+end GlobalClassFieldTheory

@@ -38,6 +38,7 @@ public import LeanPool.Chudnovsky.Imports
 public import LeanPool.Chvatal.Imports
 public import LeanPool.CircuitComplexity.Imports
 public import LeanPool.Circuitlib.Imports
+public import LeanPool.ClassFieldTheory.Imports
 public import LeanPool.ClassificationOfSurfaces.Imports
 public import LeanPool.Clawristotle.Imports
 public import LeanPool.CommonNeighbourConjecture.Imports
